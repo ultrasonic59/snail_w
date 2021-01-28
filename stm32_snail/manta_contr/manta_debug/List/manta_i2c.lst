@@ -1,0 +1,282 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         01/Dec/2020  16:53:02
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\board\manta_i2c.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EWBDA8.tmp
+#        (D:\proj\velograph\manta\contr\arm\manta_contr\src\board\manta_i2c.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -lcN
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\.\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\board\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\src\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\..\common\dbg\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\hdlc\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List\manta_i2c.lst
+#    Object file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj\manta_i2c.o
+#
+###############################################################################
+
+D:\proj\velograph\manta\contr\arm\manta_contr\src\board\manta_i2c.c
+      1          #include "manta_contr_brd.h"
+      2          
+      3          I2C_InitTypeDef magn_i2c;
+      4          I2C_InitTypeDef gyro_i2c;
+      5          
+      6          
+      7          void init_i2c(void)
+      8          {
+      9          GPIO_InitTypeDef GPIO_InitStructure;
+     10          RCC_APB1PeriphClockCmd(MAGN_RCC, ENABLE);
+     11          RCC_APB1PeriphClockCmd(GYRO_RCC, ENABLE);
+     12          RCC_AHB1PeriphClockCmd(MAGN_SDA_RCC_AHB, ENABLE);
+     13          RCC_AHB1PeriphClockCmd(GYRO_SDA_RCC_AHB, ENABLE);
+     14          ////=========== MAGN ============================
+     15          #if 1
+     16          magn_i2c.I2C_ClockSpeed = 100000; 
+     17          magn_i2c.I2C_Mode = I2C_Mode_I2C;
+     18          magn_i2c.I2C_DutyCycle = I2C_DutyCycle_2;
+     19          
+     20          magn_i2c.I2C_OwnAddress1 = H_MAGN_ADDR;
+     21          magn_i2c.I2C_Ack = I2C_Ack_Disable;
+     22          magn_i2c.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+     23          I2C_Init(MAGN_I2C, &magn_i2c);
+     24          
+     25          GPIO_InitStructure.GPIO_Pin = MAGN_SCL_PIN|MAGN_SDA_PIN;
+     26          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     27          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     28          GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;
+     29          GPIO_Init( MAGN_SCL_GPIO, &GPIO_InitStructure );
+     30          GPIO_PinAFConfig(MAGN_SCL_GPIO,MAGN_SCL_PIN_SRC,MAGN_SCL_AF);
+     31          GPIO_PinAFConfig(MAGN_SDA_GPIO,MAGN_SDA_PIN_SRC,MAGN_SCL_AF);
+     32          I2C_Cmd(MAGN_I2C, ENABLE);
+     33          #endif
+     34          ////=========== GIRO ============================
+     35          gyro_i2c.I2C_ClockSpeed = 100000; 
+     36          gyro_i2c.I2C_Mode = I2C_Mode_I2C;
+     37          gyro_i2c.I2C_DutyCycle = I2C_DutyCycle_2;
+     38          
+     39          gyro_i2c.I2C_OwnAddress1 = GYRO_ADDR;
+     40          gyro_i2c.I2C_Ack = I2C_Ack_Disable;
+     41          gyro_i2c.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+     42          I2C_DeInit(GYRO_I2C);
+     43          I2C_Init(GYRO_I2C, &gyro_i2c);
+     44          
+     45          GPIO_InitStructure.GPIO_Pin = GYRO_SCL_PIN;
+     46          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     47          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     48          GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;
+     49          GPIO_Init( GYRO_SCL_GPIO, &GPIO_InitStructure );
+     50          
+     51          GPIO_InitStructure.GPIO_Pin = GYRO_SDA_PIN;
+     52          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     53          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     54          GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_UP;
+     55          GPIO_Init( GYRO_SDA_GPIO, &GPIO_InitStructure );
+     56          
+     57          GPIO_PinAFConfig(GYRO_SCL_GPIO,GYRO_SCL_PIN_SRC,GYRO_SCL_AF);
+     58          GPIO_PinAFConfig(GYRO_SDA_GPIO,GYRO_SDA_PIN_SRC,GYRO_SDA_AF);
+     59          I2C_Cmd(GYRO_I2C, ENABLE);
+     60          
+     61          }
+     62          
+     63          int I2C_Mem_Read(I2C_TypeDef* I2Cx, uint8_t sl_addr,uint8_t *buff,uint8_t rd_addr,uint16_t num)
+     64          {
+     65          uint32_t timeout = I2C_TIMEOUT_MAX;
+     66          timeout = I2C_TIMEOUT_MAX;
+     67          while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY))
+     68            {
+     69            if ((timeout--) == 0) 
+     70              return -1;
+     71            }
+     72          I2C_GenerateSTART(I2Cx, ENABLE);
+     73          timeout = I2C_TIMEOUT_MAX;
+     74          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT))
+     75            {
+     76            if ((timeout--) == 0) 
+     77              return -2;
+     78            }
+     79          I2C_Send7bitAddress(I2Cx, sl_addr<<1, I2C_Direction_Transmitter);
+     80          timeout = I2C_TIMEOUT_MAX;
+     81          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+     82            {
+     83            if ((timeout--) == 0) 
+     84              return -3;
+     85            } 
+     86          I2C_SendData(I2Cx, rd_addr);
+     87          timeout = I2C_TIMEOUT_MAX;
+     88          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+     89            {
+     90            if ((timeout--) == 0) 
+     91              return -4;
+     92            }
+     93          I2C_GenerateSTART(I2Cx, ENABLE);
+     94          timeout = I2C_TIMEOUT_MAX;
+     95          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT))
+     96            {
+     97            if ((timeout--) == 0) 
+     98              return -5;
+     99            }
+    100          I2C_Send7bitAddress(I2Cx, sl_addr<<1, I2C_Direction_Receiver);
+    101          timeout = I2C_TIMEOUT_MAX;
+    102          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))
+    103            {
+    104            if ((timeout--) == 0) 
+    105              return -6;
+    106            }
+    107          while(num)
+    108            {
+    109            if(num==1)
+    110              {
+    111              I2C_AcknowledgeConfig(I2Cx, DISABLE);
+    112              I2C_GenerateSTOP(I2Cx, ENABLE);
+    113              }
+    114          ////	I2C_AcknowledgeConfig(I2Cx, DISABLE);
+    115              timeout = I2C_TIMEOUT_MAX;
+    116              while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED))
+    117                {
+    118                if ((timeout--) == 0) 
+    119                  return -7;
+    120                }
+    121              *buff=I2C_ReceiveData(I2Cx);
+    122              buff++;
+    123              num--;
+    124            }
+    125          I2C_AcknowledgeConfig(I2Cx, ENABLE);
+    126          return num;	
+    127          }
+    128          ////===============================================================================
+    129          int I2C_Memory_Write(I2C_TypeDef* I2Cx, uint8_t sl_addr,uint8_t *buff,uint8_t wr_addr,uint16_t num)
+    130          {
+    131          uint32_t timeout = I2C_TIMEOUT_MAX;
+    132          timeout = I2C_TIMEOUT_MAX;
+    133          while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY))
+    134            {
+    135            if ((timeout--) == 0) 
+    136              return -1;
+    137            }
+    138          I2C_GenerateSTART(I2Cx, ENABLE);
+    139          	
+    140          timeout = I2C_TIMEOUT_MAX;
+    141          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT))
+    142            {
+    143            if ((timeout--) == 0) 
+    144              return -2;
+    145            }
+    146          I2C_Send7bitAddress(I2Cx, sl_addr<<1, I2C_Direction_Transmitter);
+    147          	
+    148          timeout = I2C_TIMEOUT_MAX;
+    149          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+    150            {
+    151            if ((timeout--) == 0) 
+    152              return -3;
+    153            } 
+    154          I2C_SendData(I2Cx, wr_addr);
+    155          timeout = I2C_TIMEOUT_MAX;
+    156          while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+    157            {
+    158            if ((timeout--) == 0) 
+    159              return -4;
+    160            }
+    161          while(num)
+    162            {
+    163            I2C_SendData(I2Cx, *buff);
+    164            timeout = I2C_TIMEOUT_MAX;
+    165            while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+    166              {
+    167              if ((timeout--) == 0) 
+    168                return -5;
+    169              }
+    170            num--;
+    171            buff++;
+    172            }
+    173          I2C_GenerateSTOP(I2Cx, ENABLE);
+    174          return 0;	
+    175          }
+    176          
+    177          ////I2C_GenerateSTOP(I2Cx, ENABLE)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   I2C_Mem_Read
+        40   -> I2C_AcknowledgeConfig
+        40   -> I2C_CheckEvent
+        40   -> I2C_GenerateSTART
+        40   -> I2C_GenerateSTOP
+        40   -> I2C_GetFlagStatus
+        40   -> I2C_ReceiveData
+        40   -> I2C_Send7bitAddress
+        40   -> I2C_SendData
+      40   I2C_Memory_Write
+        40   -> I2C_CheckEvent
+        40   -> I2C_GenerateSTART
+        40   -> I2C_GenerateSTOP
+        40   -> I2C_GetFlagStatus
+        40   -> I2C_Send7bitAddress
+        40   -> I2C_SendData
+      32   init_i2c
+        32   -> GPIO_Init
+        32   -> GPIO_PinAFConfig
+        32   -> I2C_Cmd
+        32   -> I2C_DeInit
+        32   -> I2C_Init
+        32   -> RCC_AHB1PeriphClockCmd
+        32   -> RCC_APB1PeriphClockCmd
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_10
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       4  ??DataTable2_8
+       4  ??DataTable2_9
+     346  I2C_Mem_Read
+     242  I2C_Memory_Write
+      16  gyro_i2c
+     274  init_i2c
+      16  magn_i2c
+
+ 
+  32 bytes in section .bss
+ 906 bytes in section .text
+ 
+ 906 bytes of CODE memory
+  32 bytes of DATA memory
+
+Errors: none
+Warnings: none

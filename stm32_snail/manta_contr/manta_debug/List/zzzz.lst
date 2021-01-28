@@ -1,0 +1,62 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         01/Dec/2020  16:53:03
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\board\zzzz.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EWC3A4.tmp
+#        (D:\proj\velograph\manta\contr\arm\manta_contr\src\board\zzzz.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -lcN
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\.\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\board\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\src\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\..\common\dbg\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\hdlc\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List\zzzz.lst
+#    Object file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj\zzzz.o
+#
+###############################################################################
+
+D:\proj\velograph\manta\contr\arm\manta_contr\src\board\zzzz.c
+      1          #include "FreeRTOS.h"
+      2          #include "queue.h"
+      3          #include "semphr.h"
+      4          
+      5          ////#include "stm32f2xx_gpio.h"
+      6          #include "board.h"
+      7          
+      8          ////#define TEST_PIN ZSTP_PIN
+      9          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
+     10          
+
+
+ 
+ 
+ 0 bytes of memory
+
+Errors: none
+Warnings: none

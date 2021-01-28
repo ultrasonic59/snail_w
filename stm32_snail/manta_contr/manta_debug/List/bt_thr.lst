@@ -1,0 +1,155 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         01/Dec/2020  16:53:01
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\bt\bt_thr.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EWBAD3.tmp
+#        (D:\proj\velograph\manta\contr\arm\manta_contr\src\bt\bt_thr.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -lcN
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\.\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\src\board\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\src\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\manta\contr\arm\manta_contr\..\common\dbg\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\inc\ -I
+#        D:\proj\velograph\manta\contr\arm\manta_contr\..\common\hdlc\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\List\bt_thr.lst
+#    Object file  =
+#        D:\proj\velograph\manta\contr\arm\manta_contr\manta_debug\Obj\bt_thr.o
+#
+###############################################################################
+
+D:\proj\velograph\manta\contr\arm\manta_contr\src\bt\bt_thr.c
+      1          #include "bt_cmd.h"
+      2          #include "_hdlc.h"
+      3          #include "board.h"
+      4          #include "printk.h"
+      5          
+      6          hdlc_stat_t g_hdlc_bt;
+      7          void init_hdlc_bt(void);
+      8          ////=================================================
+      9          extern void on_int_tx_uart_bt(void);
+     10          volatile int res_send;
+     11          
+     12          void hdlc_bt_send_byte(uint8_t val)
+     13          {
+     14          uint8_t btmp = val;
+     15          #if 0
+     16          printk("[%x]",val);
+     17          if(val==0x7e)
+     18            printk("\r\n");
+     19          
+     20          if(UART_BT->SR & USART_FLAG_TXE)
+     21            UART_BT->DR=val;
+     22          else
+     23            {
+     24            res_send = xQueueSend(g_hdlc_bt.ua_snd_dat, &btmp, portMAX_DELAY);
+     25            on_int_tx_uart_bt();
+     26            }
+     27          #endif
+     28            res_send = xQueueSend(g_hdlc_bt.ua_snd_dat, &btmp, portMAX_DELAY);
+     29          
+     30          }
+     31          
+     32          extern uint16_t	pc_get_req_dat(uint8_t num_req,uint16_t offs,uint8_t *buf);
+     33          extern int      pc_set_rec_dat(uint8_t cmd,void *in_buf);
+     34          
+     35          TaskHandle_t  bt_thr_rx;
+     36          TaskHandle_t  bt_thr_tx;
+     37          extern void bt_snd_task(void *pdata);
+     38          
+     39          ///=======================
+     40          void init_hdlc_bt(void)
+     41          {
+     42          g_hdlc_bt.fn_send_byte=hdlc_bt_send_byte;
+     43          ////g_hdlc_bt.fn_send_frame=hdlc_bt_send_frame;
+     44          g_hdlc_bt.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
+     45          //// g_hdlc_bt.fn_get_rez=hdlc_bt_get_rez;
+     46          g_hdlc_bt.fn_get_req_dat=pc_get_req_dat;////hdlc_bt_get_req_dat;
+     47          ///g_hdlc_bt.ua_snd_dat=xQueueCreate(512,sizeof(unsigned char));		//
+     48          g_hdlc_bt.ua_snd_dat=xQueueCreate(64,sizeof(unsigned char));		//
+     49          g_hdlc_bt.ev_rsv_ack=xQueueCreate(1,1);
+     50          g_hdlc_bt.ev_rsv_dat=xQueueCreate(1,1);
+     51          g_hdlc_bt.ev_rsv_frame=xQueueCreate(1,1);
+     52          g_hdlc_bt.ev_snd_frame=xQueueCreate(16, sizeof(uint32_t));
+     53          
+     54          hdlc1_init(&g_hdlc_bt);
+     55          
+     56          xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_BT_rx",BT_RX_STACK_SIZE, (void*)&g_hdlc_bt, APP_PRIORITY, &bt_thr_rx);
+     57          xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_BT_tx", BT_TX_STACK_SIZE, (void*)&g_hdlc_bt, APP_PRIORITY, &bt_thr_tx);
+     58          ////xTaskCreate(bt_snd_task, (const char*)"BT_tx", BT_TX_STACK_SIZE, (void*)&g_hdlc_bt, APP_PRIORITY, NULL);
+     59          ///	task_queue_init();
+     60          }
+     61          
+     62          
+     63          ////=================================================
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   hdlc_bt_send_byte
+        16   -> xQueueGenericSend
+      16   init_hdlc_bt
+        16   -> hdlc1_init
+        16   -> xQueueGenericCreate
+        16   -> xTaskCreate
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_10
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+       4  ??DataTable1_7
+       4  ??DataTable1_8
+       4  ??DataTable1_9
+      12  ?_0
+      12  ?_1
+       4  bt_thr_rx
+       4  bt_thr_tx
+      84  g_hdlc_bt
+      30  hdlc_bt_send_byte
+     128  init_hdlc_bt
+       4  res_send
+
+ 
+  96 bytes in section .bss
+  24 bytes in section .rodata
+ 202 bytes in section .text
+ 
+ 202 bytes of CODE  memory
+  24 bytes of CONST memory
+  96 bytes of DATA  memory
+
+Errors: none
+Warnings: none
