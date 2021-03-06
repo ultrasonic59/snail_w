@@ -1,8 +1,6 @@
 
-/* Standard includes. */
 #include <stdio.h>
 
-/* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -48,9 +46,6 @@ __disable_irq();
 hw_board_init();
 
 printk("\n\r=== [test1] ==="); 
-////printk("\n\r=== [test2] ==="); 
-////printk("\n\r=== [test3] ==="); 
-////printk("\n\r=== [test4] ==="); 
 
 
 ///on_led0(1);
