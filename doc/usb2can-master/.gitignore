@@ -1,0 +1,51 @@
+# Object files
+*.o
+*.d
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.elf
+*.bin
+*.hex
+
+# Other
+*.lst
+*.lss
+*.map
+*.sym
+*.eep
+.deps
+*.log
+tags
+
+# VIM
+.*.swp
+
+# Eagle
+*.s#[0-9]
+*.b#[0-9]
+*.l#[0-9]
+
+# Gerber
+*.bot
+*.top
+*.dim
+*.dri
+*.excellon
+*.gpi
+*.msb
+*.mst
+*.slt
+

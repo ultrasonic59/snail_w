@@ -16,6 +16,8 @@
 
 #define MOT_TIM_PERIOD     8000
 #define MOT_TIM_PRESC     8
+////============================================
+#define ENC_TIM_PERIOD 0Xffff
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
@@ -168,6 +170,9 @@
 #define ENC_A_PIN_NPIN	    0
 #define ENC_A_PIN_GPIO	    GPIOA
 #define ENC_A_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+#define ENC_TIM  	    TIM5
+#define ENC_TIM_RCC  	    RCC_APB1Periph_TIM5
+
 ////=============== ENC_B ============================
 #define ENC_B_PIN	    GPIO_Pin_1
 #define ENC_B_PIN_NPIN	    1

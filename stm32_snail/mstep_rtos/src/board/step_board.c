@@ -38,19 +38,6 @@ void init_gpio(void)
 {
 ////RCC_AHBPeriphClockCmd(XEN_PIN_RCC_AHB,ENABLE);
 GPIO_InitTypeDef GPIO_InitStructure;
-#if 0
-////=============== TST1 ============================
-RCC_AHB1PeriphClockCmd(TST1_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = TST1_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( TST1_PIN_GPIO, &GPIO_InitStructure );
-GPIO_SetBits(TST1_PIN_GPIO, TST1_PIN);
-#endif
-
 ////=============== TST2 ============================
 RCC_AHB1PeriphClockCmd(TST2_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = TST2_PIN;
@@ -247,39 +234,42 @@ else
 
 volatile uint32_t num_step=0;
 
-void mot_tim_init(void)
+void mot_step_tim_init(void)
 {
 NVIC_InitTypeDef NVIC_InitStructure; 
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
 MOT_STEP_TIM ->PSC = MOT_TIM_PRESC;
-////LED_PWM_TIM->ARR = 1000;
 MOT_STEP_TIM ->ARR = MOT_TIM_PERIOD;////
-////MOT_STEP_TIM ->CCR2 = MOT_TIM_PERIOD/2;////30;
 MOT_STEP_TIM ->CCR1 = MOT_TIM_PERIOD/2;////30;
 MOT_STEP_TIM->CCER |= TIM_CCER_CC1E;////TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
-////MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1; 
 MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1; 
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
-///MOT_STEP_TIM->CR1 |= TIM_CR1_CEN;
 
 MOT_STEP_TIM ->DIER = TIM_DIER_CC1IE;
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 
 NVIC_InitStructure.NVIC_IRQChannel = MOT_TIM_IRQN;
-	// highest priority
+//// highest priority
 NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
 
 NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	// highest priority
+//// highest priority
 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
-///TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC2, ENABLE);
-///TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 
-
+}
+void init_enc_tim(void)
+{
+////============= DPX_R ========================
+RCC->APB1ENR |= ENC_TIM_RCC;
+ENC_TIM ->CCER = TIM_CCER_CC1P | TIM_CCER_CC2P;
+ENC_TIM ->CCMR1 = TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0;
+ENC_TIM->SMCR = TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1;
+ENC_TIM->ARR = ENC_TIM_PERIOD;////
+ENC_TIM->CR1 = TIM_CR1_CEN;
 }
 void stop_mot_step_tim(void)
 {
@@ -335,8 +325,9 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
 
-mot_tim_init();
+mot_step_tim_init();
 mot_spi_init();
+init_enc_tim();
 }
 ////============================================
 ////==============================================
