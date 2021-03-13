@@ -21,6 +21,7 @@ rule browsedata
 
 #Build steps
 build main.pbi : index main.xcl
+build motor_tsk.pbi : index motor_tsk.xcl
 build my_misc.pbi : index my_misc.xcl
 build retarget.pbi : index retarget.xcl
 build step_board.pbi : index step_board.xcl
@@ -42,11 +43,11 @@ build stm32f2xx_tim.pbi : index stm32f2xx_tim.xcl
 build stm32f2xx_usart.pbi : index stm32f2xx_usart.xcl
 build system_stm32f2xx.pbi : index system_stm32f2xx.xcl
 build stm32f2xx_it.pbi : index stm32f2xx_it.xcl
-build mstep_rtos_part0.pbi : link main.pbi my_misc.pbi retarget.pbi step_board.pbi zzzz.pbi
-build mstep_rtos_part1.pbi : link printk1.pbi can_drv.pbi heap_2.pbi list.pbi port.pbi
-build mstep_rtos_part2.pbi : link queue.pbi tasks.pbi misc.pbi stm32f2xx_can.pbi stm32f2xx_flash.pbi
-build mstep_rtos_part3.pbi : link stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi
-build mstep_rtos_part4.pbi : link system_stm32f2xx.pbi stm32f2xx_it.pbi
+build mstep_rtos_part0.pbi : link main.pbi motor_tsk.pbi my_misc.pbi retarget.pbi step_board.pbi
+build mstep_rtos_part1.pbi : link zzzz.pbi printk1.pbi can_drv.pbi heap_2.pbi list.pbi
+build mstep_rtos_part2.pbi : link port.pbi queue.pbi tasks.pbi misc.pbi stm32f2xx_can.pbi
+build mstep_rtos_part3.pbi : link stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi
+build mstep_rtos_part4.pbi : link stm32f2xx_usart.pbi system_stm32f2xx.pbi stm32f2xx_it.pbi
 build mstep_rtos.pbd : link mstep_rtos_part0.pbi mstep_rtos_part1.pbi mstep_rtos_part2.pbi mstep_rtos_part3.pbi mstep_rtos_part4.pbi
 build mstep_rtos.pbw : browsedata mstep_rtos.pbd
 

@@ -11,7 +11,7 @@
   #include "stm32f2xx_can.h"
 
 ////======================================
-extern void tst_task( void *pvParameters );
+////extern void tst_task( void *pvParameters );
 
 #define msleep vTaskDelay
 

@@ -1,4 +1,4 @@
-  1. 24V		2p
+1. 24V		2p
 2. 5v		2p
 3. motor	4p
 4.	con		3p
@@ -6,22 +6,22 @@
 6. encoder	9p
 
 ========= encoder ============================
-LD15			9pin
+LD15				9pin
 1	nc			
-2	0V		
-3	/Us
-4	/Ri
-5	/T2
-6	/T1
-7	+5V 		9
-8	+5V
-9	0V 			8
+2	0V	(white)	
+3	/Us (blue)			1
+4	/Ri (grey) 			7
+5	/T2 (red) 			4
+6	/T1 (yellow)		2
+7	+5V (blaack)		9
+8	+5V (black)		
+9	0V 	(white)			8
 10	nc
 11	nc
-12	Ri
-13	T2
-14	T1
-15	Shield
+12	Ri (braun) 			6
+13	T2 (rose) 			5
+14	T1 (green) 			3
+15	Shield 				8
 ======================== stm32f205 64 =================================
 
 10  PC2 I/O FT (4) SPI2_MISO,OTG_HS_ULPI_DIR,ETH_MII_TXD2, EVENTOUT

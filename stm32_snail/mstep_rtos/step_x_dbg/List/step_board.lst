@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         06/Mar/2021  17:52:04
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         13/Mar/2021  19:24:02
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWF49A.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EW7D6.tmp
 #        (D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D STEP_BRD -D STEP_X -lcN
 #        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_x_dbg\List
@@ -536,117 +536,40 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
     494          t_ctrl_reg->MODE=rej;
     495          mot_spi_wr(ADDR_MOT_CTRL,tmp);
     496          }
-    497          void tst_task( void *pvParameters )
-    498          {
-    499          ///uint8_t btst=0; 
-    500          uint8_t psk=0; 
-    501          ///uint16_t tst;
-    502          char key=0;
-    503          int nstep=300;
-    504          uint8_t dir=0;
-    505          uint8_t mot_rej=0;
-    506          printk("\n\r tst_task"); 
-    507          
-    508          set_sleep_mot(1);
-    509          ////set_ena_mot(1);
-    510          set_reset_mot(1);
-    511          uDelay(1000);
-    512          set_reset_mot(0);
-    513          uDelay(20000);
-    514          init_step_mot();
-    515          ////set_ena_mot(0);
-    516          ///tst=mot_spi_rd(0x0);
-    517          ///tst|=0x1;
-    518          ///mot_spi_wr(0x0,tst);
-    519          #if 0      
-    520          for(;;)
-    521            {
-    522          //// sendchar2 (0x33) ; 
-    523            put_tst_pin(btst);
-    524            btst++;  
-    525            ////delay__ms(1);  
-    526            uDelay(20000);
-    527          ///  mot_spi_transfer(0x1234);
-    528          tst=mot_spi_rd(0x0);
-    529          printk("\n\r rd[%x]",tst); 
-    530          
-    531            }
-    532          #endif 
-    533          
-    534              ena_mot(0) ;
-    535          
-    536           for(;;)
-    537            {
-    538            key=dbg_get_byte() ;  
-    539            switch(key)
-    540              {
-    541              case 'a':
-    542                nstep += 20;
-    543                break;
-    544              case 's':
-    545                if(nstep)
-    546                  nstep-= 20;
-    547                  break;
-    548              case 'd':
-    549                dir ++;
-    550                dir&=0x1;
-    551                break;
-    552              case 'm':
-    553                mot_rej ++;
-    554                if(mot_rej>8)
-    555                  mot_rej=0;
-    556           ////     mot_rej&=0x7;
-    557                break;
-    558              case 'p':
-    559               psk=1;
-    560                break;
-    561               
-    562             }
-    563            printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
-    564            set_dir_mot(dir);
-    565            set_mot_rej(mot_rej);
-    566            if(psk)
-    567              {
-    568              put_mot_nstep(nstep);
-    569              psk=0;
-    570              }
-    571          ////  set_led_dutycycle (duty);
-    572          
-    573            } 
-    574          }
-    575          ////============================================
-    576          extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
-    577          extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
-    578          extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
-    579          extern CanRxMsg RxMessage;
-    580          
-    581          ////========================================================  
-    582          void tst1_task( void *pvParameters )
-    583          {
-    584          ////uint8_t btst=0; 
-    585          uint8_t ii=0; 
-    586          printk("\n\r tst1_task"); 
-    587          for(;;)
-    588            {
-    589            if( CAN_RxRdy)
-    590            {
-    591             CAN_RxRdy=0;
-    592            printk("\n\r can_rx"); 
-    593             printk("\n\r ExtId[%x]",RxMessage.ExtId);
-    594             printk("\n\r DLC[%x]\n\r ",RxMessage.DLC);
-    595             for(ii=0;ii<8;ii++)
-    596              {
-    597              printk("[%x] ",RxMessage.Data[ii]);
-    598              }
-    599            }
-    600            else
-    601            {
-    602              msleep(10);
-    603            }
-    604            }
-    605          }
-    606          
-    607          	
+    497          
+    498          ////============================================
+    499          extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
+    500          extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
+    501          extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
+    502          extern CanRxMsg RxMessage;
+    503          
+    504          ////========================================================  
+    505          void tst1_task( void *pvParameters )
+    506          {
+    507          ////uint8_t btst=0; 
+    508          uint8_t ii=0; 
+    509          printk("\n\r tst1_task"); 
+    510          for(;;)
+    511            {
+    512            if( CAN_RxRdy)
+    513            {
+    514             CAN_RxRdy=0;
+    515            printk("\n\r can_rx"); 
+    516             printk("\n\r ExtId[%x]",RxMessage.ExtId);
+    517             printk("\n\r DLC[%x]\n\r ",RxMessage.DLC);
+    518             for(ii=0;ii<8;ii++)
+    519              {
+    520              printk("[%x] ",RxMessage.Data[ii]);
+    521              }
+    522            }
+    523            else
+    524            {
+    525              msleep(10);
+    526            }
+    527            }
+    528          }
+    529          ////=======================================================
+    530          	
 
    Maximum stack usage in bytes:
 
@@ -730,70 +653,55 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
       16   tst1_task
         16   -> _printk
         16   -> vTaskDelay
-      32   tst_task
-        32   -> _printk
-        32   -> ena_mot
-        32   -> get_byte6
-        32   -> init_step_mot
-        32   -> put_mot_nstep
-        32   -> set_dir_mot
-        32   -> set_mot_rej
-        32   -> set_reset_mot
-        32   -> set_sleep_mot
-        32   -> uDelay
 
 
    Section sizes:
 
    Bytes  Function/Label
    -----  --------------
-       4  ??DataTable18
-       4  ??DataTable18_1
-       4  ??DataTable18_10
-       4  ??DataTable18_11
-       4  ??DataTable18_12
-       4  ??DataTable18_13
-       4  ??DataTable18_14
-       4  ??DataTable18_15
-       4  ??DataTable18_16
-       4  ??DataTable18_17
-       4  ??DataTable18_18
-       4  ??DataTable18_19
-       4  ??DataTable18_2
-       4  ??DataTable18_20
-       4  ??DataTable18_21
-       4  ??DataTable18_22
-       4  ??DataTable18_23
-       4  ??DataTable18_24
-       4  ??DataTable18_25
-       4  ??DataTable18_26
-       4  ??DataTable18_27
-       4  ??DataTable18_28
-       4  ??DataTable18_29
-       4  ??DataTable18_3
-       4  ??DataTable18_30
-       4  ??DataTable18_31
-       4  ??DataTable18_32
-       4  ??DataTable18_33
-       4  ??DataTable18_34
-       4  ??DataTable18_35
-       4  ??DataTable18_36
-       4  ??DataTable18_37
-       4  ??DataTable18_38
-       4  ??DataTable18_39
-       4  ??DataTable18_4
-       4  ??DataTable18_5
-       4  ??DataTable18_6
-       4  ??DataTable18_7
-       4  ??DataTable18_8
-       4  ??DataTable18_9
-      12  ?_0
-      36  ?_1
+       4  ??DataTable17
+       4  ??DataTable17_1
+       4  ??DataTable17_10
+       4  ??DataTable17_11
+       4  ??DataTable17_12
+       4  ??DataTable17_13
+       4  ??DataTable17_14
+       4  ??DataTable17_15
+       4  ??DataTable17_16
+       4  ??DataTable17_17
+       4  ??DataTable17_18
+       4  ??DataTable17_19
+       4  ??DataTable17_2
+       4  ??DataTable17_20
+       4  ??DataTable17_21
+       4  ??DataTable17_22
+       4  ??DataTable17_23
+       4  ??DataTable17_24
+       4  ??DataTable17_25
+       4  ??DataTable17_26
+       4  ??DataTable17_27
+       4  ??DataTable17_28
+       4  ??DataTable17_29
+       4  ??DataTable17_3
+       4  ??DataTable17_30
+       4  ??DataTable17_31
+       4  ??DataTable17_32
+       4  ??DataTable17_33
+       4  ??DataTable17_34
+       4  ??DataTable17_35
+       4  ??DataTable17_36
+       4  ??DataTable17_37
+       4  ??DataTable17_4
+       4  ??DataTable17_5
+       4  ??DataTable17_6
+       4  ??DataTable17_7
+       4  ??DataTable17_8
+       4  ??DataTable17_9
+      16  ?_0
+      12  ?_1
       16  ?_2
-      12  ?_3
-      16  ?_4
-      16  ?_5
-       8  ?_6
+      16  ?_3
+       8  ?_4
        2  G_BLANK_REG
        2  G_CTRL_REG
        2  G_DECAY_REG
@@ -813,10 +721,10 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
       58  init_enc_tim
      658  init_gpio
      354  init_step_mot
-     228  mot_spi_init
+     224  mot_spi_init
       32  mot_spi_rd
       26  mot_spi_set_br
-      94  mot_spi_transfer
+      90  mot_spi_transfer
       32  mot_spi_wr
       40  mot_spi_wrp
      144  mot_step_tim_init
@@ -829,15 +737,14 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\step_board.c
       36  set_sleep_mot
       14  stop_mot_step_tim
       86  tst1_task
-     200  tst_task
 
  
     24 bytes in section .bss
-   116 bytes in section .rodata
- 2'590 bytes in section .text
+    68 bytes in section .rodata
+ 2'374 bytes in section .text
  
- 2'590 bytes of CODE  memory
-   116 bytes of CONST memory
+ 2'374 bytes of CODE  memory
+    68 bytes of CONST memory
     24 bytes of DATA  memory
 
 Errors: none

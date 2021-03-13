@@ -4259,6 +4259,9 @@
             <name>$PROJ_DIR$\src\main.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\src\motor_tsk.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\src\board\mstep_board.c</name>
             <excluded>
                 <configuration>step_debug</configuration>

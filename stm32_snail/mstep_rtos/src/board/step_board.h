@@ -316,8 +316,24 @@ uint16_t STD:1;		// bit 6
 uint16_t STDLAT:1;  	// bit 7
 }STATUS_Register_t;
 
+typedef union cmd_param_u
+{
+uint8_t bpar[4];
+int32_t wpar;
+}cmd_param_t;  
+typedef struct cmd_s_
+{
+uint8_t cmd;
+cmd_param_t par;
+}cmd_t;
+extern cmd_t cur_cmd;
 ////======================================
+#define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+
 extern void mot_spi_init(void);
+extern void init_step_mot(void);
+extern void ena_mot(uint8_t ena_dis);
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
@@ -330,6 +346,7 @@ extern void set_mot_rej(uint8_t rej);
 extern int sendchar6 (int c) ;
 extern int get_byte6(void) ;
 extern void can1_init(void);
+extern void motor_task( void *pvParameters );
 
 #define dbg_sendchar  sendchar6 
 #define dbg_get_byte get_byte6
