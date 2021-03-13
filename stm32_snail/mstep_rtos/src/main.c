@@ -30,7 +30,7 @@
 ///=======================================================================
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-extern void tst_task( void *pvParameters );
+////extern void tst_task( void *pvParameters );
 extern void tst1_task( void *pvParameters );
 extern int can_main(void);
 
@@ -38,7 +38,7 @@ extern int can_main(void);
 int main( void )
 {
 ////uint8_t btst=0; 
-uint32_t tst=0;
+////uint32_t tst=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -71,7 +71,7 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
 	/* Configure the timers used by the fast interrupt timer test. */
 /////	vSetupTimerTest();
-xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
 xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */

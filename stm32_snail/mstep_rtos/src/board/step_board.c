@@ -494,84 +494,7 @@ tmp=mot_spi_rd(ADDR_MOT_CTRL);
 t_ctrl_reg->MODE=rej;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
-void tst_task( void *pvParameters )
-{
-///uint8_t btst=0; 
-uint8_t psk=0; 
-///uint16_t tst;
-char key=0;
-int nstep=300;
-uint8_t dir=0;
-uint8_t mot_rej=0;
-printk("\n\r tst_task"); 
 
-set_sleep_mot(1);
-////set_ena_mot(1);
-set_reset_mot(1);
-uDelay(1000);
-set_reset_mot(0);
-uDelay(20000);
-init_step_mot();
-////set_ena_mot(0);
-///tst=mot_spi_rd(0x0);
-///tst|=0x1;
-///mot_spi_wr(0x0,tst);
-#if 0      
-for(;;)
-  {
-//// sendchar2 (0x33) ; 
-  put_tst_pin(btst);
-  btst++;  
-  ////delay__ms(1);  
-  uDelay(20000);
-///  mot_spi_transfer(0x1234);
-tst=mot_spi_rd(0x0);
-printk("\n\r rd[%x]",tst); 
-
-  }
-#endif 
-
-    ena_mot(0) ;
-
- for(;;)
-  {
-  key=dbg_get_byte() ;  
-  switch(key)
-    {
-    case 'a':
-      nstep += 20;
-      break;
-    case 's':
-      if(nstep)
-        nstep-= 20;
-        break;
-    case 'd':
-      dir ++;
-      dir&=0x1;
-      break;
-    case 'm':
-      mot_rej ++;
-      if(mot_rej>8)
-        mot_rej=0;
- ////     mot_rej&=0x7;
-      break;
-    case 'p':
-     psk=1;
-      break;
-     
-   }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
-  set_dir_mot(dir);
-  set_mot_rej(mot_rej);
-  if(psk)
-    {
-    put_mot_nstep(nstep);
-    psk=0;
-    }
-////  set_led_dutycycle (duty);
-
-  } 
-}
 ////============================================
 extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
@@ -603,5 +526,5 @@ for(;;)
   }
   }
 }
-
+////=======================================================
 	

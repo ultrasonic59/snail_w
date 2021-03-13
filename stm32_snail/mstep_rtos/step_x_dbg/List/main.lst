@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         06/Mar/2021  17:52:03
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         13/Mar/2021  19:24:02
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
 #    Endian       =  little
 #    Source file  =  D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWF243.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EW53F.tmp
 #        (D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D STEP_BRD -D STEP_X -lcN
 #        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_x_dbg\List
@@ -71,7 +71,7 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
      30          ///=======================================================================
      31          #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
      32          #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-     33          extern void tst_task( void *pvParameters );
+     33          ////extern void tst_task( void *pvParameters );
      34          extern void tst1_task( void *pvParameters );
      35          extern int can_main(void);
      36          
@@ -79,7 +79,7 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
      38          int main( void )
      39          {
      40          ////uint8_t btst=0; 
-     41          uint32_t tst=0;
+     41          ////uint32_t tst=0;
      42          #ifdef DEBUG
      43            debug();
      44          #endif
@@ -112,7 +112,7 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
      71          
      72          	/* Configure the timers used by the fast interrupt timer test. */
      73          /////	vSetupTimerTest();
-     74          xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+     74          xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
      75          xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
      76          
      77          	/* Start the scheduler. */
@@ -225,4 +225,4 @@ D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
   44 bytes of CONST memory
 
 Errors: none
-Warnings: 1
+Warnings: none
