@@ -47,11 +47,6 @@ hw_board_init();
 
 printk("\n\r=== [test1] ==="); 
 
-
-///on_led0(1);
-////set_led_dutycycle (LED_PWM_TIM_PERIOD);
-////  put_mot_nstep(20);
-
 ////=================================================
 can1_init();
 ////can_main();
