@@ -290,7 +290,8 @@ void EXTI15_10_IRQHandler(void)
 extern __IO uint32_t ret;
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
-extern CanRxMsg RxMessage;
+////extern 
+CanRxMsg RxMessage;
 
 void CAN1_RX0_IRQHandler(void)
 {

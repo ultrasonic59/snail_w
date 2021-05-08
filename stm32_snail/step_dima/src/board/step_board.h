@@ -347,9 +347,11 @@ extern int sendchar6 (int c) ;
 extern int get_byte6(void) ;
 extern void can1_init(void);
 extern void motor_task( void *pvParameters );
+extern int check_push_key(void);
 
 #define dbg_sendchar  sendchar6 
 #define dbg_get_byte get_byte6
+////#define check_push_key get_byte6
 
 ////=============================================
 #endif ////__STEP_BOARD_H__

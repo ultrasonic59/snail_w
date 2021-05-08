@@ -161,7 +161,7 @@ void CAN_wrFilter (unsigned int id, unsigned char format)  {
 /*----------------------------------------------------------------------------
   CAN transmit interrupt handler
  *----------------------------------------------------------------------------*/
-void CAN1_TX_IRQHandler (void) {
+void _CAN1_TX_IRQHandler (void) {
 
   if (CAN1->TSR & CAN_TSR_RQCP0) {          /* request completed mbx 0        */
     CAN1->TSR |= CAN_TSR_RQCP0;             /* reset request complete mbx 0   */
@@ -175,7 +175,7 @@ void CAN1_TX_IRQHandler (void) {
 /*----------------------------------------------------------------------------
   CAN receive interrupt handler
  *----------------------------------------------------------------------------*/
-void CAN1_RX0_IRQHandler (void)
+void _CAN1_RX0_IRQHandler (void)
 {
 u32 *up;
 	

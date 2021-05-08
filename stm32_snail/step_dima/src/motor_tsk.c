@@ -14,12 +14,12 @@ cmd_t cur_cmd={0};
 void motor_task( void *pvParameters )
 {
 ///uint8_t btst=0; 
-////uint8_t psk=0; 
+uint8_t psk=0; 
 ///uint16_t tst;
-////char key=0;
-////int nstep=300;
-////uint8_t dir=0;
-////uint8_t mot_rej=0;
+char key=0;
+int nstep=300;
+uint8_t dir=0;
+uint8_t mot_rej=0;
 printk("\n\r tst_task"); 
 
 set_sleep_mot(1);
@@ -69,6 +69,43 @@ else
         break;
     }
   }
+if(check_push_key())
+  {
+  key=dbg_get_byte() ;  
+  switch(key)
+    {
+    case 'a':
+      nstep += 20;
+      break;
+    case 's':
+      if(nstep)
+        nstep-= 20;
+        break;
+    case 'd':
+      dir ++;
+      dir&=0x1;
+      break;
+    case 'm':
+      mot_rej ++;
+      if(mot_rej>8)
+        mot_rej=0;
+ ////     mot_rej&=0x7;
+      break;
+    case 'p':
+     psk=1;
+      break;
+     
+   }
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
+  set_dir_mot(dir);
+  set_mot_rej(mot_rej);
+  if(psk)
+    {
+    put_mot_nstep(nstep);
+    psk=0;
+    }
+  
+  }  
 }
 }
 #if 0
