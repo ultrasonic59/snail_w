@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Dec/2020  20:45:03
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         08/May/2021  18:23:18
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
 #    Endian       =  little
 #    Source file  =  D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWB264.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWC18E.tmp
 #        (D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
 #        -lcN D:\proj\velograph\snail\stm32_snail\mstep_usb\usb_can\List
@@ -212,7 +212,7 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
     161          /*----------------------------------------------------------------------------
     162            CAN transmit interrupt handler
     163           *----------------------------------------------------------------------------*/
-    164          void CAN1_TX_IRQHandler (void) {
+    164          void _CAN1_TX_IRQHandler (void) {
     165          
     166            if (CAN1->TSR & CAN_TSR_RQCP0) {          /* request completed mbx 0        */
     167              CAN1->TSR |= CAN_TSR_RQCP0;             /* reset request complete mbx 0   */
@@ -226,7 +226,7 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
     175          /*----------------------------------------------------------------------------
     176            CAN receive interrupt handler
     177           *----------------------------------------------------------------------------*/
-    178          void CAN1_RX0_IRQHandler (void)
+    178          void _CAN1_RX0_IRQHandler (void)
     179          {
     180          u32 *up;
     181          	
@@ -271,9 +271,6 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
          8   -> CAN_start
          8   -> CAN_waitReady
          8   -> CAN_wrFilter
-      16   CAN1_RX0_IRQHandler
-        16   -> CAN_rdMsg
-       0   CAN1_TX_IRQHandler
        0   CAN_rdMsg
        8   CAN_setup
          8   -> __NVIC_EnableIRQ
@@ -282,6 +279,9 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
        0   CAN_waitReady
       20   CAN_wrFilter
        4   CAN_wrMsg
+      16   _CAN1_RX0_IRQHandler
+        16   -> CAN_rdMsg
+       0   _CAN1_TX_IRQHandler
        0   __NVIC_EnableIRQ
 
 
@@ -317,8 +317,6 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
        4  ??DataTable9_8
        4  ??DataTable9_9
       44  CAN1_Init
-      40  CAN1_RX0_IRQHandler
-      34  CAN1_TX_IRQHandler
       16  CAN_RxMsg
        4  CAN_RxRdy
       16  CAN_TxMsg
@@ -331,6 +329,8 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\src\can.c
       16  CAN_waitReady
      180  CAN_wrFilter
      152  CAN_wrMsg
+      40  _CAN1_RX0_IRQHandler
+      34  _CAN1_TX_IRQHandler
       30  __NVIC_EnableIRQ
 
  

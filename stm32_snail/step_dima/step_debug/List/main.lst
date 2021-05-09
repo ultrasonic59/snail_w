@@ -1,0 +1,233 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Jan/2021  20:08:42
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW6197.tmp
+#        (D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D STEP_BRD -lcN
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\dbg\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\List\main.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\Obj\main.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\main.c
+      1          
+      2          /* Standard includes. */
+      3          #include <stdio.h>
+      4          
+      5          /* Scheduler includes. */
+      6          #include "FreeRTOS.h"
+      7          #include "task.h"
+      8          #include "queue.h"
+      9          
+     10          /* Library includes. */
+     11          ////#include "stm32f2xx_it.h"
+     12          #include "stm32f2xx_rcc.h"
+     13          
+     14          /* Demo app includes. */
+     15          #include "board.h"
+     16          
+     17          #if 0
+     18          #include "usb_lib.h"
+     19          #ifdef USEUSB
+     20          #include "usb_desc.h"
+     21          #endif
+     22          #include "hw_config.h"
+     23          #ifdef USEUSB
+     24          #include "usb_pwr.h"
+     25          #endif
+     26          #include "stm32eeprom.h"
+     27          ///#include "eeprom.h"
+     28          #endif
+     29          
+     30          #include "misc.h"
+     31          #include "printk.h"
+     32          ///=======================================================================
+     33          #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+     34          #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+     35          extern void tst_task( void *pvParameters );
+     36          extern void tst1_task( void *pvParameters );
+     37          extern int can_main(void);
+     38          
+     39          ////============================================
+     40          int main( void )
+     41          {
+     42          ////uint8_t btst=0; 
+     43          uint32_t tst=0;
+     44          #ifdef DEBUG
+     45            debug();
+     46          #endif
+     47          __disable_irq();
+     48          hw_board_init();
+     49          
+     50          printk("\n\r=== [test1] ==="); 
+     51          ////printk("\n\r=== [test2] ==="); 
+     52          ////printk("\n\r=== [test3] ==="); 
+     53          ////printk("\n\r=== [test4] ==="); 
+     54          
+     55          
+     56          ///on_led0(1);
+     57          ////set_led_dutycycle (LED_PWM_TIM_PERIOD);
+     58          ////  put_mot_nstep(20);
+     59          
+     60          ////=================================================
+     61          can1_init();
+     62          ////can_main();
+     63          ////=================================================
+     64          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+     65                  
+     66          ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+     67                   
+     68          	/* Start the tasks defined within this file/specific to this demo. */
+     69           ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+     70          ////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+     71          
+     72          	/* The suicide tasks must be created last as they need to know how many
+     73          	tasks were running prior to their creation in order to ascertain whether
+     74          	or not the correct/expected number of tasks are running at any given time. */
+     75           ////????   vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+     76          
+     77          	/* Configure the timers used by the fast interrupt timer test. */
+     78          /////	vSetupTimerTest();
+     79          xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+     80          xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+     81          
+     82          	/* Start the scheduler. */
+     83          	vTaskStartScheduler();
+     84          
+     85          	/* Will only get here if there was not enough heap space to create the
+     86          	idle task. */
+     87          return 0;
+     88          }
+     89          ////============================================================
+     90          #if 0
+     91          static void vCheckTask( void *pvParameters )
+     92          {
+     93          TickType_t xLastExecutionTime;
+     94          xLCDMessage xMessage;
+     95          static signed char cPassMessage[ mainMAX_MSG_LEN ];
+     96          extern unsigned short usMaxJitter;
+     97          
+     98          	xLastExecutionTime = xTaskGetTickCount();
+     99          	xMessage.pcMessage = cPassMessage;
+    100          
+    101              for( ;; )
+    102          	{
+    103          		/* Perform this check every mainCHECK_DELAY milliseconds. */
+    104          		vTaskDelayUntil( &xLastExecutionTime, mainCHECK_DELAY );
+    105          
+    106          		/* Has an error been found in any task? */
+    107          
+    108                  if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    109          		{
+    110          			xMessage.pcMessage = "ERROR IN BLOCK Q\n";
+    111          		}
+    112          		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+    113          		{
+    114          			xMessage.pcMessage = "ERROR IN BLOCK TIME\n";
+    115          		}
+    116                  else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    117                  {
+    118                      xMessage.pcMessage = "ERROR IN SEMAPHORE\n";
+    119                  }
+    120                  else if( xArePollingQueuesStillRunning() != pdTRUE )
+    121                  {
+    122                      xMessage.pcMessage = "ERROR IN POLL Q\n";
+    123                  }
+    124                  else if( xIsCreateTaskStillRunning() != pdTRUE )
+    125                  {
+    126                      xMessage.pcMessage = "ERROR IN CREATE\n";
+    127                  }
+    128                  else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    129                  {
+    130                      xMessage.pcMessage = "ERROR IN MATH\n";
+    131                  }
+    132          		else if( xAreComTestTasksStillRunning() != pdTRUE )
+    133          		{
+    134          			xMessage.pcMessage = "ERROR IN COM TEST\n";
+    135          		}
+    136          		else
+    137          		{
+    138          			sprintf( ( char * ) cPassMessage, "PASS [%uns]\n", ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK );
+    139          		}
+    140          
+    141          		/* Send the message to the LCD gatekeeper for display. */
+    142          		xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
+    143          	}
+    144          }
+    145          #endif
+    146          /*-----------------------------------------------------------*/
+    147          
+    148          
+    149          #ifdef  DEBUG
+    150          /* Keep the linker happy. */
+    151          void assert_failed( unsigned char* pcFile, unsigned long ulLine )
+    152          {
+    153          	for( ;; )
+    154          	{
+    155          	}
+    156          }
+    157          #endif
+    158          ////=======================================================
+    159          
+    160          ////=======================================================
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   main
+        16   -> NVIC_PriorityGroupConfig
+        16   -> _printk
+        16   -> can1_init
+        16   -> hw_board_init
+        16   -> vTaskStartScheduler
+        16   -> xTaskCreate
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      20  ?_0
+      12  ?_1
+      12  ?_2
+     100  main
+
+ 
+  44 bytes in section .rodata
+ 100 bytes in section .text
+ 
+ 100 bytes of CODE  memory
+  44 bytes of CONST memory
+
+Errors: none
+Warnings: 1
