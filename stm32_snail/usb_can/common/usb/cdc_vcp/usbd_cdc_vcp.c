@@ -318,7 +318,6 @@ void init_hdlc_vcp(void)
 {
 BaseType_t rez;  
 g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
-////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
 g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
 g_hdlc_vcp.fn_get_req_dat=pc_get_req_dat;////hdlc_bt_get_req_dat;
 g_hdlc_vcp.ua_snd_dat=xQueueCreate(512,sizeof(unsigned char));		//8192

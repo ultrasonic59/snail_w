@@ -23,6 +23,7 @@
 
 void coolant_init()
 {
+#if 0 
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_COOLANT_FLOOD_PORT, ENABLE);
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -35,6 +36,7 @@ void coolant_init()
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin = 1 << COOLANT_MIST_BIT;
 	GPIO_Init(COOLANT_MIST_PORT, &GPIO_InitStructure);
+#endif       
   coolant_stop();
 }
 
@@ -43,6 +45,7 @@ void coolant_init()
 uint8_t coolant_get_state()
 {
   uint8_t cl_state = COOLANT_STATE_DISABLE;
+#if 0
   #ifdef INVERT_COOLANT_FLOOD_PIN
     if (bit_isfalse(
 		GPIO_ReadOutputData(COOLANT_FLOOD_PORT)
@@ -67,6 +70,7 @@ uint8_t coolant_get_state()
       cl_state |= COOLANT_STATE_MIST;
     }
   #endif
+#endif
   return(cl_state);
 }
 
@@ -75,6 +79,7 @@ uint8_t coolant_get_state()
 // an interrupt-level. No report flag set, but only called by routines that don't need it.
 void coolant_stop()
 {
+#if 0 
   #ifdef INVERT_COOLANT_FLOOD_PIN
 	GPIO_SetBits(COOLANT_FLOOD_PORT,1 << COOLANT_FLOOD_BIT);
   #else
@@ -87,6 +92,7 @@ void coolant_stop()
 	  GPIO_ResetBits(COOLANT_MIST_PORT, 1 << COOLANT_MIST_BIT);
     #endif
   #endif
+#endif         
 }
 
 
@@ -97,7 +103,7 @@ void coolant_stop()
 void coolant_set_state(uint8_t mode)
 {
   if (sys.abort) { return; } // Block during abort.  
-  
+#if 0 
   if (mode == COOLANT_DISABLE) {
   
     coolant_stop(); 
@@ -121,6 +127,7 @@ void coolant_set_state(uint8_t mode)
       }
     #endif
   }
+#endif 
   sys.report_ovr_counter = 0; // Set to report change immediately
 }
 

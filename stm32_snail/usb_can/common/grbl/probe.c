@@ -28,6 +28,7 @@ uint8_t probe_invert_mask;
 // Probe pin initialization routine.
 void probe_init()
 {
+#if 0 
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_PROBE_PORT, ENABLE);
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -38,6 +39,7 @@ void probe_init()
 #endif
 	GPIO_InitStructure.GPIO_Pin = PROBE_MASK;
 	GPIO_Init(PROBE_PORT, &GPIO_InitStructure);
+#endif       
   probe_configure_invert_mask(false); // Initialize invert mask.
 }
 
@@ -56,7 +58,8 @@ void probe_configure_invert_mask(uint8_t is_probe_away)
 // Returns the probe pin state. Triggered = true. Called by gcode parser and probe state monitor.
 uint8_t probe_get_state() 
 { 
-	return ((GPIO_ReadInputData(PROBE_PORT) & PROBE_MASK) ^ probe_invert_mask) != 0;
+////	return ((GPIO_ReadInputData(PROBE_PORT) & PROBE_MASK) ^ probe_invert_mask) != 0;
+        return 0;
 }
 
 

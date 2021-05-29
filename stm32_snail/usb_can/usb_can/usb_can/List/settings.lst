@@ -1,0 +1,465 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:36
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\settings.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE93D.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\settings.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\settings.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\settings.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\settings.c
+      1          /*
+      2            settings.c - eeprom configuration handling
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2011-2016 Sungeun K. Jeon for Gnea Research LLC
+      6            Copyright (c) 2009-2011 Simen Svale Skogsrud
+      7          
+      8            Grbl is free software: you can redistribute it and/or modify
+      9            it under the terms of the GNU General Public License as published by
+     10            the Free Software Foundation, either version 3 of the License, or
+     11            (at your option) any later version.
+     12          
+     13            Grbl is distributed in the hope that it will be useful,
+     14            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     15            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     16            GNU General Public License for more details.
+     17          
+     18            You should have received a copy of the GNU General Public License
+     19            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     20          */
+     21          
+     22          #include "grbl.h"
+     23          
+     24          settings_t settings;
+     25          
+     26          
+     27          // Method to store startup lines into EEPROM
+     28          void settings_store_startup_line(uint8_t n, char *line)
+     29          {
+     30            #ifdef FORCE_BUFFER_SYNC_DURING_EEPROM_WRITE
+     31              protocol_buffer_synchronize(); // A startup line may contain a motion and be executing. 
+     32            #endif
+     33            uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
+     34            memcpy_to_eeprom_with_checksum(addr,(char*)line, LINE_BUFFER_SIZE);
+     35          }
+     36          
+     37          
+     38          // Method to store build info into EEPROM
+     39          // NOTE: This function can only be called in IDLE state.
+     40          void settings_store_build_info(char *line)
+     41          {
+     42            // Build info can only be stored when state is IDLE.
+     43            memcpy_to_eeprom_with_checksum(EEPROM_ADDR_BUILD_INFO,(char*)line, LINE_BUFFER_SIZE);
+     44          }
+     45          
+     46          
+     47          // Method to store coord data parameters into EEPROM
+     48          void settings_write_coord_data(uint8_t coord_select, float *coord_data)
+     49          {
+     50            #ifdef FORCE_BUFFER_SYNC_DURING_EEPROM_WRITE
+     51              protocol_buffer_synchronize();
+     52            #endif
+     53            uint32_t addr = coord_select*(sizeof(float)*N_AXIS+1) + EEPROM_ADDR_PARAMETERS;
+     54            memcpy_to_eeprom_with_checksum(addr,(char*)coord_data, sizeof(float)*N_AXIS);
+     55          }
+     56          
+     57          
+     58          // Method to store Grbl global settings struct and version number into EEPROM
+     59          // NOTE: This function can only be called in IDLE state.
+     60          void write_global_settings()
+     61          {
+     62            eeprom_put_char(0, SETTINGS_VERSION);
+     63            memcpy_to_eeprom_with_checksum(EEPROM_ADDR_GLOBAL, (char*)&settings, sizeof(settings_t));
+     64          }
+     65          
+     66          
+     67          // Method to restore EEPROM-saved Grbl global settings back to defaults.
+     68          void settings_restore(uint8_t restore_flag) {
+     69            if (restore_flag & SETTINGS_RESTORE_DEFAULTS) {
+     70              settings.pulse_microseconds = DEFAULT_STEP_PULSE_MICROSECONDS;
+     71              settings.stepper_idle_lock_time = DEFAULT_STEPPER_IDLE_LOCK_TIME;
+     72              settings.step_invert_mask = DEFAULT_STEPPING_INVERT_MASK;
+     73              settings.dir_invert_mask = DEFAULT_DIRECTION_INVERT_MASK;
+     74              settings.status_report_mask = DEFAULT_STATUS_REPORT_MASK;
+     75              settings.junction_deviation = DEFAULT_JUNCTION_DEVIATION;
+     76              settings.arc_tolerance = DEFAULT_ARC_TOLERANCE;
+     77          
+     78              settings.rpm_max = DEFAULT_SPINDLE_RPM_MAX;
+     79              settings.rpm_min = DEFAULT_SPINDLE_RPM_MIN;
+     80          
+     81              settings.homing_dir_mask = DEFAULT_HOMING_DIR_MASK;
+     82              settings.homing_feed_rate = DEFAULT_HOMING_FEED_RATE;
+     83              settings.homing_seek_rate = DEFAULT_HOMING_SEEK_RATE;
+     84              settings.homing_debounce_delay = DEFAULT_HOMING_DEBOUNCE_DELAY;
+     85              settings.homing_pulloff = DEFAULT_HOMING_PULLOFF;
+     86          
+     87              settings.flags = 0;
+     88              if (DEFAULT_REPORT_INCHES) { settings.flags |= BITFLAG_REPORT_INCHES; }
+     89              if (DEFAULT_LASER_MODE) { settings.flags |= BITFLAG_LASER_MODE; }
+     90              if (DEFAULT_INVERT_ST_ENABLE) { settings.flags |= BITFLAG_INVERT_ST_ENABLE; }
+     91              if (DEFAULT_HARD_LIMIT_ENABLE) { settings.flags |= BITFLAG_HARD_LIMIT_ENABLE; }
+     92              if (DEFAULT_HOMING_ENABLE) { settings.flags |= BITFLAG_HOMING_ENABLE; }
+     93              if (DEFAULT_SOFT_LIMIT_ENABLE) { settings.flags |= BITFLAG_SOFT_LIMIT_ENABLE; }
+     94              if (DEFAULT_INVERT_LIMIT_PINS) { settings.flags |= BITFLAG_INVERT_LIMIT_PINS; }
+     95              if (DEFAULT_INVERT_PROBE_PIN) { settings.flags |= BITFLAG_INVERT_PROBE_PIN; }
+     96          
+     97              settings.steps_per_mm[X_AXIS] = DEFAULT_X_STEPS_PER_MM;
+     98              settings.steps_per_mm[Y_AXIS] = DEFAULT_Y_STEPS_PER_MM;
+     99              settings.steps_per_mm[Z_AXIS] = DEFAULT_Z_STEPS_PER_MM;
+    100              settings.max_rate[X_AXIS] = DEFAULT_X_MAX_RATE;
+    101              settings.max_rate[Y_AXIS] = DEFAULT_Y_MAX_RATE;
+    102              settings.max_rate[Z_AXIS] = DEFAULT_Z_MAX_RATE;
+    103              settings.acceleration[X_AXIS] = DEFAULT_X_ACCELERATION;
+    104              settings.acceleration[Y_AXIS] = DEFAULT_Y_ACCELERATION;
+    105              settings.acceleration[Z_AXIS] = DEFAULT_Z_ACCELERATION;
+    106              settings.max_travel[X_AXIS] = (-DEFAULT_X_MAX_TRAVEL);
+    107              settings.max_travel[Y_AXIS] = (-DEFAULT_Y_MAX_TRAVEL);
+    108              settings.max_travel[Z_AXIS] = (-DEFAULT_Z_MAX_TRAVEL);
+    109          
+    110              write_global_settings();
+    111            }
+    112          
+    113            if (restore_flag & SETTINGS_RESTORE_PARAMETERS) {
+    114              uint8_t idx;
+    115              float coord_data[N_AXIS];
+    116              memset(&coord_data, 0, sizeof(coord_data));
+    117              for (idx=0; idx <= SETTING_INDEX_NCOORD; idx++) { settings_write_coord_data(idx, coord_data); }
+    118            }
+    119          
+    120            if (restore_flag & SETTINGS_RESTORE_STARTUP_LINES) {
+    121              #if N_STARTUP_LINE > 0
+    122                eeprom_put_char(EEPROM_ADDR_STARTUP_BLOCK, 0);
+    123                eeprom_put_char(EEPROM_ADDR_STARTUP_BLOCK+1, 0); // Checksum
+    124              #endif
+    125              #if N_STARTUP_LINE > 1
+    126                eeprom_put_char(EEPROM_ADDR_STARTUP_BLOCK+(LINE_BUFFER_SIZE+1), 0);
+    127                eeprom_put_char(EEPROM_ADDR_STARTUP_BLOCK+(LINE_BUFFER_SIZE+2), 0); // Checksum
+    128              #endif
+    129            }
+    130          
+    131            if (restore_flag & SETTINGS_RESTORE_BUILD_INFO) {
+    132              eeprom_put_char(EEPROM_ADDR_BUILD_INFO , 0);
+    133              eeprom_put_char(EEPROM_ADDR_BUILD_INFO+1 , 0); // Checksum
+    134            }
+    135          }
+    136          
+    137          
+    138          // Reads startup line from EEPROM. Updated pointed line string data.
+    139          uint8_t settings_read_startup_line(uint8_t n, char *line)
+    140          {
+    141            uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
+    142            if (!(memcpy_from_eeprom_with_checksum((char*)line, addr, LINE_BUFFER_SIZE))) {
+    143              // Reset line with default value
+    144              line[0] = 0; // Empty line
+    145              settings_store_startup_line(n, line);
+    146              return(false);
+    147            }
+    148            return(true);
+    149          }
+    150          
+    151          
+    152          // Reads startup line from EEPROM. Updated pointed line string data.
+    153          uint8_t settings_read_build_info(char *line)
+    154          {
+    155            if (!(memcpy_from_eeprom_with_checksum((char*)line, EEPROM_ADDR_BUILD_INFO, LINE_BUFFER_SIZE))) {
+    156              // Reset line with default value
+    157              line[0] = 0; // Empty line
+    158              settings_store_build_info(line);
+    159              return(false);
+    160            }
+    161            return(true);
+    162          }
+    163          
+    164          
+    165          // Read selected coordinate data from EEPROM. Updates pointed coord_data value.
+    166          uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
+    167          {
+    168            uint32_t addr = coord_select*(sizeof(float)*N_AXIS+1) + EEPROM_ADDR_PARAMETERS;
+    169            if (!(memcpy_from_eeprom_with_checksum((char*)coord_data, addr, sizeof(float)*N_AXIS))) {
+    170              // Reset with default zero vector
+    171          		coord_data[X_AXIS] = 0.0f;
+    172          		coord_data[Y_AXIS] = 0.0f;
+    173          		coord_data[Z_AXIS] = 0.0f;
+    174          		settings_write_coord_data(coord_select,coord_data);
+    175              return(false);
+    176            }
+    177            return(true);
+    178          }
+    179          
+    180          
+    181          // Reads Grbl global settings struct from EEPROM.
+    182          uint8_t read_global_settings() {
+    183            // Check version-byte of eeprom
+    184            uint8_t version = eeprom_get_char(0);
+    185            if (version == SETTINGS_VERSION) {
+    186              // Read settings-record and check checksum
+    187              if (!(memcpy_from_eeprom_with_checksum((char*)&settings, EEPROM_ADDR_GLOBAL, sizeof(settings_t)))) {
+    188                return(false);
+    189              }
+    190            } else {
+    191              return(false);
+    192            }
+    193            return(true);
+    194          }
+    195          
+    196          
+    197          // A helper method to set settings from command line
+    198          uint8_t settings_store_global_setting(uint8_t parameter, float value) {
+    199            if (value < 0.0f) { return(STATUS_NEGATIVE_VALUE); }
+    200            if (parameter >= AXIS_SETTINGS_START_VAL) {
+    201              // Store axis configuration. Axis numbering sequence set by AXIS_SETTING defines.
+    202              // NOTE: Ensure the setting index corresponds to the report.c settings printout.
+    203              parameter -= AXIS_SETTINGS_START_VAL;
+    204              uint8_t set_idx = 0;
+    205              while (set_idx < AXIS_N_SETTINGS) {
+    206                if (parameter < N_AXIS) {
+    207                  // Valid axis setting found.
+    208                  switch (set_idx) {
+    209                    case 0:
+    210                      #ifdef MAX_STEP_RATE_HZ
+    211                      if (value*settings.max_rate[parameter] >(MAX_STEP_RATE_HZ*60.0f)) { return(STATUS_MAX_STEP_RATE_EXCEEDED); }
+    212                      #endif
+    213                      settings.steps_per_mm[parameter] = value;
+    214                      break;
+    215                    case 1:
+    216                      #ifdef MAX_STEP_RATE_HZ
+    217                      if (value*settings.steps_per_mm[parameter] > (MAX_STEP_RATE_HZ*60.0f)) { return(STATUS_MAX_STEP_RATE_EXCEEDED); }
+    218                      #endif
+    219                      settings.max_rate[parameter] = value;
+    220                      break;
+    221                    case 2: settings.acceleration[parameter] = value*60*60; break; // Convert to mm/min^2 for grbl internal use.
+    222                    case 3: settings.max_travel[parameter] = -value; break;  // Store as negative for grbl internal use.
+    223                  }
+    224                  break; // Exit while-loop after setting has been configured and proceed to the EEPROM write call.
+    225                } else {
+    226                  set_idx++;
+    227                  // If axis index greater than N_AXIS or setting index greater than number of axis settings, error out.
+    228                  if ((parameter < AXIS_SETTINGS_INCREMENT) || (set_idx == AXIS_N_SETTINGS)) { return(STATUS_INVALID_STATEMENT); }
+    229                  parameter -= AXIS_SETTINGS_INCREMENT;
+    230                }
+    231              }
+    232            } else {
+    233              // Store non-axis Grbl settings
+    234              uint8_t int_value = (uint8_t)truncf(value);
+    235              switch(parameter) {
+    236                case 0:
+    237                  if (int_value < 3) { return(STATUS_SETTING_STEP_PULSE_MIN); }
+    238                  settings.pulse_microseconds = int_value; break;
+    239                case 1: settings.stepper_idle_lock_time = int_value; break;
+    240                case 2:
+    241                  settings.step_invert_mask = int_value;
+    242                  st_generate_step_dir_invert_masks(); // Regenerate step and direction port invert masks.
+    243                  break;
+    244                case 3:
+    245                  settings.dir_invert_mask = int_value;
+    246                  st_generate_step_dir_invert_masks(); // Regenerate step and direction port invert masks.
+    247                  break;
+    248                case 4: // Reset to ensure change. Immediate re-init may cause problems.
+    249                  if (int_value) { settings.flags |= BITFLAG_INVERT_ST_ENABLE; }
+    250                  else { settings.flags &= ~BITFLAG_INVERT_ST_ENABLE; }
+    251                  break;
+    252                case 5: // Reset to ensure change. Immediate re-init may cause problems.
+    253                  if (int_value) { settings.flags |= BITFLAG_INVERT_LIMIT_PINS; }
+    254                  else { settings.flags &= ~BITFLAG_INVERT_LIMIT_PINS; }
+    255                  break;
+    256                case 6: // Reset to ensure change. Immediate re-init may cause problems.
+    257                  if (int_value) { settings.flags |= BITFLAG_INVERT_PROBE_PIN; }
+    258                  else { settings.flags &= ~BITFLAG_INVERT_PROBE_PIN; }
+    259                  probe_configure_invert_mask(false);
+    260                  break;
+    261                case 10: settings.status_report_mask = int_value; break;
+    262                case 11: settings.junction_deviation = value; break;
+    263                case 12: settings.arc_tolerance = value; break;
+    264                case 13:
+    265                  if (int_value) { settings.flags |= BITFLAG_REPORT_INCHES; }
+    266                  else { settings.flags &= ~BITFLAG_REPORT_INCHES; }
+    267                  system_flag_wco_change(); // Make sure WCO is immediately updated.
+    268                  break;
+    269                case 20:
+    270                  if (int_value) {
+    271                    if (bit_isfalse(settings.flags, BITFLAG_HOMING_ENABLE)) { return(STATUS_SOFT_LIMIT_ERROR); }
+    272                    settings.flags |= BITFLAG_SOFT_LIMIT_ENABLE;
+    273                  } else { settings.flags &= ~BITFLAG_SOFT_LIMIT_ENABLE; }
+    274                  break;
+    275                case 21:
+    276                  if (int_value) { settings.flags |= BITFLAG_HARD_LIMIT_ENABLE; }
+    277                  else { settings.flags &= ~BITFLAG_HARD_LIMIT_ENABLE; }
+    278                  limits_init(); // Re-init to immediately change. NOTE: Nice to have but could be problematic later.
+    279                  break;
+    280                case 22:
+    281                  if (int_value) { settings.flags |= BITFLAG_HOMING_ENABLE; }
+    282                  else {
+    283                    settings.flags &= ~BITFLAG_HOMING_ENABLE;
+    284                    settings.flags &= ~BITFLAG_SOFT_LIMIT_ENABLE; // Force disable soft-limits.
+    285                  }
+    286                  break;
+    287                case 23: settings.homing_dir_mask = int_value; break;
+    288                case 24: settings.homing_feed_rate = value; break;
+    289                case 25: settings.homing_seek_rate = value; break;
+    290                case 26: settings.homing_debounce_delay = int_value; break;
+    291                case 27: settings.homing_pulloff = value; break;
+    292                case 30: settings.rpm_max = value; spindle_init(); break; // Re-initialize spindle rpm calibration
+    293                case 31: settings.rpm_min = value; spindle_init(); break; // Re-initialize spindle rpm calibration
+    294                case 32:
+    295                  #ifdef VARIABLE_SPINDLE
+    296                    if (int_value) { settings.flags |= BITFLAG_LASER_MODE; }
+    297                    else { settings.flags &= ~BITFLAG_LASER_MODE; }
+    298                  #else
+    299          				return(STATUS_SETTING_DISABLED_LASER);
+    300                  #endif
+    301                  break;
+    302                default:
+    303                  return(STATUS_INVALID_STATEMENT);
+    304              }
+    305            }
+    306            write_global_settings();
+    307            return(STATUS_OK);
+    308          }
+    309          
+    310          
+    311          // Initialize the config subsystem
+    312          void settings_init() {
+    313            if(!read_global_settings()) {
+    314              report_status_message(STATUS_SETTING_READ_FAIL);
+    315              settings_restore(SETTINGS_RESTORE_ALL); // Force restore all EEPROM data.
+    316              report_grbl_settings();
+    317            }
+    318          }
+    319          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   read_global_settings
+         8   -> eeprom_get_char
+         8   -> memcpy_from_eeprom_with_checksum
+       8   settings_init
+         8   -> read_global_settings
+         8   -> report_grbl_settings
+         8   -> report_status_message
+         8   -> settings_restore
+       8   settings_read_build_info
+         8   -> memcpy_from_eeprom_with_checksum
+         8   -> settings_store_build_info
+      16   settings_read_coord_data
+        16   -> memcpy_from_eeprom_with_checksum
+        16   -> settings_write_coord_data
+      16   settings_read_startup_line
+        16   -> memcpy_from_eeprom_with_checksum
+        16   -> settings_store_startup_line
+      32   settings_restore
+        32   -> __aeabi_memset
+        32   -> eeprom_put_char
+        32   -> settings_write_coord_data
+        32   -> write_global_settings
+       8   settings_store_build_info
+         8   -> memcpy_to_eeprom_with_checksum
+      24   settings_store_global_setting
+        24   -> __aeabi_f2iz
+        24   -> __aeabi_fmul
+        24   -> limits_init
+        24   -> probe_configure_invert_mask
+        24   -> spindle_init
+        24   -> st_generate_step_dir_invert_masks
+        24   -> system_flag_wco_change
+        24   -> truncf
+        24   -> write_global_settings
+        24 __aeabi_cfcmple
+      16   settings_store_startup_line
+        16   -> memcpy_to_eeprom_with_checksum
+        16   -> protocol_buffer_synchronize
+      16   settings_write_coord_data
+        16   -> memcpy_to_eeprom_with_checksum
+        16   -> protocol_buffer_synchronize
+       8   write_global_settings
+         8   -> eeprom_put_char
+         8   -> memcpy_to_eeprom_with_checksum
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_10
+       4  ??DataTable4_11
+       4  ??DataTable4_12
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+       4  ??DataTable4_5
+       4  ??DataTable4_6
+       4  ??DataTable4_7
+       4  ??DataTable4_8
+       4  ??DataTable4_9
+      46  read_global_settings
+      92  settings
+      28  settings_init
+      38  settings_read_build_info
+      62  settings_read_coord_data
+      54  settings_read_startup_line
+     278  settings_restore
+      18  settings_store_build_info
+     810  settings_store_global_setting
+      34  settings_store_startup_line
+      34  settings_write_coord_data
+      24  write_global_settings
+
+ 
+    92 bytes in section .bss
+ 1'478 bytes in section .text
+ 
+ 1'478 bytes of CODE memory
+    92 bytes of DATA memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,422 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:36
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\spindle_control.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE96D.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\spindle_control.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\spindle_control.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\spindle_control.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\spindle_control.c
+      1          /*
+      2            spindle_control.c - spindle control methods
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2012-2016 Sungeun K. Jeon for Gnea Research LLC
+      6            Copyright (c) 2009-2011 Simen Svale Skogsrud
+      7          
+      8            Grbl is free software: you can redistribute it and/or modify
+      9            it under the terms of the GNU General Public License as published by
+     10            the Free Software Foundation, either version 3 of the License, or
+     11            (at your option) any later version.
+     12          
+     13            Grbl is distributed in the hope that it will be useful,
+     14            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     15            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     16            GNU General Public License for more details.
+     17          
+     18            You should have received a copy of the GNU General Public License
+     19            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     20          */
+     21          
+     22          #include "grbl.h"
+     23          
+     24          #ifdef VARIABLE_SPINDLE
+     25          static float pwm_gradient; // Precalulated value to speed up rpm to PWM conversions.
+     26          #endif
+     27          
+     28          void spindle_init()
+     29          {
+     30          #ifdef VARIABLE_SPINDLE
+     31            pwm_gradient = SPINDLE_PWM_RANGE / (settings.rpm_max - settings.rpm_min);
+     32          #endif
+     33          
+     34            GPIO_InitTypeDef GPIO_InitStructure;
+     35            RCC_APB2PeriphClockCmd(RCC_SPINDLE_ENABLE_PORT, ENABLE);
+     36            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     37            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     38          #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+     39            GPIO_InitStructure.GPIO_Pin = 1 << SPINDLE_ENABLE_BIT;
+     40          #else
+     41            GPIO_InitStructure.GPIO_Pin = 1 << SPINDLE_DIRECTION_BIT;
+     42          #endif
+     43            GPIO_Init(SPINDLE_ENABLE_PORT, &GPIO_InitStructure);
+     44          
+     45          #ifdef VARIABLE_SPINDLE
+     46            RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+     47            TIM_TimeBaseInitTypeDef timerInitStructure;
+     48            TIM_OCInitTypeDef outputChannelInit = {0};
+     49            TIM_TimeBaseStructInit(&timerInitStructure);
+     50          
+     51            timerInitStructure.TIM_Prescaler = F_CPU / 1000000 - 1; // 1000
+     52            timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+     53            timerInitStructure.TIM_Period = SPINDLE_PWM_MAX_VALUE - 1;
+     54            timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+     55            timerInitStructure.TIM_RepetitionCounter = 0;
+     56            TIM_TimeBaseInit(TIM1, &timerInitStructure);
+     57          
+     58            outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
+     59            outputChannelInit.TIM_Pulse = 0; // initi speed is 0
+     60            outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
+     61            outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
+     62          
+     63            TIM_OC1Init(TIM1, &outputChannelInit);
+     64            TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+     65            TIM_CtrlPWMOutputs(TIM1, DISABLE);
+     66            TIM_Cmd(TIM1, ENABLE);
+     67          
+     68            RCC_APB2PeriphClockCmd(RCC_SPINDLE_PWM_PORT, ENABLE);
+     69            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     70            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+     71            GPIO_InitStructure.GPIO_Pin = 1 << SPINDLE_PWM_BIT;
+     72            GPIO_Init(SPINDLE_PWM_PORT, &GPIO_InitStructure);
+     73          
+     74          #endif
+     75          
+     76            spindle_stop();
+     77          }
+     78          
+     79          uint8_t spindle_get_state()
+     80          {
+     81            uint8_t pin = 0;
+     82          #ifdef VARIABLE_SPINDLE
+     83          #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+     84            pin = GPIO_ReadInputData(SPINDLE_ENABLE_PORT);
+     85          // No spindle direction output pin.
+     86          #ifdef INVERT_SPINDLE_ENABLE_PIN
+     87            if (bit_isfalse(pin, (1 << SPINDLE_ENABLE_BIT)))
+     88            {
+     89              return (SPINDLE_STATE_CW);
+     90            }
+     91          #else
+     92            if (bit_istrue(pin, (1 << SPINDLE_ENABLE_BIT)))
+     93            {
+     94              return (SPINDLE_STATE_CW);
+     95            }
+     96          #endif
+     97          #else
+     98            pin = GPIO_ReadInputData(SPINDLE_DIRECTION_PORT);
+     99            if (pin & (1 << SPINDLE_DIRECTION_BIT))
+    100            {
+    101              return (SPINDLE_STATE_CCW);
+    102            }
+    103            else
+    104            {
+    105              return (SPINDLE_STATE_CW);
+    106            }
+    107          #endif
+    108          #else
+    109            pin = GPIO_ReadInputData(SPINDLE_ENABLE_PORT);
+    110          #ifdef INVERT_SPINDLE_ENABLE_PIN
+    111            if (bit_isfalse(pin, (1 << SPINDLE_ENABLE_BIT)))
+    112            {
+    113          #else
+    114            if (bit_istrue(pin, (1 << SPINDLE_ENABLE_BIT)))
+    115            {
+    116          #endif
+    117              if (pin & (1 << SPINDLE_DIRECTION_BIT))
+    118              {
+    119                return (SPINDLE_STATE_CCW);
+    120              }
+    121              else
+    122              {
+    123                return (SPINDLE_STATE_CW);
+    124              }
+    125            }
+    126          #endif
+    127          ////  return (SPINDLE_STATE_DISABLE);
+    128          }
+    129          
+    130          // Disables the spindle and sets PWM output to zero when PWM variable spindle speed is enabled.
+    131          // Called by various main program and ISR routines. Keep routine small, fast, and efficient.
+    132          // Called by spindle_init(), spindle_set_speed(), spindle_set_state(), and mc_reset().
+    133          void spindle_stop()
+    134          {
+    135          #ifdef VARIABLE_SPINDLE
+    136            TIM_CtrlPWMOutputs(TIM1, DISABLE);
+    137          
+    138          #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+    139          #ifdef INVERT_SPINDLE_ENABLE_PIN
+    140            SetSpindleEnablebit();
+    141          #else
+    142            ResetSpindleEnablebit();
+    143          #endif
+    144          #endif
+    145          #else
+    146          #ifdef INVERT_SPINDLE_ENABLE_PIN
+    147            SetSpindleEnablebit();
+    148          #else
+    149            ResetSpindleEnablebit();
+    150          #endif
+    151          #endif
+    152          }
+    153          
+    154          #ifdef VARIABLE_SPINDLE
+    155          // Sets spindle speed PWM output and enable pin, if configured. Called by spindle_set_state()
+    156          // and stepper ISR. Keep routine small and efficient.
+    157          void spindle_set_speed(SPINDLE_PWM_TYPE pwm_value)
+    158          {
+    159            TIM1->CCR1 = pwm_value;
+    160          #ifdef SPINDLE_ENABLE_OFF_WITH_ZERO_SPEED
+    161            if (pwm_value == SPINDLE_PWM_OFF_VALUE)
+    162            {
+    163              spindle_stop();
+    164            }
+    165            else
+    166            {
+    167              TIM_CtrlPWMOutputs(TIM1, ENABLE);
+    168          #ifdef INVERT_SPINDLE_ENABLE_PIN
+    169              ResetSpindleEnablebit();
+    170          #else
+    171              SetSpindleEnablebit();
+    172          #endif
+    173            }
+    174          #else
+    175            if (pwm_value == SPINDLE_PWM_OFF_VALUE)
+    176            {
+    177              TIM_CtrlPWMOutputs(TIM1, DISABLE);
+    178            }
+    179            else
+    180            {
+    181              TIM_CtrlPWMOutputs(TIM1, ENABLE);
+    182            }
+    183          #endif
+    184          }
+    185          
+    186          #ifdef ENABLE_PIECEWISE_LINEAR_SPINDLE
+    187          // Called by spindle_set_state() and step segment generator. Keep routine small and efficient.
+    188          SPINDLE_PWM_TYPE spindle_compute_pwm_value(float rpm) // 328p PWM register is 8-bit.
+    189          {
+    190            SPINDLE_PWM_TYPE pwm_value;
+    191            rpm *= (0.010 * sys.spindle_speed_ovr); // Scale by spindle speed override value.
+    192                                                    // Calculate PWM register value based on rpm max/min settings and programmed rpm.
+    193            if ((settings.rpm_min >= settings.rpm_max) || (rpm >= RPM_MAX))
+    194            {
+    195              rpm = RPM_MAX;
+    196              pwm_value = SPINDLE_PWM_MAX_VALUE;
+    197            }
+    198            else if (rpm <= RPM_MIN)
+    199            {
+    200              if (rpm == 0.0)
+    201              { // S0 disables spindle
+    202                pwm_value = SPINDLE_PWM_OFF_VALUE;
+    203              }
+    204              else
+    205              {
+    206                rpm = RPM_MIN;
+    207                pwm_value = SPINDLE_PWM_MIN_VALUE;
+    208              }
+    209            }
+    210            else
+    211            {
+    212              // Compute intermediate PWM value with linear spindle speed model via piecewise linear fit model.
+    213          #if (N_PIECES > 3)
+    214              if (rpm > RPM_POINT34)
+    215              {
+    216                pwm_value = floorf(RPM_LINE_A4 * rpm - RPM_LINE_B4);
+    217              }
+    218              else
+    219          #endif
+    220          #if (N_PIECES > 2)
+    221                  if (rpm > RPM_POINT23)
+    222              {
+    223                pwm_value = floorf(RPM_LINE_A3 * rpm - RPM_LINE_B3);
+    224              }
+    225              else
+    226          #endif
+    227          #if (N_PIECES > 1)
+    228                  if (rpm > RPM_POINT12)
+    229              {
+    230                pwm_value = floorf(RPM_LINE_A2 * rpm - RPM_LINE_B2);
+    231              }
+    232              else
+    233          #endif
+    234              {
+    235                pwm_value = floorf(RPM_LINE_A1 * rpm - RPM_LINE_B1);
+    236              }
+    237            }
+    238            sys.spindle_speed = rpm;
+    239            return (pwm_value);
+    240          }
+    241          #else
+    242          // Called by spindle_set_state() and step segment generator. Keep routine small and efficient.
+    243          SPINDLE_PWM_TYPE spindle_compute_pwm_value(float rpm) // 328p PWM register is 8-bit.
+    244          {
+    245            SPINDLE_PWM_TYPE pwm_value;
+    246            rpm *= (0.010f * sys.spindle_speed_ovr); // Scale by spindle speed override value.
+    247                                                     // Calculate PWM register value based on rpm max/min settings and programmed rpm.
+    248            if ((settings.rpm_min >= settings.rpm_max) || (rpm >= settings.rpm_max))
+    249            {
+    250              // No PWM range possible. Set simple on/off spindle control pin state.
+    251              sys.spindle_speed = settings.rpm_max;
+    252              pwm_value = SPINDLE_PWM_MAX_VALUE;
+    253            }
+    254            else if (rpm <= settings.rpm_min)
+    255            {
+    256              if (rpm == 0.0f)
+    257              { // S0 disables spindle
+    258                sys.spindle_speed = 0.0f;
+    259                pwm_value = SPINDLE_PWM_OFF_VALUE;
+    260              }
+    261              else
+    262              { // Set minimum PWM output
+    263                sys.spindle_speed = settings.rpm_min;
+    264                pwm_value = SPINDLE_PWM_MIN_VALUE;
+    265              }
+    266            }
+    267            else
+    268            {
+    269              // Compute intermediate PWM value with linear spindle speed model.
+    270              // NOTE: A nonlinear model could be installed here, if required, but keep it VERY light-weight.
+    271              sys.spindle_speed = rpm;
+    272              pwm_value = (SPINDLE_PWM_TYPE)floorf((rpm - settings.rpm_min) * pwm_gradient) + SPINDLE_PWM_MIN_VALUE;
+    273            }
+    274            return (pwm_value);
+    275          }
+    276          #endif
+    277          #endif
+    278          
+    279          // Immediately sets spindle running state with direction and spindle rpm via PWM, if enabled.
+    280          // Called by g-code parser spindle_sync(), parking retract and restore, g-code program end,
+    281          // sleep, and spindle stop override.
+    282          #ifdef VARIABLE_SPINDLE
+    283          void spindle_set_state(uint8_t state, float rpm)
+    284          #else
+    285          void _spindle_set_state(uint8_t state)
+    286          #endif
+    287          {
+    288            if (sys.abort)
+    289            {
+    290              return;
+    291            } // Block during abort.
+    292            if (state == SPINDLE_DISABLE)
+    293            { // Halt or set spindle direction and rpm.
+    294          
+    295          #ifdef VARIABLE_SPINDLE
+    296              sys.spindle_speed = 0.0f;
+    297          #endif
+    298              spindle_stop();
+    299            }
+    300            else
+    301            {
+    302          #ifndef USE_SPINDLE_DIR_AS_ENABLE_PIN
+    303              if (state == SPINDLE_ENABLE_CW)
+    304              {
+    305                ResetSpindleDirectionBit();
+    306              }
+    307              else
+    308              {
+    309                SetSpindleDirectionBit();
+    310              }
+    311          #endif
+    312          
+    313          #ifdef VARIABLE_SPINDLE
+    314              // NOTE: Assumes all calls to this function is when Grbl is not moving or must remain off.
+    315              if (settings.flags & BITFLAG_LASER_MODE)
+    316              {
+    317                if (state == SPINDLE_ENABLE_CCW)
+    318                {
+    319                  rpm = 0.0f;
+    320                } // TODO: May need to be rpm_min*(100/MAX_SPINDLE_SPEED_OVERRIDE);
+    321              }
+    322              spindle_set_speed(spindle_compute_pwm_value(rpm));
+    323          #endif
+    324          #if (defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) &&        \
+    325               !defined(SPINDLE_ENABLE_OFF_WITH_ZERO_SPEED)) || \
+    326              !defined(VARIABLE_SPINDLE)
+    327          // NOTE: Without variable spindle, the enable bit should just turn on or off, regardless
+    328          // if the spindle speed value is zero, as its ignored anyhow.
+    329          #ifdef INVERT_SPINDLE_ENABLE_PIN
+    330              ResetSpindleEnablebit();
+    331          #else
+    332              SetSpindleEnablebit();
+    333          #endif
+    334          #endif
+    335            }
+    336          
+    337            sys.report_ovr_counter = 0; // Set to report change immediately
+    338          }
+    339          
+    340          // G-code parser entry-point for setting spindle state. Forces a planner buffer sync and bails
+    341          // if an abort or check-mode is active.
+    342          #ifdef VARIABLE_SPINDLE
+    343          void spindle_sync(uint8_t state, float rpm)
+    344          {
+    345            if (sys.state == STATE_CHECK_MODE)
+    346            {
+    347              return;
+    348            }
+    349            protocol_buffer_synchronize(); // Empty planner buffer to ensure spindle is set when programmed.
+    350            spindle_set_state(state, rpm);
+    351          }
+    352          #else
+    353          void _spindle_sync(uint8_t state)
+    354          {
+    355            if (sys.state == STATE_CHECK_MODE)
+    356            {
+    357              return;
+    358            }
+    359            protocol_buffer_synchronize(); // Empty planner buffer to ensure spindle is set when programmed.
+    360            _spindle_set_state(state);
+    361          }
+    362          #endif
+
+Errors: 17
+Warnings: 15

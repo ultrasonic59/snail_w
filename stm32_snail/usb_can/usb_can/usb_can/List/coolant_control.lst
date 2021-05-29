@@ -1,0 +1,232 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:34
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\coolant_control.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE0CB.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\coolant_control.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\coolant_control.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\coolant_control.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\coolant_control.c
+      1          /*
+      2            coolant_control.c - coolant control methods
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2012-2016 Sungeun K. Jeon for Gnea Research LLC
+      6          
+      7            Grbl is free software: you can redistribute it and/or modify
+      8            it under the terms of the GNU General Public License as published by
+      9            the Free Software Foundation, either version 3 of the License, or
+     10            (at your option) any later version.
+     11          
+     12            Grbl is distributed in the hope that it will be useful,
+     13            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     14            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15            GNU General Public License for more details.
+     16          
+     17            You should have received a copy of the GNU General Public License
+     18            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     19          */
+     20          
+     21          #include "grbl.h"
+     22          
+     23          
+     24          void coolant_init()
+     25          {
+     26          #if 0 
+     27          	GPIO_InitTypeDef GPIO_InitStructure;
+     28          	RCC_APB2PeriphClockCmd(RCC_COOLANT_FLOOD_PORT, ENABLE);
+     29          	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     30          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     31          	GPIO_InitStructure.GPIO_Pin = 1 << COOLANT_FLOOD_BIT;
+     32          	GPIO_Init(COOLANT_FLOOD_PORT, &GPIO_InitStructure);
+     33          
+     34          	RCC_APB2PeriphClockCmd(RCC_COOLANT_MIST_PORT, ENABLE);
+     35          	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     36          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     37          	GPIO_InitStructure.GPIO_Pin = 1 << COOLANT_MIST_BIT;
+     38          	GPIO_Init(COOLANT_MIST_PORT, &GPIO_InitStructure);
+     39          #endif       
+     40            coolant_stop();
+     41          }
+     42          
+     43          
+     44          // Returns current coolant output state. Overrides may alter it from programmed state.
+     45          uint8_t coolant_get_state()
+     46          {
+     47            uint8_t cl_state = COOLANT_STATE_DISABLE;
+     48          #if 0
+     49            #ifdef INVERT_COOLANT_FLOOD_PIN
+     50              if (bit_isfalse(
+     51          		GPIO_ReadOutputData(COOLANT_FLOOD_PORT)
+     52          		,(1 << COOLANT_FLOOD_BIT))) {
+     53            #else
+     54              if (bit_istrue(
+     55          		GPIO_ReadOutputData(COOLANT_FLOOD_PORT)
+     56          		,(1 << COOLANT_FLOOD_BIT))) {
+     57            #endif
+     58              cl_state |= COOLANT_STATE_FLOOD;
+     59            }
+     60            #ifdef ENABLE_M7
+     61              #ifdef INVERT_COOLANT_MIST_PIN
+     62                if (bit_isfalse(
+     63          		  GPIO_ReadOutputData(COOLANT_MIST_PORT)
+     64          		  ,(1 << COOLANT_MIST_BIT))) {
+     65              #else
+     66                if (bit_istrue(
+     67          		  GPIO_ReadOutputData(COOLANT_MIST_PORT)
+     68          		  ,(1 << COOLANT_MIST_BIT))) {
+     69              #endif
+     70                cl_state |= COOLANT_STATE_MIST;
+     71              }
+     72            #endif
+     73          #endif
+     74            return(cl_state);
+     75          }
+     76          
+     77          
+     78          // Directly called by coolant_init(), coolant_set_state(), and mc_reset(), which can be at
+     79          // an interrupt-level. No report flag set, but only called by routines that don't need it.
+     80          void coolant_stop()
+     81          {
+     82          #if 0 
+     83            #ifdef INVERT_COOLANT_FLOOD_PIN
+     84          	GPIO_SetBits(COOLANT_FLOOD_PORT,1 << COOLANT_FLOOD_BIT);
+     85            #else
+     86          	GPIO_ResetBits(COOLANT_FLOOD_PORT,1 << COOLANT_FLOOD_BIT);
+     87            #endif
+     88            #ifdef ENABLE_M7
+     89              #ifdef INVERT_COOLANT_MIST_PIN
+     90          	  GPIO_SetBits(COOLANT_MIST_PORT, 1 << COOLANT_MIST_BIT);
+     91              #else
+     92          	  GPIO_ResetBits(COOLANT_MIST_PORT, 1 << COOLANT_MIST_BIT);
+     93              #endif
+     94            #endif
+     95          #endif         
+     96          }
+     97          
+     98          
+     99          // Main program only. Immediately sets flood coolant running state and also mist coolant, 
+    100          // if enabled. Also sets a flag to report an update to a coolant state.
+    101          // Called by coolant toggle override, parking restore, parking retract, sleep mode, g-code
+    102          // parser program end, and g-code parser coolant_sync().
+    103          void coolant_set_state(uint8_t mode)
+    104          {
+    105            if (sys.abort) { return; } // Block during abort.  
+    106          #if 0 
+    107            if (mode == COOLANT_DISABLE) {
+    108            
+    109              coolant_stop(); 
+    110            
+    111            } else {
+    112          	  if (mode & COOLANT_FLOOD_ENABLE) {
+    113                #ifdef INVERT_COOLANT_FLOOD_PIN
+    114          		  GPIO_ResetBits(COOLANT_FLOOD_PORT,1 << COOLANT_FLOOD_BIT);
+    115                #else
+    116          		  GPIO_SetBits(COOLANT_FLOOD_PORT,1 << COOLANT_FLOOD_BIT);
+    117                #endif
+    118              }
+    119            
+    120              #ifdef ENABLE_M7
+    121                if (mode & COOLANT_MIST_ENABLE) {
+    122                  #ifdef INVERT_COOLANT_MIST_PIN
+    123          	      GPIO_ResetBits(COOLANT_MIST_PORT, 1 << COOLANT_MIST_BIT);
+    124                  #else
+    125          		    GPIO_SetBits(COOLANT_MIST_PORT, 1 << COOLANT_MIST_BIT);
+    126                  #endif
+    127                }
+    128              #endif
+    129            }
+    130          #endif 
+    131            sys.report_ovr_counter = 0; // Set to report change immediately
+    132          }
+    133          
+    134          
+    135          // G-code parser entry-point for setting coolant state. Forces a planner buffer sync and bails 
+    136          // if an abort or check-mode is active.
+    137          void coolant_sync(uint8_t mode)
+    138          {
+    139            if (sys.state == STATE_CHECK_MODE) { return; }
+    140            protocol_buffer_synchronize(); // Ensure coolant turns on when specified in program.
+    141            coolant_set_state(mode);
+    142          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   coolant_get_state
+       8   coolant_init
+         8   -> coolant_stop
+       0   coolant_set_state
+       0   coolant_stop
+       8   coolant_sync
+         8   -> coolant_set_state
+         8   -> protocol_buffer_synchronize
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       6  coolant_get_state
+       8  coolant_init
+      14  coolant_set_state
+       2  coolant_stop
+      26  coolant_sync
+
+ 
+ 60 bytes in section .text
+ 
+ 60 bytes of CODE memory
+
+Errors: none
+Warnings: none

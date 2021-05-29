@@ -1,0 +1,306 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:34
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\gbrl_thr.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE263.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\gbrl_thr.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\gbrl_thr.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\gbrl_thr.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\gbrl_thr.c
+      1          /*
+      2            main.c - An embedded CNC Controller with rs274/ngc (g-code) support
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2011-2016 Sungeun K. Jeon for Gnea Research LLC
+      6            Copyright (c) 2009-2011 Simen Svale Skogsrud
+      7          
+      8            Grbl is free software: you can redistribute it and/or modify
+      9            it under the terms of the GNU General Public License as published by
+     10            the Free Software Foundation, either version 3 of the License, or
+     11            (at your option) any later version.
+     12          
+     13            Grbl is distributed in the hope that it will be useful,
+     14            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     15            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     16            GNU General Public License for more details.
+     17          
+     18            You should have received a copy of the GNU General Public License
+     19            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     20          */
+     21          
+     22          #include "grbl.h"
+     23          
+     24          extern void  put_tst_pin(uint8_t idat);
+     25          
+     26          // Declare system global variable structure
+     27          system_t sys;
+     28          int32_t sys_position[N_AXIS];      // Real-time machine (aka home) position vector in steps.
+     29          int32_t sys_probe_position[N_AXIS]; // Last probe position in machine coordinates and steps.
+     30          volatile uint8_t sys_probe_state;   // Probing state value.  Used to coordinate the probing cycle with stepper ISR.
+     31          volatile uint8_t sys_rt_exec_state;   // Global realtime executor bitflag variable for state management. See EXEC bitmasks.
+     32          volatile uint8_t sys_rt_exec_alarm;   // Global realtime executor bitflag variable for setting various alarms.
+     33          volatile uint8_t sys_rt_exec_motion_override; // Global realtime executor bitflag variable for motion-based overrides.
+     34          volatile uint8_t sys_rt_exec_accessory_override; // Global realtime executor bitflag variable for spindle/coolant overrides.
+     35          #ifdef DEBUG
+     36          volatile uint8_t sys_rt_exec_debug;
+     37          #endif
+     38          
+     39          #if 0
+     40          #include "usb_lib.h"
+     41          #ifdef USEUSB
+     42          #include "usb_desc.h"
+     43          #endif
+     44          #include "hw_config.h"
+     45          #ifdef USEUSB
+     46          #include "usb_pwr.h"
+     47          #endif
+     48          #include "stm32eeprom.h"
+     49          #ifndef USEUSB
+     50          #include "stm32f10x_usart.h"
+     51          #endif
+     52          void USART1_Configuration(u32 BaudRate)
+     53          {
+     54          #if 0  
+     55          	GPIO_InitTypeDef GPIO_InitStructure;
+     56          	USART_InitTypeDef USART_InitStructure;
+     57          	NVIC_InitTypeDef NVIC_InitStructure;
+     58          	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+     59          	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;   
+     60          	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  
+     61          
+     62          	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 
+     63          	NVIC_Init(&NVIC_InitStructure);                 
+     64          	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+     65          
+     66          	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+     67          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	
+     68          	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		
+     69          	GPIO_Init(GPIOA, &GPIO_InitStructure);
+     70          	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+     71          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;	
+     72          	GPIO_Init(GPIOA, &GPIO_InitStructure);
+     73          
+     74          	USART_InitStructure.USART_BaudRate = BaudRate;	  
+     75          	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 
+     76          	USART_InitStructure.USART_StopBits = USART_StopBits_1;	 
+     77          	USART_InitStructure.USART_Parity = USART_Parity_No;	 
+     78          	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+     79          	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+     80          	USART1->CR1 |= (USART_CR1_RE | USART_CR1_TE);
+     81          	USART_Init(USART1, &USART_InitStructure);
+     82          	//	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+     83          	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+     84          	USART_Cmd(USART1, ENABLE);
+     85          #endif       
+     86          }
+     87          #endif
+     88          
+     89          ////void vCheckTask( void *pvParameters )
+     90          ////int main_thr(void)
+     91          void gbrl_thr( void *pvParameters )
+     92          {
+     93          uint8_t btst=0;  
+     94          #if 0
+     95          ////  GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
+     96          //Set_System();
+     97          #ifndef USEUSB
+     98          	USART1_Configuration(115200);
+     99          #else
+    100          	Set_USBClock();
+    101          	USB_Interrupts_Config();
+    102          	USB_Init();
+    103          #endif
+    104          
+    105          #ifndef NOEEPROMSUPPORT
+    106          	FLASH_Unlock();
+    107          	eeprom_init();
+    108          #endif
+    109          #endif        
+    110           ///====================================    
+    111          for(;;)
+    112          {
+    113            put_tst_pin(btst);
+    114          btst++;  
+    115          delay__ms(1);  
+    116          }
+    117                  
+    118           ///=====================================  
+    119               
+    120          /////	SysTick->CTRL &= 0xfffffffb;
+    121            // Initialize system upon power-up.
+    122            serial_init();   // Setup serial baud rate and interrupts
+    123            settings_init(); // Load Grbl settings from EEPROM
+    124            stepper_init();  // Configure stepper pins and interrupt timers
+    125            system_init();   // Configure pinout pins and pin-change interrupt
+    126          
+    127            memset(sys_position,0,sizeof(sys_position)); // Clear machine position.
+    128          
+    129            // Initialize system state.
+    130            #ifdef FORCE_INITIALIZATION_ALARM
+    131              // Force Grbl into an ALARM state upon a power-cycle or hard reset.
+    132              sys.state = STATE_ALARM;
+    133            #else
+    134              sys.state = STATE_IDLE;
+    135            #endif
+    136            
+    137            // Check for power-up and set system alarm if homing is enabled to force homing cycle
+    138            // by setting Grbl's alarm state. Alarm locks out all g-code commands, including the
+    139            // startup scripts, but allows access to settings and internal commands. Only a homing
+    140            // cycle '$H' or kill alarm locks '$X' will disable the alarm.
+    141            // NOTE: The startup script will run after successful completion of the homing cycle, but
+    142            // not after disabling the alarm locks. Prevents motion startup blocks from crashing into
+    143            // things uncontrollably. Very bad.
+    144            #ifdef HOMING_INIT_LOCK
+    145              if (bit_istrue(settings.flags,BITFLAG_HOMING_ENABLE)) { sys.state = STATE_ALARM; }
+    146            #endif
+    147          
+    148            // Grbl initialization loop upon power-up or a system abort. For the latter, all processes
+    149            // will return to this loop to be cleanly re-initialized.
+    150            for(;;) {
+    151          
+    152              // Reset system variables.
+    153              uint8_t prior_state = sys.state;
+    154              memset(&sys, 0, sizeof(system_t)); // Clear system struct variable.
+    155              sys.state = prior_state;
+    156              sys.f_override = DEFAULT_FEED_OVERRIDE;  // Set to 100%
+    157              sys.r_override = DEFAULT_RAPID_OVERRIDE; // Set to 100%
+    158              sys.spindle_speed_ovr = DEFAULT_SPINDLE_SPEED_OVERRIDE; // Set to 100%
+    159          		memset(sys_probe_position,0,sizeof(sys_probe_position)); // Clear probe position.
+    160              sys_probe_state = 0;
+    161              sys_rt_exec_state = 0;
+    162              sys_rt_exec_alarm = 0;
+    163              sys_rt_exec_motion_override = 0;
+    164              sys_rt_exec_accessory_override = 0;
+    165          
+    166              // Reset Grbl primary systems.
+    167              serial_reset_read_buffer(); // Clear serial read buffer
+    168              gc_init(); // Set g-code parser to default state
+    169              spindle_init();
+    170              coolant_init();
+    171              limits_init();
+    172              probe_init();
+    173              plan_reset(); // Clear block buffer and planner variables
+    174              st_reset(); // Clear stepper subsystem variables.
+    175          
+    176              // Sync cleared gcode and planner positions to current system position.
+    177              plan_sync_position();
+    178              gc_sync_position();
+    179          
+    180              // Print welcome message. Indicates an initialization has occured at power-up or with a reset.
+    181              report_init_message();
+    182          
+    183              // Start Grbl main loop. Processes program inputs and executes them.
+    184              protocol_main_loop();
+    185          
+    186            }
+    187          ////???  return 0;   /* Never reached */
+    188          }
+    189          
+    190          void _delay_ms(uint32_t x)
+    191          {
+    192          	u32 temp;
+    193          	SysTick->LOAD = (u32)72000000 / 8000;                     // Loading time
+    194          	SysTick->VAL = 0x00;                                            // Empty the counter
+    195          	SysTick->CTRL = 0x01;                                           // Start from bottom
+    196          	do
+    197          	{
+    198          		temp = SysTick->CTRL;
+    199          	} while (temp & 0x01 && !(temp&(1 << 16)));                             // Wait time arrive
+    200          	SysTick->CTRL = 0x00;                                            // Close the counter
+    201          	SysTick->VAL = 0X00;                                            // Empty the counter
+    202          }
+    203          void LedBlink(void)
+    204          {
+    205          #if 0  
+    206          	static BitAction nOnFlag = Bit_SET;
+    207          	GPIO_WriteBit(GPIOC, GPIO_Pin_13, nOnFlag);
+    208          	nOnFlag = (nOnFlag == Bit_SET) ? Bit_RESET : Bit_SET;
+    209          #endif        
+    210          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   LedBlink
+       4   _delay_ms
+      16   gbrl_thr
+        16   -> delay__ms
+        16   -> put_tst_pin
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_2
+       2  LedBlink
+      46  _delay_ms
+      24  gbrl_thr
+      20  sys
+      12  sys_position
+      12  sys_probe_position
+       1  sys_probe_state
+       1  sys_rt_exec_accessory_override
+       1  sys_rt_exec_alarm
+       1  sys_rt_exec_motion_override
+       1  sys_rt_exec_state
+
+ 
+ 49 bytes in section .bss
+ 84 bytes in section .text
+ 
+ 84 bytes of CODE memory
+ 49 bytes of DATA memory
+
+Errors: none
+Warnings: 1

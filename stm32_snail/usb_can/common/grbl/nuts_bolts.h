@@ -21,7 +21,7 @@
 
 #ifndef nuts_bolts_h
 #define nuts_bolts_h
-#include "stm32f10x_rcc.h"
+////#include "stm32f10x_rcc.h"
 #include "float.h"
 #define false 0
 #define true 1

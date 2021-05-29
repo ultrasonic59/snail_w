@@ -1,0 +1,271 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:35
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE4BB.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\main.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\main.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c
+      1          /*
+      2           * FreeRTOS Kernel V10.2.1
+      3           * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+      4           *
+      5           * Permission is hereby granted, free of charge, to any person obtaining a copy of
+      6           * this software and associated documentation files (the "Software"), to deal in
+      7           * the Software without restriction, including without limitation the rights to
+      8           * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+      9           * the Software, and to permit persons to whom the Software is furnished to do so,
+     10           * subject to the following conditions:
+     11           *
+     12           * The above copyright notice and this permission notice shall be included in all
+     13           * copies or substantial portions of the Software.
+     14           *
+     15           * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     16           * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+     17           * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+     18           * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+     19           * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+     20           * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     21           *
+     22           * http://www.FreeRTOS.org
+     23           * http://aws.amazon.com/freertos
+     24           *
+     25           * 1 tab == 4 spaces!
+     26           */
+     27          
+     28          /*
+     29           * Creates all the demo application tasks, then starts the scheduler.  The WEB
+     30           * documentation provides more details of the standard demo application tasks.
+     31           * In addition to the standard demo tasks, the following tasks and tests are
+     32           * defined and/or created within this file:
+     33           *
+     34           * "Fast Interrupt Test" - A high frequency periodic interrupt is generated
+     35           * using a free running timer to demonstrate the use of the
+     36           * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt
+     37           * service routine measures the number of processor clocks that occur between
+     38           * each interrupt - and in so doing measures the jitter in the interrupt timing.
+     39           * The maximum measured jitter time is latched in the ulMaxJitter variable, and
+     40           * displayed on the LCD by the 'Check' task as described below.  The
+     41           * fast interrupt is configured and handled in the timertest.c source file.
+     42           *
+     43           * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
+     44           * is permitted to access the display directly.  Other tasks wishing to write a
+     45           * message to the LCD send the message on a queue to the LCD task instead of
+     46           * accessing the LCD themselves.  The LCD task just blocks on the queue waiting
+     47           * for messages - waking and displaying the messages as they arrive.
+     48           *
+     49           * "Check" task -  This only executes every five seconds but has the highest
+     50           * priority so is guaranteed to get processor time.  Its main function is to
+     51           * check that all the standard demo tasks are still operational.  Should any
+     52           * unexpected behaviour within a demo task be discovered the 'check' task will
+     53           * write an error to the LCD (via the LCD task).  If all the demo tasks are
+     54           * executing with their expected behaviour then the check task writes PASS
+     55           * along with the max jitter time to the LCD (again via the LCD task), as
+     56           * described above.
+     57           *
+     58           */
+     59          
+     60          /* Standard includes. */
+     61          #include <stdio.h>
+     62          
+     63          /* Scheduler includes. */
+     64          #include "FreeRTOS.h"
+     65          #include "task.h"
+     66          #include "queue.h"
+     67          
+     68          /* Library includes. */
+     69          ////#include "stm32f2xx_it.h"
+     70          #include "stm32f2xx_rcc.h"
+     71          
+     72          #include "board.h"
+     73          #include "usbd_core.h"
+     74          #include "usbd_desc.h"
+     75          
+     76          #include "can.h"
+     77          
+     78          #include "misc.h"
+     79          #include "printk.h"
+     80          ///=======================================================================
+     81          extern void usb_thread( void *arg );
+     82          extern void init_hdlc_vcp(void);
+     83          
+     84          #define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+     85          #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+     86          void tst_task( void *pvParameters );
+     87          ///==================================
+     88          TaskHandle_t  usb_thread_handle;
+     89          ///==================================
+     90          
+     91          ///=======================================================================
+     92          ///==================================
+     93          #pragma data_alignment=8   
+     94          __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
+     95          
+     96          extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
+     97          #define USBD_Class_cb USBD_CDC_VCP_cb
+     98          extern USBD_Class_cb_TypeDef  USBD_CDC_cb;
+     99          ////#define USBD_Class_cb USBD_CDC_cb
+    100          
+    101          extern USBD_Usr_cb_TypeDef USR_cb;
+    102          
+    103          ////========================================================
+    104          void uDelay (const uint32_t usec)
+    105          {
+    106          uint32_t count = 0;
+    107          const uint32_t utime = 45*usec;////(120 * usec / 7);
+    108          do
+    109            {
+    110             if ( ++count > utime )
+    111              {
+    112              return ;
+    113              }
+    114            }
+    115          while (1);
+    116          }
+    117             
+    118          ////============================================
+    119          int main( void )
+    120          {
+    121          ////uint8_t btst=0; 
+    122          ////uint32_t tst=0;
+    123          #ifdef DEBUG
+    124            debug();
+    125          #endif
+    126          __disable_irq();
+    127          hw_board_init();
+    128          
+    129          printk("\n\r CAN1_Init"); 
+    130          CAN1_Init();
+    131          ////================================
+    132            USBD_Init(&USB_OTG_dev,
+    133                      USB_OTG_FS_CORE_ID,
+    134                      &USR_desc, 
+    135                      &USBD_Class_cb, 
+    136                      &USR_cb);
+    137          ////=================================  
+    138          init_hdlc_vcp();
+    139          
+    140          
+    141          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+    142                  
+    143          ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    144                   
+    145          	/* Start the tasks defined within this file/specific to this demo. */
+    146           ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    147          ////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    148          
+    149          	/* The suicide tasks must be created last as they need to know how many
+    150          	tasks were running prior to their creation in order to ascertain whether
+    151          	or not the correct/expected number of tasks are running at any given time. */
+    152           ////????   vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    153          
+    154          	/* Configure the timers used by the fast interrupt timer test. */
+    155          /////	vSetupTimerTest();
+    156            xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+    157          ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
+    158          
+    159          	/* Start the scheduler. */
+    160          	vTaskStartScheduler();
+    161          
+    162          	/* Will only get here if there was not enough heap space to create the
+    163          	idle task. */
+    164          return 0;
+    165          }
+    166          ////============================================================
+    167          ////=======================================================
+    168          
+    169          ////=======================================================
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   main
+        16   -> CAN1_Init
+        16   -> NVIC_PriorityGroupConfig
+        16   -> USBD_Init
+        16   -> hw_board_init
+        16   -> init_hdlc_vcp
+        16   -> printf
+        16   -> vTaskStartScheduler
+        16   -> xTaskCreate
+       0   uDelay
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+      16  ?_0
+      12  ?_1
+    1524  USB_OTG_dev
+      74  main
+      18  uDelay
+       4  usb_thread_handle
+
+ 
+ 1'528 bytes in section .bss
+    28 bytes in section .rodata
+   120 bytes in section .text
+ 
+   120 bytes of CODE  memory
+    28 bytes of CONST memory
+ 1'528 bytes of DATA  memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,171 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         09/May/2021  15:42:36
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\probe.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWE773.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\probe.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\probe.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\probe.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\common\grbl\probe.c
+      1          /*
+      2            probe.c - code pertaining to probing methods
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2014-2016 Sungeun K. Jeon for Gnea Research LLC
+      6          
+      7            Grbl is free software: you can redistribute it and/or modify
+      8            it under the terms of the GNU General Public License as published by
+      9            the Free Software Foundation, either version 3 of the License, or
+     10            (at your option) any later version.
+     11          
+     12            Grbl is distributed in the hope that it will be useful,
+     13            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     14            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15            GNU General Public License for more details.
+     16          
+     17            You should have received a copy of the GNU General Public License
+     18            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     19          */
+     20          
+     21          #include "grbl.h"
+     22          
+     23          
+     24          // Inverts the probe pin state depending on user settings and probing cycle mode.
+     25          uint8_t probe_invert_mask;
+     26          
+     27          
+     28          // Probe pin initialization routine.
+     29          void probe_init()
+     30          {
+     31          #if 0 
+     32          	GPIO_InitTypeDef GPIO_InitStructure;
+     33          	RCC_APB2PeriphClockCmd(RCC_PROBE_PORT, ENABLE);
+     34          	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     35          #ifdef DISABLE_PROBE_PIN_PULL_UP
+     36          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+     37          #else
+     38          	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+     39          #endif
+     40          	GPIO_InitStructure.GPIO_Pin = PROBE_MASK;
+     41          	GPIO_Init(PROBE_PORT, &GPIO_InitStructure);
+     42          #endif       
+     43            probe_configure_invert_mask(false); // Initialize invert mask.
+     44          }
+     45          
+     46          
+     47          // Called by probe_init() and the mc_probe() routines. Sets up the probe pin invert mask to
+     48          // appropriately set the pin logic according to setting for normal-high/normal-low operation
+     49          // and the probing cycle modes for toward-workpiece/away-from-workpiece.
+     50          void probe_configure_invert_mask(uint8_t is_probe_away)
+     51          {
+     52            probe_invert_mask = 0; // Initialize as zero.
+     53            if (bit_isfalse(settings.flags,BITFLAG_INVERT_PROBE_PIN)) { probe_invert_mask ^= PROBE_MASK; }
+     54            if (is_probe_away) { probe_invert_mask ^= PROBE_MASK; }
+     55          }
+     56          
+     57          
+     58          // Returns the probe pin state. Triggered = true. Called by gcode parser and probe state monitor.
+     59          uint8_t probe_get_state() 
+     60          { 
+     61          ////	return ((GPIO_ReadInputData(PROBE_PORT) & PROBE_MASK) ^ probe_invert_mask) != 0;
+     62                  return 0;
+     63          }
+     64          
+     65          
+     66          // Monitors probe pin state and records the system position when detected. Called by the
+     67          // stepper ISR per ISR tick.
+     68          // NOTE: This function must be extremely efficient as to not bog down the stepper ISR.
+     69          void probe_state_monitor()
+     70          {
+     71            if (probe_get_state()) {
+     72              sys_probe_state = PROBE_OFF;
+     73              memcpy(sys_probe_position, sys_position, sizeof(sys_position));
+     74              bit_true(sys_rt_exec_state, EXEC_MOTION_CANCEL);
+     75            }
+     76          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   probe_configure_invert_mask
+       0   probe_get_state
+       8   probe_init
+         8   -> probe_configure_invert_mask
+      16   probe_state_monitor
+        16   -> __aeabi_memcpy
+        16   -> probe_get_state
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+      34  probe_configure_invert_mask
+       4  probe_get_state
+      10  probe_init
+       1  probe_invert_mask
+      44  probe_state_monitor
+
+ 
+   1 byte  in section .bss
+ 116 bytes in section .text
+ 
+ 116 bytes of CODE memory
+   1 byte  of DATA memory
+
+Errors: none
+Warnings: none

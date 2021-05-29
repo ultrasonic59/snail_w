@@ -31,6 +31,23 @@ build list.pbi : index list.xcl
 build port.pbi : index port.xcl
 build queue.pbi : index queue.xcl
 build tasks.pbi : index tasks.xcl
+build coolant_control.pbi : index coolant_control.xcl
+build gbrl_serial.pbi : index gbrl_serial.xcl
+build gbrl_thr.pbi : index gbrl_thr.xcl
+build gcode.pbi : index gcode.xcl
+build jog.pbi : index jog.xcl
+build limits.pbi : index limits.xcl
+build motion_control.pbi : index motion_control.xcl
+build nuts_bolts.pbi : index nuts_bolts.xcl
+build planner.pbi : index planner.xcl
+build print.pbi : index print.xcl
+build probe.pbi : index probe.xcl
+build protocol.pbi : index protocol.xcl
+build report.pbi : index report.xcl
+build settings.pbi : index settings.xcl
+build spindle_control.pbi : index spindle_control.xcl
+build stepper.pbi : index stepper.xcl
+build system.pbi : index system.xcl
 build fcs16.pbi : index fcs16.xcl
 build hdlc1.pbi : index hdlc1.xcl
 build misc.pbi : index misc.xcl
@@ -55,13 +72,15 @@ build usb_bsp.pbi : index usb_bsp.xcl
 build usb_thr.pbi : index usb_thr.xcl
 build usbd_desc.pbi : index usbd_desc.xcl
 build usbd_usr.pbi : index usbd_usr.xcl
-build usb_can_part0.pbi : link can.pbi main.pbi pc_interf.pbi usb_can_board.pbi zzzz.pbi retarget.pbi
-build usb_can_part1.pbi : link heap_2.pbi list.pbi port.pbi queue.pbi tasks.pbi fcs16.pbi
-build usb_can_part2.pbi : link hdlc1.pbi misc.pbi stm32f2xx_can.pbi stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi
-build usb_can_part3.pbi : link stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi system_stm32f2xx.pbi stm32f2xx_it.pbi usbd_cdc_vcp.pbi
-build usb_can_part4.pbi : link usbd_cdc_vcp_core.pbi usbd_core.pbi usbd_ioreq.pbi usbd_req.pbi usb_core.pbi usb_dcd.pbi
-build usb_can_part5.pbi : link usb_dcd_int.pbi usb_bsp.pbi usb_thr.pbi usbd_desc.pbi usbd_usr.pbi
-build usb_can.pbd : link usb_can_part0.pbi usb_can_part1.pbi usb_can_part2.pbi usb_can_part3.pbi usb_can_part4.pbi usb_can_part5.pbi
+build usb_can_part0.pbi : link can.pbi main.pbi pc_interf.pbi usb_can_board.pbi zzzz.pbi retarget.pbi heap_2.pbi
+build usb_can_part1.pbi : link list.pbi port.pbi queue.pbi tasks.pbi coolant_control.pbi gbrl_serial.pbi gbrl_thr.pbi
+build usb_can_part2.pbi : link gcode.pbi jog.pbi limits.pbi motion_control.pbi nuts_bolts.pbi planner.pbi print.pbi
+build usb_can_part3.pbi : link probe.pbi protocol.pbi report.pbi settings.pbi spindle_control.pbi stepper.pbi system.pbi
+build usb_can_part4.pbi : link fcs16.pbi hdlc1.pbi misc.pbi stm32f2xx_can.pbi stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi
+build usb_can_part5.pbi : link stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi system_stm32f2xx.pbi stm32f2xx_it.pbi usbd_cdc_vcp.pbi usbd_cdc_vcp_core.pbi
+build usb_can_part6.pbi : link usbd_core.pbi usbd_ioreq.pbi usbd_req.pbi usb_core.pbi usb_dcd.pbi usb_dcd_int.pbi usb_bsp.pbi
+build usb_can_part7.pbi : link usb_thr.pbi usbd_desc.pbi usbd_usr.pbi
+build usb_can.pbd : link usb_can_part0.pbi usb_can_part1.pbi usb_can_part2.pbi usb_can_part3.pbi usb_can_part4.pbi usb_can_part5.pbi usb_can_part6.pbi usb_can_part7.pbi
 build usb_can.pbw : browsedata usb_can.pbd
 
 

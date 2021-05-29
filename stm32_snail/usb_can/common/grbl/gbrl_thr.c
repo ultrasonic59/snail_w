@@ -36,6 +36,7 @@ volatile uint8_t sys_rt_exec_accessory_override; // Global realtime executor bit
 volatile uint8_t sys_rt_exec_debug;
 #endif
 
+#if 0
 #include "usb_lib.h"
 #ifdef USEUSB
 #include "usb_desc.h"
@@ -47,8 +48,10 @@ volatile uint8_t sys_rt_exec_debug;
 #include "stm32eeprom.h"
 #ifndef USEUSB
 #include "stm32f10x_usart.h"
+#endif
 void USART1_Configuration(u32 BaudRate)
 {
+#if 0  
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
@@ -79,6 +82,7 @@ void USART1_Configuration(u32 BaudRate)
 	//	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	USART_Cmd(USART1, ENABLE);
+#endif       
 }
 #endif
 
@@ -111,8 +115,9 @@ btst++;
 delay__ms(1);  
 }
         
- ///=====================================       
-	SysTick->CTRL &= 0xfffffffb;
+ ///=====================================  
+     
+/////	SysTick->CTRL &= 0xfffffffb;
   // Initialize system upon power-up.
   serial_init();   // Setup serial baud rate and interrupts
   settings_init(); // Load Grbl settings from EEPROM
@@ -197,7 +202,9 @@ void _delay_ms(uint32_t x)
 }
 void LedBlink(void)
 {
+#if 0  
 	static BitAction nOnFlag = Bit_SET;
 	GPIO_WriteBit(GPIOC, GPIO_Pin_13, nOnFlag);
 	nOnFlag = (nOnFlag == Bit_SET) ? Bit_RESET : Bit_SET;
+#endif        
 }

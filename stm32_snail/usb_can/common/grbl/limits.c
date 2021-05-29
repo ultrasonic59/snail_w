@@ -20,7 +20,7 @@
 */
 
 #include "grbl.h"
-#include "stm32f10x_conf.h"
+//// #include "stm32f10x_conf.h"
 #include "board.h"
 
 
@@ -86,7 +86,7 @@ uint8_t limits_get_state()
 {
 uint8_t limit_state = 0;
 uint16_t pin=0;
-
+#if 0
 pin = GPIO_ReadInputData(XSTOP_PIN_GPIO);
 if(pin&(0x1<<XSTOP_PIN_NPIN))
   limit_state |=(0x1<<0);
@@ -98,6 +98,7 @@ if(pin&(0x1<<ZSTOP_PIN_NPIN))
   limit_state |=(0x1<<2);
     
    limit_state ^= (settings.inv_lim&0x7) ;
+#endif  
 #if 0   
   if (bit_isfalse(settings.flags,BITFLAG_INVERT_LIMIT_PINS)) 
     { 

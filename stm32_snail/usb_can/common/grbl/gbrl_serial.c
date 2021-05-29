@@ -23,13 +23,14 @@
 ///#include "stm32f10x_map.h"
 
 #include "grbl.h"
-#include "stm32f10x.h"
+////#include "stm32f10x.h"
 ////#include "core_cm3.h"
-
-#ifndef USEUSB
-#include "stm32f10x_usart.h"
-#else
-#include "usb_regs.h"
+#if 0
+  #ifndef USEUSB
+  #include "stm32f10x_usart.h"
+  #else
+  #include "usb_regs.h"
+  #endif
 #endif
 
 #define RX_RING_BUFFER (RX_BUFFER_SIZE)
