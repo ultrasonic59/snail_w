@@ -44,7 +44,7 @@ p_hdlc->frame_out_len	= 0;
 p_hdlc->snd_buff_len= 0;
 p_hdlc->snd_buff1_len= 0;
 ///p_hdlc->snd_buff2_len= 0;
-p_hdlc->in_buf = (u8*) pvPortMalloc( HDLC1_MAX_FRAME_LEN );
+p_hdlc->in_buf = (uint8_t*) pvPortMalloc( HDLC1_MAX_FRAME_LEN );
 if( p_hdlc->in_buf == NULL ) 
 	hdlc1_error("hdlc_frames_init(): NO MEM\n");
 
@@ -55,7 +55,7 @@ p_hdlc->obr_buff	= (uint8_t*)pvPortMalloc(HDLC1_MAX_FRAME_LEN);
 if( p_hdlc->obr_buff == NULL )
 	hdlc1_error("hdlc1_init(): NO MEM FOR OBR_TMPBUF\n");
 	
-p_hdlc->t_snd_buff1 = (u8*)pvPortMalloc(HDLC1_MAX_FRAME_LEN);
+p_hdlc->t_snd_buff1 = (uint8_t*)pvPortMalloc(HDLC1_MAX_FRAME_LEN);
 if(p_hdlc->t_snd_buff1 == NULL)
 	{
 	hdlc1_error("hdlc1_init(): NO MEM FOR hdlc1_tbuff_send\n");
@@ -63,7 +63,7 @@ if(p_hdlc->t_snd_buff1 == NULL)
 	}
 memset(p_hdlc->t_snd_buff1,0,HDLC1_MAX_FRAME_LEN);	
 #if 0
-p_hdlc->t_snd_buff2 = (u8*)pvPortMalloc(HDLC1_MAX_FRAME_LEN);
+p_hdlc->t_snd_buff2 = (uint8_t*)pvPortMalloc(HDLC1_MAX_FRAME_LEN);
 if(p_hdlc->t_snd_buff2 == NULL)
 	{
 	hdlc1_error("hdlc1_init(): NO MEM FOR hdlc1_tbuff_send\n");
@@ -84,12 +84,12 @@ p_hdlc->err_len++;
 ///volatile uint8_t tst_buf[512];
 ///int ptr_tst_buf=0;
 ///========================================================
-uint8_t hdlc1_send_iframe(hdlc_stat_t *p_hdlc,u8 *data, int len)
+uint8_t hdlc1_send_iframe(hdlc_stat_t *p_hdlc,uint8_t *data, int len)
 {
 ////frame_t fr;
 uint16_t len_o=0;
-u16 ii;
-u8 bt;
+uint16_t ii;
+uint8_t bt;
 uint8_t rez=TRUE;
 ///================================
 ////p_hdlc->snd_buff2_len=0;
@@ -127,10 +127,10 @@ return rez;
 }
 
 ///==============================
-int hdlc1_parse_iframe(hdlc_stat_t *p_hdlc,u8 *in_buf,u16 len)
+int hdlc1_parse_iframe(hdlc_stat_t *p_hdlc,uint8_t *in_buf,uint16_t len)
 {
 int rez =0;
-u8 btmp;
+uint8_t btmp;
 uint32_t wtmp=0;
 uint16_t h_rez;
 ////t_frametx frame_tx;
@@ -143,7 +143,7 @@ switch(*in_buf)
 		break;	
 	case CMD_PUT_DAT:
 		btmp = *(in_buf+1);
-		p_hdlc->fn_set_rec_dat(btmp,(void *)((u32)in_buf+2));
+		p_hdlc->fn_set_rec_dat(btmp,(void *)((uint32_t)in_buf+2));
 	///	xQueueSend(ev_rsv_dat,&btmp,TIMEOUT_SEND);
 		wtmp=SEND_ACK;
 		wtmp |= (btmp<<8);
@@ -151,7 +151,7 @@ switch(*in_buf)
 		break;
 	case CMD_PUT_CMD:
 		btmp = *(in_buf+1);
-		h_rez=p_hdlc->fn_set_rec_dat(btmp,(void *)((u32)in_buf+2));
+		h_rez=p_hdlc->fn_set_rec_dat(btmp,(void *)((uint32_t)in_buf+2));
 	///	xQueueSend(ev_rsv_dat,&btmp,TIMEOUT_SEND);
 		wtmp=SEND_REZ;
 		wtmp |= (btmp<<8);
@@ -160,7 +160,7 @@ switch(*in_buf)
 		break;
 	case CMD_PUT_REQ_DAT:
 		btmp = *(in_buf+1);
-		p_hdlc->fn_set_rec_dat(btmp,(void *)((u32)in_buf+2));
+		p_hdlc->fn_set_rec_dat(btmp,(void *)((uint32_t)in_buf+2));
                 xQueueSend(p_hdlc->ev_rsv_dat,&btmp,TIMEOUT_SEND);
 ///		htmp=SEND_ACK;
 ///		htmp |= (btmp<<8);
@@ -205,10 +205,10 @@ p_hdlc->frames_received++;
 hdlc1_parse_iframe(p_hdlc, p_hdlc->obr_buff , p_hdlc->len_obr_dat);
 }
 ///================================
-int	hdlc1_send_ack_to(hdlc_stat_t *p_hdlc,u8 ipar)
+int	hdlc1_send_ack_to(hdlc_stat_t *p_hdlc,uint8_t ipar)
 {
 int num_send=0;
-u8 *p_tmp	 =p_hdlc->t_snd_buff1;
+uint8_t *p_tmp	 =p_hdlc->t_snd_buff1;
 *p_tmp++  = CMD_ACK;
 num_send++;
 *p_tmp++  = ipar;
@@ -216,10 +216,10 @@ num_send++;
 return hdlc1_send_iframe(p_hdlc,p_hdlc->t_snd_buff1, num_send);
 ////return 0;
 }
-int	hdlc1_send_rez_to(hdlc_stat_t *p_hdlc,u8 ipar,u16 rez)
+int	hdlc1_send_rez_to(hdlc_stat_t *p_hdlc,uint8_t ipar,uint16_t rez)
 {
 int num_send=0;
-u8 *p_tmp	 =p_hdlc->t_snd_buff1;
+uint8_t *p_tmp	 =p_hdlc->t_snd_buff1;
 *p_tmp++  = CMD_REZ;
 num_send++;
 *p_tmp++  = ipar;
@@ -233,7 +233,7 @@ return hdlc1_send_iframe(p_hdlc,p_hdlc->t_snd_buff1, num_send);
 }
 
 ///====== from uart isr ============================
-int hdlc1_on_bytein(hdlc_stat_t *p_hdlc, u8 in_bt )
+int hdlc1_on_bytein(hdlc_stat_t *p_hdlc, uint8_t in_bt )
 {
 p_hdlc->bytes_received++;
 if( in_bt == PPP_FRAME )						// Пришел флаг
@@ -276,12 +276,12 @@ else
 return 0;	
 }
 ///==============================
-extern u16 pppfcs16(register u16 fcs, register unsigned char *cp, register int len);
+extern uint16_t pppfcs16(register uint16_t fcs, register unsigned char *cp, register int len);
 ///====================================
 void obr_hdlc1_cmd(hdlc_stat_t *p_hdlc)
 {
 int res;
-u8 ii;
+uint8_t ii;
 if((res= hdlc1_check_framein(p_hdlc))>0 )	// Проверить правильность входящего кадра
 	{
 ///==================================
@@ -307,7 +307,7 @@ void hdlc1_obr_frame(void *pdata)
 {
 ///u8 addr= *((u8*)pdata);
 hdlc_stat_t *p_hdlc=(hdlc_stat_t *)pdata;
-u8 res_byte;
+uint8_t res_byte;
 ///u8 btmp=0x33;
 ///u16 cnt=0;
 printk("\n\r=== hdlc1_obr_frame===  [%s]",pcTaskGetTaskName(NULL) );
@@ -318,13 +318,13 @@ for(;;)
 	}
 }
 
-uint8_t hdlc1_send_dat(hdlc_stat_t *p_hdlc, u8 icmd, u8 *idat, u16 len)
+uint8_t hdlc1_send_dat(hdlc_stat_t *p_hdlc, uint8_t icmd, uint8_t *idat, uint16_t len)
 {
 uint8_t res_byte;
 uint16_t htmp;
 uint8_t res=FALSE;
 int num_send=0;
-u8 *p_tmp=p_hdlc->t_snd_buff1;
+uint8_t *p_tmp=p_hdlc->t_snd_buff1;
 if (len == 0)
   return FALSE;
 *p_tmp++  = CMD_PUT_DAT;
@@ -358,13 +358,13 @@ else
   }	
 return res;
 }
-int	hdlc1_send_to(hdlc_stat_t *p_hdlc,u8 type_send,u8 type_dat,u16 rez)
+int	hdlc1_send_to(hdlc_stat_t *p_hdlc,uint8_t type_send,uint8_t type_dat,uint16_t rez)
 {
 int res=0;
-u16 len_dat;
+uint16_t len_dat;
 int num_send=0;
-u8 *p_tmp1;
-u8 *p_tmp	 = p_hdlc->snd_buff;
+uint8_t *p_tmp1;
+uint8_t *p_tmp	 = p_hdlc->snd_buff;
 if(type_send == SEND_REZ)
 	{
 	res=hdlc1_send_rez_to(p_hdlc,type_dat,rez);
@@ -408,7 +408,7 @@ return res;
 void hdlc1_snd_task(void *pdata)
 {
 ////t_frametx frame_tx;
-u32 type_send;
+uint32_t type_send;
 hdlc_stat_t *p_hdlc=(hdlc_stat_t *)pdata;
 ///==================================
 #if 0

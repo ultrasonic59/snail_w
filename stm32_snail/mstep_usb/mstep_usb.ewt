@@ -4903,6 +4903,39 @@
         </file>
     </group>
     <group>
+        <name>tinyusb</name>
+        <group>
+            <name>cdc</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\class\cdc\cdc_device.c</name>
+            </file>
+        </group>
+        <group>
+            <name>device</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\device\usbd.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\device\usbd_control.c</name>
+            </file>
+        </group>
+        <group>
+            <name>st</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\portable\st\synopsys\dcd_synopsys.c</name>
+            </file>
+        </group>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\tusb.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\common\tusb_fifo.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\usb_descriptors.c</name>
+        </file>
+    </group>
+    <group>
         <name>usb</name>
         <group>
             <name>cdc</name>

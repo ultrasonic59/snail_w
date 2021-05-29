@@ -177,7 +177,7 @@ void _CAN1_TX_IRQHandler (void) {
  *----------------------------------------------------------------------------*/
 void _CAN1_RX0_IRQHandler (void)
 {
-u32 *up;
+uint32_t *up;
 	
 if (CAN1->RF0R & CAN_RF0R_FMP0)
   {			/* message pending ?              */
@@ -185,7 +185,7 @@ if (CAN1->RF0R & CAN_RF0R_FMP0)
 
   if (CAN_RxMsg.id == (0x080 + NODE))
     {
-    up = (u32*)CAN_RxMsg.data;
+    up = (uint32_t*)CAN_RxMsg.data;
 ////    stat_srv_y.fault &= 0xff000000;
 ////    stat_srv_y.fault |= ((*up) & 0x00ffffff);
 ////    stat_srv_y.flg |= STAT_SRV_FLG_ERR_REQ;

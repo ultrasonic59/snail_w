@@ -78,6 +78,8 @@
 
 #include "misc.h"
 #include "printk.h"
+#include "tusb.h"
+
 ///=======================================================================
 extern void usb_thread( void *arg );
 extern void init_hdlc_vcp(void);
@@ -115,6 +117,7 @@ do
   }
 while (1);
 }
+static void cdc_task(void);
    
 ////============================================
 int main( void )
@@ -128,7 +131,9 @@ __disable_irq();
 hw_board_init();
 
 printk("\n\r CAN1_Init"); 
+
 CAN1_Init();
+#if 0
 ///=================================  
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
@@ -136,8 +141,17 @@ CAN1_Init();
             &USBD_Class_cb, 
             &USR_cb);
 ///=================================  
+#endif
 init_hdlc_vcp();
+///==================================
+tusb_init();
+  while (1)
+  {
+    tud_task(); // tinyusb device task
+    cdc_task();
+  }
 
+///==================================
 
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
         
@@ -165,6 +179,53 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 return 0;
 }
 ////============================================================
+static void echo_serial_port(uint8_t itf, uint8_t buf[], uint32_t count)
+{
+  for(uint32_t i=0; i<count; i++)
+  {
+    if (itf == 0)
+    {
+      // echo back 1st port as lower case
+      if (isupper(buf[i])) buf[i] += 'a' - 'A';
+    }
+    else
+    {
+      // echo back 2nd port as upper case
+      if (islower(buf[i])) buf[i] -= 'a' - 'A';
+    }
+
+    tud_cdc_n_write_char(itf, buf[i]);
+  }
+  tud_cdc_n_write_flush(itf);
+}
+
+//--------------------------------------------------------------------+
+// USB CDC
+//--------------------------------------------------------------------+
+static void cdc_task(void)
+{
+  uint8_t itf;
+
+  for (itf = 0; itf < CFG_TUD_CDC; itf++)
+  {
+    // connected() check for DTR bit
+    // Most but not all terminal client set this when making connection
+    // if ( tud_cdc_n_connected(itf) )
+    {
+      if ( tud_cdc_n_available(itf) )
+      {
+        uint8_t buf[64];
+
+        uint32_t count = tud_cdc_n_read(itf, buf, sizeof(buf));
+
+        // echo back to both serial ports
+        echo_serial_port(0, buf, count);
+        echo_serial_port(1, buf, count);
+      }
+    }
+  }
+}
+
 ////=======================================================
 
 ////=======================================================

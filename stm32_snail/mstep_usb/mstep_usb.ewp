@@ -3416,6 +3416,7 @@
                     <state>IAR_ARM_CM3</state>
                     <state>USEUSB</state>
                     <state>MSTEP_BRD</state>
+                    <state>STM32F205xx</state>
                     <state>USE_USB_OTG_FS</state>
                 </option>
                 <option>
@@ -3557,6 +3558,7 @@
                     <state>$PROJ_DIR$\..\common\usb\inc</state>
                     <state>$PROJ_DIR$\..\common\hdlc</state>
                     <state>$PROJ_DIR$\..\common\usb\cdc</state>
+                    <state>$PROJ_DIR$\src\tinyusb</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -4449,6 +4451,39 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
+        </file>
+    </group>
+    <group>
+        <name>tinyusb</name>
+        <group>
+            <name>cdc</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\class\cdc\cdc_device.c</name>
+            </file>
+        </group>
+        <group>
+            <name>device</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\device\usbd.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\device\usbd_control.c</name>
+            </file>
+        </group>
+        <group>
+            <name>st</name>
+            <file>
+                <name>$PROJ_DIR$\src\tinyusb\portable\st\synopsys\dcd_synopsys.c</name>
+            </file>
+        </group>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\tusb.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\common\tusb_fifo.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\tinyusb\usb_descriptors.c</name>
         </file>
     </group>
     <group>

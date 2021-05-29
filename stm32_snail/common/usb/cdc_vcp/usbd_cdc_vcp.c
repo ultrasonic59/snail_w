@@ -185,10 +185,10 @@ if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
 
 }
 #else
-void hdlc_vcp_send_byte(u8 val)
+void hdlc_vcp_send_byte(uint8_t val)
 {
 int num;  
-u8 btmp=val;
+uint8_t btmp=val;
 for(;;)
 {
  num= VCP_PutContig(&btmp,1);
@@ -278,8 +278,8 @@ if (sz)
 
 ////===================================
 
-extern u16	pc_get_req_dat(u8 num_req,u16 offs,u8 *buf);
-extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
+extern uint16_t	pc_get_req_dat(uint8_t num_req,uint16_t offs,uint8_t *buf);
+extern int      pc_set_rec_dat(uint8_t cmd,void *in_buf);
 ///u8 addr= *((u8*)pdata);
 
 ///=======================
