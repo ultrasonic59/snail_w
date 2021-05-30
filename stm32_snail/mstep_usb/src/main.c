@@ -82,7 +82,7 @@
 
 ///=======================================================================
 extern void usb_thread( void *arg );
-extern void init_hdlc_vcp(void);
+////extern void init_hdlc_vcp(void);
 
 #define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
@@ -142,7 +142,7 @@ CAN1_Init();
             &USR_cb);
 ///=================================  
 #endif
-init_hdlc_vcp();
+//// init_hdlc_vcp();
 ///==================================
 tusb_init();
   while (1)

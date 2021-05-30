@@ -44,6 +44,8 @@ D:\proj\velograph\snail\stm32_snail\mstep_usb\..\common\usb\cdc
 -I
 D:\proj\velograph\snail\stm32_snail\mstep_usb\src\tinyusb
 -I
+D:\proj\velograph\snail\stm32_snail\mstep_usb\src\tinyusb\device
+-I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include
@@ -85,6 +87,8 @@ D:\proj\velograph\snail\stm32_snail\common\hdlc
 D:\proj\velograph\snail\stm32_snail\common\usb\cdc
 -I
 D:\proj\velograph\snail\stm32_snail\mstep_usb\src\tinyusb
+-I
+D:\proj\velograph\snail\stm32_snail\mstep_usb\src\tinyusb\device
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
 -I
@@ -365,10 +369,8 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
 -DVECT_TAB_FLASH=1
 -DIAR_ARM_CM3=1
--DUSEUSB=1
 -DMSTEP_BRD=1
 -DSTM32F205xx=1
--DUSE_USB_OTG_FS=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Full.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Full.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM"

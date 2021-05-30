@@ -3414,10 +3414,8 @@
                     <name>CCDefines</name>
                     <state>VECT_TAB_FLASH</state>
                     <state>IAR_ARM_CM3</state>
-                    <state>USEUSB</state>
                     <state>MSTEP_BRD</state>
                     <state>STM32F205xx</state>
-                    <state>USE_USB_OTG_FS</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -3559,6 +3557,7 @@
                     <state>$PROJ_DIR$\..\common\hdlc</state>
                     <state>$PROJ_DIR$\..\common\usb\cdc</state>
                     <state>$PROJ_DIR$\src\tinyusb</state>
+                    <state>$PROJ_DIR$\src\tinyusb\device</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -4492,6 +4491,7 @@
             <configuration>Debug</configuration>
             <configuration>mstep_debug</configuration>
             <configuration>step_debug</configuration>
+            <configuration>usb_can</configuration>
         </excluded>
         <group>
             <name>cdc</name>

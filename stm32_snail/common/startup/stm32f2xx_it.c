@@ -333,9 +333,13 @@ if (CAN1->TSR & CAN_TSR_RQCP0)          /* request completed mbx 0        */
   CAN_TxRdy = 1;
   }
 }
-
-
-///==================================================
+////==================================================
+#include "usbd.h"
+void OTG_FS_IRQHandler(void)
+{
+ tud_int_handler(0); 
+}
+////==================================================
 #ifdef USB_DEV
 
 #include "usb_core.h"
