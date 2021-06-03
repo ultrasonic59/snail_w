@@ -1,0 +1,112 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         03/Jun/2021  21:14:30
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\pc_interf.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW9871.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\pc_interf.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\pc_interf.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\pc_interf.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\pc_interf.c
+      1          #include <stdint.h>
+      2          
+      3          ///=================================================
+      4          uint16_t pc_get_req_dat(uint8_t num_req,uint16_t offs,uint8_t *buf)
+      5          {
+      6          uint16_t rez=0;
+      7          return rez;
+      8          }
+      9          
+     10          int pc_set_rec_dat(uint8_t cmd,void *in_buf)
+     11          {
+     12          int rez=0;
+     13          #if 0
+     14          uint16_t n_bytes;
+     15          u16 num_bytes;
+     16          u8 *bbuf=(u8*)in_buf;
+     17          //// ====================================
+     18          ////printk("\n\r pc_set_rec_dat[%x]",cmd);
+     19          ///=================================
+     20          ////return 0;
+     21          switch(cmd)
+     22          	{
+     23          	case NUM_SET_CNGEN:		/// 
+     24          ////		curr_par_trk.dop_par.curr_gen = *((u8*)(in_buf)+2);
+     25          		break;	
+     26          	case NUM_SET_CNUS:			/// 
+     27          		curr_par_trk.dop_par.curr_us = *((u8*)(in_buf)+2);
+     28          		break;	
+     29           	}
+     30          #endif        
+     31          return rez;
+     32          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   pc_get_req_dat
+       0   pc_set_rec_dat
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       8  pc_get_req_dat
+       6  pc_set_rec_dat
+
+ 
+ 14 bytes in section .text
+ 
+ 14 bytes of CODE memory
+
+Errors: none
+Warnings: none
