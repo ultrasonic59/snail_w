@@ -253,8 +253,8 @@ return 0;
 ////extern int hdlc_bt_get_rez(u8 type_rez,void *obuf);
 ////extern TaskHandle_t  my_system_monitor_thread_handle;
 
-TaskHandle_t  vcp_rx_thread_handle;
-TaskHandle_t  vcp_tx_thread_handle;
+////TaskHandle_t  vcp_rx_thread_handle;
+///TaskHandle_t  vcp_tx_thread_handle;
 TaskHandle_t  vcp_thread_handle;
 
 ////static 
@@ -290,6 +290,7 @@ if (sz)
   for(ii=0;ii<sz;ii++)
     {
     VCP_GetContig(&rd_dat,1);
+    rd_dat++;
     VCP_PutContig(&rd_dat,1);
 #if 0    
     if (hdlc1_on_bytein(&g_hdlc_vcp, rd_dat) > 0)
@@ -314,6 +315,7 @@ extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
 ///u8 addr= *((u8*)pdata);
 volatile int vtmp;
 ///=======================
+#if 0
 void init_hdlc_vcp(void)
 {
 BaseType_t rez;  
@@ -335,7 +337,7 @@ rez=xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (
 vtmp=rez;
 ///put_tst1(0);
 }
-
+#endif
 ///======================================  
 ////static uint8_t flg_usb_on=0;
 ///======================================  

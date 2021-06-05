@@ -4,9 +4,11 @@
 
 ////#include "stm32f2xx_gpio.h"
 #include "board.h"
+#include "my_grbl.h"
 
 ////#define TEST_PIN ZSTP_PIN
 ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
+system_t sys;
 
 void  put_tst_pin(uint8_t idat)
 {

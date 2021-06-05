@@ -4864,6 +4864,12 @@
         </file>
     </group>
     <group>
+        <name>my_grbl</name>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\my_gbrl_serial.c</name>
+        </file>
+    </group>
+    <group>
         <name>ST Library</name>
         <file>
             <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>

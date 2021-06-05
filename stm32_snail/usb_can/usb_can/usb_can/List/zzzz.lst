@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         03/Jun/2021  21:14:32
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:57
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWA0B7.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWC8C5.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -43,6 +43,7 @@
 #        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
 #        -I
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\
 #        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
 #        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
 #        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
@@ -61,27 +62,29 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
       4          
       5          ////#include "stm32f2xx_gpio.h"
       6          #include "board.h"
-      7          
-      8          ////#define TEST_PIN ZSTP_PIN
-      9          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
-     10          
-     11          void  put_tst_pin(uint8_t idat)
-     12          {
-     13          #if 1  
-     14          if(idat&0x1)
-     15            {
-     16            GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
-     17             GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
-     18            ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
-     19            }
-     20          else
-     21            {
-     22             GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
-     23             GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
-     24             ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
-     25            }
-     26          #endif 
-     27          }
+      7          #include "my_grbl.h"
+      8          
+      9          ////#define TEST_PIN ZSTP_PIN
+     10          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
+     11          system_t sys;
+     12          
+     13          void  put_tst_pin(uint8_t idat)
+     14          {
+     15          #if 1  
+     16          if(idat&0x1)
+     17            {
+     18            GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
+     19             GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
+     20            ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
+     21            }
+     22          else
+     23            {
+     24             GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
+     25             GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
+     26             ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
+     27            }
+     28          #endif 
+     29          }
 
    Maximum stack usage in bytes:
 
@@ -97,11 +100,14 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
    Bytes  Function/Label
    -----  --------------
       56  put_tst_pin
+      20  sys
 
  
+ 20 bytes in section .bss
  56 bytes in section .text
  
  56 bytes of CODE memory
+ 20 bytes of DATA memory
 
 Errors: none
 Warnings: none

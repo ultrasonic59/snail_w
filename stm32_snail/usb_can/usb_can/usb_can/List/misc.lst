@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         03/Jun/2021  21:14:30
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:54
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EW9851.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWBFE1.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -43,6 +43,7 @@
 #        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
 #        -I
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\
 #        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
 #        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
 #        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")

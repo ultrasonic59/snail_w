@@ -78,8 +78,11 @@
 #include "misc.h"
 #include "printk.h"
 ///=======================================================================
-extern void usb_thread( void *arg );
-extern void init_hdlc_vcp(void);
+extern void vcp_thread(void *pdata);
+extern TaskHandle_t  vcp_thread_handle;
+
+///extern void usb_thread( void *arg );
+///extern void init_hdlc_vcp(void);
 
 #define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
@@ -139,7 +142,7 @@ CAN1_Init();
             &USBD_Class_cb, 
             &USR_cb);
 ///=================================  
-init_hdlc_vcp();
+////init_hdlc_vcp();
 
 
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
@@ -158,6 +161,9 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 	/* Configure the timers used by the fast interrupt timer test. */
 /////	vSetupTimerTest();
   xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+////rez=
+xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+  
 ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
 
 	/* Start the scheduler. */
