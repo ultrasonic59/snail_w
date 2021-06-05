@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:55
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:54:20
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWC21C.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWED2D.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -345,11 +345,11 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
     287          }
     288          
     289          ////============= CAN1 =================================================
-    290          extern __IO uint32_t ret;
-    291          extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
-    292          extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
+    290          ///#include "can.h"
+    291          ////extern __IO uint32_t ret;
+    292          extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
     293          extern CanRxMsg RxMessage;
-    294          
+    294          #if 0
     295          void _CAN1_RX0_IRQHandler(void)
     296          {
     297          ////  CanRxMsg RxMessage;
@@ -390,7 +390,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
     332            CAN_TxRdy = 1;
     333            }
     334          }
-    335          
+    335          #endif
     336          
     337          ///==================================================
     338          
@@ -472,9 +472,6 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
          8   -> xPortSysTickHandler
        0   USART1_IRQHandler
        0   UsageFault_Handler
-       8   _CAN1_RX0_IRQHandler
-         8   -> CAN_Receive
-       0   _CAN1_TX_IRQHandler
        0   __HardFault_Handler
       32   hard_fault_handler_c
 
@@ -483,14 +480,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
 
    Bytes  Function/Label
    -----  --------------
-       4  ??DataTable3
-       4  ??DataTable3_1
-       4  ??DataTable3_2
-       4  ??DataTable3_3
-       4  ??DataTable3_4
-       4  ??DataTable3_5
-       4  ??DataTable3_6
-       4  ??DataTable3_7
+       4  ??DataTable1
        2  BusFault_Handler
        2  DMA2_Stream2_IRQHandler
        2  DMA2_Stream3_IRQHandler
@@ -512,15 +502,13 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\startup\stm32f2xx_it.c
        8  SysTick_Handler
        2  USART1_IRQHandler
        2  UsageFault_Handler
-      58  _CAN1_RX0_IRQHandler
-      34  _CAN1_TX_IRQHandler
        2  __HardFault_Handler
       36  hard_fault_handler_c
 
  
- 230 bytes in section .text
+ 110 bytes in section .text
  
- 230 bytes of CODE memory
+ 110 bytes of CODE memory
 
 Errors: none
 Warnings: none

@@ -1,0 +1,124 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:36:00
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\grbl_system.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW221A.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\grbl_system.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\grbl_system.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\grbl_system.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\grbl_system.c
+      1          #include <stdint.h>
+      2          #include "my_grbl.h"
+      3          
+      4          system_t sys;
+      5          
+      6          volatile uint8_t sys_rt_exec_state;   // Global realtime executor bitflag variable for state management. See EXEC bitmasks.
+      7          volatile uint8_t sys_rt_exec_motion_override; // Global realtime executor bitflag variable for motion-based overrides.
+      8          volatile uint8_t sys_rt_exec_accessory_override; // Global realtime executor bitflag variable for spindle/coolant overrides.
+      9          
+     10          void system_set_exec_state_flag(uint8_t flag) {
+     11          ///  __disable_irq();
+     12            sys_rt_exec_state |= (flag);
+     13          ///  __enable_irq();
+     14          }
+     15          void system_set_exec_motion_override_flag(uint8_t mask) {
+     16          ////  __disable_irq();
+     17            sys_rt_exec_motion_override |= (mask);
+     18          ///  __enable_irq();
+     19          }
+     20          void system_set_exec_accessory_override_flag(uint8_t mask) {
+     21          ///  __disable_irq();
+     22            sys_rt_exec_accessory_override |= (mask);
+     23          ///  __enable_irq();
+     24          }
+     25          
+     26          void system_clear_exec_motion_overrides() {
+     27          //// __disable_irq();
+     28            sys_rt_exec_motion_override = 0;
+     29          ////  __enable_irq();
+     30          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   system_clear_exec_motion_overrides
+       0   system_set_exec_accessory_override_flag
+       0   system_set_exec_motion_override_flag
+       0   system_set_exec_state_flag
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable3
+       4  ??DataTable3_1
+       4  ??DataTable3_2
+      20  sys
+       1  sys_rt_exec_accessory_override
+       1  sys_rt_exec_motion_override
+       1  sys_rt_exec_state
+       8  system_clear_exec_motion_overrides
+      10  system_set_exec_accessory_override_flag
+      10  system_set_exec_motion_override_flag
+      10  system_set_exec_state_flag
+
+ 
+ 23 bytes in section .bss
+ 50 bytes in section .text
+ 
+ 50 bytes of CODE memory
+ 23 bytes of DATA memory
+
+Errors: none
+Warnings: none

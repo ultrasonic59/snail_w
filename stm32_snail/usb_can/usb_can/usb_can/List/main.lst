@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:54
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:54:19
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWBFB2.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWEAA5.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
 #        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
@@ -147,93 +147,71 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\main.c
      90          ///==================================
      91          TaskHandle_t  usb_thread_handle;
      92          ///==================================
-     93          
-     94          ///=======================================================================
-     95          ///==================================
-     96          #pragma data_alignment=8   
-     97          __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
-     98          
-     99          extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
-    100          #define USBD_Class_cb USBD_CDC_VCP_cb
-    101          extern USBD_Class_cb_TypeDef  USBD_CDC_cb;
-    102          ////#define USBD_Class_cb USBD_CDC_cb
+     93          ///==================================
+     94          #pragma data_alignment=8   
+     95          __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
+     96          
+     97          extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
+     98          #define USBD_Class_cb USBD_CDC_VCP_cb
+     99          extern USBD_Class_cb_TypeDef  USBD_CDC_cb;
+    100          ////#define USBD_Class_cb USBD_CDC_cb
+    101          
+    102          extern USBD_Usr_cb_TypeDef USR_cb;
     103          
-    104          extern USBD_Usr_cb_TypeDef USR_cb;
-    105          
-    106          ////========================================================
-    107          void uDelay (const uint32_t usec)
-    108          {
-    109          uint32_t count = 0;
-    110          const uint32_t utime = 45*usec;////(120 * usec / 7);
-    111          do
-    112            {
-    113             if ( ++count > utime )
-    114              {
-    115              return ;
-    116              }
-    117            }
-    118          while (1);
-    119          }
-    120             
-    121          ////============================================
-    122          int main( void )
-    123          {
-    124          ////uint8_t btst=0; 
-    125          ////uint32_t tst=0;
-    126          #ifdef DEBUG
-    127            debug();
-    128          #endif
-    129          __disable_irq();
-    130          hw_board_init();
-    131          
-    132          printk("\n\r CAN1_Init"); 
-    133          CAN1_Init();
-    134          ////================================
-    135          
-    136          ////================================
-    137          
-    138          ///=================================  
-    139            USBD_Init(&USB_OTG_dev,
-    140                      USB_OTG_FS_CORE_ID,
-    141                      &USR_desc, 
-    142                      &USBD_Class_cb, 
-    143                      &USR_cb);
-    144          ///=================================  
-    145          ////init_hdlc_vcp();
+    104          ////========================================================
+    105          void uDelay (const uint32_t usec)
+    106          {
+    107          uint32_t count = 0;
+    108          const uint32_t utime = 45*usec;////(120 * usec / 7);
+    109          do
+    110            {
+    111             if ( ++count > utime )
+    112              {
+    113              return ;
+    114              }
+    115            }
+    116          while (1);
+    117          }
+    118             
+    119          ////============================================
+    120          int main( void )
+    121          {
+    122          ////uint8_t btst=0; 
+    123          ////uint32_t tst=0;
+    124          #ifdef DEBUG
+    125            debug();
+    126          #endif
+    127          __disable_irq();
+    128          hw_board_init();
+    129          
+    130          printk("\n\r CAN1_Init"); 
+    131          CAN1_Init();
+    132          ////================================
+    133          ////=================================  
+    134            USBD_Init(&USB_OTG_dev,
+    135                      USB_OTG_FS_CORE_ID,
+    136                      &USR_desc, 
+    137                      &USBD_Class_cb, 
+    138                      &USR_cb);
+    139          ///=================================  
+    140          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+    141            xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+    142          ////rez=
+    143          xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+    144            
+    145          ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
     146          
-    147          
-    148          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-    149                  
-    150          ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-    151                   
-    152          	/* Start the tasks defined within this file/specific to this demo. */
-    153           ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-    154          ////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-    155          
-    156          	/* The suicide tasks must be created last as they need to know how many
-    157          	tasks were running prior to their creation in order to ascertain whether
-    158          	or not the correct/expected number of tasks are running at any given time. */
-    159           ////????   vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-    160          
-    161          	/* Configure the timers used by the fast interrupt timer test. */
-    162          /////	vSetupTimerTest();
-    163            xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
-    164          ////rez=
-    165          xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
-    166            
-    167          ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
-    168          
-    169          	/* Start the scheduler. */
-    170          	vTaskStartScheduler();
-    171          
-    172          	/* Will only get here if there was not enough heap space to create the
-    173          	idle task. */
-    174          return 0;
-    175          }
-    176          ////============================================================
-    177          ////=======================================================
-    178          
-    179          ////=======================================================
+    147          	/* Start the scheduler. */
+    148          vTaskStartScheduler();
+    149          
+    150          	/* Will only get here if there was not enough heap space to create the
+    151          	idle task. */
+    152          return 0;
+    153          }
+    154          ////============================================================
+    155          ////=======================================================
+    156          
+    157          ////=======================================================
 
    Maximum stack usage in bytes:
 

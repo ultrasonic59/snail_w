@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:56
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:54:21
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWC6EA.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWF248.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -95,7 +95,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
      37          #include "printk.h"
      38          #include "min_max.h"
      39          #include "ring_buff.h"
-     40          ////#include "atomic.h"
+     40          #include "can.h"
      41          
      42          #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
      43          
@@ -337,98 +337,99 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
     279          ////===================================
     280          void vcp_thread(void *pdata)
     281          {
-    282          uint8_t rd_dat;  
-    283          uint32_t ii;  
-    284          #if 1  
-    285          for (;;) 
-    286          {
-    287          unsigned sz  = VCP_DataAvailContig();
-    288          if (sz)
-    289            {
-    290            for(ii=0;ii<sz;ii++)
-    291              {
-    292              VCP_GetContig(&rd_dat,1);
-    293              rd_dat++;
-    294              VCP_PutContig(&rd_dat,1);
-    295          #if 0    
-    296              if (hdlc1_on_bytein(&g_hdlc_vcp, rd_dat) > 0)
-    297                {
-    298                xQueueSend(g_hdlc_vcp.ev_rsv_frame, &rd_dat,TIMEOUT_SEND);
-    299                }
-    300          #endif    
-    301              }
-    302            }
-    303          ///else
-    304          ///  {
-    305            msleep(1);
-    306          ///  }
-    307          }
-    308          #endif
-    309          }
-    310          
-    311          ////===================================
-    312          
-    313          extern u16	pc_get_req_dat(u8 num_req,u16 offs,u8 *buf);
-    314          extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
-    315          ///u8 addr= *((u8*)pdata);
-    316          volatile int vtmp;
-    317          ///=======================
-    318          #if 0
-    319          void init_hdlc_vcp(void)
-    320          {
-    321          BaseType_t rez;  
-    322          g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
-    323          ////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
-    324          g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
-    325          g_hdlc_vcp.fn_get_req_dat=pc_get_req_dat;////hdlc_bt_get_req_dat;
-    326          g_hdlc_vcp.ua_snd_dat=xQueueCreate(512,sizeof(unsigned char));		//8192
-    327          g_hdlc_vcp.ev_rsv_ack=xQueueCreate(1,1);
-    328          g_hdlc_vcp.ev_rsv_dat=xQueueCreate(1,1);
-    329          g_hdlc_vcp.ev_rsv_frame=xQueueCreate(1,1);
-    330          g_hdlc_vcp.ev_snd_frame=xQueueCreate(16, sizeof(uint32_t));
-    331          hdlc1_init(&g_hdlc_vcp);
-    332          
-    333          rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
-    334          
-    335          rez=xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_vcp_rx",VCP_RX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_rx_thread_handle);
-    336          rez=xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_tx_thread_handle);
-    337          vtmp=rez;
-    338          ///put_tst1(0);
-    339          }
-    340          #endif
-    341          ///======================================  
-    342          ////static uint8_t flg_usb_on=0;
-    343          ///======================================  
-    344          void on_off_usb_thr(uint8_t on_off)
-    345          {
-    346          
-    347          #if 0  
-    348          if(on_off&0x1)
-    349            {
-    350            if(flg_usb_on)
-    351              return;
-    352            flg_usb_on=1;
-    353          ////  put_tst1(1);
-    354           vTaskResume(vcp_rx_thread_handle);
-    355           vTaskResume(vcp_tx_thread_handle);
-    356           vTaskResume(vcp_thread_handle);
-    357          
-    358            }
-    359          else
-    360            {
-    361            if(!flg_usb_on)
-    362              return;
-    363            flg_usb_on=0;
-    364            vTaskSuspend(vcp_rx_thread_handle);
-    365            vTaskSuspend(vcp_tx_thread_handle);
-    366            vTaskSuspend(vcp_thread_handle);
-    367          ///  put_tst1(0);
-    368            }
-    369          #endif
-    370          }
-    371          ///======================================  
-    372          #endif ///(USB_CLASS == CDC_VCP)
-    373          ///======================================  
+    282          uint8_t on_sleep=0;
+    283          uint8_t rd_dat;  
+    284          uint32_t ii;  
+    285          #if 1  
+    286          for (;;) 
+    287          {
+    288          unsigned sz  = VCP_DataAvailContig();
+    289          if (sz)
+    290            {
+    291            for(ii=0;ii<sz;ii++)
+    292              {
+    293              VCP_GetContig(&rd_dat,1);
+    294              rd_dat++;
+    295              VCP_PutContig(&rd_dat,1);
+    296              }
+    297            on_sleep=0;
+    298            }
+    299          if(CAN_RxRdy)
+    300            {
+    301              
+    302            on_sleep=0;  
+    303            }
+    304          if(on_sleep)
+    305            {
+    306            msleep(1);
+    307            }
+    308          }
+    309          #endif
+    310          }
+    311          
+    312          ////===================================
+    313          
+    314          extern u16	pc_get_req_dat(u8 num_req,u16 offs,u8 *buf);
+    315          extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
+    316          ///u8 addr= *((u8*)pdata);
+    317          volatile int vtmp;
+    318          ///=======================
+    319          #if 0
+    320          void init_hdlc_vcp(void)
+    321          {
+    322          BaseType_t rez;  
+    323          g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
+    324          ////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
+    325          g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
+    326          g_hdlc_vcp.fn_get_req_dat=pc_get_req_dat;////hdlc_bt_get_req_dat;
+    327          g_hdlc_vcp.ua_snd_dat=xQueueCreate(512,sizeof(unsigned char));		//8192
+    328          g_hdlc_vcp.ev_rsv_ack=xQueueCreate(1,1);
+    329          g_hdlc_vcp.ev_rsv_dat=xQueueCreate(1,1);
+    330          g_hdlc_vcp.ev_rsv_frame=xQueueCreate(1,1);
+    331          g_hdlc_vcp.ev_snd_frame=xQueueCreate(16, sizeof(uint32_t));
+    332          hdlc1_init(&g_hdlc_vcp);
+    333          
+    334          rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+    335          
+    336          rez=xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_vcp_rx",VCP_RX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_rx_thread_handle);
+    337          rez=xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_tx_thread_handle);
+    338          vtmp=rez;
+    339          ///put_tst1(0);
+    340          }
+    341          #endif
+    342          ///======================================  
+    343          ////static uint8_t flg_usb_on=0;
+    344          ///======================================  
+    345          void on_off_usb_thr(uint8_t on_off)
+    346          {
+    347          
+    348          #if 0  
+    349          if(on_off&0x1)
+    350            {
+    351            if(flg_usb_on)
+    352              return;
+    353            flg_usb_on=1;
+    354          ////  put_tst1(1);
+    355           vTaskResume(vcp_rx_thread_handle);
+    356           vTaskResume(vcp_tx_thread_handle);
+    357           vTaskResume(vcp_thread_handle);
+    358          
+    359            }
+    360          else
+    361            {
+    362            if(!flg_usb_on)
+    363              return;
+    364            flg_usb_on=0;
+    365            vTaskSuspend(vcp_rx_thread_handle);
+    366            vTaskSuspend(vcp_tx_thread_handle);
+    367            vTaskSuspend(vcp_thread_handle);
+    368          ///  put_tst1(0);
+    369            }
+    370          #endif
+    371          }
+    372          ///======================================  
+    373          #endif ///(USB_CLASS == CDC_VCP)
+    374          ///======================================  
 
    Maximum stack usage in bytes:
 
@@ -499,14 +500,15 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
 
    Bytes  Function/Label
    -----  --------------
-       4  ??DataTable9
-       4  ??DataTable9_1
-       4  ??DataTable9_2
-       4  ??DataTable9_3
-       4  ??DataTable9_4
-       4  ??DataTable9_5
-       4  ??DataTable9_6
-       4  ??DataTable9_7
+       4  ??DataTable10
+       4  ??DataTable10_1
+       4  ??DataTable10_2
+       4  ??DataTable10_3
+       4  ??DataTable10_4
+       4  ??DataTable10_5
+       4  ??DataTable10_6
+       4  ??DataTable10_7
+       4  ??DataTable10_8
        6  VCP_Ctrl
       36  VCP_DataAvail
       36  VCP_DataAvailContig
@@ -532,16 +534,16 @@ D:\proj\velograph\snail\stm32_snail\usb_can\common\usb\cdc_vcp\usbd_cdc_vcp.c
       24  ring_space_avail
       26  ring_space_contig
       12  ring_wrap
-      60  vcp_thread
+      86  vcp_thread
        4  vcp_thread_handle
        4  vtmp
 
  
   92 bytes in section .bss
   20 bytes in section .data
- 660 bytes in section .text
+ 690 bytes in section .text
  
- 660 bytes of CODE memory
+ 690 bytes of CODE memory
  112 bytes of DATA memory
 
 Errors: none

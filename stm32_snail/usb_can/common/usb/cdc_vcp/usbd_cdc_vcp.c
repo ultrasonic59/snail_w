@@ -37,7 +37,7 @@
 #include "printk.h"
 #include "min_max.h"
 #include "ring_buff.h"
-////#include "atomic.h"
+#include "can.h"
 
 #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
 
@@ -279,6 +279,7 @@ return USBD_OK;
 ////===================================
 void vcp_thread(void *pdata)
 {
+uint8_t on_sleep=0;
 uint8_t rd_dat;  
 uint32_t ii;  
 #if 1  
@@ -292,18 +293,18 @@ if (sz)
     VCP_GetContig(&rd_dat,1);
     rd_dat++;
     VCP_PutContig(&rd_dat,1);
-#if 0    
-    if (hdlc1_on_bytein(&g_hdlc_vcp, rd_dat) > 0)
-      {
-      xQueueSend(g_hdlc_vcp.ev_rsv_frame, &rd_dat,TIMEOUT_SEND);
-      }
-#endif    
     }
+  on_sleep=0;
   }
-///else
-///  {
+if(CAN_RxRdy)
+  {
+    
+  on_sleep=0;  
+  }
+if(on_sleep)
+  {
   msleep(1);
-///  }
+  }
 }
 #endif
 }

@@ -287,11 +287,11 @@ void EXTI15_10_IRQHandler(void)
 }
 
 ////============= CAN1 =================================================
-extern __IO uint32_t ret;
+///#include "can.h"
+////extern __IO uint32_t ret;
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
-extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern CanRxMsg RxMessage;
-
+#if 0
 void _CAN1_RX0_IRQHandler(void)
 {
 ////  CanRxMsg RxMessage;
@@ -332,7 +332,7 @@ if (CAN1->TSR & CAN_TSR_RQCP0)          /* request completed mbx 0        */
   CAN_TxRdy = 1;
   }
 }
-
+#endif
 
 ///==================================================
 

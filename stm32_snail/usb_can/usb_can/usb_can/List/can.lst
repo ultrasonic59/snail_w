@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         04/Jun/2021  18:09:54
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:54:19
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWBDCA.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWEA94.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
 #        -lcN D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
@@ -69,8 +69,8 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
      12          CAN_msg       CAN_TxMsg;                  /* CAN messge for sending           */
      13          CAN_msg       CAN_RxMsg;                  /* CAN message for receiving        */                        
      14          
-     15          unsigned int  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
-     16          unsigned int  CAN_RxRdy = 0;              /* CAN HW received a message        */
+     15          uint8_t  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
+     16          uint8_t  CAN_RxRdy = 0;              /* CAN HW received a message        */
      17          ////=====================
      18          void CAN_setup (void)  
      19          {
@@ -232,41 +232,52 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
     175          /*----------------------------------------------------------------------------
     176            CAN receive interrupt handler
     177           *----------------------------------------------------------------------------*/
-    178          void CAN1_RX0_IRQHandler (void)
-    179          {
-    180          u32 *up;
-    181          	
-    182          if (CAN1->RF0R & CAN_RF0R_FMP0)
-    183            {			/* message pending ?              */
-    184            CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
-    185          
-    186            if (CAN_RxMsg.id == (0x080 + NODE))
-    187              {
-    188              up = (u32*)CAN_RxMsg.data;
-    189          ////    stat_srv_y.fault &= 0xff000000;
-    190          ////    stat_srv_y.fault |= ((*up) & 0x00ffffff);
-    191          ////    stat_srv_y.flg |= STAT_SRV_FLG_ERR_REQ;
-    192              }
-    193            else
-    194              {
-    195              CAN_RxRdy = 1;                          // set receive flag
-    196              }
-    197            }
-    198          }
-    199          
-    200          ////================================================================================
-    201          void CAN1_Init (void)
+    178          #if 0
+    179          void CAN1_RX0_IRQHandler (void)
+    180          {
+    181          u32 *up;
+    182          	
+    183          if (CAN1->RF0R & CAN_RF0R_FMP0)
+    184            {			/* message pending ?              */
+    185            CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
+    186          
+    187            if (CAN_RxMsg.id == (0x080 + NODE))
+    188              {
+    189              up = (u32*)CAN_RxMsg.data;
+    190          ////    stat_srv_y.fault &= 0xff000000;
+    191          ////    stat_srv_y.fault |= ((*up) & 0x00ffffff);
+    192          ////    stat_srv_y.flg |= STAT_SRV_FLG_ERR_REQ;
+    193              }
+    194            else
+    195              {
+    196              CAN_RxRdy = 1;                          // set receive flag
+    197              }
+    198            }
+    199          }
+    200          #else
+    201          void CAN1_RX0_IRQHandler (void)
     202          {
-    203          CAN_setup ();                                   /* setup CAN Controller     */
-    204          
-    205          CAN_wrFilter (0x580 + NODE, STANDARD_FORMAT);
-    206          CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
-    207          CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
-    208          	
-    209          CAN_start ();                                   /* start CAN Controller   */
-    210          	
-    211          CAN_waitReady ();                               /* wait til tx mbx is empty */
-    212          }
+    203          if (CAN1->RF0R & CAN_RF0R_FMP0)
+    204            {			/* message pending ?              */
+    205            CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
+    206            CAN_RxRdy = 1;                          // set receive flag
+    207            }
+    208          }
+    209          
+    210          #endif
+    211          ////================================================================================
+    212          void CAN1_Init (void)
+    213          {
+    214          CAN_setup ();                                   /* setup CAN Controller     */
+    215          
+    216          ////CAN_wrFilter (0x580 + NODE, STANDARD_FORMAT);
+    217          ////CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
+    218          ////CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
+    219          	
+    220          CAN_start ();                                   /* start CAN Controller   */
+    221          	
+    222          CAN_waitReady ();                               /* wait til tx mbx is empty */
+    223          }
 
    Maximum stack usage in bytes:
 
@@ -276,9 +287,8 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
          8   -> CAN_setup
          8   -> CAN_start
          8   -> CAN_waitReady
-         8   -> CAN_wrFilter
-      16   CAN1_RX0_IRQHandler
-        16   -> CAN_rdMsg
+       8   CAN1_RX0_IRQHandler
+         8   -> CAN_rdMsg
        0   CAN1_TX_IRQHandler
        0   CAN_rdMsg
        8   CAN_setup
@@ -322,13 +332,13 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
        4  ??DataTable9_7
        4  ??DataTable9_8
        4  ??DataTable9_9
-      44  CAN1_Init
-      40  CAN1_RX0_IRQHandler
+      16  CAN1_Init
+      26  CAN1_RX0_IRQHandler
       34  CAN1_TX_IRQHandler
       16  CAN_RxMsg
-       4  CAN_RxRdy
+       1  CAN_RxRdy
       16  CAN_TxMsg
-       4  CAN_TxRdy
+       1  CAN_TxRdy
        2  CAN_filterIdx
      116  CAN_rdMsg
       66  CAN_setup
@@ -340,11 +350,11 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\can.c
       30  __NVIC_EnableIRQ
 
  
-  42 bytes in section .bss
- 828 bytes in section .text
+  36 bytes in section .bss
+ 786 bytes in section .text
  
- 828 bytes of CODE memory
-  42 bytes of DATA memory
+ 786 bytes of CODE memory
+  36 bytes of DATA memory
 
 Errors: none
-Warnings: 1
+Warnings: none

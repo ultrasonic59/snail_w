@@ -8,7 +8,6 @@
 
 ////#define TEST_PIN ZSTP_PIN
 ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
-system_t sys;
 
 void  put_tst_pin(uint8_t idat)
 {

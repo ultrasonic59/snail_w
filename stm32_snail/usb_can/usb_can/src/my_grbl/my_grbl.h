@@ -28,9 +28,16 @@
 // Define standard libraries used by Grbl.
 #include <math.h>
 #include <stdint.h>
+#include "misc.h"
 
 #define M_PI		3.14159265358979323846
-
+////===========================================
+#define bit(n) (1 << n)
+#define bit_true(x,mask) (x) |= (mask)
+#define bit_false(x,mask) (x) &= ~(mask)
+#define bit_istrue(x,mask) ((x & mask) != 0)
+#define bit_isfalse(x,mask) ((x & mask) == 0)
+////============================================
 #define PSTR(x) x
 #define pgm_read_byte_near(x) *(x)
 void _delay_ms(uint32_t x);
@@ -46,6 +53,7 @@ typedef int bool;
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+
 ////==============================================
 #define RX_BUFFER_SIZE 254
 #define TX_BUFFER_SIZE 128	// Do not try 256 it will not work for STM32.
@@ -53,6 +61,7 @@ typedef int bool;
 #define SERIAL_NO_DATA 0xff
 #include "grbl_config.h"
 #include "grbl_sys.h"
+#include "can_cmds.h"
 
 ////==============================================
 

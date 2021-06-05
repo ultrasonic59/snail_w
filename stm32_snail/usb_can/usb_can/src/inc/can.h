@@ -2,11 +2,11 @@
 #define __CAN_H__
 
 ////==============================================
-#define NODE	0x01	//0x03
-#define NODE2	0x01	//0x03
+////#define NODE	0x01	//0x03
+////#define NODE2	0x01	//0x03
 
-#define ADDR_PDO_1	0x181
-#define ADDR_PDO_2	0x182
+////#define ADDR_PDO_1	0x181
+////#define ADDR_PDO_2	0x182
 
 #define STANDARD_FORMAT  0
 #define EXTENDED_FORMAT  1
@@ -31,5 +31,8 @@ typedef struct  {
 ////#define CAN_RTR_REMOTE        ((uint32_t)0x00000002)  /* Remote frame         */
 ////==============================================
 extern void CAN1_Init (void);
+extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
+extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
+extern CanRxMsg RxMessage;
 
 #endif

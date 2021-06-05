@@ -24,6 +24,9 @@ typedef struct {
   #endif
 } system_t;
 extern system_t sys;
+extern void system_set_exec_state_flag(uint8_t mask) ;
+extern void system_set_exec_motion_override_flag(uint8_t mask);
+extern void system_set_exec_accessory_override_flag(uint8_t mask);
 
 ////======================================
 #endif  ////_GRBL_SYS_H_

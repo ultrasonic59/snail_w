@@ -12,8 +12,8 @@
 CAN_msg       CAN_TxMsg;                  /* CAN messge for sending           */
 CAN_msg       CAN_RxMsg;                  /* CAN message for receiving        */                        
 
-unsigned int  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
-unsigned int  CAN_RxRdy = 0;              /* CAN HW received a message        */
+uint8_t  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
+uint8_t  CAN_RxRdy = 0;              /* CAN HW received a message        */
 ////=====================
 void CAN_setup (void)  
 {
@@ -175,6 +175,7 @@ void CAN1_TX_IRQHandler (void) {
 /*----------------------------------------------------------------------------
   CAN receive interrupt handler
  *----------------------------------------------------------------------------*/
+#if 0
 void CAN1_RX0_IRQHandler (void)
 {
 u32 *up;
@@ -196,15 +197,25 @@ if (CAN1->RF0R & CAN_RF0R_FMP0)
     }
   }
 }
+#else
+void CAN1_RX0_IRQHandler (void)
+{
+if (CAN1->RF0R & CAN_RF0R_FMP0)
+  {			/* message pending ?              */
+  CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
+  CAN_RxRdy = 1;                          // set receive flag
+  }
+}
 
+#endif
 ////================================================================================
 void CAN1_Init (void)
 {
 CAN_setup ();                                   /* setup CAN Controller     */
 
-CAN_wrFilter (0x580 + NODE, STANDARD_FORMAT);
-CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
-CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
+////CAN_wrFilter (0x580 + NODE, STANDARD_FORMAT);
+////CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
+////CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
 	
 CAN_start ();                                   /* start CAN Controller   */
 	
