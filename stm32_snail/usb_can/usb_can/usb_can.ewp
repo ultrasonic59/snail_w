@@ -4441,11 +4441,14 @@
     </group>
     <group>
         <name>my_grbl</name>
-        <excluded>
-            <configuration>usb_can</configuration>
-        </excluded>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_print.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_settings.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\grbl_system.c</name>

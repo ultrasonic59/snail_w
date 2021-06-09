@@ -38,6 +38,7 @@
 #include "min_max.h"
 #include "ring_buff.h"
 #include "can.h"
+extern int send_char_dbg(int ch); 
 
 #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
 
@@ -276,26 +277,66 @@ for(ii=0;ii<Len;ii++)
 ////VCP_MarkRead(Len);
 return USBD_OK;
 }
+extern int serial_read_tx(void);
+extern uint8_t serial_get_tx_buffer_count(void);
+
+extern void OnUsbDataRx(uint8_t* data_in, uint16_t length);
+#define MAX_LEN_RD_DAT 256
 ////===================================
 void vcp_thread(void *pdata)
 {
-uint8_t on_sleep=0;
-uint8_t rd_dat;  
-uint32_t ii;  
+///uint8_t on_sleep=0;
+uint8_t rd_dat[MAX_LEN_RD_DAT];  
+uint32_t ii; 
+uint32_t sz; 
+int t_dat;
+uint8_t rd_tdat;
 #if 1  
 for (;;) 
 {
-unsigned sz  = VCP_DataAvailContig();
-if (sz)
+sz  = VCP_DataAvailContig();
+while (sz)
   {
+  if (sz > MAX_LEN_RD_DAT)
+    {
+    VCP_GetContig(rd_dat,MAX_LEN_RD_DAT);
+    OnUsbDataRx(rd_dat,MAX_LEN_RD_DAT); 
+    sz-=MAX_LEN_RD_DAT;
+    }
+  else
+    {
+    VCP_GetContig(rd_dat,sz);
+    OnUsbDataRx(rd_dat,sz); 
+    sz=0;
+    }
+#if 0  
   for(ii=0;ii<sz;ii++)
     {
     VCP_GetContig(&rd_dat,1);
-    rd_dat++;
-    VCP_PutContig(&rd_dat,1);
+ ////   rd_dat++;
+    ////=====================================
+    send_char_dbg(rd_dat);
+    ////==========================================
+   VCP_PutContig(&rd_dat,1);
     }
-  on_sleep=0;
+#endif  
+//// on_sleep=0;
   }
+sz  =  serial_get_tx_buffer_count();
+if(sz)
+{
+for(ii=0;ii<sz;ii++)
+  {
+  t_dat=serial_read_tx();  
+  if(t_dat>0)
+    {
+    rd_tdat=t_dat;
+    VCP_PutContig(&rd_tdat,1);
+    }
+    
+  }
+}
+#if 0
 if(CAN_RxRdy)
   {
     
@@ -305,6 +346,7 @@ if(on_sleep)
   {
   msleep(1);
   }
+#endif
 }
 #endif
 }

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         05/Jun/2021  19:36:00
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         07/Jun/2021  19:45:10
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EW2219.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWDFFF.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -58,28 +58,39 @@
 D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
       1          #include <stdint.h>
       2          #include "my_grbl.h"
-      3          
-      4          void mc_reset(void)
+      3          ////=======================================
+      4          int put_can_cmd_reset_all(void)
       5          {
-      6          }
+      6            return 0;
+      7          }
+      8          
+      9          void mc_reset(void)
+     10          {
+     11          put_can_cmd_reset_all();  
+     12          report_init_message();
+     13          }
 
    Maximum stack usage in bytes:
 
    .cstack Function
    ------- --------
-       0   mc_reset
+       8   mc_reset
+         8   -> put_can_cmd_reset_all
+         8   -> report_init_message
+       0   put_can_cmd_reset_all
 
 
    Section sizes:
 
    Bytes  Function/Label
    -----  --------------
-       2  mc_reset
+      12  mc_reset
+       4  put_can_cmd_reset_all
 
  
- 2 bytes in section .text
+ 16 bytes in section .text
  
- 2 bytes of CODE memory
+ 16 bytes of CODE memory
 
 Errors: none
 Warnings: none

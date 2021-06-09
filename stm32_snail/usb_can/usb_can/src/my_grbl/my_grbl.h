@@ -23,7 +23,7 @@
 
 // Grbl versioning system
 #define GRBL_VERSION "1.1f"
-#define GRBL_VERSION_BUILD "20170801"
+#define GRBL_VERSION_BUILD "20210607"
 
 // Define standard libraries used by Grbl.
 #include <math.h>
@@ -48,6 +48,14 @@ void _delay_us(uint32_t x);
 typedef int bool;
 //#define NOEEPROMSUPPORT
 #define printPgmString printString
+// Axis array index values. Must start with 0 and be continuous.
+#define N_AXIS 3 // Number of axes
+#define X_AXIS 0 // Axis indexing value.
+#define Y_AXIS 1
+#define Z_AXIS 2
+
+#define MM_PER_INCH (25.40f)
+#define INCH_PER_MM (0.0393701f)
 
 
 #include <string.h>
@@ -62,6 +70,12 @@ typedef int bool;
 #include "grbl_config.h"
 #include "grbl_sys.h"
 #include "can_cmds.h"
+#include "settings.h"
+#include "grbl_print.h"
+
+////==============================================
+extern void serial_write(uint8_t data); 
+////extern void report_init_message(void);
 
 ////==============================================
 

@@ -30,6 +30,11 @@ build list.pbi : index list.xcl
 build port.pbi : index port.xcl
 build queue.pbi : index queue.xcl
 build tasks.pbi : index tasks.xcl
+build can_cmds.pbi : index can_cmds.xcl
+build grbl_print.pbi : index grbl_print.xcl
+build grbl_settings.pbi : index grbl_settings.xcl
+build grbl_system.pbi : index grbl_system.xcl
+build my_gbrl_serial.pbi : index my_gbrl_serial.xcl
 build misc.pbi : index misc.xcl
 build stm32f2xx_can.pbi : index stm32f2xx_can.xcl
 build stm32f2xx_flash.pbi : index stm32f2xx_flash.xcl
@@ -53,12 +58,13 @@ build usb_thr.pbi : index usb_thr.xcl
 build usbd_desc.pbi : index usbd_desc.xcl
 build usbd_usr.pbi : index usbd_usr.xcl
 build usb_can_part0.pbi : link can.pbi main.pbi usb_can_board.pbi zzzz.pbi retarget.pbi heap_2.pbi
-build usb_can_part1.pbi : link list.pbi port.pbi queue.pbi tasks.pbi misc.pbi stm32f2xx_can.pbi
-build usb_can_part2.pbi : link stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi
-build usb_can_part3.pbi : link system_stm32f2xx.pbi stm32f2xx_it.pbi usbd_cdc_vcp.pbi usbd_cdc_vcp_core.pbi usbd_core.pbi usbd_ioreq.pbi
-build usb_can_part4.pbi : link usbd_req.pbi usb_core.pbi usb_dcd.pbi usb_dcd_int.pbi usb_bsp.pbi usb_thr.pbi
-build usb_can_part5.pbi : link usbd_desc.pbi usbd_usr.pbi
-build usb_can.pbd : link usb_can_part0.pbi usb_can_part1.pbi usb_can_part2.pbi usb_can_part3.pbi usb_can_part4.pbi usb_can_part5.pbi
+build usb_can_part1.pbi : link list.pbi port.pbi queue.pbi tasks.pbi can_cmds.pbi grbl_print.pbi
+build usb_can_part2.pbi : link grbl_settings.pbi grbl_system.pbi my_gbrl_serial.pbi misc.pbi stm32f2xx_can.pbi stm32f2xx_flash.pbi
+build usb_can_part3.pbi : link stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi system_stm32f2xx.pbi
+build usb_can_part4.pbi : link stm32f2xx_it.pbi usbd_cdc_vcp.pbi usbd_cdc_vcp_core.pbi usbd_core.pbi usbd_ioreq.pbi usbd_req.pbi
+build usb_can_part5.pbi : link usb_core.pbi usb_dcd.pbi usb_dcd_int.pbi usb_bsp.pbi usb_thr.pbi usbd_desc.pbi
+build usb_can_part6.pbi : link usbd_usr.pbi
+build usb_can.pbd : link usb_can_part0.pbi usb_can_part1.pbi usb_can_part2.pbi usb_can_part3.pbi usb_can_part4.pbi usb_can_part5.pbi usb_can_part6.pbi
 build usb_can.pbw : browsedata usb_can.pbd
 
 

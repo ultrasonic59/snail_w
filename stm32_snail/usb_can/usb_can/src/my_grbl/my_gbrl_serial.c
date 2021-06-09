@@ -34,7 +34,7 @@ uint8_t serial_get_rx_buffer_count()
 
 // Returns the number of bytes used in the TX serial buffer.
 // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
-uint8_t serial_get_tx_buffer_count()
+uint8_t serial_get_tx_buffer_count(void)
 {
   uint8_t ttail = serial_tx_buffer_tail; // Copy to limit multiple calls to volatile
   if (serial_tx_buffer_head >= ttail) { return(serial_tx_buffer_head-ttail); }
@@ -64,7 +64,7 @@ uint8_t next_head = serial_tx_buffer_head + 1;
 }
 
 // Fetches the first byte in the serial read buffer. Called by main program.
-uint8_t serial_read(void)
+uint8_t serial_read_rx(void)
 {
   uint8_t tail = serial_rx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
   if (serial_rx_buffer_head == tail) {
@@ -79,16 +79,33 @@ uint8_t serial_read(void)
     return data;
   }
 }
+int serial_read_tx(void)
+{
+uint8_t tail = serial_tx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
+  if (serial_tx_buffer_head == tail) {
+    return -1;
+  } else {
+    uint8_t data = serial_tx_buffer[tail];
 
-void OnUsbDataRx(uint8_t* dataIn, uint8_t length)
+    tail++;
+    if (tail == TX_RING_BUFFER) { tail = 0; }
+    serial_tx_buffer_tail = tail;
+
+    return data;
+  }
+}
+
+////===================================================================
+void OnUsbDataRx(uint8_t* data_in, uint16_t length)
 {
 	//lcd_write_char(*dataIn);
 uint8_t next_head;
 uint8_t data;
-
+uint16_t ii=0;
 //// Write data to buffer unless it is full.
 while (length != 0){
-  data = *dataIn ++;
+  data = *(data_in+ii);
+  ii++;
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.
   switch (data) {
@@ -148,7 +165,7 @@ while (length != 0){
     length--;
    }
 }
-
+///=========================================================================
 void serial_reset_read_buffer()
 {
   serial_rx_buffer_tail = serial_rx_buffer_head;
