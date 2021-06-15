@@ -78,8 +78,11 @@
 #include "misc.h"
 #include "printk.h"
 ///=======================================================================
-extern void usb_thread( void *arg );
-extern void init_hdlc_vcp(void);
+extern void vcp_thread(void *pdata);
+extern TaskHandle_t  vcp_thread_handle;
+
+///extern void usb_thread( void *arg );
+///extern void init_hdlc_vcp(void);
 
 #define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
@@ -87,8 +90,6 @@ void tst_task( void *pvParameters );
 ///==================================
 TaskHandle_t  usb_thread_handle;
 ///==================================
-
-///=======================================================================
 ///==================================
 #pragma data_alignment=8   
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
@@ -129,39 +130,22 @@ hw_board_init();
 printk("\n\r CAN1_Init"); 
 CAN1_Init();
 ////================================
-
-////================================
-
-///=================================  
+////=================================  
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
             &USR_desc, 
             &USBD_Class_cb, 
             &USR_cb);
 ///=================================  
-init_hdlc_vcp();
-
-
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-        
-////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-         
-	/* Start the tasks defined within this file/specific to this demo. */
- ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
- ////????   vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-
-	/* Configure the timers used by the fast interrupt timer test. */
-/////	vSetupTimerTest();
   xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+////rez=
+xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+  
 ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
 
 	/* Start the scheduler. */
-	vTaskStartScheduler();
+vTaskStartScheduler();
 
 	/* Will only get here if there was not enough heap space to create the
 	idle task. */

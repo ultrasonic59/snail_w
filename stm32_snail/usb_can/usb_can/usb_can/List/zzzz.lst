@@ -1,0 +1,109 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         14/Jun/2021  21:05:08
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
+#    Command line =
+#        -f C:\Users\vagol\AppData\Local\Temp\EWB8A3.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\hdlc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\..\common\usb\cdc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\
+#        -On --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\List\zzzz.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\usb_can\Obj\zzzz.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\board\zzzz.c
+      1          #include "FreeRTOS.h"
+      2          #include "queue.h"
+      3          #include "semphr.h"
+      4          
+      5          ////#include "stm32f2xx_gpio.h"
+      6          #include "board.h"
+      7          #include "my_grbl.h"
+      8          
+      9          ////#define TEST_PIN ZSTP_PIN
+     10          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
+     11          
+     12          void  put_tst_pin(uint8_t idat)
+     13          {
+     14          #if 1  
+     15          if(idat&0x1)
+     16            {
+     17            GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
+     18             GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
+     19            ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
+     20            }
+     21          else
+     22            {
+     23             GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
+     24             GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
+     25             ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
+     26            }
+     27          #endif 
+     28          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   put_tst_pin
+        16   -> GPIO_ResetBits
+        16   -> GPIO_SetBits
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      56  put_tst_pin
+
+ 
+ 56 bytes in section .text
+ 
+ 56 bytes of CODE memory
+
+Errors: none
+Warnings: none

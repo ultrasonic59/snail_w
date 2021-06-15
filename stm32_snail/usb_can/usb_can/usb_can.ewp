@@ -3557,6 +3557,7 @@
                     <state>$PROJ_DIR$\..\common\usb\inc</state>
                     <state>$PROJ_DIR$\..\common\hdlc</state>
                     <state>$PROJ_DIR$\..\common\usb\cdc</state>
+                    <state>$PROJ_DIR$\src\my_grbl</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -4270,40 +4271,6 @@
             <name>$PROJ_DIR$\src\main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\mstep_board.c</name>
-            <excluded>
-                <configuration>step_debug</configuration>
-                <configuration>usb_can</configuration>
-            </excluded>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\pc_interf.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\serial.c</name>
-            <excluded>
-                <configuration>Debug</configuration>
-                <configuration>mstep_debug</configuration>
-                <configuration>step_debug</configuration>
-                <configuration>usb_can</configuration>
-            </excluded>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\board\step_board.c</name>
-            <excluded>
-                <configuration>usb_can</configuration>
-            </excluded>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\timertest.c</name>
-            <excluded>
-                <configuration>Debug</configuration>
-                <configuration>mstep_debug</configuration>
-                <configuration>step_debug</configuration>
-                <configuration>usb_can</configuration>
-            </excluded>
-        </file>
-        <file>
             <name>$PROJ_DIR$\src\board\usb_can_board.c</name>
         </file>
         <file>
@@ -4347,69 +4314,147 @@
         </excluded>
         <file>
             <name>$PROJ_DIR$\src\grbl\coolant_control.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\eeprom.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\gbrl_serial.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\gbrl_thr.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\gcode.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\jog.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\limits.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\motion_control.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\nuts_bolts.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\planner.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\print.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\probe.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\protocol.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\report.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\settings.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\spindle_control.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\stepper.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\system.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\system_stm32f10x.c</name>
+            <excluded>
+                <configuration>usb_can</configuration>
+            </excluded>
         </file>
     </group>
     <group>
         <name>hdlc</name>
+        <excluded>
+            <configuration>usb_can</configuration>
+        </excluded>
         <file>
             <name>$PROJ_DIR$\..\common\hdlc\fcs16.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\common\hdlc\hdlc1.c</name>
+        </file>
+    </group>
+    <group>
+        <name>my_grbl</name>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_print.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_settings.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_system.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\my_gbrl_serial.c</name>
         </file>
     </group>
     <group>

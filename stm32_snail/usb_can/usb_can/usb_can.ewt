@@ -4746,21 +4746,6 @@
             <name>$PROJ_DIR$\src\main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\mstep_board.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\pc_interf.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\serial.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\board\step_board.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\timertest.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\src\board\usb_can_board.c</name>
         </file>
         <file>
@@ -4861,6 +4846,24 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common\hdlc\hdlc1.c</name>
+        </file>
+    </group>
+    <group>
+        <name>my_grbl</name>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_print.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_settings.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_system.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\my_grbl\my_gbrl_serial.c</name>
         </file>
     </group>
     <group>

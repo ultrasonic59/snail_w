@@ -108,8 +108,8 @@
   #endif /* USE_USB_OTG_HS */
 
 #elif   (USB_CLASS==CDC_VCP)
-  #define USBD_VID                     0x0483
-  #define USBD_PID                     0x5740
+  #define USBD_VID                     0x03EB
+  #define USBD_PID                     0x6124
 ////  #define USBD_MANUFACTURER_STRING      "STMicroelectronics"
   #define USBD_PRODUCT_HS_STRING          "VCP in HS mode"
   #define USBD_SERIALNUMBER_HS_STRING     "00000000059B"
