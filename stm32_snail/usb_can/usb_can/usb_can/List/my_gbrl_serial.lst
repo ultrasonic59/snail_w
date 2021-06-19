@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         07/Jun/2021  19:45:10
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         14/Jun/2021  21:05:02
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\my_gbrl_serial.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWE2B5.tmp
+#        -f C:\Users\vagol\AppData\Local\Temp\EWA202.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\my_gbrl_serial.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -168,9 +168,9 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\my_gbrl_serial.c
     110            // not passed into the main buffer, but these set system state flag bits for realtime execution.
     111            switch (data) {
     112              case CMD_RESET:         mc_reset(); break; // Call motion control reset routine.
-    113              case CMD_STATUS_REPORT: system_set_exec_state_flag(EXEC_STATUS_REPORT); break; // Set as true
-    114              case CMD_CYCLE_START:   system_set_exec_state_flag(EXEC_CYCLE_START); break; // Set as true
-    115              case CMD_FEED_HOLD:     system_set_exec_state_flag(EXEC_FEED_HOLD); break; // Set as true
+    113              case CMD_STATUS_REPORT: system_set_exec_state_flag(EXEC_STATUS_REPORT); break; // 
+    114              case CMD_CYCLE_START:   system_set_exec_state_flag(EXEC_CYCLE_START); break; // 
+    115              case CMD_FEED_HOLD:     system_set_exec_state_flag(EXEC_FEED_HOLD); break; // 
     116              default :
     117                if (data > 0x7F) { // Real-time control characters are extended ACSII only.
     118                  switch(data) {

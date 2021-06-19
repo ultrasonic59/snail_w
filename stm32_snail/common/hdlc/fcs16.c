@@ -28,7 +28,7 @@
    /*
     * FCS lookup table as calculated by the table generator.
     */
-static const u16 fcstab[256] = {
+static const uint16_t fcstab[256] = {
       0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
       0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
       0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -69,7 +69,7 @@ static const u16 fcstab[256] = {
    /*
     * Calculate a new fcs given the current fcs and the new data.
     */
-u16 pppfcs16(register u16 fcs, register unsigned char *cp, register int len)
+uint16_t pppfcs16(register uint16_t fcs, register unsigned char *cp, register int len)
 {
        while (len--)
            fcs = (fcs >> 8) ^ fcstab[(fcs ^ *cp++) & 0xff];
@@ -78,19 +78,19 @@ u16 pppfcs16(register u16 fcs, register unsigned char *cp, register int len)
 }
 
        /* add on output */
-void addfcs16( register unsigned char *cp, register int len )
+void addfcs16( char *cp, int len )
 {
-       u16 trialfcs;
+       uint16_t trialfcs;
 
-       trialfcs = pppfcs16( PPPINITFCS16, cp, len );
+       trialfcs = pppfcs16( PPPINITFCS16, (unsigned char*)cp, len );
        trialfcs ^= 0xffff;                 /* complement */
        cp[len] = (trialfcs & 0x00ff);      /* least significant byte first */
        cp[len+1] = ((trialfcs >> 8) & 0x00ff);
 }
        /* check on input */
-u32 checkfcs16( register u8 *cp, register u32 len )
+uint32_t checkfcs16( uint8_t *cp, uint32_t len )
 {
-      u16 trialfcs;
+      uint16_t trialfcs;
 
       trialfcs = pppfcs16( PPPINITFCS16, cp, len + 2 );
       if ( trialfcs == PPPGOODFCS16 )

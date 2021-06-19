@@ -1,6 +1,10 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 ////======================================
+#define CFG_TUSB_MCU OPT_MCU_STM32F2
+////#define USB_OTG_FS_MAX_IN_ENDPOINTS     3
+///#define USB_OTG_FS_TOTAL_FIFO_SIZE      1250
+////======================================
 #ifdef MSTEP_BRD
   #include "mstep_board.h"
 #endif
