@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\test\usb_can\usb_can\settings\usb_can.Debug.general.xcl" --backend -f "D:\proj\velograph\snail\test\usb_can\usb_can\settings\usb_can.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\settings\usb_can.Debug.general.xcl" --backend -f "D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\settings\usb_can.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\test\usb_can\usb_can\settings\usb_can.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail\test\usb_can\usb_can\settings\usb_can.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\settings\usb_can.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\settings\usb_can.Debug.driver.xcl" 
 }

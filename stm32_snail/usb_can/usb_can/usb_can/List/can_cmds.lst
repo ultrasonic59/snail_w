@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         14/Jun/2021  21:05:01
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         19/Jun/2021  21:06:13
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,7 +8,7 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 #    Command line =
-#        -f C:\Users\vagol\AppData\Local\Temp\EW9B04.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWEE73.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 #        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
 #        USE_USB_OTG_FS -lcN
@@ -64,7 +64,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
       6            return 0;
       7          }
       8          
-      9          void mc_reset(void)
+      9          void _mc_reset(void)
      10          {
      11          put_can_cmd_reset_all();  
      12          report_init_message();
@@ -74,7 +74,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 
    .cstack Function
    ------- --------
-       8   mc_reset
+       8   _mc_reset
          8   -> put_can_cmd_reset_all
          8   -> report_init_message
        0   put_can_cmd_reset_all
@@ -84,7 +84,7 @@ D:\proj\velograph\snail\stm32_snail\usb_can\usb_can\src\my_grbl\can_cmds.c
 
    Bytes  Function/Label
    -----  --------------
-      12  mc_reset
+      12  _mc_reset
        4  put_can_cmd_reset_all
 
  

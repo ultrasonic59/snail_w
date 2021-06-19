@@ -645,5 +645,35 @@
 #define STATE_SLEEP         bit(7) // Sleep state.
 
 ////===================================================
+#define N_AXIS 3 // Number of axes
+#define X_AXIS 0 // Axis indexing value.
+#define Y_AXIS 1
+#define Z_AXIS 2
+
+#define MM_PER_INCH (25.40f)
+#define INCH_PER_MM (0.0393701f)
+
+////==================????===========================
+
+#define PROBE_BIT 15
+#define PROBE_MASK (1 << PROBE_BIT)
+#define X_LIMIT_BIT 10
+#define Y_LIMIT_BIT 11
+#define Z_LIMIT_BIT 12
+#define PROBE_OFF     0 // Probing disabled or not in use. (Must be zero.)
+#define PROBE_ACTIVE  1 // Actively watching the input pin.
+#define X_STEP_BIT 0
+#define Y_STEP_BIT 1
+#define Z_STEP_BIT 2
+#define STEP_MASK ((1 << X_STEP_BIT) | (1 << Y_STEP_BIT) | (1 << Z_STEP_BIT)) // All step bits
+
+////===================================================
+#define SPINDLE_PWM_FREQUENCY 10000 // KHz
+#define SPINDLE_PWM_MAX_VALUE (1000000 / SPINDLE_PWM_FREQUENCY)
+#ifndef SPINDLE_PWM_MIN_VALUE
+#define SPINDLE_PWM_MIN_VALUE 1 // Must be greater than zero.
+#endif 
+#define SPINDLE_PWM_OFF_VALUE 0
+#define SPINDLE_PWM_RANGE (SPINDLE_PWM_MAX_VALUE - SPINDLE_PWM_MIN_VALUE)
 
 #endif ////_GRBL_CONFIG_H_

@@ -28,7 +28,36 @@
 // Define standard libraries used by Grbl.
 #include <math.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <float.h>
+
 #include "misc.h"
+#include "grbl_config.h"
+#include "nuts_bolts.h"
+#include "limits.h"
+
+#include "report.h"
+#include "planner.h"
+#include "grbl_sys.h"
+#include "can_cmds.h"
+#include "settings.h"
+#include "grbl_print.h"
+#include "protocol.h"
+#include "jog.h"
+#include "probe.h"
+
+#define PORTPINDEF uint16_t
+
+#include "stepper.h"
+
+#include "gcode.h"
+#include "spindle_control.h"
+#include "coolant_control.h"
+#include "motion_control.h"
+
+#define DELAY_MODE_DWELL       0
+#define DELAY_MODE_SYS_SUSPEND 1
 
 #define M_PI		3.14159265358979323846
 ////===========================================
@@ -49,33 +78,20 @@ typedef int bool;
 //#define NOEEPROMSUPPORT
 #define printPgmString printString
 // Axis array index values. Must start with 0 and be continuous.
-#define N_AXIS 3 // Number of axes
-#define X_AXIS 0 // Axis indexing value.
-#define Y_AXIS 1
-#define Z_AXIS 2
-
-#define MM_PER_INCH (25.40f)
-#define INCH_PER_MM (0.0393701f)
 
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
+#define SOME_LARGE_VALUE FLT_MAX
 
 ////==============================================
 #define RX_BUFFER_SIZE 254
 #define TX_BUFFER_SIZE 128	// Do not try 256 it will not work for STM32.
 
 #define SERIAL_NO_DATA 0xff
-#include "grbl_config.h"
-#include "grbl_sys.h"
-#include "can_cmds.h"
-#include "settings.h"
-#include "grbl_print.h"
 
 ////==============================================
 extern void serial_write(uint8_t data); 
 ////extern void report_init_message(void);
+extern int serial_read_tx(void);
 
 ////==============================================
 
