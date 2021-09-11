@@ -103,31 +103,36 @@ GPIO_InitStructure.GPIO_Pin = MOT_STALLN_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 GPIO_Init( MOT_STALLN_PIN_GPIO, &GPIO_InitStructure );
-////=============== CONC ============================
-RCC_AHB1PeriphClockCmd(CONC_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = CONC_PIN;
+////=============== CONC1 ============================
+RCC_AHB1PeriphClockCmd(CONC1_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = CONC1_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( CONC_PIN_GPIO, &GPIO_InitStructure );
+GPIO_Init( CONC1_PIN_GPIO, &GPIO_InitStructure );
+////=============== CONC0 ============================
+RCC_AHB1PeriphClockCmd(CONC0_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = CONC0_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_Init( CONC0_PIN_GPIO, &GPIO_InitStructure );
 ////=============== ENC_A ============================
-RCC_AHB1PeriphClockCmd(ENC_A_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = ENC_A_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( ENC_A_PIN_GPIO, &GPIO_InitStructure );
+////RCC_AHB1PeriphClockCmd(ENC_A_PIN_RCC, ENABLE);
+////GPIO_InitStructure.GPIO_Pin = ENC_A_PIN;
+////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+////GPIO_Init( ENC_A_PIN_GPIO, &GPIO_InitStructure );
 ////=============== ENC_B ============================
-RCC_AHB1PeriphClockCmd(ENC_B_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = ENC_B_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( ENC_B_PIN_GPIO, &GPIO_InitStructure );
+////RCC_AHB1PeriphClockCmd(ENC_B_PIN_RCC, ENABLE);
+////GPIO_InitStructure.GPIO_Pin = ENC_B_PIN;
+////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+////GPIO_Init( ENC_B_PIN_GPIO, &GPIO_InitStructure );
 ////=============== ENC_C ============================
-RCC_AHB1PeriphClockCmd(ENC_C_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = ENC_C_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( ENC_C_PIN_GPIO, &GPIO_InitStructure );
-
+////RCC_AHB1PeriphClockCmd(ENC_C_PIN_RCC, ENABLE);
+////GPIO_InitStructure.GPIO_Pin = ENC_C_PIN;
+////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+/////GPIO_Init( ENC_C_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_RESET ============================
 RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_RESET_PIN;
@@ -264,6 +269,7 @@ NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 
 }
+
 void init_enc_tim(void)
 {
 ////============= DPX_R ========================
@@ -396,7 +402,7 @@ GPIO_ResetBits(MOT_SPI_SCS_PIN_GPIO, MOT_SPI_SCS_PIN);
 return rez;
 }
 ////==============================================
-void mot_spi_set_br(u16 br)
+void mot_spi_set_br(uint16_t br)
 {
 uint16_t tmpreg = 0;
 tmpreg = MOT_SPI->CR1& ~(0x7<<3);

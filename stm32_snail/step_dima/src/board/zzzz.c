@@ -25,3 +25,11 @@ else
   }
 #endif 
 }
+////==============================================================
+volatile uint8_t sys_rt_exec_state;   // Global realtime executor bitflag variable for state management. See EXEC bitmasks.
+
+void system_set_exec_state_flag(uint8_t flag) {
+///  __disable_irq();
+  sys_rt_exec_state |= (flag);
+///  __enable_irq();
+}

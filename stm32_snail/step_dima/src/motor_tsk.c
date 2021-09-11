@@ -69,9 +69,9 @@ else
         break;
     }
   }
-if(check_push_key())
+if(check_push_key_dbg())
   {
-  key=dbg_get_byte() ;  
+  key=get_byte_dbg() ;  
   switch(key)
     {
     case 'a':
@@ -111,7 +111,7 @@ if(check_push_key())
 #if 0
  for(;;)
   {
-  key=dbg_get_byte() ;  
+  key=get_byte_dbg() ;  
   switch(key)
     {
     case 'a':

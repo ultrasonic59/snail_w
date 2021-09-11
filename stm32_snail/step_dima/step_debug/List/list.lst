@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Jan/2021  20:08:42
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         22/Aug/2021  14:40:52
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
@@ -8,34 +8,34 @@
 #    Source file  =
 #        D:\proj\velograph\snail\stm32_snail\common\freertos\source\list.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EW6186.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EWF1F7.tmp
 #        (D:\proj\velograph\snail\stm32_snail\common\freertos\source\list.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D STEP_BRD -lcN
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\List
+#        D:\proj\velograph\snail\stm32_snail\step_dima\step_debug\List
 #        --diag_suppress Pa082,pe191 -o
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\Obj --no_cse
+#        D:\proj\velograph\snail\stm32_snail\step_dima\step_debug\Obj --no_cse
 #        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
 #        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
 #        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
 #        8.3\arm\inc\c\DLib_Config_Full.h" -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\.\ -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\board\ -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\freertos\source\inc\
-#        -I D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\inc\ -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\freertos\source\port\ARM_CM3\
+#        D:\proj\velograph\snail\stm32_snail\step_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\step_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\step_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\step_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\step_dima\..\common\freertos\source\port\ARM_CM3\
 #        -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        D:\proj\velograph\snail\stm32_snail\step_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
 #        -I
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\
-#        -I D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\dbg\ -On
+#        D:\proj\velograph\snail\stm32_snail\step_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\snail\stm32_snail\step_dima\..\common\dbg\ -On
 #        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
 #        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
 #        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
 #    Locale       =  C
 #    List file    =
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\List\list.lst
+#        D:\proj\velograph\snail\stm32_snail\step_dima\step_debug\List\list.lst
 #    Object file  =
-#        D:\proj\velograph\snail\stm32_snail\mstep_rtos\step_debug\Obj\list.o
+#        D:\proj\velograph\snail\stm32_snail\step_dima\step_debug\Obj\list.o
 #
 ###############################################################################
 

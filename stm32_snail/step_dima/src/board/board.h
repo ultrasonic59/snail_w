@@ -7,6 +7,10 @@
 #ifdef STEP_BRD
   #include "step_board.h"
 #endif
+#ifdef DIMA_BRD
+  #include "dima_board.h"
+#endif
+
   #include "my_misc.h"
   #include "stm32f2xx_can.h"
 
