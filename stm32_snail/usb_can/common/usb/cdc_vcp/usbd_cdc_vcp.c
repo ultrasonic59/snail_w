@@ -259,7 +259,7 @@ return 0;
 TaskHandle_t  vcp_thread_handle;
 
 ////static 
-uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
+uint16_t _VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
 ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 uint8_t ch;

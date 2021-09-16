@@ -1,16 +1,17 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         11/Sep/2021  20:44:55
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Sep/2021  14:34:12
 # Copyright 1999-2019 IAR Systems AB.
 #
 #    Cpu mode     =  
 #    Endian       =  little
 #    Source file  =  D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\xyz.c
 #    Command line =
-#        -f C:\Users\vova\AppData\Local\Temp\EWB2A7.tmp
+#        -f C:\Users\vova\AppData\Local\Temp\EW5E22.tmp
 #        (D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\xyz.c -D
 #        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
-#        -lcN D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List
+#        -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List
 #        --diag_suppress Pa082,pe191 -o
 #        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj --no_cse
 #        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering

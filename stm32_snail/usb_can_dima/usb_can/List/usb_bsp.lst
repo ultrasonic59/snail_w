@@ -1,0 +1,233 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Sep/2021  14:34:11
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  D:\proj\velograph\snail\stm32_snail\common\usb\usb_bsp.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW5899.tmp
+#        (D:\proj\velograph\snail\stm32_snail\common\usb\usb_bsp.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List\usb_bsp.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj\usb_bsp.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\common\usb\usb_bsp.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    usb_bsp.c
+      4            * @author  MCD Application Team
+      5            * @version V1.2.0
+      6            * @date    09-November-2015
+      7            * @brief   This file is responsible to offer board support package and is 
+      8            *          configurable by user.
+      9            ******************************************************************************
+     10            * @attention
+     11            *
+     12            * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+     13            *
+     14            * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+     15            * You may not use this file except in compliance with the License.
+     16            * You may obtain a copy of the License at:
+     17            *
+     18            *        http://www.st.com/software_license_agreement_liberty_v2
+     19            *
+     20            * Unless required by applicable law or agreed to in writing, software 
+     21            * distributed under the License is distributed on an "AS IS" BASIS, 
+     22            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     23            * See the License for the specific language governing permissions and
+     24            * limitations under the License.
+     25            *
+     26            ******************************************************************************
+     27            */ 
+     28          
+     29          #include "stm32f2xx.h"
+     30          #include "stm32f2xx_conf.h"
+     31          #include "usb_bsp.h"
+     32          #include "FreeRTOS.h"
+     33          #include "task.h"
+     34          #include "semphr.h"
+     35          
+     36          
+     37          
+     38          /**
+     39          * @brief  USB_OTG_BSP_Init
+     40          *         Initializes BSP configurations
+     41          * @param  None
+     42          * @retval None
+     43          */
+     44          
+     45          void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
+     46          {
+     47            GPIO_InitTypeDef GPIO_InitStructure;    
+     48            
+     49          #if defined (USB_OTG_HS_LOW_PWR_MGMT_SUPPORT) || defined (USB_OTG_FS_LOW_PWR_MGMT_SUPPORT)
+     50            EXTI_InitTypeDef EXTI_InitStructure;
+     51            NVIC_InitTypeDef NVIC_InitStructure; 
+     52          #endif
+     53            RCC_AHB1PeriphClockCmd( RCC_AHB1Periph_GPIOA , ENABLE);  
+     54            
+     55             /* Configure SOF ID DM DP Pins */
+     56            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | 
+     57                                          GPIO_Pin_12;
+     58            
+     59            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+     60            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     61            GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     62            GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+     63            GPIO_Init(GPIOA, &GPIO_InitStructure);  
+     64            
+     65            GPIO_PinAFConfig(GPIOA,GPIO_PinSource11,GPIO_AF_OTG1_FS) ; 
+     66            GPIO_PinAFConfig(GPIOA,GPIO_PinSource12,GPIO_AF_OTG1_FS) ;
+     67             
+     68            RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+     69            RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_OTG_FS, ENABLE) ; 
+     70           
+     71            
+     72            /* enable the PWR clock */
+     73            RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);   
+     74          }
+     75          /**
+     76          * @brief  USB_OTG_BSP_EnableInterrupt
+     77          *         Enable USB Global interrupt
+     78          * @param  None
+     79          * @retval None
+     80          */
+     81          void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
+     82          {
+     83            NVIC_InitTypeDef NVIC_InitStructure; 
+     84            
+     85          ////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+     86          #ifdef USE_USB_OTG_HS   
+     87            NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_IRQn;
+     88          #else
+     89            NVIC_InitStructure.NVIC_IRQChannel = OTG_FS_IRQn;  
+     90          #endif
+     91            NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
+     92            NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///3;
+     93            NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+     94            NVIC_Init(&NVIC_InitStructure);  
+     95          #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
+     96          ////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+     97            NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_EP1_OUT_IRQn;
+     98            NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
+     99            NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///2;
+    100            NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    101            NVIC_Init(&NVIC_InitStructure);  
+    102            
+    103          ////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+    104            NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_EP1_IN_IRQn;
+    105            NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
+    106            NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///1;
+    107            NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    108            NVIC_Init(&NVIC_InitStructure);   
+    109          #endif
+    110          }
+    111          /**
+    112          * @brief  USB_OTG_BSP_uDelay
+    113          *         This function provides delay time in micro sec
+    114          * @param  usec : Value of delay required in micro sec
+    115          * @retval None
+    116          */
+    117          void USB_OTG_BSP_uDelay (const uint32_t usec)
+    118          {
+    119            uint32_t count = 0;
+    120            const uint32_t utime = (120 * usec / 7);
+    121            do
+    122            {
+    123              if ( ++count > utime )
+    124              {
+    125                return ;
+    126              }
+    127            }
+    128            while (1);
+    129          }
+    130          
+    131          
+    132          /**
+    133          * @brief  USB_OTG_BSP_mDelay
+    134          *          This function provides delay time in milli sec
+    135          * @param  msec : Value of delay required in milli sec
+    136          * @retval None
+    137          */
+    138          void USB_OTG_BSP_mDelay (const uint32_t msec)
+    139          {
+    140            USB_OTG_BSP_uDelay(msec * 1000);   
+    141          }
+    142          
+    143          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   USB_OTG_BSP_EnableInterrupt
+        16   -> NVIC_Init
+      24   USB_OTG_BSP_Init
+        24   -> GPIO_Init
+        24   -> GPIO_PinAFConfig
+        24   -> RCC_AHB1PeriphClockCmd
+        24   -> RCC_AHB2PeriphClockCmd
+        24   -> RCC_APB1PeriphClockCmd
+        24   -> RCC_APB2PeriphClockCmd
+       8   USB_OTG_BSP_mDelay
+         8   -> USB_OTG_BSP_uDelay
+       0   USB_OTG_BSP_uDelay
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+      36  USB_OTG_BSP_EnableInterrupt
+     102  USB_OTG_BSP_Init
+      18  USB_OTG_BSP_mDelay
+      24  USB_OTG_BSP_uDelay
+
+ 
+ 184 bytes in section .text
+ 
+ 184 bytes of CODE memory
+
+Errors: none
+Warnings: none

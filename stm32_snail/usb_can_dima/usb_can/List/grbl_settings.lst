@@ -1,0 +1,73 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Sep/2021  14:34:08
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_settings.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW4D73.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_settings.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List\grbl_settings.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj\grbl_settings.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_settings.c
+      1          #include "my_grbl.h"
+      2          
+      3          settings_t settings;
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      92  settings
+
+ 
+ 92 bytes in section .bss
+ 
+ 92 bytes of DATA memory
+
+Errors: none
+Warnings: none

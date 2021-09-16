@@ -122,7 +122,7 @@ extern uint8_t hdlc1_send_iframe_ns(hdlc_stat_t *p_hdlc,u8 *data, int len);
 										
 ///extern int req_dat_goat(u8 icmd,u16 offs,void *obuf);
 ///extern BOOL send_dat_goat(u8 icmd,u8 *idat,u16 len);
-extern int hdlc1_on_bytein(hdlc_stat_t *p_hdlc, u8 in_bt );
+////extern int hdlc1_on_bytein(hdlc_stat_t *p_hdlc, u8 in_bt );
 extern uint8_t hdlc1_send_dat(hdlc_stat_t *p_hdlc, u8 icmd, u8 *idat, u16 len);
 extern void obr_hdlc1_cmd(hdlc_stat_t *p_hdlc);
 extern void hdlc1_obr_frame(void *pdata);

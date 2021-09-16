@@ -1,0 +1,2295 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         15/Sep/2021  14:34:12
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\common\usb\drv\src\usb_core.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW5A02.tmp
+#        (D:\proj\velograph\snail\stm32_snail\common\usb\drv\src\usb_core.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\List\usb_core.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can\Obj\usb_core.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\common\usb\drv\src\usb_core.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    usb_core.c
+      4            * @author  MCD Application Team
+      5            * @version V2.2.0
+      6            * @date    09-November-2015
+      7            * @brief   USB-OTG Core Layer
+      8            ******************************************************************************
+      9            * @attention
+     10            *
+     11            * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+     12            *
+     13            * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+     14            * You may not use this file except in compliance with the License.
+     15            * You may obtain a copy of the License at:
+     16            *
+     17            *        http://www.st.com/software_license_agreement_liberty_v2
+     18            *
+     19            * Unless required by applicable law or agreed to in writing, software 
+     20            * distributed under the License is distributed on an "AS IS" BASIS, 
+     21            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     22            * See the License for the specific language governing permissions and
+     23            * limitations under the License.
+     24            *
+     25            ******************************************************************************
+     26            */
+     27          
+     28          /* Includes ------------------------------------------------------------------*/
+     29          #include "usb_core.h"
+     30          #include "usb_bsp.h"
+     31          
+     32          
+     33          
+     34          /**
+     35          * @brief  USB_OTG_EnableCommonInt
+     36          *         Initializes the commmon interrupts, used in both device and modes
+     37          * @param  pdev : Selected device
+     38          * @retval None
+     39          */
+     40          static void USB_OTG_EnableCommonInt(USB_OTG_CORE_HANDLE *pdev)
+     41          {
+     42          USB_OTG_GINTMSK_TypeDef  int_mask;
+     43            
+     44          int_mask.d32 = 0;
+     45            /* Clear any pending USB_OTG Interrupts */
+     46          #ifndef USE_OTG_MODE
+     47            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GOTGINT, 0xFFFFFFFF);
+     48          #endif
+     49            /* Clear any pending interrupts */
+     50          USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GINTSTS, 0xBFFFFFFF);
+     51          /* Enable the interrupts in the INTMSK */
+     52          int_mask.b.wkupintr = 1;
+     53          int_mask.b.usbsuspend = 1; 
+     54            
+     55          #ifdef USE_OTG_MODE
+     56            int_mask.b.otgintr = 1;
+     57            int_mask.b.sessreqintr = 1;
+     58            int_mask.b.conidstschng = 1;
+     59          #endif
+     60            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GINTMSK, int_mask.d32);
+     61          }
+     62          
+     63          /**
+     64          * @brief  USB_OTG_CoreReset : Soft reset of the core
+     65          * @param  pdev : Selected device
+     66          * @retval USB_OTG_STS : status
+     67          */
+     68          #define MAX_WAIT_CNT    200000    ///2000000
+     69          static USB_OTG_STS USB_OTG_CoreReset(USB_OTG_CORE_HANDLE *pdev)
+     70          {
+     71            USB_OTG_STS status = USB_OTG_OK;
+     72            __IO USB_OTG_GRSTCTL_TypeDef  greset;
+     73            uint32_t count = 0;
+     74            
+     75            greset.d32 = 0;
+     76            /* Wait for AHB master IDLE state. */
+     77            do
+     78            {
+     79              USB_OTG_BSP_uDelay(3);
+     80              greset.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GRSTCTL);
+     81              if (++count > MAX_WAIT_CNT)
+     82              {
+     83                return USB_OTG_OK;
+     84              }
+     85            }
+     86            while (greset.b.ahbidle == 0);
+     87            /* Core Soft Reset */
+     88            count = 0;
+     89            greset.b.csftrst = 1;
+     90            USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GRSTCTL, greset.d32 );
+     91            do
+     92            {
+     93              greset.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GRSTCTL);
+     94              if (++count > MAX_WAIT_CNT)
+     95              {
+     96                break;
+     97              }
+     98            }
+     99            while (greset.b.csftrst == 1);
+    100            /* Wait for 3 PHY Clocks*/
+    101            USB_OTG_BSP_uDelay(3);
+    102            return status;
+    103          }
+    104          
+    105          /**
+    106          * @brief  USB_OTG_WritePacket : Writes a packet into the Tx FIFO associated 
+    107          *         with the EP
+    108          * @param  pdev : Selected device
+    109          * @param  src : source pointer
+    110          * @param  ch_ep_num : end point number
+    111          * @param  bytes : No. of bytes
+    112          * @retval USB_OTG_STS : status
+    113          */
+    114          USB_OTG_STS USB_OTG_WritePacket(USB_OTG_CORE_HANDLE *pdev, 
+    115                                          uint8_t             *src, 
+    116                                          uint8_t             ch_ep_num, 
+    117                                          uint16_t            len)
+    118          {
+    119            USB_OTG_STS status = USB_OTG_OK;
+    120            if (pdev->cfg.dma_enable == 0)
+    121            {
+    122              uint32_t count32b= 0 , i= 0;
+    123              __IO uint32_t *fifo;
+    124              
+    125              count32b =  (len + 3) / 4;
+    126              fifo = pdev->regs.DFIFO[ch_ep_num];
+    127              for (i = 0; i < count32b; i++)
+    128              {
+    129                USB_OTG_WRITE_REG32( fifo, *((__packed uint32_t *)src) );
+    130                src+=4;
+    131              }
+    132            }
+    133            return status;
+    134          }
+    135          
+    136          
+    137          /**
+    138          * @brief  USB_OTG_ReadPacket : Reads a packet from the Rx FIFO
+    139          * @param  pdev : Selected device
+    140          * @param  dest : Destination Pointer
+    141          * @param  bytes : No. of bytes
+    142          * @retval None
+    143          */
+    144          void *USB_OTG_ReadPacket(USB_OTG_CORE_HANDLE *pdev, 
+    145                                   uint8_t *dest, 
+    146                                   uint16_t len)
+    147          {
+    148            uint32_t i=0;
+    149            uint32_t count32b = (len + 3) / 4;
+    150            
+    151            __IO uint32_t *fifo = pdev->regs.DFIFO[0];
+    152            
+    153            for( i = 0; i < count32b; i++)
+    154            {
+    155              *(__packed uint32_t *)dest = USB_OTG_READ_REG32(fifo);
+    156              dest += 4 ;
+    157            }
+    158            return ((void *)dest);
+    159          }
+    160          
+    161          /**
+    162          * @brief  USB_OTG_SelectCore 
+    163          *         Initialize core registers address.
+    164          * @param  pdev : Selected device
+    165          * @param  coreID : USB OTG Core ID
+    166          * @retval USB_OTG_STS : status
+    167          */
+    168          USB_OTG_STS USB_OTG_SelectCore(USB_OTG_CORE_HANDLE *pdev, 
+    169                                         USB_OTG_CORE_ID_TypeDef coreID)
+    170          {
+    171            uint32_t i , baseAddress = 0;
+    172            USB_OTG_STS status = USB_OTG_OK;
+    173            
+    174            pdev->cfg.dma_enable       = 0;
+    175            
+    176            /* at startup the core is in FS mode */
+    177            pdev->cfg.speed            = USB_OTG_SPEED_FULL;
+    178            pdev->cfg.mps              = USB_OTG_FS_MAX_PACKET_SIZE ;    
+    179            
+    180            /* initialize device cfg following its address */
+    181            if (coreID == USB_OTG_FS_CORE_ID)
+    182            {
+    183              baseAddress                = USB_OTG_FS_BASE_ADDR;
+    184              pdev->cfg.coreID           = USB_OTG_FS_CORE_ID;
+    185              pdev->cfg.host_channels    = 8 ;
+    186              pdev->cfg.dev_endpoints    = 4 ;
+    187              pdev->cfg.TotalFifoSize    = 320; /* in 32-bits */
+    188              pdev->cfg.phy_itface       = USB_OTG_EMBEDDED_PHY;     
+    189              
+    190          #ifdef USB_OTG_FS_SOF_OUTPUT_ENABLED    
+    191              pdev->cfg.Sof_output       = 1;    
+    192          #endif 
+    193              
+    194          #ifdef USB_OTG_FS_LOW_PWR_MGMT_SUPPORT    
+    195              pdev->cfg.low_power        = 1;    
+    196          #endif     
+    197            }
+    198            else if (coreID == USB_OTG_HS_CORE_ID)
+    199            {
+    200              baseAddress                = USB_OTG_HS_BASE_ADDR;
+    201              pdev->cfg.coreID           = USB_OTG_HS_CORE_ID;    
+    202              pdev->cfg.host_channels    = 12 ;
+    203              pdev->cfg.dev_endpoints    = 6 ;
+    204              pdev->cfg.TotalFifoSize    = 1280;/* in 32-bits */
+    205              
+    206              pdev->cfg.phy_itface       = USB_OTG_EMBEDDED_PHY;
+    207              
+    208          #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED    
+    209              pdev->cfg.dma_enable       = 1;    
+    210          #endif
+    211              
+    212          #ifdef USB_OTG_HS_SOF_OUTPUT_ENABLED    
+    213              pdev->cfg.Sof_output       = 1;    
+    214          #endif 
+    215              
+    216          #ifdef USB_OTG_HS_LOW_PWR_MGMT_SUPPORT    
+    217              pdev->cfg.low_power        = 1;    
+    218          #endif 
+    219              
+    220            }
+    221            
+    222            else
+    223            {
+    224              /* Do Nothing */
+    225            }
+    226            
+    227            pdev->regs.GREGS = (USB_OTG_GREGS *)(baseAddress + \
+    228              USB_OTG_CORE_GLOBAL_REGS_OFFSET);
+    229            pdev->regs.DREGS =  (USB_OTG_DREGS  *)  (baseAddress + \
+    230              USB_OTG_DEV_GLOBAL_REG_OFFSET);
+    231            
+    232            for (i = 0; i < pdev->cfg.dev_endpoints; i++)
+    233            {
+    234              pdev->regs.INEP_REGS[i]  = (USB_OTG_INEPREGS *)  \
+    235                (baseAddress + USB_OTG_DEV_IN_EP_REG_OFFSET + \
+    236                  (i * USB_OTG_EP_REG_OFFSET));
+    237              pdev->regs.OUTEP_REGS[i] = (USB_OTG_OUTEPREGS *) \
+    238                (baseAddress + USB_OTG_DEV_OUT_EP_REG_OFFSET + \
+    239                  (i * USB_OTG_EP_REG_OFFSET));
+    240            }
+    241            pdev->regs.HREGS = (USB_OTG_HREGS *)(baseAddress + \
+    242              USB_OTG_HOST_GLOBAL_REG_OFFSET);
+    243            pdev->regs.HPRT0 = (uint32_t *)(baseAddress + USB_OTG_HOST_PORT_REGS_OFFSET);
+    244            
+    245            for (i = 0; i < pdev->cfg.host_channels; i++)
+    246            {
+    247              pdev->regs.HC_REGS[i] = (USB_OTG_HC_REGS *)(baseAddress + \
+    248                USB_OTG_HOST_CHAN_REGS_OFFSET + \
+    249                  (i * USB_OTG_CHAN_REGS_OFFSET));
+    250            }
+    251            for (i = 0; i < pdev->cfg.host_channels; i++)
+    252            {
+    253              pdev->regs.DFIFO[i] = (uint32_t *)(baseAddress + USB_OTG_DATA_FIFO_OFFSET +\
+    254                (i * USB_OTG_DATA_FIFO_SIZE));
+    255            }
+    256            pdev->regs.PCGCCTL = (uint32_t *)(baseAddress + USB_OTG_PCGCCTL_OFFSET);
+    257            
+    258            return status;
+    259          }
+    260          
+    261          
+    262          /**
+    263          * @brief  USB_OTG_CoreInit
+    264          *         Initializes the USB_OTG controller registers and prepares the core
+    265          *         device mode or host mode operation.
+    266          * @param  pdev : Selected device
+    267          * @retval USB_OTG_STS : status
+    268          */
+    269          USB_OTG_STS USB_OTG_CoreInit(USB_OTG_CORE_HANDLE *pdev)
+    270          {
+    271            USB_OTG_STS status = USB_OTG_OK;
+    272            USB_OTG_GUSBCFG_TypeDef  usbcfg;
+    273            USB_OTG_GCCFG_TypeDef    gccfg;
+    274            USB_OTG_GAHBCFG_TypeDef  ahbcfg;
+    275            usbcfg.d32 = 0;
+    276            gccfg.d32 = 0;
+    277            ahbcfg.d32 = 0;
+    278          
+    279          ////  else /* FS interface (embedded Phy) */
+    280            {
+    281              
+    282              usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);;
+    283              usbcfg.b.physel  = 1; /* FS Interface */
+    284              USB_OTG_WRITE_REG32 (&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
+    285              /* Reset after a PHY select and set Host mode */
+    286              USB_OTG_CoreReset(pdev);
+    287              /* Deactivate the power down*/
+    288              gccfg.d32 = 0;
+    289              gccfg.b.pwdn = 1;
+    290              gccfg.b.vbussensingA = 1 ;
+    291              gccfg.b.vbussensingB = 1 ; 
+    292             
+    293          #ifndef VBUS_SENSING_ENABLED
+    294              gccfg.b.disablevbussensing = 1; 
+    295          #endif    
+    296              
+    297              if(pdev->cfg.Sof_output)
+    298              {
+    299                gccfg.b.sofouten = 1;  
+    300              }
+    301              
+    302              USB_OTG_WRITE_REG32 (&pdev->regs.GREGS->GCCFG, gccfg.d32);
+    303              USB_OTG_BSP_mDelay(20);
+    304            }
+    305            /* case the HS core is working in FS mode */
+    306            if(pdev->cfg.dma_enable == 1)
+    307            {
+    308              
+    309              ahbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GAHBCFG);
+    310              ahbcfg.b.hburstlen = 5; /* 64 x 32-bits*/
+    311              ahbcfg.b.dmaenable = 1;
+    312              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GAHBCFG, ahbcfg.d32);
+    313              
+    314            }
+    315            /* initialize OTG features */
+    316          #ifdef  USE_OTG_MODE
+    317            usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);
+    318            usbcfg.b.hnpcap = 1;
+    319            usbcfg.b.srpcap = 1;
+    320            USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
+    321            USB_OTG_EnableCommonInt(pdev);
+    322          #endif
+    323            
+    324          #if defined (STM32F446xx) || defined (STM32F469_479xx)
+    325            usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);
+    326            usbcfg.b.srpcap = 1;
+    327            /*clear sdis bit in dctl */
+    328            dctl.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DCTL);
+    329            /* Connect device */
+    330            dctl.b.sftdiscon  = 0;
+    331            USB_OTG_WRITE_REG32(&pdev->regs.DREGS->DCTL, dctl.d32);
+    332            dctl.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DCTL);
+    333            USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
+    334            USB_OTG_EnableCommonInt(pdev);
+    335          #endif
+    336            
+    337            return status;
+    338          }
+    339          /**
+    340          * @brief  USB_OTG_EnableGlobalInt
+    341          *         Enables the controller's Global Int in the AHB Config reg
+    342          * @param  pdev : Selected device
+    343          * @retval USB_OTG_STS : status
+    344          */
+    345          USB_OTG_STS USB_OTG_EnableGlobalInt(USB_OTG_CORE_HANDLE *pdev)
+    346          {
+    347            USB_OTG_STS status = USB_OTG_OK;
+    348            USB_OTG_GAHBCFG_TypeDef  ahbcfg;
+    349            
+    350            ahbcfg.d32 = 0;
+    351            ahbcfg.b.glblintrmsk = 1; /* Enable interrupts */
+    352            USB_OTG_MODIFY_REG32(&pdev->regs.GREGS->GAHBCFG, 0, ahbcfg.d32);
+    353            return status;
+    354          }
+    355          
+    356          
+    357          /**
+    358          * @brief  USB_OTG_DisableGlobalInt
+    359          *         Enables the controller's Global Int in the AHB Config reg
+    360          * @param  pdev : Selected device
+    361          * @retval USB_OTG_STS : status
+    362          */
+    363          USB_OTG_STS USB_OTG_DisableGlobalInt(USB_OTG_CORE_HANDLE *pdev)
+    364          {
+    365            USB_OTG_STS status = USB_OTG_OK;
+    366            USB_OTG_GAHBCFG_TypeDef  ahbcfg;
+    367            ahbcfg.d32 = 0;
+    368            ahbcfg.b.glblintrmsk = 1; /* Enable interrupts */
+    369            USB_OTG_MODIFY_REG32(&pdev->regs.GREGS->GAHBCFG, ahbcfg.d32, 0);
+    370            return status;
+    371          }
+    372          
+    373          
+    374          /**
+    375          * @brief  USB_OTG_FlushTxFifo : Flush a Tx FIFO
+    376          * @param  pdev : Selected device
+    377          * @param  num : FO num
+    378          * @retval USB_OTG_STS : status
+    379          */
+    380          USB_OTG_STS USB_OTG_FlushTxFifo (USB_OTG_CORE_HANDLE *pdev , uint32_t num )
+    381          {
+    382            USB_OTG_STS status = USB_OTG_OK;
+    383            __IO USB_OTG_GRSTCTL_TypeDef  greset;
+    384            
+    385            uint32_t count = 0;
+    386            greset.d32 = 0;
+    387            greset.b.txfflsh = 1;
+    388            greset.b.txfnum  = num;
+    389            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GRSTCTL, greset.d32 );
+    390            do
+    391            {
+    392              greset.d32 = USB_OTG_READ_REG32( &pdev->regs.GREGS->GRSTCTL);
+    393              if (++count > 200000)
+    394              {
+    395                break;
+    396              }
+    397            }
+    398            while (greset.b.txfflsh == 1);
+    399            /* Wait for 3 PHY Clocks*/
+    400            USB_OTG_BSP_uDelay(3);
+    401            return status;
+    402          }
+    403          
+    404          
+    405          /**
+    406          * @brief  USB_OTG_FlushRxFifo : Flush a Rx FIFO
+    407          * @param  pdev : Selected device
+    408          * @retval USB_OTG_STS : status
+    409          */
+    410          USB_OTG_STS USB_OTG_FlushRxFifo( USB_OTG_CORE_HANDLE *pdev )
+    411          {
+    412            USB_OTG_STS status = USB_OTG_OK;
+    413            __IO USB_OTG_GRSTCTL_TypeDef  greset;
+    414            uint32_t count = 0;
+    415            
+    416            greset.d32 = 0;
+    417            greset.b.rxfflsh = 1;
+    418            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GRSTCTL, greset.d32 );
+    419            do
+    420            {
+    421              greset.d32 = USB_OTG_READ_REG32( &pdev->regs.GREGS->GRSTCTL);
+    422              if (++count > 200000)
+    423              {
+    424                break;
+    425              }
+    426            }
+    427            while (greset.b.rxfflsh == 1);
+    428            /* Wait for 3 PHY Clocks*/
+    429            USB_OTG_BSP_uDelay(3);
+    430            return status;
+    431          }
+    432          
+    433          
+    434          /**
+    435          * @brief  USB_OTG_SetCurrentMode : Set ID line
+    436          * @param  pdev : Selected device
+    437          * @param  mode :  (Host/device)
+    438          * @retval USB_OTG_STS : status
+    439          */
+    440          USB_OTG_STS USB_OTG_SetCurrentMode(USB_OTG_CORE_HANDLE *pdev , uint8_t mode)
+    441          {
+    442            USB_OTG_STS status = USB_OTG_OK;
+    443            USB_OTG_GUSBCFG_TypeDef  usbcfg;
+    444            
+    445            usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);
+    446            
+    447            usbcfg.b.force_host = 0;
+    448            usbcfg.b.force_dev = 0;
+    449            
+    450            if ( mode == HOST_MODE)
+    451            {
+    452              usbcfg.b.force_host = 1;
+    453            }
+    454            else if ( mode == DEVICE_MODE)
+    455            {
+    456              usbcfg.b.force_dev = 1;
+    457            }
+    458            
+    459            else
+    460            {
+    461              /* Do Nothing */
+    462            }
+    463            
+    464            USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
+    465            USB_OTG_BSP_mDelay(50);
+    466            return status;
+    467          }
+    468          
+    469          
+    470          /**
+    471          * @brief  USB_OTG_GetMode : Get current mode
+    472          * @param  pdev : Selected device
+    473          * @retval current mode
+    474          */
+    475          uint32_t USB_OTG_GetMode(USB_OTG_CORE_HANDLE *pdev)
+    476          {
+    477            return (USB_OTG_READ_REG32(&pdev->regs.GREGS->GINTSTS ) & 0x1);
+    478          }
+    479          
+    480          
+    481          /**
+    482          * @brief  USB_OTG_IsDeviceMode : Check if it is device mode
+    483          * @param  pdev : Selected device
+    484          * @retval num_in_ep
+    485          */
+    486          uint8_t USB_OTG_IsDeviceMode(USB_OTG_CORE_HANDLE *pdev)
+    487          {
+    488            return (USB_OTG_GetMode(pdev) != HOST_MODE);
+    489          }
+    490          
+    491          
+    492          /**
+    493          * @brief  USB_OTG_IsHostMode : Check if it is host mode
+    494          * @param  pdev : Selected device
+    495          * @retval num_in_ep
+    496          */
+    497          uint8_t USB_OTG_IsHostMode(USB_OTG_CORE_HANDLE *pdev)
+    498          {
+    499            return (USB_OTG_GetMode(pdev) == HOST_MODE);
+    500          }
+    501          
+    502          
+    503          /**
+    504          * @brief  USB_OTG_ReadCoreItr : returns the Core Interrupt register
+    505          * @param  pdev : Selected device
+    506          * @retval Status
+    507          */
+    508          uint32_t USB_OTG_ReadCoreItr(USB_OTG_CORE_HANDLE *pdev)
+    509          {
+    510            uint32_t v = 0;
+    511            v = USB_OTG_READ_REG32(&pdev->regs.GREGS->GINTSTS);
+    512            v &= USB_OTG_READ_REG32(&pdev->regs.GREGS->GINTMSK);
+    513            return v;
+    514          }
+    515          
+    516          
+    517          /**
+    518          * @brief  USB_OTG_ReadOtgItr : returns the USB_OTG Interrupt register
+    519          * @param  pdev : Selected device
+    520          * @retval Status
+    521          */
+    522          uint32_t USB_OTG_ReadOtgItr (USB_OTG_CORE_HANDLE *pdev)
+    523          {
+    524            return (USB_OTG_READ_REG32 (&pdev->regs.GREGS->GOTGINT));
+    525          }
+    526          
+    527          #ifdef USE_HOST_MODE
+    528          /**
+    529          * @brief  USB_OTG_CoreInitHost : Initializes USB_OTG controller for host mode
+    530          * @param  pdev : Selected device
+    531          * @retval status
+    532          */
+    533          USB_OTG_STS USB_OTG_CoreInitHost(USB_OTG_CORE_HANDLE *pdev)
+    534          {
+    535            USB_OTG_STS                     status = USB_OTG_OK;
+    536            USB_OTG_FSIZ_TypeDef            nptxfifosize;
+    537            USB_OTG_FSIZ_TypeDef            ptxfifosize;  
+    538            USB_OTG_HCFG_TypeDef            hcfg;
+    539            
+    540          #ifdef USE_OTG_MODE
+    541            USB_OTG_OTGCTL_TypeDef          gotgctl;
+    542          #endif
+    543            
+    544            uint32_t                        i = 0;
+    545            
+    546            nptxfifosize.d32 = 0;  
+    547            ptxfifosize.d32 = 0;
+    548          #ifdef USE_OTG_MODE
+    549            gotgctl.d32 = 0;
+    550          #endif
+    551            hcfg.d32 = 0;
+    552            
+    553            
+    554            /* configure charge pump IO */
+    555            USB_OTG_BSP_ConfigVBUS(pdev);
+    556            
+    557            /* Restart the Phy Clock */
+    558            USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, 0);
+    559            
+    560            /* Initialize Host Configuration Register */
+    561            if (pdev->cfg.phy_itface == USB_OTG_ULPI_PHY)
+    562            {
+    563              USB_OTG_InitFSLSPClkSel(pdev , HCFG_30_60_MHZ); 
+    564            }
+    565            else
+    566            {
+    567              USB_OTG_InitFSLSPClkSel(pdev , HCFG_48_MHZ); 
+    568            }
+    569            USB_OTG_ResetPort(pdev);
+    570            
+    571            hcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.HREGS->HCFG);
+    572            hcfg.b.fslssupp = 0;
+    573            USB_OTG_WRITE_REG32(&pdev->regs.HREGS->HCFG, hcfg.d32);
+    574            
+    575            /* Configure data FIFO sizes */
+    576            /* Rx FIFO */
+    577          #ifdef USB_OTG_FS_CORE
+    578            if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID)
+    579            {
+    580              /* set Rx FIFO size */
+    581              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GRXFSIZ, RX_FIFO_FS_SIZE);
+    582              nptxfifosize.b.startaddr = RX_FIFO_FS_SIZE;   
+    583              nptxfifosize.b.depth = TXH_NP_FS_FIFOSIZ;  
+    584              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->DIEPTXF0_HNPTXFSIZ, nptxfifosize.d32);
+    585              
+    586              ptxfifosize.b.startaddr = RX_FIFO_FS_SIZE + TXH_NP_FS_FIFOSIZ;
+    587              ptxfifosize.b.depth     = TXH_P_FS_FIFOSIZ;
+    588              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->HPTXFSIZ, ptxfifosize.d32);      
+    589            }
+    590          #endif
+    591          #ifdef USB_OTG_HS_CORE  
+    592            if (pdev->cfg.coreID == USB_OTG_HS_CORE_ID)
+    593            {
+    594              /* set Rx FIFO size */
+    595              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GRXFSIZ, RX_FIFO_HS_SIZE);
+    596              nptxfifosize.b.startaddr = RX_FIFO_HS_SIZE;   
+    597              nptxfifosize.b.depth = TXH_NP_HS_FIFOSIZ;  
+    598              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->DIEPTXF0_HNPTXFSIZ, nptxfifosize.d32);
+    599              
+    600              ptxfifosize.b.startaddr = RX_FIFO_HS_SIZE + TXH_NP_HS_FIFOSIZ;
+    601              ptxfifosize.b.depth     = TXH_P_HS_FIFOSIZ;
+    602              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->HPTXFSIZ, ptxfifosize.d32);      
+    603            }
+    604          #endif  
+    605            
+    606          #ifdef USE_OTG_MODE
+    607            /* Clear Host Set HNP Enable in the USB_OTG Control Register */
+    608            gotgctl.b.hstsethnpen = 1;
+    609            USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GOTGCTL, gotgctl.d32, 0);
+    610          #endif
+    611            
+    612            /* Make sure the FIFOs are flushed. */
+    613            USB_OTG_FlushTxFifo(pdev, 0x10 );         /* all Tx FIFOs */
+    614            USB_OTG_FlushRxFifo(pdev);
+    615            
+    616            
+    617            /* Clear all pending HC Interrupts */
+    618            for (i = 0; i < pdev->cfg.host_channels; i++)
+    619            {
+    620              USB_OTG_WRITE_REG32( &pdev->regs.HC_REGS[i]->HCINT, 0xFFFFFFFF );
+    621              USB_OTG_WRITE_REG32( &pdev->regs.HC_REGS[i]->HCINTMSK, 0 );
+    622            }
+    623          #ifndef USE_OTG_MODE
+    624            USB_OTG_DriveVbus(pdev, 1);
+    625          #endif
+    626            
+    627            USB_OTG_EnableHostInt(pdev);
+    628            return status;
+    629          }
+    630          
+    631          /**
+    632          * @brief  USB_OTG_IsEvenFrame 
+    633          *         This function returns the frame number for sof packet
+    634          * @param  pdev : Selected device
+    635          * @retval Frame number
+    636          */
+    637          uint8_t USB_OTG_IsEvenFrame (USB_OTG_CORE_HANDLE *pdev) 
+    638          {
+    639            return !(USB_OTG_READ_REG32(&pdev->regs.HREGS->HFNUM) & 0x1);
+    640          }
+    641          
+    642          /**
+    643          * @brief  USB_OTG_DriveVbus : set/reset vbus
+    644          * @param  pdev : Selected device
+    645          * @param  state : VBUS state
+    646          * @retval None
+    647          */
+    648          void USB_OTG_DriveVbus (USB_OTG_CORE_HANDLE *pdev, uint8_t state)
+    649          {
+    650            USB_OTG_HPRT0_TypeDef     hprt0;
+    651            
+    652            hprt0.d32 = 0;
+    653            
+    654            /* enable disable the external charge pump */
+    655            USB_OTG_BSP_DriveVBUS(pdev, state);
+    656            
+    657            /* Turn on the Host port power. */
+    658            hprt0.d32 = USB_OTG_ReadHPRT0(pdev);
+    659            if ((hprt0.b.prtpwr == 0 ) && (state == 1 ))
+    660            {
+    661              hprt0.b.prtpwr = 1;
+    662              USB_OTG_WRITE_REG32(pdev->regs.HPRT0, hprt0.d32);
+    663            }
+    664            if ((hprt0.b.prtpwr == 1 ) && (state == 0 ))
+    665            {
+    666              hprt0.b.prtpwr = 0;
+    667              USB_OTG_WRITE_REG32(pdev->regs.HPRT0, hprt0.d32);
+    668            }
+    669            
+    670            USB_OTG_BSP_mDelay(200);
+    671          }
+    672          /**
+    673          * @brief  USB_OTG_EnableHostInt: Enables the Host mode interrupts
+    674          * @param  pdev : Selected device
+    675          * @retval USB_OTG_STS : status
+    676          */
+    677          USB_OTG_STS USB_OTG_EnableHostInt(USB_OTG_CORE_HANDLE *pdev)
+    678          {
+    679          USB_OTG_STS       status = USB_OTG_OK;
+    680          USB_OTG_GINTMSK_TypeDef  intmsk;
+    681          intmsk.d32 = 0;
+    682          /* Disable all interrupts. */
+    683          USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GINTMSK, 0);
+    684            
+    685           /* Clear any pending interrupts. */
+    686          USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GINTSTS, 0xFFFFFFFF);
+    687            
+    688          /* Enable the common interrupts */
+    689          USB_OTG_EnableCommonInt(pdev);
+    690            
+    691            if (pdev->cfg.dma_enable == 0)
+    692            {  
+    693              intmsk.b.rxstsqlvl  = 1;
+    694            }  
+    695            
+    696          
+    697            intmsk.b.incomplisoout  = 1;
+    698            intmsk.b.hcintr     = 1; 
+    699          intmsk.b.portintr   = 1;
+    700            USB_OTG_MODIFY_REG32(&pdev->regs.GREGS->GINTMSK, intmsk.d32, intmsk.d32);
+    701           
+    702            intmsk.d32 = 0;
+    703           
+    704            intmsk.b.disconnect = 1;  
+    705            
+    706            intmsk.b.sofintr    = 1; 
+    707            USB_OTG_MODIFY_REG32(&pdev->regs.GREGS->GINTMSK, intmsk.d32, 0);
+    708            return status;
+    709          }
+    710          
+    711          /**
+    712          * @brief  USB_OTG_InitFSLSPClkSel : Initializes the FSLSPClkSel field of the 
+    713          *         HCFG register on the PHY type
+    714          * @param  pdev : Selected device
+    715          * @param  freq : clock frequency
+    716          * @retval None
+    717          */
+    718          void USB_OTG_InitFSLSPClkSel(USB_OTG_CORE_HANDLE *pdev , uint8_t freq)
+    719          {
+    720            USB_OTG_HCFG_TypeDef   hcfg;
+    721            
+    722            hcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.HREGS->HCFG);
+    723            hcfg.b.fslspclksel = freq;
+    724            USB_OTG_WRITE_REG32(&pdev->regs.HREGS->HCFG, hcfg.d32);
+    725          }
+    726          
+    727          
+    728          /**
+    729          * @brief  USB_OTG_ReadHPRT0 : Reads HPRT0 to modify later
+    730          * @param  pdev : Selected device
+    731          * @retval HPRT0 value
+    732          */
+    733          uint32_t USB_OTG_ReadHPRT0(USB_OTG_CORE_HANDLE *pdev)
+    734          {
+    735            USB_OTG_HPRT0_TypeDef  hprt0;
+    736            
+    737            hprt0.d32 = USB_OTG_READ_REG32(pdev->regs.HPRT0);
+    738            hprt0.b.prtena = 0;
+    739            hprt0.b.prtconndet = 0;
+    740            hprt0.b.prtenchng = 0;
+    741            hprt0.b.prtovrcurrchng = 0;
+    742            return hprt0.d32;
+    743          }
+    744          
+    745          
+    746          /**
+    747          * @brief  USB_OTG_ReadHostAllChannels_intr : Register PCD Callbacks
+    748          * @param  pdev : Selected device
+    749          * @retval Status
+    750          */
+    751          uint32_t USB_OTG_ReadHostAllChannels_intr (USB_OTG_CORE_HANDLE *pdev)
+    752          {
+    753            return (USB_OTG_READ_REG32 (&pdev->regs.HREGS->HAINT));
+    754          }
+    755          
+    756          
+    757          /**
+    758          * @brief  USB_OTG_ResetPort : Reset Host Port
+    759          * @param  pdev : Selected device
+    760          * @retval status
+    761          * @note : (1)The application must wait at least 10 ms (+ 10 ms security)
+    762          *   before clearing the reset bit.
+    763          */
+    764          uint32_t USB_OTG_ResetPort(USB_OTG_CORE_HANDLE *pdev)
+    765          {
+    766            USB_OTG_HPRT0_TypeDef  hprt0;
+    767            
+    768            hprt0.d32 = USB_OTG_ReadHPRT0(pdev);
+    769            hprt0.b.prtrst = 1;
+    770            USB_OTG_WRITE_REG32(pdev->regs.HPRT0, hprt0.d32);
+    771            USB_OTG_BSP_mDelay (100);                                /* See Note #1 */
+    772            hprt0.b.prtrst = 0;
+    773            USB_OTG_WRITE_REG32(pdev->regs.HPRT0, hprt0.d32);
+    774            USB_OTG_BSP_mDelay (20);   
+    775            return 1;
+    776          }
+    777          
+    778          
+    779          /**
+    780          * @brief  USB_OTG_HC_Init : Prepares a host channel for transferring packets
+    781          * @param  pdev : Selected device
+    782          * @param  hc_num : channel number
+    783          * @retval USB_OTG_STS : status
+    784          */
+    785          USB_OTG_STS USB_OTG_HC_Init(USB_OTG_CORE_HANDLE *pdev , uint8_t hc_num)
+    786          {
+    787            USB_OTG_STS status = USB_OTG_OK;
+    788            uint32_t intr_enable = 0;
+    789            USB_OTG_HCINTMSK_TypeDef  hcintmsk;
+    790            USB_OTG_GINTMSK_TypeDef    gintmsk;
+    791            USB_OTG_HCCHAR_TypeDef     hcchar;
+    792            USB_OTG_HCINTn_TypeDef     hcint;
+    793            
+    794            
+    795            gintmsk.d32 = 0;
+    796            hcintmsk.d32 = 0;
+    797            hcchar.d32 = 0;
+    798            
+    799            /* Clear old interrupt conditions for this host channel. */
+    800            hcint.d32 = 0xFFFFFFFF;
+    801            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCINT, hcint.d32);
+    802            
+    803            /* Enable channel interrupts required for this transfer. */
+    804            hcintmsk.d32 = 0;
+    805            
+    806            if (pdev->cfg.dma_enable == 1)
+    807            {
+    808              hcintmsk.b.ahberr = 1;
+    809            }
+    810            
+    811            switch (pdev->host.hc[hc_num].ep_type) 
+    812            {
+    813            case EP_TYPE_CTRL:
+    814            case EP_TYPE_BULK:
+    815              hcintmsk.b.xfercompl = 1;
+    816              hcintmsk.b.stall = 1;
+    817              hcintmsk.b.xacterr = 1;
+    818              hcintmsk.b.datatglerr = 1;
+    819              hcintmsk.b.nak = 1;  
+    820              if (pdev->host.hc[hc_num].ep_is_in) 
+    821              {
+    822                hcintmsk.b.bblerr = 1;
+    823              } 
+    824              else 
+    825              {
+    826                hcintmsk.b.nyet = 1;
+    827                if (pdev->host.hc[hc_num].do_ping) 
+    828                {
+    829                  hcintmsk.b.ack = 1;
+    830                }
+    831              }
+    832              break;
+    833            case EP_TYPE_INTR:
+    834              hcintmsk.b.xfercompl = 1;
+    835              hcintmsk.b.nak = 1;
+    836              hcintmsk.b.stall = 1;
+    837              hcintmsk.b.xacterr = 1;
+    838              hcintmsk.b.datatglerr = 1;
+    839              hcintmsk.b.frmovrun = 1;
+    840              
+    841              if (pdev->host.hc[hc_num].ep_is_in) 
+    842              {
+    843                hcintmsk.b.bblerr = 1;
+    844              }
+    845              
+    846              break;
+    847            case EP_TYPE_ISOC:
+    848              hcintmsk.b.xfercompl = 1;
+    849              hcintmsk.b.frmovrun = 1;
+    850              hcintmsk.b.ack = 1;
+    851              
+    852              if (pdev->host.hc[hc_num].ep_is_in) 
+    853              {
+    854                hcintmsk.b.xacterr = 1;
+    855                hcintmsk.b.bblerr = 1;
+    856              }
+    857              break;
+    858            }
+    859            
+    860            
+    861            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCINTMSK, hcintmsk.d32);
+    862            
+    863            
+    864            /* Enable the top level host channel interrupt. */
+    865            intr_enable = (1 << hc_num);
+    866            USB_OTG_MODIFY_REG32(&pdev->regs.HREGS->HAINTMSK, 0, intr_enable);
+    867            
+    868            /* Make sure host channel interrupts are enabled. */
+    869            gintmsk.b.hcintr = 1;
+    870            USB_OTG_MODIFY_REG32(&pdev->regs.GREGS->GINTMSK, 0, gintmsk.d32);
+    871            
+    872            /* Program the HCCHAR register */
+    873            hcchar.d32 = 0;
+    874            hcchar.b.devaddr = pdev->host.hc[hc_num].dev_addr;
+    875            hcchar.b.epnum   = pdev->host.hc[hc_num].ep_num;
+    876            hcchar.b.epdir   = pdev->host.hc[hc_num].ep_is_in;
+    877            hcchar.b.lspddev = (pdev->host.hc[hc_num].speed == HPRT0_PRTSPD_LOW_SPEED);
+    878            hcchar.b.eptype  = pdev->host.hc[hc_num].ep_type;
+    879            hcchar.b.mps     = pdev->host.hc[hc_num].max_packet;
+    880            if (pdev->host.hc[hc_num].ep_type == HCCHAR_INTR)
+    881            {
+    882              hcchar.b.oddfrm  = 1;
+    883            }
+    884            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+    885            return status;
+    886          }
+    887          
+    888          
+    889          /**
+    890          * @brief  USB_OTG_HC_StartXfer : Start transfer
+    891          * @param  pdev : Selected device
+    892          * @param  hc_num : channel number
+    893          * @retval USB_OTG_STS : status
+    894          */
+    895          USB_OTG_STS USB_OTG_HC_StartXfer(USB_OTG_CORE_HANDLE *pdev , uint8_t hc_num)
+    896          {
+    897            USB_OTG_STS status = USB_OTG_OK;
+    898            USB_OTG_HCCHAR_TypeDef   hcchar;
+    899            USB_OTG_HCTSIZn_TypeDef  hctsiz;
+    900            USB_OTG_HNPTXSTS_TypeDef hnptxsts; 
+    901            USB_OTG_HPTXSTS_TypeDef  hptxsts; 
+    902            USB_OTG_GINTMSK_TypeDef  intmsk;
+    903            uint16_t                 len_words = 0;   
+    904            
+    905            uint16_t num_packets;
+    906            uint16_t max_hc_pkt_count;
+    907            
+    908            max_hc_pkt_count = 256;
+    909            hctsiz.d32 = 0;
+    910            hcchar.d32 = 0;
+    911            intmsk.d32 = 0;
+    912            
+    913            /* Compute the expected number of packets associated to the transfer */
+    914            if (pdev->host.hc[hc_num].xfer_len > 0)
+    915            {
+    916              num_packets = (pdev->host.hc[hc_num].xfer_len + \
+    917                pdev->host.hc[hc_num].max_packet - 1) / pdev->host.hc[hc_num].max_packet;
+    918              
+    919              if (num_packets > max_hc_pkt_count)
+    920              {
+    921                num_packets = max_hc_pkt_count;
+    922                pdev->host.hc[hc_num].xfer_len = num_packets * \
+    923                  pdev->host.hc[hc_num].max_packet;
+    924              }
+    925            }
+    926            else
+    927            {
+    928              num_packets = 1;
+    929            }
+    930            if (pdev->host.hc[hc_num].ep_is_in)
+    931            {
+    932              pdev->host.hc[hc_num].xfer_len = num_packets * \
+    933                pdev->host.hc[hc_num].max_packet;
+    934            }
+    935            /* Initialize the HCTSIZn register */
+    936            hctsiz.b.xfersize = pdev->host.hc[hc_num].xfer_len;
+    937            hctsiz.b.pktcnt = num_packets;
+    938            hctsiz.b.pid = pdev->host.hc[hc_num].data_pid;
+    939            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCTSIZ, hctsiz.d32);
+    940            
+    941            if (pdev->cfg.dma_enable == 1)
+    942            {
+    943              USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCDMA, (unsigned int)pdev->host.hc[hc_num].xfer_buff);
+    944            }
+    945            
+    946            
+    947            hcchar.d32 = USB_OTG_READ_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR);
+    948            hcchar.b.oddfrm = USB_OTG_IsEvenFrame(pdev);
+    949            
+    950            /* Set host channel enable */
+    951            hcchar.b.chen = 1;
+    952            hcchar.b.chdis = 0;
+    953            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+    954            
+    955            if (pdev->cfg.dma_enable == 0) /* Slave mode */
+    956            {  
+    957              if((pdev->host.hc[hc_num].ep_is_in == 0) && 
+    958                 (pdev->host.hc[hc_num].xfer_len > 0))
+    959              {
+    960                switch(pdev->host.hc[hc_num].ep_type) 
+    961                {
+    962                  /* Non periodic transfer */
+    963                case EP_TYPE_CTRL:
+    964                case EP_TYPE_BULK:
+    965                  
+    966                  hnptxsts.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->HNPTXSTS);
+    967                  len_words = (pdev->host.hc[hc_num].xfer_len + 3) / 4;
+    968                  
+    969                  /* check if there is enough space in FIFO space */
+    970                  if(len_words > hnptxsts.b.nptxfspcavail)
+    971                  {
+    972                    /* need to process data in nptxfempty interrupt */
+    973                    intmsk.b.nptxfempty = 1;
+    974                    USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, 0, intmsk.d32);  
+    975                  }
+    976                  
+    977                  break;
+    978                  /* Periodic transfer */
+    979                case EP_TYPE_INTR:
+    980                case EP_TYPE_ISOC:
+    981                  hptxsts.d32 = USB_OTG_READ_REG32(&pdev->regs.HREGS->HPTXSTS);
+    982                  len_words = (pdev->host.hc[hc_num].xfer_len + 3) / 4;
+    983                  /* check if there is enough space in FIFO space */
+    984                  if(len_words > hptxsts.b.ptxfspcavail) /* split the transfer */
+    985                  {
+    986                    /* need to process data in ptxfempty interrupt */
+    987                    intmsk.b.ptxfempty = 1;
+    988                    USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, 0, intmsk.d32);  
+    989                  }
+    990                  break;
+    991                  
+    992                default:
+    993                  break;
+    994                }
+    995                
+    996                /* Write packet into the Tx FIFO. */
+    997                USB_OTG_WritePacket(pdev, 
+    998                                    pdev->host.hc[hc_num].xfer_buff , 
+    999                                    hc_num, pdev->host.hc[hc_num].xfer_len);
+   1000              }
+   1001            }
+   1002            return status;
+   1003          }
+   1004          
+   1005          
+   1006          /**
+   1007          * @brief  USB_OTG_HC_Halt : Halt channel
+   1008          * @param  pdev : Selected device
+   1009          * @param  hc_num : channel number
+   1010          * @retval USB_OTG_STS : status
+   1011          */
+   1012          USB_OTG_STS USB_OTG_HC_Halt(USB_OTG_CORE_HANDLE *pdev , uint8_t hc_num)
+   1013          {
+   1014            USB_OTG_STS status = USB_OTG_OK;
+   1015            USB_OTG_HNPTXSTS_TypeDef            nptxsts;
+   1016            USB_OTG_HPTXSTS_TypeDef             hptxsts;
+   1017            USB_OTG_HCCHAR_TypeDef              hcchar;
+   1018            
+   1019            nptxsts.d32 = 0;
+   1020            hptxsts.d32 = 0;
+   1021            hcchar.d32 = USB_OTG_READ_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR);
+   1022            
+   1023            hcchar.b.chdis = 1;
+   1024            
+   1025            /* Check for space in the request queue to issue the halt. */
+   1026            if (hcchar.b.eptype == HCCHAR_CTRL || hcchar.b.eptype == HCCHAR_BULK)
+   1027            {
+   1028              nptxsts.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->HNPTXSTS);
+   1029              if (nptxsts.b.nptxqspcavail == 0)
+   1030              {
+   1031                hcchar.b.chen = 0;
+   1032                USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+   1033              }
+   1034            }
+   1035            else
+   1036            {
+   1037              hptxsts.d32 = USB_OTG_READ_REG32(&pdev->regs.HREGS->HPTXSTS);
+   1038              if (hptxsts.b.ptxqspcavail == 0)
+   1039              {
+   1040                hcchar.b.chen = 0;
+   1041                USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+   1042              }
+   1043            }
+   1044            hcchar.b.chen = 1;
+   1045            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+   1046            return status;
+   1047          }
+   1048          
+   1049          /**
+   1050          * @brief  Issue a ping token
+   1051          * @param  None
+   1052          * @retval : None
+   1053          */
+   1054          USB_OTG_STS USB_OTG_HC_DoPing(USB_OTG_CORE_HANDLE *pdev , uint8_t hc_num)
+   1055          {
+   1056            USB_OTG_STS               status = USB_OTG_OK;
+   1057            USB_OTG_HCCHAR_TypeDef    hcchar;
+   1058            USB_OTG_HCTSIZn_TypeDef   hctsiz;  
+   1059            
+   1060            hctsiz.d32 = 0;
+   1061            hctsiz.b.dopng = 1;
+   1062            hctsiz.b.pktcnt = 1;
+   1063            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCTSIZ, hctsiz.d32);
+   1064            
+   1065            hcchar.d32 = USB_OTG_READ_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR);
+   1066            hcchar.b.chen = 1;
+   1067            hcchar.b.chdis = 0;
+   1068            USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[hc_num]->HCCHAR, hcchar.d32);
+   1069            return status;  
+   1070          }
+   1071          
+   1072          /**
+   1073          * @brief  Stop the device and clean up fifo's
+   1074          * @param  None
+   1075          * @retval : None
+   1076          */
+   1077          void USB_OTG_StopHost(USB_OTG_CORE_HANDLE *pdev)
+   1078          {
+   1079            USB_OTG_HCCHAR_TypeDef  hcchar;
+   1080            uint32_t                i;
+   1081            
+   1082            USB_OTG_WRITE_REG32(&pdev->regs.HREGS->HAINTMSK , 0);
+   1083            USB_OTG_WRITE_REG32(&pdev->regs.HREGS->HAINT,      0xFFFFFFFF);
+   1084            /* Flush out any leftover queued requests. */
+   1085            
+   1086            for (i = 0; i < pdev->cfg.host_channels; i++)
+   1087            {
+   1088              hcchar.d32 = USB_OTG_READ_REG32(&pdev->regs.HC_REGS[i]->HCCHAR);
+   1089              hcchar.b.chen = 0;
+   1090              hcchar.b.chdis = 1;
+   1091              hcchar.b.epdir = 0;
+   1092              USB_OTG_WRITE_REG32(&pdev->regs.HC_REGS[i]->HCCHAR, hcchar.d32);
+   1093            }
+   1094            
+   1095            /* Flush the FIFO */
+   1096            USB_OTG_FlushRxFifo(pdev);
+   1097            USB_OTG_FlushTxFifo(pdev ,  0x10 );  
+   1098          }
+   1099          #endif
+   1100          #ifdef USE_DEVICE_MODE
+   1101          /*         PCD Core Layer       */
+   1102          
+   1103          /**
+   1104          * @brief  USB_OTG_InitDevSpeed :Initializes the DevSpd field of DCFG register 
+   1105          *         depending the PHY type and the enumeration speed of the device.
+   1106          * @param  pdev : Selected device
+   1107          * @retval : None
+   1108          */
+   1109          void USB_OTG_InitDevSpeed(USB_OTG_CORE_HANDLE *pdev , uint8_t speed)
+   1110          {
+   1111            USB_OTG_DCFG_TypeDef   dcfg;
+   1112            
+   1113            dcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DCFG);
+   1114            dcfg.b.devspd = speed;
+   1115            USB_OTG_WRITE_REG32(&pdev->regs.DREGS->DCFG, dcfg.d32);
+   1116          }
+   1117          
+   1118          
+   1119          /**
+   1120          * @brief  USB_OTG_CoreInitDev : Initializes the USB_OTG controller registers 
+   1121          *         for device mode
+   1122          * @param  pdev : Selected device
+   1123          * @retval USB_OTG_STS : status
+   1124          */
+   1125          USB_OTG_STS USB_OTG_CoreInitDev (USB_OTG_CORE_HANDLE *pdev)
+   1126          {
+   1127            USB_OTG_STS             status       = USB_OTG_OK;
+   1128            USB_OTG_DEPCTL_TypeDef  depctl;
+   1129            uint32_t i;
+   1130            USB_OTG_DCFG_TypeDef    dcfg;
+   1131            USB_OTG_FSIZ_TypeDef    nptxfifosize;
+   1132            USB_OTG_FSIZ_TypeDef    txfifosize;
+   1133            USB_OTG_DIEPMSK_TypeDef msk;
+   1134            USB_OTG_DTHRCTL_TypeDef dthrctl;  
+   1135            
+   1136            depctl.d32 = 0;
+   1137            dcfg.d32 = 0;
+   1138            nptxfifosize.d32 = 0;
+   1139            txfifosize.d32 = 0;
+   1140            msk.d32 = 0;
+   1141            
+   1142            /* Restart the Phy Clock */
+   1143            USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, 0);
+   1144            /* Device configuration register */
+   1145            dcfg.d32 = USB_OTG_READ_REG32( &pdev->regs.DREGS->DCFG);
+   1146            dcfg.b.perfrint = DCFG_FRAME_INTERVAL_80;
+   1147            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DCFG, dcfg.d32 );
+   1148            
+   1149          #ifdef USB_OTG_FS_CORE
+   1150            if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID  )
+   1151            {  
+   1152              
+   1153              /* Set Full speed phy */
+   1154              USB_OTG_InitDevSpeed (pdev , USB_OTG_SPEED_PARAM_FULL);
+   1155              
+   1156              /* set Rx FIFO size */
+   1157              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GRXFSIZ, RX_FIFO_FS_SIZE);
+   1158              
+   1159              /* EP0 TX*/
+   1160              nptxfifosize.b.depth     = TX0_FIFO_FS_SIZE;
+   1161              nptxfifosize.b.startaddr = RX_FIFO_FS_SIZE;
+   1162              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF0_HNPTXFSIZ, nptxfifosize.d32 );
+   1163              
+   1164              
+   1165              /* EP1 TX*/
+   1166              txfifosize.b.startaddr = nptxfifosize.b.startaddr + nptxfifosize.b.depth;
+   1167              txfifosize.b.depth = TX1_FIFO_FS_SIZE;
+   1168              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[0], txfifosize.d32 );
+   1169              
+   1170              
+   1171              /* EP2 TX*/
+   1172              txfifosize.b.startaddr += txfifosize.b.depth;
+   1173              txfifosize.b.depth = TX2_FIFO_FS_SIZE;
+   1174              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[1], txfifosize.d32 );
+   1175              
+   1176              
+   1177              /* EP3 TX*/  
+   1178              txfifosize.b.startaddr += txfifosize.b.depth;
+   1179              txfifosize.b.depth = TX3_FIFO_FS_SIZE;
+   1180              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[2], txfifosize.d32 );
+   1181            }
+   1182          #endif
+   1183          #ifdef USB_OTG_HS_CORE
+   1184            if(pdev->cfg.coreID == USB_OTG_HS_CORE_ID  )
+   1185            {
+   1186              
+   1187              /* Set High speed phy */
+   1188              
+   1189              if(pdev->cfg.phy_itface  == USB_OTG_ULPI_PHY)
+   1190              {
+   1191                USB_OTG_InitDevSpeed (pdev , USB_OTG_SPEED_PARAM_HIGH);
+   1192              }
+   1193              else /* set High speed phy in Full speed mode */
+   1194              {
+   1195                USB_OTG_InitDevSpeed (pdev , USB_OTG_SPEED_PARAM_HIGH_IN_FULL);
+   1196              }
+   1197              
+   1198              /* set Rx FIFO size */
+   1199              USB_OTG_WRITE_REG32(&pdev->regs.GREGS->GRXFSIZ, RX_FIFO_HS_SIZE);
+   1200              
+   1201              /* EP0 TX*/
+   1202              nptxfifosize.b.depth     = TX0_FIFO_HS_SIZE;
+   1203              nptxfifosize.b.startaddr = RX_FIFO_HS_SIZE;
+   1204              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF0_HNPTXFSIZ, nptxfifosize.d32 );
+   1205              
+   1206              
+   1207              /* EP1 TX*/
+   1208              txfifosize.b.startaddr = nptxfifosize.b.startaddr + nptxfifosize.b.depth;
+   1209              txfifosize.b.depth = TX1_FIFO_HS_SIZE;
+   1210              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[0], txfifosize.d32 );
+   1211              
+   1212              
+   1213              /* EP2 TX*/
+   1214              txfifosize.b.startaddr += txfifosize.b.depth;
+   1215              txfifosize.b.depth = TX2_FIFO_HS_SIZE;
+   1216              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[1], txfifosize.d32 );
+   1217              
+   1218              
+   1219              /* EP3 TX*/  
+   1220              txfifosize.b.startaddr += txfifosize.b.depth;
+   1221              txfifosize.b.depth = TX3_FIFO_HS_SIZE;
+   1222              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[2], txfifosize.d32 );
+   1223              
+   1224              /* EP4 TX*/
+   1225              txfifosize.b.startaddr += txfifosize.b.depth;
+   1226              txfifosize.b.depth = TX4_FIFO_HS_SIZE;
+   1227              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[3], txfifosize.d32 );
+   1228              
+   1229              
+   1230              /* EP5 TX*/  
+   1231              txfifosize.b.startaddr += txfifosize.b.depth;
+   1232              txfifosize.b.depth = TX5_FIFO_HS_SIZE;
+   1233              USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DIEPTXF[4], txfifosize.d32 );
+   1234            }
+   1235          #endif  
+   1236            /* Flush the FIFOs */
+   1237            USB_OTG_FlushTxFifo(pdev , 0x10); /* all Tx FIFOs */
+   1238            USB_OTG_FlushRxFifo(pdev);
+   1239            /* Clear all pending Device Interrupts */
+   1240            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DIEPMSK, 0 );
+   1241            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DOEPMSK, 0 );
+   1242            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DAINT, 0xFFFFFFFF );
+   1243            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DAINTMSK, 0 );
+   1244            
+   1245            for (i = 0; i < pdev->cfg.dev_endpoints; i++)
+   1246            {
+   1247              depctl.d32 = USB_OTG_READ_REG32(&pdev->regs.INEP_REGS[i]->DIEPCTL);
+   1248              if (depctl.b.epena)
+   1249              {
+   1250                depctl.d32 = 0;
+   1251                depctl.b.epdis = 1;
+   1252                depctl.b.snak = 1;
+   1253              }
+   1254              else
+   1255              {
+   1256                depctl.d32 = 0;
+   1257              }
+   1258              USB_OTG_WRITE_REG32( &pdev->regs.INEP_REGS[i]->DIEPCTL, depctl.d32);
+   1259              USB_OTG_WRITE_REG32( &pdev->regs.INEP_REGS[i]->DIEPTSIZ, 0);
+   1260              USB_OTG_WRITE_REG32( &pdev->regs.INEP_REGS[i]->DIEPINT, 0xFF);
+   1261            }
+   1262            for (i = 0; i <  pdev->cfg.dev_endpoints; i++)
+   1263            {
+   1264              USB_OTG_DEPCTL_TypeDef  depctl;
+   1265              depctl.d32 = USB_OTG_READ_REG32(&pdev->regs.OUTEP_REGS[i]->DOEPCTL);
+   1266              if (depctl.b.epena)
+   1267              {
+   1268                depctl.d32 = 0;
+   1269                depctl.b.epdis = 1;
+   1270                depctl.b.snak = 1;
+   1271              }
+   1272              else
+   1273              {
+   1274                depctl.d32 = 0;
+   1275              }
+   1276              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[i]->DOEPCTL, depctl.d32);
+   1277              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[i]->DOEPTSIZ, 0);
+   1278              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[i]->DOEPINT, 0xFF);
+   1279            }
+   1280            msk.d32 = 0;
+   1281            msk.b.txfifoundrn = 1;
+   1282            USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPMSK, msk.d32, msk.d32);
+   1283            
+   1284            if (pdev->cfg.dma_enable == 1)
+   1285            {
+   1286              dthrctl.d32 = 0;
+   1287              dthrctl.b.non_iso_thr_en = 1;
+   1288              dthrctl.b.iso_thr_en = 1;
+   1289              dthrctl.b.tx_thr_len = 64;
+   1290              dthrctl.b.rx_thr_en = 1;
+   1291              dthrctl.b.rx_thr_len = 64;
+   1292              USB_OTG_WRITE_REG32(&pdev->regs.DREGS->DTHRCTL, dthrctl.d32);  
+   1293            }
+   1294            USB_OTG_EnableDevInt(pdev);
+   1295            return status;
+   1296          }
+   1297          
+   1298          
+   1299          /**
+   1300          * @brief  USB_OTG_EnableDevInt : Enables the Device mode interrupts
+   1301          * @param  pdev : Selected device
+   1302          * @retval USB_OTG_STS : status
+   1303          */
+   1304          USB_OTG_STS USB_OTG_EnableDevInt(USB_OTG_CORE_HANDLE *pdev)
+   1305          {
+   1306            USB_OTG_STS status = USB_OTG_OK;
+   1307            USB_OTG_GINTMSK_TypeDef  intmsk;
+   1308            
+   1309            intmsk.d32 = 0;
+   1310            
+   1311            /* Disable all interrupts. */
+   1312            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GINTMSK, 0);
+   1313            /* Clear any pending interrupts */
+   1314            USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GINTSTS, 0xBFFFFFFF);
+   1315            /* Enable the common interrupts */
+   1316            USB_OTG_EnableCommonInt(pdev);
+   1317            
+   1318            if (pdev->cfg.dma_enable == 0)
+   1319            {
+   1320              intmsk.b.rxstsqlvl = 1;
+   1321            }
+   1322            
+   1323            /* Enable interrupts matching to the Device mode ONLY */
+   1324            intmsk.b.usbsuspend = 1;
+   1325            intmsk.b.usbreset   = 1;
+   1326            intmsk.b.enumdone   = 1;
+   1327            intmsk.b.inepintr   = 1;
+   1328            intmsk.b.outepintr  = 1;
+   1329            intmsk.b.sofintr    = 1; 
+   1330            
+   1331            intmsk.b.incomplisoin    = 1; 
+   1332            intmsk.b.incomplisoout    = 1;   
+   1333          #ifdef VBUS_SENSING_ENABLED
+   1334            intmsk.b.sessreqintr    = 1; 
+   1335            intmsk.b.otgintr    = 1;    
+   1336          #endif  
+   1337            USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, intmsk.d32, intmsk.d32);
+   1338            return status;
+   1339          }
+   1340          
+   1341          
+   1342          /**
+   1343          * @brief  USB_OTG_GetDeviceSpeed
+   1344          *         Get the device speed from the device status register
+   1345          * @param  None
+   1346          * @retval status
+   1347          */
+   1348          enum USB_OTG_SPEED USB_OTG_GetDeviceSpeed (USB_OTG_CORE_HANDLE *pdev)
+   1349          {
+   1350            USB_OTG_DSTS_TypeDef  dsts;
+   1351            enum USB_OTG_SPEED speed = USB_SPEED_UNKNOWN;
+   1352            
+   1353            
+   1354            dsts.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DSTS);
+   1355            
+   1356            switch (dsts.b.enumspd)
+   1357            {
+   1358            case DSTS_ENUMSPD_HS_PHY_30MHZ_OR_60MHZ:
+   1359              speed = USB_SPEED_HIGH;
+   1360              break;
+   1361            case DSTS_ENUMSPD_FS_PHY_30MHZ_OR_60MHZ:
+   1362            case DSTS_ENUMSPD_FS_PHY_48MHZ:
+   1363              speed = USB_SPEED_FULL;
+   1364              break;
+   1365              
+   1366            case DSTS_ENUMSPD_LS_PHY_6MHZ:
+   1367              speed = USB_SPEED_LOW;
+   1368              break;
+   1369            default:
+   1370              speed = USB_SPEED_FULL;
+   1371              break; 
+   1372            }
+   1373            
+   1374            return speed;
+   1375          }
+   1376          
+   1377          /**
+   1378          * @brief  enables EP0 OUT to receive SETUP packets and configures EP0
+   1379          *   for transmitting packets
+   1380          * @param  None
+   1381          * @retval USB_OTG_STS : status
+   1382          */
+   1383          USB_OTG_STS  USB_OTG_EP0Activate(USB_OTG_CORE_HANDLE *pdev)
+   1384          {
+   1385            USB_OTG_STS             status = USB_OTG_OK;
+   1386            USB_OTG_DSTS_TypeDef    dsts;
+   1387            USB_OTG_DEPCTL_TypeDef  diepctl;
+   1388            USB_OTG_DCTL_TypeDef    dctl;
+   1389            
+   1390            dctl.d32 = 0;
+   1391            /* Read the Device Status and Endpoint 0 Control registers */
+   1392            dsts.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DSTS);
+   1393            diepctl.d32 = USB_OTG_READ_REG32(&pdev->regs.INEP_REGS[0]->DIEPCTL);
+   1394            /* Set the MPS of the IN EP based on the enumeration speed */
+   1395            switch (dsts.b.enumspd)
+   1396            {
+   1397            case DSTS_ENUMSPD_HS_PHY_30MHZ_OR_60MHZ:
+   1398            case DSTS_ENUMSPD_FS_PHY_30MHZ_OR_60MHZ:
+   1399            case DSTS_ENUMSPD_FS_PHY_48MHZ:
+   1400              diepctl.b.mps = DEP0CTL_MPS_64;
+   1401              break;
+   1402            case DSTS_ENUMSPD_LS_PHY_6MHZ:
+   1403              diepctl.b.mps = DEP0CTL_MPS_8;
+   1404              break;
+   1405            default:
+   1406              diepctl.b.mps = DEP0CTL_MPS_64;
+   1407              break; 
+   1408            }
+   1409            USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[0]->DIEPCTL, diepctl.d32);
+   1410            dctl.b.cgnpinnak = 1;
+   1411            USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DCTL, dctl.d32, dctl.d32);
+   1412            return status;
+   1413          }
+   1414          
+   1415          
+   1416          /**
+   1417          * @brief  USB_OTG_EPActivate : Activates an EP
+   1418          * @param  pdev : Selected device
+   1419          * @retval USB_OTG_STS : status
+   1420          */
+   1421          USB_OTG_STS USB_OTG_EPActivate(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1422          {
+   1423            USB_OTG_STS status = USB_OTG_OK;
+   1424            USB_OTG_DEPCTL_TypeDef  depctl;
+   1425            USB_OTG_DAINT_TypeDef  daintmsk;
+   1426            __IO uint32_t *addr;
+   1427            
+   1428            
+   1429            depctl.d32 = 0;
+   1430            daintmsk.d32 = 0;
+   1431            /* Read DEPCTLn register */
+   1432            if (ep->is_in == 1)
+   1433            {
+   1434              addr = &pdev->regs.INEP_REGS[ep->num]->DIEPCTL;
+   1435              daintmsk.ep.in = 1 << ep->num;
+   1436            }
+   1437            else
+   1438            {
+   1439              addr = &pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL;
+   1440              daintmsk.ep.out = 1 << ep->num;
+   1441            }
+   1442            /* If the EP is already active don't change the EP Control
+   1443            * register. */
+   1444            depctl.d32 = USB_OTG_READ_REG32(addr);
+   1445            if (!depctl.b.usbactep)
+   1446            {
+   1447              depctl.b.mps    = ep->maxpacket;
+   1448              depctl.b.eptype = ep->type;
+   1449              depctl.b.txfnum = ep->tx_fifo_num;
+   1450              depctl.b.setd0pid = 1;
+   1451              depctl.b.usbactep = 1;
+   1452              USB_OTG_WRITE_REG32(addr, depctl.d32);
+   1453            }
+   1454            /* Enable the Interrupt for this EP */
+   1455          #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
+   1456            if((ep->num == 1)&&(pdev->cfg.coreID == USB_OTG_HS_CORE_ID))
+   1457            {
+   1458              USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DEACHMSK, 0, daintmsk.d32);
+   1459            }
+   1460            else
+   1461          #endif   
+   1462              USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DAINTMSK, 0, daintmsk.d32);
+   1463            return status;
+   1464          }
+   1465          
+   1466          
+   1467          /**
+   1468          * @brief  USB_OTG_EPDeactivate : Deactivates an EP
+   1469          * @param  pdev : Selected device
+   1470          * @retval USB_OTG_STS : status
+   1471          */
+   1472          USB_OTG_STS USB_OTG_EPDeactivate(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1473          {
+   1474            USB_OTG_STS status = USB_OTG_OK;
+   1475            USB_OTG_DEPCTL_TypeDef  depctl;
+   1476            USB_OTG_DAINT_TypeDef  daintmsk;
+   1477            __IO uint32_t *addr;
+   1478            
+   1479            depctl.d32 = 0;
+   1480            daintmsk.d32 = 0;  
+   1481            /* Read DEPCTLn register */
+   1482            if (ep->is_in == 1)
+   1483            {
+   1484              addr = &pdev->regs.INEP_REGS[ep->num]->DIEPCTL;
+   1485              daintmsk.ep.in = 1 << ep->num;
+   1486            }
+   1487            else
+   1488            {
+   1489              addr = &pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL;
+   1490              daintmsk.ep.out = 1 << ep->num;
+   1491            }
+   1492            depctl.b.usbactep = 0;
+   1493            USB_OTG_WRITE_REG32(addr, depctl.d32);
+   1494            /* Disable the Interrupt for this EP */
+   1495            
+   1496          #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
+   1497            if((ep->num == 1)&&(pdev->cfg.coreID == USB_OTG_HS_CORE_ID))
+   1498            {
+   1499              USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DEACHMSK, daintmsk.d32, 0);
+   1500            }
+   1501            else
+   1502          #endif    
+   1503              USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DAINTMSK, daintmsk.d32, 0);
+   1504            return status;
+   1505          }
+   1506          
+   1507          
+   1508          /**
+   1509          * @brief  USB_OTG_EPStartXfer : Handle the setup for data xfer for an EP and 
+   1510          *         starts the xfer
+   1511          * @param  pdev : Selected device
+   1512          * @retval USB_OTG_STS : status
+   1513          */
+   1514          USB_OTG_STS USB_OTG_EPStartXfer(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1515          {
+   1516            USB_OTG_STS status = USB_OTG_OK;
+   1517            USB_OTG_DEPCTL_TypeDef     depctl;
+   1518            USB_OTG_DEPXFRSIZ_TypeDef  deptsiz;
+   1519            USB_OTG_DSTS_TypeDef       dsts;    
+   1520            uint32_t fifoemptymsk = 0;  
+   1521            
+   1522            depctl.d32 = 0;
+   1523            deptsiz.d32 = 0;
+   1524            /* IN endpoint */
+   1525            if (ep->is_in == 1)
+   1526            {
+   1527              depctl.d32  = USB_OTG_READ_REG32(&(pdev->regs.INEP_REGS[ep->num]->DIEPCTL));
+   1528              deptsiz.d32 = USB_OTG_READ_REG32(&(pdev->regs.INEP_REGS[ep->num]->DIEPTSIZ));
+   1529              /* Zero Length Packet? */
+   1530              if (ep->xfer_len == 0)
+   1531              {
+   1532                deptsiz.b.xfersize = 0;
+   1533                deptsiz.b.pktcnt = 1;
+   1534              }
+   1535              else
+   1536              {
+   1537                /* Program the transfer size and packet count
+   1538                * as follows: xfersize = N * maxpacket +
+   1539                * short_packet pktcnt = N + (short_packet
+   1540                * exist ? 1 : 0)
+   1541                */
+   1542                deptsiz.b.xfersize = ep->xfer_len;
+   1543                deptsiz.b.pktcnt = (ep->xfer_len - 1 + ep->maxpacket) / ep->maxpacket;
+   1544                
+   1545                if (ep->type == EP_TYPE_ISOC)
+   1546                {
+   1547                  deptsiz.b.mc = 1;
+   1548                }       
+   1549              }
+   1550              USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[ep->num]->DIEPTSIZ, deptsiz.d32);
+   1551              
+   1552              if (pdev->cfg.dma_enable == 1)
+   1553              {
+   1554                USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[ep->num]->DIEPDMA, ep->dma_addr);
+   1555              }
+   1556              else
+   1557              {
+   1558                if (ep->type != EP_TYPE_ISOC)
+   1559                {
+   1560                  /* Enable the Tx FIFO Empty Interrupt for this EP */
+   1561                  if (ep->xfer_len > 0)
+   1562                  {
+   1563                    fifoemptymsk = 1 << ep->num;
+   1564                    USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPEMPMSK, 0, fifoemptymsk);
+   1565                  }
+   1566                }
+   1567              }
+   1568              
+   1569              
+   1570              if (ep->type == EP_TYPE_ISOC)
+   1571              {
+   1572                dsts.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DSTS);
+   1573                
+   1574                if (((dsts.b.soffn)&0x1) == 0)
+   1575                {
+   1576                  depctl.b.setd1pid = 1;
+   1577                }
+   1578                else
+   1579                {
+   1580                  depctl.b.setd0pid = 1;
+   1581                }
+   1582              } 
+   1583              
+   1584              /* EP enable, IN data in FIFO */
+   1585              depctl.b.cnak = 1;
+   1586              depctl.b.epena = 1;
+   1587              USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[ep->num]->DIEPCTL, depctl.d32);
+   1588              
+   1589              if (ep->type == EP_TYPE_ISOC)
+   1590              {
+   1591                USB_OTG_WritePacket(pdev, ep->xfer_buff, ep->num, ep->xfer_len);   
+   1592              }    
+   1593            }
+   1594            else
+   1595            {
+   1596              /* OUT endpoint */
+   1597              depctl.d32  = USB_OTG_READ_REG32(&(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL));
+   1598              deptsiz.d32 = USB_OTG_READ_REG32(&(pdev->regs.OUTEP_REGS[ep->num]->DOEPTSIZ));
+   1599              /* Program the transfer size and packet count as follows:
+   1600              * pktcnt = N
+   1601              * xfersize = N * maxpacket
+   1602              */
+   1603              if (ep->xfer_len == 0)
+   1604              {
+   1605                deptsiz.b.xfersize = ep->maxpacket;
+   1606                deptsiz.b.pktcnt = 1;
+   1607              }
+   1608              else
+   1609              {
+   1610                deptsiz.b.pktcnt = (ep->xfer_len + (ep->maxpacket - 1)) / ep->maxpacket;
+   1611                deptsiz.b.xfersize = deptsiz.b.pktcnt * ep->maxpacket;
+   1612                ep->xfer_len = deptsiz.b.xfersize ;
+   1613              }
+   1614              USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPTSIZ, deptsiz.d32);
+   1615              
+   1616              if (pdev->cfg.dma_enable == 1)
+   1617              {
+   1618                USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPDMA, ep->dma_addr);
+   1619              }
+   1620              
+   1621              if (ep->type == EP_TYPE_ISOC)
+   1622              {
+   1623                if (ep->even_odd_frame)
+   1624                {
+   1625                  depctl.b.setd1pid = 1;
+   1626                }
+   1627                else
+   1628                {
+   1629                  depctl.b.setd0pid = 1;
+   1630                }
+   1631              }
+   1632              /* EP enable */
+   1633              depctl.b.cnak = 1;
+   1634              depctl.b.epena = 1;
+   1635              USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL, depctl.d32);
+   1636            }
+   1637            return status;
+   1638          }
+   1639          
+   1640          
+   1641          /**
+   1642          * @brief  USB_OTG_EP0StartXfer : Handle the setup for a data xfer for EP0 and 
+   1643          *         starts the xfer
+   1644          * @param  pdev : Selected device
+   1645          * @retval USB_OTG_STS : status
+   1646          */
+   1647          USB_OTG_STS USB_OTG_EP0StartXfer(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1648          {
+   1649            USB_OTG_STS                 status = USB_OTG_OK;
+   1650            USB_OTG_DEPCTL_TypeDef      depctl;
+   1651            USB_OTG_DEP0XFRSIZ_TypeDef  deptsiz;
+   1652            USB_OTG_INEPREGS          *in_regs;
+   1653            uint32_t fifoemptymsk = 0;
+   1654            
+   1655            depctl.d32   = 0;
+   1656            deptsiz.d32  = 0;
+   1657            /* IN endpoint */
+   1658            if (ep->is_in == 1)
+   1659            {
+   1660              in_regs = pdev->regs.INEP_REGS[0];
+   1661              depctl.d32  = USB_OTG_READ_REG32(&in_regs->DIEPCTL);
+   1662              deptsiz.d32 = USB_OTG_READ_REG32(&in_regs->DIEPTSIZ);
+   1663              /* Zero Length Packet? */
+   1664              if (ep->xfer_len == 0)
+   1665              {
+   1666                deptsiz.b.xfersize = 0;
+   1667                deptsiz.b.pktcnt = 1;
+   1668                
+   1669              }
+   1670              else
+   1671              {
+   1672                if (ep->xfer_len > ep->maxpacket)
+   1673                {
+   1674                  ep->xfer_len = ep->maxpacket;
+   1675                  deptsiz.b.xfersize = ep->maxpacket;
+   1676                }
+   1677                else
+   1678                {
+   1679                  deptsiz.b.xfersize = ep->xfer_len;
+   1680                }
+   1681                deptsiz.b.pktcnt = 1;
+   1682              }
+   1683              USB_OTG_WRITE_REG32(&in_regs->DIEPTSIZ, deptsiz.d32);
+   1684              
+   1685              if (pdev->cfg.dma_enable == 1)
+   1686              {
+   1687                USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[ep->num]->DIEPDMA, ep->dma_addr);  
+   1688              }
+   1689              
+   1690              /* EP enable, IN data in FIFO */
+   1691              depctl.b.cnak = 1;
+   1692              depctl.b.epena = 1;
+   1693              USB_OTG_WRITE_REG32(&in_regs->DIEPCTL, depctl.d32);
+   1694              
+   1695              
+   1696              
+   1697              if (pdev->cfg.dma_enable == 0)
+   1698              {
+   1699                /* Enable the Tx FIFO Empty Interrupt for this EP */
+   1700                if (ep->xfer_len > 0)
+   1701                {
+   1702                  {
+   1703                    fifoemptymsk |= 1 << ep->num;
+   1704                    USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPEMPMSK, 0, fifoemptymsk);
+   1705                  }
+   1706                }
+   1707              }
+   1708            }
+   1709            else
+   1710            {
+   1711              /* OUT endpoint */
+   1712              depctl.d32  = USB_OTG_READ_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL);
+   1713              deptsiz.d32 = USB_OTG_READ_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPTSIZ);
+   1714              /* Program the transfer size and packet count as follows:
+   1715              * xfersize = N * (maxpacket + 4 - (maxpacket % 4))
+   1716              * pktcnt = N           */
+   1717              if (ep->xfer_len == 0)
+   1718              {
+   1719                deptsiz.b.xfersize = ep->maxpacket;
+   1720                deptsiz.b.pktcnt = 1;
+   1721              }
+   1722              else
+   1723              {
+   1724                ep->xfer_len = ep->maxpacket;
+   1725                deptsiz.b.xfersize = ep->maxpacket;
+   1726                deptsiz.b.pktcnt = 1;
+   1727              }
+   1728              USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPTSIZ, deptsiz.d32);
+   1729              if (pdev->cfg.dma_enable == 1)
+   1730              {
+   1731                USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[ep->num]->DOEPDMA, ep->dma_addr);
+   1732              }
+   1733              /* EP enable */
+   1734              depctl.b.cnak = 1;
+   1735              depctl.b.epena = 1;
+   1736              USB_OTG_WRITE_REG32 (&(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL), depctl.d32);
+   1737              
+   1738            }
+   1739            return status;
+   1740          }
+   1741          
+   1742          
+   1743          /**
+   1744          * @brief  USB_OTG_EPSetStall : Set the EP STALL
+   1745          * @param  pdev : Selected device
+   1746          * @retval USB_OTG_STS : status
+   1747          */
+   1748          USB_OTG_STS USB_OTG_EPSetStall(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1749          {
+   1750            USB_OTG_STS status = USB_OTG_OK;
+   1751            USB_OTG_DEPCTL_TypeDef  depctl;
+   1752            __IO uint32_t *depctl_addr;
+   1753            
+   1754            depctl.d32 = 0;
+   1755            if (ep->is_in == 1)
+   1756            {
+   1757              depctl_addr = &(pdev->regs.INEP_REGS[ep->num]->DIEPCTL);
+   1758              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   1759              /* set the disable and stall bits */
+   1760              if (depctl.b.epena)
+   1761              {
+   1762                depctl.b.epdis = 1;
+   1763              }
+   1764              depctl.b.stall = 1;
+   1765              USB_OTG_WRITE_REG32(depctl_addr, depctl.d32);
+   1766            }
+   1767            else
+   1768            {
+   1769              depctl_addr = &(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL);
+   1770              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   1771              /* set the stall bit */
+   1772              depctl.b.stall = 1;
+   1773              USB_OTG_WRITE_REG32(depctl_addr, depctl.d32);
+   1774            }
+   1775            return status;
+   1776          }
+   1777          
+   1778          
+   1779          /**
+   1780          * @brief  Clear the EP STALL
+   1781          * @param  pdev : Selected device
+   1782          * @retval USB_OTG_STS : status
+   1783          */
+   1784          USB_OTG_STS USB_OTG_EPClearStall(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
+   1785          {
+   1786            USB_OTG_STS status = USB_OTG_OK;
+   1787            USB_OTG_DEPCTL_TypeDef  depctl;
+   1788            __IO uint32_t *depctl_addr;
+   1789            
+   1790            depctl.d32 = 0;
+   1791            
+   1792            if (ep->is_in == 1)
+   1793            {
+   1794              depctl_addr = &(pdev->regs.INEP_REGS[ep->num]->DIEPCTL);
+   1795            }
+   1796            else
+   1797            {
+   1798              depctl_addr = &(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL);
+   1799            }
+   1800            depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   1801            /* clear the stall bits */
+   1802            depctl.b.stall = 0;
+   1803            if (ep->type == EP_TYPE_INTR || ep->type == EP_TYPE_BULK)
+   1804            {
+   1805              depctl.b.setd0pid = 1; /* DATA0 */
+   1806            }
+   1807            USB_OTG_WRITE_REG32(depctl_addr, depctl.d32);
+   1808            return status;
+   1809          }
+   1810          
+   1811          
+   1812          /**
+   1813          * @brief  USB_OTG_ReadDevAllOutEp_itr : returns OUT endpoint interrupt bits
+   1814          * @param  pdev : Selected device
+   1815          * @retval OUT endpoint interrupt bits
+   1816          */
+   1817          uint32_t USB_OTG_ReadDevAllOutEp_itr(USB_OTG_CORE_HANDLE *pdev)
+   1818          {
+   1819            uint32_t v;
+   1820            v  = USB_OTG_READ_REG32(&pdev->regs.DREGS->DAINT);
+   1821            v &= USB_OTG_READ_REG32(&pdev->regs.DREGS->DAINTMSK);
+   1822            return ((v & 0xffff0000) >> 16);
+   1823          }
+   1824          
+   1825          
+   1826          /**
+   1827          * @brief  USB_OTG_ReadDevOutEP_itr : returns Device OUT EP Interrupt register
+   1828          * @param  pdev : Selected device
+   1829          * @param  ep : end point number
+   1830          * @retval Device OUT EP Interrupt register
+   1831          */
+   1832          uint32_t USB_OTG_ReadDevOutEP_itr(USB_OTG_CORE_HANDLE *pdev , uint8_t epnum)
+   1833          {
+   1834            uint32_t v;
+   1835            v  = USB_OTG_READ_REG32(&pdev->regs.OUTEP_REGS[epnum]->DOEPINT);
+   1836            v &= USB_OTG_READ_REG32(&pdev->regs.DREGS->DOEPMSK);
+   1837            return v;
+   1838          }
+   1839          
+   1840          
+   1841          /**
+   1842          * @brief  USB_OTG_ReadDevAllInEPItr : Get int status register
+   1843          * @param  pdev : Selected device
+   1844          * @retval int status register
+   1845          */
+   1846          uint32_t USB_OTG_ReadDevAllInEPItr(USB_OTG_CORE_HANDLE *pdev)
+   1847          {
+   1848            uint32_t v;
+   1849            v = USB_OTG_READ_REG32(&pdev->regs.DREGS->DAINT);
+   1850            v &= USB_OTG_READ_REG32(&pdev->regs.DREGS->DAINTMSK);
+   1851            return (v & 0xffff);
+   1852          }
+   1853          
+   1854          /**
+   1855          * @brief  configures EPO to receive SETUP packets
+   1856          * @param  None
+   1857          * @retval : None
+   1858          */
+   1859          void USB_OTG_EP0_OutStart(USB_OTG_CORE_HANDLE *pdev)
+   1860          {
+   1861            USB_OTG_DEP0XFRSIZ_TypeDef  doeptsize0;
+   1862            doeptsize0.d32 = 0;
+   1863            doeptsize0.b.supcnt = 3;
+   1864            doeptsize0.b.pktcnt = 1;
+   1865            doeptsize0.b.xfersize = 8 * 3;
+   1866            USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[0]->DOEPTSIZ, doeptsize0.d32 );
+   1867            
+   1868            if (pdev->cfg.dma_enable == 1)
+   1869            {
+   1870              USB_OTG_DEPCTL_TypeDef  doepctl;
+   1871              doepctl.d32 = 0;
+   1872              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[0]->DOEPDMA, 
+   1873                                  (uint32_t)&pdev->dev.setup_packet);
+   1874              
+   1875              /* EP enable */
+   1876              doepctl.d32 = USB_OTG_READ_REG32(&pdev->regs.OUTEP_REGS[0]->DOEPCTL);
+   1877              doepctl.b.epena = 1;
+   1878              doepctl.d32 = 0x80008000;
+   1879              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[0]->DOEPCTL, doepctl.d32);
+   1880            }
+   1881          }
+   1882          
+   1883          /**
+   1884          * @brief  USB_OTG_RemoteWakeup : active remote wakeup signalling
+   1885          * @param  None
+   1886          * @retval : None
+   1887          */
+   1888          void USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev)
+   1889          {
+   1890            
+   1891            USB_OTG_DCTL_TypeDef     dctl;
+   1892            USB_OTG_DSTS_TypeDef     dsts;
+   1893            USB_OTG_PCGCCTL_TypeDef  power;  
+   1894            
+   1895            if (pdev->dev.DevRemoteWakeup) 
+   1896            {
+   1897              dsts.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DSTS);
+   1898              if(dsts.b.suspsts == 1)
+   1899              {
+   1900                if(pdev->cfg.low_power)
+   1901                {
+   1902                  /* un-gate USB Core clock */
+   1903                  power.d32 = USB_OTG_READ_REG32(pdev->regs.PCGCCTL);
+   1904                  power.b.gatehclk = 0;
+   1905                  power.b.stoppclk = 0;
+   1906                  USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, power.d32);
+   1907                }   
+   1908                /* active Remote wakeup signaling */
+   1909                dctl.d32 = 0;
+   1910                dctl.b.rmtwkupsig = 1;
+   1911                USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DCTL, 0, dctl.d32);
+   1912                USB_OTG_BSP_mDelay(5);
+   1913                USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DCTL, dctl.d32, 0 );
+   1914              }
+   1915            }
+   1916          }
+   1917          
+   1918          
+   1919          /**
+   1920          * @brief  USB_OTG_UngateClock : active USB Core clock
+   1921          * @param  None
+   1922          * @retval : None
+   1923          */
+   1924          void USB_OTG_UngateClock(USB_OTG_CORE_HANDLE *pdev)
+   1925          {
+   1926            if(pdev->cfg.low_power)
+   1927            {
+   1928              
+   1929              USB_OTG_DSTS_TypeDef     dsts;
+   1930              USB_OTG_PCGCCTL_TypeDef  power; 
+   1931              
+   1932              dsts.d32 = USB_OTG_READ_REG32(&pdev->regs.DREGS->DSTS);
+   1933              
+   1934              if(dsts.b.suspsts == 1)
+   1935              {
+   1936                /* un-gate USB Core clock */
+   1937                power.d32 = USB_OTG_READ_REG32(pdev->regs.PCGCCTL);
+   1938                power.b.gatehclk = 0;
+   1939                power.b.stoppclk = 0;
+   1940                USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, power.d32);
+   1941                
+   1942              }
+   1943            }
+   1944          }
+   1945          
+   1946          /**
+   1947          * @brief  Stop the device and clean up fifo's
+   1948          * @param  None
+   1949          * @retval : None
+   1950          */
+   1951          void USB_OTG_StopDevice(USB_OTG_CORE_HANDLE *pdev)
+   1952          {
+   1953            uint32_t i;
+   1954            
+   1955            pdev->dev.device_status = 1;
+   1956            
+   1957            for (i = 0; i < pdev->cfg.dev_endpoints ; i++)
+   1958            {
+   1959              USB_OTG_WRITE_REG32( &pdev->regs.INEP_REGS[i]->DIEPINT, 0xFF);
+   1960              USB_OTG_WRITE_REG32( &pdev->regs.OUTEP_REGS[i]->DOEPINT, 0xFF);
+   1961            }
+   1962            
+   1963            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DIEPMSK, 0 );
+   1964            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DOEPMSK, 0 );
+   1965            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DAINTMSK, 0 );
+   1966            USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DAINT, 0xFFFFFFFF );  
+   1967            
+   1968            /* Flush the FIFO */
+   1969            USB_OTG_FlushRxFifo(pdev);
+   1970            USB_OTG_FlushTxFifo(pdev ,  0x10 );  
+   1971          }
+   1972          
+   1973          /**
+   1974          * @brief  returns the EP Status
+   1975          * @param  pdev : Selected device
+   1976          *         ep : endpoint structure
+   1977          * @retval : EP status
+   1978          */
+   1979          
+   1980          uint32_t USB_OTG_GetEPStatus(USB_OTG_CORE_HANDLE *pdev ,USB_OTG_EP *ep)
+   1981          {
+   1982            USB_OTG_DEPCTL_TypeDef  depctl;
+   1983            __IO uint32_t *depctl_addr;
+   1984            uint32_t Status = 0;  
+   1985            
+   1986            depctl.d32 = 0;
+   1987            if (ep->is_in == 1)
+   1988            {
+   1989              depctl_addr = &(pdev->regs.INEP_REGS[ep->num]->DIEPCTL);
+   1990              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   1991              
+   1992              if (depctl.b.stall == 1)
+   1993              {
+   1994                Status = USB_OTG_EP_TX_STALL;
+   1995              }
+   1996              else if (depctl.b.naksts == 1)
+   1997              {
+   1998                Status = USB_OTG_EP_TX_NAK;
+   1999              }
+   2000              else 
+   2001              {
+   2002                Status = USB_OTG_EP_TX_VALID;     
+   2003              }
+   2004            }
+   2005            else
+   2006            {
+   2007              depctl_addr = &(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL);
+   2008              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   2009              if (depctl.b.stall == 1)
+   2010              {
+   2011                Status = USB_OTG_EP_RX_STALL;
+   2012              }
+   2013              else if (depctl.b.naksts == 1)
+   2014              {
+   2015                Status = USB_OTG_EP_RX_NAK;
+   2016              }
+   2017              else 
+   2018              {
+   2019                Status = USB_OTG_EP_RX_VALID; 
+   2020              }
+   2021            } 
+   2022            
+   2023            /* Return the current status */
+   2024            return Status;
+   2025          }
+   2026          
+   2027          /**
+   2028          * @brief  Set the EP Status
+   2029          * @param  pdev : Selected device
+   2030          *         Status : new Status
+   2031          *         ep : EP structure
+   2032          * @retval : None
+   2033          */
+   2034          void USB_OTG_SetEPStatus (USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep , uint32_t Status)
+   2035          {
+   2036            USB_OTG_DEPCTL_TypeDef  depctl;
+   2037            __IO uint32_t *depctl_addr;
+   2038            
+   2039            depctl.d32 = 0;
+   2040            
+   2041            /* Process for IN endpoint */
+   2042            if (ep->is_in == 1)
+   2043            {
+   2044              depctl_addr = &(pdev->regs.INEP_REGS[ep->num]->DIEPCTL);
+   2045              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);
+   2046              
+   2047              if (Status == USB_OTG_EP_TX_STALL)  
+   2048              {
+   2049                USB_OTG_EPSetStall(pdev, ep); return;
+   2050              }
+   2051              else if (Status == USB_OTG_EP_TX_NAK)
+   2052              {
+   2053                depctl.b.snak = 1;
+   2054              }
+   2055              else if (Status == USB_OTG_EP_TX_VALID)
+   2056              {
+   2057                if (depctl.b.stall == 1)
+   2058                {  
+   2059                  ep->even_odd_frame = 0;
+   2060                  USB_OTG_EPClearStall(pdev, ep);
+   2061                  return;
+   2062                }      
+   2063                depctl.b.cnak = 1;
+   2064                depctl.b.usbactep = 1; 
+   2065                depctl.b.epena = 1;
+   2066              }
+   2067              else if (Status == USB_OTG_EP_TX_DIS)
+   2068              {
+   2069                depctl.b.usbactep = 0;
+   2070              }
+   2071              
+   2072              else
+   2073              {
+   2074                /* Do Nothing */
+   2075              }
+   2076            } 
+   2077            else /* Process for OUT endpoint */
+   2078            {
+   2079              depctl_addr = &(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL);
+   2080              depctl.d32 = USB_OTG_READ_REG32(depctl_addr);    
+   2081              
+   2082              if (Status == USB_OTG_EP_RX_STALL)  {
+   2083                depctl.b.stall = 1;
+   2084              }
+   2085              else if (Status == USB_OTG_EP_RX_NAK)
+   2086              {
+   2087                depctl.b.snak = 1;
+   2088              }
+   2089              else if (Status == USB_OTG_EP_RX_VALID)
+   2090              {
+   2091                if (depctl.b.stall == 1)
+   2092                {  
+   2093                  ep->even_odd_frame = 0;
+   2094                  USB_OTG_EPClearStall(pdev, ep);
+   2095                  return;
+   2096                }  
+   2097                depctl.b.cnak = 1;
+   2098                depctl.b.usbactep = 1;    
+   2099                depctl.b.epena = 1;
+   2100              }
+   2101              else if (Status == USB_OTG_EP_RX_DIS)
+   2102              {
+   2103                depctl.b.usbactep = 0;    
+   2104              }
+   2105              
+   2106              else
+   2107              {
+   2108                /* Do Nothing */
+   2109              }
+   2110            }
+   2111            
+   2112            USB_OTG_WRITE_REG32(depctl_addr, depctl.d32); 
+   2113          }
+   2114          
+   2115          #endif
+   2116          /**
+   2117          * @}
+   2118          */ 
+   2119          
+   2120          /**
+   2121          * @}
+   2122          */ 
+   2123          
+   2124          /**
+   2125          * @}
+   2126          */
+   2127          
+   2128          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   USB_OTG_ActiveRemoteWakeup
+        24   -> USB_OTG_BSP_mDelay
+      32   USB_OTG_CoreInit
+        32   -> USB_OTG_BSP_mDelay
+        32   -> USB_OTG_CoreReset
+      48   USB_OTG_CoreInitDev
+        48   -> USB_OTG_EnableDevInt
+        48   -> USB_OTG_FlushRxFifo
+        48   -> USB_OTG_FlushTxFifo
+        48   -> USB_OTG_InitDevSpeed
+      24   USB_OTG_CoreReset
+        24   -> USB_OTG_BSP_uDelay
+       4   USB_OTG_DisableGlobalInt
+      12   USB_OTG_EP0Activate
+      20   USB_OTG_EP0StartXfer
+       8   USB_OTG_EP0_OutStart
+      16   USB_OTG_EPActivate
+      12   USB_OTG_EPClearStall
+      16   USB_OTG_EPDeactivate
+      12   USB_OTG_EPSetStall
+      32   USB_OTG_EPStartXfer
+        32   -> USB_OTG_WritePacket
+       0   USB_OTG_EnableCommonInt
+      16   USB_OTG_EnableDevInt
+        16   -> USB_OTG_EnableCommonInt
+       4   USB_OTG_EnableGlobalInt
+      24   USB_OTG_FlushRxFifo
+        24   -> USB_OTG_BSP_uDelay
+      24   USB_OTG_FlushTxFifo
+        24   -> USB_OTG_BSP_uDelay
+       0   USB_OTG_GetDeviceSpeed
+      12   USB_OTG_GetEPStatus
+       0   USB_OTG_GetMode
+       0   USB_OTG_InitDevSpeed
+       8   USB_OTG_IsDeviceMode
+         8   -> USB_OTG_GetMode
+       8   USB_OTG_IsHostMode
+         8   -> USB_OTG_GetMode
+       0   USB_OTG_ReadCoreItr
+       0   USB_OTG_ReadDevAllInEPItr
+       0   USB_OTG_ReadDevAllOutEp_itr
+       0   USB_OTG_ReadDevOutEP_itr
+       0   USB_OTG_ReadOtgItr
+      12   USB_OTG_ReadPacket
+      12   USB_OTG_SelectCore
+      24   USB_OTG_SetCurrentMode
+        24   -> USB_OTG_BSP_mDelay
+      24   USB_OTG_SetEPStatus
+        24   -> USB_OTG_EPClearStall
+        24   -> USB_OTG_EPSetStall
+      16   USB_OTG_StopDevice
+        16   -> USB_OTG_FlushRxFifo
+        16   -> USB_OTG_FlushTxFifo
+       0   USB_OTG_UngateClock
+      20   USB_OTG_WritePacket
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+      86  USB_OTG_ActiveRemoteWakeup
+     112  USB_OTG_CoreInit
+     426  USB_OTG_CoreInitDev
+      90  USB_OTG_CoreReset
+      28  USB_OTG_DisableGlobalInt
+      82  USB_OTG_EP0Activate
+     262  USB_OTG_EP0StartXfer
+      58  USB_OTG_EP0_OutStart
+     116  USB_OTG_EPActivate
+      62  USB_OTG_EPClearStall
+      84  USB_OTG_EPDeactivate
+      66  USB_OTG_EPSetStall
+     390  USB_OTG_EPStartXfer
+      32  USB_OTG_EnableCommonInt
+      88  USB_OTG_EnableDevInt
+      28  USB_OTG_EnableGlobalInt
+      62  USB_OTG_FlushRxFifo
+      72  USB_OTG_FlushTxFifo
+      50  USB_OTG_GetDeviceSpeed
+      98  USB_OTG_GetEPStatus
+      10  USB_OTG_GetMode
+      18  USB_OTG_InitDevSpeed
+      24  USB_OTG_IsDeviceMode
+      24  USB_OTG_IsHostMode
+      16  USB_OTG_ReadCoreItr
+      16  USB_OTG_ReadDevAllInEPItr
+      16  USB_OTG_ReadDevAllOutEp_itr
+      22  USB_OTG_ReadDevOutEP_itr
+       6  USB_OTG_ReadOtgItr
+      44  USB_OTG_ReadPacket
+     228  USB_OTG_SelectCore
+      62  USB_OTG_SetCurrentMode
+     198  USB_OTG_SetEPStatus
+      82  USB_OTG_StopDevice
+      36  USB_OTG_UngateClock
+      70  USB_OTG_WritePacket
+
+ 
+ 3'172 bytes in section .text
+ 
+ 3'172 bytes of CODE memory
+
+Errors: none
+Warnings: none

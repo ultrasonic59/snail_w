@@ -292,7 +292,7 @@ extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern 
 CanRxMsg RxMessage;
-
+#if 0
 void CAN1_RX0_IRQHandler(void)
 {
 ////  CanRxMsg RxMessage;
@@ -334,7 +334,7 @@ if (CAN1->TSR & CAN_TSR_RQCP0)          /* request completed mbx 0        */
   }
 }
 
-
+#endif
 ///==================================================
 #ifdef USB_DEV
 
