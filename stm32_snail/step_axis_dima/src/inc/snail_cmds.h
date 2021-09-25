@@ -12,7 +12,18 @@
 #define STOP_Z          0x30
 #define GOTO_Z          0x31
 #define SET_SPD_Z       0x32
+////============= CAN ====================
+#define SET_STOP_ALL    0x10             ////Avaria
+#define SET_STOP        0x11             ///
+#define GET_STATE       0x12             ////
+#define SET_HOME        0x13             ////
 
+#define SET_STEP_X     0x20             ////set step,speed,dir X
+#define SET_STEP_Y     0x40             ////set step,speed,dir Y
+#define SET_STEP_Z     0x80             ////set step,speed,dir Z
+#define PUT_STATE_X    0x100             ////
+#define PUT_STATE_Y    0x101             ////
+#define PUT_STATE_Z    0x102             ////
 
 ////======================================
 #endif

@@ -1083,25 +1083,7 @@
             <name>$PROJ_DIR$\src\retarget.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\serial.c</name>
-            <excluded>
-                <configuration>step_x_dbg</configuration>
-            </excluded>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\board\step_board.c</name>
-            <excluded>
-                <configuration>step_x_dbg</configuration>
-            </excluded>
-        </file>
-        <file>
             <name>$PROJ_DIR$\src\board\step_timer.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\timertest.c</name>
-            <excluded>
-                <configuration>step_x_dbg</configuration>
-            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\board\zzzz.c</name>

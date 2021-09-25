@@ -20,7 +20,7 @@ char key=0;
 int nstep=300;
 uint8_t dir=0;
 uint8_t mot_rej=0;
-printk("\n\r tst_task"); 
+printk("\n\r motor_task"); 
 
 set_sleep_mot(1);
 ////set_ena_mot(1);

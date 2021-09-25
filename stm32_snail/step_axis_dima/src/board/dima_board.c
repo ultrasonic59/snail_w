@@ -242,9 +242,9 @@ void mot_step_tim_init(void)
 NVIC_InitTypeDef NVIC_InitStructure; 
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
-MOT_STEP_TIM ->PSC = MOT_TIM_PRESC;
-MOT_STEP_TIM ->ARR = MOT_TIM_PERIOD;////
-MOT_STEP_TIM ->CCR1 = MOT_TIM_PERIOD/2;////30;
+MOT_STEP_TIM ->PSC = DEF_MOT_TIM_PRESC;
+MOT_STEP_TIM ->ARR = DEF_MOT_TIM_PERIOD;////
+MOT_STEP_TIM ->CCR1 = DEF_MOT_TIM_PERIOD/2;////30;
 MOT_STEP_TIM->CCER |= TIM_CCER_CC1E;////TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
 MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1; 
@@ -499,12 +499,11 @@ mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&G_DRIVE_REG);
 void set_mot_rej(uint8_t rej)
 {
 uint16_t tmp;
-CTRL_Register_t 	*t_ctrl_reg=(CTRL_Register_t*)&tmp;
+CTRL_Register_t *t_ctrl_reg=(CTRL_Register_t*)&tmp;
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
 t_ctrl_reg->MODE=rej;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
-
 ////============================================
 extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
@@ -523,6 +522,15 @@ void set_mot_step(uint8_t step)
 void reset_mot_step(void)
 {
   
+}
+void set_mot_per(uint16_t per)
+{
+if(per>MAX_PER)
+  per=MAX_PER;
+else if(per<MIN_PER)
+  per=MIN_PER;
+MOT_STEP_TIM ->ARR = per*2;////
+MOT_STEP_TIM ->CCR1 = per;////
 }
 
 ////========================================================  

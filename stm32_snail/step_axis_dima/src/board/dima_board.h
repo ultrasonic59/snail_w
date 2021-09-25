@@ -14,8 +14,12 @@
 #define	APB1_pres	4
 #define APB2_pres	2
 
-#define MOT_TIM_PERIOD          8000
-#define MOT_TIM_PRESC           8
+#define DEF_MOT_TIM_PERIOD          8000
+#define DEF_MOT_TIM_PRESC           8
+
+#define MAX_PER         64000
+#define MIN_PER         1000        
+
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
 
@@ -316,8 +320,10 @@ uint16_t STDLAT:1;  	// bit 7
 typedef union cmd_param_u
 {
 uint8_t bpar[4];
+uint16_t hpar[2];
 int32_t wpar;
-}cmd_param_t;  
+}cmd_param_t; 
+
 typedef struct cmd_s_
 {
 uint8_t cmd;
