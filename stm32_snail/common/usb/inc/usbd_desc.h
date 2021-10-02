@@ -53,17 +53,14 @@
 
  //// #define DEVIECE_CLASS                         0x02
  //// #define DEVIECE_SUBCLASS                      0x02
-  #define USBD_MANUFACTURER_STRING      "STMicroelectronics"
-////#define USBD_MANUFACTURER_STRING      "STM"
+///  #define USBD_MANUFACTURER_STRING      "STMicroelectronics"
+#define USBD_MANUFACTURER_STRING      "STM"
 
 ///==================================================
 ///#define USBD_VID                     0x0483
 ///#define USBD_PID                     0x5750
 ///==================================================
 #define USBD_LANGID_STRING            0x409
-////#define USBD_MANUFACTURER_STRING      "STMicroelectronics"
-///#define USBD_PRODUCT_HS_STRING        "VelographII"
-///#define USBD_PRODUCT_FS_STRING        "VelographII"
 #if (USB_CLASS==RNDIS)
   #define USBD_VID                     0x0483
   #define USBD_PID                     0x0125
@@ -104,14 +101,20 @@
   #define USBD_INTERFACE_HS_STRING      "Interface"
   #define USBD_CONFIGURATION_FS_STRING  "Config"
   #define USBD_INTERFACE_FS_STRING      "Interface"
+  #ifdef USE_USB_OTG_HS
+    #define CDC_IN_FRAME_INTERVAL          40   /* Number of micro-frames between IN transfers */
+  #else
+    #define CDC_IN_FRAME_INTERVAL          1    ////???5    /* Number of frames between IN transfers */
+  #endif /* USE_USB_OTG_HS */
+
 #elif   (USB_CLASS==CDC_VCP)
-  #define USBD_VID                     0x0483
-  #define USBD_PID                     0x5740
+  #define USBD_VID                     0x03EB
+  #define USBD_PID                     0x6124
 ////  #define USBD_MANUFACTURER_STRING      "STMicroelectronics"
   #define USBD_PRODUCT_HS_STRING          "VCP in HS mode"
   #define USBD_SERIALNUMBER_HS_STRING     "00000000059B"
 
-  #define USBD_PRODUCT_FS_STRING          "CDC FS Mode"
+  #define USBD_PRODUCT_FS_STRING          "STM Virtual COM Port"
   #define USBD_SERIALNUMBER_FS_STRING     "00000000059D"
 
   #define DEVIECE_CLASS                         0x02
@@ -147,6 +150,9 @@
   #define APP_RX_DATA_SIZE               1024           ///2048 ///1024           /// 2048 /* Total size of IN buffer: */
 #ifdef USE_USB_OTG_HS
     #define CDC_IN_FRAME_INTERVAL          40   /* Number of micro-frames between IN transfers */
+    #define USB_TX_BUFF_SIZE               256  /* Total size of IN buffer */
+    #define USB_RX_BUFF_SIZE               256  /* Total size of OUT buffer */
+
 #else
 ///    #define CDC_IN_FRAME_INTERVAL          1    ////???5    /* Number of frames between IN transfers */
     #define USB_TX_BUFF_SIZE               256  /* Total size of IN buffer */

@@ -1,5 +1,3 @@
-
-
 /*
   stepper.c - stepper motor driver: executes motion plans using stepper motors
   Part of Grbl
@@ -20,12 +18,12 @@
   You should have received a copy of the GNU General Public License
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
-#if 0
+
 #include "grbl.h"
 
 ////typedef int bool;
-////#include "stm32f10x_rcc.h"
-////#include "stm32f10x_tim.h"
+#include "stm32f10x_rcc.h"
+#include "stm32f10x_tim.h"
 ////#include "stm32f10x_nvic.h"
 
 #include "misc.h"
@@ -57,6 +55,14 @@ const PORTPINDEF direction_pin_mask[N_AXIS] =
 	1 << Y_DIRECTION_BIT,
 	1 << Z_DIRECTION_BIT,
 };
+#if 0
+const PORTPINDEF limit_pin_mask[N_AXIS] =
+{
+	1 << X_LIMIT_BIT,
+	1 << Y_LIMIT_BIT,
+	1 << Z_LIMIT_BIT,
+};
+#endif
 // Define Adaptive Multi-Axis Step-Smoothing(AMASS) levels and cutoff frequencies. The highest level
 // frequency bin starts at 0Hz and ends at its cutoff frequency. The next lower level frequency bin
 // starts at the next higher cutoff frequency, and so on. The cutoff frequencies for each level must
@@ -1114,4 +1120,3 @@ void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 }
-#endif

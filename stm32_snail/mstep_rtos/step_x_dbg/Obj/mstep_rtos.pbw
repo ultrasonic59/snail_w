@@ -74790,34 +74790,6 @@
     "scope": null
   },
   {
-    "ID": "c:@F@CAN1_RX0_IRQHandler",
-    "What": "Function",
-    "defdec": "Def",
-    "display": "void CAN1_RX0_IRQHandler(void)",
-    "location": {
-      "column": "6",
-      "line": "296",
-      "path": "D:\\proj\\velograph\\snail\\stm32_snail\\common\\startup\\stm32f2xx_it.c"
-    },
-    "name": "CAN1_RX0_IRQHandler",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:@F@CAN1_TX_IRQHandler",
-    "What": "Function",
-    "defdec": "Def",
-    "display": "void CAN1_TX_IRQHandler(void)",
-    "location": {
-      "column": "6",
-      "line": "327",
-      "path": "D:\\proj\\velograph\\snail\\stm32_snail\\common\\startup\\stm32f2xx_it.c"
-    },
-    "name": "CAN1_TX_IRQHandler",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
     "ID": "c:stm32f2xx_it.h@1132@macro@__STM32F2xx_IT_H",
     "What": "MacroDef",
     "defdec": "Def",

@@ -26,12 +26,15 @@ while (!(USART2->SR & 0x0020));
 return (USART2->DR);
 }
 
-////void _putk(char ch)
 int send_char_dbg(int ch) 
 {
 //sendchar_hdlc(ch);
 sendchar2(ch);
 return ch;
+}
+void _putk(char ch)
+{
+send_char_dbg(ch);
 }
 
 void init_gpio(void)

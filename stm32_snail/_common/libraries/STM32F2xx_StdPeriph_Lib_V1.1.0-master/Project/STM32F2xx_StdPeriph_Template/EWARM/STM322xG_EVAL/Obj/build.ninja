@@ -1,0 +1,71 @@
+#Generating source browse information for project Project
+
+
+#Abbreviations
+cc = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\SourceIndexer.exe
+ll = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\PbdLink.exe
+bd = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\makeBrowseData.exe
+
+
+
+#Rules
+rule index
+  depfile = $out.dep
+  command = $cc -out=$out -f $in
+rule link
+  command = $ll -M $out $in
+rule browsedata
+  command = $bd $in -output  $out
+
+
+
+#Build steps
+build system_stm32f2xx.pbi : index system_stm32f2xx.xcl
+build stm322xg_eval.pbi : index stm322xg_eval.xcl
+build stm322xg_eval_fsmc_sram.pbi : index stm322xg_eval_fsmc_sram.xcl
+build stm322xg_eval_ioe.pbi : index stm322xg_eval_ioe.xcl
+build stm322xg_eval_lcd.pbi : index stm322xg_eval_lcd.xcl
+build misc.pbi : index misc.xcl
+build stm32f2xx_adc.pbi : index stm32f2xx_adc.xcl
+build stm32f2xx_can.pbi : index stm32f2xx_can.xcl
+build stm32f2xx_crc.pbi : index stm32f2xx_crc.xcl
+build stm32f2xx_cryp.pbi : index stm32f2xx_cryp.xcl
+build stm32f2xx_cryp_aes.pbi : index stm32f2xx_cryp_aes.xcl
+build stm32f2xx_cryp_des.pbi : index stm32f2xx_cryp_des.xcl
+build stm32f2xx_cryp_tdes.pbi : index stm32f2xx_cryp_tdes.xcl
+build stm32f2xx_dac.pbi : index stm32f2xx_dac.xcl
+build stm32f2xx_dbgmcu.pbi : index stm32f2xx_dbgmcu.xcl
+build stm32f2xx_dcmi.pbi : index stm32f2xx_dcmi.xcl
+build stm32f2xx_dma.pbi : index stm32f2xx_dma.xcl
+build stm32f2xx_exti.pbi : index stm32f2xx_exti.xcl
+build stm32f2xx_flash.pbi : index stm32f2xx_flash.xcl
+build stm32f2xx_fsmc.pbi : index stm32f2xx_fsmc.xcl
+build stm32f2xx_gpio.pbi : index stm32f2xx_gpio.xcl
+build stm32f2xx_hash.pbi : index stm32f2xx_hash.xcl
+build stm32f2xx_hash_md5.pbi : index stm32f2xx_hash_md5.xcl
+build stm32f2xx_hash_sha1.pbi : index stm32f2xx_hash_sha1.xcl
+build stm32f2xx_i2c.pbi : index stm32f2xx_i2c.xcl
+build stm32f2xx_iwdg.pbi : index stm32f2xx_iwdg.xcl
+build stm32f2xx_pwr.pbi : index stm32f2xx_pwr.xcl
+build stm32f2xx_rcc.pbi : index stm32f2xx_rcc.xcl
+build stm32f2xx_rng.pbi : index stm32f2xx_rng.xcl
+build stm32f2xx_rtc.pbi : index stm32f2xx_rtc.xcl
+build stm32f2xx_sdio.pbi : index stm32f2xx_sdio.xcl
+build stm32f2xx_spi.pbi : index stm32f2xx_spi.xcl
+build stm32f2xx_syscfg.pbi : index stm32f2xx_syscfg.xcl
+build stm32f2xx_tim.pbi : index stm32f2xx_tim.xcl
+build stm32f2xx_usart.pbi : index stm32f2xx_usart.xcl
+build stm32f2xx_wwdg.pbi : index stm32f2xx_wwdg.xcl
+build main.pbi : index main.xcl
+build stm32f2xx_it.pbi : index stm32f2xx_it.xcl
+build Project_part0.pbi : link system_stm32f2xx.pbi stm322xg_eval.pbi stm322xg_eval_fsmc_sram.pbi stm322xg_eval_ioe.pbi stm322xg_eval_lcd.pbi misc.pbi
+build Project_part1.pbi : link stm32f2xx_adc.pbi stm32f2xx_can.pbi stm32f2xx_crc.pbi stm32f2xx_cryp.pbi stm32f2xx_cryp_aes.pbi stm32f2xx_cryp_des.pbi
+build Project_part2.pbi : link stm32f2xx_cryp_tdes.pbi stm32f2xx_dac.pbi stm32f2xx_dbgmcu.pbi stm32f2xx_dcmi.pbi stm32f2xx_dma.pbi stm32f2xx_exti.pbi
+build Project_part3.pbi : link stm32f2xx_flash.pbi stm32f2xx_fsmc.pbi stm32f2xx_gpio.pbi stm32f2xx_hash.pbi stm32f2xx_hash_md5.pbi stm32f2xx_hash_sha1.pbi
+build Project_part4.pbi : link stm32f2xx_i2c.pbi stm32f2xx_iwdg.pbi stm32f2xx_pwr.pbi stm32f2xx_rcc.pbi stm32f2xx_rng.pbi stm32f2xx_rtc.pbi
+build Project_part5.pbi : link stm32f2xx_sdio.pbi stm32f2xx_spi.pbi stm32f2xx_syscfg.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi stm32f2xx_wwdg.pbi
+build Project_part6.pbi : link main.pbi stm32f2xx_it.pbi
+build Project.pbd : link Project_part0.pbi Project_part1.pbi Project_part2.pbi Project_part3.pbi Project_part4.pbi Project_part5.pbi Project_part6.pbi
+build Project.pbw : browsedata Project.pbd
+
+

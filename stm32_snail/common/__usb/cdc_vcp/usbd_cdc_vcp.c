@@ -26,45 +26,30 @@
   */ 
 #include <stdlib.h>
 #include <string.h>
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
 #include "usbd_conf.h"
 #include "usbd_desc.h"
-#if VERS_PL==5
-#include "rook_v5a.h"
-#else
-#include "rook_v4e.h"
-#endif
-
-////#include "rook_v5a.h"
-#include "rook_rtos.h"
-#include "my_misc.h"
+////#include "rook_rtos.h"
+#include "my_types.h"
 #include "_hdlc.h"
 #include "printk.h"
+#include "min_max.h"
+#include "ring_buff.h"
+#include "board.h"
 
-#if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
+#if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    
+///================================
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED 
 #pragma     data_alignment = 4 
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 
 #include "usbd_cdc_vcp.h"
+
 hdlc_stat_t g_hdlc_vcp;
-#if 0
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-LINE_CODING linecoding =
-  {
-    115200, /* baud rate*/
-    0x00,   /* stop bits-1*/
-    0x00,   /* parity - none*/
-    0x08    /* nb. of bits 8*/
-  };
-
-
-USART_InitTypeDef USART_InitStructure;
-#endif
-
 /* These are external variables imported from CDC core to be used for IN 
    transfer management. */
 extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
@@ -78,8 +63,9 @@ extern uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
 static uint16_t VCP_Init     (void);
 static uint16_t VCP_DeInit   (void);
 static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
-static uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
-static uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
+////static uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
+////static 
+////uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
 
 ///static uint16_t VCP_COMConfig(uint8_t Conf);
 
@@ -88,8 +74,10 @@ CDC_IF_Prop_TypeDef VCP_fops =
   VCP_Init,
   VCP_DeInit,
   VCP_Ctrl,
-  VCP_DataTx,
-  VCP_DataRx
+  0,
+  0
+///  VCP_DataTx,
+///  VCP_DataRx
 };
 
 static uint16_t VCP_Init(void)
@@ -105,21 +93,83 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 { 
   return USBD_OK;
 }
-
-/**
-  * @brief  VCP_DataTx
-  *         CDC received data to be send over USB IN endpoint are managed in 
-  *         this function.
-  * @param  Buf: Buffer of data to be sent
-  * @param  Len: Number of data to be sent (in bytes)
-  * @retval Result of the operation: USBD_OK if all operations are OK else VCP_FAIL
-  */
-static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
-{
-  return USBD_OK;
-}
 ///=========================================
-#if 1
+/*
+ * VCP data Rx/Tx API
+ */
+
+void VCP_MarkRead(unsigned sz)
+{
+	atomic_t a = atomic_begin();
+	USB_Rx_buff_tail = ring_wrap(USB_Rx_buff_size, USB_Rx_buff_tail + sz);
+	atomic_end(a);
+}
+
+void VCP_MarkWritten(unsigned sz)
+{
+	atomic_t a = atomic_begin();
+	USB_Tx_buff_head = ring_wrap(USB_TX_BUFF_SIZE, USB_Tx_buff_head + sz);
+	atomic_end(a);
+}
+
+unsigned VCP_DataAvail(void)
+{
+	atomic_t a = atomic_begin();
+	unsigned sz = ring_data_avail(USB_Rx_buff_size, USB_Rx_buff_head, USB_Rx_buff_tail);
+	atomic_end(a);
+	return sz;
+}
+
+unsigned VCP_SpaceAvail(void)
+{
+	atomic_t a = atomic_begin();
+	unsigned sz = ring_space_avail(USB_TX_BUFF_SIZE, USB_Tx_buff_head, USB_Tx_buff_tail);
+	atomic_end(a);
+	return sz;
+}
+
+unsigned VCP_DataAvailContig(void)
+{
+	atomic_t a = atomic_begin();
+	unsigned sz = ring_data_contig(USB_Rx_buff_size, USB_Rx_buff_head, USB_Rx_buff_tail);
+	atomic_end(a);
+	return sz;
+}
+
+unsigned VCP_SpaceAvailContig(void)
+{
+	atomic_t a = atomic_begin();
+	unsigned sz = ring_space_contig(USB_TX_BUFF_SIZE, USB_Tx_buff_head, USB_Tx_buff_tail);
+	atomic_end(a);
+	return sz;
+}
+
+unsigned VCP_GetContig(void* buff, unsigned max_len)
+{
+	unsigned avail = VCP_DataAvailContig();
+	unsigned sz = MIN_(avail, max_len);
+	if (sz) {
+		memcpy(buff, VCP_DataPtr(), sz);
+		VCP_MarkRead(sz);
+	}
+	return sz;
+}
+
+unsigned VCP_PutContig(void const* buff, unsigned len)
+{
+unsigned avail = VCP_SpaceAvailContig();
+unsigned sz = MIN_(avail, len);
+if (sz) 
+  {
+  memcpy(VCP_SpacePtr(), buff, sz);
+  VCP_MarkWritten(sz);
+  }
+return sz;
+}
+
+///==========================================
+
+#if 0
 void hdlc_vcp_send_byte(u8 val)
 {
 ///u8 btmp = val;
@@ -133,6 +183,19 @@ if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
 /////on_int_tx_uart_bt();
 ///_printk("[%x]",APP_Rx_ptr_in);
 
+}
+#else
+void hdlc_vcp_send_byte(u8 val)
+{
+int num;  
+u8 btmp=val;
+for(;;)
+{
+ num= VCP_PutContig(&btmp,1);
+ if(num)
+   break;
+ msleep(1);
+}
 }
 #endif
 
@@ -164,12 +227,15 @@ return 0;
 
 TaskHandle_t  vcp_rx_thread_handle;
 TaskHandle_t  vcp_tx_thread_handle;
+TaskHandle_t  vcp_thread_handle;
 
-static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
+////static 
+uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
 ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 uint8_t ch;
 int ii;
+///VCP_MarkRead(Len);
 for(ii=0;ii<Len;ii++)
   {
   ch = Buf[ii];
@@ -179,14 +245,47 @@ for(ii=0;ii<Len;ii++)
 ///    xQueueSendFromISR(g_hdlc_vcp.ev_rsv_frame, &ch, &xHigherPriorityTaskWoken);
     }
   }
+////VCP_MarkRead(Len);
 return USBD_OK;
 }
+////===================================
+void vcp_thread(void *pdata)
+{
+uint8_t rd_dat;  
+uint32_t ii;  
+#if 1  
+for (;;) 
+{
+unsigned sz  = VCP_DataAvailContig();
+if (sz)
+  {
+  for(ii=0;ii<sz;ii++)
+    {
+    VCP_GetContig(&rd_dat,1);
+    if (hdlc1_on_bytein(&g_hdlc_vcp, rd_dat) > 0)
+      {
+      xQueueSend(g_hdlc_vcp.ev_rsv_frame, &rd_dat,TIMEOUT_SEND);
+      }
+    }
+  }
+///else
+///  {
+  msleep(1);
+///  }
+}
+#endif
+}
+
+////===================================
+
 extern u16	pc_get_req_dat(u8 num_req,u16 offs,u8 *buf);
 extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
+///u8 addr= *((u8*)pdata);
 
 ///=======================
 void init_hdlc_vcp(void)
 {
+BaseType_t rez;  
 g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
 ////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
 g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
@@ -198,19 +297,31 @@ g_hdlc_vcp.ev_rsv_frame=xQueueCreate(1,1);
 g_hdlc_vcp.ev_snd_frame=xQueueCreate(16, sizeof(uint32_t));
 hdlc1_init(&g_hdlc_vcp);
 
-xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_vcp_rx",VCP_RX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_rx_thread_handle);
-xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_tx_thread_handle);
-vTaskSuspend(vcp_rx_thread_handle);
-vTaskSuspend(vcp_tx_thread_handle);
+rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+////_printk("vcp_thread[%x]",rez);
+////vTaskSuspend(vcp_thread_handle);
+
+rez=xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_vcp_rx",VCP_RX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_rx_thread_handle);
+////_printk("hdlc1_obr_frame[%x]",rez);
+rez=xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_tx_thread_handle);
+////_printk("hdlc1_snd_task[%x]",rez);
+
+///xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, vcp_thread_handle);
+
+////vTaskSuspend(vcp_thread_handle);
+////vTaskSuspend(vcp_rx_thread_handle);
+////vTaskSuspend(vcp_tx_thread_handle);
+
 ///put_tst1(0);
 }
 
 ///======================================  
-static uint8_t flg_usb_on=0;
+////static uint8_t flg_usb_on=0;
 ///======================================  
 void on_off_usb_thr(uint8_t on_off)
 {
-///BaseType_t xYieldRequired;  
+
+#if 0  
 if(on_off&0x1)
   {
   if(flg_usb_on)
@@ -219,14 +330,7 @@ if(on_off&0x1)
 ////  put_tst1(1);
  vTaskResume(vcp_rx_thread_handle);
  vTaskResume(vcp_tx_thread_handle);
-#if 0  
- xYieldRequired=xTaskResumeFromISR(&vcp_rx_thread_handle);
- if( xYieldRequired == pdTRUE )
-    {
-    portYIELD_FROM_ISR(1); 
-    }
-#endif
-/// xTaskResumeFromISR(&vcp_tx_thread_handle);
+ vTaskResume(vcp_thread_handle);
 
   }
 else
@@ -236,8 +340,10 @@ else
   flg_usb_on=0;
   vTaskSuspend(vcp_rx_thread_handle);
   vTaskSuspend(vcp_tx_thread_handle);
+  vTaskSuspend(vcp_thread_handle);
 ///  put_tst1(0);
   }
+#endif
 }
 ///======================================  
 #endif ///(USB_CLASS == CDC_VCP)

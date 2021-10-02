@@ -3,9 +3,9 @@
 
 #include <intrinsics.h>
 
-#define VCP_RX_STACK_SIZE	        1024////( ( unsigned short ) 512 )
-#define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
-#define APP_PRIORITY  ( tskIDLE_PRIORITY + 3 )
+////#define VCP_RX_STACK_SIZE	        1024////( ( unsigned short ) 512 )
+///#define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
+////#define APP_PRIORITY  ( tskIDLE_PRIORITY + 3 )
 typedef __istate_t atomic_t;
 
 static inline atomic_t atomic_begin(void)

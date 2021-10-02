@@ -26,8 +26,10 @@
   ******************************************************************************
   */ 
 
-#include "stm32f2xx.h"
-#include "stm32f2xx_conf.h"
+/* Includes ------------------------------------------------------------------*/
+
+  #include "stm32f2xx.h"
+  #include "stm32f2xx_conf.h"
 #include "usb_bsp.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -46,10 +48,6 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
   GPIO_InitTypeDef GPIO_InitStructure;    
   
-#if defined (USB_OTG_HS_LOW_PWR_MGMT_SUPPORT) || defined (USB_OTG_FS_LOW_PWR_MGMT_SUPPORT)
-  EXTI_InitTypeDef EXTI_InitStructure;
-  NVIC_InitTypeDef NVIC_InitStructure; 
-#endif
   RCC_AHB1PeriphClockCmd( RCC_AHB1Periph_GPIOA , ENABLE);  
   
    /* Configure SOF ID DM DP Pins */
@@ -71,6 +69,8 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
   
   /* enable the PWR clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);   
+  
+ //// EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);  
 }
 /**
 * @brief  USB_OTG_BSP_EnableInterrupt
@@ -83,30 +83,11 @@ void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
   NVIC_InitTypeDef NVIC_InitStructure; 
   
 ////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-#ifdef USE_USB_OTG_HS   
-  NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_IRQn;
-#else
   NVIC_InitStructure.NVIC_IRQChannel = OTG_FS_IRQn;  
-#endif
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///3;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);  
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
-////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_EP1_OUT_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///2;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);  
-  
-////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  NVIC_InitStructure.NVIC_IRQChannel = OTG_HS_EP1_IN_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);   
-#endif
 }
 /**
 * @brief  USB_OTG_BSP_uDelay

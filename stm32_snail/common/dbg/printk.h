@@ -5,7 +5,7 @@
 #define __DEBUG
 
 ////=============================================
-#if 0
+#if 1
 #ifdef __DEBUG
   extern int _printk(const char *format, ...);
   #define printk	_printk
@@ -15,7 +15,7 @@
 #endif
 #endif
   
-#if 1  
+#if 0  
 #include <stdio.h>
   
 #define _printk	printf

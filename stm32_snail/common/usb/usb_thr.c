@@ -1,16 +1,12 @@
 #include <stdint.h>
   #include "stm32f2xx.h"
   #include "stm32f2xx_conf.h"
-
 #include "my_types.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 ////#include "my_misc.h"
 #include "printk.h"
-
-#include "usbd_conf.h"
-#include "usbd_desc.h"
 
 #include "usb_dcd_int.h"
 
@@ -22,11 +18,6 @@ void usb_thread( void *arg )
 {
 ////USB_OTG_CORE_HANDLE *pdev;  
  usb_req_t t_usb_req; 
- for(;;)
- {
-  msleep(20); 
- ;  
- }
 q_usb_in  = xQueueCreate(80,sizeof(usb_req_t));
 for(;;)
   {

@@ -106,7 +106,7 @@ extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
 /*
  * IN ring endpoint buffer (data to be sent to host)
  */
-extern uint8_t  USB_Tx_Buffer[USB_TX_BUFF_SIZE];
+extern uint8_t  USB_Tx_Buffer[];
 extern uint32_t USB_Tx_buff_head;
 extern uint32_t USB_Tx_buff_tail;
 

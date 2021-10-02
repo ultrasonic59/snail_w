@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "my_grbl.h"
+#include "printk.h"
 
 #define RX_RING_BUFFER (RX_BUFFER_SIZE)
 #define TX_RING_BUFFER (TX_BUFFER_SIZE)
@@ -94,6 +95,7 @@ uint8_t tail = serial_tx_buffer_tail; // Temporary serial_rx_buffer_tail (to opt
     return data;
   }
 }
+extern int send_char_dbg(int ch); 
 
 ////===================================================================
 void OnUsbDataRx(uint8_t* data_in, uint16_t length)
@@ -105,6 +107,10 @@ uint16_t ii=0;
 //// Write data to buffer unless it is full.
 while (length != 0){
   data = *(data_in+ii);
+  ////====================================
+ ///     send_char_dbg(data);
+  printk("[%x]",data);
+  ////====================================
   ii++;
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.

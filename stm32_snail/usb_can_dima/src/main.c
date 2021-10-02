@@ -79,7 +79,10 @@
 #include "printk.h"
 ///=======================================================================
 extern void vcp_thread(void *pdata);
+extern void grbl_thread(void* pp);
+
 extern TaskHandle_t  vcp_thread_handle;
+extern TaskHandle_t  grbl_thread_handle;
 
 ///extern void usb_thread( void *arg );
 ///extern void init_hdlc_vcp(void);
@@ -141,6 +144,8 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
   xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 ////rez=
 xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+xTaskCreate(grbl_thread, (const char*)"grbl_thread",GRBL_STACK_SIZE/2, 0, APP_PRIORITY, &grbl_thread_handle);
+
   
 ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);
 

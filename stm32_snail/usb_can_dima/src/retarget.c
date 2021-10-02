@@ -11,7 +11,7 @@ size_t __write(int handle, const unsigned char * buffer, size_t size)
     {
 ////     UNUSED_VARIABLE(app_uart_put(*buffer++));
 ///     my_uart_tx(*buffer++);
-     send_char_dbg(*buffer++);
+ ////    send_char_dbg(*buffer++);
      
     }
     return size;
@@ -22,14 +22,14 @@ size_t __read(int handle, unsigned char * buffer, size_t size)
 {
  ///   UNUSED_PARAMETER(handle);
  ////   UNUSED_PARAMETER(size);
-  *buffer=get_byte_dbg();
+///  *buffer=get_byte_dbg();
 #if 0    
     while (app_uart_get((uint8_t *)buffer) == NRF_ERROR_NOT_FOUND)
     {
         // No implementation needed.
     }
 #endif
-    return 1;
+    return 0;
 }
 extern int rdy_rx_dbg(void) ;
 

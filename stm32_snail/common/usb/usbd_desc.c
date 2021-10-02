@@ -26,16 +26,8 @@ __ALIGN_BEGIN uint8_t USBD_DeviceDesc[USB_SIZ_DEVICE_DESC] __ALIGN_END =
   USB_DEVICE_DESCRIPTOR_TYPE, /*bDescriptorType*/
   0x00,                       /*bcdUSB */
   0x02,
-////#if (USB_CLASS==MSC_CDC)
-////  0xEF,
-////  0x02,
-////#elif (USB_CLASS==MSC)
-////  0x0,
-////  0x0,
-////#else  
   DEVIECE_CLASS,                       /*bDeviceClass*/
   DEVIECE_SUBCLASS,                       /*bDeviceSubClass*/
-////#endif  
 ///  0x00,                       /*bDeviceProtocol*/
   0x01,                       /*bDeviceProtocol*/
   USB_OTG_MAX_EP0_SIZE,      /*bMaxPacketSize*/

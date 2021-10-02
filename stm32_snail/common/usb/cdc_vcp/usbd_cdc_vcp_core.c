@@ -73,13 +73,20 @@
 /*********************************************
    CDC Device library callbacks
  *********************************************/
-static uint8_t  usbd_cdc_Init        (void  *pdev, uint8_t cfgidx);
-static uint8_t  usbd_cdc_DeInit      (void  *pdev, uint8_t cfgidx);
-static uint8_t  usbd_cdc_Setup       (void  *pdev, USB_SETUP_REQ *req);
-static uint8_t  usbd_cdc_EP0_RxReady  (void *pdev);
-static uint8_t  usbd_cdc_DataIn      (void *pdev, uint8_t epnum);
-static uint8_t  usbd_cdc_DataOut     (void *pdev, uint8_t epnum);
-static uint8_t  usbd_cdc_SOF         (void *pdev);
+////static 
+uint8_t  usbd_cdc_Init        (void  *pdev, uint8_t cfgidx);
+////static 
+uint8_t  usbd_cdc_DeInit      (void  *pdev, uint8_t cfgidx);
+////static 
+uint8_t  usbd_cdc_Setup       (void  *pdev, USB_SETUP_REQ *req);
+///static 
+uint8_t  usbd_cdc_EP0_RxReady  (void *pdev);
+////static 
+uint8_t  usbd_cdc_DataIn      (void *pdev, uint8_t epnum);
+////static 
+uint8_t  usbd_cdc_DataOut     (void *pdev, uint8_t epnum);
+////static 
+uint8_t  usbd_cdc_SOF         (void *pdev);
 
 /*********************************************
    CDC specific management functions
@@ -289,11 +296,11 @@ __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_CDC_VCP_CONFIG_DESC_SIZ]  __ALIGN_END
     #pragma data_alignment=4   
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */ 
-__ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_END =
+__ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_VCP_CONFIG_DESC_SIZ]  __ALIGN_END =
 { 
   0x09,   /* bLength: Configuation Descriptor size */
   USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION,   
-  USB_CDC_CONFIG_DESC_SIZ,
+  USB_CDC_VCP_CONFIG_DESC_SIZ,
   0x00,
   0x02,   /* bNumInterfaces: 2 interfaces */
   0x01,   /* bConfigurationValue: */
@@ -397,7 +404,8 @@ __ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_EN
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  usbd_cdc_Init (void  *pdev, 
+////static 
+uint8_t  usbd_cdc_Init (void  *pdev, 
                                uint8_t cfgidx)
 {
   uint8_t *pbuf;
@@ -445,7 +453,8 @@ static uint8_t  usbd_cdc_Init (void  *pdev,
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  usbd_cdc_DeInit (void  *pdev, 
+////static 
+uint8_t  usbd_cdc_DeInit (void  *pdev, 
                                  uint8_t cfgidx)
 {
   /* Open EP IN */
@@ -473,7 +482,8 @@ static uint8_t  usbd_cdc_DeInit (void  *pdev,
   * @param  req: usb requests
   * @retval status
   */
-static uint8_t  usbd_cdc_Setup (void  *pdev, 
+////static 
+uint8_t  usbd_cdc_Setup (void  *pdev, 
                                 USB_SETUP_REQ *req)
 {
   uint16_t len=USB_CDC_VCP_DESC_SIZ;
@@ -573,7 +583,8 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
   * @param  pdev: device device instance
   * @retval status
   */
-static uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
+////static 
+uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
 { 
   if (cdcCmd != NO_CMD)
   {
@@ -604,7 +615,8 @@ static inline uint32_t last_rx_data_size(void *pdev, uint8_t epnum)
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
+////static 
+uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
 {
 	uint16_t USB_Tx_length;
 	if (!USB_Tx_Active)
@@ -671,7 +683,8 @@ extern uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len);
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
+////static 
+uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
 {
 uint32_t USB_Rx_Cnt = last_rx_data_size(pdev, epnum);
 ////VCP_DataRx(USB_Rx_Buffer + USB_Rx_buff_head, USB_Rx_Cnt);        
@@ -720,7 +733,8 @@ static void schedule_cdc_in(void *pdev)
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_SOF (void *pdev)
+////static 
+uint8_t  usbd_cdc_SOF (void *pdev)
 {      
   static uint32_t FrameCount = 0;
   
@@ -744,7 +758,8 @@ static uint8_t  usbd_cdc_SOF (void *pdev)
   * @param  length : pointer data length
   * @retval pointer to descriptor buffer
   */
-static uint8_t  *USBD_cdc_GetCfgDesc (uint8_t speed, uint16_t *length)
+////static 
+uint8_t  *USBD_cdc_GetCfgDesc (uint8_t speed, uint16_t *length)
 {
   *length = sizeof (usbd_cdc_CfgDesc);
   return usbd_cdc_CfgDesc;
@@ -764,16 +779,5 @@ static uint8_t  *USBD_cdc_GetOtherCfgDesc (uint8_t speed, uint16_t *length)
   return usbd_cdc_OtherCfgDesc;
 }
 #endif
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

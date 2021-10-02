@@ -28,6 +28,8 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include "usbd_usr.h"
+#include "printk.h"
+
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
@@ -100,68 +102,6 @@ USBD_Usr_cb_TypeDef USR_cb =
 */
 void USBD_USR_Init(void)
 {
-#if 0  
-  /* Initialize LEDs */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);   
-  
-  /* Configure the IOE on which the JoyStick is connected */
-#if defined(USE_STM324x9I_EVAL)
-  IOE16_Config();
-#else 
-  IOE_Config();
-#endif
-  
-  /* Setup SysTick Timer for 1 msec interrupts 
-  This interrupt is used to probe the joystick */
-  if (SysTick_Config(SystemCoreClock / 1000))
-  { 
-    /* Capture error */ 
-    while (1);
-  } 
-  /* Initialize the LCD */
-#if defined (USE_STM322xG_EVAL)
-  STM322xG_LCD_Init();
-#elif defined(USE_STM324xG_EVAL)
-  STM324xG_LCD_Init();
-  
-#elif defined(USE_STM324x9I_EVAL)
-  
-  LCD_Init();
-  LCD_LayerInit();
-  
-  /* Enable The Display */
-  LCD_DisplayOn(); 
-  /* Connect the Output Buffer to LCD Background Layer  */
-  LCD_SetLayer(LCD_FOREGROUND_LAYER);
-  
-  /* Clear the Background Layer */ 
-  LCD_Clear(LCD_COLOR_WHITE);
-  
-#elif defined (USE_STM3210C_EVAL)
-  STM3210C_LCD_Init();
-#else
- #error "Missing define: Evaluation board (ie. USE_STM322xG_EVAL)"
-#endif
-
-  LCD_LOG_Init();
-
-#ifdef USE_USB_OTG_HS 
-  LCD_LOG_SetHeader((uint8_t*)" OTG HS CDC-HID Device");
-#else
-  LCD_LOG_SetHeader((uint8_t*)" OTG FS CDC-HID Device");
-#endif
-  LCD_UsrLog("> USB device library started.\n"); 
-  LCD_LOG_SetFooter ((uint8_t*)"     USB Device Library v1.2.0" );
-  
-  /* Information panel */
-  LCD_SetTextColor(Green);
-  LCD_DisplayStringLine( LCD_PIXEL_HEIGHT - 42, USER_INFORMATION1);
-  LCD_DisplayStringLine( LCD_PIXEL_HEIGHT - 30, USER_INFORMATION2);
-  LCD_SetTextColor(LCD_LOG_DEFAULT_COLOR);
-#endif  
 }
 
 /**
@@ -198,7 +138,7 @@ void USBD_USR_DeviceReset(uint8_t speed )
 void USBD_USR_DeviceConfigured (void)
 {
 ////  LCD_UsrLog("> HID Interface started.\n");
-///  LCD_UsrLog("> CDC Interface started.\n");
+printk("> CDC Interface started.\n");
 }
 
 
@@ -210,7 +150,7 @@ void USBD_USR_DeviceConfigured (void)
 */
 void USBD_USR_DeviceConnected (void)
 {
- //// LCD_UsrLog("> USB Device Connected.\n");
+printk("> USB Device Connected.\n");
 }
 
 
@@ -222,7 +162,7 @@ void USBD_USR_DeviceConnected (void)
 */
 void USBD_USR_DeviceDisconnected (void)
 {
-////  LCD_UsrLog("> USB Device Disconnected.\n");
+printk("> USB Device Disconnected.\n");
 }
 
 /**
@@ -233,7 +173,7 @@ void USBD_USR_DeviceDisconnected (void)
 */
 void USBD_USR_DeviceSuspended(void)
 {
- //// LCD_UsrLog("> USB Device in Suspend Mode.\n");
+////printk("> USB Device in Suspend Mode.\n");
   /* Users can do their application actions here for the USB-Reset */
 }
 
@@ -246,7 +186,7 @@ void USBD_USR_DeviceSuspended(void)
 */
 void USBD_USR_DeviceResumed(void)
 {
-  ///  LCD_UsrLog("> USB Device in Idle Mode.\n");
+printk("> USB Device in Idle Mode.\n");
   /* Users can do their application actions here for the USB-Reset */
 }
 
