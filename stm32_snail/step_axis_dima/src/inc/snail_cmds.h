@@ -12,6 +12,7 @@
 #define STOP_Z          0x30
 #define GOTO_Z          0x31
 #define SET_SPD_Z       0x32
+////======================================
 ////============= CAN ====================
 #define SET_STOP_ALL    0x10             ////Avaria
 #define SET_STOP        0x11             ///
@@ -26,4 +27,13 @@
 #define PUT_STATE_Z    0x102             ////
 
 ////======================================
+typedef struct step_cmd_s_
+{
+uint16_t steps;
+uint16_t b_speed;
+uint16_t e_speed;
+uint16_t flags;
+}step_cmd_t;
+
+
 #endif

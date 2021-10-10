@@ -28,6 +28,8 @@
 
 #include "my_grbl.h"
 
+extern uint8_t serial_get_rx_buffer_available();
+extern uint8_t system_control_get_state();
 
 // Internal report utilities to reduce flash with repetitive tasks turned into functions.
 void report_util_setting_prefix(uint8_t n) { serial_write('$'); print_uint8_base10(n); serial_write('='); }

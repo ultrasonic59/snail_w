@@ -20,6 +20,7 @@
 */
 
 #include "my_grbl.h"
+
 #if 0
 ////typedef int bool;
 #include "stm32f10x_rcc.h"
@@ -28,7 +29,11 @@
 
 #include "misc.h"
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
+#endif
 
+#define X_DIRECTION_BIT 3
+#define Y_DIRECTION_BIT 4
+#define Z_DIRECTION_BIT 5
 
 // Some useful constants.
 #define DT_SEGMENT (1.0f/(ACCELERATION_TICKS_PER_SECOND*60.0f)) // min/segment
@@ -55,6 +60,9 @@ const PORTPINDEF direction_pin_mask[N_AXIS] =
 	1 << Y_DIRECTION_BIT,
 	1 << Z_DIRECTION_BIT,
 };
+
+#if 0
+
 #if 0
 const PORTPINDEF limit_pin_mask[N_AXIS] =
 {
@@ -674,9 +682,15 @@ void st_prep_buffer()
     if (pl_block == NULL) {
 
       // Query planner for a queued block
-      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) { pl_block = plan_get_system_motion_block(); }
-      else { pl_block = plan_get_current_block(); }
-      if (pl_block == NULL) { return; } // No planner blocks. Exit.
+      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) { 
+        pl_block = plan_get_system_motion_block(); 
+        }
+      else { 
+        pl_block = plan_get_current_block(); 
+        }
+      if (pl_block == NULL) { // No planner blocks. Exit.
+        return; 
+        } 
 
       // Check if we need to only recompute the velocity profile or load a new block.
       if (prep.recalculate_flag & PREP_FLAG_RECALCULATE) {

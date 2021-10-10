@@ -21,6 +21,10 @@ while (!(UART_DBG->SR & 0x0080));
 UART_DBG->DR = (c & 0x1FF);
 return (c);
 }
+void _putk(char ch)
+{
+send_char_dbg(ch);
+}
 
 int get_byte_dbg (void) 
 {

@@ -67,6 +67,10 @@
 #define bit_istrue(x,mask) ((x & mask) != 0)
 #define bit_isfalse(x,mask) ((x & mask) == 0)
 ////============================================
+#define LINE_FLAG_OVERFLOW bit(0)
+#define LINE_FLAG_COMMENT_PARENTHESES bit(1)
+#define LINE_FLAG_COMMENT_SEMICOLON bit(2)
+////=============================================
 #define PSTR(x) x
 #define pgm_read_byte_near(x) *(x)
 void _delay_ms(uint32_t x);

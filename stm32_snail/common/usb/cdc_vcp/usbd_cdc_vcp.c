@@ -257,7 +257,7 @@ return 0;
 ////TaskHandle_t  vcp_rx_thread_handle;
 ///TaskHandle_t  vcp_tx_thread_handle;
 TaskHandle_t  vcp_thread_handle;
-
+#if 0
 ////static 
 uint16_t _VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
@@ -277,6 +277,8 @@ for(ii=0;ii<Len;ii++)
 ////VCP_MarkRead(Len);
 return USBD_OK;
 }
+#endif
+
 extern int serial_read_tx(void);
 extern uint8_t serial_get_tx_buffer_count(void);
 

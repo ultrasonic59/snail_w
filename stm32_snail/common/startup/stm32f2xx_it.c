@@ -335,6 +335,7 @@ if (CAN1->TSR & CAN_TSR_RQCP0)          /* request completed mbx 0        */
 #endif
 
 ///==================================================
+#ifdef USEUSB
 
 #include "usb_core.h"
 #include "FreeRTOS.h"
@@ -382,5 +383,5 @@ void OTG_HS_EP1_OUT_IRQHandler(void)
 {
   USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
 }
-
+#endif  /// USEUSB
 #endif

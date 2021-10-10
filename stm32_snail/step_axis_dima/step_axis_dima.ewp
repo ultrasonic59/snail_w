@@ -361,6 +361,7 @@
                     <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\common\usb\drv\inc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1222,6 +1223,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common\grbl\stepper.c</name>
+            <excluded>
+                <configuration>step_x_dbg</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\grbl\system.c</name>
