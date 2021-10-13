@@ -4,6 +4,7 @@
 #include "printk.h"
 #include "my_grbl.h"
 #include "grbl_sys.h"
+#include "my_stepper.h"
 
 extern uint8_t serial_read_rx(void);
 extern uint8_t serial_get_rx_buffer_available();
@@ -39,6 +40,12 @@ uint8_t line_flags = 0;
 uint8_t char_counter = 0;
 uint8_t cc;
 printk("\n\r grbl_thread\n\r"); 
+////  serial_init();   // Setup serial baud rate and interrupts
+////  settings_init(); // Load Grbl settings from EEPROM
+  stepper_init();  // Configure stepper pins and interrupt timers
+////  system_init();   // Configure pinout pins and pin-change interrupt
+
+  memset(sys_position,0,sizeof(sys_position)); // Clear machine position.
 
 for (;;) 
   {

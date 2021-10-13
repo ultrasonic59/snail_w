@@ -2227,6 +2227,9 @@
             <name>$PROJ_DIR$\src\my_grbl\my_gbrl_serial.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\src\my_grbl\my_stepper.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\src\my_grbl\nuts_bolts.c</name>
         </file>
         <file>
@@ -2252,6 +2255,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\stepper.c</name>
+            <excluded>
+                <configuration>usb_can_dima</configuration>
+            </excluded>
         </file>
     </group>
     <group>

@@ -366,17 +366,19 @@ void st_go_idle()
 // with probing and homing cycles that require true real-time positions.
 void TIM2_IRQHandler(void)
 {
-	if ((TIM2->SR & 0x0001) != 0)                  // check interrupt source
-	{
-		TIM2->SR &= ~(1 << 0);                          // clear UIF flag
-		TIM2->CNT = 0;
-	}
-	else
-	{
-		return;
-	}
+if ((TIM2->SR & 0x0001) != 0)                  // check interrupt source
+  {
+  TIM2->SR &= ~(1 << 0);                          // clear UIF flag
+  TIM2->CNT = 0;
+  }
+else
+  {
+  return;
+  }
 
-  if (busy) { return; } // The busy-flag is used to avoid reentering this interrupt
+  if (busy) { // The busy-flag is used to avoid reentering this interrupt
+    return; 
+    } 
   GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 
