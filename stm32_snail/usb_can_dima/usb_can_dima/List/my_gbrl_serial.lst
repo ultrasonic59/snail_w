@@ -1,0 +1,335 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         16/Oct/2021  20:54:57
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\my_gbrl_serial.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW1E08.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\my_gbrl_serial.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List\my_gbrl_serial.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj\my_gbrl_serial.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\my_gbrl_serial.c
+      1          #include <stdint.h>
+      2          #include "my_grbl.h"
+      3          #include "printk.h"
+      4          
+      5          #define RX_RING_BUFFER (RX_BUFFER_SIZE)
+      6          #define TX_RING_BUFFER (TX_BUFFER_SIZE)
+      7          
+      8          uint8_t serial_rx_buffer[RX_RING_BUFFER];
+      9          uint8_t serial_rx_buffer_head = 0;
+     10          volatile uint8_t serial_rx_buffer_tail = 0;
+     11          
+     12          uint8_t serial_tx_buffer[TX_RING_BUFFER];
+     13          uint8_t serial_tx_buffer_head = 0;
+     14          volatile uint8_t serial_tx_buffer_tail = 0;
+     15          
+     16          
+     17          // Returns the number of bytes available in the RX serial buffer.
+     18          uint8_t serial_get_rx_buffer_available()
+     19          {
+     20            uint8_t rtail = serial_rx_buffer_tail; // Copy to limit multiple calls to volatile
+     21            if (serial_rx_buffer_head >= rtail) { return(RX_BUFFER_SIZE - (serial_rx_buffer_head-rtail)); }
+     22            return((rtail-serial_rx_buffer_head-1));
+     23          }
+     24          
+     25          
+     26          // Returns the number of bytes used in the RX serial buffer.
+     27          // NOTE: Deprecated. Not used unless classic status reports are enabled in config.h.
+     28          uint8_t serial_get_rx_buffer_count()
+     29          {
+     30            uint8_t rtail = serial_rx_buffer_tail; // Copy to limit multiple calls to volatile
+     31            if (serial_rx_buffer_head >= rtail) { return(serial_rx_buffer_head-rtail); }
+     32            return (RX_BUFFER_SIZE - (rtail-serial_rx_buffer_head));
+     33          }
+     34          
+     35          
+     36          // Returns the number of bytes used in the TX serial buffer.
+     37          // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
+     38          uint8_t serial_get_tx_buffer_count(void)
+     39          {
+     40            uint8_t ttail = serial_tx_buffer_tail; // Copy to limit multiple calls to volatile
+     41            if (serial_tx_buffer_head >= ttail) { return(serial_tx_buffer_head-ttail); }
+     42            return (TX_RING_BUFFER - (ttail-serial_tx_buffer_head));
+     43          }
+     44          
+     45          
+     46          // Writes one byte to the TX serial buffer. Called by main program.
+     47          void serial_write(uint8_t data) {
+     48            // Calculate next head
+     49          uint8_t next_head = serial_tx_buffer_head + 1;
+     50          ////printk("%c",data);
+     51          if (next_head == TX_RING_BUFFER) { 
+     52              next_head = 0; 
+     53            }
+     54          
+     55            // Wait until there is space in the buffer
+     56            while (next_head == serial_tx_buffer_tail) {
+     57              // TODO: Restructure st_prep_buffer() calls to be executed here during a long print.
+     58              if (sys_rt_exec_state & EXEC_RESET) { 
+     59                return; 
+     60                } // Only check for abort to avoid an endless loop.
+     61              ;
+     62            }
+     63          
+     64            // Store data and advance head
+     65            serial_tx_buffer[serial_tx_buffer_head] = data;
+     66          
+     67           serial_tx_buffer_head = next_head;
+     68          }
+     69          
+     70          // Fetches the first byte in the serial read buffer. Called by main program.
+     71          uint8_t serial_read_rx(void)
+     72          {
+     73           uint8_t tail = serial_rx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
+     74            if (serial_rx_buffer_head == tail) {
+     75              return SERIAL_NO_DATA;
+     76            } else {
+     77              uint8_t data = serial_rx_buffer[tail];
+     78          
+     79              tail++;
+     80              if (tail == RX_RING_BUFFER) { 
+     81                tail = 0; 
+     82                }
+     83              serial_rx_buffer_tail = tail;
+     84          
+     85              return data;
+     86            }
+     87          }
+     88          int serial_read_tx(void)
+     89          {
+     90          uint8_t tail = serial_tx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
+     91            if (serial_tx_buffer_head == tail) {
+     92              return -1;
+     93            } else {
+     94              uint8_t data = serial_tx_buffer[tail];
+     95              tail++;
+     96              if (tail == TX_RING_BUFFER) { 
+     97                tail = 0; 
+     98                }
+     99              serial_tx_buffer_tail = tail;
+    100              return data;
+    101            }
+    102          }
+    103          extern int send_char_dbg(int ch); 
+    104          
+    105          ////===================================================================
+    106          void OnUsbDataRx(uint8_t* data_in, uint16_t length)
+    107          {
+    108          	//lcd_write_char(*dataIn);
+    109          uint8_t next_head;
+    110          uint8_t data;
+    111          uint16_t ii=0;
+    112          //// Write data to buffer unless it is full.
+    113          while (length != 0){
+    114            data = *(data_in+ii);
+    115            ////====================================
+    116           ///     send_char_dbg(data);
+    117          ////  printk("[%x]",data);
+    118            ////====================================
+    119            ii++;
+    120            // Pick off realtime command characters directly from the serial stream. These characters are
+    121            // not passed into the main buffer, but these set system state flag bits for realtime execution.
+    122            switch (data) {
+    123              case CMD_RESET:     // Call motion control reset routine.    
+    124                mc_reset(); 
+    125                break; 
+    126              case CMD_STATUS_REPORT: 
+    127                system_set_exec_state_flag(EXEC_STATUS_REPORT); 
+    128                break; // 
+    129              case CMD_CYCLE_START:   
+    130                system_set_exec_state_flag(EXEC_CYCLE_START); 
+    131                break; // 
+    132              case CMD_FEED_HOLD:     
+    133                system_set_exec_state_flag(EXEC_FEED_HOLD); 
+    134                break; // 
+    135              default :
+    136                if (data > 0x7F) { // Real-time control characters are extended ACSII only.
+    137                  switch(data) {
+    138                    case CMD_SAFETY_DOOR:   
+    139                      system_set_exec_state_flag(EXEC_SAFETY_DOOR); 
+    140                      break; // Set as true
+    141                    case CMD_JOG_CANCEL:   
+    142                      if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
+    143                        system_set_exec_state_flag(EXEC_MOTION_CANCEL); 
+    144                      }
+    145                      break; 
+    146                    #ifdef DEBUG
+    147                     case CMD_DEBUG_REPORT: 
+    148                       {
+    149           ////???              uint8_t sreg = SREG; 
+    150           ////???                cli(); 
+    151            ////???               bit_true(sys_rt_exec_debug,EXEC_DEBUG_REPORT); 
+    152            ////???               SREG = sreg;
+    153                       } break;
+    154                    #endif
+    155                    case CMD_FEED_OVR_RESET: 
+    156                      system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET); 
+    157                      break;
+    158                    case CMD_FEED_OVR_COARSE_PLUS: 
+    159                      system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS); 
+    160                      break;
+    161                    case CMD_FEED_OVR_COARSE_MINUS: 
+    162                      system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS); 
+    163                      break;
+    164                    case CMD_FEED_OVR_FINE_PLUS: 
+    165                      system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS); 
+    166                      break;
+    167                    case CMD_FEED_OVR_FINE_MINUS: 
+    168                      system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS); 
+    169                      break;
+    170                    case CMD_RAPID_OVR_RESET: 
+    171                      system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET); 
+    172                      break;
+    173                    case CMD_RAPID_OVR_MEDIUM: 
+    174                      system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM); 
+    175                      break;
+    176                    case CMD_RAPID_OVR_LOW: 
+    177                      system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW); 
+    178                      break;
+    179                    case CMD_SPINDLE_OVR_RESET: 
+    180                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET); 
+    181                      break;
+    182                    case CMD_SPINDLE_OVR_COARSE_PLUS: 
+    183                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS); 
+    184                      break;
+    185                    case CMD_SPINDLE_OVR_COARSE_MINUS: 
+    186                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS); 
+    187                      break;
+    188                    case CMD_SPINDLE_OVR_FINE_PLUS: 
+    189                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS); 
+    190                      break;
+    191                    case CMD_SPINDLE_OVR_FINE_MINUS: 
+    192                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS); 
+    193                      break;
+    194                    case CMD_SPINDLE_OVR_STOP: 
+    195                      system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP); 
+    196                      break;
+    197                    case CMD_COOLANT_FLOOD_OVR_TOGGLE: 
+    198                      system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE); 
+    199                      break;
+    200                    #ifdef ENABLE_M7
+    201                      case CMD_COOLANT_MIST_OVR_TOGGLE: 
+    202                        system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); 
+    203                        break;
+    204                    #endif
+    205                  }
+    206                  // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
+    207                } else { // Write character to buffer
+    208                  next_head = serial_rx_buffer_head + 1;
+    209                  if (next_head == RX_RING_BUFFER) { next_head = 0; }
+    210          
+    211                  // Write data to buffer unless it is full.
+    212                  if (next_head != serial_rx_buffer_tail) {
+    213                    serial_rx_buffer[serial_rx_buffer_head] = data;
+    214                    serial_rx_buffer_head = next_head;
+    215                  }
+    216                }
+    217            }
+    218              length--;
+    219             }
+    220          }
+    221          ///=========================================================================
+    222          void serial_reset_read_buffer(void)
+    223          {
+    224            serial_rx_buffer_tail = serial_rx_buffer_head;
+    225          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   OnUsbDataRx
+        24   -> mc_reset
+        24   -> system_set_exec_accessory_override_flag
+        24   -> system_set_exec_motion_override_flag
+        24   -> system_set_exec_state_flag
+       0   serial_get_rx_buffer_available
+       0   serial_get_rx_buffer_count
+       0   serial_get_tx_buffer_count
+       0   serial_read_rx
+       0   serial_read_tx
+       0   serial_reset_read_buffer
+       4   serial_write
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+     360  OnUsbDataRx
+      38  serial_get_rx_buffer_available
+      36  serial_get_rx_buffer_count
+      36  serial_get_tx_buffer_count
+      48  serial_read_rx
+      50  serial_read_tx
+      10  serial_reset_read_buffer
+     256  serial_rx_buffer
+       1  serial_rx_buffer_head
+       1  serial_rx_buffer_tail
+     128  serial_tx_buffer
+       1  serial_tx_buffer_head
+       1  serial_tx_buffer_tail
+      54  serial_write
+
+ 
+ 388 bytes in section .bss
+ 664 bytes in section .text
+ 
+ 664 bytes of CODE memory
+ 388 bytes of DATA memory
+
+Errors: none
+Warnings: none

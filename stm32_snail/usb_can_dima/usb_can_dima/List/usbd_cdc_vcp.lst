@@ -1,0 +1,594 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         16/Oct/2021  20:55:00
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\common\usb\cdc_vcp\usbd_cdc_vcp.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW2776.tmp
+#        (D:\proj\velograph\snail\stm32_snail\common\usb\cdc_vcp\usbd_cdc_vcp.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List\usbd_cdc_vcp.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj\usbd_cdc_vcp.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\common\usb\cdc_vcp\usbd_cdc_vcp.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    usbd_cdc_vcp.c
+      4            * @author  MCD Application Team
+      5            * @version V1.2.0
+      6            * @date    09-November-2015
+      7            * @brief   Generic media access Layer.
+      8            ******************************************************************************
+      9            * @attention
+     10            *
+     11            * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+     12            *
+     13            * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+     14            * You may not use this file except in compliance with the License.
+     15            * You may obtain a copy of the License at:
+     16            *
+     17            *        http://www.st.com/software_license_agreement_liberty_v2
+     18            *
+     19            * Unless required by applicable law or agreed to in writing, software 
+     20            * distributed under the License is distributed on an "AS IS" BASIS, 
+     21            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     22            * See the License for the specific language governing permissions and
+     23            * limitations under the License.
+     24            *
+     25            ******************************************************************************
+     26            */ 
+     27          #include <stdlib.h>
+     28          #include <string.h>
+     29          #include "usbd_conf.h"
+     30          #include "usbd_desc.h"
+     31          
+     32          #include "FreeRTOS.h"
+     33          #include "task.h"
+     34          #include "semphr.h"
+     35          ////#include "my_misc.h"
+     36          #include "_hdlc.h"
+     37          #include "printk.h"
+     38          #include "min_max.h"
+     39          #include "ring_buff.h"
+     40          #include "can.h"
+     41          extern int send_char_dbg(int ch); 
+     42          
+     43          #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
+     44          
+     45          #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED 
+     46          #pragma     data_alignment = 4 
+     47          #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
+     48          
+     49          #include "usbd_cdc_vcp.h"
+     50          hdlc_stat_t g_hdlc_vcp;
+     51          #if 0
+     52          /* Private typedef -----------------------------------------------------------*/
+     53          /* Private define ------------------------------------------------------------*/
+     54          /* Private macro -------------------------------------------------------------*/
+     55          /* Private variables ---------------------------------------------------------*/
+     56          LINE_CODING linecoding =
+     57            {
+     58              115200, /* baud rate*/
+     59              0x00,   /* stop bits-1*/
+     60              0x00,   /* parity - none*/
+     61              0x08    /* nb. of bits 8*/
+     62            };
+     63          
+     64          
+     65          USART_InitTypeDef USART_InitStructure;
+     66          #endif
+     67          
+     68          /* These are external variables imported from CDC core to be used for IN 
+     69             transfer management. */
+     70          extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
+     71                                               These data will be sent over USB IN endpoint
+     72                                               in the CDC core functions. */
+     73          extern uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
+     74                                               start address when writing received data
+     75                                               in the buffer APP_Rx_Buffer. */
+     76          
+     77          /* Private function prototypes -----------------------------------------------*/
+     78          static uint16_t VCP_Init     (void);
+     79          static uint16_t VCP_DeInit   (void);
+     80          static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
+     81          ////static uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
+     82          ////static 
+     83          ////uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
+     84          
+     85          ///static uint16_t VCP_COMConfig(uint8_t Conf);
+     86          
+     87          CDC_IF_Prop_TypeDef VCP_fops = 
+     88          {
+     89            VCP_Init,
+     90            VCP_DeInit,
+     91            VCP_Ctrl,
+     92            0,
+     93            0
+     94          ///  VCP_DataTx,
+     95          ///  VCP_DataRx
+     96          };
+     97          
+     98          static uint16_t VCP_Init(void)
+     99          {
+    100            return USBD_OK;
+    101          }
+    102          static uint16_t VCP_DeInit(void)
+    103          {
+    104            return USBD_OK;
+    105          }
+    106          
+    107          static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
+    108          { 
+    109            return USBD_OK;
+    110          }
+    111          #if 0
+    112          /**
+    113            * @brief  VCP_DataTx
+    114            *         CDC received data to be send over USB IN endpoint are managed in 
+    115            *         this function.
+    116            * @param  Buf: Buffer of data to be sent
+    117            * @param  Len: Number of data to be sent (in bytes)
+    118            * @retval Result of the operation: USBD_OK if all operations are OK else VCP_FAIL
+    119            */
+    120          static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
+    121          {
+    122            return USBD_OK;
+    123          }
+    124          #endif
+    125          ///=========================================
+    126          /*
+    127           * VCP data Rx/Tx API
+    128           */
+    129          
+    130          void VCP_MarkRead(unsigned sz)
+    131          {
+    132          	atomic_t a = atomic_begin();
+    133          	USB_Rx_buff_tail = ring_wrap(USB_Rx_buff_size, USB_Rx_buff_tail + sz);
+    134          	atomic_end(a);
+    135          }
+    136          
+    137          void VCP_MarkWritten(unsigned sz)
+    138          {
+    139          	atomic_t a = atomic_begin();
+    140          	USB_Tx_buff_head = ring_wrap(USB_TX_BUFF_SIZE, USB_Tx_buff_head + sz);
+    141          	atomic_end(a);
+    142          }
+    143          
+    144          unsigned VCP_DataAvail(void)
+    145          {
+    146          	atomic_t a = atomic_begin();
+    147          	unsigned sz = ring_data_avail(USB_Rx_buff_size, USB_Rx_buff_head, USB_Rx_buff_tail);
+    148          	atomic_end(a);
+    149          	return sz;
+    150          }
+    151          
+    152          unsigned VCP_SpaceAvail(void)
+    153          {
+    154          	atomic_t a = atomic_begin();
+    155          	unsigned sz = ring_space_avail(USB_TX_BUFF_SIZE, USB_Tx_buff_head, USB_Tx_buff_tail);
+    156          	atomic_end(a);
+    157          	return sz;
+    158          }
+    159          
+    160          unsigned VCP_DataAvailContig(void)
+    161          {
+    162          	atomic_t a = atomic_begin();
+    163          	unsigned sz = ring_data_contig(USB_Rx_buff_size, USB_Rx_buff_head, USB_Rx_buff_tail);
+    164          	atomic_end(a);
+    165          	return sz;
+    166          }
+    167          
+    168          unsigned VCP_SpaceAvailContig(void)
+    169          {
+    170          	atomic_t a = atomic_begin();
+    171          	unsigned sz = ring_space_contig(USB_TX_BUFF_SIZE, USB_Tx_buff_head, USB_Tx_buff_tail);
+    172          	atomic_end(a);
+    173          	return sz;
+    174          }
+    175          
+    176          unsigned VCP_GetContig(void* buff, unsigned max_len)
+    177          {
+    178          	unsigned avail = VCP_DataAvailContig();
+    179          	unsigned sz = MIN_(avail, max_len);
+    180          	if (sz) {
+    181          		memcpy(buff, VCP_DataPtr(), sz);
+    182          		VCP_MarkRead(sz);
+    183          	}
+    184          	return sz;
+    185          }
+    186          
+    187          unsigned VCP_PutContig(void const* buff, unsigned len)
+    188          {
+    189          unsigned avail = VCP_SpaceAvailContig();
+    190          unsigned sz = MIN_(avail, len);
+    191          if (sz) 
+    192            {
+    193            memcpy(VCP_SpacePtr(), buff, sz);
+    194            VCP_MarkWritten(sz);
+    195            }
+    196          return sz;
+    197          }
+    198          
+    199          ///==========================================
+    200          
+    201          #if 0
+    202          void hdlc_vcp_send_byte(u8 val)
+    203          {
+    204          ///u8 btmp = val;
+    205          APP_Rx_Buffer[APP_Rx_ptr_in]=val;
+    206          APP_Rx_ptr_in++;
+    207          if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+    208            {
+    209            APP_Rx_ptr_in = 0;
+    210            }  
+    211          ////xQueueSend(g_hdlc_bt.ua_snd_dat, &btmp, portMAX_DELAY);
+    212          /////on_int_tx_uart_bt();
+    213          ///_printk("[%x]",APP_Rx_ptr_in);
+    214          
+    215          }
+    216          #else
+    217          void hdlc_vcp_send_byte(u8 val)
+    218          {
+    219          int num;  
+    220          u8 btmp=val;
+    221          for(;;)
+    222          {
+    223           num= VCP_PutContig(&btmp,1);
+    224           if(num)
+    225             break;
+    226           msleep(1);
+    227          }
+    228          }
+    229          #endif
+    230          
+    231          #if 0
+    232          uint8_t hdlc_vcp_send_frame(uint8_t *buff,uint16_t len)
+    233          {
+    234          #if 1
+    235          uint16_t ii;
+    236          
+    237          for(ii=0;ii<len;ii++)
+    238          {
+    239          APP_Rx_Buffer[APP_Rx_ptr_in]=buff[ii]; 
+    240          if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+    241            {
+    242            APP_Rx_ptr_in = 0;
+    243            }  
+    244          
+    245          }
+    246          ///memcpy(APP_Rx_Buffer,buff,len);  
+    247          #endif
+    248          return 0;
+    249          }
+    250          #endif
+    251          ///==========================================
+    252          ////extern u16     hdlc_bt_get_req_dat(u8 num_req,u8 *buf);
+    253          ////extern int hdlc_bt_set_rec_dat(u8 cmd, void *in_buf);
+    254          ////extern int hdlc_bt_get_rez(u8 type_rez,void *obuf);
+    255          ////extern TaskHandle_t  my_system_monitor_thread_handle;
+    256          
+    257          ////TaskHandle_t  vcp_rx_thread_handle;
+    258          ///TaskHandle_t  vcp_tx_thread_handle;
+    259          TaskHandle_t  vcp_thread_handle;
+    260          #if 0
+    261          ////static 
+    262          uint16_t _VCP_DataRx (uint8_t* Buf, uint32_t Len)
+    263          {
+    264          ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    265          uint8_t ch;
+    266          int ii;
+    267          ///VCP_MarkRead(Len);
+    268          for(ii=0;ii<Len;ii++)
+    269            {
+    270            ch = Buf[ii];
+    271            if (hdlc1_on_bytein(&g_hdlc_vcp, ch) > 0)
+    272              {
+    273              xQueueSend(g_hdlc_vcp.ev_rsv_frame, &ch,TIMEOUT_SEND);
+    274          ///    xQueueSendFromISR(g_hdlc_vcp.ev_rsv_frame, &ch, &xHigherPriorityTaskWoken);
+    275              }
+    276            }
+    277          ////VCP_MarkRead(Len);
+    278          return USBD_OK;
+    279          }
+    280          #endif
+    281          
+    282          extern int serial_read_tx(void);
+    283          extern uint8_t serial_get_tx_buffer_count(void);
+    284          
+    285          extern void OnUsbDataRx(uint8_t* data_in, uint16_t length);
+    286          #define MAX_LEN_RD_DAT 256
+    287          ////===================================
+    288          void vcp_thread(void *pdata)
+    289          {
+    290          ///uint8_t on_sleep=0;
+    291          uint8_t rd_dat[MAX_LEN_RD_DAT];  
+    292          uint32_t ii; 
+    293          uint32_t sz; 
+    294          int t_dat;
+    295          uint8_t rd_tdat;
+    296          printk("\n\r vcp_Thread\n\r"); 
+    297          
+    298          #if 1  
+    299          for (;;) 
+    300          {
+    301          sz  = VCP_DataAvailContig();
+    302          while (sz)
+    303            {
+    304            if (sz > MAX_LEN_RD_DAT)
+    305              {
+    306              VCP_GetContig(rd_dat,MAX_LEN_RD_DAT);
+    307              OnUsbDataRx(rd_dat,MAX_LEN_RD_DAT); 
+    308              sz-=MAX_LEN_RD_DAT;
+    309              }
+    310            else
+    311              {
+    312              VCP_GetContig(rd_dat,sz);
+    313              OnUsbDataRx(rd_dat,sz); 
+    314              sz=0;
+    315              }
+    316          #if 0  
+    317            for(ii=0;ii<sz;ii++)
+    318              {
+    319              VCP_GetContig(&rd_dat,1);
+    320           ////   rd_dat++;
+    321              ////=====================================
+    322              send_char_dbg(rd_dat);
+    323              ////==========================================
+    324             VCP_PutContig(&rd_dat,1);
+    325              }
+    326          #endif  
+    327          //// on_sleep=0;
+    328            }
+    329          sz  =  serial_get_tx_buffer_count();
+    330          if(sz)
+    331          {
+    332          for(ii=0;ii<sz;ii++)
+    333            {
+    334            t_dat=serial_read_tx();  
+    335            if(t_dat>0)
+    336              {
+    337              rd_tdat=t_dat;
+    338              VCP_PutContig(&rd_tdat,1);
+    339              }
+    340              
+    341            }
+    342          }
+    343          #if 0
+    344          if(CAN_RxRdy)
+    345            {
+    346              
+    347            on_sleep=0;  
+    348            }
+    349          if(on_sleep)
+    350            {
+    351            msleep(1);
+    352            }
+    353          #endif
+    354          }
+    355          #endif
+    356          }
+    357          
+    358          ////===================================
+    359          
+    360          extern u16	pc_get_req_dat(u8 num_req,u16 offs,u8 *buf);
+    361          extern int      pc_set_rec_dat(u8 cmd,void *in_buf);
+    362          ///u8 addr= *((u8*)pdata);
+    363          volatile int vtmp;
+    364          ///=======================
+    365          #if 0
+    366          void init_hdlc_vcp(void)
+    367          {
+    368          BaseType_t rez;  
+    369          g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
+    370          ////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
+    371          g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
+    372          g_hdlc_vcp.fn_get_req_dat=pc_get_req_dat;////hdlc_bt_get_req_dat;
+    373          g_hdlc_vcp.ua_snd_dat=xQueueCreate(512,sizeof(unsigned char));		//8192
+    374          g_hdlc_vcp.ev_rsv_ack=xQueueCreate(1,1);
+    375          g_hdlc_vcp.ev_rsv_dat=xQueueCreate(1,1);
+    376          g_hdlc_vcp.ev_rsv_frame=xQueueCreate(1,1);
+    377          g_hdlc_vcp.ev_snd_frame=xQueueCreate(16, sizeof(uint32_t));
+    378          hdlc1_init(&g_hdlc_vcp);
+    379          
+    380          rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+    381          
+    382          rez=xTaskCreate(hdlc1_obr_frame, (const char*)"HDLC_vcp_rx",VCP_RX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_rx_thread_handle);
+    383          rez=xTaskCreate(hdlc1_snd_task, (const char*)"HDLC_vcp_tx", VCP_TX_STACK_SIZE, (void*)&g_hdlc_vcp, APP_PRIORITY, &vcp_tx_thread_handle);
+    384          vtmp=rez;
+    385          ///put_tst1(0);
+    386          }
+    387          #endif
+    388          ///======================================  
+    389          ////static uint8_t flg_usb_on=0;
+    390          ///======================================  
+    391          void on_off_usb_thr(uint8_t on_off)
+    392          {
+    393          
+    394          #if 0  
+    395          if(on_off&0x1)
+    396            {
+    397            if(flg_usb_on)
+    398              return;
+    399            flg_usb_on=1;
+    400          ////  put_tst1(1);
+    401           vTaskResume(vcp_rx_thread_handle);
+    402           vTaskResume(vcp_tx_thread_handle);
+    403           vTaskResume(vcp_thread_handle);
+    404          
+    405            }
+    406          else
+    407            {
+    408            if(!flg_usb_on)
+    409              return;
+    410            flg_usb_on=0;
+    411            vTaskSuspend(vcp_rx_thread_handle);
+    412            vTaskSuspend(vcp_tx_thread_handle);
+    413            vTaskSuspend(vcp_thread_handle);
+    414          ///  put_tst1(0);
+    415            }
+    416          #endif
+    417          }
+    418          ///======================================  
+    419          #endif ///(USB_CLASS == CDC_VCP)
+    420          ///======================================  
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   VCP_Ctrl
+      16   VCP_DataAvail
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_data_avail
+      16   VCP_DataAvailContig
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_data_contig
+       0   VCP_DataPtr
+       0   VCP_DeInit
+      32   VCP_GetContig
+        32   -> VCP_DataAvailContig
+        32   -> VCP_DataPtr
+        32   -> VCP_MarkRead
+        32   -> __aeabi_memcpy
+       0   VCP_Init
+      16   VCP_MarkRead
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_wrap
+      16   VCP_MarkWritten
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_wrap
+      32   VCP_PutContig
+        32   -> VCP_MarkWritten
+        32   -> VCP_SpaceAvailContig
+        32   -> VCP_SpacePtr
+        32   -> __aeabi_memcpy
+      16   VCP_SpaceAvail
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_space_avail
+      16   VCP_SpaceAvailContig
+        16   -> atomic_begin
+        16   -> atomic_end
+        16   -> ring_space_contig
+       0   VCP_SpacePtr
+       0   atomic_begin
+       0   atomic_end
+      16   hdlc_vcp_send_byte
+        16   -> VCP_PutContig
+        16   -> vTaskDelay
+       0   on_off_usb_thr
+       0   ring_data_avail
+       0   ring_data_contig
+      16   ring_space_avail
+        16   -> ring_data_avail
+       0   ring_space_contig
+       0   ring_wrap
+     288   vcp_thread
+       288   -> OnUsbDataRx
+       288   -> VCP_DataAvailContig
+       288   -> VCP_GetContig
+       288   -> VCP_PutContig
+       288   -> _printk
+       288   -> serial_get_tx_buffer_count
+       288   -> serial_read_tx
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable9
+       4  ??DataTable9_1
+       4  ??DataTable9_2
+       4  ??DataTable9_3
+       4  ??DataTable9_4
+       4  ??DataTable9_5
+       4  ??DataTable9_6
+       4  ??DataTable9_7
+      16  ?_0
+       6  VCP_Ctrl
+      36  VCP_DataAvail
+      36  VCP_DataAvailContig
+      10  VCP_DataPtr
+       4  VCP_DeInit
+      60  VCP_GetContig
+       4  VCP_Init
+      34  VCP_MarkRead
+      34  VCP_MarkWritten
+      60  VCP_PutContig
+      36  VCP_SpaceAvail
+      36  VCP_SpaceAvailContig
+      10  VCP_SpacePtr
+      20  VCP_fops
+       8  atomic_begin
+       6  atomic_end
+      84  g_hdlc_vcp
+      32  hdlc_vcp_send_byte
+       2  on_off_usb_thr
+      20  ring_data_avail
+      18  ring_data_contig
+      24  ring_space_avail
+      26  ring_space_contig
+      12  ring_wrap
+     130  vcp_thread
+       4  vcp_thread_handle
+       4  vtmp
+
+ 
+  92 bytes in section .bss
+  20 bytes in section .data
+  16 bytes in section .rodata
+ 676 bytes in section .text
+ 
+ 676 bytes of CODE  memory
+  16 bytes of CONST memory
+ 112 bytes of DATA  memory
+
+Errors: none
+Warnings: none

@@ -293,7 +293,7 @@ uint32_t ii;
 uint32_t sz; 
 int t_dat;
 uint8_t rd_tdat;
-printk("\n\r vcp_thread\n\r"); 
+printk("\n\r vcp_Thread\n\r"); 
 
 #if 1  
 for (;;) 

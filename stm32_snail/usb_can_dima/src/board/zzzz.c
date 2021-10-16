@@ -5,6 +5,7 @@
 ////#include "stm32f2xx_gpio.h"
 #include "board.h"
 #include "my_grbl.h"
+#include "printk.h"
 
 ////#define TEST_PIN ZSTP_PIN
 ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
@@ -102,6 +103,12 @@ void settings_store_startup_line(uint8_t n, char *line)
 
 
 ////========================================================================
+void coolant_stop(void)
+{
+}
+void coolant_init(void)
+{
+}
 void coolant_sync(uint8_t mode)
 {
 }
@@ -116,7 +123,9 @@ return 0;
 void  SetSpindleEnablebit(void)
 {
 }
-
+void spindle_init(void)
+{
+}
 void  ResetSpindleEnablebit(void)
 {
 }
@@ -138,62 +147,39 @@ uint8_t spindle_get_state()
 {
 return 0;
 }
-
-// Reset and clear stepper subsystem variables
-void st_reset()
+uint16_t spindle_compute_pwm_value(float rpm) // 328p PWM register is 8-bit.
 {
-#if 0  
-  // Initialize stepper driver idle state.
-  st_go_idle();
+  return 0;
 
-  // Initialize stepper algorithm variables.
-  memset(&prep, 0, sizeof(st_prep_t));
-  memset(&st, 0, sizeof(stepper_t));
-  st.exec_segment = NULL;
-  pl_block = NULL;  // Planner block pointer used by segment buffer
-  segment_buffer_tail = 0;
-  segment_buffer_head = 0; // empty = tail
-  segment_next_head = 1;
-  busy = false;
-
-  st_generate_step_dir_invert_masks();
-  st.dir_outbits = dir_port_invert_mask; // Initialize direction bits to default.
-
-  // Initialize step and direction port pins.
-  GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
-  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (dir_port_invert_mask & DIRECTION_MASK));
-#endif
 }
-
-// Called by planner_recalculate() when the executing block is updated by the new plan.
-void st_update_plan_block_parameters()
-{
-#if 0  
-  if (pl_block != NULL) { // Ignore if at start of a new block.
-    prep.recalculate_flag |= PREP_FLAG_RECALCULATE;
-    pl_block->entry_speed_sqr = prep.current_speed*prep.current_speed; // Update entry speed.
-    pl_block = NULL; // Flag st_prep_segment() to load and check active velocity profile.
+void spindle_set_speed(uint16_t pwm_value)
+  {
   }
-#endif
-}
-void st_wake_up()
+void  put_steps(uint8_t steps)////???
 {
-}
-void st_prep_buffer()
-{
-}
-
-// Called by realtime status reporting to fetch the current speed being executed. This value
-// however is not exactly the current speed, but the speed computed in the last step segment
-// in the segment buffer. It will always be behind by up to the number of segment blocks (-1)
-// divided by the ACCELERATION TICKS PER SECOND in seconds.
-float st_get_realtime_rate()
-{
-#if 0
-  if (sys.state & (STATE_CYCLE | STATE_HOMING | STATE_HOLD | STATE_JOG | STATE_SAFETY_DOOR)){
-    return prep.current_speed;
+if(steps&(1 << X_STEP_BIT))
+  {
+  printk("x");  
   }
-#endif   
-  return 0.0f;
+if(steps&(1 << Y_STEP_BIT))
+  {
+  printk("y");  
+  }
+if(steps&(1 << Z_STEP_BIT))
+  {
+  printk("z");  
+  }
+         
+}
+void steps_reset(void)
+{
+  
 }
 
+void SetStepperDisableBit(void) ////GPIO_SetBits(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_MASK)
+{
+}
+
+void ResetStepperDisableBit(void) ////GPIO_ResetBits(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_MASK)
+{
+}

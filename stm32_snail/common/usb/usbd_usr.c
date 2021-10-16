@@ -138,7 +138,7 @@ void USBD_USR_DeviceReset(uint8_t speed )
 void USBD_USR_DeviceConfigured (void)
 {
 ////  LCD_UsrLog("> HID Interface started.\n");
-printk("> CDC Interface started.\n");
+printk("\n\r> CDC Interface started.\n\r");
 }
 
 

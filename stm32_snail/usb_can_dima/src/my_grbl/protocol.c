@@ -32,6 +32,13 @@ static char line[LINE_BUFFER_SIZE]; // Line to be executed. Zero-terminated.
 void LedBlink(void);
 #endif
 
+extern uint8_t serial_read_rx(void);
+extern uint8_t serial_get_rx_buffer_available();
+extern uint8_t system_execute_line(char *line);
+extern void system_clear_exec_alarm() ;
+extern void system_clear_exec_motion_overrides() ;
+extern void system_clear_exec_accessory_overrides() ;
+
 static void protocol_exec_rt_suspend();
 
 
@@ -88,7 +95,7 @@ void protocol_main_loop()
 #ifdef LEDBLINK
 				LedBlink();
 #endif
-				#ifdef REPORT_ECHO_LINE_RECEIVED
+	#ifdef REPORT_ECHO_LINE_RECEIVED
           report_echo_line_received(line);
         #endif
 

@@ -47,34 +47,39 @@ uint8_t serial_get_tx_buffer_count(void)
 void serial_write(uint8_t data) {
   // Calculate next head
 uint8_t next_head = serial_tx_buffer_head + 1;
-  if (next_head == TX_RING_BUFFER) { 
+////printk("%c",data);
+if (next_head == TX_RING_BUFFER) { 
     next_head = 0; 
   }
 
   // Wait until there is space in the buffer
   while (next_head == serial_tx_buffer_tail) {
     // TODO: Restructure st_prep_buffer() calls to be executed here during a long print.
-////    if (sys_rt_exec_state & EXEC_RESET) { return; } // Only check for abort to avoid an endless loop.
+    if (sys_rt_exec_state & EXEC_RESET) { 
+      return; 
+      } // Only check for abort to avoid an endless loop.
     ;
   }
 
   // Store data and advance head
   serial_tx_buffer[serial_tx_buffer_head] = data;
 
-  serial_tx_buffer_head = next_head;
+ serial_tx_buffer_head = next_head;
 }
 
 // Fetches the first byte in the serial read buffer. Called by main program.
 uint8_t serial_read_rx(void)
 {
-  uint8_t tail = serial_rx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
+ uint8_t tail = serial_rx_buffer_tail; // Temporary serial_rx_buffer_tail (to optimize for volatile)
   if (serial_rx_buffer_head == tail) {
     return SERIAL_NO_DATA;
   } else {
     uint8_t data = serial_rx_buffer[tail];
 
     tail++;
-    if (tail == RX_RING_BUFFER) { tail = 0; }
+    if (tail == RX_RING_BUFFER) { 
+      tail = 0; 
+      }
     serial_rx_buffer_tail = tail;
 
     return data;
@@ -87,11 +92,11 @@ uint8_t tail = serial_tx_buffer_tail; // Temporary serial_rx_buffer_tail (to opt
     return -1;
   } else {
     uint8_t data = serial_tx_buffer[tail];
-
     tail++;
-    if (tail == TX_RING_BUFFER) { tail = 0; }
+    if (tail == TX_RING_BUFFER) { 
+      tail = 0; 
+      }
     serial_tx_buffer_tail = tail;
-
     return data;
   }
 }
@@ -109,20 +114,30 @@ while (length != 0){
   data = *(data_in+ii);
   ////====================================
  ///     send_char_dbg(data);
-  printk("[%x]",data);
+////  printk("[%x]",data);
   ////====================================
   ii++;
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.
   switch (data) {
-    case CMD_RESET:         mc_reset(); break; // Call motion control reset routine.
-    case CMD_STATUS_REPORT: system_set_exec_state_flag(EXEC_STATUS_REPORT); break; // 
-    case CMD_CYCLE_START:   system_set_exec_state_flag(EXEC_CYCLE_START); break; // 
-    case CMD_FEED_HOLD:     system_set_exec_state_flag(EXEC_FEED_HOLD); break; // 
+    case CMD_RESET:     // Call motion control reset routine.    
+      mc_reset(); 
+      break; 
+    case CMD_STATUS_REPORT: 
+      system_set_exec_state_flag(EXEC_STATUS_REPORT); 
+      break; // 
+    case CMD_CYCLE_START:   
+      system_set_exec_state_flag(EXEC_CYCLE_START); 
+      break; // 
+    case CMD_FEED_HOLD:     
+      system_set_exec_state_flag(EXEC_FEED_HOLD); 
+      break; // 
     default :
       if (data > 0x7F) { // Real-time control characters are extended ACSII only.
         switch(data) {
-          case CMD_SAFETY_DOOR:   system_set_exec_state_flag(EXEC_SAFETY_DOOR); break; // Set as true
+          case CMD_SAFETY_DOOR:   
+            system_set_exec_state_flag(EXEC_SAFETY_DOOR); 
+            break; // Set as true
           case CMD_JOG_CANCEL:   
             if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
               system_set_exec_state_flag(EXEC_MOTION_CANCEL); 
@@ -137,24 +152,56 @@ while (length != 0){
   ////???               SREG = sreg;
              } break;
           #endif
-          case CMD_FEED_OVR_RESET: system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET); break;
-          case CMD_FEED_OVR_COARSE_PLUS: system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS); break;
-          case CMD_FEED_OVR_COARSE_MINUS: system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS); break;
-          case CMD_FEED_OVR_FINE_PLUS: system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS); break;
-          case CMD_FEED_OVR_FINE_MINUS: system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS); break;
-          case CMD_RAPID_OVR_RESET: system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET); break;
-          case CMD_RAPID_OVR_MEDIUM: system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM); break;
-          case CMD_RAPID_OVR_LOW: system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW); break;
-          case CMD_SPINDLE_OVR_RESET: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET); break;
-          case CMD_SPINDLE_OVR_COARSE_PLUS: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS); break;
-          case CMD_SPINDLE_OVR_COARSE_MINUS: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS); break;
-          case CMD_SPINDLE_OVR_FINE_PLUS: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS); break;
-          case CMD_SPINDLE_OVR_FINE_MINUS: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS); break;
-          case CMD_SPINDLE_OVR_STOP: system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP); break;
-          case CMD_COOLANT_FLOOD_OVR_TOGGLE: system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE); break;
- ////         #ifdef ENABLE_M7
-            case CMD_COOLANT_MIST_OVR_TOGGLE: system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); break;
-  ////        #endif
+          case CMD_FEED_OVR_RESET: 
+            system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET); 
+            break;
+          case CMD_FEED_OVR_COARSE_PLUS: 
+            system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS); 
+            break;
+          case CMD_FEED_OVR_COARSE_MINUS: 
+            system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS); 
+            break;
+          case CMD_FEED_OVR_FINE_PLUS: 
+            system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS); 
+            break;
+          case CMD_FEED_OVR_FINE_MINUS: 
+            system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS); 
+            break;
+          case CMD_RAPID_OVR_RESET: 
+            system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET); 
+            break;
+          case CMD_RAPID_OVR_MEDIUM: 
+            system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM); 
+            break;
+          case CMD_RAPID_OVR_LOW: 
+            system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW); 
+            break;
+          case CMD_SPINDLE_OVR_RESET: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET); 
+            break;
+          case CMD_SPINDLE_OVR_COARSE_PLUS: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS); 
+            break;
+          case CMD_SPINDLE_OVR_COARSE_MINUS: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS); 
+            break;
+          case CMD_SPINDLE_OVR_FINE_PLUS: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS); 
+            break;
+          case CMD_SPINDLE_OVR_FINE_MINUS: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS); 
+            break;
+          case CMD_SPINDLE_OVR_STOP: 
+            system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP); 
+            break;
+          case CMD_COOLANT_FLOOD_OVR_TOGGLE: 
+            system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE); 
+            break;
+          #ifdef ENABLE_M7
+            case CMD_COOLANT_MIST_OVR_TOGGLE: 
+              system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); 
+              break;
+          #endif
         }
         // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
       } else { // Write character to buffer
@@ -172,7 +219,7 @@ while (length != 0){
    }
 }
 ///=========================================================================
-void serial_reset_read_buffer()
+void serial_reset_read_buffer(void)
 {
   serial_rx_buffer_tail = serial_rx_buffer_head;
 }

@@ -1,0 +1,294 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         16/Oct/2021  20:54:56
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_print.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW1824.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_print.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List\grbl_print.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj\grbl_print.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\grbl_print.c
+      1          /*
+      2            print.c - Functions for formatting output strings
+      3            Part of Grbl
+      4          
+      5            Copyright (c) 2011-2016 Sungeun K. Jeon for Gnea Research LLC
+      6            Copyright (c) 2009-2011 Simen Svale Skogsrud
+      7          
+      8            Grbl is free software: you can redistribute it and/or modify
+      9            it under the terms of the GNU General Public License as published by
+     10            the Free Software Foundation, either version 3 of the License, or
+     11            (at your option) any later version.
+     12          
+     13            Grbl is distributed in the hope that it will be useful,
+     14            but WITHOUT ANY WARRANTY; without even the implied warranty of
+     15            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     16            GNU General Public License for more details.
+     17          
+     18            You should have received a copy of the GNU General Public License
+     19            along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+     20          */
+     21          
+     22          #include "my_grbl.h"
+     23          
+     24          
+     25          void printString(const char *s)
+     26          {
+     27            while (*s)
+     28              serial_write(*s++);
+     29          }
+     30          
+     31          // Prints an uint8 variable in base 10.
+     32          void print_uint8_base10(uint8_t n)
+     33          {
+     34            uint8_t digit_a = 0;
+     35            uint8_t digit_b = 0;
+     36            if (n >= 100) { // 100-255
+     37              digit_a = '0' + n % 10;
+     38              n /= 10;
+     39            }
+     40            if (n >= 10) { // 10-99
+     41              digit_b = '0' + n % 10;
+     42              n /= 10;
+     43            }
+     44            serial_write('0' + n);
+     45            if (digit_b) { serial_write(digit_b); }
+     46            if (digit_a) { serial_write(digit_a); }
+     47          }
+     48          
+     49          
+     50          // Prints an uint8 variable in base 2 with desired number of desired digits.
+     51          void print_uint8_base2_ndigit(uint8_t n, uint8_t digits) 
+     52          {
+     53          ////	unsigned char buf[digits];
+     54          	unsigned char buf[20];
+     55            
+     56            uint8_t i = 0;
+     57          
+     58            for (; i < digits; i++) {
+     59                buf[i] = n % 2 ;
+     60                n /= 2;
+     61            }
+     62          
+     63            for (; i > 0; i--)
+     64                serial_write('0' + buf[i - 1]);
+     65          }
+     66          
+     67          
+     68          void print_uint32_base10(uint32_t n)
+     69          {
+     70            if (n == 0) {
+     71              serial_write('0');
+     72              return;
+     73            }
+     74          
+     75            unsigned char buf[10];
+     76            uint8_t i = 0;
+     77          
+     78            while (n > 0) {
+     79              buf[i++] = n % 10;
+     80              n /= 10;
+     81            }
+     82          
+     83            for (; i > 0; i--)
+     84              serial_write('0' + buf[i-1]);
+     85          }
+     86          
+     87          
+     88          void printInteger(long n)
+     89          {
+     90            if (n < 0) {
+     91              serial_write('-');
+     92              print_uint32_base10(-n);
+     93            } else {
+     94              print_uint32_base10(n);
+     95            }
+     96          }
+     97          
+     98          
+     99          // Convert float to string by immediately converting to a long integer, which contains
+    100          // more digits than a float. Number of decimal places, which are tracked by a counter,
+    101          // may be set by the user. The integer is then efficiently converted to a string.
+    102          // NOTE: AVR '%' and '/' integer operations are very efficient. Bitshifting speed-up
+    103          // techniques are actually just slightly slower. Found this out the hard way.
+    104          void printFloat(float n, uint8_t decimal_places)
+    105          {
+    106            if (n < 0) {
+    107              serial_write('-');
+    108              n = -n;
+    109            }
+    110          
+    111            uint8_t decimals = decimal_places;
+    112            while (decimals >= 2) { // Quickly convert values expected to be E0 to E-4.
+    113              n *= 100;
+    114              decimals -= 2;
+    115            }
+    116            if (decimals) { n *= 10; }
+    117            n += 0.5; // Add rounding factor. Ensures carryover through entire value.
+    118          
+    119            // Generate digits backwards and store in string.
+    120            unsigned char buf[13];
+    121            uint8_t i = 0;
+    122            uint32_t a = (long)n;
+    123            while(a > 0) {
+    124              buf[i++] = (a % 10) + '0'; // Get digit
+    125              a /= 10;
+    126            }
+    127            while (i < decimal_places) {
+    128               buf[i++] = '0'; // Fill in zeros to decimal point for (n < 1)
+    129            }
+    130            if (i == decimal_places) { // Fill in leading zero, if needed.
+    131              buf[i++] = '0';
+    132            }
+    133          
+    134            // Print the generated string.
+    135            for (; i > 0; i--) {
+    136              if (i == decimal_places) { serial_write('.'); } // Insert decimal point in right place.
+    137              serial_write(buf[i-1]);
+    138            }
+    139          }
+    140          
+    141          
+    142          // Floating value printing handlers for special variables types used in Grbl and are defined
+    143          // in the config.h.
+    144          //  - CoordValue: Handles all position or coordinate values in inches or mm reporting.
+    145          //  - RateValue: Handles feed rate and current velocity in inches or mm reporting.
+    146          void printFloat_CoordValue(float n) {
+    147            if (bit_istrue(settings.flags,BITFLAG_REPORT_INCHES)) {
+    148              printFloat(n*INCH_PER_MM,N_DECIMAL_COORDVALUE_INCH);
+    149            } else {
+    150              printFloat(n,N_DECIMAL_COORDVALUE_MM);
+    151            }
+    152          }
+    153          
+    154          void printFloat_RateValue(float n) {
+    155            if (bit_istrue(settings.flags,BITFLAG_REPORT_INCHES)) {
+    156              printFloat(n*INCH_PER_MM,N_DECIMAL_RATEVALUE_INCH);
+    157            } else {
+    158              printFloat(n,N_DECIMAL_RATEVALUE_MM);
+    159            }
+    160          }
+    161          
+    162          // Debug tool to print free memory in bytes at the called point.
+    163          // NOTE: Keep commented unless using. Part of this function always gets compiled in.
+    164          // void printFreeMemory()
+    165          // {
+    166          //   extern int __heap_start, *__brkval;
+    167          //   uint16_t free;  // Up to 64k values.
+    168          //   free = (int) &free - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+    169          //   printInteger((int32_t)free);
+    170          //   printString(" ");
+    171          // }
+    172          void report_init_message(void)
+    173          {
+    174            printString("\r\nGrbl " GRBL_VERSION " ['$' for help]\r\n");
+    175          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   printFloat
+        40   -> __aeabi_d2f
+        40   -> __aeabi_dadd
+        40   -> __aeabi_f2d
+        40   -> __aeabi_f2iz
+        40   -> __aeabi_fmul
+        40   -> serial_write
+        40 __aeabi_cfcmple
+      16   printFloat_CoordValue
+        16   -> __aeabi_fmul
+        16   -> printFloat
+      16   printFloat_RateValue
+        16   -> __aeabi_fmul
+        16   -> printFloat
+       8   printInteger
+         8   -> print_uint32_base10
+         8   -> serial_write
+       8   printString
+         8   -> serial_write
+      24   print_uint32_base10
+        24   -> serial_write
+      16   print_uint8_base10
+        16   -> serial_write
+      40   print_uint8_base2_ndigit
+        40   -> serial_write
+       8   report_init_message
+         8   -> printString
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+       4  ??DataTable4_5
+      32  ?_0
+     244  printFloat
+      44  printFloat_CoordValue
+      44  printFloat_RateValue
+      30  printInteger
+      22  printString
+      84  print_uint32_base10
+     120  print_uint8_base10
+      92  print_uint8_base2_ndigit
+      10  report_init_message
+
+ 
+  32 bytes in section .rodata
+ 714 bytes in section .text
+ 
+ 714 bytes of CODE  memory
+  32 bytes of CONST memory
+
+Errors: none
+Warnings: none

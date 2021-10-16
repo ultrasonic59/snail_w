@@ -1,0 +1,152 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         16/Oct/2021  20:55:00
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  D:\proj\velograph\snail\stm32_snail\common\usb\usb_thr.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW2756.tmp
+#        (D:\proj\velograph\snail\stm32_snail\common\usb\usb_thr.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D USE_USB_OTG_FS
+#        -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List\usb_thr.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj\usb_thr.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\common\usb\usb_thr.c
+      1          #include <stdint.h>
+      2            #include "stm32f2xx.h"
+      3            #include "stm32f2xx_conf.h"
+      4          #include "my_types.h"
+      5          #include "FreeRTOS.h"
+      6          #include "task.h"
+      7          #include "queue.h"
+      8          ////#include "my_misc.h"
+      9          #include "printk.h"
+     10          
+     11          #include "usb_dcd_int.h"
+     12          
+     13          extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+     14          #if 1
+     15          xQueueHandle q_usb_in = 0;
+     16          ///usb_req_t
+     17          void usb_thread( void *arg )
+     18          {
+     19          ////USB_OTG_CORE_HANDLE *pdev;  
+     20           usb_req_t t_usb_req; 
+     21          q_usb_in  = xQueueCreate(80,sizeof(usb_req_t));
+     22          for(;;)
+     23            {
+     24            xQueueReceive(q_usb_in,&t_usb_req,portMAX_DELAY);
+     25            if(t_usb_req.in_out==0)       ///out
+     26              USBD_DCD_INT_fops->DataOutStage((void*)t_usb_req.addr_dev , t_usb_req.num_point);
+     27            else  ///in
+     28              USBD_DCD_INT_fops->DataInStage((void*)t_usb_req.addr_dev , t_usb_req.num_point);
+     29           
+     30          ////  USBD_OTG_ISR_Handler(pdev) ; 
+     31          ///  _printk("U");
+     32            }
+     33          }
+     34          #endif
+     35          
+     36          void my_USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
+     37          {
+     38          ////signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+     39          ///xQueueSendFromISR(q_usb_in, pdev, &xHigherPriorityTaskWoken);
+     40           USBD_OTG_ISR_Handler(pdev) ; 
+     41          }
+     42          ///=======================================================
+     43          void USB_OTG_EnableSuspend(USB_OTG_CORE_HANDLE *pdev)
+     44          {
+     45          USB_OTG_GINTMSK_TypeDef  int_mask;
+     46            
+     47          int_mask.d32 = 0;
+     48          /* Enable the interrupts in the INTMSK */
+     49          int_mask.b.usbsuspend = 1; 
+     50          USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, int_mask.d32,NULL);
+     51          }
+     52          void USB_OTG_DisableSuspend(USB_OTG_CORE_HANDLE *pdev)
+     53          {
+     54          USB_OTG_GINTMSK_TypeDef  int_mask;
+     55          int_mask.d32 = 0;
+     56          int_mask.b.usbsuspend = 1; 
+     57          USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK,NULL, int_mask.d32);
+     58          }
+     59          
+     60          
+     61          
+     62          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   USB_OTG_DisableSuspend
+       0   USB_OTG_EnableSuspend
+       8   my_USBD_OTG_ISR_Handler
+         8   -> USBD_OTG_ISR_Handler
+      24   usb_thread
+        24   -- Indirect call
+        24   -> xQueueGenericCreate
+        24   -> xQueueReceive
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+      18  USB_OTG_DisableSuspend
+      18  USB_OTG_EnableSuspend
+      12  my_USBD_OTG_ISR_Handler
+       4  q_usb_in
+      70  usb_thread
+
+ 
+   4 bytes in section .bss
+ 126 bytes in section .text
+ 
+ 126 bytes of CODE memory
+   4 bytes of DATA memory
+
+Errors: none
+Warnings: none

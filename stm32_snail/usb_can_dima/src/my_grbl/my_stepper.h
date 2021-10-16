@@ -78,22 +78,86 @@ typedef struct stepper_s_{
   st_block_t *exec_block;   // Pointer to the block data for the segment being executed
   segment_t *exec_segment;  // Pointer to the segment being executed
 } stepper_t;
+// Segment preparation data struct. Contains all the necessary information to compute new segments
+// based on the current executing planner block.
+typedef struct st_prep_s{
+  uint8_t st_block_index;  // Index of stepper common data block being prepped
+  uint8_t recalculate_flag;
+
+  float dt_remainder;
+  float steps_remaining;
+  float step_per_mm;
+  float req_mm_increment;
+
+  #ifdef PARKING_ENABLE
+    uint8_t last_st_block_index;
+    float last_steps_remaining;
+    float last_step_per_mm;
+    float last_dt_remainder;
+  #endif
+
+  uint8_t ramp_type;      // Current segment ramp state
+  float mm_complete;      // End of velocity profile from end of current planner block in (mm).
+                          // NOTE: This value must coincide with a step(no mantissa) when converted.
+  float current_speed;    // Current speed at the end of the segment buffer (mm/min)
+  float maximum_speed;    // Maximum speed of executing block. Not always nominal speed. (mm/min)
+  float exit_speed;       // Exit speed of executing block (mm/min)
+  float accelerate_until; // Acceleration ramp end measured from end of block (mm)
+  float decelerate_after; // Deceleration ramp start measured from end of block (mm)
+
+  #ifdef VARIABLE_SPINDLE
+    float inv_rate;    // Used by PWM laser mode to speed up segment calculations.
+    uint8_t current_spindle_pwm;
+  #endif
+} st_prep_t;
+
 #if 1
-const uint16_t step_pin_mask[N_AXIS] =
+const static uint16_t step_pin_mask[N_AXIS] =
 {
 	1 << X_STEP_BIT,
 	1 << Y_STEP_BIT,
 	1 << Z_STEP_BIT,
 
 };
-const uint16_t direction_pin_mask[N_AXIS] =
+const static uint16_t direction_pin_mask[N_AXIS] =
 {
 	1 << X_DIRECTION_BIT,
 	1 << Y_DIRECTION_BIT,
 	1 << Z_DIRECTION_BIT,
 };
 #endif
+#if 0
+const PORTPINDEF limit_pin_mask[N_AXIS] =
+{
+	1 << X_LIMIT_BIT,
+	1 << Y_LIMIT_BIT,
+	1 << Z_LIMIT_BIT,
+};
+#endif
+// Define Adaptive Multi-Axis Step-Smoothing(AMASS) levels and cutoff frequencies. The highest level
+// frequency bin starts at 0Hz and ends at its cutoff frequency. The next lower level frequency bin
+// starts at the next higher cutoff frequency, and so on. The cutoff frequencies for each level must
+// be considered carefully against how much it over-drives the stepper ISR, the accuracy of the 16-bit
+// timer, and the CPU overhead. Level 0 (no AMASS, normal operation) frequency bin starts at the
+// Level 1 cutoff frequency and up to as fast as the CPU allows (over 30kHz in limited testing).
+// NOTE: AMASS cutoff frequency multiplied by ISR overdrive factor must not exceed maximum step frequency.
+// NOTE: Current settings are set to overdrive the ISR to no more than 16kHz, balancing CPU overhead
+// and timer accuracy.  Do not alter these settings unless you know what you are doing.
+#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
+	#define MAX_AMASS_LEVEL 3
+	// AMASS_LEVEL0: Normal operation. No AMASS. No upper cutoff frequency. Starts at LEVEL1 cutoff frequency.
+	#define AMASS_LEVEL1 (F_CPU/8000) // Over-drives ISR (x2). Defined as F_CPU/(Cutoff frequency in Hz)
+	#define AMASS_LEVEL2 (F_CPU/4000) // Over-drives ISR (x4)
+	#define AMASS_LEVEL3 (F_CPU/2000) // Over-drives ISR (x8)
+
+  #if MAX_AMASS_LEVEL <= 0
+    error "AMASS must have 1 or more levels to operate correctly."
+  #endif
+#endif
 
 extern void stepper_init(void);
-
+extern void SetStepperDisableBit(void); 
+extern void ResetStepperDisableBit(void); 
+extern void steps_reset(void);
+extern uint16_t spindle_compute_pwm_value(float rpm);
 #endif  ////__MY_STEPPER_H__

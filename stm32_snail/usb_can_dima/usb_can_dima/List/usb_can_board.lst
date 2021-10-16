@@ -1,0 +1,531 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM         16/Oct/2021  20:54:59
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\usb_can_board.c
+#    Command line =
+#        -f C:\Users\vova\AppData\Local\Temp\EW256E.tmp
+#        (D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\usb_can_board.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D USEUSB -D MSTEP_BRD -D
+#        USE_USB_OTG_FS -D STM32F205xx -lcN
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c\DLib_Config_Full.h"
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\.\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\dbg\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\core\inc\
+#        -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\drv\inc\
+#        -I D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\inc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\hdlc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\..\common\usb\cdc\ -I
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\my_grbl\ -On
+#        --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 8.3\arm\CMSIS\Core\Include\" -I "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include\")
+#    Locale       =  C
+#    List file    =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\List\usb_can_board.lst
+#    Object file  =
+#        D:\proj\velograph\snail\stm32_snail\usb_can_dima\usb_can_dima\Obj\usb_can_board.o
+#
+###############################################################################
+
+D:\proj\velograph\snail\stm32_snail\usb_can_dima\src\board\usb_can_board.c
+      1          #include "FreeRTOS.h"
+      2          #include "queue.h"
+      3          #include "semphr.h"
+      4          ///#include "stm32f2xx_gpio.h"
+      5          ///#include "stm32f2xx_rcc.h"
+      6          #include "my_types.h"
+      7          #include "stm32f2xx_conf.h"
+      8          #include "mstep_board.h"
+      9          #include "printk.h"
+     10          ///=============================
+     11          int sendchar2 (int c) 
+     12          { 
+     13          while (!(USART2->SR & 0x0080));
+     14          USART2->DR = (c & 0x1FF);
+     15          return (c);
+     16          }
+     17          
+     18          int get_byte2 (void) 
+     19          {
+     20          while (!(USART2->SR & 0x0020));
+     21          return (USART2->DR);
+     22          }
+     23          int get_byte_dbg (void) 
+     24          {
+     25          while (!(USART2->SR & 0x0020));
+     26          return (USART2->DR);
+     27          }
+     28          
+     29          int send_char_dbg(int ch) 
+     30          {
+     31          //sendchar_hdlc(ch);
+     32          sendchar2(ch);
+     33          return ch;
+     34          }
+     35          void _putk(char ch)
+     36          {
+     37          send_char_dbg(ch);
+     38          }
+     39          
+     40          void init_gpio(void)
+     41          {
+     42          ////RCC_AHBPeriphClockCmd(XEN_PIN_RCC_AHB,ENABLE);
+     43          GPIO_InitTypeDef GPIO_InitStructure;
+     44          ////=============== TST1 ============================
+     45          RCC_AHB1PeriphClockCmd(TST1_PIN_RCC, ENABLE);
+     46          GPIO_InitStructure.GPIO_Pin = TST1_PIN;
+     47          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     48          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+     49          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     50          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+     51          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     52          GPIO_Init( TST1_PIN_GPIO, &GPIO_InitStructure );
+     53          GPIO_SetBits(TST1_PIN_GPIO, TST1_PIN);
+     54          ////=============== TST2 ============================
+     55          RCC_AHB1PeriphClockCmd(TST2_PIN_RCC, ENABLE);
+     56          GPIO_InitStructure.GPIO_Pin = TST2_PIN;
+     57          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     58          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+     59          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     60          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+     61          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     62          GPIO_Init( TST2_PIN_GPIO, &GPIO_InitStructure );
+     63          ////=============== TST3 ============================
+     64          RCC_AHB1PeriphClockCmd(TST3_PIN_RCC, ENABLE);
+     65          GPIO_InitStructure.GPIO_Pin = TST3_PIN;
+     66          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     67          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+     68          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     69          
+     70          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     71          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+     72          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     73          GPIO_Init( TST3_PIN_GPIO, &GPIO_InitStructure );
+     74          GPIO_PinAFConfig(TST3_PIN_GPIO, TST3_PIN_NPIN, GPIO_AF_TIM1);
+     75          
+     76          ////=============== TST7 ============================
+     77          RCC_AHB1PeriphClockCmd(TST7_PIN_RCC, ENABLE);
+     78          GPIO_InitStructure.GPIO_Pin = TST7_PIN;
+     79          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     80          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+     81          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     82          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     83          GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
+     84          GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
+     85            
+     86          ////=========== DBG_UART =================================================== 
+     87          RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
+     88          GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
+     89          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     90          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     91          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     92          GPIO_Init( UART_DBG_TX_GPIO, &GPIO_InitStructure );
+     93          
+     94          RCC_AHB1PeriphClockCmd(UART_DBG_RX_RCC, ENABLE);
+     95          GPIO_InitStructure.GPIO_Pin = UART_DBG_RX_PIN;
+     96          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     97          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     98          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     99          GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
+    100            
+    101          GPIO_PinAFConfig(UART_DBG_TX_GPIO_PORT, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
+    102          GPIO_PinAFConfig(UART_DBG_RX_GPIO_PORT, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
+    103          ////===================================================================
+    104          ////=============== MOT_FAULT ============================
+    105          RCC_AHB1PeriphClockCmd(MOT_FAULT_PIN_RCC, ENABLE);
+    106          GPIO_InitStructure.GPIO_Pin = MOT_FAULT_PIN;
+    107          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    108          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    109          ////GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    110          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    111          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    112          GPIO_Init( MOT_FAULT_PIN_GPIO, &GPIO_InitStructure );
+    113          ////=============== MOT_CONC ============================
+    114          RCC_AHB1PeriphClockCmd(CONC_PIN_RCC, ENABLE);
+    115          GPIO_InitStructure.GPIO_Pin = CONC_PIN;
+    116          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    117          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    118          ////GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    119          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    120          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    121          GPIO_Init( CONC_PIN_GPIO, &GPIO_InitStructure );
+    122          
+    123          ////=============== MOT_M2 ============================
+    124          RCC_AHB1PeriphClockCmd(MOT_M2_PIN_RCC, ENABLE);
+    125          GPIO_InitStructure.GPIO_Pin = MOT_M2_PIN;
+    126          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    127          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    128          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    129          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    130          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    131          GPIO_Init( MOT_M2_PIN_GPIO, &GPIO_InitStructure );
+    132          ////=============== MOT_M1 ============================
+    133          RCC_AHB1PeriphClockCmd(MOT_M1_PIN_RCC, ENABLE);
+    134          GPIO_InitStructure.GPIO_Pin = MOT_M1_PIN;
+    135          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    136          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    137          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    138          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    139          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    140          GPIO_Init( MOT_M1_PIN_GPIO, &GPIO_InitStructure );
+    141          ////=============== MOT_M0 ============================
+    142          RCC_AHB1PeriphClockCmd(MOT_M0_PIN_RCC, ENABLE);
+    143          GPIO_InitStructure.GPIO_Pin = MOT_M0_PIN;
+    144          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    145          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    146          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    147          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    148          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    149          GPIO_Init( MOT_M0_PIN_GPIO, &GPIO_InitStructure );
+    150          ////=============== MOT_ENA ============================
+    151          RCC_AHB1PeriphClockCmd(MOT_ENA_PIN_RCC, ENABLE);
+    152          GPIO_InitStructure.GPIO_Pin = MOT_ENA_PIN;
+    153          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    154          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    155          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    156          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    157          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    158          GPIO_Init( MOT_ENA_PIN_GPIO, &GPIO_InitStructure );
+    159          ////=============== MOT_RESET ============================
+    160          RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
+    161          GPIO_InitStructure.GPIO_Pin = MOT_RESET_PIN;
+    162          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    163          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    164          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    165          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    166          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    167          GPIO_Init( MOT_RESET_PIN_GPIO, &GPIO_InitStructure );
+    168          ////=============== MOT_SLEEP ============================
+    169          RCC_AHB1PeriphClockCmd(MOT_SLEEP_PIN_RCC, ENABLE);
+    170          GPIO_InitStructure.GPIO_Pin = MOT_SLEEP_PIN;
+    171          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    172          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    173          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    174          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    175          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    176          GPIO_Init( MOT_SLEEP_PIN_GPIO, &GPIO_InitStructure );
+    177          ////#define MOT_STEP_TIM  	        TIM12
+    178          ////=============== MOT_STEP ============================
+    179          RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
+    180          GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
+    181          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    182          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    183          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    184          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    185          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    186          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    187          GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
+    188          GPIO_PinAFConfig(MOT_STEP_PIN_GPIO, MOT_STEP_PIN_NPIN, GPIO_AF_TIM1);
+    189          ////===================================================================
+    190          
+    191          ////=============== MOT_DIR ============================
+    192          RCC_AHB1PeriphClockCmd(MOT_DIR_PIN_RCC, ENABLE);
+    193          GPIO_InitStructure.GPIO_Pin = MOT_DIR_PIN;
+    194          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    195          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    196          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    197          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    198          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    199          GPIO_Init( MOT_DIR_PIN_GPIO, &GPIO_InitStructure );
+    200          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    201          
+    202          ////============== LED_PWM ============================
+    203          RCC_AHB1PeriphClockCmd(LED_PWM_PIN_RCC, ENABLE);
+    204          GPIO_InitStructure.GPIO_Pin = LED_PWM_PIN;
+    205          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    206          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    207          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    208          ////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    209          ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    210          GPIO_Init( LED_PWM_PIN_GPIO, &GPIO_InitStructure );
+    211          GPIO_PinAFConfig(LED_PWM_PIN_GPIO, LED_PWM_PIN_NPIN, GPIO_AF_TIM8);
+    212          ////=============== ON_LED0 ============================
+    213          RCC_AHB1PeriphClockCmd(ON_LED0_PIN_RCC, ENABLE);
+    214          GPIO_InitStructure.GPIO_Pin = ON_LED0_PIN;
+    215          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    216          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    217          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    218          GPIO_Init( ON_LED0_PIN_GPIO, &GPIO_InitStructure );
+    219          ////=============== ON_LED1 ============================
+    220          RCC_AHB1PeriphClockCmd(ON_LED1_PIN_RCC, ENABLE);
+    221          GPIO_InitStructure.GPIO_Pin = ON_LED1_PIN;
+    222          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    223          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    224          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    225          GPIO_Init( ON_LED1_PIN_GPIO, &GPIO_InitStructure );
+    226          
+    227          }
+    228          
+    229          ////=============================================
+    230          void UART_DBG_Init(void)
+    231          {
+    232          ////GPIO_InitTypeDef GPIO_InitStructure;
+    233          USART_InitTypeDef USART_InitStructure;
+    234          UART_DBG_CLK_INIT(UART_DBG_CLK, ENABLE);
+    235          USART_DeInit(UART_DBG);
+    236          USART_InitStructure.USART_BaudRate = 115200;
+    237          USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    238          USART_InitStructure.USART_StopBits = USART_StopBits_1 ;
+    239          USART_InitStructure.USART_Parity = USART_Parity_No;
+    240          USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    241          USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    242          USART_Init(UART_DBG, &USART_InitStructure);
+    243          UART_DBG->CR1 |= USART_CR1_RXNEIE;
+    244          USART_Cmd(UART_DBG, ENABLE);
+    245          }
+    246          ////==================================================
+    247          ////==================================
+    248          void CAN_Config(void)
+    249          {
+    250            GPIO_InitTypeDef  GPIO_InitStructure;
+    251            CAN_InitTypeDef        CAN_InitStructure;
+    252            CAN_FilterInitTypeDef  CAN_FilterInitStructure;
+    253          
+    254          
+    255            /* CAN GPIOs configuration **************************************************/
+    256          
+    257            /* Enable GPIO clock */
+    258          RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
+    259          
+    260            /* Connect CAN pins to AF9 */
+    261            GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_RX_SOURCE, CAN1_AF_PORT);
+    262            GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_TX_SOURCE, CAN1_AF_PORT);
+    263          
+    264            /* Configure CAN RX and TX pins */
+    265            GPIO_InitStructure.GPIO_Pin = CAN1_RX_PIN | CAN1_TX_PIN;
+    266            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    267            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    268            GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    269            GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+    270            GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
+    271          
+    272            /* CAN configuration ********************************************************/
+    273            /* Enable CAN clock */
+    274            RCC_APB1PeriphClockCmd(CAN1_CLK, ENABLE);
+    275            /* CAN register init */
+    276            CAN_DeInit(CAN1);
+    277          
+    278            CAN_StructInit(&CAN_InitStructure);
+    279          
+    280            /* CAN cell init */
+    281            CAN_InitStructure.CAN_TTCM = DISABLE;
+    282            CAN_InitStructure.CAN_ABOM = DISABLE;
+    283            CAN_InitStructure.CAN_AWUM = DISABLE;
+    284            CAN_InitStructure.CAN_NART = DISABLE;
+    285            CAN_InitStructure.CAN_RFLM = DISABLE;
+    286            CAN_InitStructure.CAN_TXFP = DISABLE;
+    287            CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
+    288            CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
+    289          
+    290            /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
+    291            CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
+    292            CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
+    293            CAN_InitStructure.CAN_Prescaler = 2;
+    294            CAN_Init(CAN1, &CAN_InitStructure);
+    295          
+    296          
+    297            CAN_FilterInitStructure.CAN_FilterNumber = 0;
+    298            CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0;
+    299            CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    300            CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    301            CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+    302            CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
+    303            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+    304            CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
+    305            //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    306            CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    307            CAN_FilterInit(&CAN_FilterInitStructure);
+    308          
+    309            CAN_FilterInitStructure.CAN_FilterNumber = 14;
+    310            CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO1;
+    311            CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    312            CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    313            CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+    314            CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
+    315            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+    316            CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
+    317            //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    318            CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    319            CAN_FilterInit(&CAN_FilterInitStructure);
+    320          
+    321          //  CAN2TxMessage.StdId = 0x321;
+    322          //  CAN2TxMessage.ExtId = 0x01;
+    323          //  CAN2TxMessage.RTR = CAN_RTR_DATA;
+    324          //  CAN2TxMessage.IDE = CAN_ID_STD;
+    325          //  CAN2TxMessage.DLC = 8;
+    326          
+    327            /* Enable FIFO 0 message pending Interrupt */
+    328            CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+    329          
+    330          }
+    331          void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP)
+    332          {
+    333          TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+    334          NVIC_InitTypeDef NVIC_InitStructure;
+    335          
+    336          TIM_TimeBaseStructure.TIM_Period = Period - 1;
+    337          TIM_TimeBaseStructure.TIM_Prescaler = Prescaler - 1;
+    338          TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+    339          TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    340          TIM_TimeBaseInit(TIMER, &TIM_TimeBaseStructure);
+    341          
+    342          TIM_ClearITPendingBit(TIMER, TIM_IT_Update);
+    343          TIM_ITConfig(TIMER, TIM_IT_Update, ENABLE);
+    344          TIM_Cmd(TIMER, ENABLE);
+    345          
+    346          NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+    347          if (TIMER == TIM2) 
+    348            { 
+    349            NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn; 
+    350            }
+    351          else if (TIMER == TIM3) 
+    352            { 
+    353            NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn; 
+    354            }
+    355          else if (TIMER == TIM4) 
+    356            { 
+    357            NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn; 
+    358            }
+    359          NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = PP;
+    360          NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+    361          NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    362          NVIC_Init(&NVIC_InitStructure);
+    363          }
+    364          
+    365          
+    366          ////=============================================
+    367          void hw_board_init(void)
+    368          {
+    369          init_gpio();
+    370          UART_DBG_Init(); 
+    371          CAN_Config();
+    372          ////led_tim_init();
+    373          ////mot_tim_init();
+    374          }
+    375          ////============================================
+    376          ////========================================================   
+    377          void tst_task( void *pvParameters )
+    378          {
+    379          printk("\n\r tst_task"); 
+    380          for(;;)
+    381            {
+    382          //// sendchar2 (0x33) ; 
+    383          ////  put_tst_pin(btst);
+    384          ///  btst++;  
+    385            ////delay__ms(1);  
+    386          ////  uDelay(20000);
+    387              msleep(20); 
+    388          
+    389            }
+    390          }
+    391          ////============================================
+    392          	
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      48   CAN_Config
+        48   -> CAN_DeInit
+        48   -> CAN_FilterInit
+        48   -> CAN_ITConfig
+        48   -> CAN_Init
+        48   -> CAN_StructInit
+        48   -> GPIO_Init
+        48   -> GPIO_PinAFConfig
+        48   -> RCC_AHB1PeriphClockCmd
+        48   -> RCC_APB1PeriphClockCmd
+      40   TIM_Configuration
+        40   -> NVIC_Init
+        40   -> NVIC_PriorityGroupConfig
+        40   -> TIM_ClearITPendingBit
+        40   -> TIM_Cmd
+        40   -> TIM_ITConfig
+        40   -> TIM_TimeBaseInit
+      24   UART_DBG_Init
+        24   -> RCC_APB1PeriphClockCmd
+        24   -> USART_Cmd
+        24   -> USART_DeInit
+        24   -> USART_Init
+       8   _putk
+         8   -> send_char_dbg
+       0   get_byte2
+       0   get_byte_dbg
+       8   hw_board_init
+         8   -> CAN_Config
+         8   -> UART_DBG_Init
+         8   -> init_gpio
+      24   init_gpio
+        24   -> GPIO_Init
+        24   -> GPIO_PinAFConfig
+        24   -> GPIO_SetBits
+        24   -> RCC_AHB1PeriphClockCmd
+       8   send_char_dbg
+         8   -> sendchar2
+       0   sendchar2
+       8   tst_task
+         8   -> _printk
+         8   -> vTaskDelay
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+      12  ?_0
+     304  CAN_Config
+     146  TIM_Configuration
+      84  UART_DBG_Init
+      14  _putk
+      20  get_byte2
+      20  get_byte_dbg
+      16  hw_board_init
+     810  init_gpio
+      14  send_char_dbg
+      24  sendchar2
+      18  tst_task
+
+ 
+    12 bytes in section .rodata
+ 1'510 bytes in section .text
+ 
+ 1'510 bytes of CODE  memory
+    12 bytes of CONST memory
+
+Errors: none
+Warnings: none

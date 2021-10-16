@@ -27,6 +27,7 @@
 #include "my_stepper.h"
 
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
+extern void  put_steps(uint8_t steps);
 
 // Used to avoid ISR nesting of the "Stepper Driver Interrupt". Should never occur though.
 static volatile uint8_t busy;
@@ -41,6 +42,9 @@ static uint8_t segment_buffer_head;
 static uint8_t segment_next_head;
 static uint16_t step_port_invert_mask;
 static uint16_t dir_port_invert_mask;
+static plan_block_t *pl_block;     // Pointer to the planner block being prepped
+static st_block_t *st_prep_block;  // Pointer to the stepper block data being prepped
+static st_prep_t prep;
 
 
 ////===============================================
@@ -49,92 +53,36 @@ void  set_curr_dir(uint8_t dirs)
 curr_dir=dirs;  
 }
 
-void  put_steps(uint8_t steps)////???
-{
-  
-}
 ////===============================================
 
 #if 0
-
-#if 0
-const PORTPINDEF limit_pin_mask[N_AXIS] =
-{
-	1 << X_LIMIT_BIT,
-	1 << Y_LIMIT_BIT,
-	1 << Z_LIMIT_BIT,
-};
-#endif
-// Define Adaptive Multi-Axis Step-Smoothing(AMASS) levels and cutoff frequencies. The highest level
-// frequency bin starts at 0Hz and ends at its cutoff frequency. The next lower level frequency bin
-// starts at the next higher cutoff frequency, and so on. The cutoff frequencies for each level must
-// be considered carefully against how much it over-drives the stepper ISR, the accuracy of the 16-bit
-// timer, and the CPU overhead. Level 0 (no AMASS, normal operation) frequency bin starts at the
-// Level 1 cutoff frequency and up to as fast as the CPU allows (over 30kHz in limited testing).
-// NOTE: AMASS cutoff frequency multiplied by ISR overdrive factor must not exceed maximum step frequency.
-// NOTE: Current settings are set to overdrive the ISR to no more than 16kHz, balancing CPU overhead
-// and timer accuracy.  Do not alter these settings unless you know what you are doing.
-#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-	#define MAX_AMASS_LEVEL 3
-	// AMASS_LEVEL0: Normal operation. No AMASS. No upper cutoff frequency. Starts at LEVEL1 cutoff frequency.
-	#define AMASS_LEVEL1 (F_CPU/8000) // Over-drives ISR (x2). Defined as F_CPU/(Cutoff frequency in Hz)
-	#define AMASS_LEVEL2 (F_CPU/4000) // Over-drives ISR (x4)
-	#define AMASS_LEVEL3 (F_CPU/2000) // Over-drives ISR (x8)
-
-  #if MAX_AMASS_LEVEL <= 0
-    error "AMASS must have 1 or more levels to operate correctly."
-  #endif
-#endif
-
-
-
-
 // Step and direction port invert masks.
 static PORTPINDEF step_port_invert_mask;
 static PORTPINDEF dir_port_invert_mask;
 
-// Used to avoid ISR nesting of the "Stepper Driver Interrupt". Should never occur though.
-static volatile uint8_t busy;
+/// This interrupt is enabled by ISR_TIMER1_COMPAREA when it sets the motor port bits to execute
+// a step. This ISR resets the motor port after a short period (settings.pulse_microseconds)
+// completing one step cycle.
+void TIM3_IRQHandler(void)
+{
+	if ((TIM3->SR & 0x0001) != 0)                  // check interrupt source
+	{
+		TIM3->SR &= ~(1<<0);                          // clear UIF flag
+		TIM3->CNT = 0;
+ 		NVIC_DisableIRQ(TIM3_IRQn);
+    // Reset stepping pins (leave the direction pins)
+		GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
+	}
+}
 
-// Pointers for the step segment being prepped from the planner buffer. Accessed only by the
-// main program. Pointers may be planning segments or planner blocks ahead of what being executed.
-static plan_block_t *pl_block;     // Pointer to the planner block being prepped
-static st_block_t *st_prep_block;  // Pointer to the stepper block data being prepped
 
-// Segment preparation data struct. Contains all the necessary information to compute new segments
-// based on the current executing planner block.
-typedef struct {
-  uint8_t st_block_index;  // Index of stepper common data block being prepped
-  uint8_t recalculate_flag;
+////================================================================================
 
-  float dt_remainder;
-  float steps_remaining;
-  float step_per_mm;
-  float req_mm_increment;
 
-  #ifdef PARKING_ENABLE
-    uint8_t last_st_block_index;
-    float last_steps_remaining;
-    float last_step_per_mm;
-    float last_dt_remainder;
-  #endif
 
-  uint8_t ramp_type;      // Current segment ramp state
-  float mm_complete;      // End of velocity profile from end of current planner block in (mm).
-                          // NOTE: This value must coincide with a step(no mantissa) when converted.
-  float current_speed;    // Current speed at the end of the segment buffer (mm/min)
-  float maximum_speed;    // Maximum speed of executing block. Not always nominal speed. (mm/min)
-  float exit_speed;       // Exit speed of executing block (mm/min)
-  float accelerate_until; // Acceleration ramp end measured from end of block (mm)
-  float decelerate_after; // Deceleration ramp start measured from end of block (mm)
+#endif
 
-  #ifdef VARIABLE_SPINDLE
-    float inv_rate;    // Used by PWM laser mode to speed up segment calculations.
-    uint8_t current_spindle_pwm;
-  #endif
-} st_prep_t;
-static st_prep_t prep;
-
+////===================================================================
 
 /*    BLOCK VELOCITY PROFILE DEFINITION
           __________________________
@@ -177,18 +125,17 @@ static st_prep_t prep;
 
 // Stepper state initialization. Cycle should only start if the st.cycle_start flag is
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
-void st_wake_up()????????
+void st_wake_up(void)
 {
   // Enable stepper drivers.
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
   { 
-	  SetStepperDisableBit();
+  SetStepperDisableBit();
   }
   else 
   { 
-	  ResetStepperDisableBit(); 
+  ResetStepperDisableBit(); 
   }
-
   // Initialize stepper output bits to ensure first ISR call does not step.
   st.step_outbits = step_port_invert_mask;
 
@@ -202,12 +149,12 @@ void st_wake_up()????????
     // Set step pulse time. Ad hoc computation from oscilloscope. Uses two's complement.
     st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
   #endif
-
+#if 0
   // Enable Stepper Driver Interrupt
   TIM3->ARR = st.step_pulse_time - 1;
   TIM3->EGR = TIM_PSCReloadMode_Immediate;
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-
+#endif
   TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
   /* Set the Autoreload value */
 #ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
@@ -218,30 +165,49 @@ void st_wake_up()????????
 }
 
 
-// Stepper shutdown
-void st_go_idle()
+// Initialize and start the stepper motor subsystem
+void stepper_init(void)
 {
-  // Disable Stepper Driver Interrupt. Allow Stepper Port Reset Interrupt to finish, if active.
-  NVIC_DisableIRQ(TIM2_IRQn);
+#if 0  
+  // Configure step and direction interface pins
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_STEPPERS_DISABLE_PORT, ENABLE);
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = STEPPERS_DISABLE_MASK;
+	GPIO_Init(STEPPERS_DISABLE_PORT, &GPIO_InitStructure);
 
-  busy = false;
+	RCC_APB2PeriphClockCmd(RCC_STEP_PORT, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = STEP_MASK;
+	GPIO_Init(STEP_PORT, &GPIO_InitStructure);
 
-  // Set stepper driver idle state, disabled or enabled, depending on settings and circumstances.
-  bool pin_state = false; // Keep enabled.
-  if (((settings.stepper_idle_lock_time != 0xff) || sys_rt_exec_alarm || sys.state == STATE_SLEEP) && sys.state != STATE_HOMING) {
-    // Force stepper dwell to lock axes for a defined amount of time to ensure the axes come to a complete
-    // stop and not drift from residual inertial forces at the end of the last movement.
-    delay__ms(settings.stepper_idle_lock_time);
-    pin_state = true; // Override. Disable steppers.
-  }
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { pin_state = !pin_state; } // Apply pin invert.
-  if (pin_state) 
-  { 
-	  SetStepperDisableBit();
-  }
-  else 
-  { 
-	  ResetStepperDisableBit();
+	RCC_APB2PeriphClockCmd(RCC_DIRECTION_PORT, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = DIRECTION_MASK;
+	GPIO_Init(DIRECTION_PORT, &GPIO_InitStructure);
+#endif  
+//// Configurating TIM2
+RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+//// RCC->APB1ENR |= RCC_APB1Periph_TIM2;
+TIM_Configuration(TIM2, 1, 1, 1);
+
+  // Configurating TIM3
+////RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	// RCC->APB1ENR |= RCC_APB1Periph_TIM3;
+////TIM_Configuration(TIM3, 1, 1, 1);
+
+  // Stop/Distable TIM2 & TIM3 here
+////NVIC_DisableIRQ(TIM3_IRQn);
+NVIC_DisableIRQ(TIM2_IRQn);
+}
+// Generates the step and direction port invert masks used in the Stepper Interrupt Driver.
+void st_generate_step_dir_invert_masks()
+{
+  uint8_t idx;
+  step_port_invert_mask = 0;
+  dir_port_invert_mask = 0;
+  for (idx=0; idx<N_AXIS; idx++) {
+    if (bit_istrue(settings.step_invert_mask,bit(idx))) { step_port_invert_mask |= step_pin_mask[idx]; }
+    if (bit_istrue(settings.dir_invert_mask,bit(idx))) { dir_port_invert_mask |= direction_pin_mask[idx]; }
   }
 }
 
@@ -308,14 +274,16 @@ else
 if (busy) { // The busy-flag is used to avoid reentering this interrupt
     return; 
     } 
-  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
+////  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
+  set_curr_dir(st.dir_outbits);
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 
   // Then pulse the stepping pins
   #ifdef STEP_PULSE_DELAY
     st.step_bits = (STEP_PORT & ~STEP_MASK) | st.step_outbits; // Store out_bits to prevent overwriting.
   #else  // Normal operation
-	GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | st.step_outbits);
+////	GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | st.step_outbits);
+       put_steps(st.step_outbits) ;
   #endif
 
   // Enable step pulse reset timer so that The Stepper Port Reset Interrupt can reset the signal after
@@ -434,46 +402,8 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   busy = false;
 }
 
-
-/* The Stepper Port Reset Interrupt: Timer0 OVF interrupt handles the falling edge of the step
-   pulse. This should always trigger before the next Timer1 COMPA interrupt and independently
-   finish, if Timer1 is disabled after completing a move.
-   NOTE: Interrupt collisions between the serial and stepper interrupts can cause delays by
-   a few microseconds, if they execute right before one another. Not a big deal, but can
-   cause issues at high step rates if another high frequency asynchronous interrupt is
-   added to Grbl.
-*/
-// This interrupt is enabled by ISR_TIMER1_COMPAREA when it sets the motor port bits to execute
-// a step. This ISR resets the motor port after a short period (settings.pulse_microseconds)
-// completing one step cycle.
-void TIM3_IRQHandler(void)
-{
-	if ((TIM3->SR & 0x0001) != 0)                  // check interrupt source
-	{
-		TIM3->SR &= ~(1<<0);                          // clear UIF flag
-		TIM3->CNT = 0;
- 		NVIC_DisableIRQ(TIM3_IRQn);
-    // Reset stepping pins (leave the direction pins)
-		GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
-	}
-}
-
-
-// Generates the step and direction port invert masks used in the Stepper Interrupt Driver.
-void st_generate_step_dir_invert_masks()
-{
-  uint8_t idx;
-  step_port_invert_mask = 0;
-  dir_port_invert_mask = 0;
-  for (idx=0; idx<N_AXIS; idx++) {
-    if (bit_istrue(settings.step_invert_mask,bit(idx))) { step_port_invert_mask |= step_pin_mask[idx]; }
-    if (bit_istrue(settings.dir_invert_mask,bit(idx))) { dir_port_invert_mask |= direction_pin_mask[idx]; }
-  }
-}
-
-
 // Reset and clear stepper subsystem variables
-void st_reset()
+void st_reset(void)
 {
   // Initialize stepper driver idle state.
   st_go_idle();
@@ -492,8 +422,35 @@ void st_reset()
   st.dir_outbits = dir_port_invert_mask; // Initialize direction bits to default.
 
   // Initialize step and direction port pins.
-  GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
-  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (dir_port_invert_mask & DIRECTION_MASK));
+  steps_reset();
+//// GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
+////  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (dir_port_invert_mask & DIRECTION_MASK));
+}
+// Stepper shutdown
+void st_go_idle(void)
+{
+  // Disable Stepper Driver Interrupt. Allow Stepper Port Reset Interrupt to finish, if active.
+  NVIC_DisableIRQ(TIM2_IRQn);
+
+  busy = false;
+
+  // Set stepper driver idle state, disabled or enabled, depending on settings and circumstances.
+  bool pin_state = false; // Keep enabled.
+  if (((settings.stepper_idle_lock_time != 0xff) || sys_rt_exec_alarm || sys.state == STATE_SLEEP) && sys.state != STATE_HOMING) {
+    // Force stepper dwell to lock axes for a defined amount of time to ensure the axes come to a complete
+    // stop and not drift from residual inertial forces at the end of the last movement.
+    delay__ms(settings.stepper_idle_lock_time);
+    pin_state = true; // Override. Disable steppers.
+  }
+  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { pin_state = !pin_state; } // Apply pin invert.
+  if (pin_state) 
+  { 
+	  SetStepperDisableBit();
+  }
+  else 
+  { 
+	  ResetStepperDisableBit();
+  }
 }
 
 
@@ -554,7 +511,6 @@ static uint8_t st_next_block_index(uint8_t block_index)
     pl_block = NULL; // Set to reload next block.
   }
 #endif
-
 
 /* Prepares step segment buffer. Continuously called from main program.
 
@@ -985,7 +941,6 @@ uint32_t cycles = 1000;////????
   }
 }
 
-
 // Called by realtime status reporting to fetch the current speed being executed. This value
 // however is not exactly the current speed, but the speed computed in the last step segment
 // in the segment buffer. It will always be behind by up to the number of segment blocks (-1)
@@ -996,266 +951,6 @@ float st_get_realtime_rate()
     return prep.current_speed;
   }
   return 0.0f;
-}
-
-#endif
-
-////===================================================================
-void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP)
-{
-TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-NVIC_InitTypeDef NVIC_InitStructure;
-
-TIM_TimeBaseStructure.TIM_Period = Period - 1;
-TIM_TimeBaseStructure.TIM_Prescaler = Prescaler - 1;
-TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-TIM_TimeBaseInit(TIMER, &TIM_TimeBaseStructure);
-
-TIM_ClearITPendingBit(TIMER, TIM_IT_Update);
-TIM_ITConfig(TIMER, TIM_IT_Update, ENABLE);
-TIM_Cmd(TIMER, ENABLE);
-
-NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-if (TIMER == TIM2) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn; 
-  }
-else if (TIMER == TIM3) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn; 
-  }
-else if (TIMER == TIM4) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn; 
-  }
-NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = PP;
-NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-NVIC_Init(&NVIC_InitStructure);
-}
-// Initialize and start the stepper motor subsystem
-void stepper_init(void)
-{
-#if 0  
-  // Configure step and direction interface pins
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_STEPPERS_DISABLE_PORT, ENABLE);
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Pin = STEPPERS_DISABLE_MASK;
-	GPIO_Init(STEPPERS_DISABLE_PORT, &GPIO_InitStructure);
-
-	RCC_APB2PeriphClockCmd(RCC_STEP_PORT, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = STEP_MASK;
-	GPIO_Init(STEP_PORT, &GPIO_InitStructure);
-
-	RCC_APB2PeriphClockCmd(RCC_DIRECTION_PORT, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = DIRECTION_MASK;
-	GPIO_Init(DIRECTION_PORT, &GPIO_InitStructure);
-#endif  
-//// Configurating TIM2
-RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-//// RCC->APB1ENR |= RCC_APB1Periph_TIM2;
-TIM_Configuration(TIM2, 1, 1, 1);
-
-  // Configurating TIM3
-RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-	// RCC->APB1ENR |= RCC_APB1Periph_TIM3;
-TIM_Configuration(TIM3, 1, 1, 1);
-
-  // Stop/Distable TIM2 & TIM3 here
-NVIC_DisableIRQ(TIM3_IRQn);
-NVIC_DisableIRQ(TIM2_IRQn);
-}
-/* "The Stepper Driver Interrupt" - This timer interrupt is the workhorse of Grbl. Grbl employs
-   the venerable Bresenham line algorithm to manage and exactly synchronize multi-axis moves.
-   Unlike the popular DDA algorithm, the Bresenham algorithm is not susceptible to numerical
-   round-off errors and only requires fast integer counters, meaning low computational overhead
-   and maximizing the Arduino's capabilities. However, the downside of the Bresenham algorithm
-   is, for certain multi-axis motions, the non-dominant axes may suffer from un-smooth step
-   pulse trains, or aliasing, which can lead to strange audible noises or shaking. This is
-   particularly noticeable or may cause motion issues at low step frequencies (0-5kHz), but
-   is usually not a physical problem at higher frequencies, although audible.
-     To improve Bresenham multi-axis performance, Grbl uses what we call an Adaptive Multi-Axis
-   Step Smoothing (AMASS) algorithm, which does what the name implies. At lower step frequencies,
-   AMASS artificially increases the Bresenham resolution without effecting the algorithm's
-   innate exactness. AMASS adapts its resolution levels automatically depending on the step
-   frequency to be executed, meaning that for even lower step frequencies the step smoothing
-   level increases. Algorithmically, AMASS is acheived by a simple bit-shifting of the Bresenham
-   step count for each AMASS level. For example, for a Level 1 step smoothing, we bit shift
-   the Bresenham step event count, effectively multiplying it by 2, while the axis step counts
-   remain the same, and then double the stepper ISR frequency. In effect, we are allowing the
-   non-dominant Bresenham axes step in the intermediate ISR tick, while the dominant axis is
-   stepping every two ISR ticks, rather than every ISR tick in the traditional sense. At AMASS
-   Level 2, we simply bit-shift again, so the non-dominant Bresenham axes can step within any
-   of the four ISR ticks, the dominant axis steps every four ISR ticks, and quadruple the
-   stepper ISR frequency. And so on. This, in effect, virtually eliminates multi-axis aliasing
-   issues with the Bresenham algorithm and does not significantly alter Grbl's performance, but
-   in fact, more efficiently utilizes unused CPU cycles overall throughout all configurations.
-     AMASS retains the Bresenham algorithm exactness by requiring that it always executes a full
-   Bresenham step, regardless of AMASS Level. Meaning that for an AMASS Level 2, all four
-   intermediate steps must be completed such that baseline Bresenham (Level 0) count is always
-   retained. Similarly, AMASS Level 3 means all eight intermediate steps must be executed.
-   Although the AMASS Levels are in reality arbitrary, where the baseline Bresenham counts can
-   be multiplied by any integer value, multiplication by powers of two are simply used to ease
-   CPU overhead with bitshift integer operations.
-     This interrupt is simple and dumb by design. All the computational heavy-lifting, as in
-   determining accelerations, is performed elsewhere. This interrupt pops pre-computed segments,
-   defined as constant velocity over n number of steps, from the step segment buffer and then
-   executes them by pulsing the stepper pins appropriately via the Bresenham algorithm. This
-   ISR is supported by The Stepper Port Reset Interrupt which it uses to reset the stepper port
-   after each pulse. The bresenham line tracer algorithm controls all stepper outputs
-   simultaneously with these two interrupts.
-
-   NOTE: This interrupt must be as efficient as possible and complete before the next ISR tick,
-   which for Grbl must be less than 33.3usec (@30kHz ISR rate). Oscilloscope measured time in
-   ISR is 5usec typical and 25usec maximum, well below requirement.
-   NOTE: This ISR expects at least one step to be executed per segment.
-*/
-// TODO: Replace direct updating of the int32 position counters in the ISR somehow. Perhaps use smaller
-// int8 variables and update position counters only when a segment completes. This can get complicated
-// with probing and homing cycles that require true real-time positions.
-void TIM2_IRQHandler(void)
-{
-if ((TIM2->SR & 0x0001) != 0)                  // check interrupt source
-  {
-  TIM2->SR &= ~(1 << 0);                          // clear UIF flag
-  TIM2->CNT = 0;
-  }
-else
-  {
-  return;
-  }
-if (busy) { // The busy-flag is used to avoid reentering this interrupt
-    return; 
-    } 
-////  GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
-  set_curr_dir(st.dir_outbits);
-  TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-
-  // Then pulse the stepping pins
-  #ifdef STEP_PULSE_DELAY
-    st.step_bits = (STEP_PORT & ~STEP_MASK) | st.step_outbits; // Store out_bits to prevent overwriting.
-  #else  // Normal operation
-////	GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | st.step_outbits);
-       put_steps(st.step_outbits) ;
-  #endif
-
-  // Enable step pulse reset timer so that The Stepper Port Reset Interrupt can reset the signal after
-  // exactly settings.pulse_microseconds microseconds, independent of the main Timer1 prescaler.
-   NVIC_EnableIRQ(TIM3_IRQn);
-
-  busy = true;
-
-  // If there is no step segment, attempt to pop one from the stepper buffer
-  if (st.exec_segment == NULL) {
-    // Anything in the buffer? If so, load and initialize next step segment.
-    if (segment_buffer_head != segment_buffer_tail) {
-      // Initialize new step segment and load number of steps to execute
-      st.exec_segment = &segment_buffer[segment_buffer_tail];
-
-      // Initialize step segment timing per step and load number of steps to execute.
-	  TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
-	  /* Set the Autoreload value */
-#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
-	  TIM2->PSC = st.exec_segment->prescaler;
-#endif
-      st.step_count = st.exec_segment->n_step; // NOTE: Can sometimes be zero when moving slow.
-      // If the new segment starts a new planner block, initialize stepper variables and counters.
-      // NOTE: When the segment data index changes, this indicates a new planner block.
-      if ( st.exec_block_index != st.exec_segment->st_block_index ) {
-        st.exec_block_index = st.exec_segment->st_block_index;
-        st.exec_block = &st_block_buffer[st.exec_block_index];
-
-        // Initialize Bresenham line and distance counters
-        st.counter_x = st.counter_y = st.counter_z = (st.exec_block->step_event_count >> 1);
-      }
-      st.dir_outbits = st.exec_block->direction_bits ^ dir_port_invert_mask;
-
-      #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-        // With AMASS enabled, adjust Bresenham axis increment counters according to AMASS level.
-        st.steps[X_AXIS] = st.exec_block->steps[X_AXIS] >> st.exec_segment->amass_level;
-        st.steps[Y_AXIS] = st.exec_block->steps[Y_AXIS] >> st.exec_segment->amass_level;
-        st.steps[Z_AXIS] = st.exec_block->steps[Z_AXIS] >> st.exec_segment->amass_level;
-      #endif
-
-      #ifdef VARIABLE_SPINDLE
-        // Set real-time spindle output as segment is loaded, just prior to the first step.
-        spindle_set_speed(st.exec_segment->spindle_pwm);
-      #endif
-
-    } else {
-      // Segment buffer empty. Shutdown.
-      st_go_idle();
-      // Ensure pwm is set properly upon completion of rate-controlled motion.
-      #ifdef VARIABLE_SPINDLE
-      if (st.exec_block->is_pwm_rate_adjusted) { spindle_set_speed(SPINDLE_PWM_OFF_VALUE); }
-      #endif
-      system_set_exec_state_flag(EXEC_CYCLE_STOP); // Flag main program for cycle end
-      return; // Nothing to do but exit.
-    }
-  }
-
-
-  // Check probing state.
-  if (sys_probe_state == PROBE_ACTIVE) { probe_state_monitor(); }
-
-  // Reset step out bits.
-  st.step_outbits = 0;
-
-  // Execute step displacement profile by Bresenham line algorithm
-  #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-    st.counter_x += st.steps[X_AXIS];
-  #else
-    st.counter_x += st.exec_block->steps[X_AXIS];
-  #endif
-  if (st.counter_x > st.exec_block->step_event_count) {
-    st.step_outbits |= (1<<X_STEP_BIT);
-    st.counter_x -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<X_DIRECTION_BIT)) { sys_position[X_AXIS]--; }
-    else { sys_position[X_AXIS]++; }
-  }
-  #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-    st.counter_y += st.steps[Y_AXIS];
-  #else
-    st.counter_y += st.exec_block->steps[Y_AXIS];
-  #endif
-  if (st.counter_y > st.exec_block->step_event_count) {
-    st.step_outbits |= (1<<Y_STEP_BIT);
-    st.counter_y -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<Y_DIRECTION_BIT)) { sys_position[Y_AXIS]--; }
-    else { sys_position[Y_AXIS]++; }
-  }
-  #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-    st.counter_z += st.steps[Z_AXIS];
-  #else
-    st.counter_z += st.exec_block->steps[Z_AXIS];
-  #endif
-  if (st.counter_z > st.exec_block->step_event_count) {
-    st.step_outbits |= (1<<Z_STEP_BIT);
-    st.counter_z -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<Z_DIRECTION_BIT)) { sys_position[Z_AXIS]--; }
-    else { sys_position[Z_AXIS]++; }
-  }
-
-  // During a homing cycle, lock out and prevent desired axes from moving.
-  if (sys.state == STATE_HOMING) { st.step_outbits &= sys.homing_axis_lock; }
-
-  st.step_count--; // Decrement step events count
-  if (st.step_count == 0) {
-    // Segment is complete. Discard current segment and advance segment indexing.
-    st.exec_segment = NULL;
-    uint8_t segment_tail_next = segment_buffer_tail + 1;
-    if (segment_tail_next == SEGMENT_BUFFER_SIZE)
-    {
-      segment_tail_next = 0;
-    }
-    segment_buffer_tail = segment_tail_next;
-  }
-
-  st.step_outbits ^= step_port_invert_mask;  // Apply step port invert mask
-  busy = false;
 }
 
 

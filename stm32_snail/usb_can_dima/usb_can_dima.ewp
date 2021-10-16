@@ -2240,9 +2240,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\protocol.c</name>
-            <excluded>
-                <configuration>usb_can_dima</configuration>
-            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\report.c</name>
@@ -2360,7 +2357,4 @@
             <name>$PROJ_DIR$\..\common\usb\usbd_usr.c</name>
         </file>
     </group>
-    <file>
-        <name>$PROJ_DIR$\src\xyz.c</name>
-    </file>
 </project>

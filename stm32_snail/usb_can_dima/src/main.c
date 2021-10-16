@@ -141,7 +141,7 @@ CAN1_Init();
             &USR_cb);
 ///=================================  
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+///  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 ////rez=
 xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
 xTaskCreate(grbl_thread, (const char*)"grbl_thread",GRBL_STACK_SIZE/2, 0, APP_PRIORITY, &grbl_thread_handle);

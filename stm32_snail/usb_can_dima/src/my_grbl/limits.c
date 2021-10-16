@@ -22,6 +22,7 @@
 #include "my_grbl.h"
 ////#include "stm32f10x_conf.h"
 #include "board.h"
+#include "my_stepper.h"
 
 
 // Homing axis search distance multiplier. Computed by this value times the cycle travel.
