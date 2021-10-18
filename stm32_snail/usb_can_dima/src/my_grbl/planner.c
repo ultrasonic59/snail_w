@@ -45,7 +45,9 @@ static planner_t pl;
 uint8_t plan_next_block_index(uint8_t block_index)
 {
   block_index++;
-  if (block_index == BLOCK_BUFFER_SIZE) { block_index = 0; }
+  if (block_index == BLOCK_BUFFER_SIZE) { 
+    block_index = 0;
+    }
   return(block_index);
 }
 
@@ -53,7 +55,9 @@ uint8_t plan_next_block_index(uint8_t block_index)
 // Returns the index of the previous block in the ring buffer
 static uint8_t plan_prev_block_index(uint8_t block_index)
 {
-  if (block_index == 0) { block_index = BLOCK_BUFFER_SIZE; }
+  if (block_index == 0) { 
+    block_index = BLOCK_BUFFER_SIZE; 
+    }
   block_index--;
   return(block_index);
 }
@@ -124,13 +128,15 @@ static uint8_t plan_prev_block_index(uint8_t block_index)
   ARM versions should have enough memory and speed for look-ahead blocks numbering up to a hundred or more.
 
 */
-static void planner_recalculate()
+static void planner_recalculate(void)
 {
   // Initialize block index to the last block in the planner buffer.
   uint8_t block_index = plan_prev_block_index(block_buffer_head);
 
   // Bail. Can't do anything with one only one plan-able block.
-  if (block_index == block_buffer_planned) { return; }
+  if (block_index == block_buffer_planned) { 
+    return;
+    }
 
   // Reverse Pass: Coarsely maximize all possible deceleration curves back-planning from the last
   // block in buffer. Cease planning when the last optimal planned or tail pointer is reached.

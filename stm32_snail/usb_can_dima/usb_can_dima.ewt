@@ -2423,6 +2423,9 @@
             <name>$PROJ_DIR$\src\my_grbl\gcode.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\src\my_grbl\grbl_eeprom.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\src\my_grbl\grbl_print.c</name>
         </file>
         <file>
@@ -2497,9 +2500,6 @@
         <file>
             <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
         </file>
-        <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\system_stm32f2xx.c</name>
-        </file>
     </group>
     <group>
         <name>startup</name>
@@ -2508,6 +2508,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\system_stm32f2xx.c</name>
         </file>
     </group>
     <group>
@@ -2567,4 +2570,7 @@
             <name>$PROJ_DIR$\..\common\usb\usbd_usr.c</name>
         </file>
     </group>
+    <file>
+        <name>$PROJ_DIR$\..\common\libraries\eeprom_emul\emul_eeprom.c</name>
+    </file>
 </project>

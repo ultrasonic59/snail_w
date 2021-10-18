@@ -33,6 +33,7 @@ build queue.pbi : index queue.xcl
 build tasks.pbi : index tasks.xcl
 build can_cmds.pbi : index can_cmds.xcl
 build gcode.pbi : index gcode.xcl
+build grbl_eeprom.pbi : index grbl_eeprom.xcl
 build grbl_print.pbi : index grbl_print.xcl
 build grbl_settings.pbi : index grbl_settings.xcl
 build grbl_system.pbi : index grbl_system.xcl
@@ -55,8 +56,8 @@ build stm32f2xx_rcc.pbi : index stm32f2xx_rcc.xcl
 build stm32f2xx_spi.pbi : index stm32f2xx_spi.xcl
 build stm32f2xx_tim.pbi : index stm32f2xx_tim.xcl
 build stm32f2xx_usart.pbi : index stm32f2xx_usart.xcl
-build system_stm32f2xx.pbi : index system_stm32f2xx.xcl
 build stm32f2xx_it.pbi : index stm32f2xx_it.xcl
+build system_stm32f2xx.pbi : index system_stm32f2xx.xcl
 build usbd_cdc_vcp.pbi : index usbd_cdc_vcp.xcl
 build usbd_cdc_vcp_core.pbi : index usbd_cdc_vcp_core.xcl
 build usbd_core.pbi : index usbd_core.xcl
@@ -69,14 +70,16 @@ build usb_bsp.pbi : index usb_bsp.xcl
 build usb_thr.pbi : index usb_thr.xcl
 build usbd_desc.pbi : index usbd_desc.xcl
 build usbd_usr.pbi : index usbd_usr.xcl
+build emul_eeprom.pbi : index emul_eeprom.xcl
 build usb_can_dima_part0.pbi : link can.pbi main.pbi usb_can_board.pbi zzzz.pbi printk1.pbi retarget.pbi heap_2.pbi
-build usb_can_dima_part1.pbi : link list.pbi port.pbi queue.pbi tasks.pbi can_cmds.pbi gcode.pbi grbl_print.pbi
-build usb_can_dima_part2.pbi : link grbl_settings.pbi grbl_system.pbi grbl_thr.pbi jog.pbi limits.pbi motion_control.pbi my_gbrl_serial.pbi
-build usb_can_dima_part3.pbi : link my_stepper.pbi nuts_bolts.pbi planner.pbi probe.pbi protocol.pbi report.pbi misc.pbi
-build usb_can_dima_part4.pbi : link stm32f2xx_can.pbi stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi stm32f2xx_usart.pbi
-build usb_can_dima_part5.pbi : link system_stm32f2xx.pbi stm32f2xx_it.pbi usbd_cdc_vcp.pbi usbd_cdc_vcp_core.pbi usbd_core.pbi usbd_ioreq.pbi usbd_req.pbi
-build usb_can_dima_part6.pbi : link usb_core.pbi usb_dcd.pbi usb_dcd_int.pbi usb_bsp.pbi usb_thr.pbi usbd_desc.pbi usbd_usr.pbi
-build usb_can_dima.pbd : link usb_can_dima_part0.pbi usb_can_dima_part1.pbi usb_can_dima_part2.pbi usb_can_dima_part3.pbi usb_can_dima_part4.pbi usb_can_dima_part5.pbi usb_can_dima_part6.pbi
+build usb_can_dima_part1.pbi : link list.pbi port.pbi queue.pbi tasks.pbi can_cmds.pbi gcode.pbi grbl_eeprom.pbi
+build usb_can_dima_part2.pbi : link grbl_print.pbi grbl_settings.pbi grbl_system.pbi grbl_thr.pbi jog.pbi limits.pbi motion_control.pbi
+build usb_can_dima_part3.pbi : link my_gbrl_serial.pbi my_stepper.pbi nuts_bolts.pbi planner.pbi probe.pbi protocol.pbi report.pbi
+build usb_can_dima_part4.pbi : link misc.pbi stm32f2xx_can.pbi stm32f2xx_flash.pbi stm32f2xx_gpio.pbi stm32f2xx_rcc.pbi stm32f2xx_spi.pbi stm32f2xx_tim.pbi
+build usb_can_dima_part5.pbi : link stm32f2xx_usart.pbi stm32f2xx_it.pbi system_stm32f2xx.pbi usbd_cdc_vcp.pbi usbd_cdc_vcp_core.pbi usbd_core.pbi usbd_ioreq.pbi
+build usb_can_dima_part6.pbi : link usbd_req.pbi usb_core.pbi usb_dcd.pbi usb_dcd_int.pbi usb_bsp.pbi usb_thr.pbi usbd_desc.pbi
+build usb_can_dima_part7.pbi : link usbd_usr.pbi emul_eeprom.pbi
+build usb_can_dima.pbd : link usb_can_dima_part0.pbi usb_can_dima_part1.pbi usb_can_dima_part2.pbi usb_can_dima_part3.pbi usb_can_dima_part4.pbi usb_can_dima_part5.pbi usb_can_dima_part6.pbi usb_can_dima_part7.pbi
 build usb_can_dima.pbw : browsedata usb_can_dima.pbd
 
 

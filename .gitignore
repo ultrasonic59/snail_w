@@ -21,6 +21,13 @@ stm32_snail/mstep_usb/step_debug/
 stm32_snail/mstep_usb/usb_can/
 stm32_snail/usb_can/usb_can/usb_can/
 stm32_snail/usb_can/usb_can/settings/
+stm32_snail/usb_can_dima/usb_can_dima/
+stm32_snail/usb_can_dima/settings/
+stm32_snail/step_axis_dima/step_x_dbg/
+stm32_snail/step_axis_dima/settings/
+stm32_snail/booter/EWARM/snail_boot/
+stm32_snail/booter/EWARM/settings/
+
 
 win/src_vc_2/debug
 win/src_vc_2/ipch
@@ -48,5 +55,6 @@ win/win_snail_dbg/Win32
 *.pbi
 *.dep
 *.xcl
+*.suo
 
 

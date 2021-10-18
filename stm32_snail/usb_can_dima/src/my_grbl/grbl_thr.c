@@ -39,7 +39,7 @@ void grbl_thread(void* pp)
 {
 printk("\n\r grbl_thread\n\r"); 
 ////  serial_init();   // Setup serial baud rate and interrupts
-////  settings_init(); // Load Grbl settings from EEPROM
+  settings_init(); // Load Grbl settings from EEPROM
   stepper_init();  // Configure stepper pins and interrupt timers
 ////  system_init();   // Configure pinout pins and pin-change interrupt
   memset(sys_position,0,sizeof(sys_position)); // Clear machine position.

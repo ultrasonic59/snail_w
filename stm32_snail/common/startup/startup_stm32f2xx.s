@@ -188,7 +188,7 @@ __vector_table
         PUBWEAK Reset_Handler
         SECTION .text:CODE:NOROOT:REORDER(2)
 Reset_Handler
-;///        LDR     R1, =0x08010000
+;///      LDR     R1, =0x08010000
 ;///        LDR     R0, [R1]
 ;///        MSR     MSP, R0
         LDR     R0, =SystemInit

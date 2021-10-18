@@ -76,6 +76,8 @@
 #include "can.h"
 
 #include "misc.h"
+#include "emul_eeprom.h"
+
 #include "printk.h"
 ///=======================================================================
 extern void vcp_thread(void *pdata);
@@ -129,7 +131,9 @@ int main( void )
 #endif
 __disable_irq();
 hw_board_init();
-
+////=============================
+eeprom_init();
+///=============================
 printk("\n\r CAN1_Init"); 
 CAN1_Init();
 ////================================
