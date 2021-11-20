@@ -25,6 +25,7 @@
 #include "stm32f2xx_tim.h"
 #include "misc.h"
 #include "my_stepper.h"
+#include "printk.h"
 
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
 extern void  put_steps(uint8_t steps);
@@ -55,7 +56,7 @@ curr_dir=dirs;
 
 ////===============================================
 
-#if 0
+#if 1
 // Step and direction port invert masks.
 static PORTPINDEF step_port_invert_mask;
 static PORTPINDEF dir_port_invert_mask;
@@ -71,7 +72,8 @@ void TIM3_IRQHandler(void)
 		TIM3->CNT = 0;
  		NVIC_DisableIRQ(TIM3_IRQn);
     // Reset stepping pins (leave the direction pins)
-		GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
+////		GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
+        put_steps(0) ;
 	}
 }
 
@@ -121,12 +123,25 @@ void TIM3_IRQHandler(void)
   parameters for the stepper algorithm to accurately trace the profile. These critical parameters
   are shown and defined in the above illustration.
 */
+void tst_print(void)
+{
+  ////==============================================
+  printk("\n\r [out=%x,idx=%x][n_step=%x,idx=%x]cycl=[%x][steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
+         ,st.step_outbits
+         ,st.exec_segment->n_step,st.exec_segment->st_block_index,st.exec_segment->cycles_per_tick
+         ,st_block_buffer[st.exec_segment->st_block_index].steps[0]
+         ,st_block_buffer[st.exec_segment->st_block_index].steps[1]
+         ,st_block_buffer[st.exec_segment->st_block_index].steps[2]
+           ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
+  ////==============================================
+}
 
 
 // Stepper state initialization. Cycle should only start if the st.cycle_start flag is
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up(void)
 {
+uint8_t rdy_blk=1;  
   // Enable stepper drivers.
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
   { 
@@ -149,7 +164,7 @@ void st_wake_up(void)
     // Set step pulse time. Ad hoc computation from oscilloscope. Uses two's complement.
     st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
   #endif
-#if 0
+#if 1
   // Enable Stepper Driver Interrupt
   TIM3->ARR = st.step_pulse_time - 1;
   TIM3->EGR = TIM_PSCReloadMode_Immediate;
@@ -162,6 +177,11 @@ void st_wake_up(void)
 #endif
   TIM2->EGR = TIM_PSCReloadMode_Immediate;
   NVIC_EnableIRQ(TIM2_IRQn);
+ rdy_blk=1; 
+  ////=========================================================         
+          tst_print();
+ ////=========================================================         
+  
 }
 
 
@@ -187,16 +207,16 @@ void stepper_init(void)
 #endif  
 //// Configurating TIM2
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-//// RCC->APB1ENR |= RCC_APB1Periph_TIM2;
+ RCC->APB1ENR |= RCC_APB1Periph_TIM2;
 TIM_Configuration(TIM2, 1, 1, 1);
 
   // Configurating TIM3
-////RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	// RCC->APB1ENR |= RCC_APB1Periph_TIM3;
-////TIM_Configuration(TIM3, 1, 1, 1);
+TIM_Configuration(TIM3, 1, 1, 1);
 
   // Stop/Distable TIM2 & TIM3 here
-////NVIC_DisableIRQ(TIM3_IRQn);
+NVIC_DisableIRQ(TIM3_IRQn);
 NVIC_DisableIRQ(TIM2_IRQn);
 }
 // Generates the step and direction port invert masks used in the Stepper Interrupt Driver.
