@@ -157,6 +157,12 @@
 #define UART_TX1_PIN_NPIN	    6
 #define UART_TX1_PIN_GPIO	    GPIOB
 #define UART_TX1_PIN_RCC  	    RCC_AHB1Periph_GPIOB
+#define UART1_CLK                   RCC_APB2Periph_USART1
+#define UART_CLK_INIT               RCC_APB2PeriphClockCmd
+
+#define UART1_RX_AF                 GPIO_AF_USART1
+#define UART1_TX_AF                 GPIO_AF_USART1
+
 ////============== CAN1_RX ============================
 #define CAN1_RX_PIN	    	GPIO_Pin_8
 #define CAN1_RX_PIN_NPIN	8

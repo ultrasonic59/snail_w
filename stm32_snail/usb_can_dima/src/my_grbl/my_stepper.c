@@ -126,13 +126,15 @@ void TIM3_IRQHandler(void)
 void tst_print(void)
 {
   ////==============================================
-  printk("\n\r [out=%x,idx=%x][n_step=%x,idx=%x]cycl=[%x][steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
+  printk("\n\r [out=%x][n_step=%x,idx=%x]cycl=[%x][steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
          ,st.step_outbits
-         ,st.exec_segment->n_step,st.exec_segment->st_block_index,st.exec_segment->cycles_per_tick
-         ,st_block_buffer[st.exec_segment->st_block_index].steps[0]
-         ,st_block_buffer[st.exec_segment->st_block_index].steps[1]
-         ,st_block_buffer[st.exec_segment->st_block_index].steps[2]
-           ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
+         ,st.exec_segment->n_step
+         ,st.exec_segment->st_block_index
+         ,st.exec_segment->cycles_per_tick
+         ,st_block_buffer[st.exec_segment->st_block_index].steps_[0]
+         ,st_block_buffer[st.exec_segment->st_block_index].steps_[1]
+         ,st_block_buffer[st.exec_segment->st_block_index].steps_[2]
+         ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
   ////==============================================
 }
 
@@ -141,7 +143,7 @@ void tst_print(void)
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up(void)
 {
-uint8_t rdy_blk=1;  
+////uint8_t rdy_blk=1;  
   // Enable stepper drivers.
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
   { 
@@ -151,6 +153,7 @@ uint8_t rdy_blk=1;
   { 
   ResetStepperDisableBit(); 
   }
+#if 1 
   // Initialize stepper output bits to ensure first ISR call does not step.
   st.step_outbits = step_port_invert_mask;
 
@@ -177,7 +180,8 @@ uint8_t rdy_blk=1;
 #endif
   TIM2->EGR = TIM_PSCReloadMode_Immediate;
   NVIC_EnableIRQ(TIM2_IRQn);
- rdy_blk=1; 
+#endif
+//// rdy_blk=1; 
   ////=========================================================         
           tst_print();
  ////=========================================================         
@@ -205,6 +209,7 @@ void stepper_init(void)
 	GPIO_InitStructure.GPIO_Pin = DIRECTION_MASK;
 	GPIO_Init(DIRECTION_PORT, &GPIO_InitStructure);
 #endif  
+#if 1
 //// Configurating TIM2
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
  RCC->APB1ENR |= RCC_APB1Periph_TIM2;
@@ -218,6 +223,7 @@ TIM_Configuration(TIM3, 1, 1, 1);
   // Stop/Distable TIM2 & TIM3 here
 NVIC_DisableIRQ(TIM3_IRQn);
 NVIC_DisableIRQ(TIM2_IRQn);
+#endif
 }
 // Generates the step and direction port invert masks used in the Stepper Interrupt Driver.
 void st_generate_step_dir_invert_masks()
@@ -280,6 +286,7 @@ void st_generate_step_dir_invert_masks()
 // TODO: Replace direct updating of the int32 position counters in the ISR somehow. Perhaps use smaller
 // int8 variables and update position counters only when a segment completes. This can get complicated
 // with probing and homing cycles that require true real-time positions.
+#if 1
 void TIM2_IRQHandler(void)
 {
 if ((TIM2->SR & 0x0001) != 0)                  // check interrupt source
@@ -372,7 +379,7 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_x += st.steps[X_AXIS];
   #else
-    st.counter_x += st.exec_block->steps[X_AXIS];
+    st.counter_x += st.exec_block->steps_[X_AXIS];
   #endif
   if (st.counter_x > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<X_STEP_BIT);
@@ -383,7 +390,7 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_y += st.steps[Y_AXIS];
   #else
-    st.counter_y += st.exec_block->steps[Y_AXIS];
+    st.counter_y += st.exec_block->steps_[Y_AXIS];
   #endif
   if (st.counter_y > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<Y_STEP_BIT);
@@ -394,7 +401,7 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_z += st.steps[Z_AXIS];
   #else
-    st.counter_z += st.exec_block->steps[Z_AXIS];
+    st.counter_z += st.exec_block->steps_[Z_AXIS];
   #endif
   if (st.counter_z > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<Z_STEP_BIT);
@@ -422,6 +429,7 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   busy = false;
 }
 
+#endif
 // Reset and clear stepper subsystem variables
 void st_reset(void)
 {
@@ -588,13 +596,17 @@ void st_prep_buffer()
         st_prep_block->direction_bits = pl_block->direction_bits;
         uint8_t idx;
         #ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-          for (idx=0; idx<N_AXIS; idx++) { st_prep_block->steps[idx] = (pl_block->steps[idx] << 1); }
+          for (idx=0; idx<N_AXIS; idx++) { 
+            st_prep_block->steps_[idx] = (pl_block->steps[idx] << 1); 
+          }
           st_prep_block->step_event_count = (pl_block->step_event_count << 1);
         #else
           // With AMASS enabled, simply bit-shift multiply all Bresenham data by the max AMASS
           // level, such that we never divide beyond the original data anywhere in the algorithm.
           // If the original data is divided, we can lose a step from integer roundoff.
-          for (idx=0; idx<N_AXIS; idx++) { st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL; }
+          for (idx=0; idx<N_AXIS; idx++) { 
+            st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL; 
+            }
           st_prep_block->step_event_count = pl_block->step_event_count << MAX_AMASS_LEVEL;
         #endif
 

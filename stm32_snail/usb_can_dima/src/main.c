@@ -70,21 +70,29 @@
 #include "stm32f2xx_rcc.h"
 
 #include "board.h"
-#include "usbd_core.h"
-#include "usbd_desc.h"
-
+#ifdef USEUSB  
+  #include "usbd_core.h"
+  #include "usbd_desc.h"
+#endif
+   
 #include "can.h"
 
 #include "misc.h"
 #include "emul_eeprom.h"
 
 #include "printk.h"
+   
+   
 ///=======================================================================
 extern void vcp_thread(void *pdata);
 extern void grbl_thread(void* pp);
 
 extern TaskHandle_t  vcp_thread_handle;
 extern TaskHandle_t  grbl_thread_handle;
+#ifndef USEUSB
+#include "stm32f2xx_usart.h"
+#endif
+
 
 ///extern void usb_thread( void *arg );
 ///extern void init_hdlc_vcp(void);
@@ -93,6 +101,7 @@ extern TaskHandle_t  grbl_thread_handle;
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 void tst_task( void *pvParameters );
 ///==================================
+#ifdef USEUSB
 TaskHandle_t  usb_thread_handle;
 ///==================================
 ///==================================
@@ -105,7 +114,7 @@ extern USBD_Class_cb_TypeDef  USBD_CDC_cb;
 ////#define USBD_Class_cb USBD_CDC_cb
 
 extern USBD_Usr_cb_TypeDef USR_cb;
-
+#endif ///USEUSB
 ////========================================================
 void uDelay (const uint32_t usec)
 {
@@ -137,6 +146,7 @@ eeprom_init();
 printk("\n\r CAN1_Init"); 
 CAN1_Init();
 ////================================
+#ifdef USEUSB
 ////=================================  
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
@@ -144,10 +154,13 @@ CAN1_Init();
             &USBD_Class_cb, 
             &USR_cb);
 ///=================================  
+#endif ////USEUSB
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 ///  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 ////rez=
+#ifdef USEUSB
 xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
+#endif
 xTaskCreate(grbl_thread, (const char*)"grbl_thread",GRBL_STACK_SIZE/2, 0, APP_PRIORITY, &grbl_thread_handle);
 
   

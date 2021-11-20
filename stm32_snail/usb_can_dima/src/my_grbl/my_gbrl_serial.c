@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include "my_grbl.h"
 #include "printk.h"
-
+#ifndef USEUSB
+#include "stm32f2xx_usart.h"
+#endif
 #define RX_RING_BUFFER (RX_BUFFER_SIZE)
 #define TX_RING_BUFFER (TX_BUFFER_SIZE)
 
@@ -45,6 +47,11 @@ uint8_t serial_get_tx_buffer_count(void)
 
 // Writes one byte to the TX serial buffer. Called by main program.
 void serial_write(uint8_t data) {
+#ifndef USEUSB
+  USART_SendData(USART1, data);
+  while (!(USART1->SR & USART_FLAG_TXE));
+    return;
+#else
   // Calculate next head
 uint8_t next_head = serial_tx_buffer_head + 1;
 ////printk("%c",data);
@@ -65,6 +72,7 @@ if (next_head == TX_RING_BUFFER) {
   serial_tx_buffer[serial_tx_buffer_head] = data;
 
  serial_tx_buffer_head = next_head;
+#endif
 }
 
 // Fetches the first byte in the serial read buffer. Called by main program.
@@ -103,20 +111,32 @@ uint8_t tail = serial_tx_buffer_tail; // Temporary serial_rx_buffer_tail (to opt
 extern int send_char_dbg(int ch); 
 
 ////===================================================================
+#ifdef USEUSB
 void OnUsbDataRx(uint8_t* data_in, uint16_t length)
 {
 	//lcd_write_char(*dataIn);
 uint8_t next_head;
 uint8_t data;
-uint16_t ii=0;
+///uint16_t ii=0;
 //// Write data to buffer unless it is full.
 while (length != 0){
   data = *(data_in+ii);
+#else 
+void USART1_IRQHandler (void) 
+{
+    volatile unsigned int IIR;
+    uint8_t data;
+    uint8_t next_head;
+
+    IIR = USART1->SR;
+    if (IIR & USART_FLAG_RXNE) 
+    {                  // read interrupt
+        data = USART1->DR & 0x1FF;
+#endif
   ////====================================
- ///     send_char_dbg(data);
-////  printk("[%x]",data);
+ ////       serial_write(data+1);
   ////====================================
-  ii++;
+ ///// ii++;
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.
   switch (data) {
@@ -215,7 +235,11 @@ while (length != 0){
         }
       }
   }
+#ifndef USEUSB
+        USART1->SR &= ~USART_FLAG_RXNE;	          // clear interrupt
+#else
     length--;
+#endif
    }
 }
 ///=========================================================================

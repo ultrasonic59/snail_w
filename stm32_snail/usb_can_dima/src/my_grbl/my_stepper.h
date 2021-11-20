@@ -29,7 +29,7 @@
 // discarded when entirely consumed and completed by the segment buffer. Also, AMASS alters this
 // data for its own use.
 typedef struct st_block_s_{
-  uint32_t steps[N_AXIS];
+  uint32_t steps_[N_AXIS];
   uint32_t step_event_count;
   uint8_t direction_bits;
   #ifdef VARIABLE_SPINDLE

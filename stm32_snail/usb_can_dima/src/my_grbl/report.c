@@ -114,11 +114,14 @@ void report_status_message(uint8_t status_code)
 {
   switch(status_code) {
     case STATUS_OK: // STATUS_OK
-      printPgmString(PSTR("ok\r\n")); break;
+      printPgmString(PSTR("ok\r\n")); 
+      break;
     default:
       printPgmString(PSTR("Err:"));
       print_uint8_base10(status_code);
       report_util_line_feed();
+      break;
+      
   }
 }
 

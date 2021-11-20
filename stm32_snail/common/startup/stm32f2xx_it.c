@@ -216,10 +216,6 @@ void DMA2_Stream3_IRQHandler(void)
 {
 ////sdio_dma_irq();
 }
-void USART1_IRQHandler(void)
-{  
-////usart1_irq();
-}
 extern void usart1_tx_dma_irq(void);
 void DMA2_Stream7_IRQHandler(void)
 { 
