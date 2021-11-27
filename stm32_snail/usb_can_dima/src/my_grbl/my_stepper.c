@@ -126,16 +126,18 @@ void TIM3_IRQHandler(void)
 void tst_print(void)
 {
   ////==============================================
-  printk("\n\r [out=%x][n_step=%x,idx=%x]cycl=[%x][steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
+  printk("\n\r [out=%x][n_step=%x,idx=%x]cycl=[%x]"
          ,st.step_outbits
          ,st.exec_segment->n_step
          ,st.exec_segment->st_block_index
          ,st.exec_segment->cycles_per_tick
+          );
+  printk("\n\r [steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
          ,st_block_buffer[st.exec_segment->st_block_index].steps_[0]
          ,st_block_buffer[st.exec_segment->st_block_index].steps_[1]
          ,st_block_buffer[st.exec_segment->st_block_index].steps_[2]
          ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
-  ////==============================================
+ ////==============================================
 }
 
 
@@ -143,6 +145,7 @@ void tst_print(void)
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up(void)
 {
+  uint32_t tst;
 ////uint8_t rdy_blk=1;  
   // Enable stepper drivers.
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
@@ -167,13 +170,33 @@ void st_wake_up(void)
     // Set step pulse time. Ad hoc computation from oscilloscope. Uses two's complement.
     st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
   #endif
+    
 #if 1
   // Enable Stepper Driver Interrupt
   TIM3->ARR = st.step_pulse_time - 1;
   TIM3->EGR = TIM_PSCReloadMode_Immediate;
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 #endif
-  TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
+  if (st.exec_segment == NULL) {
+    if (segment_buffer_head != segment_buffer_tail) {
+      st.exec_segment = &segment_buffer[segment_buffer_tail];
+ 
+    tst=st.exec_segment->cycles_per_tick - 1;
+    TIM2->ARR = tst;
+    }
+    else
+    {
+     printk("\n\r Error segment"); 
+     return;
+    }
+  }
+tst=st.exec_segment->cycles_per_tick - 1;
+TIM2->ARR = tst;
+  ////=========================================================         
+          tst_print();
+ ////=========================================================         
+    
+ //// TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
   /* Set the Autoreload value */
 #ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
   TIM2->PSC = st.exec_segment->prescaler;
@@ -182,9 +205,6 @@ void st_wake_up(void)
   NVIC_EnableIRQ(TIM2_IRQn);
 #endif
 //// rdy_blk=1; 
-  ////=========================================================         
-          tst_print();
- ////=========================================================         
   
 }
 
@@ -370,7 +390,9 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
 
 
   // Check probing state.
-  if (sys_probe_state == PROBE_ACTIVE) { probe_state_monitor(); }
+  if (sys_probe_state == PROBE_ACTIVE) { 
+    probe_state_monitor(); 
+    }
 
   // Reset step out bits.
   st.step_outbits = 0;
@@ -384,8 +406,12 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   if (st.counter_x > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<X_STEP_BIT);
     st.counter_x -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<X_DIRECTION_BIT)) { sys_position[X_AXIS]--; }
-    else { sys_position[X_AXIS]++; }
+    if (st.exec_block->direction_bits & (1<<X_DIRECTION_BIT)) { 
+      sys_position[X_AXIS]--; 
+      }
+    else { 
+      sys_position[X_AXIS]++; 
+      }
   }
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_y += st.steps[Y_AXIS];
@@ -395,8 +421,12 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   if (st.counter_y > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<Y_STEP_BIT);
     st.counter_y -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<Y_DIRECTION_BIT)) { sys_position[Y_AXIS]--; }
-    else { sys_position[Y_AXIS]++; }
+    if (st.exec_block->direction_bits & (1<<Y_DIRECTION_BIT)) { 
+      sys_position[Y_AXIS]--; 
+      }
+    else { 
+      sys_position[Y_AXIS]++; 
+      }
   }
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_z += st.steps[Z_AXIS];
@@ -406,12 +436,18 @@ if (busy) { // The busy-flag is used to avoid reentering this interrupt
   if (st.counter_z > st.exec_block->step_event_count) {
     st.step_outbits |= (1<<Z_STEP_BIT);
     st.counter_z -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits & (1<<Z_DIRECTION_BIT)) { sys_position[Z_AXIS]--; }
-    else { sys_position[Z_AXIS]++; }
+    if (st.exec_block->direction_bits & (1<<Z_DIRECTION_BIT)) { 
+      sys_position[Z_AXIS]--; 
+      }
+    else { 
+      sys_position[Z_AXIS]++; 
+      }
   }
 
   // During a homing cycle, lock out and prevent desired axes from moving.
-  if (sys.state == STATE_HOMING) { st.step_outbits &= sys.homing_axis_lock; }
+  if (sys.state == STATE_HOMING) { 
+    st.step_outbits &= sys.homing_axis_lock; 
+    }
 
   st.step_count--; // Decrement step events count
   if (st.step_count == 0) {
@@ -556,7 +592,9 @@ static uint8_t st_next_block_index(uint8_t block_index)
 void st_prep_buffer()
 {
   // Block step prep buffer, while in a suspend state and there is no suspend motion to execute.
-  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) { return; }
+  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) { 
+    return; 
+    }
 
   while (segment_buffer_tail != segment_next_head) { // Check if we need to fill the buffer.
 
