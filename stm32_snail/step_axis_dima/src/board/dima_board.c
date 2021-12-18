@@ -114,24 +114,6 @@ GPIO_InitStructure.GPIO_Pin = CONC0_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 GPIO_Init( CONC0_PIN_GPIO, &GPIO_InitStructure );
-////=============== ENC_A ============================
-////RCC_AHB1PeriphClockCmd(ENC_A_PIN_RCC, ENABLE);
-////GPIO_InitStructure.GPIO_Pin = ENC_A_PIN;
-////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-////GPIO_Init( ENC_A_PIN_GPIO, &GPIO_InitStructure );
-////=============== ENC_B ============================
-////RCC_AHB1PeriphClockCmd(ENC_B_PIN_RCC, ENABLE);
-////GPIO_InitStructure.GPIO_Pin = ENC_B_PIN;
-////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-////GPIO_Init( ENC_B_PIN_GPIO, &GPIO_InitStructure );
-////=============== ENC_C ============================
-////RCC_AHB1PeriphClockCmd(ENC_C_PIN_RCC, ENABLE);
-////GPIO_InitStructure.GPIO_Pin = ENC_C_PIN;
-////GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-/////GPIO_Init( ENC_C_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_RESET ============================
 RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_RESET_PIN;
@@ -268,18 +250,6 @@ NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 
 }
-/*
-void init_enc_tim(void)
-{
-////============= DPX_R ========================
-RCC->APB1ENR |= ENC_TIM_RCC;
-ENC_TIM ->CCER = TIM_CCER_CC1P | TIM_CCER_CC2P;
-ENC_TIM ->CCMR1 = TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0;
-ENC_TIM->SMCR = TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1;
-ENC_TIM->ARR = ENC_TIM_PERIOD;////
-ENC_TIM->CR1 = TIM_CR1_CEN;
-}
-*/
 
 void stop_mot_step_tim(void)
 {

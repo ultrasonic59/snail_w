@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail\stm32_snail\step_axis_dima\settings\step_axis_dima.step_x_dbg.driver.xcl" 
 
 @echo off 
 :end

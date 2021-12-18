@@ -7,7 +7,7 @@
 #include "board.h"
 #include "printk.h"
 
-#include "snail_cmds.h"
+#include "snail_can_cmds.h"
 
 cmd_t cur_cmd={0};
 
@@ -50,6 +50,7 @@ printk("\n\r rd[%x]",tst);
 ena_mot(0) ;
 for(;;)
 {
+#if 0
 if(cur_cmd.cmd==0)
   msleep(10);
 else
@@ -69,6 +70,7 @@ else
         break;
     }
   }
+#endif
 if(check_push_key_dbg())
   {
   key=get_byte_dbg() ;  
