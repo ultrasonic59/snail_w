@@ -24,8 +24,17 @@
 #include "stm32f2xx_rcc.h"
 #include "stm32f2xx_tim.h"
 #include "misc.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
+#include "queue.h"
+
 #include "my_stepper.h"
 #include "printk.h"
+
+extern xQueueHandle rdy_to_send;
+
 
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
 extern void  put_steps(uint8_t steps);
@@ -34,15 +43,22 @@ extern void  put_steps(uint8_t steps);
 static volatile uint8_t busy;
 uint8_t curr_dir=0;
 
-static st_block_t st_block_buffer[SEGMENT_BUFFER_SIZE-1];
-static segment_t segment_buffer[SEGMENT_BUFFER_SIZE];
-static stepper_t st;
+////static 
+st_block_t st_block_buffer[SEGMENT_BUFFER_SIZE-1];
+////static 
+segment_t segment_buffer[SEGMENT_BUFFER_SIZE];
+////static 
+stepper_t st;
 // Step segment ring buffer indices
-static volatile uint8_t segment_buffer_tail;
-static uint8_t segment_buffer_head;
+///static 
+volatile uint8_t segment_buffer_tail;
+///static 
+uint8_t segment_buffer_head;
 static uint8_t segment_next_head;
-static uint16_t step_port_invert_mask;
-static uint16_t dir_port_invert_mask;
+///static 
+uint16_t step_port_invert_mask;
+///static 
+uint16_t dir_port_invert_mask;
 static plan_block_t *pl_block;     // Pointer to the planner block being prepped
 static st_block_t *st_prep_block;  // Pointer to the stepper block data being prepped
 static st_prep_t prep;
@@ -56,7 +72,7 @@ curr_dir=dirs;
 
 ////===============================================
 
-#if 1
+#if 0
 // Step and direction port invert masks.
 static PORTPINDEF step_port_invert_mask;
 static PORTPINDEF dir_port_invert_mask;
@@ -123,28 +139,13 @@ void TIM3_IRQHandler(void)
   parameters for the stepper algorithm to accurately trace the profile. These critical parameters
   are shown and defined in the above illustration.
 */
-void tst_print(void)
-{
-  ////==============================================
-  printk("\n\r [out=%x][n_step=%x,idx=%x]cycl=[%x]"
-         ,st.step_outbits
-         ,st.exec_segment->n_step
-         ,st.exec_segment->st_block_index
-         ,st.exec_segment->cycles_per_tick
-          );
-  printk("\n\r [steps0=%x][steps1=%x][steps2=%x][ev_cnt=%x]"
-         ,st_block_buffer[st.exec_segment->st_block_index].steps_[0]
-         ,st_block_buffer[st.exec_segment->st_block_index].steps_[1]
-         ,st_block_buffer[st.exec_segment->st_block_index].steps_[2]
-         ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
- ////==============================================
-}
-
 
 // Stepper state initialization. Cycle should only start if the st.cycle_start flag is
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up(void)
 {
+uint8_t  btmp=0;
+
   uint32_t tst;
 ////uint8_t rdy_blk=1;  
   // Enable stepper drivers.
@@ -156,7 +157,7 @@ void st_wake_up(void)
   { 
   ResetStepperDisableBit(); 
   }
-#if 1 
+#if 0
   // Initialize stepper output bits to ensure first ISR call does not step.
   st.step_outbits = step_port_invert_mask;
 
@@ -171,7 +172,7 @@ void st_wake_up(void)
     st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
   #endif
     
-#if 1
+#if 0
   // Enable Stepper Driver Interrupt
   TIM3->ARR = st.step_pulse_time - 1;
   TIM3->EGR = TIM_PSCReloadMode_Immediate;
@@ -192,8 +193,16 @@ void st_wake_up(void)
   }
 tst=st.exec_segment->cycles_per_tick - 1;
 TIM2->ARR = tst;
-  ////=========================================================         
+  ////=========================================================  
+  st.step_outbits = step_port_invert_mask;
+
+  if (st.exec_segment == NULL) {
+    if (segment_buffer_head != segment_buffer_tail) {
+      st.exec_segment = &segment_buffer[segment_buffer_tail];
+
           tst_print();
+ sys.state &= ~STATE_CYCLE;
+////  st_go_idle();
  ////=========================================================         
     
  //// TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
@@ -204,6 +213,23 @@ TIM2->ARR = tst;
   TIM2->EGR = TIM_PSCReloadMode_Immediate;
   NVIC_EnableIRQ(TIM2_IRQn);
 #endif
+  
+  ////========================================================= 
+  st.step_outbits = step_port_invert_mask;
+
+  if (st.exec_segment == NULL) {
+    if (segment_buffer_head != segment_buffer_tail) {
+      st.exec_segment = &segment_buffer[segment_buffer_tail];
+    }
+  }
+  
+xQueueSend(rdy_to_send,&btmp,TIMEOUT_SEND);
+
+////          tst_print();
+//// sys.state &= ~STATE_CYCLE;
+////  st_go_idle();
+ ////=========================================================         
+  
 //// rdy_blk=1; 
   
 }
@@ -229,7 +255,7 @@ void stepper_init(void)
 	GPIO_InitStructure.GPIO_Pin = DIRECTION_MASK;
 	GPIO_Init(DIRECTION_PORT, &GPIO_InitStructure);
 #endif  
-#if 1
+#if 0
 //// Configurating TIM2
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
  RCC->APB1ENR |= RCC_APB1Periph_TIM2;
@@ -306,7 +332,7 @@ void st_generate_step_dir_invert_masks()
 // TODO: Replace direct updating of the int32 position counters in the ISR somehow. Perhaps use smaller
 // int8 variables and update position counters only when a segment completes. This can get complicated
 // with probing and homing cycles that require true real-time positions.
-#if 1
+#if 0
 void TIM2_IRQHandler(void)
 {
 if ((TIM2->SR & 0x0001) != 0)                  // check interrupt source
@@ -940,8 +966,8 @@ void st_prep_buffer()
     float inv_rate = dt/(last_n_steps_remaining - step_dist_remaining); // Compute adjusted step rate inverse
 
     // Compute CPU cycles per step for the prepped segment.
- ////???	uint32_t cycles = (uint32_t)ceilf((TICKS_PER_MICROSECOND * 1000000) *inv_rate * 60); // (cycles/step)
-uint32_t cycles = 1000;////????
+	uint32_t cycles = (uint32_t)ceilf((TICKS_PER_MICROSECOND * 1000000) *inv_rate * 60); // (cycles/step)
+////uint32_t cycles = 1000;////????
     #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
       // Compute step timing and multi-axis smoothing level.
       // NOTE: AMASS overdrives the timer with each level, so only one prescalar is required.

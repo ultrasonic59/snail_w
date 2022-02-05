@@ -154,6 +154,8 @@ const PORTPINDEF limit_pin_mask[N_AXIS] =
     error "AMASS must have 1 or more levels to operate correctly."
   #endif
 #endif
+      
+#define TIMEOUT_SEND	10
 
 extern void stepper_init(void);
 extern void SetStepperDisableBit(void); 

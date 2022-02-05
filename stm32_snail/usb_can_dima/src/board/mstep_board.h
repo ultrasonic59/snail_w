@@ -224,6 +224,7 @@
 #define UART_DBG_TX_SOURCE      GPIO_Pin_2
 #define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
+
 extern void init_gpio(void);
 extern void hw_board_init(void);
 extern void  on_led0(uint8_t idat);

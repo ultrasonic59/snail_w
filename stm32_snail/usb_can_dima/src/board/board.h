@@ -10,6 +10,8 @@
 #define VCP_RX_STACK_SIZE	        1024////( ( unsigned short ) 512 )
 #define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
 #define GRBL_STACK_SIZE                 1024////
+#define CAN_SEND_STACK_SIZE                 1024////
+
 #define         APP_PRIORITY	      (6)	
 #define APPLICATION_STACK_SIZE         (4000)
 
