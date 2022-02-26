@@ -514,7 +514,7 @@ void obr_segment(void)
 #else
  ////          nTimer1Out = st.exec_segment->cycles_per_tick;
                 tTimer = st.exec_segment->cycles_per_tick;
-                printf("\n nTimer1Out [%d]", st.exec_segment->cycles_per_tick);
+ ////               printf("\n nTimer1Out [%d]", st.exec_segment->cycles_per_tick);
 #if 0
                printf("\n nTimer1Out [%d][%d][%d][%d]", st.exec_segment->cycles_per_tick
                     ,settings.steps_per_mm[X_AXIS]
@@ -566,11 +566,12 @@ void obr_segment(void)
         if (sys_probe_state == PROBE_ACTIVE) {
             probe_state_monitor();
         }
-
+#if 0
         printf("\n st.step_count[%d:%d][%d][%d][%d]", st.step_count, st.exec_block->step_event_count
             , st.steps[X_AXIS]
             , st.steps[Y_AXIS]
             , st.steps[Z_AXIS] );
+#endif
     
         do
         {
@@ -586,8 +587,12 @@ void obr_segment(void)
                 st.step_outbits |= (1 << X_STEP_BIT);
                 tst_cnt[X_AXIS] ++;
                 st.counter_x -= st.exec_block->step_event_count;
-                if (st.exec_block->direction_bits & (1 << X_DIRECTION_BIT)) { sys_position[X_AXIS]--; }
-                else { sys_position[X_AXIS]++; }
+                if (st.exec_block->direction_bits & (1 << X_DIRECTION_BIT)) { 
+                    sys_position[X_AXIS]--; 
+                }
+                else { 
+                    sys_position[X_AXIS]++; 
+                }
             }
 #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
             st.counter_y += st.steps[Y_AXIS];
@@ -598,8 +603,12 @@ void obr_segment(void)
                 st.step_outbits |= (1 << Y_STEP_BIT);
                 tst_cnt[Y_AXIS] ++;
                 st.counter_y -= st.exec_block->step_event_count;
-                if (st.exec_block->direction_bits & (1 << Y_DIRECTION_BIT)) { sys_position[Y_AXIS]--; }
-                else { sys_position[Y_AXIS]++; }
+                if (st.exec_block->direction_bits & (1 << Y_DIRECTION_BIT)) {
+                    sys_position[Y_AXIS]--; 
+                }
+                else {
+                    sys_position[Y_AXIS]++; 
+                }
             }
 #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
             st.counter_z += st.steps[Z_AXIS];
@@ -608,10 +617,14 @@ void obr_segment(void)
 #endif
             if (st.counter_z > st.exec_block->step_event_count) {
                 st.step_outbits |= (1 << Z_STEP_BIT);
-                tst_cnt[Y_AXIS] ++;
+                tst_cnt[Z_AXIS] ++;
                 st.counter_z -= st.exec_block->step_event_count;
-                if (st.exec_block->direction_bits & (1 << Z_DIRECTION_BIT)) { sys_position[Z_AXIS]--; }
-                else { sys_position[Z_AXIS]++; }
+                if (st.exec_block->direction_bits & (1 << Z_DIRECTION_BIT)) { 
+                    sys_position[Z_AXIS]--; 
+                }
+                else { 
+                    sys_position[Z_AXIS]++; 
+                }
             }
 
             // During a homing cycle, lock out and prevent desired axes from moving.
@@ -630,7 +643,7 @@ void obr_segment(void)
 
         } while (st.step_count);
         
-        printf("\n tst_cnt[%d][%d][%d]"
+        printf("\n tst_cnt[%d][%02x][%d][%d][%d]", st.exec_segment->cycles_per_tick, st.exec_block->direction_bits
             , tst_cnt[X_AXIS]
             , tst_cnt[Y_AXIS]
             , tst_cnt[Z_AXIS]
