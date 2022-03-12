@@ -207,11 +207,7 @@ void report_grbl_settings() {
   report_util_float_setting(27,settings.homing_pulloff,N_DECIMAL_SETTINGVALUE);
   report_util_float_setting(30,settings.rpm_max,N_DECIMAL_RPMVALUE);
   report_util_float_setting(31,settings.rpm_min,N_DECIMAL_RPMVALUE);
-  #ifdef VARIABLE_SPINDLE
-    report_util_uint8_setting(32,bit_istrue(settings.flags,BITFLAG_LASER_MODE));
-  #else
     report_util_uint8_setting(32,0);
-  #endif
   // Print axis settings
   uint8_t idx, set_idx;
   uint8_t val = AXIS_SETTINGS_START_VAL;
@@ -344,12 +340,6 @@ void report_gcode_modes()
 
   printPgmString(PSTR(" F"));
   printFloat_RateValue(gc_state.feed_rate);
-
-  #ifdef VARIABLE_SPINDLE
-    printPgmString(PSTR(" S"));
-    printFloat(gc_state.spindle_speed,N_DECIMAL_RPMVALUE);
-  #endif
-
   report_util_feedback_line_feed();
 }
 
@@ -557,15 +547,8 @@ void report_realtime_status()
 
   // Report realtime feed speed
 #ifdef REPORT_FIELD_CURRENT_FEED_SPEED
-#ifdef VARIABLE_SPINDLE
-  printPgmString(PSTR("|FS:"));
-  printFloat_RateValue(st_get_realtime_rate());
-  serial_write(',');
-  printFloat(sys.spindle_speed, N_DECIMAL_RPMVALUE);
-#else
   printPgmString(PSTR("|F:"));
   printFloat_RateValue(st_get_realtime_rate());
-#endif      
 #endif
 
 #ifdef REPORT_FIELD_PIN_STATE

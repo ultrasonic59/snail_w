@@ -45,7 +45,7 @@ static void protocol_exec_rt_suspend();
 /*
   GRBL PRIMARY LOOP:
 */
-void protocol_main_loop()
+void protocol_main_loop(void)
 {
   // Perform some machine checks to make sure everything is good to go.
   #ifdef CHECK_LIMITS_AT_INIT
@@ -175,10 +175,8 @@ void protocol_main_loop()
       return; 
     } 
   }
-
 ////  return; /* Never reached */
 }
-
 
 // Block until all buffered steps are executed or in a cycle state. Works with feed hold
 // during a synchronize call, if it should happen. Also, waits for clean cycle end.
@@ -537,24 +535,6 @@ static void protocol_exec_rt_suspend()
 
   plan_block_t *block = plan_get_current_block();
   uint8_t restore_condition;
-  #ifdef VARIABLE_SPINDLE
-    float restore_spindle_speed;
-    if (block == NULL) {
-      restore_condition = (gc_state.modal.spindle | gc_state.modal.coolant);
-      restore_spindle_speed = gc_state.spindle_speed;
-    } else {
-      restore_condition = block->condition;
-      restore_spindle_speed = block->spindle_speed;
-    }
-    #ifdef DISABLE_LASER_DURING_HOLD
-      if (bit_istrue(settings.flags, BITFLAG_LASER_MODE)) {
-        system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP);
-      }
-    #endif
-  #else
-    if (block == NULL) { restore_condition = (gc_state.modal.spindle | gc_state.modal.coolant); }
-    else { restore_condition = block->condition; }
-  #endif
 
   while (sys.suspend) {
 
@@ -687,20 +667,21 @@ static void protocol_exec_rt_suspend()
                   // When in laser mode, ignore spindle spin-up delay. Set to turn on laser when cycle starts.
                   bit_true(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM);
                 } else {
-                  spindle_set_state((restore_condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)), restore_spindle_speed);
+ ////                 spindle_set_state((restore_condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)), restore_spindle_speed);
                   delay_sec(SAFETY_DOOR_SPINDLE_DELAY, DELAY_MODE_SYS_SUSPEND);
                 }
               }
             }
+#if 0           
             if (gc_state.modal.coolant != COOLANT_DISABLE) {
               // Block if safety door re-opened during prior restore actions.
               if (bit_isfalse(sys.suspend,SUSPEND_RESTART_RETRACT)) {
                 // NOTE: Laser mode will honor this delay. An exhaust system is often controlled by this pin.
-                coolant_set_state((restore_condition & (PL_COND_FLAG_COOLANT_FLOOD | PL_COND_FLAG_COOLANT_FLOOD)));
-                delay_sec(SAFETY_DOOR_COOLANT_DELAY, DELAY_MODE_SYS_SUSPEND);
+ ////               coolant_set_state((restore_condition & (PL_COND_FLAG_COOLANT_FLOOD | PL_COND_FLAG_COOLANT_FLOOD)));
+ ////               delay_sec(SAFETY_DOOR_COOLANT_DELAY, DELAY_MODE_SYS_SUSPEND);
               }
             }
-
+#endif
             #ifdef PARKING_ENABLE
               // Execute slow plunge motion from pull-out position to resume position.
 						#ifdef ENABLE_PARKING_OVERRIDE_CONTROL
@@ -751,16 +732,19 @@ static void protocol_exec_rt_suspend()
               if (bit_istrue(settings.flags,BITFLAG_LASER_MODE)) {
                 // When in laser mode, ignore spindle spin-up delay. Set to turn on laser when cycle starts.
                 bit_true(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM);
-              } else {
-                spindle_set_state((restore_condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)), restore_spindle_speed);
-              }
+              } 
+///              else {
+///                spindle_set_state((restore_condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)), restore_spindle_speed);
+///              }
             }
             if (sys.spindle_stop_ovr & SPINDLE_STOP_OVR_RESTORE_CYCLE) {
               system_set_exec_state_flag(EXEC_CYCLE_START);  // Set to resume program.
             }
             sys.spindle_stop_ovr = SPINDLE_STOP_OVR_DISABLED; // Clear stop override state
           }
-        } else {
+        } 
+#if 0       
+        else {
           // Handles spindle state during hold. NOTE: Spindle speed overrides may be altered during hold state.
           // NOTE: STEP_CONTROL_UPDATE_SPINDLE_PWM is automatically reset upon resume in step generator.
           if (bit_istrue(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM)) {
@@ -768,6 +752,7 @@ static void protocol_exec_rt_suspend()
             bit_false(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM);
           }
         }
+#endif
 
       }
     }

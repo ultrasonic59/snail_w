@@ -10,7 +10,6 @@
 // If doing so, simply comment out these two defines and see instructions below.
 //#define DEFAULTS_GENERIC
 #define DEFAULT_CNC3020
-#define CPU_MAP_STM32F103
 
 // Serial baud rate
 // #define BAUD_RATE 230400
@@ -561,6 +560,7 @@
 // to ensure the laser doesn't inadvertently remain powered while at a stop and cause a fire.
 #define DISABLE_LASER_DURING_HOLD // Default enabled. Comment to disable.
 
+#define ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING  // Default enabled. Comment to disable.
 // Enables a piecewise linear model of the spindle PWM/speed output. Requires a solution by the
 // 'fit_nonlinear_spindle.py' script in the /doc/script folder of the repo. See file comments 
 // on how to gather spindle data and run the script to generate a solution.

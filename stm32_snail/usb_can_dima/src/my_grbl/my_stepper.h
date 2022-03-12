@@ -18,9 +18,9 @@
 #define PREP_FLAG_PARKING bit(2)
 #define PREP_FLAG_DECEL_OVERRIDE bit(3)
 
-#define X_DIRECTION_BIT 3
-#define Y_DIRECTION_BIT 4
-#define Z_DIRECTION_BIT 5
+#define X_DIRECTION_BIT 0
+#define Y_DIRECTION_BIT 1
+#define Z_DIRECTION_BIT 2
 
 // Stores the planner block Bresenham algorithm execution data for the segments in the segment
 // buffer. Normally, this buffer is partially in-use, but, for the worst case scenario, it will
@@ -29,7 +29,7 @@
 // discarded when entirely consumed and completed by the segment buffer. Also, AMASS alters this
 // data for its own use.
 typedef struct st_block_s_{
-  uint32_t steps_[N_AXIS];
+  uint32_t steps[N_AXIS];
   uint32_t step_event_count;
   uint8_t direction_bits;
   #ifdef VARIABLE_SPINDLE
@@ -49,9 +49,6 @@ typedef struct segment_s_{
     uint8_t amass_level;    // Indicates AMASS level for the ISR to execute this segment
   #else
     uint8_t prescaler;      // Without AMASS, a prescaler is required to adjust for slow timing.
-  #endif
-  #ifdef VARIABLE_SPINDLE
-    uint8_t spindle_pwm;
   #endif
 } segment_t;
 // Stepper ISR data struct. Contains the running data for the main stepper ISR.
@@ -105,10 +102,6 @@ typedef struct st_prep_s{
   float accelerate_until; // Acceleration ramp end measured from end of block (mm)
   float decelerate_after; // Deceleration ramp start measured from end of block (mm)
 
-  #ifdef VARIABLE_SPINDLE
-    float inv_rate;    // Used by PWM laser mode to speed up segment calculations.
-    uint8_t current_spindle_pwm;
-  #endif
 } st_prep_t;
 
 #if 1

@@ -339,9 +339,6 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
   plan_block_t *block = &block_buffer[block_buffer_head];
   memset(block,0,sizeof(plan_block_t)); // Zero all block values.
   block->condition = pl_data->condition;
-  #ifdef VARIABLE_SPINDLE
-    block->spindle_speed = pl_data->spindle_speed;
-  #endif
   #ifdef USE_LINE_NUMBERS
     block->line_number = pl_data->line_number;
   #endif
@@ -365,12 +362,6 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
     memcpy(position_steps, pl.position, sizeof(pl.position)); 
     }
 
-  #ifdef COREXY
-    target_steps[A_MOTOR] = lround(target[A_MOTOR]*settings.steps_per_mm[A_MOTOR]);
-    target_steps[B_MOTOR] = lround(target[B_MOTOR]*settings.steps_per_mm[B_MOTOR]);
-    block->steps[A_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) + (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
-    block->steps[B_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) - (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
-  #endif
 
   for (idx=0; idx<N_AXIS; idx++) {
     // Calculate target position in absolute steps, number of steps for each axis, and determine max step events.

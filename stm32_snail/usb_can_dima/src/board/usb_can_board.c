@@ -414,7 +414,9 @@ void hw_board_init(void)
 {
 init_gpio();
 UART_DBG_Init(); 
-USART1_Configuration(115200);
+#ifndef USEUSB
+  USART1_Configuration(115200);
+#endif
 CAN_Config();
 ////led_tim_init();
 ////mot_tim_init();

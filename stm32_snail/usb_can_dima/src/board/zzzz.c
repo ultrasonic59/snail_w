@@ -72,12 +72,6 @@ else
 #endif 
 }
 ////========================================================================
-void coolant_stop(void)
-{
-}
-void coolant_init(void)
-{
-}
 void coolant_sync(uint8_t mode)
 {
 }

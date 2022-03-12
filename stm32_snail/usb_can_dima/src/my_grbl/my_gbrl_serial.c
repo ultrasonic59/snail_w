@@ -117,7 +117,7 @@ void OnUsbDataRx(uint8_t* data_in, uint16_t length)
 	//lcd_write_char(*dataIn);
 uint8_t next_head;
 uint8_t data;
-///uint16_t ii=0;
+uint16_t ii=0;
 //// Write data to buffer unless it is full.
 while (length != 0){
   data = *(data_in+ii);
