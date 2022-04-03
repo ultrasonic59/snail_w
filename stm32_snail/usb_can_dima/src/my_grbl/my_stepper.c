@@ -34,6 +34,8 @@
 #include "printk.h"
 
 extern xQueueHandle rdy_to_send;
+extern void obr_segment(void);
+
 
 
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
@@ -128,7 +130,8 @@ uint8_t  btmp=0;
 ///#if 0
 st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
 ///==== ena steps ========
-xQueueSend(rdy_to_send,&btmp,TIMEOUT_SEND);
+ ////xQueueSend(rdy_to_send,&btmp,TIMEOUT_SEND);
+obr_segment();
 //// rdy_blk=1; 
 #ifdef WIN32
   nTimer1Out = 1;
@@ -233,7 +236,7 @@ static uint8_t st_next_block_index(uint8_t block_index)
 }
 
 extern settings_t settings;
-
+#if 1
 void obr_segment(void)
 {
 uint32_t tTimer;
@@ -373,7 +376,7 @@ do
         }
     }while (tTimer);
 }
-
+#endif
 
 /* Prepares step segment buffer. Continuously called from main program.
 

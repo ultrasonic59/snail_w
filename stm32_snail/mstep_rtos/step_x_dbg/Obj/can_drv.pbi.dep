@@ -7,6 +7,13 @@ can_drv.pbi: \
   C:\\Program\ Files\ (x86)\\IAR\ Systems\\Embedded\ Workbench\ 8.3\\arm\\inc\\c\\DLib_Config_Full.h \
   C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\DLib_Product.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\stm32f2xx.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\CMSIS\Core\Include\core_cm3.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\CMSIS\Core\Include/cmsis_version.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\CMSIS\Core\Include/cmsis_compiler.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\CMSIS\Core\Include\cmsis_iccarm.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\iccarm_builtin.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\CMSIS\Core\Include/mpu_armv7.h \
+  D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver/system_stm32f2xx.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\stm32f2xx_rcc.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\stm32f2xx_can.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\misc.h \
@@ -25,6 +32,4 @@ can_drv.pbi: \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\stm32f2xx_tim.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\stm32f2xx_usart.h \
   D:\proj\velograph\snail\stm32_snail\mstep_rtos\src\inc\my_misc.h \
-  D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\dbg\printk.h \
-  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\stdio.h \
-  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\ysizet.h
+  D:\proj\velograph\snail\stm32_snail\mstep_rtos\..\common\dbg\printk.h

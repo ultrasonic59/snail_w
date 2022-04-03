@@ -67,7 +67,7 @@ void gc_sync_position()
 uint8_t gc_execute_line(char *line)
 {
   ////=====================================
-  printk("\r\n[%s]",line);
+/////  printk("\r\n[%s]",line);
   ////=====================================
   /* -------------------------------------------------------------------------------------
      STEP 1: Initialize parser block struct and copy current g-code state modes. The parser

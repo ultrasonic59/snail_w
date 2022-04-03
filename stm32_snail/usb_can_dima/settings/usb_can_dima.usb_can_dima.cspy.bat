@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --backend -f "D:\proj\velograph\snail\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail1\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --backend -f "D:\proj\velograph\snail1\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "D:\proj\velograph\snail1\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail1\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
 
 @echo off 
 :end

@@ -20,6 +20,7 @@
 */
 
 #include "my_grbl.h"
+#include "printk.h"
 
 // Define line flags. Includes comment type tracking and line overflow detection.
 #define LINE_FLAG_OVERFLOW bit(0)
@@ -86,6 +87,9 @@ void protocol_main_loop(void)
     // Process one line of incoming serial data, as the data becomes available. Performs an
     // initial filtering by removing spaces and comments and capitalizing all letters.
     while((c = serial_read_rx()) != SERIAL_NO_DATA) {
+      ///==================================
+////printk("[%c]",c);
+///========================================
       if ((c == '\n') || (c == '\r')) { // End of line reached
 
         protocol_execute_realtime();    // Runtime command check point.

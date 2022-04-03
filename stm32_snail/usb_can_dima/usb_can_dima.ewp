@@ -15,10 +15,6 @@
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
-                    <name>BrowseInfoPath</name>
-                    <state>usb_can\BrowseInfo</state>
-                </option>
-                <option>
                     <name>ExePath</name>
                     <state>usb_can\Exe</state>
                 </option>
@@ -31,16 +27,20 @@
                     <state>usb_can\List</state>
                 </option>
                 <option>
+                    <name>BrowseInfoPath</name>
+                    <state>usb_can\BrowseInfo</state>
+                </option>
+                <option>
                     <name>GEndianMode</name>
                     <state>0</state>
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, with multibyte support.</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>No specifier a, A, no specifier n, no float nor long long, no flags, without multibyte support.</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -48,41 +48,41 @@
                 </option>
                 <option>
                     <name>OGCoreOrChip</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GRuntimeLibSelect</name>
                     <version>0</version>
-                    <state>2</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GRuntimeLibSelectSlave</name>
                     <version>0</version>
-                    <state>2</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
-                    <state>4.41A</state>
+                    <state>9.10.2.39304</state>
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.1.21529</state>
+                    <state>9.10.2.39304</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>Default	None</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -94,7 +94,7 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</state>
+                    <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
@@ -103,7 +103,7 @@
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGUseCmsisDspLib</name>
@@ -120,7 +120,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>Default	None</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -155,7 +155,7 @@
                 <option>
                     <name>OGPrintfVariant</name>
                     <version>0</version>
-                    <state>4</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGPrintfMultibyteSupport</name>
@@ -164,11 +164,11 @@
                 <option>
                     <name>OGScanfVariant</name>
                     <version>0</version>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGScanfMultibyteSupport</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GenLocaleTags</name>
@@ -209,17 +209,8 @@
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
-                    <name>CCOptimizationNoSizeConstraints</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCDefines</name>
-                    <state>VECT_TAB_FLASH</state>
-                    <state>IAR_ARM_CM3</state>
-                    <state>USEUSB</state>
-                    <state>MSTEP_BRD</state>
-                    <state>USE_USB_OTG_FS</state>
-                    <state>STM32F205xx</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -231,11 +222,11 @@
                 </option>
                 <option>
                     <name>CCPreprocLine</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCListCFile</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCListCMnemonics</name>
@@ -259,7 +250,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state>Pa082, pe191</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -340,23 +331,7 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\.</state>
-                    <state>$PROJ_DIR$\src\board</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\inc</state>
-                    <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3</state>
-                    <state>$PROJ_DIR$\..\common\libraries\inc</state>
-                    <state>$PROJ_DIR$\..\common\libraries</state>
-                    <state>$PROJ_DIR$\..\common\dbg</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver</state>
-                    <state>$PROJ_DIR$\..\common\usb\core\inc</state>
-                    <state>$PROJ_DIR$\..\common\usb\drv\inc</state>
-                    <state>$PROJ_DIR$\..\common\usb</state>
-                    <state>$PROJ_DIR$\..\common\usb\inc</state>
-                    <state>$PROJ_DIR$\..\common\hdlc</state>
-                    <state>$PROJ_DIR$\..\common\usb\cdc</state>
-                    <state>$PROJ_DIR$\src\my_grbl</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -372,7 +347,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -381,7 +356,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -413,7 +388,7 @@
                 </option>
                 <option>
                     <name>IccCppInlineSemantics</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>IccCmsis</name>
@@ -421,6 +396,10 @@
                 </option>
                 <option>
                     <name>IccFloatSemantics</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCOptimizationNoSizeConstraints</name>
                     <state>0</state>
                 </option>
                 <option>
@@ -600,7 +579,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state>$FILE_BNAME$.o</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -616,9 +595,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\.</state>
-                    <state>$PROJ_DIR$\src</state>
-                    <state>$PROJ_DIR$\src\inc</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1284,6 +1261,7 @@
                     <state>MSTEP_BRD</state>
                     <state>USE_USB_OTG_FS</state>
                     <state>STM32F205xx</state>
+                    <state>USEUSB</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

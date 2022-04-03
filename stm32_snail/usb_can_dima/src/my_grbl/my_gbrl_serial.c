@@ -225,6 +225,10 @@ void USART1_IRQHandler (void)
         }
         // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
       } else { // Write character to buffer
+///==================================
+////printk("[%c]",data);
+///========================================
+
         next_head = serial_rx_buffer_head + 1;
         if (next_head == RX_RING_BUFFER) { next_head = 0; }
 
@@ -239,6 +243,7 @@ void USART1_IRQHandler (void)
         USART1->SR &= ~USART_FLAG_RXNE;	          // clear interrupt
 #else
     length--;
+    ii++;
 #endif
    }
 }
