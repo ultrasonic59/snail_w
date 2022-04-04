@@ -436,6 +436,8 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 
 extern void mot_spi_init(void);
 extern void init_step_mot(void);
