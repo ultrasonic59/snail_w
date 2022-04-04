@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "my_grbl.h"
 #include "my_stepper.h"
+#include "can.h"
 
 #include "printk.h"
 extern void  set_curr_dir(uint8_t dirs);
@@ -18,7 +19,7 @@ extern volatile uint8_t segment_buffer_tail;
 extern uint8_t segment_buffer_head;
 
 TaskHandle_t  can_send_thread_handle;
-xQueueHandle rdy_to_send;
+xQueueHandle queu_to_send;
 
 void tst_print(void)
 {
@@ -37,20 +38,22 @@ void tst_print(void)
  ////==============================================
 }
 
-extern void obr_segment(void);
+////extern void obr_segment(void);
 
 void can_send_thread(void* pp)
 {
-uint8_t  res_byte;
+can_msg_t  snd_msg;
+
 printk("\n\r can_send_thread");
 
-rdy_to_send=xQueueCreate(1,1);
+queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
 for(;;)
   {
-  xQueueReceive(rdy_to_send,&res_byte,portMAX_DELAY);
+  xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
+  CAN_wrMsg (&snd_msg);
 ////   tst_print();
 ///  set_curr_dir(st.dir_outbits);
-  obr_segment();
+////  obr_segment();
 
 ///=================================================
 

@@ -2,9 +2,9 @@
 #define __SNAIL_CAN_CMDS_H__
 ////======================================
 ////======================================
-#define CAN_FILTR_ID_X (0x1<<5)
-#define CAN_FILTR_ID_Y (0x1<<6)
-#define CAN_FILTR_ID_Z (0x1<<7)
+#define CAN_FILTR_ID_X 0x20
+#define CAN_FILTR_ID_Y 0x40
+#define CAN_FILTR_ID_Z 0x80
 
 #define CAN_FILTR_MASK 0x7F0
 
