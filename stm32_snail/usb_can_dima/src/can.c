@@ -9,8 +9,8 @@
 
 #include "printk.h"
 ////=====================
-CAN_msg       CAN_TxMsg;                  /* CAN messge for sending           */
-CAN_msg       CAN_RxMsg;                  /* CAN message for receiving        */                        
+can_msg_t       CAN_TxMsg;                  /* CAN messge for sending           */
+can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */                        
 
 uint8_t  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
 uint8_t  CAN_RxRdy = 0;              /* CAN HW received a message        */
@@ -54,7 +54,7 @@ CAN_TxRdy = 1;
 /*----------------------------------------------------------------------------
   write a message to CAN peripheral and transmit it
  *----------------------------------------------------------------------------*/
-void CAN_wrMsg (CAN_msg *msg)  {
+void CAN_wrMsg (can_msg_t *msg)  {
 
   CAN1->sTxMailBox[0].TIR  = 0;           /* Reset TIR register               */
                                           /* Setup identifier information     */
@@ -90,7 +90,7 @@ void CAN_wrMsg (CAN_msg *msg)  {
 /*----------------------------------------------------------------------------
   read a message from CAN peripheral and release it
  *----------------------------------------------------------------------------*/
-void CAN_rdMsg (CAN_msg *msg)  {
+void CAN_rdMsg (can_msg_t *msg)  {
                                               /* Read identifier information  */
   if ((CAN1->sFIFOMailBox[0].RIR & CAN_ID_EXT) == 0) {
     msg->format = STANDARD_FORMAT;

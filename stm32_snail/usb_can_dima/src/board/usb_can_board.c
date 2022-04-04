@@ -6,6 +6,9 @@
 #include "my_types.h"
 #include "stm32f2xx_conf.h"
 #include "mstep_board.h"
+#include "can.h"
+#include "can_cmds.h"
+
 #include "printk.h"
 ///=============================
 #ifndef USEUSB
@@ -269,7 +272,6 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( ON_LED1_PIN_GPIO, &GPIO_InitStructure );
-
 }
 
 ////=============================================
@@ -290,16 +292,31 @@ UART_DBG->CR1 |= USART_CR1_RXNEIE;
 USART_Cmd(UART_DBG, ENABLE);
 }
 ////==================================================
+/*
+#define CAN1_INH_PIN	    	GPIO_Pin_0
+#define CAN1_INH_PIN_NPIN	    0
+#define CAN1_INH_PIN_GPIO	    GPIOC
+#define CAN1_INH_PIN_RCC  	RCC_AHB1Periph_GPIOC
+*/
 ////==================================
 void CAN_Config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   CAN_InitTypeDef        CAN_InitStructure;
   CAN_FilterInitTypeDef  CAN_FilterInitStructure;
-
-
-  /* CAN GPIOs configuration **************************************************/
-
+////=============== CAN1_INH ============================
+RCC_AHB1PeriphClockCmd(TST1_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
+GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
+ 
+  
+ /* CAN GPIOs configuration **************************************************/
   /* Enable GPIO clock */
 RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
 
@@ -314,7 +331,6 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
   GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
-
   /* CAN configuration ********************************************************/
   /* Enable CAN clock */
   RCC_APB1PeriphClockCmd(CAN1_CLK, ENABLE);
@@ -334,9 +350,11 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
 
   /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
+  
+   /* Baudrate = 500 Kbps */
   CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
   CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
-  CAN_InitStructure.CAN_Prescaler = 2;
+  CAN_InitStructure.CAN_Prescaler = 4;
   CAN_Init(CAN1, &CAN_InitStructure);
 
 
@@ -422,18 +440,30 @@ CAN_Config();
 ////mot_tim_init();
 }
 ////============================================
+extern xQueueHandle queu_to_send;
+
 ////========================================================   
 void tst_task( void *pvParameters )
 {
+uint8_t ii;  
+uint8_t btst=0;  
+can_msg_t  send_msg;
+
 printk("\n\r tst_task"); 
+send_msg.id= ID_X_CMD;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+send_msg.len=CAN_MAX_NUM_BYTES;
+for(ii=0;ii<CAN_MAX_NUM_BYTES;ii++)
+{
+send_msg.data[ii]=ii+3;
+}
 for(;;)
   {
-//// sendchar2 (0x33) ; 
-////  put_tst_pin(btst);
-///  btst++;  
-  ////delay__ms(1);  
-////  uDelay(20000);
-    msleep(20); 
+send_msg.data[1]=btst;    
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+  btst++;  
+  msleep(50); 
 
   }
 }

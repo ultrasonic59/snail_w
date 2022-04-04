@@ -11,9 +11,11 @@
 #define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
 #define GRBL_STACK_SIZE                 1024////
 #define CAN_SEND_STACK_SIZE                 1024////
+#define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
 
 #define         APP_PRIORITY	      (6)	
 #define APPLICATION_STACK_SIZE         (4000)
+#define TST_TASK_PRIORITY		APP_PRIORITY ////		( tskIDLE_PRIORITY + 3 )
 
 ////======================================
 extern void tst_task( void *pvParameters );

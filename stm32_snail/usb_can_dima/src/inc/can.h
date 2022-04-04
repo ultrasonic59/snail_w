@@ -7,6 +7,9 @@
 
 ////#define ADDR_PDO_1	0x181
 ////#define ADDR_PDO_2	0x182
+#define CAN_TIMEOUT_SEND	100
+
+#define CAN_MAX_NUM_BYTES 8
 
 #define STANDARD_FORMAT  0
 #define EXTENDED_FORMAT  1
@@ -14,13 +17,13 @@
 #define DATA_FRAME       0
 #define REMOTE_FRAME     1
 
-typedef struct  {
+typedef struct  CAN_msg_s_{
   unsigned int   id;                 // 29 bit identifier
-  unsigned char  data[8];            // Data field
+  unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
   unsigned char  len;                // Length of data field in bytes
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
-} CAN_msg;
+} can_msg_t;
 
 /* CAN identifier type */
 ///#define CAN_ID_STD            ((uint32_t)0x00000000)  /* Standard Id          */
@@ -34,5 +37,6 @@ extern void CAN1_Init (void);
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 ////extern CanRxMsg RxMessage;
+extern void CAN_wrMsg (can_msg_t *msg);
 
 #endif
