@@ -31,6 +31,7 @@
 ////extern void tst_task( void *pvParameters );
 extern void tst1_task( void *pvParameters );
 extern int can_main(void);
+extern void CAN1_Init (void);
 
 ////============================================
 int main( void )
@@ -52,8 +53,10 @@ hw_board_init();
   #error "\n\r=== STEP_... nodefined ==="; 
 #endif
 ////=================================================
-can1_init();
+////can1_init();
 ////can_main();
+CAN1_Init();
+
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 /////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );

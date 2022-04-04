@@ -265,3 +265,80 @@ if (CAN1->RF0R & CAN_RF0R_FMP0)
 
 
 ////==================================================================
+void CAN_wrFilter (unsigned int id, unsigned char format)  {
+  static unsigned short CAN_filterIdx = 0;
+         unsigned int   CAN_msgId     = 0;
+  
+  if (CAN_filterIdx > 13) {                 /* check if Filter Memory is full*/
+    return;
+  }
+                                            /* Setup identifier information  */
+  if (format == STANDARD_FORMAT)  {         /*   Standard ID                 */
+      CAN_msgId |= (uint32_t)(id << 21) | CAN_ID_STD;
+  }  else  {                                /*   Extended ID                 */
+      CAN_msgId |= (uint32_t)(id <<  3) | CAN_ID_EXT;
+  }
+
+  CAN1->FMR  |=   CAN_FMR_FINIT;            /* set initMode for filter banks */
+  CAN1->FA1R &=  ~(1UL << CAN_filterIdx);   /* deactivate filter             */
+
+                                            /* initialize filter             */
+  CAN1->FS1R |= (unsigned int)(1 << CAN_filterIdx);     /* set 32-bit scale configuration    */
+  CAN1->FM1R |= (unsigned int)(1 << CAN_filterIdx);     /* set 2 32-bit identifier list mode */
+
+  CAN1->sFilterRegister[CAN_filterIdx].FR1 = CAN_msgId; /*  32-bit identifier                */
+  CAN1->sFilterRegister[CAN_filterIdx].FR2 = CAN_msgId; /*  32-bit identifier                */
+    													   
+  CAN1->FFA1R &= ~(unsigned int)(1 << CAN_filterIdx);   /* assign filter to FIFO 0           */
+  CAN1->FA1R  |=  (unsigned int)(1 << CAN_filterIdx);   /* activate filter                   */
+
+  CAN1->FMR &= ~CAN_FMR_FINIT;              /* reset initMode for filterBanks*/
+
+  CAN_filterIdx += 1;                       /* increase filter index         */
+}
+
+void CAN_waitReady (void)  
+{
+while ((CAN1->TSR & CAN_TSR_TME0) == 0);  /* Transmit mailbox 0 is empty    */
+CAN_TxRdy = 1;
+ 
+}
+void CAN_setup (void)  
+{
+unsigned int brp;
+
+  RCC->APB1ENR |= ( 1UL << 25);           /* enable clock for CAN             */
+  NVIC_EnableIRQ(CAN1_TX_IRQn);    /* enable CAN TX interrupt          */
+  NVIC_EnableIRQ(CAN1_RX0_IRQn);   /* enable CAN RX interrupt          */
+
+  CAN1->MCR = (CAN_MCR_INRQ   |           /* initialisation request           */
+               CAN_MCR_NART    );         /* no automatic retransmission      */
+                                          /* only FIFO 0, tx mailbox 0 used!  */
+  CAN1->IER = (CAN_IER_FMPIE0 |           /* enable FIFO 0 msg pending IRQ    */
+               CAN_IER_TMEIE    );        /* enable Transmit mbx empty IRQ    */
+
+brp = 4;//4;
+                                                                          
+CAN1->BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | (          0x1FF)); 
+CAN1->BTR |=  ((((1-1) & 0x03) << 24) | (((8-1) & 0x07) << 20) | (((6-1) & 0x0F) << 16) | ((brp-1) & 0x1FF));
+}
+void CAN_start (void)  
+{
+CAN1->MCR &= ~CAN_MCR_INRQ;             /* normal operating mode, reset INRQ*/
+while (CAN1->MSR & CAN_MCR_INRQ);
+
+}
+
+////================================================================================
+void CAN1_Init (void)
+{
+CAN_setup ();                                   /* setup CAN Controller     */
+
+CAN_wrFilter (0x0, STANDARD_FORMAT);
+////CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
+////CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
+	
+CAN_start ();                                   /* start CAN Controller   */
+	
+CAN_waitReady ();                               /* wait til tx mbx is empty */
+}
