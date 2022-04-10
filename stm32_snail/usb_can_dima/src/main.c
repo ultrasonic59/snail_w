@@ -100,6 +100,7 @@ extern TaskHandle_t  can_send_thread_handle;
 ///extern void usb_thread( void *arg );
 ///extern void init_hdlc_vcp(void);
 
+extern void tst1_task( void *pvParameters );
 extern void tst_task( void *pvParameters );
 ///==================================
 #ifdef USEUSB
@@ -143,7 +144,7 @@ int main( void )
 __disable_irq();
 hw_board_init();
 ////=============================
-eeprom_init();
+//// eeprom_init();
 ///=============================
 printk("\n\r CAN1_Init"); 
 CAN1_Init();
@@ -163,9 +164,9 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 ////xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
 #endif
 /////xTaskCreate(grbl_thread, (const char*)"grbl_thread",GRBL_STACK_SIZE/2, 0, APP_PRIORITY, &grbl_thread_handle);
-xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+////xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
 
-rez=xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+rez=xTaskCreate( tst1_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 
   
 ////    xTaskCreate( usb_thread, "usb_thread", APPLICATION_STACK_SIZE/sizeof( portSTACK_TYPE ), NULL, APP_PRIORITY, &usb_thread_handle);

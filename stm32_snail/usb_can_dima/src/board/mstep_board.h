@@ -165,11 +165,15 @@
 
 ////============== CAN1_RX ============================
 #define CAN1_RX_PIN	    	GPIO_Pin_8
+#define CAN1_RX_PIN_SOURCE	GPIO_PinSource8
+#define CAN1_RX_SOURCE              GPIO_PinSource8
 #define CAN1_RX_PIN_NPIN	8
 #define CAN1_RX_PIN_GPIO	GPIOB
 #define CAN1_RX_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////============== CAN1_TX ============================
 #define CAN1_TX_PIN	    	GPIO_Pin_9
+#define CAN1_TX_PIN_SOURCE	GPIO_PinSource9
+#define CAN1_TX_SOURCE              GPIO_PinSource9
 #define CAN1_TX_PIN_NPIN	9
 #define CAN1_TX_PIN_GPIO	GPIOB
 #define CAN1_TX_PIN_RCC  	RCC_AHB1Periph_GPIOB

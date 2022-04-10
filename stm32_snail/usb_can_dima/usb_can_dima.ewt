@@ -2842,9 +2842,6 @@
     <group>
         <name>Board</name>
         <file>
-            <name>$PROJ_DIR$\src\can.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\src\can_thr.c</name>
         </file>
         <file>
@@ -2864,6 +2861,15 @@
         </file>
         <file>
             <name>$PROJ_DIR$\src\retarget.c</name>
+        </file>
+    </group>
+    <group>
+        <name>drv</name>
+        <file>
+            <name>$PROJ_DIR$\..\common\can\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
         </file>
     </group>
     <group>
@@ -2889,9 +2895,6 @@
     </group>
     <group>
         <name>my_grbl</name>
-        <file>
-            <name>$PROJ_DIR$\src\my_grbl\can_cmds.c</name>
-        </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\grbl_eeprom.c</name>
         </file>
@@ -2983,7 +2986,7 @@
             <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\system_stm32f2xx.c</name>
+            <name>$PROJ_DIR$\..\common\startup\system_stm32f2xx.c</name>
         </file>
     </group>
     <group>

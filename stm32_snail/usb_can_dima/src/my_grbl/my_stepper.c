@@ -115,7 +115,7 @@ curr_dir=dirs;
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up(void)
 {
-uint8_t  btmp=0;
+/////uint8_t  btmp=0;
 #if 0
   // Enable stepper drivers.
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 

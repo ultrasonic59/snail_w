@@ -538,7 +538,7 @@ static void protocol_exec_rt_suspend()
   #endif
 
   plan_block_t *block = plan_get_current_block();
-  uint8_t restore_condition;
+ //// uint8_t restore_condition;
 
   while (sys.suspend) {
 

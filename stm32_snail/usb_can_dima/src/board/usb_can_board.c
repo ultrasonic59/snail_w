@@ -299,99 +299,6 @@ USART_Cmd(UART_DBG, ENABLE);
 #define CAN1_INH_PIN_RCC  	RCC_AHB1Periph_GPIOC
 */
 ////==================================
-void CAN_Config(void)
-{
-  GPIO_InitTypeDef  GPIO_InitStructure;
-  CAN_InitTypeDef        CAN_InitStructure;
-  CAN_FilterInitTypeDef  CAN_FilterInitStructure;
-////=============== CAN1_INH ============================
-RCC_AHB1PeriphClockCmd(TST1_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
-GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
- 
-  
- /* CAN GPIOs configuration **************************************************/
-  /* Enable GPIO clock */
-RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
-
-  /* Connect CAN pins to AF9 */
-  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_RX_SOURCE, CAN1_AF_PORT);
-  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_TX_SOURCE, CAN1_AF_PORT);
-
-  /* Configure CAN RX and TX pins */
-  GPIO_InitStructure.GPIO_Pin = CAN1_RX_PIN | CAN1_TX_PIN;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
-  GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
-  /* CAN configuration ********************************************************/
-  /* Enable CAN clock */
-  RCC_APB1PeriphClockCmd(CAN1_CLK, ENABLE);
-  /* CAN register init */
-  CAN_DeInit(CAN1);
-
-  CAN_StructInit(&CAN_InitStructure);
-
-  /* CAN cell init */
-  CAN_InitStructure.CAN_TTCM = DISABLE;
-  CAN_InitStructure.CAN_ABOM = DISABLE;
-  CAN_InitStructure.CAN_AWUM = DISABLE;
-  CAN_InitStructure.CAN_NART = DISABLE;
-  CAN_InitStructure.CAN_RFLM = DISABLE;
-  CAN_InitStructure.CAN_TXFP = DISABLE;
-  CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
-  CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
-
-  /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
-  
-   /* Baudrate = 500 Kbps */
-  CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
-  CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
-  CAN_InitStructure.CAN_Prescaler = 4;
-  CAN_Init(CAN1, &CAN_InitStructure);
-
-
-  CAN_FilterInitStructure.CAN_FilterNumber = 0;
-  CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0;
-  CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-  CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
-  CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
-  //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-  CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-  CAN_FilterInit(&CAN_FilterInitStructure);
-
-  CAN_FilterInitStructure.CAN_FilterNumber = 14;
-  CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO1;
-  CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-  CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
-  CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
-  //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-  CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-  CAN_FilterInit(&CAN_FilterInitStructure);
-
-//  CAN2TxMessage.StdId = 0x321;
-//  CAN2TxMessage.ExtId = 0x01;
-//  CAN2TxMessage.RTR = CAN_RTR_DATA;
-//  CAN2TxMessage.IDE = CAN_ID_STD;
-//  CAN2TxMessage.DLC = 8;
-
-  /* Enable FIFO 0 message pending Interrupt */
-  CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-
-}
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP)
 {
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -430,6 +337,7 @@ NVIC_Init(&NVIC_InitStructure);
 ////=============================================
 void hw_board_init(void)
 {
+NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
 #ifndef USEUSB
@@ -461,11 +369,46 @@ send_msg.data[ii]=ii+3;
 for(;;)
   {
 send_msg.data[1]=btst;    
-xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+/////xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+  CAN_wrMsg (&send_msg);
+
   btst++;  
-  msleep(50); 
+  msleep(200); 
 
   }
 }
 ////============================================
+////extern CanRxMsg RxMessage;
+extern can_msg_t CAN_RxMsg;
+////========================================================  
+void tst1_task( void *pvParameters )
+{
+////uint8_t btst=0; 
+uint8_t ii=0; 
+printk("\n\r tst1_task"); 
+
+for(;;)
+  {
+  if( CAN_RxRdy)
+    {
+    CAN_RxRdy=0;
+    printk("\n\r can_rx"); 
+    printk("\n\r ExtId[%x]",CAN_RxMsg.id);
+    printk("\n\r len[%x]\n\r ",CAN_RxMsg.len);
+    for(ii=0;ii<8;ii++)
+      {
+      printk("[%x] ",CAN_RxMsg.data[ii]);
+      }
+    }
+  else
+  {
+    msleep(10);
+  }
+  }
+}
 	
+  unsigned int   id;                 // 29 bit identifier
+  unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
+  unsigned char  len;                // Length of data field in bytes
+  unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
+  unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME

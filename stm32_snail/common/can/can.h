@@ -38,5 +38,6 @@ extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 ////extern CanRxMsg RxMessage;
 extern void CAN_wrMsg (can_msg_t *msg);
+extern void CAN_Config(void);
 
 #endif

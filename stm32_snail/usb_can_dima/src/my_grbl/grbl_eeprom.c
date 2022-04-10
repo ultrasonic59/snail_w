@@ -41,7 +41,11 @@ void eeprom_flush()
 		nAddress += 4;
 	}
 }
+////???
 void eeprom_init()
+{
+}
+void _eeprom_init()
 {
 	uint16_t VarIdx = 0;
 	uint8_t *pTmp = EE_Buffer;
@@ -93,7 +97,11 @@ return 0;
  *  \param  addr  EEPROM address to write to.
  *  \param  new_value  New EEPROM value.
  */
+////???
 void eeprom_put_char( unsigned int addr, unsigned char new_value )
+{
+}
+void _eeprom_put_char( unsigned int addr, unsigned char new_value )
 {
 ///uint16_t rez;
 uint16_t tdata;
@@ -105,9 +113,11 @@ EE_WriteVariable(addr,tdata);
 }
 
 // Extensions added as part of Grbl 
-
-
+////???
 void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size) {
+}
+
+void _memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size) {
   unsigned char checksum = 0;
   for(; size > 0; size--) { 
     checksum = (checksum << 1) || (checksum >> 7);
