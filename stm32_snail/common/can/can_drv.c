@@ -125,12 +125,8 @@ GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
 GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
- 
-  
  /* CAN GPIOs configuration **************************************************/
   /* Enable GPIO clock */
 RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
@@ -316,7 +312,7 @@ return 0;
 
 #define DATA_FRAME       0
 #define REMOTE_FRAME     1
-
+#if 0
 typedef struct  CAN_msg_s_{
   unsigned int   id;                 // 29 bit identifier
   unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
@@ -324,6 +320,8 @@ typedef struct  CAN_msg_s_{
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
 } can_msg_t;
+#endif
+
 can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */                        
 /*----------------------------------------------------------------------------
   write a message to CAN peripheral and transmit it

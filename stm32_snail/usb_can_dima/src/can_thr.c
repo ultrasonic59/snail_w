@@ -54,11 +54,8 @@ for(;;)
 ////   tst_print();
 ///  set_curr_dir(st.dir_outbits);
 ////  obr_segment();
-
 ///=================================================
-
-///=================================================
-  sys.state &= ~STATE_CYCLE;
+////  sys.state &= ~STATE_CYCLE;
 
   }
 }
