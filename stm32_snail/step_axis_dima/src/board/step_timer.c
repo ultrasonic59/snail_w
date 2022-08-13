@@ -19,7 +19,7 @@ stepper_t st;
 // Step segment ring buffer indices
 static volatile uint8_t segment_buffer_tail;
 static uint8_t segment_buffer_head;
-static uint8_t segment_next_head;
+////static uint8_t segment_next_head;
 int32_t sys_position[N_AXIS];      // Real-time machine (aka home) position vector in steps.
 
 static segment_t segment_buffer[SEGMENT_BUFFER_SIZE];
@@ -77,7 +77,7 @@ else
     st.step_bits = (STEP_PORT & ~STEP_MASK) | st.step_outbits; // Store out_bits to prevent overwriting.
   #else  // Normal operation
 ////	GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | st.step_outbits);
-        set_mot_step(st.step_outbits);
+        set_dir_mot(st.step_outbits);
 
   #endif
   // Enable step pulse reset timer so that The Stepper Port Reset Interrupt can reset the signal after

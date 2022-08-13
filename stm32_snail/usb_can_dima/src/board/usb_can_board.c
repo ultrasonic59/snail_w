@@ -380,12 +380,32 @@ send_msg.data[1]=btst;
 ////============================================
 ////extern CanRxMsg RxMessage;
 extern can_msg_t CAN_RxMsg;
+extern int put_can_cmd_go(uint8_t dirs,uint16_t per
+                   ,uint32_t step_x
+                   ,uint32_t step_y
+                   ,uint32_t step_z);
+
 ////========================================================  
 void tst1_task( void *pvParameters )
 {
 ////uint8_t btst=0; 
 uint8_t ii=0; 
 printk("\n\r tst1_task"); 
+///=======================================
+/*
+can_msg_t  send_msg;
+go_cmd_t t_go_cmd;
+t_go_cmd.cmd=GO_CMD ;
+t_go_cmd.dirs=1;
+t_go_cmd.step_per=1000;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+t_go_cmd.steps=10;
+memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+send_msg.id=ID_X_CMD; 
+*/
+///============================================
 
 for(;;)
   {
@@ -402,13 +422,22 @@ for(;;)
     }
   else
   {
+#if 0 
+   put_can_cmd_go(0,1000
+                   ,100
+                   ,0
+                   ,0); 
+
+ ///   CAN_wrMsg (&send_msg);
+#endif 
     msleep(10);
   }
   }
 }
-	
+#if 0	
   unsigned int   id;                 // 29 bit identifier
   unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
   unsigned char  len;                // Length of data field in bytes
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
+#endif

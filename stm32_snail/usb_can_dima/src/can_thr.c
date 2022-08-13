@@ -41,10 +41,10 @@ void test_print(can_msg_t  *snd_msg)
 {
 go_cmd_t *p_go_cmd=  (go_cmd_t *)snd_msg->data;
   ////==============================================
-  printk("\n\r [id=%x]"
+  printk("\n\r [id=%x]  "
          ,snd_msg->id
           );
-  printk("\n\r [cmd=%x][dirs=%x][per=%x][steps=%lx]"
+  printk(" [cmd=%x][dirs=%x][per=%x][steps=%lx]"
          ,p_go_cmd->cmd
          ,p_go_cmd->dirs
          ,p_go_cmd->step_per
@@ -65,7 +65,9 @@ for(;;)
   {
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
   CAN_wrMsg (&snd_msg);
-  test_print(&snd_msg);
+  
+ //// test_print(&snd_msg);
+  
  ////  tst_print();
 ///  set_curr_dir(st.dir_outbits);
 ////  obr_segment();

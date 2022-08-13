@@ -1453,7 +1453,10 @@
     <group>
         <name>drv</name>
         <file>
-            <name>$PROJ_DIR$\src\drv\can_drv.c</name>
+            <name>$PROJ_DIR$\..\common\can\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
         </file>
     </group>
     <group>

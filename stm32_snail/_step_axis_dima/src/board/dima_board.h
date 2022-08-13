@@ -72,15 +72,22 @@
 #define UART_DBG_RX_PIN_NPIN	7
 #define UART_DBG_RX_GPIO        GPIOC
 #define UART_DBG_RX_RCC  	RCC_AHB1Periph_GPIOC
+////============== CAN1 ============================
+#define CAN1_CLK                    RCC_APB1Periph_CAN1
+#define CAN1_AF_PORT                GPIO_AF_CAN1
+#define CAN1_GPIO_CLK               RCC_AHB1Periph_GPIOB
+#define CAN1_GPIO_PORT              GPIOB
 ////============== CAN1_RX ============================
 #define CAN1_RX_PIN	    	GPIO_Pin_8
 #define CAN1_RX_PIN_SOURCE	GPIO_PinSource8
+#define CAN1_RX_SOURCE              GPIO_PinSource8
 #define CAN1_RX_PIN_NPIN	8
 #define CAN1_RX_PIN_GPIO	GPIOB
 #define CAN1_RX_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////============== CAN1_TX ============================
 #define CAN1_TX_PIN	    	GPIO_Pin_9
 #define CAN1_TX_PIN_SOURCE	GPIO_PinSource9
+#define CAN1_TX_SOURCE              GPIO_PinSource9
 #define CAN1_TX_PIN_NPIN	9
 #define CAN1_TX_PIN_GPIO	GPIOB
 #define CAN1_TX_PIN_RCC  	RCC_AHB1Periph_GPIOB
@@ -436,6 +443,8 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 
 extern void mot_spi_init(void);
 extern void init_step_mot(void);

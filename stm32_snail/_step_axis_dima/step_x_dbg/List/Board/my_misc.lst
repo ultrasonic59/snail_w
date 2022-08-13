@@ -1,0 +1,91 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.10.2.313/W64 for ARM         27/May/2022  14:57:38
+# Copyright 1999-2021 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\src\my_misc.c
+#    Command line      =
+#        -f
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\List\Board\my_misc.lst.rsp
+#        (D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\src\my_misc.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
+#        -lcN
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\List\Board
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\Obj\Board
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.0\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\.\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\src\board\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\src\inc\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\usb\drv\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\..\common\board\
+#        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
+#        Workbench 9.0\arm\CMSIS\Core\Include\\" -I "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.0\arm\CMSIS\DSP\Include\\")
+#        --dependencies=n
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\Obj\Board\my_misc.o.d
+#    Locale            =  C
+#    List file         =
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\List\Board\my_misc.lst
+#    Object file       =
+#        D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\step_x_dbg\Obj\Board\my_misc.o
+#    Runtime model:       
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+D:\proj\velograph\snail_w\stm32_snail\step_axis_dima\src\my_misc.c
+      1          #include <stdint.h>
+      2          ///=======================================================================
+      3          void uDelay (const uint32_t usec)
+      4          {
+      5          uint32_t count = 0;
+      6          const uint32_t utime = 45*usec;////(120 * usec / 7);
+      7          do
+      8            {
+      9             if ( ++count > utime )
+     10              {
+     11              return ;
+     12              }
+     13            }
+     14          while (1);
+     15          }
+     16          ///=======================================================================
+     17             
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   uDelay
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      18  uDelay
+
+ 
+ 18 bytes in section .text
+ 
+ 18 bytes of CODE memory
+
+Errors: none
+Warnings: none

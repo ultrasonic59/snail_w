@@ -2,6 +2,7 @@
 #define __CAN_CMDS_H_
 ///=========================================================
 #define CAN_MAX_LEN_QUEU 16
+#define ID_MASK         (0x7e0)
 
 #define ID_X_CMD         (0x1<<5)
 #define ID_Y_CMD         (0x1<<6)

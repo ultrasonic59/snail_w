@@ -39,5 +39,6 @@ extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 ////extern CanRxMsg RxMessage;
 extern void CAN_wrMsg (can_msg_t *msg);
 extern void CAN_Config(void);
+extern void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask);
 
 #endif

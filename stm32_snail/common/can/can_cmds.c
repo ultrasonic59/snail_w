@@ -32,7 +32,7 @@ int put_can_cmd_go(uint8_t dirs,uint16_t per
                    ,uint32_t step_y
                    ,uint32_t step_z)
 {
-uint8_t btst=0;  
+///uint8_t btst=0;  
 can_msg_t  send_msg;
 go_cmd_t t_go_cmd;
 t_go_cmd.cmd=GO_CMD ;
@@ -45,13 +45,29 @@ if(step_x)
   {
    t_go_cmd.steps=step_x;
    memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-   send_msg.id=ID_X_CMD;       
+   send_msg.id=ID_X_CMD; 
+   xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   }
-send_msg.data[1]=btst;    
-xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+if(step_y)
+  {
+   t_go_cmd.steps=step_y;
+   memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+   send_msg.id=ID_Y_CMD; 
+   xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+  }
+if(step_z)
+  {
+   t_go_cmd.steps=step_z;
+   memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+   send_msg.id=ID_Z_CMD; 
+   xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+  }
+
+////send_msg.data[1]=btst;    
+////xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
 ///go_cmd_t   go_cmd;
-#if 1        
+#if 0        
         printk("\n\r tst_cnt[%d][%02x][%d][%d][%d]", per, dirs
             , step_x
             , step_y

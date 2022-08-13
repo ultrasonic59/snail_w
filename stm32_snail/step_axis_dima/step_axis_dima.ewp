@@ -349,6 +349,8 @@
                     <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common\usb\drv\inc</state>
                     <state>$PROJ_DIR$\..\common\board</state>
+                    <state>$PROJ_DIR$\..\common\my_grbl</state>
+                    <state>$PROJ_DIR$\..\common\can</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1077,6 +1079,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\src\board\step_timer.c</name>
+            <excluded>
+                <configuration>step_x_dbg</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\board\zzzz.c</name>
@@ -1091,7 +1096,10 @@
     <group>
         <name>drv</name>
         <file>
-            <name>$PROJ_DIR$\src\drv\can_drv.c</name>
+            <name>$PROJ_DIR$\..\common\can\can_cmds.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
         </file>
     </group>
     <group>

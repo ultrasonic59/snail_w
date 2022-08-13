@@ -287,48 +287,6 @@ void EXTI15_10_IRQHandler(void)
 ////extern __IO uint32_t ret;
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern CanRxMsg RxMessage;
-#if 0
-void _CAN1_RX0_IRQHandler(void)
-{
-////  CanRxMsg RxMessage;
-if (CAN1->RF0R & CAN_RF0R_FMP0)
-  {			
-  RxMessage.StdId = 0x00;
-  RxMessage.ExtId = 0x00;
-  RxMessage.IDE = 0;
-  RxMessage.DLC = 0;
-  RxMessage.FMI = 0;
-  RxMessage.Data[0] = 0x00;
-  RxMessage.Data[1] = 0x00;
-
-  CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
-  CAN_RxRdy=1;
-  }
-#if 0
-  if((RxMessage.ExtId == 0x1234) && (RxMessage.IDE == CAN_ID_EXT)
-     && (RxMessage.DLC == 2) && ((RxMessage.Data[1]|RxMessage.Data[0]<<8) == 0xDECA))
-  {
-    ret = 1; 
-  }
-  else
-  {
-    ret = 0; 
-  }
-#endif
-}
-/*----------------------------------------------------------------------------
-  CAN transmit interrupt handler
- *----------------------------------------------------------------------------*/
-void _CAN1_TX_IRQHandler (void) 
-{
-if (CAN1->TSR & CAN_TSR_RQCP0)          /* request completed mbx 0        */
-  {         
-   CAN1->TSR |= CAN_TSR_RQCP0;             /* reset request complete mbx 0   */
-   CAN1->IER &= ~CAN_IER_TMEIE;            /* disable  TME interrupt         */
-  CAN_TxRdy = 1;
-  }
-}
-#endif
 
 ///==================================================
 #ifdef USEUSB

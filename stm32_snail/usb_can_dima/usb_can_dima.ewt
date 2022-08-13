@@ -2896,52 +2896,52 @@
     <group>
         <name>my_grbl</name>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\grbl_eeprom.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\grbl_eeprom.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\grbl_print.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\grbl_print.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\grbl_settings.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\grbl_settings.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\grbl_system.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\grbl_system.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\grbl_thr.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\grbl_thr.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\jog.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\jog.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\limits.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\limits.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\motion_control.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\motion_control.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\my_gbrl_serial.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\my_gbrl_serial.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\my_gcode.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\my_gcode.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\my_protocol.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\my_protocol.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\my_stepper.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\my_stepper.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\nuts_bolts.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\nuts_bolts.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\planner.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\planner.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\probe.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\probe.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_grbl\report.c</name>
+            <name>$PROJ_DIR$\..\common\my_grbl\report.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\spindle_control.c</name>

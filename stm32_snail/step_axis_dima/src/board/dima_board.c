@@ -5,7 +5,8 @@
 ///#include "stm32f2xx_gpio.h"
 ///#include "stm32f2xx_rcc.h"
 
-////#include "board.h"
+#include "can.h"
+#include "can_cmds.h"
 #include "board.h"
 #include "printk.h"
 
@@ -322,7 +323,7 @@ UART_DBG_Init();
 mot_step_tim_init();
 mot_spi_init();
 ////init_enc_tim();
-CAN_Config();
+////CAN_Config();
 
 }
 ////============================================
@@ -494,21 +495,26 @@ mot_spi_wr(ADDR_MOT_CTRL,tmp);
 extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
-extern CanRxMsg RxMessage;
-
+////extern CanRxMsg RxMessage;
+#if 0
+set_dir_mot(uint8_t idat)
 void set_mot_dir(uint8_t dir)
 {
   
 }
 
+
 void set_mot_step(uint8_t step)
 {
   
 }
+#endif
 void reset_mot_step(void)
 {
   
 }
+////void put_mot_nstep(uint32_t nstep)
+
 void set_mot_per(uint16_t per)
 {
 if(per>MAX_PER)
@@ -519,122 +525,100 @@ MOT_STEP_TIM ->ARR = per*2;////
 MOT_STEP_TIM ->CCR1 = per;////
 }
 ///=========================================================
-void CAN_Config(void)
+void CAN1_Init (void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure;
-  CAN_InitTypeDef        CAN_InitStructure;
-  CAN_FilterInitTypeDef  CAN_FilterInitStructure;
-////=============== CAN1_INH ============================
-/////RCC_AHB1PeriphClockCmd(TST1_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
-GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
- 
-  
- /* CAN GPIOs configuration **************************************************/
-  /* Enable GPIO clock */
-RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
+uint32_t id;
+ uint32_t mask;
+CAN_Config();
 
-  /* Connect CAN pins to AF9 */
-  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_RX_SOURCE, CAN1_AF_PORT);
-  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_TX_SOURCE, CAN1_AF_PORT);
+mask= ID_MASK << 21; ///5+16
 
-  /* Configure CAN RX and TX pins */
-  GPIO_InitStructure.GPIO_Pin = CAN1_RX_PIN | CAN1_TX_PIN;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
-  GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
-  /* CAN configuration ********************************************************/
-  /* Enable CAN clock */
-  RCC_APB1PeriphClockCmd(CAN1_CLK, ENABLE);
-  /* CAN register init */
-  CAN_DeInit(CAN1);
+#if STEP_X
+  id=ID_X_CMD<<21; ///5+16
 
-  CAN_StructInit(&CAN_InitStructure);
+#elif STEP_Y
+  id=ID_Y_CMD<<21; ///5+16
+#elif STEP_Z
+  id=ID_Z_CMD<<21; ///5+16
+#else 
+  #error "\n\r=== STEP_... nodefined ==="; 
+#endif
 
-  /* CAN cell init */
-  CAN_InitStructure.CAN_TTCM = DISABLE;
-  CAN_InitStructure.CAN_ABOM = DISABLE;
-  CAN_InitStructure.CAN_AWUM = DISABLE;
-  CAN_InitStructure.CAN_NART = DISABLE;
-  CAN_InitStructure.CAN_RFLM = DISABLE;
-  CAN_InitStructure.CAN_TXFP = DISABLE;
-  CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
-  CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
-
-  /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
-  
-   /* Baudrate = 500 Kbps */
-  CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
-  CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
-  CAN_InitStructure.CAN_Prescaler = 4;
-  CAN_Init(CAN1, &CAN_InitStructure);
-
-
-  CAN_FilterInitStructure.CAN_FilterNumber = 0;
-  CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0;
-  CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-  CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
-  CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
-  //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-  CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-  CAN_FilterInit(&CAN_FilterInitStructure);
-
-  CAN_FilterInitStructure.CAN_FilterNumber = 14;
-  CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO1;
-  CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-  CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
-  CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
-  //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-  CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-  CAN_FilterInit(&CAN_FilterInitStructure);
-
-//  CAN2TxMessage.StdId = 0x321;
-//  CAN2TxMessage.ExtId = 0x01;
-//  CAN2TxMessage.RTR = CAN_RTR_DATA;
-//  CAN2TxMessage.IDE = CAN_ID_STD;
-//  CAN2TxMessage.DLC = 8;
-
+CAN_FilterConfig(0,id,mask);	
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-
 }
 
-////========================================================  
-void tst1_task( void *pvParameters )
+extern can_msg_t CAN_RxMsg;
+xQueueHandle queu_can_resv;
+
+void can_task( void *pvParameters )
 {
-////uint8_t btst=0; 
 uint8_t ii=0; 
-printk("\n\r tst1_task"); 
+go_cmd_t *p_go_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+
+printk("\n\r can_task"); 
+queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+ 
 for(;;)
   {
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
     printk("\n\r can_rx"); 
-    printk("\n\r ExtId[%x]",RxMessage.ExtId);
-    printk("\n\r DLC[%x]\n\r ",RxMessage.DLC);
+    printk("\n\r ExtId[%x]",CAN_RxMsg.id);
+    printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
     for(ii=0;ii<8;ii++)
       {
-      printk("[%x] ",RxMessage.Data[ii]);
+      printk("[%x] ",CAN_RxMsg.data[ii]);
       }
     }
   else
   {
-    msleep(10);
+////   CAN_wrMsg (&send_msg);
+    msleep(20);
+  }
+  }
+}
+////========================================================  
+void tst1_task( void *pvParameters )
+{
+////uint8_t btst=0; 
+uint8_t ii=0; 
+printk("\n\r tst1_task"); 
+///=======================================
+#if 0
+can_msg_t  send_msg;
+go_cmd_t t_go_cmd;
+t_go_cmd.cmd=GO_CMD ;
+t_go_cmd.dirs=1;
+t_go_cmd.step_per=1000;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+t_go_cmd.steps=10;
+memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+send_msg.id=ID_X_CMD; 
+#endif
+///============================================
+
+for(;;)
+  {
+  if( CAN_RxRdy)
+    {
+    CAN_RxRdy=0;
+    printk("\n\r can_rx"); 
+    printk("\n\r ExtId[%x]",CAN_RxMsg.id);
+    printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
+    for(ii=0;ii<8;ii++)
+      {
+      printk("[%x] ",CAN_RxMsg.data[ii]);
+      }
+    }
+  else
+  {
+////   CAN_wrMsg (&send_msg);
+    msleep(20);
   }
   }
 }
