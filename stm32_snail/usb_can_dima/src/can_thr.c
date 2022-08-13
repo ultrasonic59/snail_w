@@ -21,7 +21,7 @@ extern uint8_t segment_buffer_head;
 TaskHandle_t  can_send_thread_handle;
 xQueueHandle queu_to_send;
 
-void tst_print(void)
+void _tst_print(void)
 {
   ////==============================================
   printk("\n\r [out=%x][n_step=%x,idx=%x]cycl=[%x]"
@@ -35,6 +35,20 @@ void tst_print(void)
          ,st_block_buffer[st.exec_segment->st_block_index].steps[1]
          ,st_block_buffer[st.exec_segment->st_block_index].steps[2]
          ,st_block_buffer[st.exec_segment->st_block_index].step_event_count  );
+ ////==============================================
+}
+void test_print(can_msg_t  *snd_msg)
+{
+go_cmd_t *p_go_cmd=  (go_cmd_t *)snd_msg->data;
+  ////==============================================
+  printk("\n\r [id=%x]"
+         ,snd_msg->id
+          );
+  printk("\n\r [cmd=%x][dirs=%x][per=%x][steps=%lx]"
+         ,p_go_cmd->cmd
+         ,p_go_cmd->dirs
+         ,p_go_cmd->step_per
+         ,p_go_cmd->steps  );
  ////==============================================
 }
 
@@ -51,7 +65,8 @@ for(;;)
   {
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
   CAN_wrMsg (&snd_msg);
-////   tst_print();
+  test_print(&snd_msg);
+ ////  tst_print();
 ///  set_curr_dir(st.dir_outbits);
 ////  obr_segment();
 ///=================================================

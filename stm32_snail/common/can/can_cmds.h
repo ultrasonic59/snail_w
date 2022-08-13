@@ -20,13 +20,7 @@ typedef struct  go_cmd_s_{
   uint16_t  step_per;                 /// period step
   uint32_t  steps;                 /// steps X,Y , Z 
 }go_cmd_t;
-#if 0
-typedef struct  can_msg_s_{
-  uint32_t  id;                       /// 
-  uint8_t  type;                     /// 
-  uint8_t  data[CAN_MAX_NUM_BYTES];                 ///
- }can_msg_t;
-#endif
+
 ///=========================================================
 extern void mc_reset(void);
 extern int put_can_cmd_go(uint8_t dirs,uint16_t per

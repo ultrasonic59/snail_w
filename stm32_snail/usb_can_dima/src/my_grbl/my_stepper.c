@@ -64,7 +64,7 @@ uint16_t step_port_invert_mask;
 static plan_block_t *pl_block;     // Pointer to the planner block being prepped
 static st_block_t *st_prep_block;  // Pointer to the stepper block data being prepped
 static st_prep_t prep;
-static uint8_t nTimer1Out =0;
+////static uint8_t nTimer1Out =0;
 ////===============================================
 void  set_curr_dir(uint8_t dirs)
 {
@@ -255,7 +255,7 @@ do
  ////          nTimer1Out = st.exec_segment->cycles_per_tick;
                 tTimer = st.exec_segment->cycles_per_tick;
  ////               printf("\n nTimer1Out [%d]", st.exec_segment->cycles_per_tick);
-                nTimer1Out = 0;
+ ////               nTimer1Out = 0;
 
 #endif
     st.step_count = st.exec_segment->n_step; // NOTE: Can sometimes be zero when moving slow.

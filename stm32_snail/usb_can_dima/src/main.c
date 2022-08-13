@@ -135,7 +135,7 @@ while (1);
 ////============================================
 int main( void )
 {
-  int rez;
+////  int rez;
 ////uint8_t btst=0; 
 ////uint32_t tst=0;
 #ifdef DEBUG

@@ -4,6 +4,7 @@
 #include "stm32f2xx_can.h"
 #include "misc.h"
 #include "board.h"
+#include "can.h"
 #include "snail_can_cmds.h"
 #include "printk.h"
 ////=======================================================

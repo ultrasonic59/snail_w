@@ -1,0 +1,13 @@
+typedef struct  CAN_msg_s_{
+  unsigned int   id;                 // 29 bit identifier
+  unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
+  unsigned char  len;                // Length of data field in bytes
+  unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
+  unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
+} can_msg_t;
+typedef struct  go_cmd_s_{
+  uint8_t  cmd;                       /// 
+  uint8_t  dirs;                     /// Dirs X,Y,Z ....
+  uint16_t  step_per;                 /// period step
+  uint32_t  steps;                 /// steps X,Y , Z 
+}go_cmd_t;

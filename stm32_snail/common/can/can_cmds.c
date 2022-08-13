@@ -4,6 +4,7 @@
 #include "semphr.h"
 #include "queue.h"
 #include "my_grbl.h"
+#include "can.h"
 #include "can_cmds.h"
 #include "printk.h"
 ////=======================================
@@ -19,17 +20,19 @@ void _mc_reset(void)
 put_can_cmd_reset_all();  
 report_init_message();
 }
+#if 0
   unsigned int   id;                 // 29 bit identifier
   unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
   unsigned char  len;                // Length of data field in bytes
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
-
+#endif
 int put_can_cmd_go(uint8_t dirs,uint16_t per
                    ,uint32_t step_x
                    ,uint32_t step_y
                    ,uint32_t step_z)
 {
+uint8_t btst=0;  
 can_msg_t  send_msg;
 go_cmd_t t_go_cmd;
 t_go_cmd.cmd=GO_CMD ;
@@ -41,7 +44,7 @@ send_msg.type=DATA_FRAME;
 if(step_x)
   {
    t_go_cmd.steps=step_x;
-   memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t);
+   memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
    send_msg.id=ID_X_CMD;       
   }
 send_msg.data[1]=btst;    
