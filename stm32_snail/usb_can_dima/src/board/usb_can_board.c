@@ -345,7 +345,7 @@ UART_DBG_Init();
 #endif
 CAN_Config();
 ////led_tim_init();
-////mot_tim_init();
+CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
 ////============================================
 extern xQueueHandle queu_to_send;

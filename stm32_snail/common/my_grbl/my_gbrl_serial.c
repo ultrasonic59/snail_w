@@ -58,7 +58,6 @@ uint8_t next_head = serial_tx_buffer_head + 1;
 if (next_head == TX_RING_BUFFER) { 
     next_head = 0; 
   }
-
   // Wait until there is space in the buffer
   while (next_head == serial_tx_buffer_tail) {
     // TODO: Restructure st_prep_buffer() calls to be executed here during a long print.
@@ -67,11 +66,9 @@ if (next_head == TX_RING_BUFFER) {
       } // Only check for abort to avoid an endless loop.
     ;
   }
-
   // Store data and advance head
-  serial_tx_buffer[serial_tx_buffer_head] = data;
-
- serial_tx_buffer_head = next_head;
+serial_tx_buffer[serial_tx_buffer_head] = data;
+serial_tx_buffer_head = next_head;
 #endif
 }
 

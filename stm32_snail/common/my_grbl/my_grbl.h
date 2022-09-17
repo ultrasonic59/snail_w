@@ -71,7 +71,7 @@
 #define LINE_FLAG_COMMENT_PARENTHESES bit(1)
 #define LINE_FLAG_COMMENT_SEMICOLON bit(2)
 ////=============================================
-#define PSTR(x) x
+////#define PSTR(x) x
 #define pgm_read_byte_near(x) *(x)
 void _delay_ms(uint32_t x);
 void _delay_us(uint32_t x);
@@ -80,7 +80,7 @@ void _delay_us(uint32_t x);
 #define PORTPINDEF uint16_t
 typedef int bool;
 //#define NOEEPROMSUPPORT
-#define printPgmString printString
+/////#define printPgmString printString
 // Axis array index values. Must start with 0 and be continuous.
 
 

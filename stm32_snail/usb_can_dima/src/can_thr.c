@@ -66,7 +66,7 @@ for(;;)
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
   CAN_wrMsg (&snd_msg);
   
- //// test_print(&snd_msg);
+  test_print(&snd_msg);
   
  ////  tst_print();
 ///  set_curr_dir(st.dir_outbits);
