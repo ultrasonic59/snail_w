@@ -87,6 +87,8 @@
 extern void vcp_thread(void *pdata);
 extern void grbl_thread(void* pp);
 extern void can_send_thread(void* pp);
+extern void can_rsv_task(void* pp);
+
 
 extern TaskHandle_t  vcp_thread_handle;
 extern TaskHandle_t  grbl_thread_handle;
@@ -163,8 +165,10 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 #ifdef USEUSB
 xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TX_STACK_SIZE/2, 0, APP_PRIORITY, &vcp_thread_handle);
 #endif
+
 xTaskCreate(grbl_thread, (const char*)"grbl_thread",GRBL_STACK_SIZE/2, 0, APP_PRIORITY, &grbl_thread_handle);
 xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
 
 ////rez=
 xTaskCreate( tst1_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );

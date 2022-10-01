@@ -555,7 +555,7 @@ xQueueHandle queu_can_resv;
 void can_task( void *pvParameters )
 {
 uint8_t ii=0; 
-go_cmd_t *p_go_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
 
 printk("\n\r can_task"); 
 queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
@@ -565,6 +565,15 @@ for(;;)
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
+    switch(p_can_cmd->cmd) {
+      case GO_CMD:
+        printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+     
+        break;
+    default:
+      break;
+    }
+#if 0   
     printk("\n\r can_rx"); 
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
     printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
@@ -572,6 +581,7 @@ for(;;)
       {
       printk("[%x] ",CAN_RxMsg.data[ii]);
       }
+#endif
     }
   else
   {

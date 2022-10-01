@@ -14,6 +14,9 @@
 
 #define GO_CMD                0x1
 #define GET_STAT_CMD          0x2
+#define PUT_STAT_CMD          0x3
+
+#define CAN_REQ_STAT_NUM_BYTES 1
 
 typedef struct  go_cmd_s_{
   uint8_t  cmd;                       /// 
@@ -21,6 +24,13 @@ typedef struct  go_cmd_s_{
   uint16_t  step_per;                 /// period step
   uint32_t  steps;                 /// steps X,Y , Z 
 }go_cmd_t;
+
+typedef struct  put_stat_cmd_s_{
+  uint8_t  cmd;                       /// 
+  uint8_t  dirs;                     /// Dirs X,Y,Z ....
+  uint16_t  step_per;                 /// period step
+  uint32_t  steps;                 /// steps X,Y , Z 
+}put_stat_cmd_t;
 
 ///=========================================================
 extern void mc_reset(void);
