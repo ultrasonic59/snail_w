@@ -20,7 +20,17 @@
 #define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 
 ////======================================
+extern uint32_t curr_x;
+extern uint32_t curr_y;
+extern uint32_t curr_z;
+extern uint8_t stat_ready;
+extern uint8_t curr_stat_x;
+extern uint8_t curr_stat_y;
+extern uint8_t curr_stat_z;
+
 extern void tst_task( void *pvParameters );
+extern void board_init(void);
+
 #define msleep vTaskDelay
 
 #endif

@@ -12,6 +12,10 @@
 
 extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
+
+uint32_t cur_coord=0;
+uint8_t cur_stat=0;
+
 void mot_spi_wr(uint8_t addr,uint16_t idata);
 uint16_t mot_spi_rd(uint8_t addr);
 void CAN_Config(void);
@@ -550,26 +554,39 @@ CAN_FilterConfig(0,id,mask);
 }
 
 extern can_msg_t CAN_RxMsg;
-xQueueHandle queu_can_resv;
+////xQueueHandle queu_can_resv;
+xQueueHandle queu_to_send;
 
-void can_task( void *pvParameters )
+void can_rsv_task( void *pvParameters )
 {
-uint8_t ii=0; 
-go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+///uint8_t ii=0; 
+////go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
 
-printk("\n\r can_task"); 
-queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+printk("\n\r can_rsv_task"); 
+////queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
  
 for(;;)
   {
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
-    switch(p_can_cmd->cmd) {
+    switch(CAN_RxMsg.data[0]) {
       case GO_CMD:
-        printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
-     
+        {
+        go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+         printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+        }
         break;
+      case GET_STAT_CMD:
+        {
+        put_can_cmd_stat(cur_stat,cur_coord);
+ 
+   ////     put_stat_cmd_t *p_stat_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+ 
+  ////      printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+        }
+        break;
+        
     default:
       break;
     }
@@ -590,6 +607,31 @@ for(;;)
   }
   }
 }
+
+void can_send_thread(void* pp)
+{
+can_msg_t  snd_msg;
+
+printk("\n\r can_send_thread");
+
+queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+for(;;)
+  {
+  xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
+////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
+  CAN_wrMsg (&snd_msg);
+  
+ //// test_print(&snd_msg);
+  
+ ////  tst_print();
+///  set_curr_dir(st.dir_outbits);
+////  obr_segment();
+///=================================================
+////  sys.state &= ~STATE_CYCLE;
+
+  }
+}
+
 ////========================================================  
 void tst1_task( void *pvParameters )
 {

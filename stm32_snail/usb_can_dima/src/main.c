@@ -145,6 +145,7 @@ int main( void )
 #endif
 __disable_irq();
 hw_board_init();
+board_init();
 ////=============================
 //// eeprom_init();
 ///=============================

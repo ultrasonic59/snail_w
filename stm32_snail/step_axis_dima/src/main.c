@@ -17,10 +17,12 @@
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );
 extern void tst1_task( void *pvParameters );
-extern void can_task( void *pvParameters );
+extern void can_rsv_task( void *pvParameters );
+extern void can_send_thread(void* pp);
 
 extern int can_main(void);
 extern void CAN1_Init (void);
+TaskHandle_t  can_send_thread_handle;
 
 ////============================================
 int main( void )
@@ -47,7 +49,8 @@ CAN1_Init();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 /////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
-xTaskCreate( can_task, "can_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
 ///xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 /* Start the scheduler. */
 vTaskStartScheduler();

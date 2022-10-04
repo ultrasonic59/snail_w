@@ -77,3 +77,37 @@ if(step_z)
 
   return 0;
 }
+////================================================
+#ifndef _MASTER_
+extern uint32_t cur_coord;
+extern uint8_t cur_stat;
+
+int put_can_cmd_stat(uint8_t state
+                   ,uint32_t coord)
+{
+///uint8_t btst=0;  
+can_msg_t  send_msg;
+put_stat_cmd_t t_put_stat_cmd;
+t_put_stat_cmd.cmd=PUT_STAT_CMD ;
+#if STEP_X
+  t_put_stat_cmd.axis= AXIS_X;
+#elif STEP_Y
+  t_put_stat_cmd.axis= AXIS_Y;
+#elif STEP_Z
+  t_put_stat_cmd.axis= AXIS_Z;
+#else
+  t_put_stat_cmd.axis= 0;
+#endif
+t_put_stat_cmd.coord=cur_coord;
+t_put_stat_cmd.state=cur_stat;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+#endif
+////======================================================

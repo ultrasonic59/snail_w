@@ -443,11 +443,16 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define CAN_SEND_STACK_SIZE                 1024////
 #define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define         APP_PRIORITY	      (6)	
 
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+////=================================================================
+extern uint32_t cur_coord;
+extern uint8_t cur_stat;
 
 extern void mot_spi_init(void);
 extern void init_step_mot(void);

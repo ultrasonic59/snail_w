@@ -11,6 +11,14 @@
 
 #include "printk.h"
 ///=============================
+uint32_t curr_x=0;
+uint32_t curr_y=0;
+uint32_t curr_z=0;
+uint8_t stat_ready=0;
+uint8_t curr_stat_x=0;
+uint8_t curr_stat_y=0;
+uint8_t curr_stat_z=0;
+
 #ifndef USEUSB
 #include "stm32f2xx_usart.h"
 void USART1_Configuration(u32 BaudRate)
@@ -346,6 +354,17 @@ UART_DBG_Init();
 CAN_Config();
 ////led_tim_init();
 CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+}
+void board_init(void)
+{
+curr_x=0;
+curr_y=0;
+curr_z=0;
+stat_ready=0; 
+curr_stat_x=0;
+curr_stat_y=0;
+curr_stat_z=0;
+
 }
 ////============================================
 extern xQueueHandle queu_to_send;

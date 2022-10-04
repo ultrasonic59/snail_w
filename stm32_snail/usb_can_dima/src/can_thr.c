@@ -57,15 +57,48 @@ go_cmd_t *p_go_cmd=  (go_cmd_t *)snd_msg->data;
 }
 
 ////extern void obr_segment(void);
+xQueueHandle queu_stat_rdy;
+
 ////===================================
-void can_wait_ready(void){
+int can_wait_ready(uint8_t flg_rdy){
 can_msg_t  send_msg;
-send_msg.id=ID_X_CMD|ID_Y_CMD|ID_Z_CMD;
-send_msg.data[0]=GET_STAT_CMD;
-send_msg.len=CAN_REQ_STAT_NUM_BYTES;
-send_msg.format=STANDARD_FORMAT;
-send_msg.type=DATA_FRAME;
-CAN_wrMsg (&send_msg);
+uint8_t t_ready_stat=0;
+uint8_t t_rdy=flg_rdy;
+int rez=0;
+for(;;){
+  send_msg.id=ID_X_CMD|ID_Y_CMD|ID_Z_CMD;
+  send_msg.data[0]=GET_STAT_CMD;
+  send_msg.len=CAN_REQ_STAT_NUM_BYTES;
+  send_msg.format=STANDARD_FORMAT;
+  send_msg.type=DATA_FRAME;
+  CAN_wrMsg (&send_msg);
+  xQueueReceive(queu_stat_rdy,&t_ready_stat,portMAX_DELAY);   ////wait ready stat
+  if(flg_rdy&READY_X){
+    if(t_ready_stat&READY_X){
+      if(curr_stat_x==STATE_READY){
+        t_rdy&= ~READY_X;
+        }
+      }
+    }
+  if(flg_rdy&READY_Y){
+    if(t_ready_stat&READY_Y){
+      if(curr_stat_y==STATE_READY){
+        t_rdy&= ~READY_Y;
+        }
+      }
+    }
+  if(flg_rdy&READY_Z){
+    if(t_ready_stat&READY_Z){
+      if(curr_stat_z==STATE_READY){
+        t_rdy&= ~READY_Z;
+        }
+      }
+    }
+if(t_rdy==0)
+  break;
+}
+
+return rez;
 }
 ///================================
 void can_send_thread(void* pp)
@@ -78,7 +111,7 @@ queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
 for(;;)
   {
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
-  can_wait_ready();             //// wait ready X,Y,Z
+  can_wait_ready(READY_X);             //// wait ready X,Y,Z
   CAN_wrMsg (&snd_msg);
   
   test_print(&snd_msg);
@@ -91,14 +124,16 @@ for(;;)
 
   }
 }
-xQueueHandle queu_can_resv;
+////xQueueHandle queu_can_resv;
+////xQueueHandle queu_stat_rdy;
 
 void can_rsv_task( void *pvParameters )
 {
-uint8_t ii=0; 
+////uint8_t ii=0; 
 ///can_cmd_t *p_can_cmd=  (can_cmd_t *)CAN_RxMsg.data;
 printk("\n\r can_rsv_task"); 
-queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+////queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+queu_stat_rdy=xQueueCreate(1,sizeof(uint8_t));
  
 for(;;)
   {
@@ -108,8 +143,29 @@ for(;;)
     switch(CAN_RxMsg.data[0]) {
       case PUT_STAT_CMD:
         {
-        put_stat_cmd_t *p_can_cmd=  (put_stat_cmd_t *)CAN_RxMsg.data;
-         printk("put stat");
+        put_stat_cmd_t *p_stat_cmd=  (put_stat_cmd_t *)CAN_RxMsg.data;
+        if(p_stat_cmd->axis&AXIS_X)
+          {
+          stat_ready|= READY_X;
+          curr_stat_x= p_stat_cmd->state;
+          curr_x = p_stat_cmd->coord;
+          }
+         if(p_stat_cmd->axis&AXIS_Y)
+          {
+          stat_ready|= READY_Y;
+          curr_stat_y= p_stat_cmd->state;
+          curr_y = p_stat_cmd->coord;
+          }
+         if(p_stat_cmd->axis&AXIS_Z)
+          {
+          stat_ready|= READY_Z;
+          curr_stat_z= p_stat_cmd->state;
+          curr_z = p_stat_cmd->coord;
+          }
+         xQueueSend(queu_stat_rdy,&stat_ready,CAN_TIMEOUT_SEND);   ///set stat ready 
+  
+       printk("put stat");
+         
         }
         break;
     default:
