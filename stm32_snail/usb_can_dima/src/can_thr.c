@@ -62,17 +62,22 @@ xQueueHandle queu_stat_rdy;
 ////===================================
 int can_wait_ready(uint8_t flg_rdy){
 can_msg_t  send_msg;
+int t_rez;
 uint8_t t_ready_stat=0;
 uint8_t t_rdy=flg_rdy;
 int rez=0;
+printk("\n\r can_wait_ready");
 for(;;){
-  send_msg.id=ID_X_CMD|ID_Y_CMD|ID_Z_CMD;
-  send_msg.data[0]=GET_STAT_CMD;
+////  send_msg.id=ID_X_CMD|ID_Y_CMD|ID_Z_CMD;
+  send_msg.id=ID_X_CMD;
+ send_msg.data[0]=GET_STAT_CMD;
   send_msg.len=CAN_REQ_STAT_NUM_BYTES;
   send_msg.format=STANDARD_FORMAT;
   send_msg.type=DATA_FRAME;
   CAN_wrMsg (&send_msg);
-  xQueueReceive(queu_stat_rdy,&t_ready_stat,portMAX_DELAY);   ////wait ready stat
+  t_rez=xQueueReceive(queu_stat_rdy,&t_ready_stat,TIME_WAIT_RDY);   ////wait ready stat
+  if(t_rez==pdTRUE)
+  {
   if(flg_rdy&READY_X){
     if(t_ready_stat&READY_X){
       if(curr_stat_x==STATE_READY){
@@ -94,6 +99,10 @@ for(;;){
         }
       }
     }
+  }
+  else{
+    msleep(5);
+  }
 if(t_rdy==0)
   break;
 }
@@ -116,12 +125,6 @@ for(;;)
   
   test_print(&snd_msg);
   
- ////  tst_print();
-///  set_curr_dir(st.dir_outbits);
-////  obr_segment();
-///=================================================
-////  sys.state &= ~STATE_CYCLE;
-
   }
 }
 ////xQueueHandle queu_can_resv;
@@ -184,7 +187,7 @@ for(;;)
   else
   {
 ////   CAN_wrMsg (&send_msg);
-    msleep(20);
+    msleep(5);
   }
   }
 }

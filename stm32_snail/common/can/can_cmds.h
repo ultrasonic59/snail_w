@@ -28,7 +28,7 @@
 
 #define STATE_IDLE           0
 #define STATE_READY          1
-#define STATE_MOVE          2
+#define STATE_MOVE           2
 #define STATE_ERROR          3
 
 
