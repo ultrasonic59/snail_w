@@ -152,6 +152,7 @@ for(;;)
           stat_ready|= READY_X;
           curr_stat_x= p_stat_cmd->state;
           curr_x = p_stat_cmd->coord;
+          printk("\r\ncurr_stat_x[%x]",curr_stat_x);
           }
          if(p_stat_cmd->axis&AXIS_Y)
           {
@@ -167,7 +168,7 @@ for(;;)
           }
          xQueueSend(queu_stat_rdy,&stat_ready,CAN_TIMEOUT_SEND);   ///set stat ready 
   
-       printk("put stat");
+  /////     printk("put stat");
          
         }
         break;

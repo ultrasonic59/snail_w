@@ -98,8 +98,10 @@ t_put_stat_cmd.cmd=PUT_STAT_CMD ;
 #else
   t_put_stat_cmd.axis= 0;
 #endif
-t_put_stat_cmd.coord=cur_coord;
-t_put_stat_cmd.state=cur_stat;
+////t_put_stat_cmd.coord=cur_coord;
+///t_put_stat_cmd.state=cur_stat;
+t_put_stat_cmd.coord=coord;
+t_put_stat_cmd.state=state;
 send_msg.len=CAN_MAX_NUM_BYTES;
 send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;

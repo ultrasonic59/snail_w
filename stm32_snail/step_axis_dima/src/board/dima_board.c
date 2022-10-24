@@ -326,6 +326,7 @@ UART_DBG_Init();
 
 mot_step_tim_init();
 mot_spi_init();
+cur_stat=STATE_READY;
 ////init_enc_tim();
 ////CAN_Config();
 
@@ -555,88 +556,16 @@ CAN_FilterConfig(0,id,mask);
 
 extern can_msg_t CAN_RxMsg;
 ////xQueueHandle queu_can_resv;
-xQueueHandle queu_to_send;
 
-void can_rsv_task( void *pvParameters )
-{
-///uint8_t ii=0; 
-////go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
-
-printk("\n\r can_rsv_task"); 
-////queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
- 
-for(;;)
-  {
-  if( CAN_RxRdy)
-    {
-    CAN_RxRdy=0;
-    switch(CAN_RxMsg.data[0]) {
-      case GO_CMD:
-        {
-        go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
-         printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
-        }
-        break;
-      case GET_STAT_CMD:
-        {
-        put_can_cmd_stat(cur_stat,cur_coord);
- 
-   ////     put_stat_cmd_t *p_stat_cmd=  (go_cmd_t *)CAN_RxMsg.data;
- 
-  ////      printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
-        }
-        break;
-        
-    default:
-      break;
-    }
-#if 0   
-    printk("\n\r can_rx"); 
-    printk("\n\r ExtId[%x]",CAN_RxMsg.id);
-    printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
-    for(ii=0;ii<8;ii++)
-      {
-      printk("[%x] ",CAN_RxMsg.data[ii]);
-      }
-#endif
-    }
-  else
-  {
-////   CAN_wrMsg (&send_msg);
-    msleep(20);
-  }
-  }
-}
-
-void can_send_thread(void* pp)
-{
-can_msg_t  snd_msg;
-
-printk("\n\r can_send_thread");
-
-queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
-for(;;)
-  {
-  xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
-////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
-  CAN_wrMsg (&snd_msg);
-  
- //// test_print(&snd_msg);
-  
- ////  tst_print();
-///  set_curr_dir(st.dir_outbits);
-////  obr_segment();
-///=================================================
-////  sys.state &= ~STATE_CYCLE;
-
-  }
-}
 
 ////========================================================  
 void tst1_task( void *pvParameters )
 {
 ////uint8_t btst=0; 
-uint8_t ii=0; 
+uint32_t t_coord=0;  
+uint8_t t_stat=0x8; 
+
+////uint8_t ii=0; 
 printk("\n\r tst1_task"); 
 ///=======================================
 #if 0
@@ -653,7 +582,7 @@ memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
 send_msg.id=ID_X_CMD; 
 #endif
 ///============================================
-
+#if 0
 for(;;)
   {
   if( CAN_RxRdy)
@@ -672,6 +601,14 @@ for(;;)
 ////   CAN_wrMsg (&send_msg);
     msleep(20);
   }
+  }
+#endif
+for(;;)
+  {
+  put_can_cmd_stat(t_stat,t_coord);
+   
+   t_coord++; 
+    msleep(20);
   }
 }
 ////=======================================================

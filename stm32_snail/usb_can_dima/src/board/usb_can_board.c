@@ -345,6 +345,12 @@ NVIC_Init(&NVIC_InitStructure);
 ////=============================================
 void hw_board_init(void)
 {
+uint32_t id;
+ uint32_t mask;
+mask= ID_MASK << 21; ///5+16
+
+id=ID_MASTER_CMD<<21; ///5+16
+  
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
@@ -353,6 +359,8 @@ UART_DBG_Init();
 #endif
 CAN_Config();
 ////led_tim_init();
+CAN_FilterConfig(0,id,mask);	
+
 CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
 void board_init(void)
