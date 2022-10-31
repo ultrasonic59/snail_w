@@ -25,12 +25,14 @@
 #define GO_CMD                0x1
 #define GET_STAT_CMD          0x2
 #define PUT_STAT_CMD          0x3
+#define PUT_ACK               0x4
 
 #define STATE_IDLE           0
 #define STATE_READY          1
 #define STATE_MOVE           2
 #define STATE_ERROR          3
 
+#define LEN_ACK_QU      8
 
 #define CAN_REQ_STAT_NUM_BYTES 1
 
@@ -49,6 +51,16 @@ typedef struct  put_stat_cmd_s_{
   uint32_t  coord;                      /// 
 }put_stat_cmd_t;
 
+typedef struct  ack_s_{
+  uint8_t  ack_cmd;                         /// 
+  uint8_t  axis;                        /// X,Y , Z 
+}ack_t;
+
+typedef struct  put_ack_s_{
+  uint8_t  cmd;                         /// 
+  ack_t   ack;                         /// 
+}put_ack_t;
+
 ///=========================================================
 extern void mc_reset(void);
 extern int put_can_cmd_go(uint8_t dirs,uint16_t per
@@ -58,5 +70,6 @@ extern int put_can_cmd_go(uint8_t dirs,uint16_t per
 
 extern int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord);
+extern int put_can_ack(uint8_t cmd );
 
 #endif  //// __CAN_CMDS_H_

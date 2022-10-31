@@ -58,7 +58,23 @@ go_cmd_t *p_go_cmd=  (go_cmd_t *)snd_msg->data;
 
 ////extern void obr_segment(void);
 xQueueHandle queu_stat_rdy;
-
+xQueueHandle queu_ack;
+///---- send message with acknol ----------
+int can_send_msg_ack(can_msg_t  *p_snd_msg){ 
+int t_rez;
+ack_t t_ack;
+int rez=0;
+CAN_wrMsg(p_snd_msg); 
+t_rez=xQueueReceive(queu_ack,&t_ack,TIME_WAIT_ACK);   ////wait ready stat
+if(t_rez==pdTRUE)
+  {
+//// check cmd ,axis    
+  rez=0;  
+  }
+else
+  rez= -1;
+return rez;  
+}
 ////===================================
 int can_wait_ready(uint8_t flg_rdy){
 can_msg_t  send_msg;
@@ -121,8 +137,8 @@ for(;;)
   {
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
   can_wait_ready(READY_X);             //// wait ready X,Y,Z
-  CAN_wrMsg (&snd_msg);
-  
+ //// CAN_wrMsg (&snd_msg);
+  can_send_msg_ack(&snd_msg); 
   test_print(&snd_msg);
   
   }
@@ -137,6 +153,7 @@ void can_rsv_task( void *pvParameters )
 printk("\n\r can_rsv_task"); 
 ////queu_can_resv=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
 queu_stat_rdy=xQueueCreate(1,sizeof(uint8_t));
+queu_ack=xQueueCreate(LEN_ACK_QU,sizeof(ack_t));
  
 for(;;)
   {
@@ -144,7 +161,14 @@ for(;;)
     {
     CAN_RxRdy=0;
     switch(CAN_RxMsg.data[0]) {
-      case PUT_STAT_CMD:
+    case PUT_ACK:
+      {
+      put_ack_t *p_p_ack=  (put_ack_t *)CAN_RxMsg.data;
+      ack_t *p_ack=  (ack_t *)&p_p_ack->ack;
+      xQueueSend(queu_ack,p_ack,CAN_TIMEOUT_SEND);   ///set stat ready 
+      }
+      break;
+    case PUT_STAT_CMD:
         {
         put_stat_cmd_t *p_stat_cmd=  (put_stat_cmd_t *)CAN_RxMsg.data;
         if(p_stat_cmd->axis&AXIS_X)

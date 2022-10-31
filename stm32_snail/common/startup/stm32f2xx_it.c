@@ -227,24 +227,6 @@ void DMA2_Stream2_IRQHandler(void)
 //// usart1_rx_dma_irq();
 }
 ////=============================
-#if 0
-/*Bluretooth UART API */
-void DMA2_Stream1_IRQHandler(void)
-{ 
-////  usart6_rx_dma_irq();
-}
-
-void DMA2_Stream6_IRQHandler(void)
-{
- //// usart6_tx_dma_irq();
-}
-
-void USART6_IRQHandler(void)
-{  
- ////   usart6_irq();
-}
-#endif
-////=============================
 
 /*EXTI ISR*/
 void EXTI0_IRQHandler(void)

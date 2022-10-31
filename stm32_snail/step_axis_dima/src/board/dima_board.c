@@ -213,7 +213,15 @@ else
 }
 void  set_dir_mot(uint8_t idat)
 {
-if(idat&0x1)
+uint8_t tdat=0;
+#if STEP_X
+  tdat=idat&DIR_X;
+#elif STEP_Y
+  tdat=idat&DIR_Y;
+#elif STEP_Z
+  tdat=idat&DIR_Z;
+#endif
+if(tdat)
   {
   GPIO_SetBits(MOT_DIR_PIN_GPIO, MOT_DIR_PIN);
   }
@@ -269,11 +277,12 @@ NVIC_Init(&NVIC_InitStructure);
 void stop_mot_step_tim(void)
 {
 TIM_Cmd(MOT_STEP_TIM, DISABLE);
+
 }
 void ena_mot(uint8_t ena_dis)
 {
 uint16_t tmp;
- 
+////return ; 
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
 if(ena_dis&0x1)
 {
@@ -285,14 +294,18 @@ tmp&= ~0x1;
 }
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
+///===========================================================
 void put_mot_nstep(uint32_t nstep)
 {
 ena_mot(1) ;
- num_step=nstep; 
+num_step=nstep; 
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
+
+///===========================================================
 volatile uint32_t gsr;
+
 ////=======================================================
 void MOT_STEP_TIM_IRQHandler(void)
 { 
@@ -302,6 +315,8 @@ if(num_step)
   if(num_step==0)
     {
     stop_mot_step_tim(); 
+    cur_stat=STATE_READY;  
+
     ena_mot(0) ;
     }
   }
@@ -317,6 +332,19 @@ uint8_t get_conc1(void)
 {
 return GPIO_ReadInputDataBit(CONC1_PIN_GPIO, CONC1_PIN);
 }
+void motor_init(void)
+{
+set_sleep_mot(1);
+////set_ena_mot(1);
+set_reset_mot(1);
+uDelay(1000);
+set_reset_mot(0);
+uDelay(20000);
+init_step_mot();
+ena_mot(0) ;
+set_mot_rej(DEF_MOT_REJ);
+  
+}
 ////=============================================
 void hw_board_init(void)
 {
@@ -327,6 +355,9 @@ UART_DBG_Init();
 mot_step_tim_init();
 mot_spi_init();
 cur_stat=STATE_READY;
+motor_init();
+ena_mot(0) ;
+
 ////init_enc_tim();
 ////CAN_Config();
 
@@ -441,8 +472,8 @@ void init_step_mot(void)
   
 // CTRL Register
 
-G_CTRL_REG.DTIME 	= 0x03;
-G_CTRL_REG.ISGAIN 	= 0x03;
+G_CTRL_REG.DTIME 	= 0;///0x03;
+G_CTRL_REG.ISGAIN 	= 0;///0x03;
 G_CTRL_REG.EXSTALL 	= 0x00;
 G_CTRL_REG.MODE 	= 0;///0x03;
 G_CTRL_REG.RSTEP 	= 0x00;
@@ -485,6 +516,7 @@ mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&G_BLANK_REG);
 mot_spi_wrp(ADDR_MOT_DECAY,(uint16_t*)&G_DECAY_REG);
 mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&G_STALL_REG);
 mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&G_DRIVE_REG);
+mot_spi_wr(ADDR_MOT_STATUS,0);       
 
 }
 ////========================================================  
@@ -493,27 +525,41 @@ void set_mot_rej(uint8_t rej)
 uint16_t tmp;
 CTRL_Register_t *t_ctrl_reg=(CTRL_Register_t*)&tmp;
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
+
 t_ctrl_reg->MODE=rej;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
+
+tmp=mot_spi_rd(ADDR_MOT_CTRL);
 }
+
+
+void print_mot_reg(void)
+{
+uint16_t tmp;
+tmp=mot_spi_rd(ADDR_MOT_CTRL);
+printk("\n\r CTRL[%x]",tmp);
+
+tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+printk("\n\r TORQUE[%x]",tmp);
+tmp=mot_spi_rd(ADDR_MOT_OFF);
+printk("\n\r OFF[%x]",tmp);
+tmp=mot_spi_rd(ADDR_MOT_BLANK);
+printk("\n\r BLANK[%x]",tmp);
+tmp=mot_spi_rd(ADDR_MOT_STALL);
+printk("\n\r STALL[%x]",tmp);
+tmp=mot_spi_rd(ADDR_MOT_DRIVE);
+printk("\n\r DRIVE[%x]",tmp);
+tmp=mot_spi_rd(ADDR_MOT_STATUS);
+printk("\n\r STATUS[%x]",tmp);
+
+}
+
+
 ////============================================
 extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 ////extern CanRxMsg RxMessage;
-#if 0
-set_dir_mot(uint8_t idat)
-void set_mot_dir(uint8_t dir)
-{
-  
-}
-
-
-void set_mot_step(uint8_t step)
-{
-  
-}
-#endif
 void reset_mot_step(void)
 {
   

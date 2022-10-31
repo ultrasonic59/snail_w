@@ -111,5 +111,34 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_ack(uint8_t cmd )
+{
+///uint8_t btst=0;  
+can_msg_t  send_msg;
+
+put_ack_t t_put_ack;
+
+t_put_ack.cmd=PUT_ACK ;
+#if STEP_X
+  t_put_ack.ack.axis= AXIS_X;
+#elif STEP_Y
+  t_put_ack..ack.axis= AXIS_Y;
+#elif STEP_Z
+  t_put_ack..ack.axis= AXIS_Z;
+#else
+  t_put_ack..ack.axis= 0;
+#endif
+ t_put_ack.ack.ack_cmd=cmd;
+send_msg.len= sizeof(put_ack_t);
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+
+
 #endif
 ////======================================================

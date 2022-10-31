@@ -14,11 +14,11 @@
 #define	APB1_pres	4
 #define APB2_pres	2
 
-#define DEF_MOT_TIM_PERIOD          8000
-#define DEF_MOT_TIM_PRESC           8
+#define DEF_MOT_TIM_PERIOD          500
+#define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
-#define MIN_PER         1000        
+#define MIN_PER         500        
 
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
@@ -250,7 +250,7 @@
 #define ADDR_MOT_STALL  5
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
-
+#define DEF_MOT_REJ   0
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register
@@ -457,10 +457,14 @@ extern uint8_t cur_stat;
 extern void mot_spi_init(void);
 extern void init_step_mot(void);
 extern void ena_mot(uint8_t ena_dis);
+extern void motor_init(void);
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
 extern void put_mot_nstep(uint32_t nstep);
+///extern void set_step_per(uint16_t step_per);
+extern void set_mot_per(uint16_t per);
+
 extern void  set_sleep_mot(uint8_t idat);
 extern void  set_ena_mot(uint8_t idat);
 extern void  set_dir_mot(uint8_t idat);
@@ -471,6 +475,7 @@ extern int get_byte_dbg(void) ;
 extern void can1_init(void);
 extern void motor_task( void *pvParameters );
 extern int check_push_key_dbg(void);
+extern void print_mot_reg(void);
 
 ////#define dbg_sendchar  sendchar6 
 ////#define dbg_get_byte get_byte6

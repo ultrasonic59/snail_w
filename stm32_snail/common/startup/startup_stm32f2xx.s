@@ -62,14 +62,7 @@
         EXTERN  hard_fault_handler_c
  ;////       EXTERN  RTC_WKUP_irq
         EXTERN  xPortSysTickHandler ;///SysTick_Handler
-;///        EXTERN  SDIO_irq
- ;//       EXTERN  EXTI0_irq
-  ;///      EXTERN  EXTI1_irq
-  ;//      EXTERN  EXTI2_irq
- ;///       EXTERN  EXTI3_irq
- ;//       EXTERN  EXTI4_irq
  ;////       EXTERN  TIM7_irq
-;///        EXTERN  DMA2_Stream3_IRQHandler
         PUBLIC  __vector_table
 
         DATA

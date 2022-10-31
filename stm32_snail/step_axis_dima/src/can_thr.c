@@ -13,12 +13,18 @@
 extern can_msg_t CAN_RxMsg;
 
 xQueueHandle queu_to_send;
+
 int go_cmd(go_cmd_t *p_go_cmd)
 {
 cur_stat=STATE_MOVE;  
-printk("\n\rGo [dir=%x:per=%d:steps=%d] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
-msleep(10000);
-cur_stat=STATE_READY;  
+printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+
+set_dir_mot(p_go_cmd->dirs);
+////set_step_per(p_go_cmd->step_per);
+set_mot_per(p_go_cmd->step_per);
+put_mot_nstep(p_go_cmd->steps);
+////msleep(1000);
+////cur_stat=STATE_READY;  
 return 0;
 }
 
@@ -33,8 +39,8 @@ printk("\n\r can_rsv_task");
     switch(CAN_RxMsg.data[0]) {
       case GO_CMD:
         {
- ////       cur_stat=STATE_MOVE;  
- ////       go_cmd_t *p_can_cmd=  (go_cmd_t *)CAN_RxMsg.data;
+        put_can_ack(GO_CMD);
+          
         go_cmd((go_cmd_t *)CAN_RxMsg.data);
   ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
          
