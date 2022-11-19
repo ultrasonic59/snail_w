@@ -20,13 +20,6 @@ void _mc_reset(void)
 put_can_cmd_reset_all();  
 report_init_message();
 }
-#if 0
-  unsigned int   id;                 // 29 bit identifier
-  unsigned char  data[CAN_MAX_NUM_BYTES];            // Data field
-  unsigned char  len;                // Length of data field in bytes
-  unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
-  unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
-#endif
 int put_can_cmd_go(uint8_t dirs,uint16_t per
                    ,uint32_t step_x
                    ,uint32_t step_y

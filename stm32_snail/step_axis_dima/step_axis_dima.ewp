@@ -74,7 +74,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>STM32F205RB	ST STM32F205RB</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -120,7 +120,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>STM32F205RB	ST STM32F205RB</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -1326,5 +1326,8 @@
     </group>
     <file>
         <name>$PROJ_DIR$\src\can_thr.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\..\common\libraries\eeprom_emul\emul_eeprom.c</name>
     </file>
 </project>

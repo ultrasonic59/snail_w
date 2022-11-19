@@ -7,8 +7,38 @@
 #include "stm32f2xx_rcc.h"
 #include "stm32f2xx_tim.h"
 #include "misc.h"
+////=============================================
+/* EEPROM start address in Flash */
+#define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
+                                                      after 16KByte of used Flash memory */
+#define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
+/* Pages 0 and 1 base and end addresses */
+#define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
+#define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
+
+#define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
+#define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
 
 ////=============================================
+#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
+#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
+#define APP_END_ADDRESS         ((uint32_t)(TMP_BASE_ADDRESS + (TMP_PAGE_SIZE - 1)))
+
+////=============================================
+#define VCP_RX_STACK_SIZE	        1024////( ( unsigned short ) 512 )
+#define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
+#define GRBL_STACK_SIZE                 1024////
+#define CAN_SEND_STACK_SIZE                 1024////
+#define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+
+#define         APP_PRIORITY	     ( tskIDLE_PRIORITY + 3 )	
+#define APPLICATION_STACK_SIZE         (4000)
+#define TST_TASK_PRIORITY		APP_PRIORITY ////		( tskIDLE_PRIORITY + 3 )
+#define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define CAN_TASK_PRIORITY		( tskIDLE_PRIORITY + 6 )
+#define TIME_WAIT_RDY           200 
+#define TIME_WAIT_ACK           100 
+///==============================================================
 #define	APB1_pres	4
 #define APB2_pres	2
 
@@ -21,15 +51,8 @@
 #define MOT_TIM_PERIOD     6000
 #define MOT_TIM_PRESC     8
 
-////#define MOT_STEP_TIM_IRQHandler	 TIM1_TRG_COM_TIM11_IRQHandler
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
-
-////#define MOT_STEP_TIM_IRQHandler	TIM8_BRK_TIM12_IRQHandler
-////#define TIM8_TRG_COM_TIM14_IRQHandler  MOT_STEP_TIM_IRQHandler	
-
-////#define TIM_LED_FREQ	100000
-////#define MOT_TIM_IRQN    TIM1_TRG_COM_TIM11_IRQn////TIM8_BRK_TIM12_IRQn
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
 #define TIM_LED TST_TIM
 ////=============== TST1 ============================
@@ -228,6 +251,14 @@
 #define UART_DBG_TX_SOURCE      GPIO_Pin_2
 #define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
+////======================================
+extern uint32_t curr_x;
+extern uint32_t curr_y;
+extern uint32_t curr_z;
+extern uint8_t stat_ready;
+extern uint8_t curr_stat_x;
+extern uint8_t curr_stat_y;
+extern uint8_t curr_stat_z;
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
@@ -242,6 +273,9 @@ extern void  set_reset_mot(uint8_t idat);
 extern void set_mot_rej(uint8_t rej);
 extern int sendchar2 (int c) ;
 extern int get_byte2(void) ;
+extern void tst_task( void *pvParameters );
+extern void board_init(void);
+#define msleep vTaskDelay
 
 #define dbg_sendchar  sendchar2 
 #define dbg_get_byte get_byte2

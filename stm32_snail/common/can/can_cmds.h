@@ -26,6 +26,7 @@
 #define GET_STAT_CMD          0x2
 #define PUT_STAT_CMD          0x3
 #define PUT_ACK               0x4
+#define PRG_PARAM             0x5
 
 #define STATE_IDLE           0
 #define STATE_READY          1
@@ -60,6 +61,13 @@ typedef struct  put_ack_s_{
   uint8_t  cmd;                         /// 
   ack_t   ack;                         /// 
 }put_ack_t;
+
+typedef struct  prg_param_cmd_s_{
+  uint8_t   cmd;                         /// 
+  uint16_t  num_par;                        /// 
+  uint8_t   len_par;                     ///bytes 
+  uint32_t  par_val;                      /// 
+}prg_param_cmd_t;
 
 ///=========================================================
 extern void mc_reset(void);

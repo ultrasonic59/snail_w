@@ -9,6 +9,22 @@
 #include "stm32f2xx_tim.h"
 #include "stm32f2xx_spi.h"
 #include "misc.h"
+////=============================================
+/* EEPROM start address in Flash */
+#define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
+                                                      after 16KByte of used Flash memory */
+#define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
+/* Pages 0 and 1 base and end addresses */
+#define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
+#define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
+
+#define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
+#define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
+
+////=============================================
+#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
+#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
+#define APP_END_ADDRESS         ((uint32_t)(TMP_BASE_ADDRESS + (TMP_PAGE_SIZE - 1)))
 
 ////=============================================
 #define	APB1_pres	4

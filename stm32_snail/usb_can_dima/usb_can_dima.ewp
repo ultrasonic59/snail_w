@@ -579,7 +579,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -1116,7 +1116,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>STM32F205RB	ST STM32F205RB</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -1162,7 +1162,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>STM32F205RE	ST STM32F205RE</state>
+                    <state>STM32F205RB	ST STM32F205RB</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -1403,6 +1403,7 @@
                     <state>$PROJ_DIR$\..\common\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common\can</state>
                     <state>$PROJ_DIR$\..\common\my_grbl</state>
+                    <state>$PROJ_DIR$\..\common\board</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2219,12 +2220,14 @@
         <file>
             <name>$PROJ_DIR$\src\my_grbl\spindle_control.c</name>
             <excluded>
+                <configuration>usb_can</configuration>
                 <configuration>usb_can_dima</configuration>
             </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\src\my_grbl\stepper.c</name>
             <excluded>
+                <configuration>usb_can</configuration>
                 <configuration>usb_can_dima</configuration>
             </excluded>
         </file>

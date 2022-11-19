@@ -26,18 +26,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx.h"
 #include "stm32f2xx_flash.h"
+#include "board.h"
 
 
-/* EEPROM start address in Flash */
-#define EEPROM_START_ADDRESS    ((uint32_t)0x08004000) /* EEPROM emulation start address:
-                                                      after 16KByte of used Flash memory */
-#define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
-/* Pages 0 and 1 base and end addresses */
-#define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
-#define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
-
-#define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
-#define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
 
 /* Used Flash pages for EEPROM emulation */
 #define PAGE0                   ((uint16_t)0x0000)
