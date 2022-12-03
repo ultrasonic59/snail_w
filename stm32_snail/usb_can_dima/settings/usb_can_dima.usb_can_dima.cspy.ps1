@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "W:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --backend -f "W:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "W:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --debug_file=$debugfile --backend -f "W:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\usb_can_dima\settings\usb_can_dima.usb_can_dima.driver.xcl" 
 }
