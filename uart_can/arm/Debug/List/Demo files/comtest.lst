@@ -1,0 +1,390 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         03/Dec/2022  17:36:58
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                     =  thumb
+#    Endian                       =  little
+#    Source file                  =
+#        D:\proj\velograph\test_arm\uart_can\comtest.c
+#    Command line                 =
+#        -f "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo
+#        files\comtest.o.rsp" (D:\proj\velograph\test_arm\uart_can\comtest.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -lcN
+#        "D:\proj\velograph\test_arm\uart_can\Debug\List\Demo files"
+#        --diag_suppress Pa082,pe191 -o
+#        "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\test_arm\uart_can\.\ -I
+#        D:\proj\velograph\test_arm\uart_can\STM32F10xFWLib\inc\ -I
+#        D:\proj\velograph\test_arm\uart_can\freertos\include\ -I
+#        D:\proj\velograph\test_arm\uart_can\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\test_arm\uart_can\drv\ -Ol --use_c++_inline
+#        --require_prototypes) --dependencies=n
+#        "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files\comtest.o.d"
+#    Locale                       =  C
+#    List file                    =
+#        D:\proj\velograph\test_arm\uart_can\Debug\List\Demo files\comtest.lst
+#    Object file                  =
+#        D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files\comtest.o
+#    Runtime model:                  
+#      __CPP_Runtime              =  1
+#      __SystemLibrary            =  DLib
+#      __dlib_full_locale_support =  1
+#      __dlib_version             =  6
+#
+###############################################################################
+
+D:\proj\velograph\test_arm\uart_can\comtest.c
+      1          /*
+      2           * FreeRTOS Kernel V10.2.1
+      3           * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+      4           *
+      5           * Permission is hereby granted, free of charge, to any person obtaining a copy of
+      6           * this software and associated documentation files (the "Software"), to deal in
+      7           * the Software without restriction, including without limitation the rights to
+      8           * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+      9           * the Software, and to permit persons to whom the Software is furnished to do so,
+     10           * subject to the following conditions:
+     11           *
+     12           * The above copyright notice and this permission notice shall be included in all
+     13           * copies or substantial portions of the Software.
+     14           *
+     15           * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     16           * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+     17           * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+     18           * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+     19           * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+     20           * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     21           *
+     22           * http://www.FreeRTOS.org
+     23           * http://aws.amazon.com/freertos
+     24           *
+     25           * 1 tab == 4 spaces!
+     26           */
+     27          
+     28          /**
+     29           * Creates two tasks that operate on an interrupt driven serial port.  A loopback 
+     30           * connector should be used so that everything that is transmitted is also received.  
+     31           * The serial port does not use any flow control.  On a standard 9way 'D' connector 
+     32           * pins two and three should be connected together.
+     33           *
+     34           * The first task repeatedly sends a string to a queue, character at a time.  The 
+     35           * serial port interrupt will empty the queue and transmit the characters.  The 
+     36           * task blocks for a pseudo random period before resending the string.
+     37           *
+     38           * The second task blocks on a queue waiting for a character to be received.  
+     39           * Characters received by the serial port interrupt routine are posted onto the 
+     40           * queue - unblocking the task making it ready to execute.  If this is then the 
+     41           * highest priority task ready to run it will run immediately - with a context 
+     42           * switch occurring at the end of the interrupt service routine.  The task 
+     43           * receiving characters is spawned with a higher priority than the task 
+     44           * transmitting the characters.
+     45           *
+     46           * With the loop back connector in place, one task will transmit a string and the 
+     47           * other will immediately receive it.  The receiving task knows the string it 
+     48           * expects to receive so can detect an error.
+     49           *
+     50           * This also creates a third task.  This is used to test semaphore usage from an
+     51           * ISR and does nothing interesting.  
+     52           * 
+     53           * \page ComTestC comtest.c
+     54           * \ingroup DemoFiles
+     55           * <HR>
+     56           */
+     57          
+     58          /*
+     59          Changes from V1.00:
+     60          	
+     61          	+ The priority of the Rx task has been lowered.  Received characters are
+     62          	  now processed (read from the queue) at the idle priority, allowing low
+     63          	  priority tasks to run evenly at times of a high communications overhead.
+     64          
+     65          Changes from V1.01:
+     66          
+     67          	+ The Tx task now waits a pseudo random time between transissions.
+     68          	  Previously a fixed period was used but this was not such a good test as
+     69          	  interrupts fired at regular intervals.
+     70          
+     71          Changes From V1.2.0:
+     72          
+     73          	+ Use vSerialPutString() instead of single character puts.
+     74          	+ Only stop the check variable incrementing after two consecutive errors. 
+     75          
+     76          Changed from V1.2.5
+     77          
+     78          	+ Made the Rx task 2 priorities higher than the Tx task.  Previously it was
+     79          	  only 1.  This is done to tie in better with the other demo application 
+     80          	  tasks.
+     81          
+     82          Changes from V2.0.0
+     83          
+     84          	+ Delay periods are now specified using variables and constants of
+     85          	  TickType_t rather than unsigned long.
+     86          	+ Slight modification to task priorities.
+     87          
+     88          */
+     89          
+     90          
+     91          /* Scheduler include files. */
+     92          #include <stdlib.h>
+     93          #include <string.h>
+     94          #include "FreeRTOS.h"
+     95          #include "task.h"
+     96          
+     97          /* Demo program include files. */
+     98          #include "serial.h"
+     99          #include "comtest.h"
+    100          ////#include "print.h"
+    101          
+    102          /* The Tx task will transmit the sequence of characters at a pseudo random
+    103          interval.  This is the maximum and minimum block time between sends. */
+    104          #define comTX_MAX_BLOCK_TIME		( ( TickType_t ) 0x15e )
+    105          #define comTX_MIN_BLOCK_TIME		( ( TickType_t ) 0xc8 )
+    106          
+    107          #define comMAX_CONSECUTIVE_ERRORS	( 2 )
+    108          
+    109          #define comSTACK_SIZE				( ( unsigned short ) 256 )
+    110          
+    111          #define comRX_RELATIVE_PRIORITY		( 1 )
+    112          
+    113          /* Handle to the com port used by both tasks. */
+    114          static xComPortHandle xPort;
+    115          
+    116          /* The transmit function as described at the top of the file. */
+    117          static void vComTxTask( void *pvParameters );
+    118          
+    119          /* The receive function as described at the top of the file. */
+    120          static void vComRxTask( void *pvParameters );
+    121          
+    122          /* The semaphore test function as described at the top of the file. */
+    123          static void vSemTestTask( void * pvParameters );
+    124          
+    125          /* The string that is repeatedly transmitted. */
+    126          const char * const pcMessageToExchange = 	"Send this message over and over again to check communications interrupts. "
+    127          									   			"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\r\n";
+    128          
+    129          /* Variables that are incremented on each cycle of each task.  These are used to 
+    130          check that both tasks are still executing. */
+    131          volatile short sTxCount = 0, sRxCount = 0, sSemCount = 0;
+    132          
+    133          /* The handle to the semaphore test task. */
+    134          static TaskHandle_t xSemTestTaskHandle = NULL;
+    135          
+    136          /*-----------------------------------------------------------*/
+    137          
+    138          void vStartComTestTasks( unsigned portBASE_TYPE uxPriority, eCOMPort ePort, eBaud eBaudRate )
+    139          {
+    140          const unsigned portBASE_TYPE uxBufferLength = 255;
+    141          
+    142          	/* Initialise the com port then spawn both tasks. */
+    143          	xPort = xSerialPortInit( ePort, eBaudRate, serNO_PARITY, serBITS_8, serSTOP_1, uxBufferLength );
+    144          	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority, NULL );
+    145          	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority + comRX_RELATIVE_PRIORITY, NULL );
+    146          	xTaskCreate( vSemTestTask, "ISRSem", comSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xSemTestTaskHandle );
+    147          }
+    148          /*-----------------------------------------------------------*/
+    149          
+    150          static void vComTxTask( void *pvParameters )
+    151          {
+    152          const char * const pcTaskStartMsg = "COM Tx task started.\r\n";
+    153          TickType_t xTimeToWait;
+    154          
+    155          	/* Stop warnings. */
+    156          	( void ) pvParameters;
+    157          
+    158          	/* Queue a message for printing to say the task has started. */
+    159          /////	vPrintDisplayMessage( &pcTaskStartMsg );
+    160          
+    161          	for( ;; )
+    162          	{
+    163          		/* Send the string to the serial port. */
+    164          		vSerialPutString( xPort, pcMessageToExchange, strlen( pcMessageToExchange ) );
+    165          
+    166          		/* We have posted all the characters in the string - increment the variable 
+    167          		used to check that this task is still running, then wait before re-sending 
+    168          		the string. */
+    169          		sTxCount++;
+    170          
+    171          		xTimeToWait = xTaskGetTickCount();
+    172          
+    173          		/* Make sure we don't wait too long... */
+    174          		xTimeToWait %= comTX_MAX_BLOCK_TIME;
+    175          
+    176          		/* ...but we do want to wait. */
+    177          		if( xTimeToWait < comTX_MIN_BLOCK_TIME )
+    178          		{
+    179          			xTimeToWait = comTX_MIN_BLOCK_TIME;
+    180          		}
+    181          
+    182          		vTaskDelay( xTimeToWait );
+    183          	}
+    184          } /*lint !e715 !e818 pvParameters is required for a task function even if it is not referenced. */
+    185          /*-----------------------------------------------------------*/
+    186          
+    187          static void vComRxTask( void *pvParameters )
+    188          {
+    189          const char * const pcTaskStartMsg = "COM Rx task started.\r\n";
+    190          const char * const pcTaskErrorMsg = "COM read error\r\n";
+    191          const char * const pcTaskRestartMsg = "COM resynced\r\n";
+    192          const char * const pcTaskTimeoutMsg = "COM Rx timed out\r\n";
+    193          const TickType_t xBlockTime = ( TickType_t ) 0xffff / portTICK_PERIOD_MS;
+    194          const char *pcExpectedChar;
+    195          portBASE_TYPE xGotChar;
+    196          char cRxedChar;
+    197          short sResyncRequired, sConsecutiveErrors, sLatchedError;
+    198          
+    199          	/* Stop warnings. */
+    200          	( void ) pvParameters;
+    201          
+    202          	/* Queue a message for printing to say the task has started. */
+    203          /////	vPrintDisplayMessage( &pcTaskStartMsg );
+    204          	
+    205          	/* The first expected character is the first character in the string. */
+    206          	pcExpectedChar = pcMessageToExchange;
+    207          	sResyncRequired = pdFALSE;
+    208          	sConsecutiveErrors = 0;
+    209          	sLatchedError = pdFALSE;
+    210          
+    211          	for( ;; )
+    212          	{
+    213          		/* Receive a message from the com port interrupt routine.  If a message is 
+    214          		not yet available the call will block the task. */
+    215          		xGotChar = xSerialGetChar( xPort, &cRxedChar, xBlockTime );
+    216          		if( xGotChar == pdTRUE )
+    217          		{
+    218          			if( sResyncRequired == pdTRUE )
+    219          			{
+    220          				/* We got out of sequence and are waiting for the start of the next 
+    221          				transmission of the string. */
+    222          				if( cRxedChar == '\n' )
+    223          				{
+    224          					/* This is the end of the message so we can start again - with 
+    225          					the first character in the string being the next thing we expect 
+    226          					to receive. */
+    227          					pcExpectedChar = pcMessageToExchange;
+    228          					sResyncRequired = pdFALSE;
+    229          
+    230          					/* Queue a message for printing to say that we are going to try 
+    231          					again. */
+    232          					vPrintDisplayMessage( &pcTaskRestartMsg );
+    233          
+    234          					/* Stop incrementing the check variable, if consecutive errors occur. */
+    235          					sConsecutiveErrors++;
+    236          					if( sConsecutiveErrors >= comMAX_CONSECUTIVE_ERRORS )
+    237          					{
+    238          						sLatchedError = pdTRUE;
+    239          					}
+    240          				}
+    241          			}
+    242          			else
+    243          			{
+    244          				/* We have received a character, but is it the expected character? */
+    245          				if( cRxedChar != *pcExpectedChar )
+    246          				{
+    247          					/* This was not the expected character so post a message for 
+    248          					printing to say that an error has occurred.  We will then wait 
+    249          					to resynchronise. */
+    250          					vPrintDisplayMessage( &pcTaskErrorMsg );					
+    251          					sResyncRequired = pdTRUE;
+    252          				}
+    253          				else
+    254          				{
+    255          					/* This was the expected character so next time we will expect 
+    256          					the next character in the string.  Wrap back to the beginning 
+    257          					of the string when the null terminator has been reached. */
+    258          					pcExpectedChar++;
+    259          					if( *pcExpectedChar == '\0' )
+    260          					{
+    261          						pcExpectedChar = pcMessageToExchange;
+    262          
+    263          						/* We have got through the entire string without error. */
+    264          						sConsecutiveErrors = 0;
+    265          					}
+    266          				}
+    267          			}
+    268          
+    269          			/* Increment the count that is used to check that this task is still 
+    270          			running.  This is only done if an error has never occurred. */
+    271          			if( sLatchedError == pdFALSE )
+    272          			{
+    273          				sRxCount++;			
+    274          			}
+    275          		}
+    276          		else
+    277          		{
+    278          			vPrintDisplayMessage( &pcTaskTimeoutMsg );
+    279          		}
+    280          	}
+    281          } /*lint !e715 !e818 pvParameters is required for a task function even if it is not referenced. */
+    282          /*-----------------------------------------------------------*/
+    283          
+    284          static void vSemTestTask( void * pvParameters )
+    285          {
+    286          const char * const pcTaskStartMsg = "ISR Semaphore test started.\r\n";
+    287          portBASE_TYPE xError = pdFALSE;
+    288          
+    289           	/* Stop warnings. */
+    290          	( void ) pvParameters;
+    291          
+    292          	/* Queue a message for printing to say the task has started. */
+    293          	vPrintDisplayMessage( &pcTaskStartMsg );
+    294          
+    295          	for( ;; )
+    296          	{
+    297          		if( xSerialWaitForSemaphore( xPort ) )
+    298          		{
+    299          			if( xError == pdFALSE )
+    300          			{
+    301          				sSemCount++;
+    302          			}
+    303          		}
+    304          		else
+    305          		{
+    306          			xError = pdTRUE;
+    307          		}
+    308          	}
+    309          } /*lint !e715 !e830 !e818 pvParameters not used but function prototype must be standard for task function. */
+    310          /*-----------------------------------------------------------*/
+    311          
+    312          /* This is called to check that all the created tasks are still running. */
+    313          portBASE_TYPE xAreComTestTasksStillRunning( void )
+    314          {
+    315          static short sLastTxCount = 0, sLastRxCount = 0, sLastSemCount = 0;
+    316          portBASE_TYPE xReturn;
+    317          
+    318          	/* Not too worried about mutual exclusion on these variables as they are 16 
+    319          	bits and we are only reading them.  We also only care to see if they have 
+    320          	changed or not. */
+    321          
+    322          	if( ( sTxCount == sLastTxCount ) || ( sRxCount == sLastRxCount ) || ( sSemCount == sLastSemCount ) )
+    323          	{
+    324          		xReturn = pdFALSE;
+    325          	}
+    326          	else
+    327          	{
+    328          		xReturn = pdTRUE;
+    329          	}
+    330          
+    331          	sLastTxCount = sTxCount;
+    332          	sLastRxCount = sRxCount;
+    333          	sLastSemCount = sSemCount;
+    334          
+    335          	return xReturn;
+    336          }
+    337          /*-----------------------------------------------------------*/
+    338          
+    339          void vComTestUnsuspendTask( void )
+    340          {
+    341          	/* The task that is suspended on the semaphore will be referenced from the
+    342          	Suspended list as it is blocking indefinitely.  This call just checks that
+    343          	the kernel correctly detects this and does not attempt to unsuspend the
+    344          	task. */
+    345          	xTaskResumeFromISR( xSemTestTaskHandle );
+    346          }
+
+Errors: 4
+Warnings: 4

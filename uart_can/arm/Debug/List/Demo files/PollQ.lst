@@ -1,0 +1,264 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         03/Dec/2022  17:36:57
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                     =  thumb
+#    Endian                       =  little
+#    Source file                  =
+#        D:\proj\velograph\test_arm\uart_can\PollQ.c
+#    Command line                 =
+#        -f "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo
+#        files\PollQ.o.rsp" (D:\proj\velograph\test_arm\uart_can\PollQ.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -lcN
+#        "D:\proj\velograph\test_arm\uart_can\Debug\List\Demo files"
+#        --diag_suppress Pa082,pe191 -o
+#        "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\test_arm\uart_can\.\ -I
+#        D:\proj\velograph\test_arm\uart_can\STM32F10xFWLib\inc\ -I
+#        D:\proj\velograph\test_arm\uart_can\freertos\include\ -I
+#        D:\proj\velograph\test_arm\uart_can\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\test_arm\uart_can\drv\ -Ol --use_c++_inline
+#        --require_prototypes) --dependencies=n
+#        "D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files\PollQ.o.d"
+#    Locale                       =  C
+#    List file                    =
+#        D:\proj\velograph\test_arm\uart_can\Debug\List\Demo files\PollQ.lst
+#    Object file                  =
+#        D:\proj\velograph\test_arm\uart_can\Debug\Obj\Demo files\PollQ.o
+#    Runtime model:                  
+#      __CPP_Runtime              =  1
+#      __SystemLibrary            =  DLib
+#      __dlib_full_locale_support =  1
+#      __dlib_version             =  6
+#
+###############################################################################
+
+D:\proj\velograph\test_arm\uart_can\PollQ.c
+      1          /*
+      2           * FreeRTOS Kernel V10.2.1
+      3           * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+      4           *
+      5           * Permission is hereby granted, free of charge, to any person obtaining a copy of
+      6           * this software and associated documentation files (the "Software"), to deal in
+      7           * the Software without restriction, including without limitation the rights to
+      8           * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+      9           * the Software, and to permit persons to whom the Software is furnished to do so,
+     10           * subject to the following conditions:
+     11           *
+     12           * The above copyright notice and this permission notice shall be included in all
+     13           * copies or substantial portions of the Software.
+     14           *
+     15           * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     16           * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+     17           * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+     18           * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+     19           * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+     20           * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     21           *
+     22           * http://www.FreeRTOS.org
+     23           * http://aws.amazon.com/freertos
+     24           *
+     25           * 1 tab == 4 spaces!
+     26           */
+     27          
+     28          
+     29          /**
+     30           * This is a very simple queue test.  See the BlockQ. c documentation for a more 
+     31           * comprehensive version.
+     32           *
+     33           * Creates two tasks that communicate over a single queue.  One task acts as a 
+     34           * producer, the other a consumer.  
+     35           *
+     36           * The producer loops for three iteration, posting an incrementing number onto the 
+     37           * queue each cycle.  It then delays for a fixed period before doing exactly the 
+     38           * same again.
+     39           *
+     40           * The consumer loops emptying the queue.  Each item removed from the queue is 
+     41           * checked to ensure it contains the expected value.  When the queue is empty it 
+     42           * blocks for a fixed period, then does the same again.
+     43           *
+     44           * All queue access is performed without blocking.  The consumer completely empties 
+     45           * the queue each time it runs so the producer should never find the queue full.  
+     46           *
+     47           * An error is flagged if the consumer obtains an unexpected value or the producer 
+     48           * find the queue is full.
+     49           *
+     50           * \page PollQC pollQ.c
+     51           * \ingroup DemoFiles
+     52           * <HR>
+     53           */
+     54          
+     55          /*
+     56          Changes from V2.0.0
+     57          
+     58          	+ Delay periods are now specified using variables and constants of
+     59          	  TickType_t rather than unsigned long.
+     60          */
+     61          
+     62          #include <stdlib.h>
+     63          
+     64          /* Scheduler include files. */
+     65          #include "FreeRTOS.h"
+     66          #include "task.h"
+     67          #include "queue.h"
+     68          ////#include "print.h"
+     69          
+     70          /* Demo program include files. */
+     71          #include "PollQ.h"
+     72          
+     73          #define pollqSTACK_SIZE		( ( unsigned short ) configMINIMAL_STACK_SIZE )
+     74          
+     75          /* The task that posts the incrementing number onto the queue. */
+     76          static void vPolledQueueProducer( void *pvParameters );
+     77          
+     78          /* The task that empties the queue. */
+     79          static void vPolledQueueConsumer( void *pvParameters );
+     80          
+     81          /* Variables that are used to check that the tasks are still running with no errors. */
+     82          static volatile short sPollingConsumerCount = 0, sPollingProducerCount = 0;
+     83          /*-----------------------------------------------------------*/
+     84          
+     85          void vStartPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
+     86          {
+     87          static QueueHandle_t xPolledQueue;
+     88          const unsigned portBASE_TYPE uxQueueSize = 10;
+     89          
+     90          	/* Create the queue used by the producer and consumer. */
+     91          	xPolledQueue = xQueueCreate( uxQueueSize, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+     92          
+     93          	/* Spawn the producer and consumer. */
+     94          	xTaskCreate( vPolledQueueConsumer, "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, NULL );
+     95          	xTaskCreate( vPolledQueueProducer, "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, NULL );
+     96          }
+     97          /*-----------------------------------------------------------*/
+     98          
+     99          static void vPolledQueueProducer( void *pvParameters )
+    100          {
+    101          unsigned short usValue = 0, usLoop;
+    102          QueueHandle_t *pxQueue;
+    103          const TickType_t xDelay = ( TickType_t ) 200 / portTICK_PERIOD_MS;
+    104          const unsigned short usNumToProduce = 3;
+    105          const char * const pcTaskStartMsg = "Polled queue producer started.\r\n";
+    106          const char * const pcTaskErrorMsg = "Could not post on polled queue.\r\n";
+    107          short sError = pdFALSE;
+    108          
+    109          	/* Queue a message for printing to say the task has started. */
+    110          	vPrintDisplayMessage( &pcTaskStartMsg );
+    111          
+    112          	/* The queue being used is passed in as the parameter. */
+    113          	pxQueue = ( QueueHandle_t * ) pvParameters;
+    114          
+    115          	for( ;; )
+    116          	{		
+    117          		for( usLoop = 0; usLoop < usNumToProduce; ++usLoop )
+    118          		{
+    119          			/* Send an incrementing number on the queue without blocking. */
+    120          			if( xQueueSendToBack( *pxQueue, ( void * ) &usValue, ( TickType_t ) 0 ) != pdPASS )
+    121          			{
+    122          				/* We should never find the queue full - this is an error. */
+    123          				vPrintDisplayMessage( &pcTaskErrorMsg );
+    124          				sError = pdTRUE;
+    125          			}
+    126          			else
+    127          			{
+    128          				if( sError == pdFALSE )
+    129          				{
+    130          					/* If an error has ever been recorded we stop incrementing the 
+    131          					check variable. */
+    132          					++sPollingProducerCount;
+    133          				}
+    134          
+    135          				/* Update the value we are going to post next time around. */
+    136          				++usValue;
+    137          			}
+    138          		}
+    139          
+    140          		/* Wait before we start posting again to ensure the consumer runs and 
+    141          		empties the queue. */
+    142          		vTaskDelay( xDelay );
+    143          	}
+    144          }
+    145          /*-----------------------------------------------------------*/
+    146          
+    147          static void vPolledQueueConsumer( void *pvParameters )
+    148          {
+    149          unsigned short usData, usExpectedValue = 0;
+    150          QueueHandle_t *pxQueue;
+    151          const TickType_t xDelay = ( TickType_t ) 200 / portTICK_PERIOD_MS;
+    152          const char * const pcTaskStartMsg = "Polled queue consumer started.\r\n";
+    153          const char * const pcTaskErrorMsg = "Incorrect value received on polled queue.\r\n";
+    154          short sError = pdFALSE;
+    155          
+    156          	/* Queue a message for printing to say the task has started. */
+    157          	vPrintDisplayMessage( &pcTaskStartMsg );
+    158          
+    159          	/* The queue being used is passed in as the parameter. */
+    160          	pxQueue = ( QueueHandle_t * ) pvParameters;
+    161          
+    162          	for( ;; )
+    163          	{		
+    164          		/* Loop until the queue is empty. */
+    165          		while( uxQueueMessagesWaiting( *pxQueue ) )
+    166          		{
+    167          			if( xQueueReceive( *pxQueue, &usData, ( TickType_t ) 0 ) == pdPASS )
+    168          			{
+    169          				if( usData != usExpectedValue )
+    170          				{
+    171          					/* This is not what we expected to receive so an error has 
+    172          					occurred. */
+    173          					vPrintDisplayMessage( &pcTaskErrorMsg );
+    174          					sError = pdTRUE;
+    175          					/* Catch-up to the value we received so our next expected value 
+    176          					should again be correct. */
+    177          					usExpectedValue = usData;
+    178          				}
+    179          				else
+    180          				{
+    181          					if( sError == pdFALSE )
+    182          					{
+    183          						/* Only increment the check variable if no errors have 
+    184          						occurred. */
+    185          						++sPollingConsumerCount;
+    186          					}
+    187          				}
+    188          				++usExpectedValue;
+    189          			}
+    190          		}
+    191          
+    192          		/* Now the queue is empty we block, allowing the producer to place more 
+    193          		items in the queue. */
+    194          		vTaskDelay( xDelay );
+    195          	}
+    196          }
+    197          /*-----------------------------------------------------------*/
+    198          
+    199          /* This is called to check that all the created tasks are still running with no errors. */
+    200          portBASE_TYPE xArePollingQueuesStillRunning( void )
+    201          {
+    202          static short sLastPollingConsumerCount = 0, sLastPollingProducerCount = 0;
+    203          portBASE_TYPE xReturn;
+    204          
+    205          	if( ( sLastPollingConsumerCount == sPollingConsumerCount ) ||
+    206          		( sLastPollingProducerCount == sPollingProducerCount ) 
+    207          	  )
+    208          	{
+    209          		xReturn = pdFALSE;
+    210          	}
+    211          	else
+    212          	{
+    213          		xReturn = pdTRUE;
+    214          	}
+    215          
+    216          	sLastPollingConsumerCount = sPollingConsumerCount;
+    217          	sLastPollingProducerCount = sPollingProducerCount;
+    218          
+    219          	return xReturn;
+    220          }
+
+Errors: 4
+Warnings: none

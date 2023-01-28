@@ -1,0 +1,412 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         28/Jan/2023  19:17:54
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                 =  thumb
+#    Endian                   =  little
+#    Source file              =  D:\proj\velograph\uart_can\arm\drv\can.c
+#    Command line             =
+#        -f D:\proj\velograph\uart_can\arm\Debug\Obj\drv\can.o.rsp
+#        (D:\proj\velograph\uart_can\arm\drv\can.c -D USE_STDPERIPH_DRIVER -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D STM32F10X_MD -lcN
+#        D:\proj\velograph\uart_can\arm\Debug\List\drv --diag_suppress
+#        Pa082,pe191 -o D:\proj\velograph\uart_can\arm\Debug\Obj\drv --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I D:\proj\velograph\uart_can\arm\.\
+#        -I D:\proj\velograph\uart_can\arm\freertos\include\ -I
+#        D:\proj\velograph\uart_can\arm\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\uart_can\arm\drv\ -I
+#        D:\proj\velograph\uart_can\arm\lib\STM32F10x_StdPeriph_Driver\inc\ -I
+#        D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\DeviceSupport\ST\STM32F10x\
+#        -I D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\CoreSupport\ -I
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\CMSIS\Core\Include\\" -I
+#        D:\proj\velograph\uart_can\arm\lib\ring_buffer\ -Ol --use_c++_inline)
+#        --dependencies=n D:\proj\velograph\uart_can\arm\Debug\Obj\drv\can.o.d
+#    Locale                   =  C
+#    List file                =
+#        D:\proj\velograph\uart_can\arm\Debug\List\drv\can.lst
+#    Object file              =
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\drv\can.o
+#    Runtime model:              
+#      __CPP_Runtime          =  1
+#      __SystemLibrary        =  DLib
+#      __dlib_file_descriptor =  1
+#      __dlib_version         =  6
+#
+###############################################################################
+
+D:\proj\velograph\uart_can\arm\drv\can.c
+      1          #include "board.h"
+      2          #include <string.h>
+      3          #include <stdio.h>
+      4          ///============================================
+      5          xQueueHandle q_can_rd = 0;
+      6          uint8_t cur_can_br=DEF_CAN_BR;
+      7          
+      8          can_br_coef_t can_br32[]=
+      9          {
+     10            {160,CAN_BS1_15tq,CAN_BS2_5tq},  ////10 kb
+     11            {80,CAN_BS1_15tq,CAN_BS2_5tq},  ////20 kb
+     12            {32,CAN_BS1_15tq,CAN_BS2_5tq},  ////50 kb
+     13            {32,CAN_BS1_8tq,CAN_BS2_2tq},  ////100 kb
+     14            {16,CAN_BS1_14tq,CAN_BS2_2tq},  ////125 kb
+     15            {8,CAN_BS1_14tq,CAN_BS2_2tq},  ////250 kb
+     16            {8,CAN_BS1_6tq,CAN_BS2_1tq},  ////500 kb
+     17            {4,CAN_BS1_8tq,CAN_BS2_2tq},  ////800 kb
+     18            {2,CAN_BS1_12tq,CAN_BS2_3tq}  ////1000 kb
+     19          };
+     20          can_br_coef_t can_br30[]=
+     21          {
+     22            {150,CAN_BS1_15tq,CAN_BS2_5tq},  ////10 kb
+     23            {75,CAN_BS1_15tq,CAN_BS2_5tq},  ////20 kb
+     24            {30,CAN_BS1_15tq,CAN_BS2_5tq},  ////50 kb
+     25            {30,CAN_BS1_8tq,CAN_BS2_2tq},  ////100 kb
+     26            {15,CAN_BS1_14tq,CAN_BS2_2tq},  ////125 kb
+     27            {15,CAN_BS1_7tq,CAN_BS2_1tq},  ////250 kb
+     28            {6,CAN_BS1_8tq,CAN_BS2_2tq},  ////500 kb
+     29            {3,CAN_BS1_11tq,CAN_BS2_2tq},  ////800 kb
+     30            {2,CAN_BS1_13tq,CAN_BS2_2tq}  ////1000 kb
+     31          };
+     32          
+     33          ///============================================
+     34          void	canfilter_init(void);
+     35          void nvic_can(void)
+     36          {
+     37          NVIC_InitTypeDef  NVIC_InitStructure;
+     38          NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+     39          NVIC_InitStructure.NVIC_IRQChannel =USB_LP_CAN1_RX0_IRQn;
+     40          NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0;
+     41          NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x1;
+     42          NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+     43          NVIC_Init(&NVIC_InitStructure);
+     44          
+     45          NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX1_IRQn;
+     46          NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0;
+     47          NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x1;
+     48          NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+     49          NVIC_Init(&NVIC_InitStructure);
+     50          }
+     51          int can_init( FunctionalState ttcm, FunctionalState abom, FunctionalState awum, FunctionalState nart,
+     52          	     FunctionalState rflm, FunctionalState txfp, uint32_t sjw, uint32_t ts1, uint32_t ts2,
+     53          	     uint32_t brp, uint8_t loopback, uint8_t silent)
+     54          {
+     55            uint8_t tmp=0;
+     56          CAN_InitTypeDef   CAN_InitStructure;
+     57          CAN_DeInit(CAN1);				// CAN register deinit
+     58          CAN_StructInit(&CAN_InitStructure);
+     59          CAN_InitStructure.CAN_TTCM = ttcm;
+     60          CAN_InitStructure.CAN_ABOM = abom;
+     61          CAN_InitStructure.CAN_AWUM = awum;
+     62          CAN_InitStructure.CAN_NART = nart;
+     63          CAN_InitStructure.CAN_RFLM = rflm;
+     64          CAN_InitStructure.CAN_TXFP = txfp;
+     65          if(loopback)
+     66            tmp|=CAN_Mode_LoopBack;
+     67          if(silent)
+     68            tmp|=CAN_Mode_Silent;
+     69          CAN_InitStructure.CAN_Mode = tmp;
+     70          ////CAN_InitStructure.CAN_Mode = CAN_Mode_LoopBack;
+     71          
+     72          CAN_InitStructure.CAN_SJW = sjw;
+     73          CAN_InitStructure.CAN_Prescaler = brp;
+     74          CAN_InitStructure.CAN_BS1 = ts1;
+     75          CAN_InitStructure.CAN_BS2 = ts2;
+     76          
+     77          if(CAN_Init(CAN1, &CAN_InitStructure) == CAN_InitStatus_Success)
+     78            return 0;
+     79          else
+     80            return -1;
+     81          }
+     82          int _can_init(uint32_t sjw, uint32_t ts1, uint32_t ts2,
+     83          	     uint32_t brp)
+     84          {
+     85          return can_init(DISABLE,DISABLE,DISABLE, ENABLE,
+     86          	     DISABLE, DISABLE, sjw, ts1, ts2,
+     87          	     brp, _FALSE, _FALSE);
+     88            
+     89          }
+     90          void init_can(void)
+     91          {
+     92          RCC_APB1PeriphClockCmd(CAN_CLK, ENABLE);
+     93          #if 1
+     94          can_init(DISABLE,DISABLE,DISABLE, ENABLE,
+     95          	     DISABLE, DISABLE, CAN_SJW_1tq, CAN_BS1_6tq, CAN_BS2_8tq,
+     96          	     4, _FALSE, _FALSE);
+     97          #endif
+     98          can_speed(cur_can_br);
+     99          nvic_can();
+    100          
+    101          CAN_ITConfig(CAN1,CAN_IT_FMP0,ENABLE);
+    102          CAN_ITConfig(CAN1,CAN_IT_FMP1,ENABLE);
+    103          canfilter_init();
+    104          }
+    105          
+    106          ///int	can1_resive0=0;
+    107          ////int	can1_resive1=0;
+    108          CanRxMsg can_msg_buf1;
+    109          CanRxMsg can_msg_buf2;
+    110          
+    111          void USB_LP_CAN1_RX0_IRQHandler(void)
+    112          {
+    113          uint8_t flg=0;  
+    114          signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    115          if (CAN_GetITStatus(CAN1,CAN_IT_FMP0))
+    116            {
+    117            CAN_ClearITPendingBit(CAN1,CAN_IT_FMP0);
+    118            CAN_Receive( CAN1,CAN_FIFO0, &can_msg_buf1);
+    119            CAN_FIFORelease(CAN1,CAN_FIFO0);
+    120            flg=1;
+    121            xQueueSendFromISR(q_can_rd, &flg, &xHigherPriorityTaskWoken);
+    122          ////  can1_resive0=1;
+    123            }
+    124          }
+    125          void CAN1_RX1_IRQHandler(void)
+    126          {
+    127          uint8_t flg=0;  
+    128          signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    129          if (CAN_GetITStatus(CAN1,CAN_IT_FMP1))
+    130            {
+    131            CAN_ClearITPendingBit( CAN1,CAN_IT_FMP1);
+    132            CAN_Receive( CAN1,CAN_FIFO1, &can_msg_buf2);
+    133            CAN_FIFORelease(CAN1,CAN_FIFO1);
+    134            flg=2;
+    135            xQueueSendFromISR(q_can_rd, &flg, &xHigherPriorityTaskWoken);
+    136          ////  can1_resive1=1;
+    137            }
+    138          }
+    139          
+    140          //	CAN Master filter init
+    141          void	canfilter_init(void)
+    142          {
+    143          	CAN_FilterInitTypeDef  	CAN_FilterInitStructure;
+    144          	CAN_FilterInitStructure.CAN_FilterNumber = 0;
+    145          	CAN_FilterInitStructure.CAN_FilterMode 	= CAN_FilterMode_IdMask;
+    146          	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    147          	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+    148          	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
+    149          	CAN_FilterInitStructure.CAN_FilterMaskIdHigh 	= 0x0000;
+    150          	CAN_FilterInitStructure.CAN_FilterMaskIdLow 	= 0x0000;
+    151          	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    152          	CAN_FilterInitStructure.CAN_FilterActivation 	= ENABLE;		////
+    153          	CAN_FilterInit(&CAN_FilterInitStructure);
+    154          }
+    155          #if 0
+    156          void CanWriteData(uint16_t ID,uint8_t *idata,uint8_t len)
+    157          {
+    158          uint8_t ii;
+    159          CanTxMsg TxMessage;
+    160          if(len>MAX_CAN_LEN)
+    161            len=MAX_CAN_LEN;
+    162            /* transmit */
+    163            TxMessage.StdId = ID;  
+    164            TxMessage.RTR = CAN_RTR_DATA; 
+    165            TxMessage.IDE = CAN_ID_STD;   
+    166            TxMessage.DLC = len;
+    167           for(ii=0;ii<len;ii++)
+    168            {
+    169            TxMessage.Data[ii]=idata[ii];
+    170            }
+    171          CAN_Transmit(CAN1,&TxMessage);  	
+    172          }
+    173          #endif
+    174          ////==================================================================
+    175          int can_transmit( uint32_t id, uint8_t ext, uint8_t rtr,
+    176          		 uint8_t length, uint8_t *data)
+    177          {
+    178          uint8_t ii;
+    179          CanTxMsg TxMessage;
+    180          if(length>MAX_CAN_LEN)
+    181            length=MAX_CAN_LEN;
+    182            /* transmit */
+    183          if(ext)
+    184            TxMessage.ExtId = id;
+    185          else  
+    186            TxMessage.StdId = id; 
+    187            TxMessage.RTR = CAN_RTR_DATA; 
+    188          if(ext)
+    189            TxMessage.IDE = CAN_ID_EXT;   
+    190          else  
+    191            TxMessage.IDE = CAN_ID_STD;   
+    192          
+    193            TxMessage.DLC = length;
+    194           for(ii=0;ii<length;ii++)
+    195            {
+    196            TxMessage.Data[ii]=data[ii];
+    197            }
+    198          return CAN_Transmit(CAN1,&TxMessage);  	
+    199          }
+    200          
+    201          int can_speed(uint8_t index) {
+    202          if(index>=MAX_NUM_BR )
+    203            return -1;
+    204          else
+    205            return _can_init(CAN_SJW_1tq, can_br32[index].ts1,can_br32[index].ts2,can_br32[index].pre);
+    206          }
+    207          extern void on_led(void);
+    208          
+    209          void can_read_task( void *pvParameters )
+    210          {
+    211          uint8_t flg=0;
+    212          char t_buf[32];
+    213          uint8_t num_bytes=0;
+    214          uint32_t cur_time;
+    215          CanRxMsg *p_msg_buf;
+    216          q_can_rd  = xQueueCreate(LEN_CAN_RD_Q,sizeof(uint8_t));
+    217          
+    218          for( ;; )
+    219            {
+    220            xQueueReceive(q_can_rd,&flg,portMAX_DELAY);
+    221            switch(flg){
+    222              case 0x1:
+    223                p_msg_buf=&can_msg_buf1;
+    224                break;
+    225              case 0x2:
+    226                 p_msg_buf=&can_msg_buf2;
+    227               break;
+    228              default:
+    229                break;
+    230             }
+    231            if(flg)  {
+    232              on_led();
+    233              cur_time=xTaskGetTickCount();
+    234          #if 0
+    235              num_bytes = sprintf(t_buf,"t%3.3X%1.1X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X%4.4X\r",
+    236          ///   num_bytes = sprintf(t_buf,"t%3.3X%1.1X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X%2.2X\r",
+    237                      p_msg_buf->StdId,
+    238                      p_msg_buf->DLC,
+    239                      p_msg_buf->Data[0],
+    240                      p_msg_buf->Data[1],
+    241                      p_msg_buf->Data[2],
+    242                      p_msg_buf->Data[3],
+    243                      p_msg_buf->Data[4],
+    244                      p_msg_buf->Data[5],
+    245                      p_msg_buf->Data[6],
+    246                      p_msg_buf->Data[7] ,
+    247                      cur_time);
+    248          #else
+    249          num_bytes = 0;
+    250          t_buf[num_bytes++] = 't';
+    251          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->StdId)>>8);
+    252          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->StdId)>>4);
+    253          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->StdId));
+    254          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->DLC));
+    255          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[0])>>4);
+    256          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[0]));
+    257          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[1])>>4);
+    258          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[1]));
+    259          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[2])>>4);
+    260          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[2]));
+    261          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[3])>>4);
+    262          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[3]));
+    263          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[4])>>4);
+    264          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[4]));
+    265          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[5])>>4);
+    266          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[5]));
+    267          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[6])>>4);
+    268          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[6]));
+    269          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[7])>>4);
+    270          t_buf[num_bytes++] = halfbyte_to_hexascii((p_msg_buf->Data[7]));
+    271          t_buf[num_bytes++] = halfbyte_to_hexascii((cur_time)>>12);
+    272          t_buf[num_bytes++] = halfbyte_to_hexascii((cur_time)>>8);
+    273          t_buf[num_bytes++] = halfbyte_to_hexascii((cur_time)>>4);
+    274          t_buf[num_bytes++] = halfbyte_to_hexascii((cur_time)>>0);
+    275          t_buf[num_bytes++] = '\r';
+    276          #endif
+    277             
+    278                  if(num_bytes)
+    279                    {
+    280                    write_my_uart(t_buf,num_bytes); 
+    281                    }
+    282                }
+    283            }
+    284            
+    285          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   CAN1_RX1_IRQHandler
+        16   -> CAN_ClearITPendingBit
+        16   -> CAN_FIFORelease
+        16   -> CAN_GetITStatus
+        16   -> CAN_Receive
+        16   -> xQueueGenericSendFromISR
+      16   USB_LP_CAN1_RX0_IRQHandler
+        16   -> CAN_ClearITPendingBit
+        16   -> CAN_FIFORelease
+        16   -> CAN_GetITStatus
+        16   -> CAN_Receive
+        16   -> xQueueGenericSendFromISR
+      40   _can_init
+        40   -> can_init
+      48   can_init
+        48   -> CAN_DeInit
+        48   -> CAN_Init
+        48   -> CAN_StructInit
+      64   can_read_task
+        64   -> halfbyte_to_hexascii
+        64   -> on_led
+        64   -> write_my_uart
+        64   -> xQueueGenericCreate
+        64   -> xQueueReceive
+        64   -> xTaskGetTickCount
+       8   can_speed
+         8   -> _can_init
+      32   can_transmit
+        32   -> CAN_Transmit
+      24   canfilter_init
+        24   -> CAN_FilterInit
+      40   init_can
+        40   -> CAN_ITConfig
+        40   -> RCC_APB1PeriphClockCmd
+        40   -> can_init
+        40   -> can_speed
+        40   -> canfilter_init
+        40   -> nvic_can
+       8   nvic_can
+         8   -> NVIC_Init
+         8   -> NVIC_PriorityGroupConfig
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+      74  CAN1_RX1_IRQHandler
+      76  USB_LP_CAN1_RX0_IRQHandler
+      44  _can_init
+      36  can_br30
+      36  can_br32
+     136  can_init
+      20  can_msg_buf1
+      20  can_msg_buf2
+     576  can_read_task
+      52  can_speed
+     106  can_transmit
+      66  canfilter_init
+       1  cur_can_br
+     104  init_can
+      72  nvic_can
+       4  q_can_rd
+
+ 
+    44 bytes in section .bss
+    73 bytes in section .data
+ 1'330 bytes in section .text
+ 
+ 1'330 bytes of CODE memory
+   117 bytes of DATA memory
+
+Errors: none
+Warnings: none

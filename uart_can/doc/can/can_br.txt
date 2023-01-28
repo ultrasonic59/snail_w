@@ -1,0 +1,55 @@
+SYNC_SEG = Tq = (BRP[9:0] + 1) x Tpclk
+BS1 = Tq x (TS1[3:0] + 1)
+BS2 = Tq x (TS2[3:0] + 1)
+
+
+BRP = (FPCLK / (BaudRate x (TS1 + TS2 + 3))) - 1
+
+— BaudRate = 1/NominalBitTime; — частота сети
+ — NominalBitTime = 1 * tq + tBS1 + tBS2; — время бита
+где:
+tBS1 =   tq * (TS1[3:0] + 1);
+tBS2 =   tq * (TS2[2:0] + 1);
+tq = (BRP[9:0] + 1) * tpclk;
+tpclk -  частота шины :
+
+	 S0 = 10 kBaud
+	 S1 = 20 kBaud
+	 S2 = 50 kBaud
+	 S3 = 100 kBaud
+	 S4 = 125 kBaud
+	 S5 = 250 kBaud
+	 S6 = 500 kBaud
+	 S7 = 800 kBaud
+	 S8 = 1 MBaud
+
+================================= 36MHz ===============================================
+	 10 kBaud Sample Point 75.0 % : 36MHZ / 180 = 200kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 20 kBaud Sample Point 75.0 % : 36MHZ /  90 = 400kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 50 kBaud Sample Point 75.0 % : 36MHZ /  36 = 1MHz   -> TQ 20   SJW + TS1 15 TS2 5
+	 100 kBaud Sample Point 80.0 % : 36MHZ /  36 = 1MHz   -> TQ 10   SJW + TS1  8 TS2 2
+	 125 kBaud Sample Point 87.5 % : 36MHZ /  18 = 2MHz   -> TQ 16   SJW + TS1 14 TS2 2 
+	 250 kBaud Sample Point 87.5 % : 36MHZ /   9 = 4MHz   -> TQ 16   SJW + TS1 14 TS2 2
+	 500 kBaud Sample Point 87.5 % : 36MHZ /   9 = 4MHz   -> TQ  8   SJW + TS1  7 TS2 1
+	 800 kBaud Sample Point 86.7 % : 36MHZ /   3 = 12MHz  -> TQ 15   SJW + TS1 13 TS2 2
+	 1000 kBaud Sample Point 88.9 % : 36MHZ /   2 = 18MHz  -> TQ 18   SJW + TS1 16 TS2 2
+================================= 32MHz ===============================================
+	 10 kBaud Sample Point 75.0 % : 32MHZ / 160 = 200kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 20 kBaud Sample Point 75.0 % : 32MHZ /  80 = 400kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 50 kBaud Sample Point 75.0 % : 32MHZ /  32 = 1MHz   -> TQ 20   SJW + TS1 15 TS2 5
+	 100 kBaud Sample Point 80.0 % : 32MHZ /  32 = 1MHz   -> TQ 10   SJW + TS1  8 TS2 2
+	 125 kBaud Sample Point 87.5 % : 32MHZ /  16 = 2MHz   -> TQ 16   SJW + TS1 14 TS2 2 
+	 250 kBaud Sample Point 87.5 % : 32MHZ /   8 = 4MHz   -> TQ 16   SJW + TS1 14 TS2 2
+	 500 kBaud Sample Point 87.5 % : 32MHZ /   8 = 4MHz   -> TQ  8   SJW + TS1  7 TS2 1
+	 800 kBaud Sample Point 86.7 % : 32MHZ /   4 = 8 MHz  -> TQ 10   SJW + TS1 8 TS2 2
+	 1000 kBaud Sample Point 88.9 % : 32MHZ /   2 = 16MHz  -> TQ 16   SJW + TS1 14 TS2 2
+================================= 30MHz ===============================================
+	 10 kBaud Sample Point 75.0 % : 30MHZ / 150 = 200kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 20 kBaud Sample Point 75.0 % : 30MHZ /  75 = 400kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 50 kBaud Sample Point 75.0 % : 30MHZ /  30 = 1MHz   -> TQ 20   SJW + TS1 15 TS2 5
+	 100 kBaud Sample Point 80.0 % : 30MHZ /  30 = 1MHz   -> TQ 10   SJW + TS1  8 TS2 2
+	 125 kBaud Sample Point 87.5 % : 30MHZ /  15 = 2MHz   -> TQ 16   SJW + TS1 14 TS2 2 
+	 250 kBaud Sample Point 87.5 % : 30MHZ /   15 = 2MHz   -> TQ 8   SJW + TS1 7 TS2 1
+	 500 kBaud Sample Point 87.5 % : 30MHZ /   6 = 5MHz   -> TQ  10   SJW + TS1  8 TS2 2
+	 800 kBaud Sample Point 86.7 % : 30MHZ /   3 = 10 MHz  -> TQ 13   SJW + TS1 11 TS2 2
+	 1000 kBaud Sample Point 88.9 % : 30MHZ /   2 = 15MHz  -> TQ 15   SJW + TS1 13 TS2 2

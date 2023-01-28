@@ -1,0 +1,237 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         28/Jan/2023  19:17:54
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                 =  thumb
+#    Endian                   =  little
+#    Source file              =  D:\proj\velograph\uart_can\arm\slc.c
+#    Command line             =
+#        -f D:\proj\velograph\uart_can\arm\Debug\Obj\src\slc.o.rsp
+#        (D:\proj\velograph\uart_can\arm\slc.c -D USE_STDPERIPH_DRIVER -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D STM32F10X_MD -lcN
+#        D:\proj\velograph\uart_can\arm\Debug\List\src --diag_suppress
+#        Pa082,pe191 -o D:\proj\velograph\uart_can\arm\Debug\Obj\src --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I D:\proj\velograph\uart_can\arm\.\
+#        -I D:\proj\velograph\uart_can\arm\freertos\include\ -I
+#        D:\proj\velograph\uart_can\arm\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\uart_can\arm\drv\ -I
+#        D:\proj\velograph\uart_can\arm\lib\STM32F10x_StdPeriph_Driver\inc\ -I
+#        D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\DeviceSupport\ST\STM32F10x\
+#        -I D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\CoreSupport\ -I
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\CMSIS\Core\Include\\" -I
+#        D:\proj\velograph\uart_can\arm\lib\ring_buffer\ -Ol --use_c++_inline)
+#        --dependencies=n D:\proj\velograph\uart_can\arm\Debug\Obj\src\slc.o.d
+#    Locale                   =  C
+#    List file                =
+#        D:\proj\velograph\uart_can\arm\Debug\List\src\slc.lst
+#    Object file              =
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\src\slc.o
+#    Runtime model:              
+#      __CPP_Runtime          =  1
+#      __SystemLibrary        =  DLib
+#      __dlib_file_descriptor =  1
+#      __dlib_version         =  6
+#      __iar_require _Printf     
+#
+###############################################################################
+
+D:\proj\velograph\uart_can\arm\slc.c
+      1          #include <stdio.h>
+      2          #include <string.h>
+      3          
+      4          #include "board.h"
+      5          #include "serial.h"
+      6          #include "my_misc.h"
+      7          
+      8          uint8_t UserTxBuffer[64];
+      9          
+     10          uint8_t uart_read_blocking(void) {
+     11          int cnt;
+     12          ///int32_t ret;
+     13          uint8_t ch;
+     14          do {
+     15              cnt= ringbuffer_getc(&uart_rx_buffer ,&ch); 
+     16            } while(cnt < 0);
+     17          return ch;
+     18          }
+     19          
+     20          uint32_t get_nibbles(int nibbles) {
+     21          int i;
+     22          uint32_t id;
+     23          char c;
+     24          
+     25          id = 0;
+     26          for (i = 0; i < nibbles; i++) {
+     27            c = uart_read_blocking();
+     28            id <<= 4;
+     29            id |= nibble2bin(c);
+     30            }
+     31          return id;
+     32          }
+     33          
+     34          int slcan_command(void) {
+     35          uint8_t num_bytes=0;  
+     36          ///uint8_t sw_flow = _TRUE;
+     37          uint8_t ext, rtr;
+     38          uint8_t i, dlc, data[MAX_CAN_LEN];
+     39          uint32_t id;
+     40          int32_t ret ;
+     41          char ch;
+     42          uint8_t send_can;
+     43          
+     44          id = 0;
+     45          dlc = 0;
+     46          ext = _TRUE;
+     47          send_can = _TRUE;
+     48          rtr = _FALSE;
+     49          ch = uart_read_blocking();
+     50          switch (ch) {
+     51            case 'T':
+     52              id = get_nibbles(8);
+     53              dlc = get_nibbles(1);
+     54              break;
+     55            case 't':
+     56              ext = _FALSE;
+     57              id = get_nibbles(3);
+     58              dlc = get_nibbles(1);
+     59              break;
+     60            case 'R':
+     61              rtr = _TRUE;
+     62              ext = _TRUE;
+     63              id = get_nibbles(8);
+     64              dlc = get_nibbles(1);
+     65              break;
+     66            case 'r':
+     67              rtr = _TRUE;
+     68              ext = _FALSE;
+     69              id = get_nibbles(3);
+     70              dlc = get_nibbles(1);
+     71              break;
+     72            case 'S':
+     73              ch = get_nibbles(1);
+     74             cur_can_br=ch;
+     75           ////   can_speed(ch);
+     76              num_bytes = sprintf((char*)UserTxBuffer,"\r");
+     77             send_can = _FALSE;
+     78              break;
+     79            case 'v':
+     80              send_can = _FALSE;
+     81              num_bytes = sprintf((char*)UserTxBuffer,"vSTM32\r");
+     82              break;
+     83            case 'V':
+     84              send_can = _FALSE;
+     85              num_bytes = sprintf((char*)UserTxBuffer,"V0102\r");
+     86             break;
+     87            case 'C':    ////  close
+     88              send_can = _FALSE;
+     89              break;
+     90            case 'O':     ////open
+     91             init_can();
+     92              send_can = _FALSE;
+     93              num_bytes = sprintf((char*)UserTxBuffer,"\r");
+     94             break;
+     95          default:
+     96              send_can = _FALSE;
+     97              num_bytes = sprintf((char*)UserTxBuffer,"%c\r",ch);
+     98             break;
+     99              }
+    100            if(dlc > MAX_CAN_LEN) {
+    101            /* consume chars until eol reached */
+    102              do {
+    103                  ret = uart_read_blocking();
+    104                } while (ret != '\r');
+    105              return -1;
+    106              }
+    107            for (i = 0; i < dlc; i++) {
+    108                data[i] = (uint8_t) get_nibbles(2);
+    109                }
+    110          
+    111          	/* consume chars until eol reached */
+    112             do {
+    113              ret = uart_read_blocking();
+    114            } while (ret != '\r');
+    115          ////================================================
+    116            if (send_can) {
+    117              ret = can_transmit( id, ext, rtr, dlc, data);
+    118              on_led();
+    119            }
+    120          if(num_bytes)
+    121            {
+    122             write_my_uart((char*)UserTxBuffer,num_bytes); 
+    123            }
+    124          return 0;
+    125          }
+    126          void slc_task( void *pvParameters )
+    127          {
+    128          uint32_t rd_cnt;
+    129          q_uart_rd  = xQueueCreate(1,sizeof(uint32_t));
+    130          for( ;; )
+    131            {
+    132            xQueueReceive(q_uart_rd,&rd_cnt,portMAX_DELAY);
+    133            slcan_command();
+    134            }
+    135            
+    136          }
+    137          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   get_nibbles
+        16   -> nibble2bin
+        16   -> uart_read_blocking
+      16   slc_task
+        16   -> slcan_command
+        16   -> xQueueGenericCreate
+        16   -> xQueueReceive
+      48   slcan_command
+        48   -> can_transmit
+        48   -> get_nibbles
+        48   -> init_can
+        48   -> on_led
+        48   -> sprintf
+        48   -> uart_read_blocking
+        48   -> write_my_uart
+       8   uart_read_blocking
+         8   -> ringbuffer_getc
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       2  ?_0
+       8  ?_1
+       8  ?_2
+       4  ?_3
+      64  UserTxBuffer
+      34  get_nibbles
+      34  slc_task
+     378  slcan_command
+      20  uart_read_blocking
+
+ 
+  64 bytes in section .bss
+  22 bytes in section .rodata
+ 498 bytes in section .text
+ 
+ 498 bytes of CODE  memory
+  22 bytes of CONST memory
+  64 bytes of DATA  memory
+
+Errors: none
+Warnings: none

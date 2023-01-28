@@ -1,0 +1,338 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         28/Jan/2023  19:17:54
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =  D:\proj\velograph\uart_can\arm\stm32f10x_it.c
+#    Command line      =
+#        -f D:\proj\velograph\uart_can\arm\Debug\Obj\src\stm32f10x_it.o.rsp
+#        (D:\proj\velograph\uart_can\arm\stm32f10x_it.c -D USE_STDPERIPH_DRIVER
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D STM32F10X_MD -lcN
+#        D:\proj\velograph\uart_can\arm\Debug\List\src --diag_suppress
+#        Pa082,pe191 -o D:\proj\velograph\uart_can\arm\Debug\Obj\src --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I D:\proj\velograph\uart_can\arm\.\
+#        -I D:\proj\velograph\uart_can\arm\freertos\include\ -I
+#        D:\proj\velograph\uart_can\arm\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\uart_can\arm\drv\ -I
+#        D:\proj\velograph\uart_can\arm\lib\STM32F10x_StdPeriph_Driver\inc\ -I
+#        D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\DeviceSupport\ST\STM32F10x\
+#        -I D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\CoreSupport\ -I
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\CMSIS\Core\Include\\" -I
+#        D:\proj\velograph\uart_can\arm\lib\ring_buffer\ -Ol --use_c++_inline)
+#        --dependencies=n
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\src\stm32f10x_it.o.d
+#    Locale            =  C
+#    List file         =
+#        D:\proj\velograph\uart_can\arm\Debug\List\src\stm32f10x_it.lst
+#    Object file       =
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\src\stm32f10x_it.o
+#    Runtime model:       
+#      __CPP_Runtime   =  1
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+D:\proj\velograph\uart_can\arm\stm32f10x_it.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    CAN/LoopBack/stm32f10x_it.c 
+      4            * @author  MCD Application Team
+      5            * @version V3.5.0
+      6            * @date    08-April-2011
+      7            * @brief   Main Interrupt Service Routines.
+      8            *          This file provides template for all exceptions handler and 
+      9            *          peripherals interrupt service routine.
+     10            ******************************************************************************
+     11            * @attention
+     12            *
+     13            * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
+     14            * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
+     15            * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
+     16            * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
+     17            * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
+     18            * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+     19            *
+     20            * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+     21            ******************************************************************************
+     22            */ 
+     23          
+     24          /* Includes ------------------------------------------------------------------*/
+     25          #include "stm32f10x_it.h"
+     26          
+     27          /** @addtogroup STM32F10x_StdPeriph_Examples
+     28            * @{
+     29            */
+     30          
+     31          /** @addtogroup CAN_LoopBack
+     32            * @{
+     33            */ 
+     34          
+     35          /* Private typedef -----------------------------------------------------------*/
+     36          /* Private define ------------------------------------------------------------*/
+     37          /* Private macro -------------------------------------------------------------*/
+     38          /* Private variables ---------------------------------------------------------*/
+     39          extern __IO uint32_t ret;
+     40          
+     41          /* Private function prototypes -----------------------------------------------*/
+     42          /* Private functions ---------------------------------------------------------*/
+     43          
+     44          /******************************************************************************/
+     45          /*            Cortex-M3 Processor Exceptions Handlers                         */
+     46          /******************************************************************************/
+     47          
+     48          /**
+     49            * @brief   This function handles NMI exception.
+     50            * @param  None
+     51            * @retval None
+     52            */
+     53          void NMI_Handler(void)
+     54          {
+     55          }
+     56          #if 0
+     57          /**
+     58            * @brief  This function handles Hard Fault exception.
+     59            * @param  None
+     60            * @retval None
+     61            */
+     62          void HardFault_Handler(void)
+     63          {
+     64            /* Go to infinite loop when Hard Fault exception occurs */
+     65            while (1)
+     66            {
+     67            }
+     68          }
+     69          #endif
+     70          
+     71          /**
+     72            * @brief  This function handles Memory Manage exception.
+     73            * @param  None
+     74            * @retval None
+     75            */
+     76          void MemManage_Handler(void)
+     77          {
+     78            /* Go to infinite loop when Memory Manage exception occurs */
+     79            while (1)
+     80            {
+     81            }
+     82          }
+     83          
+     84          /**
+     85            * @brief  This function handles Bus Fault exception.
+     86            * @param  None
+     87            * @retval None
+     88            */
+     89          void BusFault_Handler(void)
+     90          {
+     91            /* Go to infinite loop when Bus Fault exception occurs */
+     92            while (1)
+     93            {
+     94            }
+     95          }
+     96          
+     97          /**
+     98            * @brief  This function handles Usage Fault exception.
+     99            * @param  None
+    100            * @retval None
+    101            */
+    102          void UsageFault_Handler(void)
+    103          {
+    104            /* Go to infinite loop when Usage Fault exception occurs */
+    105            while (1)
+    106            {
+    107            }
+    108          }
+    109          #if 0
+    110          /**
+    111            * @brief  This function handles SVCall exception.
+    112            * @param  None
+    113            * @retval None
+    114            */
+    115          void SVC_Handler(void)
+    116          {
+    117          }
+    118          #endif
+    119          /**
+    120            * @brief  This function handles Debug Monitor exception.
+    121            * @param  None
+    122            * @retval None
+    123            */
+    124          void DebugMon_Handler(void)
+    125          {
+    126          }
+    127          #if 0
+    128          /**
+    129            * @brief  This function handles PendSVC exception.
+    130            * @param  None
+    131            * @retval None
+    132            */
+    133          void PendSV_Handler(void)
+    134          {
+    135          }
+    136          
+    137          /**
+    138            * @brief  This function handles SysTick Handler.
+    139            * @param  None
+    140            * @retval None
+    141            */
+    142          void SysTick_Handler(void)
+    143          {
+    144          }
+    145          #endif
+    146          /******************************************************************************/
+    147          /*            STM32F10x Peripherals Interrupt Handlers                        */
+    148          /******************************************************************************/
+    149          
+    150          /**
+    151            * @brief  This function handles CAN1 Handler.
+    152            * @param  None
+    153            * @retval None
+    154            */
+    155          #ifndef STM32F10X_CL
+    156          void _USB_LP_CAN1_RX0_IRQHandler(void)
+    157          #else
+    158          void CAN1_RX0_IRQHandler(void)
+    159          #endif
+    160          {
+    161            CanRxMsg RxMessage;
+    162          
+    163            RxMessage.StdId=0x00;
+    164            RxMessage.ExtId=0x00;
+    165            RxMessage.IDE=0;
+    166            RxMessage.DLC=0;
+    167            RxMessage.FMI=0;
+    168            RxMessage.Data[0]=0x00;
+    169            RxMessage.Data[1]=0x00;
+    170          
+    171            CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
+    172          
+    173            if((RxMessage.ExtId==0x1234) && (RxMessage.IDE==CAN_ID_EXT)
+    174               && (RxMessage.DLC==2) && ((RxMessage.Data[1]|RxMessage.Data[0]<<8)==0xDECA))
+    175            {
+    176              ret = 1; 
+    177            }
+    178            else
+    179            {
+    180              ret = 0; 
+    181            }
+    182          }
+    183          
+    184          /**
+    185            * @brief  This function handles CAN2 Handler.
+    186            * @param  None
+    187            * @retval None
+    188            */
+    189          #ifdef STM32F10X_CL
+    190          void CAN2_RX0_IRQHandler(void)
+    191          
+    192          {
+    193            CanRxMsg RxMessage;
+    194          
+    195            RxMessage.StdId=0x00;
+    196            RxMessage.ExtId=0x00;
+    197            RxMessage.IDE=0;
+    198            RxMessage.DLC=0;
+    199            RxMessage.FMI=0;
+    200            RxMessage.Data[0]=0x00;
+    201            RxMessage.Data[1]=0x00;
+    202          
+    203            CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
+    204          
+    205            if((RxMessage.ExtId==0x1234) && (RxMessage.IDE==CAN_ID_EXT)
+    206               && (RxMessage.DLC==2) && ((RxMessage.Data[1]|RxMessage.Data[0]<<8)==0xDECA))
+    207            {
+    208              ret = 1; 
+    209            }
+    210            else
+    211            {
+    212              ret = 0; 
+    213            }
+    214          }
+    215          #endif
+    216          
+    217           
+    218          void hard_fault_handler_c (unsigned int * hardfault_args)
+    219          {
+    220          #if 1
+    221            volatile unsigned int stacked_r0;
+    222            volatile unsigned int stacked_r1;
+    223            volatile unsigned int stacked_r2;
+    224            volatile unsigned int stacked_r3;
+    225            volatile unsigned int stacked_r12;
+    226            volatile unsigned int stacked_lr;
+    227            volatile unsigned int stacked_pc;
+    228            volatile unsigned int stacked_psr;
+    229           
+    230            stacked_r0 = ((unsigned long) hardfault_args[0]);
+    231            stacked_r1 = ((unsigned long) hardfault_args[1]);
+    232            stacked_r2 = ((unsigned long) hardfault_args[2]);
+    233            stacked_r3 = ((unsigned long) hardfault_args[3]);
+    234           
+    235            stacked_r12 = ((unsigned long) hardfault_args[4]);
+    236            stacked_lr = ((unsigned long) hardfault_args[5]);
+    237            stacked_pc = ((unsigned long) hardfault_args[6]);
+    238            stacked_psr = ((unsigned long) hardfault_args[7]);
+    239          #endif
+    240           while (1);
+    241          #if 0
+    242            printf ("\r\n\r\n[Hard fault handler - all numbers in hex]\r\n");
+    243            printf ("R0 = %x\r\n", stacked_r0);
+    244            printf ("R1 = %x\r\n", stacked_r1);
+    245            printf ("R2 = %x\r\n", stacked_r2);
+    246            printf ("R3 = %x\r\n", stacked_r3);
+    247            printf ("R12 = %x\r\n", stacked_r12);
+    248            printf ("LR [R14] = %x  subroutine call return address\r\n", stacked_lr);
+    249            printf ("PC [R15] = %x  program counter\r\n", stacked_pc);
+    250            printf ("PSR = %x\r\n", stacked_psr);
+    251            printf ("BFAR = %x\r\n", (*((volatile unsigned long *)(0xE000ED38))));
+    252            printf ("CFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED28))));
+    253            printf ("HFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED2C))));
+    254            printf ("DFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED30))));
+    255            printf ("AFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED3C))));
+    256            printf ("SCB_SHCSR = %x\r\n", SCB->SHCSR);
+    257           
+    258            while (1);
+    259          #endif
+    260          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   BusFault_Handler
+       0   DebugMon_Handler
+       0   MemManage_Handler
+       0   NMI_Handler
+       0   UsageFault_Handler
+      24   _USB_LP_CAN1_RX0_IRQHandler
+        24   -> CAN_Receive
+       4   hard_fault_handler_c
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       2  BusFault_Handler
+       2  DebugMon_Handler
+       2  MemManage_Handler
+       2  NMI_Handler
+       2  UsageFault_Handler
+     116  _USB_LP_CAN1_RX0_IRQHandler
+      36  hard_fault_handler_c
+
+ 
+ 170 bytes in section .text
+ 
+ 170 bytes of CODE memory
+
+Errors: none
+Warnings: none

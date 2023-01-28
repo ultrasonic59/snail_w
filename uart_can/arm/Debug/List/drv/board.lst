@@ -1,0 +1,235 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         28/Jan/2023  19:17:54
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                 =  thumb
+#    Endian                   =  little
+#    Source file              =  D:\proj\velograph\uart_can\arm\drv\board.c
+#    Command line             =
+#        -f D:\proj\velograph\uart_can\arm\Debug\Obj\drv\board.o.rsp
+#        (D:\proj\velograph\uart_can\arm\drv\board.c -D USE_STDPERIPH_DRIVER -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D STM32F10X_MD -lcN
+#        D:\proj\velograph\uart_can\arm\Debug\List\drv --diag_suppress
+#        Pa082,pe191 -o D:\proj\velograph\uart_can\arm\Debug\Obj\drv --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I D:\proj\velograph\uart_can\arm\.\
+#        -I D:\proj\velograph\uart_can\arm\freertos\include\ -I
+#        D:\proj\velograph\uart_can\arm\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\uart_can\arm\drv\ -I
+#        D:\proj\velograph\uart_can\arm\lib\STM32F10x_StdPeriph_Driver\inc\ -I
+#        D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\DeviceSupport\ST\STM32F10x\
+#        -I D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\CoreSupport\ -I
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\CMSIS\Core\Include\\" -I
+#        D:\proj\velograph\uart_can\arm\lib\ring_buffer\ -Ol --use_c++_inline)
+#        --dependencies=n
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\drv\board.o.d
+#    Locale                   =  C
+#    List file                =
+#        D:\proj\velograph\uart_can\arm\Debug\List\drv\board.lst
+#    Object file              =
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\drv\board.o
+#    Runtime model:              
+#      __CPP_Runtime          =  1
+#      __SystemLibrary        =  DLib
+#      __dlib_file_descriptor =  1
+#      __dlib_version         =  6
+#
+###############################################################################
+
+D:\proj\velograph\uart_can\arm\drv\board.c
+      1          #include <stdio.h>
+      2          #include <string.h>
+      3          
+      4          #include "board.h"
+      5          #include "serial.h"
+      6          #include "my_misc.h"
+      7          
+      8          void init_gpio(void)
+      9          {
+     10          ////RCC_AHBPeriphClockCmd(XEN_PIN_RCC_AHB,ENABLE);
+     11          GPIO_InitTypeDef GPIO_InitStructure;
+     12            
+     13          ////=========== MY_UART =================================================== 
+     14          RCC_APB2PeriphClockCmd(MY_UART_GPIO_RCC, ENABLE);
+     15          GPIO_InitStructure.GPIO_Pin = MY_UART_TX_PIN;
+     16          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     17          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+     18          GPIO_Init( MY_UART_TX_GPIO, &GPIO_InitStructure );
+     19          
+     20          GPIO_InitStructure.GPIO_Pin = MY_UART_RX_PIN;
+     21          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     22          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;////GPIO_Mode_AF_PP;
+     23          GPIO_Init( MY_UART_RX_GPIO, &GPIO_InitStructure );
+     24            
+     25          ////GPIO_PinAFConfig(UART_DBG_TX_GPIO_PORT, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
+     26          ////GPIO_PinAFConfig(UART_DBG_RX_GPIO_PORT, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
+     27          ////============ CAN ===============================================
+     28          RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE); 
+     29          RCC_APB2PeriphClockCmd(CAN_GPIO_PORT_RCC, ENABLE);
+     30          
+     31          /// ==============CAN RX  pins =============================
+     32            GPIO_PinRemapConfig(GPIO_Remap1_CAN1, ENABLE);
+     33          
+     34            GPIO_InitStructure.GPIO_Pin = CAN_RX_PIN ;
+     35            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+     36          ////   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+     37           GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     38            GPIO_Init(CAN_GPIO_PORT, &GPIO_InitStructure);
+     39          //// GPIO_PinRemapConfig(GPIO_Remap1_CAN, ENABLE);
+     40            
+     41          /// ==============CAN  TX pins =============================
+     42          ////GPIO_PinRemapConfig(GPIO_Remap1_CAN1, ENABLE);
+     43           GPIO_InitStructure.GPIO_Pin = CAN_TX_PIN;
+     44            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+     45            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     46            GPIO_Init(CAN_GPIO_PORT, &GPIO_InitStructure);
+     47           ///============ LED ================== 
+     48          GPIO_InitStructure.GPIO_Pin = LED_PIN;
+     49          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     50          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+     51          GPIO_Init( LED_PIN_GPIO, &GPIO_InitStructure );
+     52          }
+     53          static uint8_t st_led=0;
+     54          int led_time=0;
+     55          #define LED_TIME 100
+     56          void vApplicationTickHook( void )
+     57          {
+     58          if(led_time) 
+     59            {
+     60            led_time--;
+     61            if(st_led==0)
+     62              {
+     63              st_led=1;
+     64              put_led(st_led);
+     65              }
+     66            }
+     67          else if(st_led!=0)
+     68              {
+     69              st_led=0;
+     70              put_led(st_led);
+     71              }
+     72          }
+     73          void on_led(void)
+     74          {
+     75           led_time= LED_TIME;
+     76           st_led=0;
+     77          }
+     78          
+     79          void  put_led(uint8_t idat)
+     80          {
+     81          if(idat&0x1)  
+     82            GPIO_WriteBit(LED_PIN_GPIO,LED_PIN,(BitAction)(0)); 
+     83          else
+     84            GPIO_WriteBit(LED_PIN_GPIO,LED_PIN,(BitAction)(0x1)); 
+     85          }
+     86          
+     87          void board_init(void)
+     88          {
+     89          init_gpio();
+     90          ///init_serial();
+     91          usart_setup();
+     92          
+     93          cur_can_br=DEF_CAN_BR;
+     94          
+     95          init_can();
+     96          put_led(0); ///off led
+     97          }
+     98          void uDelay (const uint32_t usec)
+     99          {
+    100          uint32_t count = 0;
+    101          const uint32_t utime = 45*usec;////(120 * usec / 7);
+    102          do
+    103            {
+    104             if ( ++count > utime )
+    105              {
+    106              return ;
+    107              }
+    108            }
+    109          while (1);
+    110          }
+    111          ////======================================================
+    112          volatile unsigned int counter;
+    113          volatile uint8_t status;
+    114          volatile uint8_t commands_pending;
+    115          uint8_t d_data[MAX_CAN_LEN];
+    116          
+    117          void testTask( void *pvParameters )
+    118          {
+    119          uint8_t t_tst=1;  
+    120          ////put_led(t_tst);
+    121          ////uint8_t test_data[8]={0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8};
+    122          
+    123          for( ;; )
+    124            {
+    125            t_tst++; 
+    126           //// write_my_uart( (char*)&t_tst,1) ;
+    127                 sendchar_my_uart(0x35) ; 
+    128                   vTaskDelay(200);
+    129            ////       put_led(t_tst);
+    130           ////       CanWriteData(0xA5,test_data,8);
+    131          //// slcan_command();
+    132            }
+    133            
+    134          }
+    135          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   board_init
+         8   -> init_can
+         8   -> init_gpio
+         8   -> put_led
+         8   -> usart_setup
+      16   init_gpio
+        16   -> GPIO_Init
+        16   -> GPIO_PinRemapConfig
+        16   -> RCC_APB2PeriphClockCmd
+       0   on_led
+       8   put_led
+         8   -> GPIO_WriteBit
+       8   testTask
+         8   -> sendchar_my_uart
+         8   -> vTaskDelay
+       0   uDelay
+       8   vApplicationTickHook
+         8   -> put_led
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+      28  board_init
+       1  commands_pending
+       4  counter
+       8  d_data
+     176  init_gpio
+       4  led_time
+      14  on_led
+      30  put_led
+       1  st_led
+       1  status
+      20  testTask
+      16  uDelay
+      56  vApplicationTickHook
+
+ 
+  19 bytes in section .bss
+ 360 bytes in section .text
+ 
+ 360 bytes of CODE memory
+  19 bytes of DATA memory
+
+Errors: none
+Warnings: none

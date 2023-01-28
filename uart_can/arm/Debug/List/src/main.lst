@@ -1,0 +1,126 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         28/Jan/2023  19:17:54
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                 =  thumb
+#    Endian                   =  little
+#    Source file              =  D:\proj\velograph\uart_can\arm\main.c
+#    Command line             =
+#        -f D:\proj\velograph\uart_can\arm\Debug\Obj\src\main.o.rsp
+#        (D:\proj\velograph\uart_can\arm\main.c -D USE_STDPERIPH_DRIVER -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D STM32F10X_MD -lcN
+#        D:\proj\velograph\uart_can\arm\Debug\List\src --diag_suppress
+#        Pa082,pe191 -o D:\proj\velograph\uart_can\arm\Debug\Obj\src --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None
+#        --dlib_config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\inc\c\DLib_Config_Full.h" -I D:\proj\velograph\uart_can\arm\.\
+#        -I D:\proj\velograph\uart_can\arm\freertos\include\ -I
+#        D:\proj\velograph\uart_can\arm\freertos\portable\IAR\ARM_CM3\ -I
+#        D:\proj\velograph\uart_can\arm\drv\ -I
+#        D:\proj\velograph\uart_can\arm\lib\STM32F10x_StdPeriph_Driver\inc\ -I
+#        D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\DeviceSupport\ST\STM32F10x\
+#        -I D:\proj\velograph\uart_can\arm\lib\CMSIS\CM3\CoreSupport\ -I
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.1\arm\CMSIS\Core\Include\\" -I
+#        D:\proj\velograph\uart_can\arm\lib\ring_buffer\ -Ol --use_c++_inline)
+#        --dependencies=n D:\proj\velograph\uart_can\arm\Debug\Obj\src\main.o.d
+#    Locale                   =  C
+#    List file                =
+#        D:\proj\velograph\uart_can\arm\Debug\List\src\main.lst
+#    Object file              =
+#        D:\proj\velograph\uart_can\arm\Debug\Obj\src\main.o
+#    Runtime model:              
+#      __CPP_Runtime          =  1
+#      __SystemLibrary        =  DLib
+#      __dlib_file_descriptor =  1
+#      __dlib_version         =  6
+#
+###############################################################################
+
+D:\proj\velograph\uart_can\arm\main.c
+      1          #include <stdio.h>
+      2          
+      3          /* Scheduler includes. */
+      4          #include "FreeRTOS.h"
+      5          #include "task.h"
+      6          #include "queue.h"
+      7          
+      8          #include "board.h"
+      9          
+     10          /* Task priorities. */
+     11          #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+     12             
+     13          #define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 4 )
+     14          
+     15          #define CAN_TASK_STACK_SIZE			        ( configMINIMAL_STACK_SIZE + 50 )
+     16          
+     17          extern void slc_task( void *pvParameters );
+     18          ///======================================================
+     19          int main( void )
+     20          {
+     21          #ifdef DEBUG
+     22            debug();
+     23          #endif
+     24          board_init();
+     25          ////xTaskCreate( testTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+     26          xTaskCreate( slc_task, "slc_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+     27          xTaskCreate( can_read_task, "can_read", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+     28          /* Start the scheduler. */
+     29          vTaskStartScheduler();
+     30          	/* Will only get here if there was not enough heap space to create the
+     31          	idle task. */
+     32          return 0;
+     33          }
+     34          /*-----------------------------------------------------------*/
+     35          
+     36          int fputc( int ch, FILE *f )
+     37          {
+     38          return ch;
+     39          }
+     40          /*-----------------------------------------------------------*/
+     41          
+     42          #ifdef  DEBUG
+     43          /* Keep the linker happy. */
+     44          void assert_failed( unsigned char* pcFile, unsigned long ulLine )
+     45          {
+     46          	for( ;; )
+     47          	{
+     48          	}
+     49          }
+     50          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   fputc
+      16   main
+        16   -> board_init
+        16   -> vTaskStartScheduler
+        16   -> xTaskCreate
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  ??DataTable0_2
+       4  ??DataTable0_3
+      12  ?_0
+      12  ?_1
+       2  fputc
+      54  main
+
+ 
+ 24 bytes in section .rodata
+ 72 bytes in section .text
+ 
+ 72 bytes of CODE  memory
+ 24 bytes of CONST memory
+
+Errors: none
+Warnings: none
