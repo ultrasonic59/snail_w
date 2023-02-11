@@ -1,0 +1,166 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Feb/2023  18:37:31
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                 =  thumb
+#    Endian                   =  little
+#    Source file              =
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\main.c
+#    Command line             =
+#        -f
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\Board\main.o.rsp
+#        (D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\main.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
+#        -lcN
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\Board
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\.\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\board\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\usb\drv\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\my_grbl\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\can\
+#        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
+#        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\Board\main.o.d
+#    Locale                   =  C
+#    List file                =
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board\main.lst
+#    Object file              =
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\Board\main.o
+#    Runtime model:              
+#      __CPP_Runtime          =  1
+#      __SystemLibrary        =  DLib
+#      __dlib_file_descriptor =  1
+#      __dlib_version         =  6
+#
+###############################################################################
+
+D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\main.c
+      1          
+      2          #include <stdio.h>
+      3          
+      4          #include "FreeRTOS.h"
+      5          #include "task.h"
+      6          #include "queue.h"
+      7          
+      8          /* Library includes. */
+      9          ////#include "stm32f2xx_it.h"
+     10          #include "stm32f2xx_rcc.h"
+     11          
+     12          /* Demo app includes. */
+     13          #include "board.h"
+     14          
+     15          #include "misc.h"
+     16          #include "printk.h"
+     17          ///=======================================================================
+     18          ////extern void tst_task( void *pvParameters );
+     19          extern void tst1_task( void *pvParameters );
+     20          extern void can_rsv_task( void *pvParameters );
+     21          extern void can_send_thread(void* pp);
+     22          
+     23          extern int can_main(void);
+     24          extern void CAN1_Init (void);
+     25          TaskHandle_t  can_send_thread_handle;
+     26          
+     27          ////============================================
+     28          int main( void )
+     29          {
+     30          ////uint8_t btst=0; 
+     31          ////uint32_t tst=0;
+     32          #ifdef DEBUG
+     33            debug();
+     34          #endif
+     35          __disable_irq();
+     36          hw_board_init();
+     37          #if STEP_X
+     38            printk("\n\r=== [step_x_axis] ==="); 
+     39          #elif STEP_Y
+     40            printk("\n\r=== [step_y_axis] ==="); 
+     41          #elif STEP_Z
+     42            printk("\n\r=== [step_z_axis] ==="); 
+     43          #else 
+     44            #error "\n\r=== STEP_... nodefined ==="; 
+     45          #endif
+     46          ////=================================================
+     47          CAN1_Init();
+     48          
+     49          ////=================================================
+     50          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+     51          xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+     52          xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+     53          xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+     54          ////xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+     55          /* Start the scheduler. */
+     56          vTaskStartScheduler();
+     57          return 0;
+     58          }
+     59          
+     60          #ifdef  DEBUG
+     61          /* Keep the linker happy. */
+     62          void assert_failed( unsigned char* pcFile, unsigned long ulLine )
+     63          {
+     64          	for( ;; )
+     65          	{
+     66          	}
+     67          }
+     68          #endif
+     69          ////=======================================================
+     70          
+     71          ////=======================================================
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   main
+        16   -> CAN1_Init
+        16   -> NVIC_PriorityGroupConfig
+        16   -> _printk
+        16   -> hw_board_init
+        16   -> vTaskStartScheduler
+        16   -> xTaskCreate
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      24  ?_0
+      12  ?_1
+      16  ?_2
+      16  ?_3
+       4  can_send_thread_handle
+     132  main
+
+ 
+   4 bytes in section .bss
+  68 bytes in section .rodata
+ 132 bytes in section .text
+ 
+ 132 bytes of CODE  memory
+  68 bytes of CONST memory
+   4 bytes of DATA  memory
+
+Errors: none
+Warnings: none

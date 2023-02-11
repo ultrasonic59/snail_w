@@ -1,0 +1,216 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Feb/2023  18:28:32
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\can_thr.c
+#    Command line      =
+#        -f
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\can_thr.o.rsp
+#        (D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\can_thr.c
+#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
+#        -lcN
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\List\
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\.\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\freertos\source\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\usb\drv\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_grbl\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\can\
+#        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
+#        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\can_thr.o.d
+#    Locale            =  C
+#    List file         =
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\List\can_thr.lst
+#    Object file       =
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\can_thr.o
+#    Runtime model:       
+#      __CPP_Runtime   =  1
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\can_thr.c
+      1          #include <string.h>
+      2          #include "FreeRTOS.h"
+      3          #include "queue.h"
+      4          #include "semphr.h"
+      5          ///#include "stm32f2xx_gpio.h"
+      6          ///#include "stm32f2xx_rcc.h"
+      7          
+      8          #include "can.h"
+      9          #include "can_cmds.h"
+     10          #include "board.h"
+     11          #include "printk.h"
+     12          
+     13          extern can_msg_t CAN_RxMsg;
+     14          
+     15          xQueueHandle queu_to_send;
+     16          
+     17          int go_cmd(go_cmd_t *p_go_cmd)
+     18          {
+     19          cur_stat=STATE_MOVE;  
+     20          printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+     21          
+     22          set_dir_mot(p_go_cmd->dirs);
+     23          ////set_step_per(p_go_cmd->step_per);
+     24          set_mot_per(p_go_cmd->step_per);
+     25          put_mot_nstep(p_go_cmd->steps);
+     26          ////msleep(1000);
+     27          ////cur_stat=STATE_READY;  
+     28          return 0;
+     29          }
+     30          
+     31          void can_rsv_task( void *pvParameters )
+     32          {
+     33          printk("\n\r can_rsv_task"); 
+     34           for(;;)
+     35            {
+     36            if( CAN_RxRdy)
+     37              {
+     38              CAN_RxRdy=0;
+     39              switch(CAN_RxMsg.data[0]) {
+     40                case GO_CMD:
+     41                  {
+     42                  put_can_ack(GO_CMD);
+     43                    
+     44                  go_cmd((go_cmd_t *)CAN_RxMsg.data);
+     45            ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+     46                   
+     47                  }
+     48                  break;
+     49                case GET_STAT_CMD:
+     50                  {
+     51                  put_can_cmd_stat(cur_stat,cur_coord);
+     52                   printk("[stat=%x] ",cur_stat);
+     53          
+     54                   }
+     55                  break;
+     56                  
+     57              default:
+     58                break;
+     59              }
+     60          #if 0   
+     61              printk("\n\r can_rx"); 
+     62              printk("\n\r ExtId[%x]",CAN_RxMsg.id);
+     63              printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
+     64              for(ii=0;ii<8;ii++)
+     65                {
+     66                printk("[%x] ",CAN_RxMsg.data[ii]);
+     67                }
+     68          #endif
+     69              }
+     70            else
+     71            {
+     72          ////   CAN_wrMsg (&send_msg);
+     73              msleep(20);
+     74            }
+     75            }
+     76          }
+     77          
+     78          void can_send_thread(void* pp)
+     79          {
+     80          can_msg_t  snd_msg;
+     81          
+     82          printk("\n\r can_send_thread");
+     83          
+     84          queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+     85          for(;;)
+     86            {
+     87            xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
+     88          ////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
+     89            CAN_wrMsg (&snd_msg);
+     90            
+     91           //// test_print(&snd_msg);
+     92            
+     93           ////  tst_print();
+     94          ///  set_curr_dir(st.dir_outbits);
+     95          ////  obr_segment();
+     96          ///=================================================
+     97          ////  sys.state &= ~STATE_CYCLE;
+     98          
+     99            }
+    100          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   can_rsv_task
+        16   -> _printk
+        16   -> go_cmd
+        16   -> put_can_ack
+        16   -> put_can_cmd_stat
+        16   -> vTaskDelay
+      32   can_send_thread
+        32   -> CAN_wrMsg
+        32   -> _printk
+        32   -> xQueueGenericCreate
+        32   -> xQueueReceive
+       8   go_cmd
+         8   -> _printk
+         8   -> put_mot_nstep
+         8   -> set_dir_mot
+         8   -> set_mot_per
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       4  ??DataTable2_8
+      32  ?_0
+      16  ?_1
+      12  ?_2
+      20  ?_3
+      82  can_rsv_task
+      46  can_send_thread
+      44  go_cmd
+       4  queu_to_send
+
+ 
+   4 bytes in section .bss
+  80 bytes in section .rodata
+ 208 bytes in section .text
+ 
+ 208 bytes of CODE  memory
+  80 bytes of CONST memory
+   4 bytes of DATA  memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,473 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Feb/2023  20:01:01
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =
+#        D:\proj\velograph\snail_w\stm32_snail\common\can\can_drv.c
+#    Command line      =
+#        -f
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\drv\can_drv.o.rsp
+#        (D:\proj\velograph\snail_w\stm32_snail\common\can\can_drv.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
+#        -lcN
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\drv
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\.\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\board\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\freertos\source\inc\
+#        -I D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\usb\drv\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\my_grbl\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\..\common\can\
+#        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
+#        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\drv\can_drv.o.d
+#    Locale            =  C
+#    List file         =
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv\can_drv.lst
+#    Object file       =
+#        D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\Obj\drv\can_drv.o
+#    Runtime model:       
+#      __CPP_Runtime   =  1
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+D:\proj\velograph\snail_w\stm32_snail\common\can\can_drv.c
+      1          #include "stdint.h"
+      2          #include "stm32f2xx.h"
+      3          #include "stm32f2xx_rcc.h"
+      4          #include "stm32f2xx_can.h"
+      5          #include "misc.h"
+      6          #include "board.h"
+      7          #include "can.h"
+      8          #include "snail_can_cmds.h"
+      9          #include "printk.h"
+     10          ////=======================================================
+     11          ////#define CANx CAN1
+     12          #define MAX_CAN_DATA_LEN 8
+     13          
+     14          ////=======================================================
+     15          typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
+     16          volatile TestStatus TestRx;
+     17          __IO uint32_t ret=0;
+     18          uint8_t  CAN_TxRdy = 0;              /* CAN HW ready to transmit message */
+     19          uint8_t  CAN_RxRdy = 0;              /* CAN HW received a message        */
+     20          CanRxMsg RxMessage;
+     21          
+     22          ////=============================================================
+     23          void NVIC_can_Config(void)
+     24          {
+     25          NVIC_InitTypeDef NVIC_InitStructure;
+     26          
+     27          NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+     28          
+     29          NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX0_IRQn;
+     30          NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+     31          NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x1;///0;
+     32          NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+     33          NVIC_Init(&NVIC_InitStructure);
+     34          
+     35          NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX1_IRQn;
+     36          NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+     37          NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x1;///0;
+     38          NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+     39          NVIC_Init(&NVIC_InitStructure);
+     40          
+     41          }
+     42          void CAN_Config(void)
+     43          {
+     44            GPIO_InitTypeDef  GPIO_InitStructure;
+     45            CAN_InitTypeDef        CAN_InitStructure;
+     46           //// CAN_FilterInitTypeDef  CAN_FilterInitStructure;
+     47          ////=============== CAN1_INH ============================
+     48          RCC_AHB1PeriphClockCmd(CAN1_INH_PIN_RCC, ENABLE);
+     49          GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
+     50          GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     51          GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+     52          GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     53          GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
+     54          GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
+     55           /* CAN GPIOs configuration **************************************************/
+     56            /* Enable GPIO clock */
+     57          RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
+     58          
+     59            /* Connect CAN pins to AF9 */
+     60            GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_RX_SOURCE, CAN1_AF_PORT);
+     61            GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_TX_SOURCE, CAN1_AF_PORT);
+     62          
+     63            /* Configure CAN RX and TX pins */
+     64            GPIO_InitStructure.GPIO_Pin = CAN1_RX_PIN | CAN1_TX_PIN;
+     65            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+     66            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+     67            GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+     68            GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+     69            GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
+     70            /* CAN configuration ********************************************************/
+     71            /* Enable CAN clock */
+     72            RCC_APB1PeriphClockCmd(CAN1_CLK, ENABLE);
+     73            NVIC_can_Config();
+     74          
+     75            /* CAN register init */
+     76            CAN_DeInit(CAN1);
+     77          
+     78            CAN_StructInit(&CAN_InitStructure);
+     79          
+     80            /* CAN cell init */
+     81            CAN_InitStructure.CAN_TTCM = DISABLE;
+     82            CAN_InitStructure.CAN_ABOM = DISABLE;
+     83            CAN_InitStructure.CAN_AWUM = DISABLE;
+     84            CAN_InitStructure.CAN_NART = ENABLE;          ////off autoresend
+     85            CAN_InitStructure.CAN_RFLM = DISABLE;
+     86            CAN_InitStructure.CAN_TXFP = DISABLE;
+     87            CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
+     88            CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
+     89          
+     90            /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
+     91            
+     92             /* Baudrate = 500 Kbps */
+     93            CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
+     94            CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
+     95            CAN_InitStructure.CAN_Prescaler = 2;
+     96            CAN_Init(CAN1, &CAN_InitStructure);
+     97          #if 0
+     98            CAN_FilterInitStructure.CAN_FilterNumber = 0;
+     99            CAN_FilterInitStructure.CAN_FilterFIFOAssignment=0;////CAN_Filter_FIFO0;
+    100            CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    101            CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    102            CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+    103            CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
+    104            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+    105            CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
+    106            //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    107            CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    108            CAN_FilterInit(&CAN_FilterInitStructure);
+    109          #endif
+    110          #if 0
+    111            CAN_FilterInitStructure.CAN_FilterNumber = 14;
+    112            CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO1;
+    113            CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    114            CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    115            CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+    116            CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
+    117            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+    118            CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
+    119            //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    120            CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    121            CAN_FilterInit(&CAN_FilterInitStructure);
+    122          #endif
+    123          
+    124            /* Enable FIFO 0 message pending Interrupt */
+    125          ////  CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+    126          
+    127          }
+    128          
+    129          void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
+    130          {
+    131           CAN_FilterInitTypeDef  CAN_FilterInitStructure;
+    132           #if 1
+    133            CAN_FilterInitStructure.CAN_FilterNumber = num;
+    134            CAN_FilterInitStructure.CAN_FilterFIFOAssignment=0;////CAN_Filter_FIFO0;
+    135            CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    136            CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
+    137            CAN_FilterInitStructure.CAN_FilterIdHigh = (id>>16)&0xffff;
+    138            CAN_FilterInitStructure.CAN_FilterIdLow = id&0xffff;
+    139            CAN_FilterInitStructure.CAN_FilterMaskIdHigh = (mask>>16)&0xffff;
+    140            CAN_FilterInitStructure.CAN_FilterMaskIdLow =  mask&0xffff;
+    141            //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
+    142            CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    143            CAN_FilterInit(&CAN_FilterInitStructure);
+    144          #endif
+    145          
+    146          }
+    147          ///=============================================
+    148          #define CAN_MAX_NUM_BYTES 8
+    149          #define STANDARD_FORMAT  0
+    150          #define EXTENDED_FORMAT  1
+    151          
+    152          #define DATA_FRAME       0
+    153          #define REMOTE_FRAME     1
+    154          
+    155          can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */                        
+    156          /*----------------------------------------------------------------------------
+    157            write a message to CAN peripheral and transmit it
+    158           *----------------------------------------------------------------------------*/
+    159          void CAN_wrMsg (can_msg_t *msg)  {
+    160          
+    161            CAN1->sTxMailBox[0].TIR  = 0;           /* Reset TIR register               */
+    162                                                    /* Setup identifier information     */
+    163            if (msg->format == STANDARD_FORMAT) {   /*    Standard ID                   */
+    164              CAN1->sTxMailBox[0].TIR |= (uint32_t)(msg->id << 21) | CAN_ID_STD;
+    165            } else {                                /* Extended ID                      */
+    166              CAN1->sTxMailBox[0].TIR |= (uint32_t)(msg->id <<  3) | CAN_ID_EXT;
+    167            }
+    168                                                    /* Setup type information           */
+    169            if (msg->type == DATA_FRAME)  {         /* DATA FRAME                       */
+    170              CAN1->sTxMailBox[0].TIR |= CAN_RTR_DATA;
+    171            } else {                                /* REMOTE FRAME                     */
+    172              CAN1->sTxMailBox[0].TIR |= CAN_RTR_REMOTE;
+    173            }
+    174                                                    /* Setup data bytes                 */
+    175            CAN1->sTxMailBox[0].TDLR = (((uint32_t)msg->data[3] << 24) | 
+    176                                        ((uint32_t)msg->data[2] << 16) |
+    177                                        ((uint32_t)msg->data[1] <<  8) | 
+    178                                        ((uint32_t)msg->data[0])        );
+    179            CAN1->sTxMailBox[0].TDHR = (((uint32_t)msg->data[7] << 24) | 
+    180                                        ((uint32_t)msg->data[6] << 16) |
+    181                                        ((uint32_t)msg->data[5] <<  8) |
+    182                                        ((uint32_t)msg->data[4])        );
+    183                                                    /* Setup length                     */
+    184            CAN1->sTxMailBox[0].TDTR &= ~CAN_TDT0R_DLC;
+    185            CAN1->sTxMailBox[0].TDTR |=  (msg->len & CAN_TDT0R_DLC);
+    186          
+    187            CAN1->IER |= CAN_IER_TMEIE;                 /* enable  TME interrupt        */
+    188            CAN1->sTxMailBox[0].TIR |=  CAN_TI0R_TXRQ;  /* transmit message             */
+    189          }
+    190          
+    191          
+    192          /*----------------------------------------------------------------------------
+    193            read a message from CAN peripheral and release it
+    194           *----------------------------------------------------------------------------*/
+    195          void CAN_rdMsg (can_msg_t *msg)  {
+    196                                                        /* Read identifier information  */
+    197            if ((CAN1->sFIFOMailBox[0].RIR & CAN_ID_EXT) == 0) {
+    198              msg->format = STANDARD_FORMAT;
+    199              msg->id     = 0x000007FF & (CAN1->sFIFOMailBox[0].RIR >> 21);
+    200            } else {
+    201              msg->format = EXTENDED_FORMAT;
+    202              msg->id     = 0x1FFFFFFF & (CAN1->sFIFOMailBox[0].RIR >> 3);
+    203            }
+    204                                                        /* Read type information        */
+    205            if ((CAN1->sFIFOMailBox[0].RIR & CAN_RTR_REMOTE) == 0) {
+    206              msg->type =   DATA_FRAME;
+    207            } else {
+    208              msg->type = REMOTE_FRAME;
+    209            }
+    210                                                        /* Read number of rec. bytes    */
+    211            msg->len     = (CAN1->sFIFOMailBox[0].RDTR      ) & 0x0F;
+    212                                                        /* Read data bytes              */
+    213            msg->data[0] = (CAN1->sFIFOMailBox[0].RDLR      ) & 0xFF;
+    214            msg->data[1] = (CAN1->sFIFOMailBox[0].RDLR >>  8) & 0xFF;
+    215            msg->data[2] = (CAN1->sFIFOMailBox[0].RDLR >> 16) & 0xFF;
+    216            msg->data[3] = (CAN1->sFIFOMailBox[0].RDLR >> 24) & 0xFF;
+    217          
+    218            msg->data[4] = (CAN1->sFIFOMailBox[0].RDHR      ) & 0xFF;
+    219            msg->data[5] = (CAN1->sFIFOMailBox[0].RDHR >>  8) & 0xFF;
+    220            msg->data[6] = (CAN1->sFIFOMailBox[0].RDHR >> 16) & 0xFF;
+    221            msg->data[7] = (CAN1->sFIFOMailBox[0].RDHR >> 24) & 0xFF;
+    222          
+    223            CAN1->RF0R |= CAN_RF0R_RFOM0;             /* Release FIFO 0 output mailbox */
+    224          }
+    225          
+    226          
+    227          void CAN1_RX0_IRQHandler (void)
+    228          {
+    229          if (CAN1->RF0R & CAN_RF0R_FMP0)
+    230            {			/* message pending ?              */
+    231            CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
+    232            CAN_RxRdy = 1;                          // set receive flag
+    233            }
+    234          }
+    235          void CAN1_RX1_IRQHandler (void)
+    236          {
+    237          if (CAN1->RF1R & CAN_RF0R_FMP0)
+    238            {			/* message pending ?              */
+    239            CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
+    240            CAN_RxRdy = 1;                          // set receive flag
+    241            }
+    242          }
+    243          
+    244          #if 0
+    245          ////==================================================================
+    246          void CAN_wrFilter (unsigned int id, unsigned char format)  {
+    247            static unsigned short CAN_filterIdx = 0;
+    248                   unsigned int   CAN_msgId     = 0;
+    249            
+    250            if (CAN_filterIdx > 13) {                 /* check if Filter Memory is full*/
+    251              return;
+    252            }
+    253                                                      /* Setup identifier information  */
+    254            if (format == STANDARD_FORMAT)  {         /*   Standard ID                 */
+    255                CAN_msgId |= (uint32_t)(id << 21) | CAN_ID_STD;
+    256            }  else  {                                /*   Extended ID                 */
+    257                CAN_msgId |= (uint32_t)(id <<  3) | CAN_ID_EXT;
+    258            }
+    259          
+    260            CAN1->FMR  |=   CAN_FMR_FINIT;            /* set initMode for filter banks */
+    261            CAN1->FA1R &=  ~(1UL << CAN_filterIdx);   /* deactivate filter             */
+    262          
+    263                                                      /* initialize filter             */
+    264            CAN1->FS1R |= (unsigned int)(1 << CAN_filterIdx);     /* set 32-bit scale configuration    */
+    265            CAN1->FM1R |= (unsigned int)(1 << CAN_filterIdx);     /* set 2 32-bit identifier list mode */
+    266          
+    267            CAN1->sFilterRegister[CAN_filterIdx].FR1 = CAN_msgId; /*  32-bit identifier                */
+    268            CAN1->sFilterRegister[CAN_filterIdx].FR2 = CAN_msgId; /*  32-bit identifier                */
+    269              													   
+    270            CAN1->FFA1R &= ~(unsigned int)(1 << CAN_filterIdx);   /* assign filter to FIFO 0           */
+    271            CAN1->FA1R  |=  (unsigned int)(1 << CAN_filterIdx);   /* activate filter                   */
+    272          
+    273            CAN1->FMR &= ~CAN_FMR_FINIT;              /* reset initMode for filterBanks*/
+    274          
+    275            CAN_filterIdx += 1;                       /* increase filter index         */
+    276          }
+    277          
+    278          void CAN_waitReady (void)  
+    279          {
+    280          while ((CAN1->TSR & CAN_TSR_TME0) == 0);  /* Transmit mailbox 0 is empty    */
+    281          CAN_TxRdy = 1;
+    282           
+    283          }
+    284          #if 0
+    285          void CAN_setup (void)  
+    286          {
+    287          unsigned int brp;
+    288          
+    289            RCC->APB1ENR |= ( 1UL << 25);           /* enable clock for CAN             */
+    290            NVIC_EnableIRQ(CAN1_TX_IRQn);    /* enable CAN TX interrupt          */
+    291            NVIC_EnableIRQ(CAN1_RX0_IRQn);   /* enable CAN RX interrupt          */
+    292          
+    293            CAN1->MCR = (CAN_MCR_INRQ   |           /* initialisation request           */
+    294                         CAN_MCR_NART    );         /* no automatic retransmission      */
+    295                                                    /* only FIFO 0, tx mailbox 0 used!  */
+    296            CAN1->IER = (CAN_IER_FMPIE0 |           /* enable FIFO 0 msg pending IRQ    */
+    297                         CAN_IER_TMEIE    );        /* enable Transmit mbx empty IRQ    */
+    298          
+    299          brp = 4;//4;
+    300                                                                                    
+    301          CAN1->BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | (          0x1FF)); 
+    302          CAN1->BTR |=  ((((1-1) & 0x03) << 24) | (((8-1) & 0x07) << 20) | (((6-1) & 0x0F) << 16) | ((brp-1) & 0x1FF));
+    303          }
+    304          #endif
+    305          
+    306          void CAN_start (void)  
+    307          {
+    308          CAN1->MCR &= ~CAN_MCR_INRQ;             /* normal operating mode, reset INRQ*/
+    309          while (CAN1->MSR & CAN_MCR_INRQ);
+    310          
+    311          }
+    312          #endif
+    313          ////================================================================================
+    314          #if 0
+    315          void CAN1_Init (void)
+    316          {
+    317          ////CAN_setup ();                                   /* setup CAN Controller     */
+    318          
+    319          ////CAN_wrFilter (0x0, STANDARD_FORMAT);
+    320          ////CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
+    321          ////CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
+    322          	
+    323          ////CAN_start ();                                   /* start CAN Controller   */
+    324          	
+    325          ////CAN_waitReady ();                               /* wait til tx mbx is empty */
+    326          }
+    327          #endif
+    328          /*----------------------------------------------------------------------------
+    329            CAN transmit interrupt handler
+    330           *----------------------------------------------------------------------------*/
+    331          void CAN1_TX_IRQHandler (void) {
+    332          
+    333            if (CAN1->TSR & CAN_TSR_RQCP0) {          /* request completed mbx 0        */
+    334              CAN1->TSR |= CAN_TSR_RQCP0;             /* reset request complete mbx 0   */
+    335              CAN1->IER &= ~CAN_IER_TMEIE;            /* disable  TME interrupt         */
+    336          	
+    337          	CAN_TxRdy = 1;
+    338          //	sendchar2(0x34);
+    339            }
+    340          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   CAN1_RX0_IRQHandler
+         8   -> CAN_rdMsg
+       8   CAN1_RX1_IRQHandler
+         8   -> CAN_rdMsg
+       0   CAN1_TX_IRQHandler
+      32   CAN_Config
+        32   -> CAN_DeInit
+        32   -> CAN_Init
+        32   -> CAN_StructInit
+        32   -> GPIO_Init
+        32   -> GPIO_PinAFConfig
+        32   -> GPIO_ResetBits
+        32   -> NVIC_can_Config
+        32   -> RCC_AHB1PeriphClockCmd
+        32   -> RCC_APB1PeriphClockCmd
+      32   CAN_FilterConfig
+        32   -> CAN_FilterInit
+       0   CAN_rdMsg
+       4   CAN_wrMsg
+       8   NVIC_can_Config
+         8   -> NVIC_Init
+         8   -> NVIC_PriorityGroupConfig
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_10
+       4  ??DataTable6_11
+       4  ??DataTable6_12
+       4  ??DataTable6_13
+       4  ??DataTable6_14
+       4  ??DataTable6_15
+       4  ??DataTable6_16
+       4  ??DataTable6_17
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+       4  ??DataTable6_5
+       4  ??DataTable6_6
+       4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+      26  CAN1_RX0_IRQHandler
+      26  CAN1_RX1_IRQHandler
+      34  CAN1_TX_IRQHandler
+     226  CAN_Config
+      72  CAN_FilterConfig
+      16  CAN_RxMsg
+       1  CAN_RxRdy
+       1  CAN_TxRdy
+     116  CAN_rdMsg
+     152  CAN_wrMsg
+      72  NVIC_can_Config
+      20  RxMessage
+       1  TestRx
+       4  ret
+
+ 
+  43 bytes in section .bss
+ 796 bytes in section .text
+ 
+ 796 bytes of CODE memory
+  43 bytes of DATA memory
+
+Errors: none
+Warnings: none

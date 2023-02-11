@@ -1,0 +1,236 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Feb/2023  18:28:31
+# Copyright 1999-2022 IAR Systems AB.
+#
+#    Cpu mode                     =  thumb
+#    Endian                       =  little
+#    Source file                  =
+#        D:\proj\velograph\snail_w\stm32_snail\common\can\can_cmds.c
+#    Command line                 =
+#        -f
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\drv\can_cmds.o.rsp
+#        (D:\proj\velograph\snail_w\stm32_snail\common\can\can_cmds.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
+#        -lcN
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\List\drv
+#        --diag_suppress Pa082,pe191 -o
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\drv
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
+#        Systems\Embedded Workbench 9.1\arm\inc\c\DLib_Config_Full.h" -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\.\ -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\freertos\source\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\freertos\source\port\ARM_CM3\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\STM32F2xx_StdPeriph_Driver\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\dbg\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\usb\drv\inc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\board\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_grbl\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\can\
+#        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
+#        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\drv\can_cmds.o.d
+#    Locale                       =  C
+#    List file                    =
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\List\drv\can_cmds.lst
+#    Object file                  =
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\drv\can_cmds.o
+#    Runtime model:                  
+#      __CPP_Runtime              =  1
+#      __SystemLibrary            =  DLib
+#      __dlib_full_locale_support =  1
+#      __dlib_version             =  6
+#
+###############################################################################
+
+D:\proj\velograph\snail_w\stm32_snail\common\can\can_cmds.c
+      1          #include <stdint.h>
+      2          #include "FreeRTOS.h"
+      3          #include "task.h"
+      4          #include "semphr.h"
+      5          #include "queue.h"
+      6          #include "my_grbl.h"
+      7          #include "can.h"
+      8          #include "can_cmds.h"
+      9          #include "printk.h"
+     10          ////=======================================
+     11          extern xQueueHandle queu_to_send;
+     12          
+     13          int put_can_cmd_reset_all(void)
+     14          {
+     15            return 0;
+     16          }
+     17          
+     18          void _mc_reset(void)
+     19          {
+     20          put_can_cmd_reset_all();  
+     21          report_init_message();
+     22          }
+     23          int put_can_cmd_go(uint8_t dirs,uint16_t per
+     24                             ,uint32_t step_x
+     25                             ,uint32_t step_y
+     26                             ,uint32_t step_z)
+     27          {
+     28          ///uint8_t btst=0;  
+     29          can_msg_t  send_msg;
+     30          go_cmd_t t_go_cmd;
+     31          t_go_cmd.cmd=GO_CMD ;
+     32          t_go_cmd.dirs=dirs;
+     33          t_go_cmd.step_per=per;
+     34          send_msg.len=CAN_MAX_NUM_BYTES;
+     35          send_msg.format=STANDARD_FORMAT;
+     36          send_msg.type=DATA_FRAME;
+     37          if(step_x)
+     38            {
+     39             t_go_cmd.steps=step_x;
+     40             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+     41             send_msg.id=ID_X_CMD; 
+     42             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+     43            }
+     44          if(step_y)
+     45            {
+     46             t_go_cmd.steps=step_y;
+     47             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+     48             send_msg.id=ID_Y_CMD; 
+     49             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+     50            }
+     51          if(step_z)
+     52            {
+     53             t_go_cmd.steps=step_z;
+     54             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
+     55             send_msg.id=ID_Z_CMD; 
+     56             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+     57            }
+     58          
+     59          ////send_msg.data[1]=btst;    
+     60          ////xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+     61          
+     62          ///go_cmd_t   go_cmd;
+     63          #if 0        
+     64                  printk("\n\r tst_cnt[%d][%02x][%d][%d][%d]", per, dirs
+     65                      , step_x
+     66                      , step_y
+     67                      , step_z
+     68                  );
+     69          #endif
+     70          
+     71            return 0;
+     72          }
+     73          ////================================================
+     74          #ifndef _MASTER_
+     75          extern uint32_t cur_coord;
+     76          extern uint8_t cur_stat;
+     77          
+     78          int put_can_cmd_stat(uint8_t state
+     79                             ,uint32_t coord)
+     80          {
+     81          ///uint8_t btst=0;  
+     82          can_msg_t  send_msg;
+     83          put_stat_cmd_t t_put_stat_cmd;
+     84          t_put_stat_cmd.cmd=PUT_STAT_CMD ;
+     85          #if STEP_X
+     86            t_put_stat_cmd.axis= AXIS_X;
+     87          #elif STEP_Y
+     88            t_put_stat_cmd.axis= AXIS_Y;
+     89          #elif STEP_Z
+     90            t_put_stat_cmd.axis= AXIS_Z;
+     91          #else
+     92            t_put_stat_cmd.axis= 0;
+     93          #endif
+     94          ////t_put_stat_cmd.coord=cur_coord;
+     95          ///t_put_stat_cmd.state=cur_stat;
+     96          t_put_stat_cmd.coord=coord;
+     97          t_put_stat_cmd.state=state;
+     98          send_msg.len=CAN_MAX_NUM_BYTES;
+     99          send_msg.format=STANDARD_FORMAT;
+    100          send_msg.type=DATA_FRAME;
+    101          memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
+    102          send_msg.id=ID_MASTER_CMD; 
+    103          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+    104          
+    105            return 0;
+    106          }
+    107          int put_can_ack(uint8_t cmd )
+    108          {
+    109          ///uint8_t btst=0;  
+    110          can_msg_t  send_msg;
+    111          
+    112          put_ack_t t_put_ack;
+    113          
+    114          t_put_ack.cmd=PUT_ACK ;
+    115          #if STEP_X
+    116            t_put_ack.ack.axis= AXIS_X;
+    117          #elif STEP_Y
+    118            t_put_ack..ack.axis= AXIS_Y;
+    119          #elif STEP_Z
+    120            t_put_ack..ack.axis= AXIS_Z;
+    121          #else
+    122            t_put_ack..ack.axis= 0;
+    123          #endif
+    124           t_put_ack.ack.ack_cmd=cmd;
+    125          send_msg.len= sizeof(put_ack_t);
+    126          send_msg.format=STANDARD_FORMAT;
+    127          send_msg.type=DATA_FRAME;
+    128          memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
+    129          send_msg.id=ID_MASTER_CMD; 
+    130          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+    131          
+    132            return 0;
+    133          }
+    134          
+    135          
+    136          #endif
+    137          ////======================================================
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   _mc_reset
+         8   -> put_can_cmd_reset_all
+         8   -> report_init_message
+      40   put_can_ack
+        40   -> __aeabi_memcpy
+        40   -> xQueueGenericSend
+      64   put_can_cmd_go
+        64   -> __aeabi_memcpy
+        64   -> xQueueGenericSend
+       0   put_can_cmd_reset_all
+      48   put_can_cmd_stat
+        48   -> __aeabi_memcpy
+        48   -> xQueueGenericSend
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable3
+      12  _mc_reset
+      82  put_can_ack
+     188  put_can_cmd_go
+       4  put_can_cmd_reset_all
+      92  put_can_cmd_stat
+
+ 
+ 382 bytes in section .text
+ 
+ 382 bytes of CODE memory
+
+Errors: none
+Warnings: none
