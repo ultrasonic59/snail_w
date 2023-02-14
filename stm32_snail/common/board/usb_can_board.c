@@ -9,7 +9,7 @@
 ///#include "stm32f2xx_rcc.h"
 ///#include "my_types.h"
 #include "stm32f2xx_conf.h"
-#include "mstep_board.h"
+#include "board.h"
 #include "printk.h"
 ///=============================
 int sendchar2 (int c) 

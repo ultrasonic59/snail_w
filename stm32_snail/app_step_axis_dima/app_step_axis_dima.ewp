@@ -1450,6 +1450,7 @@
                     <state>$PROJ_DIR$\..\common\board</state>
                     <state>$PROJ_DIR$\..\common\my_grbl</state>
                     <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common\my_misc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2181,13 +2182,13 @@
             <name>$PROJ_DIR$\src\app_main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\dima_board.c</name>
+            <name>$PROJ_DIR$\..\common\board\dima_board.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\motor_tsk.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\my_misc.c</name>
+            <name>$PROJ_DIR$\..\common\my_misc\my_misc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\retarget.c</name>
@@ -2200,7 +2201,7 @@
             </excluded>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\zzzz.c</name>
+            <name>$PROJ_DIR$\..\common\board\zzzz.c</name>
         </file>
     </group>
     <group>

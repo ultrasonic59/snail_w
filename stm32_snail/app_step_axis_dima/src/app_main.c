@@ -44,7 +44,8 @@ hw_board_init();
 #endif
 ////=================================================
 CAN1_Init();
-
+////goto_app();
+////goto_booter();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 //// xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );

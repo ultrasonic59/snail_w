@@ -1,18 +1,18 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Feb/2023  18:28:31
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         14/Feb/2023  21:04:07
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode          =  thumb
 #    Endian            =  little
 #    Source file       =
-#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\zzzz.c
+#        D:\proj\velograph\snail_w\stm32_snail\common\board\zzzz.c
 #    Command line      =
 #        -f
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\Board\zzzz.o.rsp
-#        (D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\zzzz.c
-#        -D VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx
-#        -lcN
+#        (D:\proj\velograph\snail_w\stm32_snail\common\board\zzzz.c -D
+#        VECT_TAB_FLASH -D IAR_ARM_CM3 -D DIMA_BRD -D STEP_X -D STM32F205xx -D
+#        BOOTER -lcN
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\List\Board
 #        --diag_suppress Pa082,pe191 -o
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\Board
@@ -21,8 +21,6 @@
 #        --cpu=Cortex-M3 -e --fpu=None --dlib_config "C:\Program Files\IAR
 #        Systems\Embedded Workbench 9.1\arm\inc\c\DLib_Config_Full.h" -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\.\ -I
-#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\
-#        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\freertos\source\inc\
 #        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\inc\
@@ -35,13 +33,11 @@
 #        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\dbg\
 #        -I
-#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\usb\drv\inc\
-#        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\board\
 #        -I
-#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_grbl\
-#        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\can\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_misc\
 #        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
 #        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\Board\zzzz.o.d
@@ -57,51 +53,228 @@
 #
 ###############################################################################
 
-D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\zzzz.c
+D:\proj\velograph\snail_w\stm32_snail\common\board\zzzz.c
       1          #include "FreeRTOS.h"
       2          #include "queue.h"
       3          #include "semphr.h"
       4          
       5          ////#include "stm32f2xx_gpio.h"
       6          #include "board.h"
-      7          
-      8          ////#define TEST_PIN ZSTP_PIN
-      9          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
-     10          
-     11          void  put_tst_pin(uint8_t idat)
-     12          {
-     13          #if 1  
-     14          if(idat&0x1)
-     15            {
-     16            GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
-     17             GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
-     18            ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
-     19            }
-     20          else
-     21            {
-     22             GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
-     23             GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
-     24             ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
-     25            }
-     26          #endif 
-     27          }
-     28          ////==============================================================
-     29          volatile uint8_t sys_rt_exec_state;   // Global realtime executor bitflag variable for state management. See EXEC bitmasks.
-     30          
-     31          void system_set_exec_state_flag(uint8_t flag) {
-     32          ///  __disable_irq();
-     33            sys_rt_exec_state |= (flag);
-     34          ///  __enable_irq();
-     35          }
+      7          ////#include "my_grbl.h"
+      8          #include "printk.h"
+      9          
+     10          ////#define TEST_PIN ZSTP_PIN
+     11          ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
+     12          
+     13          void  put_tst_pin(uint8_t idat)
+     14          {
+     15          #if 1  
+     16          if(idat&0x1)
+     17            {
+     18            GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
+     19             GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
+     20            ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
+     21            }
+     22          else
+     23            {
+     24             GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
+     25             GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
+     26             ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
+     27            }
+     28          #endif 
+     29          }
+     30          ////===============================================================
+     31          // Method to store coord data parameters into EEPROM
+     32          void settings_write_coord_data(uint8_t coord_select, float *coord_data)
+     33          {
+     34          }
+     35          // Read selected coordinate data from EEPROM. Updates pointed coord_data value.
+     36            
+     37          uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
+     38          {
+     39          #if 0
+     40            uint32_t addr = coord_select*(sizeof(float)*N_AXIS+1) + EEPROM_ADDR_PARAMETERS;
+     41            if (!(memcpy_from_eeprom_with_checksum((char*)coord_data, addr, sizeof(float)*N_AXIS))) {
+     42              // Reset with default zero vector
+     43          		coord_data[X_AXIS] = 0.0f;
+     44          		coord_data[Y_AXIS] = 0.0f;
+     45          		coord_data[Z_AXIS] = 0.0f;
+     46          		settings_write_coord_data(coord_select,coord_data);
+     47              return(false);
+     48            }
+     49          #endif
+     50            return(1);
+     51          }
+     52          // Reads startup line from EEPROM. Updated pointed line string data.
+     53          uint8_t settings_read_build_info(char *line)
+     54          {
+     55          #if 0
+     56            if (!(memcpy_from_eeprom_with_checksum((char*)line, EEPROM_ADDR_BUILD_INFO, LINE_BUFFER_SIZE))) {
+     57              // Reset line with default value
+     58              line[0] = 0; // Empty line
+     59              settings_store_build_info(line);
+     60              return(false);
+     61            }
+     62          #endif
+     63            return(1);
+     64          }
+     65          // Method to store build info into EEPROM
+     66          // NOTE: This function can only be called in IDLE state.
+     67          void settings_store_build_info(char *line)
+     68          {
+     69            // Build info can only be stored when state is IDLE.
+     70          ////  memcpy_to_eeprom_with_checksum(EEPROM_ADDR_BUILD_INFO,(char*)line, LINE_BUFFER_SIZE);
+     71          }
+     72          
+     73          void settings_restore(uint8_t restore_flag) {
+     74          }
+     75           // Reads startup line from EEPROM. Updated pointed line string data.
+     76          uint8_t settings_read_startup_line(uint8_t n, char *line)
+     77          {
+     78          #if 0
+     79            uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
+     80            if (!(memcpy_from_eeprom_with_checksum((char*)line, addr, LINE_BUFFER_SIZE))) {
+     81              // Reset line with default value
+     82              line[0] = 0; // Empty line
+     83              settings_store_startup_line(n, line);
+     84              return(false);
+     85            }
+     86          #endif
+     87            return(1);
+     88          }
+     89          uint8_t settings_store_global_setting(uint8_t parameter, float value) {
+     90            return(1);
+     91          }
+     92            // Method to store startup lines into EEPROM
+     93          void settings_store_startup_line(uint8_t n, char *line)
+     94          {
+     95          #if 0
+     96            #ifdef FORCE_BUFFER_SYNC_DURING_EEPROM_WRITE
+     97              protocol_buffer_synchronize(); // A startup line may contain a motion and be executing. 
+     98            #endif
+     99            uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
+    100            memcpy_to_eeprom_with_checksum(addr,(char*)line, LINE_BUFFER_SIZE);
+    101          #endif
+    102          }
+    103          
+    104          
+    105          ////========================================================================
+    106          void coolant_stop(void)
+    107          {
+    108          }
+    109          void coolant_init(void)
+    110          {
+    111          }
+    112          void coolant_sync(uint8_t mode)
+    113          {
+    114          }
+    115          void coolant_set_state(uint8_t mode)
+    116          {
+    117          }
+    118          uint8_t coolant_get_state()
+    119          {
+    120          return 0;
+    121          }
+    122            
+    123          void  SetSpindleEnablebit(void)
+    124          {
+    125          }
+    126          void spindle_init(void)
+    127          {
+    128          }
+    129          void  ResetSpindleEnablebit(void)
+    130          {
+    131          }
+    132          void __spindle_set_state(uint8_t state)
+    133            {
+    134            }
+    135          void spindle_set_state(uint8_t state, float rpm)
+    136            {
+    137            }
+    138          
+    139          void spindle_sync(uint8_t state, float rpm)
+    140          {
+    141          }
+    142          
+    143          void spindle_stop()
+    144          {
+    145          }
+    146          uint8_t spindle_get_state()
+    147          {
+    148          return 0;
+    149          }
+    150          uint16_t spindle_compute_pwm_value(float rpm) // 328p PWM register is 8-bit.
+    151          {
+    152            return 0;
+    153          
+    154          }
+    155          void spindle_set_speed(uint16_t pwm_value)
+    156            {
+    157            }
+    158          void  put_steps(uint8_t steps)////???
+    159          {
+    160          if(steps&(1 << X_STEP_BIT))
+    161            {
+    162            printk("x");  
+    163            }
+    164          if(steps&(1 << Y_STEP_BIT))
+    165            {
+    166            printk("y");  
+    167            }
+    168          if(steps&(1 << Z_STEP_BIT))
+    169            {
+    170            printk("z");  
+    171            }
+    172                   
+    173          }
+    174          void steps_reset(void)
+    175          {
+    176            
+    177          }
+    178          
+    179          void SetStepperDisableBit(void) ////GPIO_SetBits(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_MASK)
+    180          {
+    181          }
+    182          
+    183          void ResetStepperDisableBit(void) ////GPIO_ResetBits(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_MASK)
+    184          {
+    185          }
 
    Maximum stack usage in bytes:
 
    .cstack Function
    ------- --------
+       0   ResetSpindleEnablebit
+       0   ResetStepperDisableBit
+       0   SetSpindleEnablebit
+       0   SetStepperDisableBit
+       0   __spindle_set_state
+       0   coolant_get_state
+       0   coolant_init
+       0   coolant_set_state
+       0   coolant_stop
+       0   coolant_sync
+       8   put_steps
+         8   -> _printk
        8   put_tst_pin
          8   -> GPIO_ResetBits
          8   -> GPIO_SetBits
-       0   system_set_exec_state_flag
+       0   settings_read_build_info
+       0   settings_read_coord_data
+       0   settings_read_startup_line
+       0   settings_restore
+       0   settings_store_build_info
+       0   settings_store_global_setting
+       0   settings_store_startup_line
+       0   settings_write_coord_data
+       0   spindle_compute_pwm_value
+       0   spindle_get_state
+       0   spindle_init
+       0   spindle_set_speed
+       0   spindle_set_state
+       0   spindle_stop
+       0   spindle_sync
+       0   steps_reset
 
 
    Section sizes:
@@ -111,16 +284,46 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\board\zzzz.c
        4  ??DataTable1
        4  ??DataTable1_1
        4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       2  ?_0
+       2  ?_1
+       2  ?_2
+       2  ResetSpindleEnablebit
+       2  ResetStepperDisableBit
+       2  SetSpindleEnablebit
+       2  SetStepperDisableBit
+       2  __spindle_set_state
+       4  coolant_get_state
+       2  coolant_init
+       2  coolant_set_state
+       2  coolant_stop
+       2  coolant_sync
+      36  put_steps
       44  put_tst_pin
-       1  sys_rt_exec_state
-      10  system_set_exec_state_flag
+       6  settings_read_build_info
+       6  settings_read_coord_data
+       6  settings_read_startup_line
+       2  settings_restore
+       2  settings_store_build_info
+       6  settings_store_global_setting
+       2  settings_store_startup_line
+       2  settings_write_coord_data
+       6  spindle_compute_pwm_value
+       4  spindle_get_state
+       2  spindle_init
+       2  spindle_set_speed
+       2  spindle_set_state
+       2  spindle_stop
+       2  spindle_sync
+       2  steps_reset
 
  
-  1 byte  in section .bss
- 66 bytes in section .text
+   6 bytes in section .rodata
+ 176 bytes in section .text
  
- 66 bytes of CODE memory
-  1 byte  of DATA memory
+ 176 bytes of CODE  memory
+   6 bytes of CONST memory
 
 Errors: none
 Warnings: none

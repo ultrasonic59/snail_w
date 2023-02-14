@@ -1,9 +1,12 @@
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 #include "queue.h"
-#include "my_grbl.h"
+////#include "my_grbl.h"
 #include "can.h"
 #include "can_cmds.h"
 #include "printk.h"
@@ -18,7 +21,7 @@ int put_can_cmd_reset_all(void)
 void _mc_reset(void)
 {
 put_can_cmd_reset_all();  
-report_init_message();
+////report_init_message();
 }
 int put_can_cmd_go(uint8_t dirs,uint16_t per
                    ,uint32_t step_x

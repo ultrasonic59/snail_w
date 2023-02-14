@@ -1318,6 +1318,7 @@
                     <state>DIMA_BRD</state>
                     <state>STEP_X</state>
                     <state>STM32F205xx</state>
+                    <state>BOOTER</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1439,17 +1440,15 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\.</state>
-                    <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\..\common\freertos\source\inc</state>
                     <state>$PROJ_DIR$\src\inc</state>
                     <state>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3</state>
                     <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common\dbg</state>
-                    <state>$PROJ_DIR$\..\common\usb\drv\inc</state>
                     <state>$PROJ_DIR$\..\common\board</state>
-                    <state>$PROJ_DIR$\..\common\my_grbl</state>
                     <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common\my_misc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2181,22 +2180,16 @@
             <name>$PROJ_DIR$\src\boot_main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\dima_board.c</name>
+            <name>$PROJ_DIR$\..\common\board\dima_board.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\motor_tsk.c</name>
-            <excluded>
-                <configuration>booter_x_dbg</configuration>
-            </excluded>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\src\my_misc.c</name>
+            <name>$PROJ_DIR$\..\common\my_misc\my_misc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\retarget.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\src\board\zzzz.c</name>
+            <name>$PROJ_DIR$\..\common\board\zzzz.c</name>
         </file>
     </group>
     <group>

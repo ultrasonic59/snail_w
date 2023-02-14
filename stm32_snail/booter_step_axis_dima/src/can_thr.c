@@ -16,6 +16,7 @@ xQueueHandle queu_to_send;
 
 int go_cmd(go_cmd_t *p_go_cmd)
 {
+#ifndef BOOTER  
 cur_stat=STATE_MOVE;  
 printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
 
@@ -23,8 +24,7 @@ set_dir_mot(p_go_cmd->dirs);
 ////set_step_per(p_go_cmd->step_per);
 set_mot_per(p_go_cmd->step_per);
 put_mot_nstep(p_go_cmd->steps);
-////msleep(1000);
-////cur_stat=STATE_READY;  
+#endif
 return 0;
 }
 

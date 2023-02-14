@@ -4,7 +4,7 @@
 
 ////#include "stm32f2xx_gpio.h"
 #include "board.h"
-#include "my_grbl.h"
+////#include "my_grbl.h"
 #include "printk.h"
 
 ////#define TEST_PIN ZSTP_PIN
@@ -47,7 +47,7 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
     return(false);
   }
 #endif
-  return(true);
+  return(1);
 }
 // Reads startup line from EEPROM. Updated pointed line string data.
 uint8_t settings_read_build_info(char *line)
@@ -60,7 +60,7 @@ uint8_t settings_read_build_info(char *line)
     return(false);
   }
 #endif
-  return(true);
+  return(1);
 }
 // Method to store build info into EEPROM
 // NOTE: This function can only be called in IDLE state.
@@ -84,10 +84,10 @@ uint8_t settings_read_startup_line(uint8_t n, char *line)
     return(false);
   }
 #endif
-  return(true);
+  return(1);
 }
 uint8_t settings_store_global_setting(uint8_t parameter, float value) {
-  return(true);
+  return(1);
 }
   // Method to store startup lines into EEPROM
 void settings_store_startup_line(uint8_t n, char *line)

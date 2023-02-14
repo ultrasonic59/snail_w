@@ -1,6 +1,7 @@
 #ifndef __CAN_H__
 #define __CAN_H__
 
+#include <stdint.h>
 ////==============================================
 ////#define NODE	0x01	//0x03
 ////#define NODE2	0x01	//0x03

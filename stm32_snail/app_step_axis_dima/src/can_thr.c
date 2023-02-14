@@ -81,6 +81,8 @@ can_msg_t  snd_msg;
 
 printk("\n\r can_send_thread");
 
+////goto_app();
+
 queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
 for(;;)
   {
