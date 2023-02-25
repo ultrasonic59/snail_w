@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         14/Feb/2023  21:04:07
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         25/Feb/2023  19:59:35
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode          =  thumb
@@ -39,6 +39,8 @@
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\can\
 #        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_misc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\eeprom_emul\
 #        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
 #        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
 #        "D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\ST
@@ -62,7 +64,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_sys_stm32f2
       2          #include "stm32f2xx.h"
       3          
       4          /* #define VECT_TAB_SRAM */
-      5          #define VECT_TAB_OFFSET  0x10000 /*!< Vector Table base offset field. 
+      5          #define VECT_TAB_OFFSET  0x00000 /*!< Vector Table base offset field. 
       6                                             This value must be a multiple of 0x200. */
       7          
       8          
@@ -444,7 +446,6 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_sys_stm32f2
        4  ??DataTable2_1
        4  ??DataTable2_10
        4  ??DataTable2_11
-       4  ??DataTable2_12
        4  ??DataTable2_2
        4  ??DataTable2_3
        4  ??DataTable2_4
@@ -457,13 +458,13 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_sys_stm32f2
      150  SetSysClock
        4  SystemCoreClock
      162  SystemCoreClockUpdate
-      58  SystemInit
+      60  SystemInit
 
  
   20 bytes in section .data
- 422 bytes in section .text
+ 420 bytes in section .text
  
- 422 bytes of CODE memory
+ 420 bytes of CODE memory
   20 bytes of DATA memory
 
 Errors: none

@@ -8,6 +8,7 @@
 #include "stm32f2xx_rcc.h"
 #include "stm32f2xx_tim.h"
 #include "stm32f2xx_spi.h"
+#include "stm32f2xx_flash.h"
 #include "misc.h"
 ////=============================================
 /* EEPROM start address in Flash */
@@ -22,12 +23,12 @@
 #define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
 
 ////=============================================
-#define APP_BASE_ADDRESS        ((uint32_t)0x08000000)
-#define APP_PAGE_SIZE           ((uint32_t)0x8000)           ////32 KB
-#define APP_END_ADDRESS         ((uint32_t)(TMP_BASE_ADDRESS + (TMP_PAGE_SIZE - 1)))
+#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
+#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
+#define APP_END_ADDRESS         ((uint32_t)(APP_BASE_ADDRESS + (APP_PAGE_SIZE - 1)))
 
-#define BOOT_BASE_ADDRESS        ((uint32_t)0x08010000)
-#define BOOT_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
+#define BOOT_BASE_ADDRESS        ((uint32_t)0x08000000)
+#define BOOT_PAGE_SIZE           ((uint32_t)0x8000)           ////32 KB
 
 ////=============================================
 #define	APB1_pres	4
@@ -469,6 +470,10 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+////=============Addr eeprom ==========================================
+#define ADDR_EEPROM_BOOT_WORK  0x0
+#define VAL_EEPROM_WORK  0xAA55
+
 ////=================================================================
 extern uint32_t cur_coord;
 extern uint8_t cur_stat;

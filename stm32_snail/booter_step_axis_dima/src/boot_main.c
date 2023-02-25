@@ -14,6 +14,7 @@
 
 #include "misc.h"
 #include "printk.h"
+#include "emul_eeprom.h"
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );
 extern void tst_task( void *pvParameters );
@@ -29,6 +30,7 @@ int main( void )
 {
 ////uint8_t btst=0; 
 ////uint32_t tst=0;
+uint16_t tmp=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -44,8 +46,16 @@ hw_board_init();
   #error "\n\r=== boot STEP_... nodefined ==="; 
 #endif
 ////=================================================
-CAN1_Init();
+eeprom_init();
+if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+  {
+    if(tmp==VAL_EEPROM_WORK) ////need add check KS!!!
+      {
+       goto_app();
+      }
+  }
 
+CAN1_Init();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 ////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );

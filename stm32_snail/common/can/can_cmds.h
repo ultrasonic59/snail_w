@@ -27,11 +27,26 @@
 #define PUT_STAT_CMD          0x3
 #define PUT_ACK               0x4
 #define PRG_PARAM             0x5
+///===== booter cmd =============
+#define GO_TO_BOOTER          0xF5
+#define GO_TO_APP             0xF6
+#define ERASE_SECTORS         0xF7
+#define ERASE_OK              0xF8
+#define PRG_DAT               0xF9
+#define PRG_DAT_OK            0xFA
+#define GET_BOOT_STAT         0xFB
+#define PUT_BOOT_STAT         0xFC
+
+#define BOOTER_STATE_IDLE     0xF0
+#define BOOTER_STATE_ERASE    0xF1
+#define BOOTER_STATE_PROG     0xF2
+
 
 #define STATE_IDLE           0
 #define STATE_READY          1
 #define STATE_MOVE           2
 #define STATE_ERROR          3
+#define STATE_BOOT          4
 
 #define LEN_ACK_QU      8
 
@@ -79,5 +94,6 @@ extern int put_can_cmd_go(uint8_t dirs,uint16_t per
 extern int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord);
 extern int put_can_ack(uint8_t cmd );
+extern int obr_can_cmd(uint8_t *data);
 
 #endif  //// __CAN_CMDS_H_

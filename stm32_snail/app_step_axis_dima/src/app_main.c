@@ -14,6 +14,7 @@
 
 #include "misc.h"
 #include "printk.h"
+#include "emul_eeprom.h"
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );
 extern void tst_task( void *pvParameters );
@@ -28,6 +29,7 @@ int main( void )
 {
 ////uint8_t btst=0; 
 ////uint32_t tst=0;
+uint16_t tmp=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -42,6 +44,19 @@ hw_board_init();
 #else 
   #error "\n\r=== app STEP_... nodefined ==="; 
 #endif
+////=================================================
+eeprom_init();
+if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+  {
+    if(tmp!=VAL_EEPROM_WORK) ///
+      {
+       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+      }
+  }
+else
+  {
+  EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+  }
 ////=================================================
 CAN1_Init();
 ////goto_app();

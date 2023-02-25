@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --backend -f "D:\proj\velograph\snail_w\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\STM32F4xx_AN3965_V1.0.0\Project\STM32F4xx_IAP\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
 }

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         14/Feb/2023  21:04:08
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         25/Feb/2023  19:59:36
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode          =  thumb
@@ -38,6 +38,8 @@
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\can\
 #        -I
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\my_misc\
+#        -I
+#        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\..\common\libraries\eeprom_emul\
 #        -On --use_c++_inline -I "C:\Program Files\IAR Systems\Embedded
 #        Workbench 9.1\arm\CMSIS\Core\Include\\") --dependencies=n
 #        D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\booter_x_dbg\Obj\can_thr.o.d
@@ -92,79 +94,80 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\can_thr.c
      36            if( CAN_RxRdy)
      37              {
      38              CAN_RxRdy=0;
-     39              switch(CAN_RxMsg.data[0]) {
-     40                case GO_CMD:
-     41                  {
-     42                  put_can_ack(GO_CMD);
-     43                    
-     44                  go_cmd((go_cmd_t *)CAN_RxMsg.data);
-     45            ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
-     46                   
-     47                  }
-     48                  break;
-     49                case GET_STAT_CMD:
-     50                  {
-     51                  put_can_cmd_stat(cur_stat,cur_coord);
-     52                   printk("[stat=%x] ",cur_stat);
-     53          
-     54                   }
-     55                  break;
-     56                  
-     57              default:
-     58                break;
-     59              }
-     60          #if 0   
-     61              printk("\n\r can_rx"); 
-     62              printk("\n\r ExtId[%x]",CAN_RxMsg.id);
-     63              printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
-     64              for(ii=0;ii<8;ii++)
-     65                {
-     66                printk("[%x] ",CAN_RxMsg.data[ii]);
-     67                }
-     68          #endif
-     69              }
-     70            else
-     71            {
-     72          ////   CAN_wrMsg (&send_msg);
-     73              msleep(20);
-     74            }
-     75            }
-     76          }
-     77          
-     78          void can_send_thread(void* pp)
-     79          {
-     80          can_msg_t  snd_msg;
-     81          
-     82          printk("\n\r can_send_thread");
-     83          
-     84          queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
-     85          for(;;)
-     86            {
-     87            xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
-     88          ////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
-     89            CAN_wrMsg (&snd_msg);
-     90            
-     91           //// test_print(&snd_msg);
-     92            
-     93           ////  tst_print();
-     94          ///  set_curr_dir(st.dir_outbits);
-     95          ////  obr_segment();
-     96          ///=================================================
-     97          ////  sys.state &= ~STATE_CYCLE;
-     98          
-     99            }
-    100          }
+     39              obr_can_cmd(CAN_RxMsg.data);
+     40          #if 0    
+     41              switch(CAN_RxMsg.data[0]) {
+     42                case GO_CMD:
+     43                  {
+     44                  put_can_ack(GO_CMD);
+     45                    
+     46                  go_cmd((go_cmd_t *)CAN_RxMsg.data);
+     47            ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+     48                   
+     49                  }
+     50                  break;
+     51                case GET_STAT_CMD:
+     52                  {
+     53                  put_can_cmd_stat(cur_stat,cur_coord);
+     54                   printk("[stat=%x] ",cur_stat);
+     55          
+     56                   }
+     57                  break;
+     58                  
+     59              default:
+     60                break;
+     61              }
+     62          #endif
+     63          #if 0   
+     64              printk("\n\r can_rx"); 
+     65              printk("\n\r ExtId[%x]",CAN_RxMsg.id);
+     66              printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
+     67              for(ii=0;ii<8;ii++)
+     68                {
+     69                printk("[%x] ",CAN_RxMsg.data[ii]);
+     70                }
+     71          #endif
+     72              }
+     73            else
+     74            {
+     75          ////   CAN_wrMsg (&send_msg);
+     76              msleep(20);
+     77            }
+     78            }
+     79          }
+     80          
+     81          void can_send_thread(void* pp)
+     82          {
+     83          can_msg_t  snd_msg;
+     84          
+     85          printk("\n\r can_send_thread");
+     86          
+     87          queu_to_send=xQueueCreate(CAN_MAX_LEN_QUEU,sizeof(can_msg_t));
+     88          for(;;)
+     89            {
+     90            xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
+     91          ////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
+     92            CAN_wrMsg (&snd_msg);
+     93            
+     94           //// test_print(&snd_msg);
+     95            
+     96           ////  tst_print();
+     97          ///  set_curr_dir(st.dir_outbits);
+     98          ////  obr_segment();
+     99          ///=================================================
+    100          ////  sys.state &= ~STATE_CYCLE;
+    101          
+    102            }
+    103          }
 
    Maximum stack usage in bytes:
 
    .cstack Function
    ------- --------
-      16   can_rsv_task
-        16   -> _printk
-        16   -> go_cmd
-        16   -> put_can_ack
-        16   -> put_can_cmd_stat
-        16   -> vTaskDelay
+       8   can_rsv_task
+         8   -> _printk
+         8   -> obr_can_cmd
+         8   -> vTaskDelay
       32   can_send_thread
         32   -> CAN_wrMsg
         32   -> _printk
@@ -182,24 +185,20 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\can_thr.c
        4  ??DataTable2_2
        4  ??DataTable2_3
        4  ??DataTable2_4
-       4  ??DataTable2_5
-       4  ??DataTable2_6
-       4  ??DataTable2_7
       16  ?_0
-      12  ?_1
-      20  ?_2
-      82  can_rsv_task
+      20  ?_1
+      38  can_rsv_task
       46  can_send_thread
        6  go_cmd
        4  queu_to_send
 
  
    4 bytes in section .bss
-  48 bytes in section .rodata
- 166 bytes in section .text
+  36 bytes in section .rodata
+ 110 bytes in section .text
  
- 166 bytes of CODE  memory
-  48 bytes of CONST memory
+ 110 bytes of CODE  memory
+  36 bytes of CONST memory
    4 bytes of DATA  memory
 
 Errors: none
