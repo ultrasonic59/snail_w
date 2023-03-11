@@ -10,6 +10,7 @@
 #include "stm32f2xx_spi.h"
 #include "stm32f2xx_flash.h"
 #include "misc.h"
+#include "flash_if.h"
 ////=============================================
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:

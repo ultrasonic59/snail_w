@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         09/Mar/2023  13:22:19
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Mar/2023  15:47:52
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode                     =  thumb
@@ -211,7 +211,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
     152              erase_sectors(data+1);
     153              break;
     154            case PRG_DAT:
-    155              prg_dat(data+1);
+    155              prg_dat(data);
     156              break;
     157             case GET_BOOT_STAT:
     158              put_can_cmd_stat(cur_stat,cur_coord);
@@ -221,7 +221,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
     162              default:
     163                break;
     164              }
-    165            
+    165          return 0;  
     166          }
     167          ////======================================================
 
@@ -260,7 +260,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
        4  ??DataTable4_3
       12  ?_0
        8  _mc_reset
-      80  obr_can_cmd
+      82  obr_can_cmd
       82  put_can_ack
      188  put_can_cmd_go
        4  put_can_cmd_reset_all
@@ -268,10 +268,10 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
 
  
   12 bytes in section .rodata
- 470 bytes in section .text
+ 472 bytes in section .text
  
- 470 bytes of CODE  memory
+ 472 bytes of CODE  memory
   12 bytes of CONST memory
 
 Errors: none
-Warnings: 1
+Warnings: none

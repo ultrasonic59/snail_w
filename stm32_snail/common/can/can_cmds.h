@@ -84,6 +84,14 @@ typedef struct  prg_param_cmd_s_{
   uint32_t  par_val;                      /// 
 }prg_param_cmd_t;
 
+#define MAX_NUM_BYTES_PRG     4
+typedef struct  prg_flash_cmd_s_{
+  uint8_t    cmd;                         /// 
+  uint8_t    num_bytes;                   ///bytes  
+  uint16_t   b_addr;                     ///
+  uint8_t    data[MAX_NUM_BYTES_PRG];                    /// 
+}prg_flash_cmd_t;
+
 ///=========================================================
 extern void mc_reset(void);
 extern int put_can_cmd_go(uint8_t dirs,uint16_t per
@@ -95,5 +103,9 @@ extern int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord);
 extern int put_can_ack(uint8_t cmd );
 extern int obr_can_cmd(uint8_t *data);
-
+///=====================================
+#define ERROR_NUM_BYTES_PRG 3
+#define ERROR_ADDR_PRG      4
+#define ERROR_FLAH_PRG      5
+///=====================================
 #endif  //// __CAN_CMDS_H_

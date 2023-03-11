@@ -152,7 +152,7 @@ switch(data[0]) {
     erase_sectors(data+1);
     break;
   case PRG_DAT:
-    prg_dat(data+1);
+    prg_dat(data);
     break;
    case GET_BOOT_STAT:
     put_can_cmd_stat(cur_stat,cur_coord);
@@ -162,6 +162,6 @@ switch(data[0]) {
     default:
       break;
     }
-  
+return 0;  
 }
 ////======================================================
