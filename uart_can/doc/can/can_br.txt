@@ -53,3 +53,13 @@ tpclk -  частота шины :
 	 500 kBaud Sample Point 87.5 % : 30MHZ /   6 = 5MHz   -> TQ  10   SJW + TS1  8 TS2 2
 	 800 kBaud Sample Point 86.7 % : 30MHZ /   3 = 10 MHz  -> TQ 13   SJW + TS1 11 TS2 2
 	 1000 kBaud Sample Point 88.9 % : 30MHZ /   2 = 15MHz  -> TQ 15   SJW + TS1 13 TS2 2
+================================= 25MHz ===============================================
+	 10 kBaud Sample Point 75.0 % : 25MHZ / 125 = 200kHz -> TQ 20   SJW + TS1 15 TS2 5
+	 20 kBaud Sample Point 75.0 % : 25MHZ /  50 = 500kHz -> TQ 25   SJW + TS1 18 TS2 7
+	 50 kBaud Sample Point 75.0 % : 25MHZ /  25 = 1MHz   -> TQ 20   SJW + TS1 15 TS2 5
+	 100 kBaud Sample Point 80.0 % : 25MHZ /  25 = 1MHz   -> TQ 10   SJW + TS1  8 TS2 2
+	 125 kBaud Sample Point 87.5 % : 25MHZ /  20 = 1.25MHz   -> TQ 10   SJW + TS1 8 TS2 2 
+	 250 kBaud Sample Point 87.5 % : 25MHZ /   10 = 2.5MHz   -> TQ 10   SJW + TS1 8 TS2 2
+	 500 kBaud Sample Point 87.5 % : 25MHZ /   5 = 5MHz   -> TQ  10   SJW + TS1  8 TS2 2
+	 800 kBaud Sample Point 86.7 % : 25MHZ /   2 = 12.5 MHz  -> TQ 15   SJW + TS1 13 TS2 2
+	 1000 kBaud Sample Point 88.9 % : 25MHZ /   1 = 25MHz  -> TQ 25   SJW + TS1 18 TS2 7

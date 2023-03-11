@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\uart_can\arm\settings\uart_can.Debug.general.xcl" --backend -f "D:\proj\velograph\uart_can\arm\settings\uart_can.Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\uart_can\arm\settings\uart_can.Debug.general.xcl" --backend -f "D:\proj\velograph\snail_w\uart_can\arm\settings\uart_can.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\uart_can\arm\settings\uart_can.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\uart_can\arm\settings\uart_can.Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\uart_can\arm\settings\uart_can.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\uart_can\arm\settings\uart_can.Debug.driver.xcl" 
 }
