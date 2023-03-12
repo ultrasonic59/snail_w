@@ -47,7 +47,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_mainwindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_firmware_update.cpp">
+    <ClCompile Include="GeneratedFiles\qrc_firm_upd.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
     <ClCompile Include="src\COMPort.cpp">
@@ -73,7 +73,7 @@
     <CustomBuild Include="mainwindow.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="firmware_update.qrc">
+    <CustomBuild Include="firm_upd.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="src\dialog_write_file.h">

@@ -9,7 +9,7 @@
 #include <QtCore/qglobal.h>
 
 static const unsigned char qt_resource_data[] = {
-  // D:/proj/velograph/snail_w/win/firmware_update/firmware_update/main_ru.qm
+  // D:/proj/velograph/snail_w/win/firm_upd/firm_upd/main_ru.qm
   0x0,0x0,0x1b,0x33,
   0x3c,
   0xb8,0x64,0x18,0xca,0xef,0x9c,0x95,0xcd,0x21,0x1c,0xbf,0x60,0xa1,0xbd,0xdd,0x42,
@@ -486,21 +486,21 @@ extern Q_CORE_EXPORT bool qUnregisterResourceData
 QT_END_NAMESPACE
 
 
-int QT_MANGLE_NAMESPACE(qInitResources_firmware_update)()
+int QT_MANGLE_NAMESPACE(qInitResources_firm_upd)()
 {
     QT_PREPEND_NAMESPACE(qRegisterResourceData)
         (0x01, qt_resource_struct, qt_resource_name, qt_resource_data);
     return 1;
 }
 
-Q_CONSTRUCTOR_FUNCTION(QT_MANGLE_NAMESPACE(qInitResources_firmware_update))
+Q_CONSTRUCTOR_FUNCTION(QT_MANGLE_NAMESPACE(qInitResources_firm_upd))
 
-int QT_MANGLE_NAMESPACE(qCleanupResources_firmware_update)()
+int QT_MANGLE_NAMESPACE(qCleanupResources_firm_upd)()
 {
     QT_PREPEND_NAMESPACE(qUnregisterResourceData)
        (0x01, qt_resource_struct, qt_resource_name, qt_resource_data);
     return 1;
 }
 
-Q_DESTRUCTOR_FUNCTION(QT_MANGLE_NAMESPACE(qCleanupResources_firmware_update))
+Q_DESTRUCTOR_FUNCTION(QT_MANGLE_NAMESPACE(qCleanupResources_firm_upd))
 

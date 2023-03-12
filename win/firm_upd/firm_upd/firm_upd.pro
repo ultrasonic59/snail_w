@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 TEMPLATE = app
-TARGET = firmware_update
+TARGET = firm_upd
 DESTDIR = ../Win32/Debug
 QT += core multimedia network opengl widgets gui printsupport multimediawidgets
 CONFIG += debug
@@ -32,4 +32,4 @@ HEADERS += ./mainwindow.h
 SOURCES += ./main.cpp \
     ./mainwindow.cpp
 FORMS += ./mainwindow.ui
-RESOURCES += firmware_update.qrc
+RESOURCES += firm_upd.qrc
