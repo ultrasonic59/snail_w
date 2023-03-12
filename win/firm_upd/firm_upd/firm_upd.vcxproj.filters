@@ -21,15 +21,15 @@
     <Filter Include="Generated Files">
       <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
       <Extensions>moc;h;cpp</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
+      <ParseFiles>true</ParseFiles>
     </Filter>
     <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{4154bb87-8476-440a-851c-fa2dbb345e5a}</UniqueIdentifier>
+      <UniqueIdentifier>{d46a833a-31b3-44fa-9261-d91b8b507b09}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{81ccc388-06f1-499b-af01-a92d9c8ffbd3}</UniqueIdentifier>
+      <UniqueIdentifier>{fd945a9d-0fc1-49ef-9a88-b29265535acc}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
@@ -38,68 +38,50 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mainwindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_mainwindow.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_mainwindow.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_firm_upd.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\COMPort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\QFileDialogCust.cpp">
+    <ClCompile Include="firm_upd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog_write_file.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_dialog_write_file.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_firm_upd.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_dialog_write_file.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_firm_upd.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProgHex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ProgHex.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ProgHex.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="mainwindow.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="mainwindow.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="firm_upd.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="src\dialog_write_file.h">
-      <Filter>Source Files</Filter>
+    <CustomBuild Include="firm_upd.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="dialog_write_file.ui">
+    <CustomBuild Include="firm_upd.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_mainwindow.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\COMPort.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QFileDialogCust.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_dialog_write_file.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
+    <CustomBuild Include="src\ProgHex.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="main_ru.qm">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\COMPort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

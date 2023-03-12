@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "firm_upd.h"
 #include <QtWidgets/QApplication>
 #include <QtPlugin>
 #include <QTranslator>
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	a.installTranslator(&qtPortTranslator);
 	QLocale::setDefault(QLocale(QLocale::Russian, QLocale::RussianFederation));*/
 
-	MainWindow w;
+	Cfirm_upd w;
 	w.show();
 
 	return a.exec();

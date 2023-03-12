@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         09/Mar/2023  13:21:38
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         12/Mar/2023  14:29:51
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode          =  thumb
@@ -64,7 +64,7 @@ D:\proj\velograph\snail_w\stm32_snail\common\my_misc\my_misc.c
       2          #include "board.h"
       3          #include "my_misc.h"
       4          
-      5          ////#include <cmsis_iccarm.h>
+      5          #include "can_cmds.h"
       6          #include "printk.h"
       7          static uint32_t GetSector(uint32_t Address);
       8          
@@ -123,127 +123,187 @@ D:\proj\velograph\snail_w\stm32_snail\common\my_misc\my_misc.c
      61          ////=================================================
      62          void FLASH_If_Init(void)
      63          { 
-     64            FLASH_Unlock(); 
+     64          FLASH_Unlock(); 
      65          
      66            /* Clear pending flags (if any) */  
-     67            FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | 
-     68                            FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+     67          FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | 
+     68                          FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
      69          }
-     70          uint32_t FLASH_If_Erase(uint32_t StartSector)
-     71          {
-     72            uint32_t UserStartSector = FLASH_Sector_1, i = 0;
-     73          
-     74            /* Get the sector where start the user flash area */
-     75            UserStartSector = GetSector(APPLICATION_ADDRESS);
-     76          
-     77            for(i = UserStartSector; i <= FLASH_Sector_11; i += 8)
-     78            {
-     79              /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
-     80                 be done by word */ 
-     81              if (FLASH_EraseSector(i, VoltageRange_3) != FLASH_COMPLETE)
-     82              {
-     83                /* Error occurred while page erase */
-     84                return (1);
-     85              }
-     86            }
-     87            
-     88            return (0);
-     89          }
-     90          uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t DataLength)
-     91          {
-     92            uint32_t i = 0;
-     93          
-     94            for (i = 0; (i < DataLength) && (*FlashAddress <= (USER_FLASH_END_ADDRESS-4)); i++)
-     95            {
-     96              /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
-     97                 be done by word */ 
-     98              if (FLASH_ProgramWord(*FlashAddress, *(uint32_t*)(Data+i)) == FLASH_COMPLETE)
-     99              {
-    100               /* Check the written value */
-    101                if (*(uint32_t*)*FlashAddress != *(uint32_t*)(Data+i))
-    102                {
-    103                  /* Flash content doesn't match SRAM content */
-    104                  return(2);
-    105                }
-    106                /* Increment FLASH destination address */
-    107                *FlashAddress += 4;
-    108              }
-    109              else
-    110              {
-    111                /* Error occurred while writing data in Flash memory */
-    112                return (1);
-    113              }
-    114            }
-    115          
-    116            return (0);
-    117          }
-    118          
-    119          static uint32_t GetSector(uint32_t Address)
-    120          {
-    121            uint32_t sector = 0;
-    122            
-    123            if((Address < ADDR_FLASH_SECTOR_1) && (Address >= ADDR_FLASH_SECTOR_0))
+     70          
+     71          uint32_t FLASH_If_Erase(uint32_t StartSector)
+     72          {
+     73          uint32_t UserStartSector = GetSector(APP_BASE_ADDRESS);
+     74          
+     75          if (FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
+     76              {
+     77              return 1;
+     78              }
+     79             
+     80            return 0;
+     81          }
+     82          uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t DataLength)
+     83          {
+     84            uint32_t i = 0;
+     85          
+     86            for (i = 0; (i < DataLength) && (*FlashAddress <= (APP_END_ADDRESS-4)); i++)
+     87            {
+     88              /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
+     89                 be done by word */ 
+     90              if (FLASH_ProgramWord(*FlashAddress, *(uint32_t*)(Data+i)) == FLASH_COMPLETE)
+     91              {
+     92               /* Check the written value */
+     93                if (*(uint32_t*)*FlashAddress != *(uint32_t*)(Data+i))
+     94                {
+     95                  /* Flash content doesn't match SRAM content */
+     96                  return(2);
+     97                }
+     98                /* Increment FLASH destination address */
+     99                *FlashAddress += 4;
+    100              }
+    101              else
+    102              {
+    103                /* Error occurred while writing data in Flash memory */
+    104                return (1);
+    105              }
+    106            }
+    107          
+    108            return (0);
+    109          }
+    110          
+    111          static uint32_t GetSector(uint32_t Address)
+    112          {
+    113            uint32_t sector = 0;
+    114            
+    115            if((Address < ADDR_FLASH_SECTOR_1) && (Address >= ADDR_FLASH_SECTOR_0))
+    116            {
+    117              sector = FLASH_Sector_0;  
+    118            }
+    119            else if((Address < ADDR_FLASH_SECTOR_2) && (Address >= ADDR_FLASH_SECTOR_1))
+    120            {
+    121              sector = FLASH_Sector_1;  
+    122            }
+    123            else if((Address < ADDR_FLASH_SECTOR_3) && (Address >= ADDR_FLASH_SECTOR_2))
     124            {
-    125              sector = FLASH_Sector_0;  
+    125              sector = FLASH_Sector_2;  
     126            }
-    127            else if((Address < ADDR_FLASH_SECTOR_2) && (Address >= ADDR_FLASH_SECTOR_1))
+    127            else if((Address < ADDR_FLASH_SECTOR_4) && (Address >= ADDR_FLASH_SECTOR_3))
     128            {
-    129              sector = FLASH_Sector_1;  
+    129              sector = FLASH_Sector_3;  
     130            }
-    131            else if((Address < ADDR_FLASH_SECTOR_3) && (Address >= ADDR_FLASH_SECTOR_2))
+    131            else if(Address >= ADDR_FLASH_SECTOR_4)
     132            {
-    133              sector = FLASH_Sector_2;  
+    133              sector = FLASH_Sector_4;  
     134            }
-    135            else if((Address < ADDR_FLASH_SECTOR_4) && (Address >= ADDR_FLASH_SECTOR_3))
-    136            {
-    137              sector = FLASH_Sector_3;  
-    138            }
-    139            else if((Address < ADDR_FLASH_SECTOR_5) && (Address >= ADDR_FLASH_SECTOR_4))
-    140            {
-    141              sector = FLASH_Sector_4;  
-    142            }
-    143            else if((Address < ADDR_FLASH_SECTOR_6) && (Address >= ADDR_FLASH_SECTOR_5))
-    144            {
-    145              sector = FLASH_Sector_5;  
-    146            }
-    147            else if((Address < ADDR_FLASH_SECTOR_7) && (Address >= ADDR_FLASH_SECTOR_6))
-    148            {
-    149              sector = FLASH_Sector_6;  
-    150            }
-    151            else if((Address < ADDR_FLASH_SECTOR_8) && (Address >= ADDR_FLASH_SECTOR_7))
-    152            {
-    153              sector = FLASH_Sector_7;  
-    154            }
-    155            else if((Address < ADDR_FLASH_SECTOR_9) && (Address >= ADDR_FLASH_SECTOR_8))
-    156            {
-    157              sector = FLASH_Sector_8;  
-    158            }
-    159            else if((Address < ADDR_FLASH_SECTOR_10) && (Address >= ADDR_FLASH_SECTOR_9))
-    160            {
-    161              sector = FLASH_Sector_9;  
-    162            }
-    163            else if((Address < ADDR_FLASH_SECTOR_11) && (Address >= ADDR_FLASH_SECTOR_10))
-    164            {
-    165              sector = FLASH_Sector_10;  
-    166            }
-    167            else/*(Address < FLASH_END_ADDR) && (Address >= ADDR_FLASH_SECTOR_11))*/
-    168            {
-    169              sector = FLASH_Sector_11;  
-    170            }
-    171              return sector;
-    172          }
-    173          
-    174          uint8_t erase_sectors(uint8_t *data)
-    175          {
-    176            
-    177          return 0;  
-    178          }
-    179          uint8_t prg_dat(uint8_t *data)
-    180          {
-    181          return 0;  
-    182          }
-    183          
-    184          ////=================================================
+    135              return sector;
+    136          }
+    137          
+    138          uint8_t erase_sectors(uint8_t *data)
+    139          {
+    140          return FLASH_If_Erase(0);  
+    141          }
+    142          uint8_t prg_dat(uint8_t *data)
+    143          {
+    144          uint8_t ii;   
+    145          FLASH_Status t_fl_stat;  
+    146          uint8_t num_bytes;
+    147          uint32_t addr_prg;
+    148          prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
+    149          num_bytes=p_prg_flash_cmd->num_bytes;
+    150          
+    151          if((num_bytes>MAX_NUM_BYTES_PRG)||(num_bytes==0))
+    152            return ERROR_NUM_BYTES_PRG;
+    153          addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
+    154          if(addr_prg>APP_END_ADDRESS)
+    155            return ERROR_ADDR_PRG;
+    156          
+    157          switch(num_bytes)  {
+    158            case 1:
+    159              t_fl_stat=FLASH_ProgramByte(addr_prg, p_prg_flash_cmd->data[0]); 
+    160              break;
+    161            case 2:
+    162              t_fl_stat=FLASH_ProgramHalfWord(addr_prg, (uint16_t )p_prg_flash_cmd->data[0]); 
+    163              break;
+    164            case 3:
+    165              for(ii=0;ii<3;ii++)
+    166                {
+    167                t_fl_stat=FLASH_ProgramByte(addr_prg+ii, p_prg_flash_cmd->data[ii]); 
+    168                if( t_fl_stat!=FLASH_COMPLETE)
+    169                  break;
+    170                }
+    171              break;
+    172            case 4:
+    173              t_fl_stat=FLASH_ProgramWord(addr_prg, (uint32_t )p_prg_flash_cmd->data[0]); 
+    174              break;
+    175          }
+    176          if(t_fl_stat==FLASH_COMPLETE ) 
+    177            return 0;  
+    178          else
+    179            return ERROR_FLAH_PRG;
+    180          
+    181          }
+    182          
+    183          ////=================================================
 
-Errors: 14
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   FLASH_If_Erase
+        16   -> FLASH_EraseSector
+        16   -> GetSector
+       8   FLASH_If_Init
+         8   -> FLASH_ClearFlag
+         8   -> FLASH_Unlock
+      24   FLASH_If_Write
+        24   -> FLASH_ProgramWord
+       0   GetSector
+       8   erase_sectors
+         8   -> FLASH_If_Erase
+       8   goto_app
+         8   -- Indirect call
+         8   -> NVIC_SetVectorTable
+       8   goto_booter
+         8   -- Indirect call
+         8   -> NVIC_SetVectorTable
+      32   prg_dat
+        32   -> FLASH_ProgramByte
+        32   -> FLASH_ProgramHalfWord
+        32   -> FLASH_ProgramWord
+       0   uDelay
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+       4  ??DataTable6_5
+       4  ??DataTable6_6
+       4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+      32  FLASH_If_Erase
+      14  FLASH_If_Init
+      72  FLASH_If_Write
+      80  GetSector
+       4  Jump_To_Application
+      14  erase_sectors
+      48  goto_app
+      52  goto_booter
+       4  jumpAddress
+     176  prg_dat
+      18  uDelay
+
+ 
+   8 bytes in section .bss
+ 546 bytes in section .text
+ 
+ 546 bytes of CODE memory
+   8 bytes of DATA memory
+
+Errors: none
 Warnings: none
