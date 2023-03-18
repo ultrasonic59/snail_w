@@ -1,29 +1,30 @@
 #include "firm_upd.h"
 #include <QSettings>
-#include <QtSerialPort/QSerialPortInfo>
+#include "ui_firm_upd.h"
+
+////#include <QtSerialPort/QSerialPortInfo>
 ////#include "dialog_write_file.h"
-#include "QFileDialog.h"
+////#include "QFileDialog.h"
 ////   QStringList fonts = { "Arial", "Helvetica", "Times" };
+QByteArray lastLine;
 
 ///==========================================================
 void Cfirm_upd::saveSettings()
 {
 	QSettings settings( QCoreApplication::applicationDirPath()+"//firm_upd.ini",
 					   QSettings::IniFormat);
-	settings.setValue("COM_port_name", com_port.COMstate.PortName);
+	settings.setValue("COM_port_name", COM_port_name);
 
 	settings.setValue("CurFilePath", CurFilePath);
 	settings.setValue("CurAxis", CurAxis);
 	
-////	settings.setValue("DeviceReadFile", DeviceReadFile);
-////	settings.setValue("DeviceWriteDir", DeviceWriteDir);
 }
 
 void Cfirm_upd::loadSettings()
 {
 	QSettings settings( QCoreApplication::applicationDirPath()+"//firm_upd.ini",
 					   QSettings::IniFormat);
-	com_port.COMstate.PortName = settings.value("COM_port_name", "COM8").toString();		// 
+	COM_port_name = settings.value("COM_port_name", "COM8").toString();		// 
 
 	CurFilePath = settings.value("CurFilePath", QCoreApplication::applicationDirPath() ).toString();
 	CurAxis = settings.value("CurAxis", AxisX).toInt();
@@ -32,27 +33,33 @@ void Cfirm_upd::loadSettings()
 ///==========================================================
 Cfirm_upd::Cfirm_upd(QWidget *parent) : 
 		QMainWindow(parent),
-		COMpr(),
-		CurAxis(AxisX),
-		ui(),com_port(this, &COMpr)		
+////		COMpr(),
+		CurAxis(AxisX), 
+		ui(new Ui::firm_upd)
 {
-	ui.setupUi(this);
+	ui->setupUi(this);
 	loadSettings();
-	ui.lineEdit_file_path->setText(CurFilePath);
+////	ui.lineEdit_file_path->setText(CurFilePath);
 ////       QStringList _axis = { "Arial", "Helvetica", "Times" };
    QStringList axis_str;
      axis_str << "AxisX"
            << "AxisY"
            << "AxisZ" ;
+   port = new QSerialPort();
+   curFile = new QFile();
 
-	ui.comboBox_axis->insertItems( 3, axis_str);
+////	ui.comboBox_axis->insertItems( 3, axis_str);
 
-ui.progressBar->hide();
+ui->progressBar->hide();
 
-	connect(ui.pushButton_refresh, SIGNAL(clicked()), this, SLOT(refresh_used_ports()));
-	connect(ui.pushButton_Conn, SIGNAL(clicked()), this, SLOT(connection()));
-    connect(ui.pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
-    connect(ui.pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
+	connect(ui->pushButton_refresh, SIGNAL(clicked()), this, SLOT(refresh_used_ports()));
+	connect(ui->pushButton_Conn, SIGNAL(clicked()), this, SLOT(connection()));
+    connect(ui->pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
+    connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
+
+   QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
+   QObject::connect(port, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(serialError()));
+   QObject::connect(this, SIGNAL(hardwareResponseFinished()), this, SLOT(serialReady()));
 
 }
 
@@ -65,13 +72,13 @@ Cfirm_upd::~Cfirm_upd()
 
 void Cfirm_upd::refresh_used_ports()
 {
-	ui.comboBox_ports->clear();
+	ui->comboBox_ports->clear();
 #if 1
 	foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
 	{
 		if(info.description() != "")
 		{
-			ui.comboBox_ports->addItem(info.portName());
+			ui->comboBox_ports->addItem(info.portName());
 ////			if(device_CMD.COM_port_name == info.portName())
 ////				ui.comboBox_ports->setCurrentIndex( ui.comboBox_ports->count() - 1 );		// переключаем на выбранный порт
 		}
@@ -82,6 +89,7 @@ void Cfirm_upd::refresh_used_ports()
 }
 void Cfirm_upd::connection()
 {
+#if 0
 	if(com_port.IsConnected())
 		{
 		ui.pushButton_Conn->setText(tr("Connect"));
@@ -96,6 +104,7 @@ void Cfirm_upd::connection()
 		com_port.SetConnected(true);
 
 		}
+#endif
 #if 0
 	if(device_CMD.IsAttached())
 	{
@@ -125,7 +134,7 @@ QFileDialog dial_file_sel(this);
 
 dial_file_sel.setFileMode(QFileDialog::ExistingFile);
 
-QDir old_dir(ui.lineEdit_file_path->text().section('/',0, -2));
+QDir old_dir(ui->lineEdit_file_path->text().section('/',0, -2));
 if(old_dir.exists())
 	dial_file_sel.setDirectory(old_dir.path());
 else
@@ -139,14 +148,139 @@ if(dial_file_sel.exec())
    {
 	QStringList temp = dial_file_sel.selectedFiles();
     CurFilePath=temp[0];
-    ui.lineEdit_file_path->setText(CurFilePath);
+    ui->lineEdit_file_path->setText(CurFilePath);
     saveSettings();
     }
 }
 ///=========================================================================
 void Cfirm_upd::progr_flash()
 {
-ui.progressBar->show();
+ui->progressBar->show();
 
 }
 ///=========================================================================
+void Cfirm_upd::program()
+{
+#if 1
+    curFile->setFileName(ui->lineEdit_file_path->text());
+
+    if(!curFile->exists())
+    {
+        ui->statusBar->showMessage("Aborted: file does not exist.");
+        return;
+    }
+
+    if(!curFile->open(QFile::ReadOnly))
+    {
+        ui->statusBar->showMessage("Aborted: unable to open file for reading.");
+        return;
+    }
+
+    if(port->isOpen())
+    {
+        port->close();
+    }
+
+    QSerialPortInfo info;
+#if 0
+    foreach(info, QSerialPortInfo::availablePorts())
+    {
+        if(info.portName() == ui->portList->currentText())
+        {
+            qDebug() << "Port selected";
+            port->setPort(info);
+            break;
+        }
+    }
+#endif
+    port->setBaudRate(QSerialPort::Baud115200);
+    port->setDataBits(QSerialPort::Data8);
+    port->setStopBits(QSerialPort::OneStop);
+    port->setParity(QSerialPort::NoParity);
+    port->setFlowControl(QSerialPort::NoFlowControl);
+
+    if(port->open(QIODevice::ReadWrite))
+    {
+        qDebug("Port open");
+    }
+
+    ui->statusBar->showMessage("Programming... ");
+
+    serialReady();
+#endif
+}
+
+void Cfirm_upd::serialDataReceived()
+{
+    QString msg = QString(port->readAll());
+    message += msg;
+
+    if(msg.contains('>') && !messageFinished)
+    {
+        messageFinished = true;
+
+        if(message.contains("ERR") || message.contains("WARN"))
+        {
+            qDebug() << "WARNING: PROGRAMMER THREW ERROR DURING PROGRAMMING.";
+            qDebug() << message;
+
+            ui->statusBar->showMessage("WARNING: Programming error detected");
+
+            QObject::disconnect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
+
+            port->write(QByteArray(1, '\n'));
+            QThread::msleep(500);
+            port->write(QByteArray(1, '\n'));
+            QThread::msleep(500);
+
+            qDebug() << port->readAll();
+
+            QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
+
+            qDebug() << "Writing " << lastLine;
+
+            message = "";
+            messageFinished = false;
+            port->write(lastLine);
+            return;
+        }
+
+        ui->statusBar->showMessage("Programming... ");
+        qDebug() << message;
+        QThread::msleep(200);
+        emit hardwareResponseFinished();
+    }
+}
+
+void Cfirm_upd::serialError()
+{
+    qDebug() << port->errorString();
+}
+
+void Cfirm_upd::serialReady()
+{
+    if(!curFile->isOpen())
+    {
+        ui->statusBar->showMessage("Error: file is closed while trying to program.");
+        port->close();
+        return;
+    }
+
+    messageFinished = false;
+    message = "";
+
+    if(!curFile->atEnd())
+    {
+        //TODO: remove trailing endline char from line
+        QByteArray line = curFile->readLine();
+        line.truncate(line.length() - 2);
+        line.append('\n');
+        lastLine = line;
+        qDebug() << "Writing " << line;
+        port->write(line);
+    }
+    else
+    {
+        ui->statusBar->showMessage("Programming complete");
+    }
+}

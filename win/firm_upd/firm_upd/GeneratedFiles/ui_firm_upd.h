@@ -20,6 +20,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -39,12 +40,13 @@ public:
     QProgressBar *progressBar;
     QLineEdit *lineEdit_file_path;
     QPushButton *pushButt_file;
+    QStatusBar *statusBar;
 
     void setupUi(QMainWindow *firm_upd)
     {
         if (firm_upd->objectName().isEmpty())
             firm_upd->setObjectName(QStringLiteral("firm_upd"));
-        firm_upd->resize(687, 156);
+        firm_upd->resize(687, 242);
         centralWidget = new QWidget(firm_upd);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         pushButton_Conn = new QPushButton(centralWidget);
@@ -99,6 +101,9 @@ public:
         pushButt_file->setMaximumSize(QSize(40, 16777215));
         pushButt_file->setFont(font);
         firm_upd->setCentralWidget(centralWidget);
+        statusBar = new QStatusBar(firm_upd);
+        statusBar->setObjectName(QStringLiteral("statusBar"));
+        firm_upd->setStatusBar(statusBar);
 
         retranslateUi(firm_upd);
 
