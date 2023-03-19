@@ -17,16 +17,11 @@ public:
 	QByteArray data;
 };
 
-class CprogHex : public QObject
+class CProgHex : public QObject
 {
 	Q_OBJECT
 public:
-	explicit CprogHex(QObject *parent = 0);
-
-private:
-    quint32 getLineType(QString line);
-
-#if 0
+	explicit CProgHex(QObject *parent = 0);
 	bool open(QString fileName, quint32 pageSize);
 	inline void reReadAll() { segmentIdx = 0; segmentPos = 0; }
 	inline void reReadSegment() { segmentPos = 0; }
@@ -53,7 +48,7 @@ private:
 	quint32 pageSize, pagesInFile;
 	qint32 segmentIdx, segmentPos;
 	bool oneShot;
-#endif
+
 };
 
 #endif // _PROG_HEX_H_

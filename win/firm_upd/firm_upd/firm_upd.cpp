@@ -39,7 +39,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 {
 	ui->setupUi(this);
 	loadSettings();
-////	ui.lineEdit_file_path->setText(CurFilePath);
+	ui->lineEdit_file_path->setText(CurFilePath);
 ////       QStringList _axis = { "Arial", "Helvetica", "Times" };
    QStringList axis_str;
      axis_str << "AxisX"
@@ -155,7 +155,29 @@ if(dial_file_sel.exec())
 ///=========================================================================
 void Cfirm_upd::progr_flash()
 {
+quint64 file_size;
+////ui->progressBar->show();
+curFile->setFileName(CurFilePath);
+if(!curFile->open(QFile::ReadOnly))
+    {
+    ui->statusBar->showMessage("Aborted: unable to open file for reading.");
+    return;
+    }
+ui->statusBar->showMessage("Programming... ");
+QTextStream in(curFile);
+QString line = in.readLine();
+file_size=curFile->size();
+ui->progressBar->setMinimum(0);
+ui->progressBar->setMaximum(file_size);
+////ui->progressBar->setValue(file_size/4);
 ui->progressBar->show();
+while(!line.isNull()) {
+	if (line.startsWith(":"))
+////		processHexLine(line);
+		line = in.readLine();
+	}
+curFile->close();
+
 
 }
 ///=========================================================================

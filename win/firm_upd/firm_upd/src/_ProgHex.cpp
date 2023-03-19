@@ -1,22 +1,12 @@
 #include <QTextStream>
-#include "progHex.h"
+#include "ProgHex.h"
 
 
-CprogHex::CprogHex(QObject *parent) : QObject(parent)
+CProgHex::CProgHex(QObject *parent) : QObject(parent)
 {
 
 }
 
-quint32 CprogHex::getLineType(QString line)
-{
-	line.remove(0, 7);
-	line.remove(2, 64);
-	return line.toUInt();
-}
-
-
-
-#if 0
 bool CProgHex::open(QString fileName, quint32 pageSize)
 {
 	linearAddress = 0;
@@ -98,6 +88,12 @@ void CProgHex::processHexLine(QString &line)
 	}
 }
 
+quint32 CProgHex::getLineType(QString line)
+{
+	line.remove(0, 7);
+	line.remove(2, 64);
+	return line.toUInt();
+}
 
 quint32 CProgHex::getLength(QString line)
 {
@@ -191,4 +187,3 @@ qint32 CProgHex::readPage(quint32 &currentAddress, char **data, bool readAllSegm
 
 	return bytesAvailable;
 }
-#endif

@@ -15,7 +15,7 @@
 #include <QFile>
 
 ////#include "COMPort.h"
-////#include "ProgHex.h"
+#include "progHex.h"
 ////#include "QFileDialogCust.h"
 
 #define AxisX  0
@@ -44,7 +44,7 @@ protected:
 ////	COMPort com_port;
     QSerialPort* port;
 	qint8 CurAxis;
-////	CProgHex prog_hex;
+	CprogHex prog_hex;
 ///	QString COM_port_name;
    bool messageFinished;
    QString message;
