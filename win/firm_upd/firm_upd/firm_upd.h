@@ -58,9 +58,10 @@ public slots:
     void connection();
 	void on_file_path();
 	void progr_flash();
+	void set_pb_val(quint32 val);
 public slots:
  ////   void openFileDialog();
-    void program();
+ ////   void program();
     void serialDataReceived();
     void serialError();
     void serialReady();

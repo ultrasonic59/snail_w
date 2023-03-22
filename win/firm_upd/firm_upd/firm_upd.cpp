@@ -57,9 +57,15 @@ ui->progressBar->hide();
     connect(ui->pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
     connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
 
+	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
+
    QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
    QObject::connect(port, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(serialError()));
    QObject::connect(this, SIGNAL(hardwareResponseFinished()), this, SLOT(serialReady()));
+
+///	connect(prog_hex, SIGNAL(sig_set_pb_val(quint32 val)), this, SLOT(set_pb_val(quint32 val)));
+
+
 
 }
 
@@ -153,6 +159,11 @@ if(dial_file_sel.exec())
     }
 }
 ///=========================================================================
+void Cfirm_upd::set_pb_val(quint32 val)
+{
+ui->progressBar->setValue(val);
+}
+
 void Cfirm_upd::progr_flash()
 {
 quint64 file_size;
@@ -164,6 +175,22 @@ if(!curFile->open(QFile::ReadOnly))
     return;
     }
 ui->statusBar->showMessage("Programming... ");
+QApplication::setOverrideCursor(Qt::WaitCursor);
+file_size=curFile->size();
+ui->progressBar->setMinimum(0);
+ui->progressBar->setMaximum(file_size);
+ui->progressBar->show();
+
+////ui->progressBar->setValue(file_size/4);
+
+prog_hex.progr(curFile);
+
+QApplication::restoreOverrideCursor();
+
+ui->progressBar->hide();
+ui->statusBar->showMessage("");
+
+#if 0
 QTextStream in(curFile);
 QString line = in.readLine();
 file_size=curFile->size();
@@ -176,11 +203,13 @@ while(!line.isNull()) {
 ////		processHexLine(line);
 		line = in.readLine();
 	}
+#endif
 curFile->close();
 
 
 }
 ///=========================================================================
+#if 0
 void Cfirm_upd::program()
 {
 #if 1
@@ -231,7 +260,7 @@ void Cfirm_upd::program()
     serialReady();
 #endif
 }
-
+#endif
 void Cfirm_upd::serialDataReceived()
 {
     QString msg = QString(port->readAll());

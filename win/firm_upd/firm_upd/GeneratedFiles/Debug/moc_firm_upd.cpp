@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Cfirm_upd_t {
-    QByteArrayData data[11];
-    char stringdata[142];
+    QByteArrayData data[12];
+    char stringdata[149];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -36,15 +36,16 @@ QT_MOC_LITERAL(3, 36, 18),
 QT_MOC_LITERAL(4, 55, 10),
 QT_MOC_LITERAL(5, 66, 12),
 QT_MOC_LITERAL(6, 79, 11),
-QT_MOC_LITERAL(7, 91, 7),
-QT_MOC_LITERAL(8, 99, 18),
-QT_MOC_LITERAL(9, 118, 11),
-QT_MOC_LITERAL(10, 130, 11)
+QT_MOC_LITERAL(7, 91, 10),
+QT_MOC_LITERAL(8, 102, 3),
+QT_MOC_LITERAL(9, 106, 18),
+QT_MOC_LITERAL(10, 125, 11),
+QT_MOC_LITERAL(11, 137, 11)
     },
     "Cfirm_upd\0hardwareResponseFinished\0\0"
     "refresh_used_ports\0connection\0"
-    "on_file_path\0progr_flash\0program\0"
-    "serialDataReceived\0serialError\0"
+    "on_file_path\0progr_flash\0set_pb_val\0"
+    "val\0serialDataReceived\0serialError\0"
     "serialReady"
 };
 #undef QT_MOC_LITERAL
@@ -70,10 +71,10 @@ static const uint qt_meta_data_Cfirm_upd[] = {
        4,    0,   61,    2, 0x0a /* Public */,
        5,    0,   62,    2, 0x0a /* Public */,
        6,    0,   63,    2, 0x0a /* Public */,
-       7,    0,   64,    2, 0x0a /* Public */,
-       8,    0,   65,    2, 0x0a /* Public */,
-       9,    0,   66,    2, 0x0a /* Public */,
-      10,    0,   67,    2, 0x0a /* Public */,
+       7,    1,   64,    2, 0x0a /* Public */,
+       9,    0,   67,    2, 0x0a /* Public */,
+      10,    0,   68,    2, 0x0a /* Public */,
+      11,    0,   69,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -83,7 +84,7 @@ static const uint qt_meta_data_Cfirm_upd[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::UInt,    8,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -101,7 +102,7 @@ void Cfirm_upd::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 2: _t->connection(); break;
         case 3: _t->on_file_path(); break;
         case 4: _t->progr_flash(); break;
-        case 5: _t->program(); break;
+        case 5: _t->set_pb_val((*reinterpret_cast< quint32(*)>(_a[1]))); break;
         case 6: _t->serialDataReceived(); break;
         case 7: _t->serialError(); break;
         case 8: _t->serialReady(); break;
@@ -117,7 +118,6 @@ void Cfirm_upd::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             }
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject Cfirm_upd::staticMetaObject = {

@@ -24,7 +24,11 @@ public:
 	explicit CprogHex(QObject *parent = 0);
 
 private:
-    quint32 getLineType(QString line);
+    quint8 getLineType(QString line);
+	quint8 parseHexLine(QString line);
+	quint32	linAddr;
+	quint32	segAddr;
+	quint32	nextAddr;
 
 #if 0
 	bool open(QString fileName, quint32 pageSize);
@@ -54,6 +58,10 @@ private:
 	qint32 segmentIdx, segmentPos;
 	bool oneShot;
 #endif
+public:
+	bool progr(QFile *pFile);
+signals:
+	void sig_set_pb_val(quint32 val);
 };
 
 #endif // _PROG_HEX_H_

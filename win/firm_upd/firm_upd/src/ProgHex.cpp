@@ -1,19 +1,123 @@
 #include <QTextStream>
+#include <QThread>
+#include <QDebug>
 #include "progHex.h"
 
 
-CprogHex::CprogHex(QObject *parent) : QObject(parent)
+CprogHex::CprogHex(QObject *parent) : 
+			QObject(parent),
+	        linAddr(0),
+			segAddr(0),
+			nextAddr(0)
+
 {
 
 }
 
-quint32 CprogHex::getLineType(QString line)
+quint8 CprogHex::getLineType(QString line)
 {
-	line.remove(0, 7);
-	line.remove(2, 64);
-	return line.toUInt();
+////	line.remove(0, 7);
+////	line.remove(2, 64);
+////	return line.toUInt();
+return	line.mid(6, 2).toULong(0, 16);
 }
 
+#define HEX_OK			0
+#define END_OF_FILE		1
+#define ERR_TYPE_REC	3
+
+quint8 CprogHex::parseHexLine(QString line)
+{
+quint8 rez=0;
+quint8 crc8=0;
+line.remove(':');
+for(int cc =0; cc < line.length(); cc +=2)
+	{
+	crc8 += line.mid(cc, 2).toUShort(0, 16);
+	}
+////QThread::msleep(1);
+if(crc8 == 0)
+   {
+	quint8 lenData= line.mid(0, 2).toULong(0, 16);
+	quint8 lineType= line.mid(6, 2).toULong(0, 16);
+	quint32 offsAddr=line.mid(2, 4).toULong(0, 16);
+	quint32 tData	=line.mid(8, lenData * 2).toULong(0, 16);
+	quint32 Address = linAddr + segAddr + offsAddr;
+
+	switch(lineType)
+		{
+		case 0: /// Data
+	///		sRes += (sHexFileStr.mid(8, bLenData * 2) + "\n");
+			rez = HEX_OK;
+////				qDebug() << "Data " ;
+		break;
+		case 1: //
+				rez = END_OF_FILE;
+					qDebug() << "END_OF_FILE " ;
+		break;
+
+		case 2: // Extended Segment Address Record
+			segAddr = tData << 4; // *16
+			rez = HEX_OK;
+			qDebug() << "Extended Segment Address Record " ;
+			break;
+
+		case 3: // Start Segment Address Record
+////				sRes ="[Start Segment Address: 0x" + DWORD2Hex(dwData) + "]\n";
+			qDebug() << "Start Segment Address Record " ;
+
+			break;
+
+		case 4: // Extended Linear Address Record
+				linAddr = tData << 16; // *65536
+			qDebug() << "Extended Linear Address Record " ;
+			break;
+
+		case 5: // Start Linear Address Record
+////				sRes ="[Start Linear Address: 0x" + DWORD2Hex(dwData) + "]\n";
+			qDebug() << "Start Linear Address Record " ;
+			break;
+
+		case 32: // ROM code, used by Samsung SAMA assembler
+		case 34: // Extension code, used by Samsung Smart Studio microcontroller development system
+
+		default:
+			rez = ERR_TYPE_REC;
+			qDebug() << "Unknown type record: " << lineType;
+		////	sRes ="<Unknown type record>\n";
+		}
+		nextAddr = Address + lenData;
+			qDebug() << "nextAddr :" << nextAddr<< "Address :"<<Address <<"lenData" << lenData;
+
+   }
+else
+   {
+	qDebug() << "Error crc " ;
+
+   }
+////	line.remove(0, 7);
+////	line.remove(2, 64);
+////	return line.toUInt();
+////return	line.mid(6, 2).toULong(0, 16);
+return rez;
+}
+
+
+bool CprogHex::progr(QFile *pFile)
+{
+QString tstr;
+quint32 cur_pos=0;
+QTextStream in(pFile);
+while(!in.atEnd())
+	{
+	tstr=in.readLine();
+	parseHexLine(tstr);
+	cur_pos += tstr.length();
+////	qDebug() << "cur_pos: " << cur_pos;
+	emit sig_set_pb_val(cur_pos);
+	}
+return true;
+}
 
 
 #if 0
