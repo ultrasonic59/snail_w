@@ -83,14 +83,18 @@ typedef struct  prg_param_cmd_s_{
   uint8_t   len_par;                     ///bytes 
   uint32_t  par_val;                      /// 
 }prg_param_cmd_t;
-
-#define MAX_NUM_BYTES_PRG     4
+///============ for progr =====================
+#define MAX_NUM_BYTES_PRG     6
 typedef struct  prg_flash_cmd_s_{
   uint8_t    cmd;                         /// 
   uint8_t    num_bytes;                   ///bytes  
-  uint16_t   b_addr;                     ///
   uint8_t    data[MAX_NUM_BYTES_PRG];                    /// 
 }prg_flash_cmd_t;
+
+typedef struct  set_flash_addr_s_{
+  uint8_t    cmd;                      /// 
+  uint32_t   b_addr;                   ///  
+}set_flash_addr_t;
 
 ///=========================================================
 extern void mc_reset(void);

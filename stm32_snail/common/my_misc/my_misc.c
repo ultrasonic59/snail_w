@@ -150,10 +150,10 @@ num_bytes=p_prg_flash_cmd->num_bytes;
 
 if((num_bytes>MAX_NUM_BYTES_PRG)||(num_bytes==0))
   return ERROR_NUM_BYTES_PRG;
-addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
-if(addr_prg>APP_END_ADDRESS)
-  return ERROR_ADDR_PRG;
-
+////????addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
+////????if(addr_prg>APP_END_ADDRESS)
+////????  return ERROR_ADDR_PRG;
+#if 0
 switch(num_bytes)  {
   case 1:
     t_fl_stat=FLASH_ProgramByte(addr_prg, p_prg_flash_cmd->data[0]); 
@@ -173,6 +173,8 @@ switch(num_bytes)  {
     t_fl_stat=FLASH_ProgramWord(addr_prg, (uint32_t )p_prg_flash_cmd->data[0]); 
     break;
 }
+#endif
+
 if(t_fl_stat==FLASH_COMPLETE ) 
   return 0;  
 else
