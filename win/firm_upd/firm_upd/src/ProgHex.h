@@ -6,8 +6,10 @@
 #include <QList>
 #include <QByteArray>
 #include <QtCore/QtGlobal>
+#include "can_cmd.h"
 
-
+#define ADDR_FLASH_APP 0x080010000
+#if 0
 class IntelHexSegment
 {
 public:
@@ -16,6 +18,19 @@ public:
 	quint32    totalPages;
 	QByteArray data;
 };
+#endif
+///==== Can cmd ====================
+#define ERRASE_ADDR  0x3
+#define PROG_ADDR    0x4
+#define PROG_CHUNC   0x5
+
+#define MAX_PROG_CHUNC_SIZE 6
+
+#define MAX_NUM_BYTES 32
+typedef struct bin_dat_s{
+quint8 len_data;
+quint8 bytes[MAX_NUM_BYTES];
+}bin_data_t;
 
 class CprogHex : public QObject
 {
@@ -26,9 +41,17 @@ public:
 private:
     quint8 getLineType(QString line);
 	quint8 parseHexLine(QString line);
+	quint8 hex2bin(QString line );
+	quint8 progFlash();
+	quint8 progFlashChunc(quint8 *dat, quint8 len);
+    quint8 setProgAddr(quint32 addres);
+	quint8 erraseAddr(quint32 addres);
+	quint8 sendCanCmd(can_cmd_t *dat);
+
 	quint32	linAddr;
-	quint32	segAddr;
-	quint32	nextAddr;
+////	quint32	segAddr;
+///	quint32	nextAddr;
+	bin_data_t cur_bin_data;
 
 #if 0
 	bool open(QString fileName, quint32 pageSize);

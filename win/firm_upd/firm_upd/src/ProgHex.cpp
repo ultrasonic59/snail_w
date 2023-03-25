@@ -6,9 +6,9 @@
 
 CprogHex::CprogHex(QObject *parent) : 
 			QObject(parent),
-	        linAddr(0),
-			segAddr(0),
-			nextAddr(0)
+	        linAddr(0)///,
+			////segAddr(0),
+			///nextAddr(0)
 
 {
 
@@ -16,15 +16,56 @@ CprogHex::CprogHex(QObject *parent) :
 
 quint8 CprogHex::getLineType(QString line)
 {
-////	line.remove(0, 7);
-////	line.remove(2, 64);
-////	return line.toUInt();
 return	line.mid(6, 2).toULong(0, 16);
 }
 
 #define HEX_OK			0
 #define END_OF_FILE		1
 #define ERR_TYPE_REC	3
+
+quint8 CprogHex::hex2bin(QString line )
+{
+quint8 index=0;
+if (line.length()==0)
+	return 0;
+for(quint8 ii=0;ii<line.length();ii+=2)
+{
+cur_bin_data.bytes[index]=line.mid(ii, 2).toUShort(0, 16);
+qDebug() << cur_bin_data.bytes[index]; 
+index++;
+}
+cur_bin_data.len_data=index;
+return index;
+}
+quint8 CprogHex::sendCanCmd(can_cmd_t *dat)
+{
+return 0;
+}
+
+quint8 CprogHex::progFlashChunc(quint8 *dat, quint8 len)
+{
+can_cmd_t t_can_cmd;
+t_can_cmd.num_bytes=len+1;
+
+return sendCanCmd(&t_can_cmd);
+}
+quint8 CprogHex::setProgAddr(quint32 addres)
+{
+can_cmd_t t_can_cmd;
+t_can_cmd.num_bytes=sizeof(quint32)+1;
+return sendCanCmd(&t_can_cmd);
+}
+quint8 CprogHex::erraseAddr(quint32 addres)
+{
+can_cmd_t t_can_cmd;
+t_can_cmd.num_bytes=sizeof(quint32)+1;
+return sendCanCmd(&t_can_cmd);
+}
+quint8 CprogHex::progFlash()
+{
+
+return HEX_OK;
+}
 
 quint8 CprogHex::parseHexLine(QString line)
 {
@@ -42,22 +83,22 @@ if(crc8 == 0)
 	quint8 lineType= line.mid(6, 2).toULong(0, 16);
 	quint32 offsAddr=line.mid(2, 4).toULong(0, 16);
 	quint32 tData	=line.mid(8, lenData * 2).toULong(0, 16);
-	quint32 Address = linAddr + segAddr + offsAddr;
-
+	quint32 Address = linAddr  + offsAddr;
 	switch(lineType)
 		{
 		case 0: /// Data
-	///		sRes += (sHexFileStr.mid(8, bLenData * 2) + "\n");
-			rez = HEX_OK;
-////				qDebug() << "Data " ;
-		break;
+			setProgAddr(Address);
+			hex2bin(line.mid(8, lenData * 2) );
+
+			rez = progFlash();
+			break;
 		case 1: //
 				rez = END_OF_FILE;
 					qDebug() << "END_OF_FILE " ;
-		break;
+			break;
 
 		case 2: // Extended Segment Address Record
-			segAddr = tData << 4; // *16
+	////		segAddr = tData << 4; // *16
 			rez = HEX_OK;
 			qDebug() << "Extended Segment Address Record " ;
 			break;
@@ -78,16 +119,13 @@ if(crc8 == 0)
 			qDebug() << "Start Linear Address Record " ;
 			break;
 
-		case 32: // ROM code, used by Samsung SAMA assembler
-		case 34: // Extension code, used by Samsung Smart Studio microcontroller development system
-
 		default:
 			rez = ERR_TYPE_REC;
 			qDebug() << "Unknown type record: " << lineType;
 		////	sRes ="<Unknown type record>\n";
 		}
-		nextAddr = Address + lenData;
-			qDebug() << "nextAddr :" << nextAddr<< "Address :"<<Address <<"lenData" << lenData;
+	////	nextAddr = Address + lenData;
+	/////		qDebug() << "nextAddr :" << nextAddr<< "Address :"<<Address <<"lenData" << lenData;
 
    }
 else
@@ -108,6 +146,8 @@ bool CprogHex::progr(QFile *pFile)
 QString tstr;
 quint32 cur_pos=0;
 QTextStream in(pFile);
+if(erraseAddr(ADDR_FLASH_APP)!= HEX_OK)
+	return false;
 while(!in.atEnd())
 	{
 	tstr=in.readLine();
