@@ -45,27 +45,32 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
      axis_str << "AxisX"
            << "AxisY"
            << "AxisZ" ;
-   port = new QSerialPort();
+////   port = new QSerialPort();
    curFile = new QFile();
-
+///===================================================
+   m_pThread = new QThread(this);
+   m_pProg_hex = new CprogHex;
+   m_pProg_hex->moveToThread(m_pThread);
+   connect(m_pThread, SIGNAL(finished()), m_pProg_hex, SLOT(deleteLater()));
+   m_pThread->start();
+///============================================
 ////	ui.comboBox_axis->insertItems( 3, axis_str);
 
-ui->progressBar->hide();
+    ui->progressBar->hide();
 
 	connect(ui->pushButton_refresh, SIGNAL(clicked()), this, SLOT(refresh_used_ports()));
 	connect(ui->pushButton_Conn, SIGNAL(clicked()), this, SLOT(connection()));
     connect(ui->pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
     connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
 
-	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
+////	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
+	connect(m_pProg_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
 
-   QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
-   QObject::connect(port, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(serialError()));
+ ////  QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
+ ////  QObject::connect(port, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(serialError()));
    QObject::connect(this, SIGNAL(hardwareResponseFinished()), this, SLOT(serialReady()));
 
 ///	connect(prog_hex, SIGNAL(sig_set_pb_val(quint32 val)), this, SLOT(set_pb_val(quint32 val)));
-
-
 
 }
 
@@ -79,7 +84,7 @@ Cfirm_upd::~Cfirm_upd()
 void Cfirm_upd::refresh_used_ports()
 {
 	ui->comboBox_ports->clear();
-#if 1
+#if 0
 	foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
 	{
 		if(info.description() != "")
@@ -183,7 +188,8 @@ ui->progressBar->show();
 
 ////ui->progressBar->setValue(file_size/4);
 
-prog_hex.progr(curFile);
+//// prog_hex.progr(curFile);
+m_pProg_hex->progr(curFile);
 
 QApplication::restoreOverrideCursor();
 
@@ -263,7 +269,8 @@ void Cfirm_upd::program()
 #endif
 void Cfirm_upd::serialDataReceived()
 {
-    QString msg = QString(port->readAll());
+#if 0
+QString msg = QString(port->readAll());
     message += msg;
 
     if(msg.contains('>') && !messageFinished)
@@ -301,15 +308,17 @@ void Cfirm_upd::serialDataReceived()
         QThread::msleep(200);
         emit hardwareResponseFinished();
     }
+#endif
 }
 
 void Cfirm_upd::serialError()
 {
-    qDebug() << port->errorString();
+////    qDebug() << port->errorString();
 }
 
 void Cfirm_upd::serialReady()
 {
+#if 0
     if(!curFile->isOpen())
     {
         ui->statusBar->showMessage("Error: file is closed while trying to program.");
@@ -334,4 +343,5 @@ void Cfirm_upd::serialReady()
     {
         ui->statusBar->showMessage("Programming complete");
     }
+#endif
 }

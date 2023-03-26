@@ -5,8 +5,8 @@
 ////#include "ui_firm_upd.h"
 
 #include <QFile>
-#include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
+///#include <QtSerialPort/QSerialPort>
+///#include <QtSerialPort/QSerialPortInfo>
 
 ////#include <QSerialPort>
 ////#include <QSerialPortInfo>
@@ -14,7 +14,8 @@
 #include <QtCore>
 #include <QFile>
 
-////#include "COMPort.h"
+#include <QThread>
+
 #include "progHex.h"
 ////#include "QFileDialogCust.h"
 
@@ -42,12 +43,15 @@ public:
 ////	COMPortProperites COMpr;
 protected:
 ////	COMPort com_port;
-    QSerialPort* port;
+////    QSerialPort* port;
 	qint8 CurAxis;
-	CprogHex prog_hex;
+///	CprogHex prog_hex;
 ///	QString COM_port_name;
    bool messageFinished;
    QString message;
+private:
+   QThread *m_pThread;
+   CprogHex *m_pProg_hex;
 
 public:
 	Cfirm_upd(QWidget *parent = 0);
