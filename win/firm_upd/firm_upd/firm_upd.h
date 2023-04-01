@@ -34,7 +34,7 @@ class Cfirm_upd : public QMainWindow
 protected:
 	Ui::firm_upd *ui;
 	QString CurFilePath;
-	QString COM_port_name;
+	QString _COM_port_name;
     void saveSettings();
     void loadSettings();
 public:

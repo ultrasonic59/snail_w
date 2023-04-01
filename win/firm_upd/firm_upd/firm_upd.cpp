@@ -13,7 +13,7 @@ void Cfirm_upd::saveSettings()
 {
 	QSettings settings( QCoreApplication::applicationDirPath()+"//firm_upd.ini",
 					   QSettings::IniFormat);
-	settings.setValue("COM_port_name", COM_port_name);
+	settings.setValue("COM_port_name", _COM_port_name);
 
 	settings.setValue("CurFilePath", CurFilePath);
 	settings.setValue("CurAxis", CurAxis);
@@ -24,7 +24,7 @@ void Cfirm_upd::loadSettings()
 {
 	QSettings settings( QCoreApplication::applicationDirPath()+"//firm_upd.ini",
 					   QSettings::IniFormat);
-	COM_port_name = settings.value("COM_port_name", "COM8").toString();		// 
+	_COM_port_name = settings.value("COM_port_name", "COM8").toString();		// 
 
 	CurFilePath = settings.value("CurFilePath", QCoreApplication::applicationDirPath() ).toString();
 	CurAxis = settings.value("CurAxis", AxisX).toInt();
@@ -116,6 +116,11 @@ void Cfirm_upd::connection()
 
 		}
 #endif
+	m_pProg_hex->COM_port_name = _COM_port_name;		// 
+
+
+	m_pProg_hex->connectToDev();
+
 #if 0
 	if(device_CMD.IsAttached())
 	{

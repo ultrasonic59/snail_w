@@ -4,9 +4,27 @@
 #define CAN_MAX_LEN_QUEU 16
 #define ID_MASK         (uint32_t)(0x7e0)
 
+#define AXIS_X           (0x1<<0)
+#define AXIS_Y           (0x1<<1)
+#define AXIS_Z           (0x1<<2)
+
+#if STEP_X
+  #define AXIS_BRD AXIS_X
+#elif STEP_Y
+  #define AXIS_BRD AXIS_Y
+#elif STEP_Z
+  #define AXIS_BRD AXIS_Z
+#else 
+  #error "\n\r=== STEP_... nodefined ==="; 
+#endif
+
+#define ID_BRD (AXIS_BRD<<5)
+
+#if 0
 #define ID_X_CMD         (0x1<<5)
 #define ID_Y_CMD         (0x1<<6)
 #define ID_Z_CMD         (0x1<<7)
+#endif
 
 #define ID_MASTER_CMD    (0x1<<9)
 
@@ -18,15 +36,20 @@
 #define READY_Y           (0x1<<1)
 #define READY_Z           (0x1<<2)
 
+#if 0
 #define AXIS_X           (0x1<<0)
 #define AXIS_Y           (0x1<<1)
 #define AXIS_Z           (0x1<<2)
+#endif
 
 #define GO_CMD                0x1
 #define GET_STAT_CMD          0x2
 #define PUT_STAT_CMD          0x3
 #define PUT_ACK               0x4
 #define PRG_PARAM             0x5
+#define CHECK_CONN            0x6
+#define ACK_CONN              0x7
+
 ///===== booter cmd =============
 #define GO_TO_BOOTER          0xF5
 #define GO_TO_APP             0xF6
@@ -40,6 +63,7 @@
 #define BOOTER_STATE_IDLE     0xF0
 #define BOOTER_STATE_ERASE    0xF1
 #define BOOTER_STATE_PROG     0xF2
+#define BOOTER_NO_BOOT        0xF3
 
 
 #define STATE_IDLE           0

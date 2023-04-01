@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Mar/2023  15:47:52
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         01/Apr/2023  19:21:28
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode                     =  thumb
@@ -65,7 +65,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
       6          #include "task.h"
       7          #include "semphr.h"
       8          #include "queue.h"
-      9          ////#include "my_grbl.h"
+      9          #include "board.h"
      10          #include "can.h"
      11          #include "can_cmds.h"
      12          #include "printk.h"
@@ -101,21 +101,21 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
      42            {
      43             t_go_cmd.steps=step_x;
      44             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-     45             send_msg.id=ID_X_CMD; 
+     45             send_msg.id=ID_BRD; 
      46             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
      47            }
      48          if(step_y)
      49            {
      50             t_go_cmd.steps=step_y;
      51             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-     52             send_msg.id=ID_Y_CMD; 
+     52             send_msg.id=ID_BRD; 
      53             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
      54            }
      55          if(step_z)
      56            {
      57             t_go_cmd.steps=step_z;
      58             memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-     59             send_msg.id=ID_Z_CMD; 
+     59             send_msg.id=ID_BRD; 
      60             xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
      61            }
      62          
@@ -145,85 +145,77 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
      86          can_msg_t  send_msg;
      87          put_stat_cmd_t t_put_stat_cmd;
      88          t_put_stat_cmd.cmd=PUT_STAT_CMD ;
-     89          #if STEP_X
-     90            t_put_stat_cmd.axis= AXIS_X;
-     91          #elif STEP_Y
-     92            t_put_stat_cmd.axis= AXIS_Y;
-     93          #elif STEP_Z
-     94            t_put_stat_cmd.axis= AXIS_Z;
-     95          #else
-     96            t_put_stat_cmd.axis= 0;
-     97          #endif
-     98          ////t_put_stat_cmd.coord=cur_coord;
-     99          ///t_put_stat_cmd.state=cur_stat;
-    100          t_put_stat_cmd.coord=coord;
-    101          t_put_stat_cmd.state=state;
-    102          send_msg.len=CAN_MAX_NUM_BYTES;
-    103          send_msg.format=STANDARD_FORMAT;
-    104          send_msg.type=DATA_FRAME;
-    105          memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
-    106          send_msg.id=ID_MASTER_CMD; 
-    107          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
-    108          
-    109            return 0;
-    110          }
-    111          int put_can_ack(uint8_t cmd )
-    112          {
-    113          ///uint8_t btst=0;  
-    114          can_msg_t  send_msg;
-    115          
-    116          put_ack_t t_put_ack;
-    117          
-    118          t_put_ack.cmd=PUT_ACK ;
-    119          #if STEP_X
-    120            t_put_ack.ack.axis= AXIS_X;
-    121          #elif STEP_Y
-    122            t_put_ack..ack.axis= AXIS_Y;
-    123          #elif STEP_Z
-    124            t_put_ack..ack.axis= AXIS_Z;
-    125          #else
-    126            t_put_ack..ack.axis= 0;
+     89          t_put_stat_cmd.axis= AXIS_BRD;
+     90          
+     91          ////t_put_stat_cmd.coord=cur_coord;
+     92          ///t_put_stat_cmd.state=cur_stat;
+     93          t_put_stat_cmd.coord=coord;
+     94          t_put_stat_cmd.state=state;
+     95          send_msg.len=CAN_MAX_NUM_BYTES;
+     96          send_msg.format=STANDARD_FORMAT;
+     97          send_msg.type=DATA_FRAME;
+     98          memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
+     99          send_msg.id=ID_MASTER_CMD; 
+    100          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+    101          
+    102            return 0;
+    103          }
+    104          
+    105          int put_can_ack(uint8_t cmd )
+    106          {
+    107          ///uint8_t btst=0;  
+    108          can_msg_t  send_msg;
+    109          
+    110          put_ack_t t_put_ack;
+    111          
+    112          t_put_ack.cmd=PUT_ACK ;
+    113          t_put_ack.ack.axis= AXIS_BRD;
+    114          
+    115           t_put_ack.ack.ack_cmd=cmd;
+    116          send_msg.len= sizeof(put_ack_t);
+    117          send_msg.format=STANDARD_FORMAT;
+    118          send_msg.type=DATA_FRAME;
+    119          memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
+    120          send_msg.id=ID_MASTER_CMD; 
+    121          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+    122          
+    123            return 0;
+    124          }
+    125          
+    126          
     127          #endif
-    128           t_put_ack.ack.ack_cmd=cmd;
-    129          send_msg.len= sizeof(put_ack_t);
-    130          send_msg.format=STANDARD_FORMAT;
-    131          send_msg.type=DATA_FRAME;
-    132          memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
-    133          send_msg.id=ID_MASTER_CMD; 
-    134          xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
-    135          
-    136            return 0;
-    137          }
-    138          
-    139          
-    140          #endif
-    141          
-    142          int obr_can_cmd(uint8_t *data)
-    143          {
-    144          switch(data[0]) {
-    145            case GO_TO_APP:
-    146              goto_app();
+    128          
+    129          int obr_can_cmd(uint8_t *data)
+    130          {
+    131          switch(data[0]) {
+    132            case GO_TO_APP:
+    133              goto_app();
+    134              break;
+    135            case GO_TO_BOOTER:
+    136              goto_booter();
+    137              break;
+    138            case ERASE_SECTORS:
+    139              erase_sectors(data+1);
+    140              break;
+    141            case PRG_DAT:
+    142              prg_dat(data);
+    143              break;
+    144            case CHECK_CONN:
+    145              put_can_ack(CHECK_CONN );
+    146              printk("CHECK_CONN[%x] ",cur_stat);
     147              break;
-    148            case GO_TO_BOOTER:
-    149              goto_booter();
-    150              break;
-    151            case ERASE_SECTORS:
-    152              erase_sectors(data+1);
-    153              break;
-    154            case PRG_DAT:
-    155              prg_dat(data);
-    156              break;
-    157             case GET_BOOT_STAT:
-    158              put_can_cmd_stat(cur_stat,cur_coord);
-    159              printk("[stat=%x] ",cur_stat);
-    160              break;
-    161                  
-    162              default:
-    163                break;
-    164              }
-    165          return 0;  
-    166          }
-    167          ////======================================================
+    148           
+    149             case GET_BOOT_STAT:
+    150              put_can_cmd_stat(cur_stat,cur_coord);
+    151              printk("[stat=%x] ",cur_stat);
+    152              break;
+    153                  
+    154              default:
+    155                break;
+    156              }
+    157          return 0;  
+    158          }
+    159          ////======================================================
 
    Maximum stack usage in bytes:
 
@@ -237,6 +229,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
         16   -> goto_app
         16   -> goto_booter
         16   -> prg_dat
+        16   -> put_can_ack
         16   -> put_can_cmd_stat
       40   put_can_ack
         40   -> __aeabi_memcpy
@@ -258,20 +251,22 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\booter_can_cmds.
        4  ??DataTable4_1
        4  ??DataTable4_2
        4  ??DataTable4_3
-      12  ?_0
+       4  ??DataTable4_4
+      16  ?_0
+      12  ?_1
        8  _mc_reset
-      82  obr_can_cmd
+     104  obr_can_cmd
       82  put_can_ack
      188  put_can_cmd_go
        4  put_can_cmd_reset_all
       92  put_can_cmd_stat
 
  
-  12 bytes in section .rodata
- 472 bytes in section .text
+  28 bytes in section .rodata
+ 498 bytes in section .text
  
- 472 bytes of CODE  memory
-  12 bytes of CONST memory
+ 498 bytes of CODE  memory
+  28 bytes of CONST memory
 
 Errors: none
 Warnings: none

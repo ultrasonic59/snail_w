@@ -8,7 +8,8 @@ CprogHex::CprogHex(QObject *parent) :
 			QObject(parent),
 	        linAddr(0),
 			can_id(0),
-			COM_port_name("COM1")
+			m_isConnected(false),
+			COM_port_name("COM8")
 {
 m_pSerialPort = new QSerialPort(this);
 
@@ -16,7 +17,17 @@ m_pSerialPort = new QSerialPort(this);
 
 bool CprogHex::getStat() 
 {
-    return m_isConnected;
+quint8 tmp_cmd[]={'v','\r'};
+
+QByteArray send_data;
+send_data=QByteArray((const char*)tmp_cmd,2);
+QByteArray res_data;
+res_data=SendRes(send_data);
+
+memcpy(tmp_cmd, res_data.data(), 2);
+if(tmp_cmd[0]!='v')
+	return false;
+return m_isConnected;
 
 }
 
@@ -47,6 +58,7 @@ m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
 void CprogHex::connectToDev()
 {
+config_port();
 if (m_pSerialPort->open(QSerialPort::ReadWrite))
 	{
     m_isConnected = getStat();

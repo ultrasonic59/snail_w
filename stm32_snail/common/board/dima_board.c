@@ -1,9 +1,6 @@
 #include <string.h>
 #include "FreeRTOS.h"
 #include "queue.h"
-////#include "semphr.h"
-///#include "stm32f2xx_gpio.h"
-///#include "stm32f2xx_rcc.h"
 
 #include "can.h"
 #include "can_cmds.h"
@@ -168,7 +165,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( MOT_SPI_SCS_PIN_GPIO, &GPIO_InitStructure );
-////============== CAN1_INH ============================
+////=============== CAN1_INH ============================
 RCC_AHB1PeriphClockCmd(CAN1_INH_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -176,6 +173,21 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( CAN1_INH_PIN_GPIO, &GPIO_InitStructure );
 GPIO_ResetBits(CAN1_INH_PIN_GPIO, CAN1_INH_PIN);
+ /* CAN GPIOs configuration **************************************************/
+  /* Enable GPIO clock */
+RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
+
+  /* Connect CAN pins to AF9 */
+  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_RX_SOURCE, CAN1_AF_PORT);
+  GPIO_PinAFConfig(CAN1_GPIO_PORT, CAN1_TX_SOURCE, CAN1_AF_PORT);
+
+  /* Configure CAN RX and TX pins */
+  GPIO_InitStructure.GPIO_Pin = CAN1_RX_PIN | CAN1_TX_PIN;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+  GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
 
 }
 ////=============================================
@@ -217,6 +229,8 @@ void hw_board_init(void)
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
+init_can();
+
 /*
 #ifndef BOOTER
    motor_init();
@@ -231,7 +245,7 @@ extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 ///=========================================================
-void CAN1_Init (void)
+void _CAN1_Init (void)
 {
 uint32_t id;
  uint32_t mask;
@@ -239,16 +253,7 @@ CAN_Config();
 
 mask= ID_MASK << 21; ///5+16
 
-#if STEP_X
-  id=ID_X_CMD<<21; ///5+16
-
-#elif STEP_Y
-  id=ID_Y_CMD<<21; ///5+16
-#elif STEP_Z
-  id=ID_Z_CMD<<21; ///5+16
-#else 
-  #error "\n\r=== STEP_... nodefined ==="; 
-#endif
+id=ID_BRD<<21; ///5+16
 
 CAN_FilterConfig(0,id,mask);	
   /* Enable FIFO 0 message pending Interrupt */
@@ -277,7 +282,7 @@ send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;
 t_go_cmd.steps=10;
 memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-send_msg.id=ID_X_CMD; 
+send_msg.id=ID_BRD; 
 #endif
 ///============================================
 #if 0

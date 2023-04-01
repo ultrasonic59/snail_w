@@ -15,7 +15,7 @@
 #define DEFAULT_BAUD_RATE QSerialPort::Baud115200
 
 #define WRITE_WAIT_DELAY 100
-#define READ_WAIT_DELAY 50
+#define READ_WAIT_DELAY 5000
 
 ///==== Can cmd ====================
 #define GET_STAT     0x2
@@ -39,6 +39,7 @@ public:
     bool isConnected() const;
 	QString COM_port_name;
 	void config_port();
+    void connectToDev();
 
 private:
     quint8 getLineType(QString line);
@@ -56,7 +57,7 @@ private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
  
-    void connectToDev();
+ ////   void connectToDev();
 	bool getStat(); 
 	QByteArray SendRes(QByteArray sentData);
 

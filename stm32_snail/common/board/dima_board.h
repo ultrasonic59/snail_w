@@ -474,7 +474,8 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK  0x0
 #define VAL_EEPROM_WORK  0xAA55
-
+////============================================
+////============================================
 ////=================================================================
 extern uint32_t cur_coord;
 extern uint8_t cur_stat;

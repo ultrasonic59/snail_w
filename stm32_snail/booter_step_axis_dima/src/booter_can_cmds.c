@@ -6,7 +6,7 @@
 #include "task.h"
 #include "semphr.h"
 #include "queue.h"
-////#include "my_grbl.h"
+#include "board.h"
 #include "can.h"
 #include "can_cmds.h"
 #include "printk.h"
@@ -42,21 +42,21 @@ if(step_x)
   {
    t_go_cmd.steps=step_x;
    memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-   send_msg.id=ID_X_CMD; 
+   send_msg.id=ID_BRD; 
    xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   }
 if(step_y)
   {
    t_go_cmd.steps=step_y;
    memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-   send_msg.id=ID_Y_CMD; 
+   send_msg.id=ID_BRD; 
    xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   }
 if(step_z)
   {
    t_go_cmd.steps=step_z;
    memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-   send_msg.id=ID_Z_CMD; 
+   send_msg.id=ID_BRD; 
    xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   }
 
@@ -86,15 +86,8 @@ int put_can_cmd_stat(uint8_t state
 can_msg_t  send_msg;
 put_stat_cmd_t t_put_stat_cmd;
 t_put_stat_cmd.cmd=PUT_STAT_CMD ;
-#if STEP_X
-  t_put_stat_cmd.axis= AXIS_X;
-#elif STEP_Y
-  t_put_stat_cmd.axis= AXIS_Y;
-#elif STEP_Z
-  t_put_stat_cmd.axis= AXIS_Z;
-#else
-  t_put_stat_cmd.axis= 0;
-#endif
+t_put_stat_cmd.axis= AXIS_BRD;
+
 ////t_put_stat_cmd.coord=cur_coord;
 ///t_put_stat_cmd.state=cur_stat;
 t_put_stat_cmd.coord=coord;
@@ -108,6 +101,7 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+
 int put_can_ack(uint8_t cmd )
 {
 ///uint8_t btst=0;  
@@ -116,15 +110,8 @@ can_msg_t  send_msg;
 put_ack_t t_put_ack;
 
 t_put_ack.cmd=PUT_ACK ;
-#if STEP_X
-  t_put_ack.ack.axis= AXIS_X;
-#elif STEP_Y
-  t_put_ack..ack.axis= AXIS_Y;
-#elif STEP_Z
-  t_put_ack..ack.axis= AXIS_Z;
-#else
-  t_put_ack..ack.axis= 0;
-#endif
+t_put_ack.ack.axis= AXIS_BRD;
+
  t_put_ack.ack.ack_cmd=cmd;
 send_msg.len= sizeof(put_ack_t);
 send_msg.format=STANDARD_FORMAT;
@@ -154,6 +141,11 @@ switch(data[0]) {
   case PRG_DAT:
     prg_dat(data);
     break;
+  case CHECK_CONN:
+    put_can_ack(CHECK_CONN );
+    printk("CHECK_CONN[%x] ",cur_stat);
+    break;
+ 
    case GET_BOOT_STAT:
     put_can_cmd_stat(cur_stat,cur_coord);
     printk("[stat=%x] ",cur_stat);

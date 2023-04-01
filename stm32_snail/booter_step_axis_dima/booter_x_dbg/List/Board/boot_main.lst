@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         11/Mar/2023  15:47:52
+# IAR ANSI C/C++ Compiler V9.30.1.335/W64 for ARM         01/Apr/2023  19:21:28
 # Copyright 1999-2022 IAR Systems AB.
 #
 #    Cpu mode                 =  thumb
@@ -75,7 +75,7 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_main.c
      16          #include "printk.h"
      17          #include "emul_eeprom.h"
      18          ///=======================================================================
-     19          ////extern void tst_task( void *pvParameters );
+     19          extern void tst1_task( void *pvParameters );
      20          extern void tst_task( void *pvParameters );
      21          extern void can_rsv_task( void *pvParameters );
      22          extern void can_send_thread(void* pp);
@@ -105,51 +105,48 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_main.c
      46            #error "\n\r=== boot STEP_... nodefined ==="; 
      47          #endif
      48          ////=================================================
-     49          eeprom_init();
-     50          if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
-     51            {
-     52              if(tmp==VAL_EEPROM_WORK) ////need add check KS!!!
-     53                {
-     54                 goto_app();
-     55                }
-     56            }
-     57          
-     58          CAN1_Init();
-     59          ////=================================================
-     60          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-     61          ////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
-     62          xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
-     63          xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
-     64          xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
-     65          /* Start the scheduler. */
-     66          vTaskStartScheduler();
-     67          return 0;
-     68          }
-     69          
-     70          #ifdef  DEBUG
-     71          /* Keep the linker happy. */
-     72          void assert_failed( unsigned char* pcFile, unsigned long ulLine )
-     73          {
-     74          	for( ;; )
-     75          	{
-     76          	}
-     77          }
-     78          #endif
-     79          ////=======================================================
-     80          
-     81          ////=======================================================
+     49          #if 0
+     50          eeprom_init();
+     51          if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+     52            {
+     53              if(tmp==VAL_EEPROM_WORK) ////need add check KS!!!
+     54                {
+     55                 goto_app();
+     56                }
+     57            }
+     58          #endif
+     59          ////CAN1_Init();
+     60          ////=================================================
+     61          NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+     62          ////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+     63          xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+     64          xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+     65          ////xTaskCreate( tst1_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+     66          /* Start the scheduler. */
+     67          vTaskStartScheduler();
+     68          return 0;
+     69          }
+     70          
+     71          #ifdef  DEBUG
+     72          /* Keep the linker happy. */
+     73          void assert_failed( unsigned char* pcFile, unsigned long ulLine )
+     74          {
+     75          	for( ;; )
+     76          	{
+     77          	}
+     78          }
+     79          #endif
+     80          ////=======================================================
+     81          
+     82          ////=======================================================
 
    Maximum stack usage in bytes:
 
    .cstack Function
    ------- --------
       16   main
-        16   -> CAN1_Init
-        16   -> EE_ReadVariable
         16   -> NVIC_PriorityGroupConfig
         16   -> _printk
-        16   -> eeprom_init
-        16   -> goto_app
         16   -> hw_board_init
         16   -> vTaskStartScheduler
         16   -> xTaskCreate
@@ -162,18 +159,17 @@ D:\proj\velograph\snail_w\stm32_snail\booter_step_axis_dima\src\boot_main.c
       32  ?_0
       16  ?_1
       16  ?_2
-      12  ?_3
        4  can_send_thread_handle
-     172  main
+     100  main
 
  
    4 bytes in section .bss
-  76 bytes in section .rodata
- 172 bytes in section .text
+  64 bytes in section .rodata
+ 100 bytes in section .text
  
- 172 bytes of CODE  memory
-  76 bytes of CONST memory
+ 100 bytes of CODE  memory
+  64 bytes of CONST memory
    4 bytes of DATA  memory
 
 Errors: none
-Warnings: none
+Warnings: 1
