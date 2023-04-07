@@ -2,7 +2,8 @@
 #include <QSettings>
 #include "ui_firm_upd.h"
 
-////#include <QtSerialPort/QSerialPortInfo>
+#include <QtSerialPort/QSerialPortInfo>
+
 ////#include "dialog_write_file.h"
 ////#include "QFileDialog.h"
 ////   QStringList fonts = { "Arial", "Helvetica", "Times" };
@@ -54,6 +55,8 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
    connect(m_pThread, SIGNAL(finished()), m_pProg_hex, SLOT(deleteLater()));
    m_pThread->start();
 ///============================================
+	refresh_used_ports();
+///============================================
 ////	ui.comboBox_axis->insertItems( 3, axis_str);
 
     ui->progressBar->hide();
@@ -84,7 +87,7 @@ Cfirm_upd::~Cfirm_upd()
 void Cfirm_upd::refresh_used_ports()
 {
 	ui->comboBox_ports->clear();
-#if 0
+#if 1
 	foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
 	{
 		if(info.description() != "")
@@ -116,7 +119,9 @@ void Cfirm_upd::connection()
 
 		}
 #endif
+	_COM_port_name=ui->comboBox_ports->currentText();
 	m_pProg_hex->COM_port_name = _COM_port_name;		// 
+	saveSettings();
 
 
 	m_pProg_hex->connectToDev();
