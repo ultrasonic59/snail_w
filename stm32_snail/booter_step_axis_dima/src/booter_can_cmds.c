@@ -12,6 +12,8 @@
 #include "printk.h"
 #include "my_misc.h"
 ////=======================================
+extern uint8_t boot_state;
+
 extern xQueueHandle queu_to_send;
 
 int put_can_cmd_reset_all(void)
@@ -101,6 +103,22 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_boot_cmd_stat(uint8_t state)
+{
+can_msg_t  send_msg;
+put_boot_stat_cmd_t t_put_stat_cmd;
+t_put_stat_cmd.cmd=PUT_BOOT_STAT ;
+t_put_stat_cmd.axis= AXIS_BRD;
+t_put_stat_cmd.state=boot_state;
+send_msg.len=sizeof(put_boot_stat_cmd_t);
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_boot_stat_cmd_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
 
 int put_can_ack(uint8_t cmd )
 {
@@ -147,8 +165,8 @@ switch(data[0]) {
     break;
  
    case GET_BOOT_STAT:
-    put_can_cmd_stat(cur_stat,cur_coord);
-    printk("[stat=%x] ",cur_stat);
+    put_can_boot_cmd_stat(boot_state);
+    printk("[stat=%x] ",boot_state);
     break;
         
     default:

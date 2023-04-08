@@ -37,10 +37,12 @@ class CprogHex : public QObject
 public:
 	explicit CprogHex(QObject *parent = 0);
     bool isConnected() const;
+    bool isOpened() const;
+	quint8 get_curr_state();
 	QString COM_port_name;
 	void config_port();
     void connectToDev();
-
+	bool SetBootMode();
 private:
     quint8 getLineType(QString line);
 	quint8 parseHexLine(QString line);
@@ -49,21 +51,24 @@ private:
 	quint8 progFlashChunc(quint8 *dat, quint8 len);
     quint8 setProgAddr(quint32 addres);
 	quint8 erraseAddr(quint32 addres);
-	quint8 sendCanCmd(can_cmd_t *dat);
+	quint8 getDevStat(quint8 &stat);
+	quint8 SendResCanCmd(can_cmd_t *idat,can_cmd_t *odat=nullptr);
 
 	quint32	linAddr;
 	bin_data_t cur_bin_data;
 private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
- 
- ////   void connectToDev();
+    bool m_isOpened;
+  ////   void connectToDev();
 	bool getStat(); 
 	QByteArray SendRes(QByteArray sentData);
-
+	quint32 can_id;
+	quint8 state_dev;
 public:
 	bool progr(QFile *pFile);
-	quint32 can_id;
+	void set_can_id(QString id);
+	void SetConnected(bool conn);
 signals:
 	void sig_set_pb_val(quint32 val);
 };

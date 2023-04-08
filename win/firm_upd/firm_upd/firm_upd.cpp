@@ -46,7 +46,8 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
      axis_str << "AxisX"
            << "AxisY"
            << "AxisZ" ;
-////   port = new QSerialPort();
+
+	ui->comboBox_axis->addItems(axis_str);
    curFile = new QFile();
 ///===================================================
    m_pThread = new QThread(this);
@@ -56,8 +57,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
    m_pThread->start();
 ///============================================
 	refresh_used_ports();
-///============================================
-////	ui.comboBox_axis->insertItems( 3, axis_str);
+	ui->comboBox_ports->setCurrentText(_COM_port_name);
 
     ui->progressBar->hide();
 
@@ -74,12 +74,20 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
    QObject::connect(this, SIGNAL(hardwareResponseFinished()), this, SLOT(serialReady()));
 
 ///	connect(prog_hex, SIGNAL(sig_set_pb_val(quint32 val)), this, SLOT(set_pb_val(quint32 val)));
+///=====================================================
+   if(m_pProg_hex->isConnected())
+		ui->pushButton_Conn->setText(tr("Disconnect"));
+	else
+		ui->pushButton_Conn->setText(tr("Connect"));
+///====================================================
 
 }
 
 Cfirm_upd::~Cfirm_upd()
 {
-	saveSettings();
+if(m_pProg_hex->isConnected())
+	m_pProg_hex->SetConnected(false);
+saveSettings();
 }
 
 
@@ -103,51 +111,43 @@ void Cfirm_upd::refresh_used_ports()
 }
 void Cfirm_upd::connection()
 {
-#if 0
-	if(com_port.IsConnected())
-		{
-		ui.pushButton_Conn->setText(tr("Connect"));
-		com_port.SetConnected(false);
-		}
-	else
-		{
-		com_port.setPortName(ui.comboBox_ports->currentText());
-		///device_CMD.COM_port_name = ui.comboBox_ports->currentText();
-		////device_CMD.SetupDevice();
-		ui.pushButton_Conn->setText(tr("Disconnect"));
-		com_port.SetConnected(true);
-
-		}
-#endif
+if(m_pProg_hex->isConnected())
+	{
+	m_pProg_hex->SetConnected(false);
+	ui->statusBar->showMessage("No connected to dev");
+	}
+else
+	{
+	ui->statusBar->showMessage("Connecting to dev");
 	_COM_port_name=ui->comboBox_ports->currentText();
 	m_pProg_hex->COM_port_name = _COM_port_name;		// 
+	m_pProg_hex->set_can_id(ui->comboBox_axis->currentText() );
 	saveSettings();
-
-
 	m_pProg_hex->connectToDev();
+	quint8 cur_dev_state=0;
+	cur_dev_state=m_pProg_hex->get_curr_state();
+	if(cur_dev_state&BOOTER_STATE_MASK!=BOOTER_STATE_MASK)
+		{
+		ui->statusBar->showMessage("Set boot mode");
+		m_pProg_hex->SetBootMode();
+		}
 
-#if 0
-	if(device_CMD.IsAttached())
-	{
-		SetActionsState(false);
-		ui.pushButton_start_stop->setText(tr("\320\237\320\276\320\264\320\272\320\273\321\216\321\207\320\270\321\202\321\214"));
-		device_CMD.StopDevice();
-
-		SetConnectStatus();
-
-		dial_load_status.hide();
-		dial_process_status.hide();
-
-		SetConnectionChange(true);
 	}
-	else
+
+if(m_pProg_hex->isConnected())
 	{
-		SetConnectionChange(false);
-		device_CMD.COM_port_name = ui.comboBox_ports->currentText();
-		device_CMD.SetupDevice();
-		ui.pushButton_start_stop->setText(tr("\320\236\321\202\320\272\320\273\321\216\321\207\320\270\321\202\321\214"));
+	ui->ind_conn->setStyleSheet("background-color: rgb(0, 128, 0); color: rgb(0, 128, 0)");
+	ui->statusBar->showMessage("Connected to dev");
+	ui->pushButton_Conn->setText(tr("Disconnect"));
 	}
-#endif
+else
+	{
+	ui->statusBar->showMessage("No connected to dev");
+	ui->pushButton_Conn->setText(tr("Connect"));
+	ui->ind_conn->setStyleSheet("color: rgb(0, 128, 0)");
+	}
+
+ 
 }
 void Cfirm_upd::on_file_path()
 {

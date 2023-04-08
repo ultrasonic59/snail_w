@@ -91,6 +91,12 @@ typedef struct  put_stat_cmd_s_{
   uint32_t  coord;                      /// 
 }put_stat_cmd_t;
 
+typedef struct  put_boot_stat_cmd_s_{
+  uint8_t  cmd;                         /// 
+  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  state;                     /// 
+}put_boot_stat_cmd_t;
+
 typedef struct  ack_s_{
   uint8_t  ack_cmd;                         /// 
   uint8_t  axis;                        /// X,Y , Z 

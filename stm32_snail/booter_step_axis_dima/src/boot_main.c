@@ -15,6 +15,7 @@
 #include "misc.h"
 #include "printk.h"
 #include "emul_eeprom.h"
+#include "can_cmds.h"
 ///=======================================================================
 extern void tst1_task( void *pvParameters );
 extern void tst_task( void *pvParameters );
@@ -24,13 +25,13 @@ extern void can_send_thread(void* pp);
 ////extern int can_main(void);
 extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
-
+uint8_t boot_state;
 ////============================================
 int main( void )
 {
 ////uint8_t btst=0; 
 ////uint32_t tst=0;
-uint16_t tmp=0;
+///uint16_t tmp=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -46,6 +47,7 @@ hw_board_init();
   #error "\n\r=== boot STEP_... nodefined ==="; 
 #endif
 ////=================================================
+  boot_state=BOOTER_STATE_IDLE;
 #if 0
 eeprom_init();
 if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)

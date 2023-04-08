@@ -9,14 +9,18 @@ CprogHex::CprogHex(QObject *parent) :
 	        linAddr(0),
 			can_id(0),
 			m_isConnected(false),
+			m_isOpened(false),
+			state_dev(0),
 			COM_port_name("COM8")
 {
 m_pSerialPort = new QSerialPort(this);
-
 }
+
 
 bool CprogHex::getStat() 
 {
+quint8 btmp=0;
+
 quint8 tmp_cmd[]={'v','\r'};
 
 QByteArray send_data;
@@ -27,7 +31,18 @@ res_data=SendRes(send_data);
 memcpy(tmp_cmd, res_data.data(), 2);
 if(tmp_cmd[0]!='v')
 	return false;
-return m_isConnected;
+quint8 stat;
+btmp=getDevStat(stat);
+if(btmp)
+	{
+	state_dev=stat;
+	return true;
+	}
+else
+	{
+	state_dev=0;
+	return false;
+	}
 
 }
 
@@ -36,6 +51,32 @@ bool CprogHex::isConnected() const
     return m_isConnected;
 
 }
+bool CprogHex::SetBootMode()
+{
+quint8 tdat=0;
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+s_cmd.data[0]=GO_TO_BOOTER;
+s_cmd.id=can_id;
+s_cmd.num_bytes=1;
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+return true;
+}
+
+void CprogHex::SetConnected(bool conn)
+{
+m_isConnected=conn;
+if(!m_isConnected)
+	{
+	if(m_isOpened)
+		{
+		m_pSerialPort->close();
+		m_isOpened=false;
+		}
+
+	}
+}
+
 
 QByteArray CprogHex::SendRes(QByteArray sentData)
 {
@@ -61,14 +102,17 @@ void CprogHex::connectToDev()
 config_port();
 if (m_pSerialPort->open(QSerialPort::ReadWrite))
 	{
+	m_isOpened=true;
     m_isConnected = getStat();
     if (m_isConnected)
         {
-        qDebug() << "dev connected";
+        qDebug() << "dev connected" ;
         }
     else
         {
         qDebug() << "no dev!";
+		m_pSerialPort->close();
+		m_isOpened=false;
         }
     }
     else
@@ -76,6 +120,20 @@ if (m_pSerialPort->open(QSerialPort::ReadWrite))
         qDebug() << "dev no connected";
         m_isConnected = false;
     }
+}
+quint8 CprogHex::get_curr_state()
+{
+return state_dev;
+}
+
+void CprogHex::set_can_id(QString id)
+{
+if(id=="AxisX")
+	can_id=ID_BRD_X;
+if(id=="AxisY")
+	can_id=ID_BRD_Y;
+if(id=="AxisZ")
+	can_id=ID_BRD_Z;
 }
 
 quint8 CprogHex::getLineType(QString line)
@@ -101,40 +159,87 @@ index++;
 cur_bin_data.len_data=index;
 return index;
 }
-quint8 CprogHex::sendCanCmd(can_cmd_t *dat)
+
+quint8 CprogHex::SendResCanCmd(can_cmd_t *idat,can_cmd_t *odat)
 {
+QString tstr;
+QString stmp;
 
-
-return 0;
+tstr.sprintf("t%03x%x%02x",idat->id,idat->num_bytes,idat->data[0]);
+if(idat->num_bytes>1)
+	{
+	for(quint8 ii=1;ii<idat->num_bytes;ii++)
+		{
+		tstr+=stmp.sprintf("%02x",idat->data[ii]);
+		}
+	}
+tstr+="\r\n";
+////QByteArray sentData((const char*)idat->data,idat->num_bytes);
+QByteArray sentData;
+sentData += tstr;
+///QString::QString(&sentData);
+qDebug() << "send:"<< tstr << sentData; 
+QByteArray rdata;
+rdata=SendRes(sentData);
+///put_boot_stat_cmd_t t_stat;
+qDebug() << "rsiv:"<< rdata << rdata; 
+QString rstr;
+rstr += rdata;
+odat->id=rstr.mid(1,3).toUShort(0, 16);
+odat->num_bytes=rstr.mid(4,1).toUShort(0, 16);
+for(quint8 cc=0;cc<odat->num_bytes;cc+=2)
+	{
+	odat->data[cc]=rstr.mid(5+cc,2).toUShort(0, 16);
+	}
+return rdata.size();
+}
+quint8 CprogHex::getDevStat(quint8 &stat)
+{
+quint8 tdat=0;
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+s_cmd.data[0]=GET_BOOT_STAT;
+s_cmd.id=can_id;
+s_cmd.num_bytes=1;
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+if(tdat)
+	{
+	put_boot_stat_cmd_t *tstat = (put_boot_stat_cmd_t *) &(r_cmd.data);
+	stat= tstat->state;
+	}
+return tdat; 
 }
 
 quint8 CprogHex::progFlashChunc(quint8 *data, quint8 len)
 {
 can_cmd_t t_can_cmd;
 t_can_cmd.num_bytes=len+1;
+t_can_cmd.id=can_id;
 if(len>MAX_PROG_CHUNC_SIZE)
 	len=MAX_PROG_CHUNC_SIZE;
 t_can_cmd.data[OFFS_CAN_CMD]=PROG_CHUNC;
 t_can_cmd.data[OFFS_CAN_NUM_BYTES]=len;
 memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
-return sendCanCmd(&t_can_cmd);
+return SendResCanCmd(&t_can_cmd);
 }
 
 quint8 CprogHex::setProgAddr(quint32 addres)
 {
 can_cmd_t t_can_cmd;
+t_can_cmd.id=can_id;
 t_can_cmd.num_bytes=sizeof(quint32)+1;
 t_can_cmd.data[OFFS_CAN_CMD]=PROG_ADDR;
 memcpy(t_can_cmd.data+OFFS_CAN_ADDR,&addres,sizeof(quint32));
-return sendCanCmd(&t_can_cmd);
+return SendResCanCmd(&t_can_cmd);
 }
 quint8 CprogHex::erraseAddr(quint32 addres)
 {
 can_cmd_t t_can_cmd;
 t_can_cmd.num_bytes=sizeof(quint32)+1;
+t_can_cmd.id=can_id;
 t_can_cmd.data[OFFS_CAN_CMD]=ERRASE_ADDR;
 memcpy(t_can_cmd.data+OFFS_CAN_ADDR,&addres,sizeof(quint32));
-return sendCanCmd(&t_can_cmd);
+return SendResCanCmd(&t_can_cmd);
 }
 quint8 CprogHex::progFlashLine()
 {

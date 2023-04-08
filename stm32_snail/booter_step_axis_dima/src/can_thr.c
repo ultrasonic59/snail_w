@@ -30,13 +30,26 @@ return 0;
 
 void can_rsv_task( void *pvParameters )
 {
+  uint8_t ii;
 printk("\n\r can_rsv_task"); 
  for(;;)
   {
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
+ ////=============================== 
+#if 1    
+    printk("\n\r can_rx"); 
+    printk(" ExtId[%x]",CAN_RxMsg.id);
+    printk(" DLC[%x] \n\r ",CAN_RxMsg.len);
+    for(ii=0;ii<CAN_RxMsg.len;ii++)
+      {
+      printk("[%x] ",CAN_RxMsg.data[ii]);
+      }
+#endif 
+ ////===============================   
     obr_can_cmd(CAN_RxMsg.data);
+    
 #if 0    
     switch(CAN_RxMsg.data[0]) {
       case GO_CMD:
