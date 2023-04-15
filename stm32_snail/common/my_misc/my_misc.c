@@ -142,7 +142,7 @@ return FLASH_If_Erase(0);
 uint8_t prg_dat(uint8_t *data)
 {
 uint8_t ii;   
-FLASH_Status t_fl_stat;  
+FLASH_Status t_fl_stat=FLASH_COMPLETE;  
 uint8_t num_bytes;
 uint32_t addr_prg;
 prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
@@ -178,6 +178,7 @@ switch(num_bytes)  {
 if(t_fl_stat==FLASH_COMPLETE ) 
   return 0;  
 else
+
   return ERROR_FLAH_PRG;
 
 }

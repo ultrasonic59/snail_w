@@ -9,6 +9,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QTimer>
 #include "can_cmd.h"
+#include "debug_data.h"
 
 #define ADDR_FLASH_APP 0x080010000
 
@@ -69,6 +70,10 @@ public:
 	bool progr(QFile *pFile);
 	void set_can_id(QString id);
 	void SetConnected(bool conn);
+	void rd_eeprom(dat_req_t* data );
+	void wr_eeprom(dat_req_t* data );
+	void rd_falsh(dat_req_t* data );
+
 signals:
 	void sig_set_pb_val(quint32 val);
 };

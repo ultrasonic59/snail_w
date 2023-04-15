@@ -196,6 +196,19 @@
      <string>...</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButt_debug">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>30</y>
+      <width>51</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Debug</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

@@ -11,6 +11,8 @@
 #include "can_cmds.h"
 #include "printk.h"
 #include "my_misc.h"
+#include "emul_eeprom.h"
+
 ////=======================================
 extern uint8_t boot_state;
 
@@ -119,6 +121,40 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_rd_eeprom_ans(rd_eeprom_ans_t *t_rd_eeprom_ans)
+{
+can_msg_t  send_msg;
+can_cmd_t t_can_cmd;
+t_can_cmd.data[0]=RD_EEPROM_ANS ;
+t_can_cmd.data[1]=t_rd_eeprom_ans->num_dates;
+t_can_cmd.data[2]=t_rd_eeprom_ans->addr;
+memcpy(&t_can_cmd.data[3],t_rd_eeprom_ans->data,sizeof(uint16_t)*t_rd_eeprom_ans->num_dates);
+send_msg.len= 3+sizeof(uint16_t)*t_rd_eeprom_ans->num_dates;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,t_can_cmd.data,3+sizeof(uint16_t)*t_rd_eeprom_ans->num_dates);
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+int put_can_wr_eeprom_ans(wr_eeprom_req_t *t_wr_eeprom_ans)
+{
+can_msg_t  send_msg;
+can_cmd_t t_can_cmd;
+t_can_cmd.data[0]=WR_EEPROM_ANS ;
+t_can_cmd.data[1]=t_wr_eeprom_ans->num_dates;
+t_can_cmd.data[2]=t_wr_eeprom_ans->addr;
+send_msg.len= 3;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,t_can_cmd.data,3);
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+
 
 int put_can_ack(uint8_t cmd )
 {
@@ -144,6 +180,52 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
 #endif
 
+void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
+{
+
+if(t_rd_eeprom_ans->num_dates==0)
+  return;
+if(EE_Read(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
+  {
+
+  t_rd_eeprom_ans->num_dates=0;
+  return;
+  }
+  printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
+if(t_rd_eeprom_ans->num_dates==2)
+  {
+  if(EE_Read(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
+    {
+    t_rd_eeprom_ans->num_dates=1;
+    return;
+    }
+  }
+  printk(" dat1[%x] ===",t_rd_eeprom_ans->data[1]); 
+ 
+}
+
+void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
+{
+  printk("\n\r wr dat0[%x] ===",t_wr_eeprom_req->data[0]); 
+
+if(t_wr_eeprom_req->num_dates==0)
+  return;
+if(EE_Write(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
+  {
+  t_wr_eeprom_req->num_dates=0;
+  return;
+  }
+if(t_wr_eeprom_req->num_dates==2)
+  {
+  if(EE_Write(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
+    {
+    t_wr_eeprom_req->num_dates=1;
+    return;
+    }
+  }
+}
+  
+
 int obr_can_cmd(uint8_t *data)
 {
 switch(data[0]) {
@@ -167,6 +249,27 @@ switch(data[0]) {
    case GET_BOOT_STAT:
     put_can_boot_cmd_stat(boot_state);
     printk("[stat=%x] ",boot_state);
+    break;
+   case RD_EEPROM_REQ:
+     {
+     rd_eeprom_ans_t t_rd_eeprom_ans;  
+     t_rd_eeprom_ans.num_dates=data[1];
+     t_rd_eeprom_ans.addr=data[2];
+     rd_eeprom_dat(&t_rd_eeprom_ans);
+     put_can_rd_eeprom_ans(&t_rd_eeprom_ans);
+     printk("RD_EEPROM_REQ ");
+     }
+    break;
+   case WR_EEPROM_REQ:
+     {
+      wr_eeprom_req_t t_wr_eeprom_req;
+      t_wr_eeprom_req.num_dates=data[1];
+     t_wr_eeprom_req.addr=data[2];
+    memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
+     wr_eeprom_dat(&t_wr_eeprom_req);
+     put_can_wr_eeprom_ans(&t_wr_eeprom_req);
+     printk("WR_EEPROM_REQ ");
+     }
     break;
         
     default:

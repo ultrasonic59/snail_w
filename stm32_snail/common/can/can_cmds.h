@@ -50,6 +50,13 @@
 #define CHECK_CONN            0x6
 #define ACK_CONN              0x7
 
+#define RD_EEPROM_REQ         0x8
+#define RD_EEPROM_ANS         0x9
+#define WR_EEPROM_REQ         0xA
+#define WR_EEPROM_ANS         0xB
+#define RD_FLASH_REQ          0xC
+#define RD_FLASH_ANS          0xD
+
 ///===== booter cmd =============
 #define GO_TO_BOOTER          0xF5
 #define GO_TO_APP             0xF6
@@ -113,6 +120,39 @@ typedef struct  prg_param_cmd_s_{
   uint8_t   len_par;                     ///bytes 
   uint32_t  par_val;                      /// 
 }prg_param_cmd_t;
+
+#define MAX_CAN_NUM_BYTES  8
+typedef struct can_cmd_s{
+uint32_t id;
+uint8_t num_bytes;
+uint8_t data[MAX_CAN_NUM_BYTES];
+}can_cmd_t;
+
+#define EEPROM_MAX_NUM_DATES 2
+typedef struct rd_eeprom_req_s{
+uint8_t num_dates;
+uint8_t addr;
+}rd_eeprom_req_t;
+
+typedef struct rd_eeprom_ans_s{
+uint8_t num_dates;
+uint8_t addr;
+uint16_t data[EEPROM_MAX_NUM_DATES ];
+}rd_eeprom_ans_t,wr_eeprom_req_t;
+
+#if 0
+typedef struct wr_eeprom_req_s{
+uint8_t num_dates;
+uint8_t addr;
+uint16_t data[EEPROM_MAX_NUM_DATES ];
+}wr_eeprom_req_t;
+#endif
+typedef struct wr_eeprom_ans_s{
+uint8_t num_dates;
+uint8_t addr;
+}wr_eeprom_ans_t;
+
+
 ///============ for progr =====================
 #define MAX_NUM_BYTES_PRG     6
 typedef struct  prg_flash_cmd_s_{

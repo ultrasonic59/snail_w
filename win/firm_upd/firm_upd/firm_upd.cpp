@@ -65,6 +65,12 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 	connect(ui->pushButton_Conn, SIGNAL(clicked()), this, SLOT(connection()));
     connect(ui->pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
     connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
+	connect(ui->pushButt_debug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+
+	connect(&dial_dbg, SIGNAL(req_rd_eeprom(dat_req_t*)), this, SLOT(slot_rd_eeprom_dat(dat_req_t*)));
+	connect(&dial_dbg, SIGNAL(req_wr_eeprom(dat_req_t*)), this, SLOT(slot_wr_eeprom_dat(dat_req_t*)));
+	connect(&dial_dbg, SIGNAL(req_rd_flash(dat_req_t*)), this, SLOT(slot_rd_flash_dat(dat_req_t*)));
+
 
 ////	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
 	connect(m_pProg_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
@@ -354,4 +360,29 @@ void Cfirm_upd::serialReady()
         ui->statusBar->showMessage("Programming complete");
     }
 #endif
+}
+
+void  Cfirm_upd::on_butt_debug()
+{
+	dial_dbg.show();
+}
+void Cfirm_upd::slot_rd_eeprom_dat(dat_req_t* odat)
+{
+if(!m_pProg_hex->isConnected())
+	return;
+///odat->data[0]=0x4567;
+m_pProg_hex->rd_eeprom(odat);
+dial_dbg.req_data_rdy(odat);	
+return;
+}
+void Cfirm_upd::slot_wr_eeprom_dat(dat_req_t* idat)
+{
+if(!m_pProg_hex->isConnected())
+	return;
+m_pProg_hex->wr_eeprom(idat);
+}
+void Cfirm_upd::slot_rd_flash_dat(dat_req_t* odat)
+{
+////	if(!device_CMD.IsAttached())
+		return;
 }

@@ -28,9 +28,6 @@
 /* Global variable used to store variable value in read sequence */
 uint16_t DataVar = 0;
 
-/* Virtual address defined by the user: 0xFFFF value is prohibited */
-////extern uint16_t VirtAddVarTab[NumbOfVar];
-//// uint16_t VirtAddVarTab[NumbOfVar] = {0x5555, 0x6666, 0x7777};
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -116,7 +113,7 @@ uint16_t EE_Init(void)
           if (VarIdx != x)
           {
             /* Read the last variables' updates */
-            ReadStatus = EE_ReadVariable(VarIdx, &DataVar);
+            ReadStatus = EE_Read(VarIdx, &DataVar);
             /* In case variable corresponding to the virtual address was found */
             if (ReadStatus != 0x1)
             {
@@ -188,7 +185,7 @@ uint16_t EE_Init(void)
       else if (PageStatus1 == ERASED) /* Page0 valid, Page1 erased */
       {
         /* Erase Page1 */
-        FlashStatus = FLASH_EraseSector(PAGE1_BASE_ADDRESS,VoltageRange_3);
+        FlashStatus = FLASH_EraseSector(PAGE1_SECTOR,VoltageRange_3);
         /* If erase operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
@@ -207,7 +204,7 @@ uint16_t EE_Init(void)
           if (VarIdx != x)
           {
             /* Read the last variables' updates */
-            ReadStatus = EE_ReadVariable(VarIdx, &DataVar);
+            ReadStatus = EE_Read(VarIdx, &DataVar);
             /* In case variable corresponding to the virtual address was found */
             if (ReadStatus != 0x1)
             {
@@ -262,11 +259,16 @@ uint16_t EE_Init(void)
   *           - 1: if the variable was not found
   *           - NO_VALID_PAGE: if no valid page was found.
   */
-uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data)
+uint8_t EE_Read(uint16_t VirtAddress, uint16_t* Data)
 {
-  uint16_t ValidPage = PAGE0;
-  uint16_t AddressValue = 0x5555, ReadStatus = 1;
-  uint32_t Address = 0x08010000, PageStartAddress = 0x08010000;
+ uint8_t ValidPage = PAGE0;
+ uint8_t ReadStatus = 1;
+ uint32_t PageStartAddress;
+ uint32_t Address;
+ uint16_t AddressValue;
+ 
+ /// uint16_t AddressValue = 0x5555, ReadStatus = 1;
+ //// uint32_t Address = 0x08010000, PageStartAddress = 0x08010000;
 
   /* Get active Page for read operation */
   ValidPage = EE_FindValidPage(READ_FROM_VALID_PAGE);
@@ -321,9 +323,9 @@ uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data)
   *           - NO_VALID_PAGE: if no valid page was found
   *           - Flash error code: on write Flash error
   */
-uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data)
+uint8_t EE_Write(uint16_t VirtAddress, uint16_t Data)
 {
-  uint16_t Status = 0;
+  uint8_t Status = 0;
 
   /* Write the variable virtual address and value in the EEPROM */
   Status = EE_VerifyPageFullWriteVariable(VirtAddress, Data);
@@ -350,7 +352,7 @@ static FLASH_Status EE_Format(void)
   FLASH_Status FlashStatus = FLASH_COMPLETE;
 
   /* Erase Page0 */
-  FlashStatus = FLASH_EraseSector(PAGE0_BASE_ADDRESS,VoltageRange_3);
+  FlashStatus = FLASH_EraseSector(PAGE0_SECTOR,VoltageRange_3);
 
   /* If erase operation was failed, a Flash error code is returned */
   if (FlashStatus != FLASH_COMPLETE)
@@ -368,7 +370,7 @@ static FLASH_Status EE_Format(void)
   }
 
   /* Erase Page1 */
-  FlashStatus = FLASH_EraseSector(PAGE1_BASE_ADDRESS,VoltageRange_3);
+  FlashStatus = FLASH_EraseSector(PAGE1_SECTOR,VoltageRange_3);
 
   /* Return Page1 erase operation status */
   return FlashStatus;
@@ -459,7 +461,9 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress, uint16_t Da
 {
   FLASH_Status FlashStatus = FLASH_COMPLETE;
   uint16_t ValidPage = PAGE0;
-  uint32_t Address = 0x08010000, PageEndAddress = 0x080107FF;
+////  uint32_t Address = 0x08010000, PageEndAddress = 0x080107FF;
+  uint32_t Address ;
+  uint32_t PageEndAddress ;
 
   /* Get valid Page for write operation */
   ValidPage = EE_FindValidPage(WRITE_IN_VALID_PAGE);
@@ -569,7 +573,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
     if (VarIdx != VirtAddress)  /* Check each variable except the one passed as parameter */
     {
       /* Read the other last variable updates */
-      ReadStatus = EE_ReadVariable(VarIdx, &DataVar);
+      ReadStatus = EE_Read(VarIdx, &DataVar);
       /* In case variable corresponding to the virtual address was found */
       if (ReadStatus != 0x1)
       {

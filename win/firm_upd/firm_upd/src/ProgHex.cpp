@@ -173,7 +173,7 @@ if(idat->num_bytes>1)
 		tstr+=stmp.sprintf("%02x",idat->data[ii]);
 		}
 	}
-tstr+="\r\n";
+tstr+="\r";
 ////QByteArray sentData((const char*)idat->data,idat->num_bytes);
 QByteArray sentData;
 sentData += tstr;
@@ -182,14 +182,16 @@ qDebug() << "send:"<< tstr << sentData;
 QByteArray rdata;
 rdata=SendRes(sentData);
 ///put_boot_stat_cmd_t t_stat;
-qDebug() << "rsiv:"<< rdata << rdata; 
+qDebug() << "resiv:"<< rdata ; 
 QString rstr;
 rstr += rdata;
+qDebug() << "rstr:"<< rstr ; 
+
 odat->id=rstr.mid(1,3).toUShort(0, 16);
 odat->num_bytes=rstr.mid(4,1).toUShort(0, 16);
-for(quint8 cc=0;cc<odat->num_bytes;cc+=2)
+for(quint8 cc=0;cc<odat->num_bytes;cc++)
 	{
-	odat->data[cc]=rstr.mid(5+cc,2).toUShort(0, 16);
+	odat->data[cc]=rstr.mid(5+cc*2,2).toUShort(0, 16);
 	}
 return rdata.size();
 }
@@ -344,3 +346,62 @@ while(!in.atEnd())
 return true;
 }
 
+void CprogHex::rd_eeprom(dat_req_t* data )
+{
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+////data->data[0]=0x4567;
+quint8 tdat=0;
+if(data->nbytes==0)
+	return ;
+if(data->nbytes>EEPROM_MAX_NUM_DATES)
+	{
+	data->nbytes=EEPROM_MAX_NUM_DATES;
+	}
+s_cmd.data[0]=RD_EEPROM_REQ;
+s_cmd.id=can_id;
+s_cmd.num_bytes=3 ;///+ sizeof(quint16)*data->nbytes;
+s_cmd.data[1]=data->nbytes;
+s_cmd.data[2]=data->addr ;
+////memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+if((tdat)&&(r_cmd.data[0]==RD_EEPROM_ANS))
+	{
+	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)*data->nbytes);
+	}
+else
+	data->nbytes=0;
+}
+void CprogHex::wr_eeprom(dat_req_t* data )
+{
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+////data->data[0]=0x4567;
+quint8 tdat=0;
+if(data->nbytes==0)
+	return ;
+if(data->nbytes>EEPROM_MAX_NUM_DATES)
+	{
+	data->nbytes=EEPROM_MAX_NUM_DATES;
+	}
+s_cmd.data[0]=WR_EEPROM_REQ;
+s_cmd.id=can_id;
+s_cmd.num_bytes=3+ sizeof(quint16)*data->nbytes;
+s_cmd.data[1]=data->nbytes;
+s_cmd.data[2]=data->addr ;
+memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+if((tdat)&&(r_cmd.data[0]==WR_EEPROM_ANS))
+	{
+       qDebug() << "Writing OK" ;
+	
+////	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)*data->nbytes);
+	}
+else
+	data->nbytes=0;
+
+
+}
+void CprogHex::rd_falsh(dat_req_t* data )
+{
+}

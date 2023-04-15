@@ -2,7 +2,7 @@
 #define __FIRM_UPD_H__
 
 #include <QMainWindow>
-////#include "ui_firm_upd.h"
+#include "dial_debug.h"
 
 #include <QFile>
 ///#include <QtSerialPort/QSerialPort>
@@ -49,6 +49,8 @@ protected:
 ///	QString COM_port_name;
    bool messageFinished;
    QString message;
+   DialDebug dial_dbg;
+
 private:
    QThread *m_pThread;
    CprogHex *m_pProg_hex;
@@ -72,6 +74,11 @@ public slots:
 
 signals:
     void hardwareResponseFinished();
+private slots:
+	void on_butt_debug();
+	void slot_rd_eeprom_dat(dat_req_t* odat);
+	void slot_wr_eeprom_dat(dat_req_t* idat);
+	void slot_rd_flash_dat(dat_req_t* odat);
 
 };
 ///===========================================

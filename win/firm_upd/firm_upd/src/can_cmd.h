@@ -6,6 +6,15 @@
 #define OFFS_CAN_NUM_BYTES 1
 #define OFFS_CAN_DATA      2
 #define OFFS_CAN_ADDR      1
+///===== common cmd =============
+
+#define RD_EEPROM_REQ         0x8
+#define RD_EEPROM_ANS         0x9
+#define WR_EEPROM_REQ         0xA
+#define WR_EEPROM_ANS         0xB
+#define RD_FLASH_REQ          0xC
+#define RD_FLASH_ANS          0xD
+
 ///===== booter cmd =============
 #define GO_TO_BOOTER          0xF5
 #define GO_TO_APP             0xF6
@@ -41,5 +50,27 @@ quint32 id;
 quint8 num_bytes;
 quint8 data[MAX_CAN_NUM_BYTES];
 }can_cmd_t;
+
+#define EEPROM_MAX_NUM_DATES 2
+typedef struct rd_eeprom_req_s{
+quint8 num_dates;
+quint8 addr;
+}rd_eeprom_req_t;
+
+typedef struct rd_eeprom_ans_s{
+quint8 num_dates;
+quint8 addr;
+quint16 data[EEPROM_MAX_NUM_DATES ];
+}rd_eeprom_ans_t;
+
+typedef struct wr_eeprom_req_s{
+quint8 num_dates;
+quint8 addr;
+quint16 data[EEPROM_MAX_NUM_DATES ];
+}wr_eeprom_req_t;
+typedef struct wr_eeprom_ans_s{
+quint8 num_dates;
+quint8 addr;
+}wr_eeprom_ans_t;
 
 #endif

@@ -47,9 +47,11 @@ hw_board_init();
   #error "\n\r=== boot STEP_... nodefined ==="; 
 #endif
 ////=================================================
-  boot_state=BOOTER_STATE_IDLE;
-#if 0
+boot_state=BOOTER_STATE_IDLE;
 eeprom_init();
+  
+#if 0
+////eeprom_init();
 if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
     if(tmp==VAL_EEPROM_WORK) ////need add check KS!!!

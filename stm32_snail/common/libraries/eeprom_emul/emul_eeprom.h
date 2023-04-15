@@ -31,8 +31,8 @@
 
 
 /* Used Flash pages for EEPROM emulation */
-#define PAGE0                   ((uint16_t)0x0000)
-#define PAGE1                   ((uint16_t)0x0001)
+#define PAGE0                   ((uint8_t)0x00)
+#define PAGE1                   ((uint8_t)0x01)
 
 /* No valid page define */
 #define NO_VALID_PAGE           ((uint16_t)0x00AB)
@@ -56,8 +56,8 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 uint16_t EE_Init(void);
-uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
-uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data);
+uint8_t EE_Read(uint16_t VirtAddress, uint16_t* Data);
+uint8_t EE_Write(uint16_t VirtAddress, uint16_t Data);
 uint16_t eeprom_init(void);
 
 #endif /* __EMUL_EEPROM_H */

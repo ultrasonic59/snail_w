@@ -15,6 +15,10 @@
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
                                                       after 16KByte of used Flash memory */
+#define EEPROM_START_SECTOR    FLASH_Sector_2
+#define PAGE0_SECTOR    FLASH_Sector_2                                                     
+#define PAGE1_SECTOR    FLASH_Sector_3                                                     
+
 #define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
 /* Pages 0 and 1 base and end addresses */
 #define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
