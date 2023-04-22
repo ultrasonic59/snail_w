@@ -144,6 +144,7 @@ return	line.mid(6, 2).toULong(0, 16);
 #define HEX_OK			0
 #define END_OF_FILE		1
 #define ERR_TYPE_REC	3
+#define ERR_ERRASE		4
 
 quint8 CprogHex::hex2bin(QString line )
 {
@@ -219,7 +220,7 @@ t_can_cmd.num_bytes=len+1;
 t_can_cmd.id=can_id;
 if(len>MAX_PROG_CHUNC_SIZE)
 	len=MAX_PROG_CHUNC_SIZE;
-t_can_cmd.data[OFFS_CAN_CMD]=PROG_CHUNC;
+t_can_cmd.data[OFFS_CAN_CMD]=PRG_DAT;///PROG_CHUNC;
 t_can_cmd.data[OFFS_CAN_NUM_BYTES]=len;
 memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
 return SendResCanCmd(&t_can_cmd);
@@ -230,19 +231,50 @@ quint8 CprogHex::setProgAddr(quint32 addres)
 can_cmd_t t_can_cmd;
 t_can_cmd.id=can_id;
 t_can_cmd.num_bytes=sizeof(quint32)+1;
-t_can_cmd.data[OFFS_CAN_CMD]=PROG_ADDR;
+t_can_cmd.data[OFFS_CAN_CMD]=SET_ADDR_PRG;
 memcpy(t_can_cmd.data+OFFS_CAN_ADDR,&addres,sizeof(quint32));
 return SendResCanCmd(&t_can_cmd);
 }
 quint8 CprogHex::erraseAddr(quint32 addres)
 {
+quint8 tmp;
 can_cmd_t t_can_cmd;
+can_cmd_t t_can_cmd_ans;
+
 t_can_cmd.num_bytes=sizeof(quint32)+1;
 t_can_cmd.id=can_id;
-t_can_cmd.data[OFFS_CAN_CMD]=ERRASE_ADDR;
+t_can_cmd.data[OFFS_CAN_CMD]=ERASE_SECTORS;
 memcpy(t_can_cmd.data+OFFS_CAN_ADDR,&addres,sizeof(quint32));
-return SendResCanCmd(&t_can_cmd);
+tmp = SendResCanCmd(&t_can_cmd,&t_can_cmd_ans);
+if(tmp)
+	{
+	if(t_can_cmd_ans.data[2]==0)
+		return HEX_OK;
+	}
+////else 
+	return ERR_ERRASE;
+
 }
+quint8 CprogHex::checkErraseAddr(quint32 addres)
+{
+quint8 tmp;
+can_cmd_t t_can_cmd;
+can_cmd_t t_can_cmd_ans;
+
+t_can_cmd.num_bytes=sizeof(quint32)+1;
+t_can_cmd.id=can_id;
+t_can_cmd.data[OFFS_CAN_CMD]=CHECK_ERASE_SECTORS;
+memcpy(t_can_cmd.data+OFFS_CAN_ADDR,&addres,sizeof(quint32));
+tmp = SendResCanCmd(&t_can_cmd,&t_can_cmd_ans);
+if(tmp)
+	{
+	if(t_can_cmd_ans.data[2]==0)
+		return HEX_OK;
+	}
+////else 
+	return ERR_ERRASE;
+}
+
 quint8 CprogHex::progFlashLine()
 {
 quint8 offs_dat=0;
@@ -333,8 +365,11 @@ bool CprogHex::progr(QFile *pFile)
 QString tstr;
 quint32 cur_pos=0;
 QTextStream in(pFile);
-if(erraseAddr(ADDR_FLASH_APP)!= HEX_OK)
-	return false;
+if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
+	{
+	if(erraseAddr(ADDR_FLASH_APP)!= HEX_OK)
+		return false;
+	}
 while(!in.atEnd())
 	{
 	tstr=in.readLine();

@@ -19,10 +19,11 @@
 #define READ_WAIT_DELAY 5000
 
 ///==== Can cmd ====================
-#define GET_STAT     0x2
-#define ERRASE_ADDR  0x3
-#define PROG_ADDR    0x4
-#define PROG_CHUNC   0x5
+////#define GET_STAT     0x2
+////#define ERRASE_ADDR  0x3
+////#define PROG_ADDR    0x4
+
+////#define PROG_CHUNC   0x5
 
 #define MAX_PROG_CHUNC_SIZE 6
 
@@ -52,6 +53,8 @@ private:
 	quint8 progFlashChunc(quint8 *dat, quint8 len);
     quint8 setProgAddr(quint32 addres);
 	quint8 erraseAddr(quint32 addres);
+	quint8 checkErraseAddr(quint32 addres);
+
 	quint8 getDevStat(quint8 &stat);
 	quint8 SendResCanCmd(can_cmd_t *idat,can_cmd_t *odat=nullptr);
 

@@ -105,11 +105,11 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
-int put_can_boot_cmd_stat(uint8_t state)
+int put_can_boot_ans(uint8_t cmd,uint8_t state)
 {
 can_msg_t  send_msg;
 put_boot_stat_cmd_t t_put_stat_cmd;
-t_put_stat_cmd.cmd=PUT_BOOT_STAT ;
+t_put_stat_cmd.cmd=cmd ;
 t_put_stat_cmd.axis= AXIS_BRD;
 t_put_stat_cmd.state=boot_state;
 send_msg.len=sizeof(put_boot_stat_cmd_t);
@@ -121,6 +121,11 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_boot_cmd_stat(uint8_t state)
+{
+return put_can_boot_ans(PUT_BOOT_STAT,state);  
+}
+
 int put_can_rd_eeprom_ans(rd_eeprom_ans_t *t_rd_eeprom_ans)
 {
 can_msg_t  send_msg;
@@ -228,6 +233,7 @@ if(t_wr_eeprom_req->num_dates==2)
 
 int obr_can_cmd(uint8_t *data)
 {
+uint8_t tmp;  
 switch(data[0]) {
   case GO_TO_APP:
     goto_app();
@@ -235,11 +241,22 @@ switch(data[0]) {
   case GO_TO_BOOTER:
     goto_booter();
     break;
-  case ERASE_SECTORS:
-    erase_sectors(data+1);
+  case SET_ADDR_PRG:
+    set_curr_addr_prg((uint32_t*)(data+1));
+    put_can_boot_ans(SET_ADDR_PRG,ERROR_OK);
     break;
+  case ERASE_SECTORS:
+    tmp=erase_sectors(data+1);
+    put_can_boot_ans(ERASE_OK,tmp);
+    break;
+  case CHECK_ERASE_SECTORS:
+    tmp=check_erase_sectors(data+1);
+    put_can_boot_ans(ERASE_OK,tmp);
+    break;
+    
   case PRG_DAT:
-    prg_dat(data);
+   tmp= prg_dat(data);
+   put_can_boot_ans(PRG_DAT_OK,tmp);
     break;
   case CHECK_CONN:
     put_can_ack(CHECK_CONN );

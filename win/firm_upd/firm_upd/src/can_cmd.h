@@ -16,6 +16,8 @@
 #define RD_FLASH_ANS          0xD
 
 ///===== booter cmd =============
+#define CHECK_ERASE_SECTORS   0xF3
+#define SET_ADDR_PRG          0xF4
 #define GO_TO_BOOTER          0xF5
 #define GO_TO_APP             0xF6
 #define ERASE_SECTORS         0xF7

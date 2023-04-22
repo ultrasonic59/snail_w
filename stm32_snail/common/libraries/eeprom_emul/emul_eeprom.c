@@ -326,7 +326,8 @@ uint8_t EE_Read(uint16_t VirtAddress, uint16_t* Data)
 uint8_t EE_Write(uint16_t VirtAddress, uint16_t Data)
 {
   uint8_t Status = 0;
-
+FLASH_Unlock();
+////================================================
   /* Write the variable virtual address and value in the EEPROM */
   Status = EE_VerifyPageFullWriteVariable(VirtAddress, Data);
 
@@ -336,6 +337,8 @@ uint8_t EE_Write(uint16_t VirtAddress, uint16_t Data)
     /* Perform Page transfer */
     Status = EE_PageTransfer(VirtAddress, Data);
   }
+////==================================================  
+FLASH_Lock();
 
   /* Return last operation status */
   return Status;

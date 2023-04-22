@@ -58,6 +58,8 @@
 #define RD_FLASH_ANS          0xD
 
 ///===== booter cmd =============
+#define CHECK_ERASE_SECTORS   0xF3
+#define SET_ADDR_PRG          0xF4
 #define GO_TO_BOOTER          0xF5
 #define GO_TO_APP             0xF6
 #define ERASE_SECTORS         0xF7
@@ -177,9 +179,16 @@ extern int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord);
 extern int put_can_ack(uint8_t cmd );
 extern int obr_can_cmd(uint8_t *data);
+extern int put_can_boot_ans(uint8_t cmd,uint8_t state);
+extern uint8_t check_erase_sectors(uint8_t *data);
+
 ///=====================================
+#define ERROR_OK            0
+
 #define ERROR_NUM_BYTES_PRG 3
 #define ERROR_ADDR_PRG      4
 #define ERROR_FLAH_PRG      5
+#define ERROR_ERRASE        6
+
 ///=====================================
 #endif  //// __CAN_CMDS_H_

@@ -3,6 +3,7 @@
 #include "my_misc.h"
 
 #include "can_cmds.h"
+#include "emul_eeprom.h"
 #include "printk.h"
 static uint32_t GetSector(uint32_t Address);
 
@@ -134,25 +135,54 @@ static uint32_t GetSector(uint32_t Address)
   }
     return sector;
 }
+static uint32_t curr_addr_prg=0;
+void set_curr_addr_prg(uint32_t *iaddr)
+{
+  curr_addr_prg= *iaddr;
+}
 
 uint8_t erase_sectors(uint8_t *data)
 {
 return FLASH_If_Erase(0);  
 }
+#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
+#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
+#define APP_END_ADDRESS         ((uint32_t)(APP_BASE_ADDRESS + (APP_PAGE_SIZE - 1)))
+
+uint8_t check_erase_sectors(uint8_t *data)
+{
+uint32_t ii;
+uint8_t tdata;
+for(ii=APP_BASE_ADDRESS;ii<APP_END_ADDRESS;ii++)
+{
+ tdata= *(uint8_t*)(ii); 
+ if(tdata!=0xff)
+   return ERROR_ERRASE;
+}
+return ERROR_OK;  
+}
+
 uint8_t prg_dat(uint8_t *data)
 {
 uint8_t ii;   
 FLASH_Status t_fl_stat=FLASH_COMPLETE;  
 uint8_t num_bytes;
-uint32_t addr_prg;
+////uint32_t addr_prg;
 prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
 num_bytes=p_prg_flash_cmd->num_bytes;
 
 if((num_bytes>MAX_NUM_BYTES_PRG)||(num_bytes==0))
   return ERROR_NUM_BYTES_PRG;
-////????addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
+////addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
 ////????if(addr_prg>APP_END_ADDRESS)
 ////????  return ERROR_ADDR_PRG;
+FLASH_Unlock();
+for(ii=0;ii<p_prg_flash_cmd->num_bytes;ii++)
+  {
+  t_fl_stat=FLASH_ProgramByte(curr_addr_prg, p_prg_flash_cmd->data[ii]); 
+  if(t_fl_stat!=FLASH_COMPLETE ) 
+    break;
+  }
 #if 0
 switch(num_bytes)  {
   case 1:
@@ -174,13 +204,37 @@ switch(num_bytes)  {
     break;
 }
 #endif
+FLASH_Lock();
 
 if(t_fl_stat==FLASH_COMPLETE ) 
   return 0;  
 else
-
   return ERROR_FLAH_PRG;
 
 }
+uint8_t check_ks_app(void)
+{
+uint16_t rd_ks=0;
+uint16_t tmp_ks=0;
+uint32_t size_app=0;
+uint32_t ii;
+uint16_t tmp=0;
 
+if(EE_Read(ADDR_KS_APP, &tmp_ks)!=0)
+  return 0;
+if(EE_Read(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
+  return 0;
+size_app=tmp;
+size_app<<=16;
+if(EE_Read(ADDR_KS_APP, &tmp)!=0)
+  return 0;
+size_app|=tmp;
+for(ii=0;ii< size_app;ii++)
+  {
+   tmp_ks+= *(uint8_t*)(APP_BASE_ADDRESS+ii); 
+  }
+if(tmp_ks!=rd_ks)
+  return 0;
+return 1;
+}
 ////=================================================

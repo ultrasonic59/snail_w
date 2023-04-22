@@ -26,15 +26,19 @@ extern void can_send_thread(void* pp);
 extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
 uint8_t boot_state;
+
+extern uint8_t check_ks_app(void);
 ////============================================
 int main( void )
 {
 ////uint8_t btst=0; 
 ////uint32_t tst=0;
-///uint16_t tmp=0;
+uint16_t tmp=0;
+
 #ifdef DEBUG
-  debug();
+////  debug();
 #endif
+  
 __disable_irq();
 hw_board_init();
 #if STEP_X
@@ -50,11 +54,11 @@ hw_board_init();
 boot_state=BOOTER_STATE_IDLE;
 eeprom_init();
   
-#if 0
+#if 1
 ////eeprom_init();
-if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
-    if(tmp==VAL_EEPROM_WORK) ////need add check KS!!!
+    if((tmp==VAL_EEPROM_WORK)&&(check_ks_app())) 
       {
        goto_app();
       }
@@ -80,6 +84,18 @@ void assert_failed( unsigned char* pcFile, unsigned long ulLine )
 	{
 	}
 }
+#if 0
+void assert_param(unsigned long iVal)
+{
+  if(iVal==0)
+    {
+    for( ;; )
+	{
+	}
+    }
+  
+}
+#endif
 #endif
 ////=======================================================
 

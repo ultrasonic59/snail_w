@@ -47,7 +47,7 @@ GPIO_InitStructure.GPIO_Pin = TST2_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init( TST2_PIN_GPIO, &GPIO_InitStructure );
 ////=============== TST3 ============================
@@ -58,7 +58,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init( TST3_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(TST3_PIN_GPIO, TST3_PIN_NPIN, GPIO_AF_TIM1);
