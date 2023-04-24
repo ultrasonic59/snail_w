@@ -111,7 +111,7 @@ can_msg_t  send_msg;
 put_boot_stat_cmd_t t_put_stat_cmd;
 t_put_stat_cmd.cmd=cmd ;
 t_put_stat_cmd.axis= AXIS_BRD;
-t_put_stat_cmd.state=boot_state;
+t_put_stat_cmd.state=state;
 send_msg.len=sizeof(put_boot_stat_cmd_t);
 send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;

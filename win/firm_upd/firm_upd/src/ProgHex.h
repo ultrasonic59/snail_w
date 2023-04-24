@@ -17,6 +17,12 @@
 
 #define WRITE_WAIT_DELAY 100
 #define READ_WAIT_DELAY 5000
+////=============Addr eeprom ==========================================
+#define ADDR_EEPROM_BOOT_WORK   0x0
+#define VAL_EEPROM_WORK  0xAA55
+#define ADDR_KS_APP             0x1
+#define ADDR_EEPROM_SIZEL_APP  0x2
+#define ADDR_EEPROM_SIZEH_APP  0x3
 
 ///==== Can cmd ====================
 ////#define GET_STAT     0x2
@@ -60,6 +66,8 @@ private:
 
 	quint32	linAddr;
 	bin_data_t cur_bin_data;
+	quint16 t_ks;
+	quint32 size_app;
 private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
@@ -75,7 +83,13 @@ public:
 	void SetConnected(bool conn);
 	void rd_eeprom(dat_req_t* data );
 	void wr_eeprom(dat_req_t* data );
-	void rd_falsh(dat_req_t* data );
+	bool wr_eeprom(quint16 addr, quint16 data );
+
+	void rd_flash(dat_req_t* data );
+	void clr_ks(void)
+		{
+		t_ks=0;
+		}
 
 signals:
 	void sig_set_pb_val(quint32 val);

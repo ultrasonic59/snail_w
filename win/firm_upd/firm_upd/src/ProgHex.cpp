@@ -11,6 +11,8 @@ CprogHex::CprogHex(QObject *parent) :
 			m_isConnected(false),
 			m_isOpened(false),
 			state_dev(0),
+			t_ks(0),
+			size_app(0),
 			COM_port_name("COM8")
 {
 m_pSerialPort = new QSerialPort(this);
@@ -154,7 +156,7 @@ if (line.length()==0)
 for(quint8 ii=0;ii<line.length();ii+=2)
 {
 cur_bin_data.bytes[index]=line.mid(ii, 2).toUShort(0, 16);
-qDebug() << cur_bin_data.bytes[index]; 
+////qDebug() << cur_bin_data.bytes[index]; 
 index++;
 }
 cur_bin_data.len_data=index;
@@ -179,20 +181,22 @@ tstr+="\r";
 QByteArray sentData;
 sentData += tstr;
 ///QString::QString(&sentData);
-qDebug() << "send:"<< tstr << sentData; 
+///qDebug() << "send:"<< tstr << sentData; 
 QByteArray rdata;
 rdata=SendRes(sentData);
 ///put_boot_stat_cmd_t t_stat;
-qDebug() << "resiv:"<< rdata ; 
+///qDebug() << "resiv:"<< rdata ; 
 QString rstr;
 rstr += rdata;
-qDebug() << "rstr:"<< rstr ; 
-
-odat->id=rstr.mid(1,3).toUShort(0, 16);
-odat->num_bytes=rstr.mid(4,1).toUShort(0, 16);
-for(quint8 cc=0;cc<odat->num_bytes;cc++)
+///qDebug() << "rstr:"<< rstr ; 
+if(odat!=nullptr)
 	{
-	odat->data[cc]=rstr.mid(5+cc*2,2).toUShort(0, 16);
+	odat->id=rstr.mid(1,3).toUShort(0, 16);
+	odat->num_bytes=rstr.mid(4,1).toUShort(0, 16);
+	for(quint8 cc=0;cc<odat->num_bytes;cc++)
+		{
+		odat->data[cc]=rstr.mid(5+cc*2,2).toUShort(0, 16);
+		}
 	}
 return rdata.size();
 }
@@ -215,6 +219,7 @@ return tdat;
 
 quint8 CprogHex::progFlashChunc(quint8 *data, quint8 len)
 {
+////quint8 ii;
 can_cmd_t t_can_cmd;
 t_can_cmd.num_bytes=len+1;
 t_can_cmd.id=can_id;
@@ -223,6 +228,11 @@ if(len>MAX_PROG_CHUNC_SIZE)
 t_can_cmd.data[OFFS_CAN_CMD]=PRG_DAT;///PROG_CHUNC;
 t_can_cmd.data[OFFS_CAN_NUM_BYTES]=len;
 memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
+for(quint8 ii=0;ii<len;ii++)
+	{
+	t_ks+= data[ii];
+	}
+size_app+=len;
 return SendResCanCmd(&t_can_cmd);
 }
 
@@ -319,7 +329,7 @@ if(crc8 == 0)
 			break;
 		case 1: //
 			rez = END_OF_FILE;
-			qDebug() << "END_OF_FILE " ;
+////			qDebug() << "END_OF_FILE " ;
 			break;
 
 		case 2: // Extended Segment Address Record
@@ -363,6 +373,7 @@ return rez;
 bool CprogHex::progr(QFile *pFile)
 {
 QString tstr;
+quint8 t_rez=HEX_OK;
 quint32 cur_pos=0;
 QTextStream in(pFile);
 if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
@@ -370,15 +381,31 @@ if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
 	if(erraseAddr(ADDR_FLASH_APP)!= HEX_OK)
 		return false;
 	}
+t_ks=0;
 while(!in.atEnd())
 	{
 	tstr=in.readLine();
-	parseHexLine(tstr);
+	t_rez=parseHexLine(tstr);
+	if((t_rez!=HEX_OK)&&(t_rez!=END_OF_FILE))
+		break;
 	cur_pos += tstr.length();
 ////	qDebug() << "cur_pos: " << cur_pos;
 	emit sig_set_pb_val(cur_pos);
 	}
-return true;
+if((t_rez!=HEX_OK)&&(t_rez!=END_OF_FILE))
+	return false;
+else
+	{
+	if(!wr_eeprom(ADDR_KS_APP,t_ks))
+		return false;
+	if(!wr_eeprom(ADDR_EEPROM_SIZEL_APP,size_app&0xffff))
+		return false;
+	if(!wr_eeprom(ADDR_EEPROM_SIZEH_APP,(size_app>>16)&0xffff))
+		return false;
+	if(!wr_eeprom(ADDR_EEPROM_BOOT_WORK,VAL_EEPROM_WORK))
+		return false;
+	return true;
+	}
 }
 
 void CprogHex::rd_eeprom(dat_req_t* data )
@@ -428,7 +455,7 @@ memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
 tdat=SendResCanCmd(&s_cmd,&r_cmd);
 if((tdat)&&(r_cmd.data[0]==WR_EEPROM_ANS))
 	{
-       qDebug() << "Writing OK" ;
+ ///      qDebug() << "Writing OK" ;
 	
 ////	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)*data->nbytes);
 	}
@@ -437,6 +464,32 @@ else
 
 
 }
-void CprogHex::rd_falsh(dat_req_t* data )
+bool CprogHex::wr_eeprom(quint16 addr, quint16 data  )
+{
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+////data->data[0]=0x4567;
+quint8 tdat=0;
+s_cmd.data[0]=WR_EEPROM_REQ;
+s_cmd.id=can_id;
+s_cmd.num_bytes=5;
+s_cmd.data[1]=2;
+s_cmd.data[2]=addr ;
+s_cmd.data[3]=data&0xff;
+s_cmd.data[4]=(data>>8)&0xff;
+
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+if((tdat)&&(r_cmd.data[0]==WR_EEPROM_ANS))
+	{
+///      qDebug() << "Writing OK" ;
+		return true;
+ 	}
+else
+	return false;
+
+
+}
+
+void CprogHex::rd_flash(dat_req_t* data )
 {
 }

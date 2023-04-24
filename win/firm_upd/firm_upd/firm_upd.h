@@ -65,12 +65,12 @@ public slots:
 	void on_file_path();
 	void progr_flash();
 	void set_pb_val(quint32 val);
-public slots:
+////public slots:
  ////   void openFileDialog();
  ////   void program();
-    void serialDataReceived();
-    void serialError();
-    void serialReady();
+////    void serialDataReceived();
+////    void serialError();
+////    void serialReady();
 
 signals:
     void hardwareResponseFinished();

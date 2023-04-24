@@ -71,14 +71,20 @@ FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
 
 uint32_t FLASH_If_Erase(uint32_t StartSector)
 {
+uint32_t rez;  
+FLASH_Unlock(); 
+
 uint32_t UserStartSector = GetSector(APP_BASE_ADDRESS);
 
 if (FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
     {
-    return 1;
+    rez= ERROR_ERRASE;
     }
-   
-  return 0;
+else
+  rez= ERROR_OK;
+FLASH_Lock(); 
+
+return rez;
 }
 uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t DataLength)
 {
