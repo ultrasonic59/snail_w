@@ -21,7 +21,7 @@ extern void tst_task( void *pvParameters );
 extern void can_rsv_task( void *pvParameters );
 extern void can_send_thread(void* pp);
 
-extern void CAN1_Init (void);
+////extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
 
 ////============================================
@@ -46,24 +46,24 @@ hw_board_init();
 #endif
 ////=================================================
 eeprom_init();
-if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
     if(tmp!=VAL_EEPROM_WORK) ///
       {
-       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+       EE_Write(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
       }
   }
 else
   {
-  EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+  EE_Write(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
   }
 ////=================================================
-CAN1_Init();
+////CAN1_Init();
 ////goto_app();
 ////goto_booter();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-//// xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+ xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
 xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
 xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
 xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );

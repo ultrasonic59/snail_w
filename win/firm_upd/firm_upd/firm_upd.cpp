@@ -252,6 +252,10 @@ m_pProg_hex->wr_eeprom(idat);
 }
 void Cfirm_upd::slot_rd_flash_dat(dat_req_t* odat)
 {
-////	if(!device_CMD.IsAttached())
+if(!m_pProg_hex->isConnected())
+	return;
+///odat->data[0]=0x4567;
+m_pProg_hex->rd_flash(odat);
+dial_dbg.req_data_rdy(odat);	
 		return;
 }

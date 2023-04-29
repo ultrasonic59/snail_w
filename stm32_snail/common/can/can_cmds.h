@@ -57,6 +57,8 @@
 #define RD_FLASH_REQ          0xC
 #define RD_FLASH_ANS          0xD
 
+#define CMD_STOP              0xF
+
 ///===== booter cmd =============
 #define CHECK_ERASE_SECTORS   0xF3
 #define SET_ADDR_PRG          0xF4
@@ -142,25 +144,25 @@ uint8_t addr;
 uint16_t data[EEPROM_MAX_NUM_DATES ];
 }rd_eeprom_ans_t,wr_eeprom_req_t;
 
-#if 0
-typedef struct wr_eeprom_req_s{
-uint8_t num_dates;
-uint8_t addr;
-uint16_t data[EEPROM_MAX_NUM_DATES ];
-}wr_eeprom_req_t;
-#endif
 typedef struct wr_eeprom_ans_s{
 uint8_t num_dates;
 uint8_t addr;
 }wr_eeprom_ans_t;
 
+typedef struct rd_flash_req_s{
+uint32_t addr;
+}rd_flash_req_t;
+typedef struct rd_flash_ans_s{
+uint32_t addr;
+uint16_t data;
+}rd_flash_ans_t;
 
 ///============ for progr =====================
-#define MAX_NUM_BYTES_PRG     6
+#define MAX_NUM_WORDS_PRG     3
 typedef struct  prg_flash_cmd_s_{
   uint8_t    cmd;                         /// 
   uint8_t    num_bytes;                   ///bytes  
-  uint8_t    data[MAX_NUM_BYTES_PRG];                    /// 
+  uint16_t    data[MAX_NUM_WORDS_PRG];                    /// 
 }prg_flash_cmd_t;
 
 typedef struct  set_flash_addr_s_{
@@ -181,6 +183,8 @@ extern int put_can_ack(uint8_t cmd );
 extern int obr_can_cmd(uint8_t *data);
 extern int put_can_boot_ans(uint8_t cmd,uint8_t state);
 extern uint8_t check_erase_sectors(uint8_t *data);
+extern int go_cmd(go_cmd_t *p_go_cmd);
+extern int stop_mot_cmd(void);
 
 ///=====================================
 #define ERROR_OK            0

@@ -415,6 +415,11 @@ if(num_step)
     ena_mot(0) ;
     }
   }
+else
+  {
+   stop_mot_step_tim(); 
+   ena_mot(0) ;
+   }
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 }

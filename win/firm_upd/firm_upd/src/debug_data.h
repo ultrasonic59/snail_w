@@ -4,7 +4,7 @@
 
 struct dat_req_t
 {
-	quint16 addr;
+	quint32 addr;
 	quint16 nbytes;
 	quint16 data[MAX_ALT_DATA_LEN];
 };

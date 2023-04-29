@@ -220,17 +220,20 @@ return tdat;
 quint8 CprogHex::progFlashChunc(quint8 *data, quint8 len)
 {
 ////quint8 ii;
+quint16 thdata;
+quint16 *hdata=(quint16 *)data;
 can_cmd_t t_can_cmd;
-t_can_cmd.num_bytes=len+1;
+t_can_cmd.num_bytes=len+2;
 t_can_cmd.id=can_id;
-if(len>MAX_PROG_CHUNC_SIZE)
-	len=MAX_PROG_CHUNC_SIZE;
+if(len>MAX_PROG_CHUNC_BYTES)
+	len=MAX_PROG_CHUNC_BYTES;
 t_can_cmd.data[OFFS_CAN_CMD]=PRG_DAT;///PROG_CHUNC;
 t_can_cmd.data[OFFS_CAN_NUM_BYTES]=len;
 memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
-for(quint8 ii=0;ii<len;ii++)
+for(quint8 ii=0;ii<len/2;ii++)
 	{
-	t_ks+= data[ii];
+	thdata= hdata[ii];
+	t_ks+= thdata;
 	}
 size_app+=len;
 return SendResCanCmd(&t_can_cmd);
@@ -290,10 +293,10 @@ quint8 CprogHex::progFlashLine()
 quint8 offs_dat=0;
 quint8 num_bytes=cur_bin_data.len_data;
 while(num_bytes > 0) {
-if(num_bytes > MAX_PROG_CHUNC_SIZE){
-	progFlashChunc(cur_bin_data.bytes+offs_dat, MAX_PROG_CHUNC_SIZE);
-	num_bytes -= MAX_PROG_CHUNC_SIZE;
-	offs_dat += MAX_PROG_CHUNC_SIZE;
+if(num_bytes > MAX_PROG_CHUNC_BYTES){
+	progFlashChunc(cur_bin_data.bytes+offs_dat, MAX_PROG_CHUNC_BYTES);
+	num_bytes -= MAX_PROG_CHUNC_BYTES;
+	offs_dat += MAX_PROG_CHUNC_BYTES;
 	}
 else{
 	progFlashChunc(cur_bin_data.bytes+offs_dat, num_bytes);
@@ -375,6 +378,7 @@ bool CprogHex::progr(QFile *pFile)
 QString tstr;
 quint8 t_rez=HEX_OK;
 quint32 cur_pos=0;
+
 QTextStream in(pFile);
 if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
 	{
@@ -382,6 +386,7 @@ if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
 		return false;
 	}
 t_ks=0;
+size_app=0;
 while(!in.atEnd())
 	{
 	tstr=in.readLine();
@@ -492,4 +497,21 @@ else
 
 void CprogHex::rd_flash(dat_req_t* data )
 {
+can_cmd_t s_cmd;
+can_cmd_t r_cmd;
+quint8 tdat=0;
+s_cmd.data[0]=RD_FLASH_REQ;
+s_cmd.id=can_id;
+s_cmd.num_bytes=5 ;///+ sizeof(quint16)*data->nbytes;
+memcpy(&s_cmd.data[1],&data->addr,sizeof(quint32));
+////memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
+tdat=SendResCanCmd(&s_cmd,&r_cmd);
+if((tdat)&&(r_cmd.data[0]==RD_FLASH_ANS))
+	{
+	memcpy(data->data,&r_cmd.data[5],sizeof(quint16));
+	}
+else
+	data->nbytes=0;
+
+
 }

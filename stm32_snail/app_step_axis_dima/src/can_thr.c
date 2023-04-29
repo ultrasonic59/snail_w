@@ -13,6 +13,14 @@
 extern can_msg_t CAN_RxMsg;
 
 xQueueHandle queu_to_send;
+int stop_mot_cmd(void)
+{
+cur_stat=STATE_IDLE;  
+printk("\n\rSTATE_IDLE ");
+
+put_mot_nstep(0);
+return 0;
+}
 
 int go_cmd(go_cmd_t *p_go_cmd)
 {
@@ -36,6 +44,8 @@ printk("\n\r can_rsv_task");
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
+    obr_can_cmd(CAN_RxMsg.data);
+#if 0   
     switch(CAN_RxMsg.data[0]) {
       case GO_CMD:
         {
@@ -57,6 +67,7 @@ printk("\n\r can_rsv_task");
     default:
       break;
     }
+#endif
 #if 0   
     printk("\n\r can_rx"); 
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);

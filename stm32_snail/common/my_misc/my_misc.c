@@ -45,7 +45,8 @@ void goto_app(void)
 {
 ////uint32_t sp_tst=0;  
 __disable_irq();
-NVIC_SetVectorTable(NVIC_VectTab_FLASH, APP_BASE_ADDRESS);
+NVIC_SetVectorTable(NVIC_VectTab_FLASH, APP_BASE_ADDRESS-NVIC_VectTab_FLASH);
+////NVIC_SetVectorTable(APP_BASE_ADDRESS,0);
 jumpAddress = *(__IO uint32_t*) (APP_BASE_ADDRESS + 4);
 ////sp_tst= *(__IO uint32_t*) (APP_BASE_ADDRESS);
 ///printk(" Jamp addres=[%x:%x:%x]\r\n",jumpAddress,APP_BASE_ADDRESS,sp_tst);	
@@ -172,44 +173,21 @@ uint8_t prg_dat(uint8_t *data)
 {
 uint8_t ii;   
 FLASH_Status t_fl_stat=FLASH_COMPLETE;  
-uint8_t num_bytes;
+uint8_t num_words;
 ////uint32_t addr_prg;
 prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
-num_bytes=p_prg_flash_cmd->num_bytes;
+num_words=p_prg_flash_cmd->num_bytes/2;
 
-if((num_bytes>MAX_NUM_BYTES_PRG)||(num_bytes==0))
+if((num_words>MAX_NUM_WORDS_PRG)||(num_words==0))
   return ERROR_NUM_BYTES_PRG;
-////addr_prg=p_prg_flash_cmd->b_addr + APP_BASE_ADDRESS;
-////????if(addr_prg>APP_END_ADDRESS)
-////????  return ERROR_ADDR_PRG;
 FLASH_Unlock();
-for(ii=0;ii<p_prg_flash_cmd->num_bytes;ii++)
+for(ii=0;ii<num_words;ii++)
   {
-  t_fl_stat=FLASH_ProgramByte(curr_addr_prg, p_prg_flash_cmd->data[ii]); 
+  t_fl_stat=FLASH_ProgramHalfWord(curr_addr_prg, p_prg_flash_cmd->data[ii]); 
   if(t_fl_stat!=FLASH_COMPLETE ) 
     break;
+  curr_addr_prg+=2;
   }
-#if 0
-switch(num_bytes)  {
-  case 1:
-    t_fl_stat=FLASH_ProgramByte(addr_prg, p_prg_flash_cmd->data[0]); 
-    break;
-  case 2:
-    t_fl_stat=FLASH_ProgramHalfWord(addr_prg, (uint16_t )p_prg_flash_cmd->data[0]); 
-    break;
-  case 3:
-    for(ii=0;ii<3;ii++)
-      {
-      t_fl_stat=FLASH_ProgramByte(addr_prg+ii, p_prg_flash_cmd->data[ii]); 
-      if( t_fl_stat!=FLASH_COMPLETE)
-        break;
-      }
-    break;
-  case 4:
-    t_fl_stat=FLASH_ProgramWord(addr_prg, (uint32_t )p_prg_flash_cmd->data[0]); 
-    break;
-}
-#endif
 FLASH_Lock();
 
 if(t_fl_stat==FLASH_COMPLETE ) 
@@ -226,18 +204,18 @@ uint32_t size_app=0;
 uint32_t ii;
 uint16_t tmp=0;
 
-if(EE_Read(ADDR_KS_APP, &tmp_ks)!=0)
-  return 0;
 if(EE_Read(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
   return 0;
 size_app=tmp;
 size_app<<=16;
-if(EE_Read(ADDR_KS_APP, &tmp)!=0)
+if(EE_Read(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
   return 0;
 size_app|=tmp;
-for(ii=0;ii< size_app;ii++)
+if(EE_Read(ADDR_KS_APP, &rd_ks)!=0)
+  return 0;
+for(ii=0;ii< size_app;ii+=2)
   {
-   tmp_ks+= *(uint8_t*)(APP_BASE_ADDRESS+ii); 
+   tmp_ks+= *(uint16_t*)(APP_BASE_ADDRESS+ii); 
   }
 if(tmp_ks!=rd_ks)
   return 0;

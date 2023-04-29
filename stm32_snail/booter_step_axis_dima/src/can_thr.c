@@ -30,7 +30,7 @@ return 0;
 
 void can_rsv_task( void *pvParameters )
 {
-  uint8_t ii;
+////  uint8_t ii;
 printk("\n\r can_rsv_task"); 
  for(;;)
   {
@@ -38,7 +38,7 @@ printk("\n\r can_rsv_task");
     {
     CAN_RxRdy=0;
  ////=============================== 
-#if 1    
+#if 0    
     printk("\n\r can_rx"); 
     printk(" ExtId[%x]",CAN_RxMsg.id);
     printk(" DLC[%x] \n\r ",CAN_RxMsg.len);

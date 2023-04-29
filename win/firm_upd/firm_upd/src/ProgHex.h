@@ -31,7 +31,7 @@
 
 ////#define PROG_CHUNC   0x5
 
-#define MAX_PROG_CHUNC_SIZE 6
+#define MAX_PROG_CHUNC_BYTES 6
 
 #define MAX_NUM_BYTES 32
 typedef struct bin_dat_s{

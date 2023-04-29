@@ -184,6 +184,35 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
 
 #endif
+int put_can_rd_flash_ans(rd_flash_ans_t *t_rd_flash_ans)
+{
+can_msg_t  send_msg;
+can_cmd_t t_can_cmd;
+t_can_cmd.data[0]=RD_FLASH_ANS ;
+
+memcpy(&t_can_cmd.data[1],&t_rd_flash_ans->addr,sizeof(uint32_t));
+
+memcpy(&t_can_cmd.data[5],&t_rd_flash_ans->data,sizeof(uint16_t));
+send_msg.len= 7;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,t_can_cmd.data,5+sizeof(uint16_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+
+
+void rd_flash_dat(rd_flash_ans_t *t_rd_flash_ans)
+{
+uint16_t t_data;  
+t_data= *(uint16_t*)(t_rd_flash_ans->addr); 
+t_rd_flash_ans->data=t_data;
+printk("\n\rflash [%x:%x] ===",t_rd_flash_ans->addr,t_rd_flash_ans->data); 
+  
+ 
+}
 
 void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
 {
@@ -211,7 +240,7 @@ if(t_rd_eeprom_ans->num_dates==2)
 
 void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 {
-  printk("\n\r wr dat0[%x] ===",t_wr_eeprom_req->data[0]); 
+  printk("\n\r wr dat0[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
 
 if(t_wr_eeprom_req->num_dates==0)
   return;
@@ -260,12 +289,12 @@ switch(data[0]) {
     break;
   case CHECK_CONN:
     put_can_ack(CHECK_CONN );
-    printk("CHECK_CONN[%x] ",cur_stat);
+ ////   printk("CHECK_CONN[%x] ",cur_stat);
     break;
  
    case GET_BOOT_STAT:
     put_can_boot_cmd_stat(boot_state);
-    printk("[stat=%x] ",boot_state);
+////    printk("[stat=%x] ",boot_state);
     break;
    case RD_EEPROM_REQ:
      {
@@ -274,7 +303,7 @@ switch(data[0]) {
      t_rd_eeprom_ans.addr=data[2];
      rd_eeprom_dat(&t_rd_eeprom_ans);
      put_can_rd_eeprom_ans(&t_rd_eeprom_ans);
-     printk("RD_EEPROM_REQ ");
+////     printk("RD_EEPROM_REQ ");
      }
     break;
    case WR_EEPROM_REQ:
@@ -285,10 +314,19 @@ switch(data[0]) {
     memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
      wr_eeprom_dat(&t_wr_eeprom_req);
      put_can_wr_eeprom_ans(&t_wr_eeprom_req);
-     printk("WR_EEPROM_REQ ");
+ ////    printk("WR_EEPROM_REQ ");
      }
     break;
-        
+    case RD_FLASH_REQ:
+     {
+     rd_flash_ans_t t_rd_flash_ans;  
+      memcpy(&t_rd_flash_ans.addr,&data[1],sizeof(uint32_t));
+     rd_flash_dat(&t_rd_flash_ans);
+     put_can_rd_flash_ans(&t_rd_flash_ans);
+////     printk("RD_EEPROM_REQ ");
+     }
+    break;
+       
     default:
       break;
     }
