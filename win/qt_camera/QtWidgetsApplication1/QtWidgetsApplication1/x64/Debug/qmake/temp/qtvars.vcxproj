@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid></ProjectGuid>
+    <RootNamespace>qtvars</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="Configuration">
+    <PlatformToolset>v142</PlatformToolset>
+    <OutputDirectory>.\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <PrimaryOutput>qtvars</PrimaryOutput>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">.\</OutDir>
+    <TargetName Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">qtvars</TargetName>
+    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\vova\AppData\Local\Temp\hnpdo3r5.2bz;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimediaWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtGui;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtNetwork;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtCore;C:\Users\vova\AppData\Local\Temp\hnpdo3r5.2bz;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>.\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>.\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_MULTIMEDIAWIDGETS_LIB;QT_MULTIMEDIA_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\dsengined.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\qtmedia_audioengined.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\wmfengined.lib;mf.lib;mfplat.lib;mfuuid.lib;d3d9.lib;dxva2.lib;evr.lib;mfreadwrite.lib;wmcodecdspuuid.lib;dmoguids.lib;msdmo.lib;Mf.lib;Mfuuid.lib;Mfplat.lib;Propsys.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\audio\qtaudio_wasapid.lib;Mmdevapi.lib;runtimeobject.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\audio\qtaudio_windowsd.lib;strmiids.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\playlistformats\qtmultimedia_m3ud.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\styles\qwindowsvistastyled.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\platforms\qwindowsd.lib;winspool.lib;shlwapi.lib;wtsapi32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5EventDispatcherSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5FontDatabaseSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtfreetyped.lib;dwrite.lib;d2d1.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5ThemeSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5AccessibilitySupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5WindowsUIAutomationSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qgifd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qicnsd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qicod.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qjpegd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qtgad.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qtiffd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qwbmpd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qwebpd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\bearer\qgenericbearerd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5MultimediaWidgetsd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5OpenGLd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Multimediad.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Widgetsd.lib;uxtheme.lib;dwmapi.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Guid.lib;d3d11.lib;dxgi.lib;dxguid.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtlibpngd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtharfbuzzd.lib;comdlg32.lib;oleaut32.lib;imm32.lib;glu32.lib;opengl32.lib;gdi32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Networkd.lib;dnsapi.lib;iphlpapi.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Cored.lib;mpr.lib;userenv.lib;version.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtpcre2d.lib;netapi32.lib;ws2_32.lib;advapi32.lib;kernel32.lib;ole32.lib;shell32.lib;uuid.lib;user32.lib;winmm.lib;glu32.lib;opengl32.lib;gdi32.lib;user32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtmaind.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <OutputFile>$(OutDir)\qtvars.exe</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_MULTIMEDIAWIDGETS_LIB;QT_MULTIMEDIA_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">cl -BxC:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\bin\qmake.exe -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -Zi -MTd -W0 -E C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;moc_predefs.h</Command>
+      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">Generate moc_predefs.h</Message>
+      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">moc_predefs.h;%(Outputs)</Outputs>
+    </CustomBuild>
+    <ClCompile Include="C:\Users\vova\AppData\Local\Temp\hnpdo3r5.2bz\qtvars_plugin_import.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

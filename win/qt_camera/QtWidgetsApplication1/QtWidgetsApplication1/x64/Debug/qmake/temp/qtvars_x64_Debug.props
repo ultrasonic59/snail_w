@@ -1,0 +1,60 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+<Qt_DEFINES_>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_MULTIMEDIAWIDGETS_LIB;QT_MULTIMEDIA_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Qt_DEFINES_>
+<Qt_INCLUDEPATH_>C:\Users\vova\AppData\Local\Temp\hnpdo3r5.2bz;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimediaWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtGui;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtNetwork;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtCore;C:\Users\vova\AppData\Local\Temp\hnpdo3r5.2bz;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\mkspecs\win32-msvc</Qt_INCLUDEPATH_>
+<Qt_STDCPP_></Qt_STDCPP_>
+<Qt_RUNTIME_>MultiThreadedDebug</Qt_RUNTIME_>
+<Qt_CL_OPTIONS_>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus</Qt_CL_OPTIONS_>
+<Qt_LIBS_>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\dsengined.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\qtmedia_audioengined.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\mediaservice\wmfengined.lib;mf.lib;mfplat.lib;mfuuid.lib;d3d9.lib;dxva2.lib;evr.lib;mfreadwrite.lib;wmcodecdspuuid.lib;dmoguids.lib;msdmo.lib;Mf.lib;Mfuuid.lib;Mfplat.lib;Propsys.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\audio\qtaudio_wasapid.lib;Mmdevapi.lib;runtimeobject.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\audio\qtaudio_windowsd.lib;strmiids.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\playlistformats\qtmultimedia_m3ud.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\styles\qwindowsvistastyled.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\platforms\qwindowsd.lib;winspool.lib;shlwapi.lib;wtsapi32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5EventDispatcherSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5FontDatabaseSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtfreetyped.lib;dwrite.lib;d2d1.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5ThemeSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5AccessibilitySupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5WindowsUIAutomationSupportd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qgifd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qicnsd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qicod.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qjpegd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qtgad.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qtiffd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qwbmpd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\imageformats\qwebpd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\plugins\bearer\qgenericbearerd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5MultimediaWidgetsd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5OpenGLd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Multimediad.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Widgetsd.lib;uxtheme.lib;dwmapi.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Guid.lib;d3d11.lib;dxgi.lib;dxguid.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtlibpngd.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtharfbuzzd.lib;comdlg32.lib;oleaut32.lib;imm32.lib;glu32.lib;opengl32.lib;gdi32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Networkd.lib;dnsapi.lib;iphlpapi.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\Qt5Cored.lib;mpr.lib;userenv.lib;version.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtpcre2d.lib;netapi32.lib;ws2_32.lib;advapi32.lib;kernel32.lib;ole32.lib;shell32.lib;uuid.lib;user32.lib;winmm.lib;glu32.lib;opengl32.lib;gdi32.lib;user32.lib;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib\qtmaind.lib;shell32.lib</Qt_LIBS_>
+<Qt_LINK_OPTIONS_>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"</Qt_LINK_OPTIONS_>
+<QMake_QT_SYSROOT_></QMake_QT_SYSROOT_>
+<QMake_QT_INSTALL_PREFIX_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64</QMake_QT_INSTALL_PREFIX_>
+<QMake_QT_INSTALL_ARCHDATA_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64</QMake_QT_INSTALL_ARCHDATA_>
+<QMake_QT_INSTALL_DATA_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64</QMake_QT_INSTALL_DATA_>
+<QMake_QT_INSTALL_DOCS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/doc</QMake_QT_INSTALL_DOCS_>
+<QMake_QT_INSTALL_HEADERS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/include</QMake_QT_INSTALL_HEADERS_>
+<QMake_QT_INSTALL_LIBS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/lib</QMake_QT_INSTALL_LIBS_>
+<QMake_QT_INSTALL_LIBEXECS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/bin</QMake_QT_INSTALL_LIBEXECS_>
+<QMake_QT_INSTALL_BINS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/bin</QMake_QT_INSTALL_BINS_>
+<QMake_QT_INSTALL_TESTS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/tests</QMake_QT_INSTALL_TESTS_>
+<QMake_QT_INSTALL_PLUGINS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/plugins</QMake_QT_INSTALL_PLUGINS_>
+<QMake_QT_INSTALL_IMPORTS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/imports</QMake_QT_INSTALL_IMPORTS_>
+<QMake_QT_INSTALL_QML_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/qml</QMake_QT_INSTALL_QML_>
+<QMake_QT_INSTALL_TRANSLATIONS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/translations</QMake_QT_INSTALL_TRANSLATIONS_>
+<QMake_QT_INSTALL_CONFIGURATION_></QMake_QT_INSTALL_CONFIGURATION_>
+<QMake_QT_INSTALL_EXAMPLES_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/examples</QMake_QT_INSTALL_EXAMPLES_>
+<QMake_QT_INSTALL_DEMOS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/examples</QMake_QT_INSTALL_DEMOS_>
+<QMake_QT_HOST_PREFIX_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64</QMake_QT_HOST_PREFIX_>
+<QMake_QT_HOST_DATA_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64</QMake_QT_HOST_DATA_>
+<QMake_QT_HOST_BINS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/bin</QMake_QT_HOST_BINS_>
+<QMake_QT_HOST_LIBS_>C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/lib</QMake_QT_HOST_LIBS_>
+<QMake_QMAKE_SPEC_>win32-msvc</QMake_QMAKE_SPEC_>
+<QMake_QMAKE_XSPEC_>win32-msvc</QMake_QMAKE_XSPEC_>
+<QMake_QMAKE_VERSION_>3.1</QMake_QMAKE_VERSION_>
+<QMake_QT_VERSION_>5.15.0</QMake_QT_VERSION_>
+<Qt_INCLUDEPATH_
+      >$(Qt_INCLUDEPATH_);x64\Debug\moc;x64\Debug\uic</Qt_INCLUDEPATH_>
+    <QtBkup_QtInstall
+      >5.15.0_msvc2019_static_x64</QtBkup_QtInstall>
+    <QtBkup_QtModules
+      >core;gui;multimedia;multimediawidgets;widgets</QtBkup_QtModules>
+    <QtBkup_QtPathBinaries
+      >bin</QtBkup_QtPathBinaries>
+    <QtBkup_QtPathLibraryExecutables
+      >bin</QtBkup_QtPathLibraryExecutables>
+    <QtBkup_QtHeaderSearchPath
+      ></QtBkup_QtHeaderSearchPath>
+    <QtBkup_QtLibrarySearchPath
+      ></QtBkup_QtLibrarySearchPath>
+    <QtBkup_QtVars
+      >DEFINES=/Project/ItemDefinitionGroup/ClCompile/PreprocessorDefinitions;INCLUDEPATH=/Project/ItemDefinitionGroup/ClCompile/AdditionalIncludeDirectories;STDCPP=/Project/ItemDefinitionGroup/ClCompile/LanguageStandard;RUNTIME=/Project/ItemDefinitionGroup/ClCompile/RuntimeLibrary;CL_OPTIONS=/Project/ItemDefinitionGroup/ClCompile/AdditionalOptions;LIBS=/Project/ItemDefinitionGroup/Link/AdditionalDependencies;LINK_OPTIONS=/Project/ItemDefinitionGroup/Link/AdditionalOptions</QtBkup_QtVars>
+    <QtBkup_QMakeCodeLines
+      ></QtBkup_QMakeCodeLines>
+    <QtBkup_QtBuildConfig
+      >debug</QtBkup_QtBuildConfig>
+    <QtVersion>5.15.0</QtVersion>
+    <QtVersionMajor>5</QtVersionMajor>
+    <QtVersionMinor>15</QtVersionMinor>
+    <QtVersionPatch>0</QtVersionPatch>
+  </PropertyGroup>
+</Project>
