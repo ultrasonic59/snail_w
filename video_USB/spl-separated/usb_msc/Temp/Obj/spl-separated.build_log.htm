@@ -1,0 +1,104 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: home vova, home, LIC=32B1Q-NLEPS-Z9VG9-40YFS-0PQ1R-09ZX7
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.36.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARM.DLL V5.36.0.0
+Dialog DLL:      DARMP3.DLL
+Target DLL:      UL2ARM.DLL V1.74.14.0
+Dialog DLL:      TARMP3.DLL V1.4.0.0
+ 
+<h2>Project:</h2>
+D:\proj\velograph\test_allw\F1C100s_RTX4_USB\spl-separated\usb_msc\usb_msc.uvproj
+Project File Date:  06/12/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'Product'
+assembling uboot.s...
+assembling mmu_a.s...
+compiling mmu_c.c...
+assembling startup_F1C100s.s...
+assembling spl.s...
+compiling Retarget.c...
+compiling sys-uart.c...
+assembling ubox_a.s...
+compiling f1c100s-intc.c...
+compiling target_F1C100s.c...
+compiling efx_main.c...
+compiling clk-f1c100s-pll.c...
+compiling reset-f1c100s.c...
+compiling gpio-f1c100s.c...
+compiling pwm-f1c100s.c...
+compiling usrentry.c...
+.\..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+users\usrentry.c: 1 warning, 0 errors
+compiling usb_descriptors.c...
+.\..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+users\usb_descriptors.c: 1 warning, 0 errors
+compiling fb-f1c100s.c...
+compiling usbd_control.c...
+.\..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+..\tinyusb\src\device\usbd_control.c: 1 warning, 0 errors
+compiling hid_device.c...
+compiling RTX_Conf_F1C100s.c...
+compiling tusb.c...
+..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+..\tinyusb\src\tusb.c: 1 warning, 0 errors
+compiling tusb_fifo.c...
+compiling usbd.c...
+.\..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+..\tinyusb\src\device\usbd.c(257): warning:  #2803-D: unrecognized GCC pragma
+  #pragma GCC diagnostic push
+..\tinyusb\src\device\usbd.c(258): warning:  #2803-D: unrecognized GCC pragma
+  #pragma GCC diagnostic ignored "-Wtype-limits"
+..\tinyusb\src\device\usbd.c(265): warning:  #2803-D: unrecognized GCC pragma
+  #pragma GCC diagnostic pop
+..\tinyusb\src\device\usbd.c: 4 warnings, 0 errors
+compiling dcd_sunxi_musb.c...
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(892): warning:  #223-D: function "f1c100s_intc_clear_pend" declared implicitly
+    f1c100s_intc_clear_pend(F1C100S_IRQ_USBOTG);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(893): warning:  #223-D: function "f1c100s_intc_set_isr" declared implicitly
+    f1c100s_intc_set_isr(F1C100S_IRQ_USBOTG, usb_isr_handler);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(923): warning:  #223-D: function "f1c100s_intc_enable_irq" declared implicitly
+    f1c100s_intc_enable_irq(F1C100S_IRQ_USBOTG);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(928): warning:  #223-D: function "f1c100s_intc_mask_irq" declared implicitly
+    f1c100s_intc_mask_irq(F1C100S_IRQ_USBOTG);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(934): warning:  #223-D: function "f1c100s_intc_disable_irq" declared implicitly
+    f1c100s_intc_disable_irq(F1C100S_IRQ_USBOTG);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c(939): warning:  #223-D: function "f1c100s_intc_unmask_irq" declared implicitly
+    f1c100s_intc_unmask_irq(F1C100S_IRQ_USBOTG);
+..\tinyusb\src\portable\sunxi\dcd_sunxi_musb.c: 6 warnings, 0 errors
+compiling msc_device.c...
+compiling msc_disk_dual.c...
+.\..\tinyusb\src\class/hid/hid.h(241): warning:  #66-D: enumeration value is out of "int" range
+    GAMEPAD_BUTTON_31 = TU_BIT(31),
+users\msc_disk_dual.c: 1 warning, 0 errors
+linking...
+Program Size: Code=46532 RO-data=1400 RW-data=25165928 ZI-data=4227524  
+After Build - User command #1: fromelf --bincombined --output="D:\proj\velograph\test_allw\F1C100s_RTX4_USB\spl-separated\usb_msc\output\spl-separated.bin" .\Temp\Obj\spl-separated.axf
+After Build - User command #2: D:\proj\velograph\test_allw\F1C100s_RTX4_USB\spl-separated\usb_msc\output\postscript.bat spl-separated.bin
+====== uboot head added ======
+The bootloader head has been fixed, spl size is 7168 bytes.
+".\Temp\Obj\spl-separated.axf" - 0 Error(s), 15 Warning(s).
+Build Time Elapsed:  00:00:18
+</pre>
+</body>
+</html>
