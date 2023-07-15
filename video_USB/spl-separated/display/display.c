@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include "lcd-cfg.h"
 #include "display.h"
 #include "f1c100s_de.h"
 #include "f1c100s_gpio.h"
@@ -11,8 +12,8 @@ static void display_gpio_init(void);
 void display_init(void) {
     de_lcd_config_t config;
 
-    config.width = 800;
-    config.height = 480;
+    config.width = LCD_PANEL_XSIZE;
+    config.height = LCD_PANEL_YSIZE;
     config.bus_width = DE_LCD_R_6BITS | DE_LCD_G_6BITS | DE_LCD_B_6BITS;
     config.bus_mode = DE_LCD_PARALLEL_RGB;
 

@@ -7,6 +7,40 @@ extern "C" {
 
 #include <stdint.h>
 
+typedef enum 
+{
+	PIXEL_FORMAT_ARGB32		= 0,
+	PIXEL_FORMAT_RGB24		= 1,
+	PIXEL_FORMAT_A8			= 2,
+	PIXEL_FORMAT_A1			= 3,
+	PIXEL_FORMAT_RGB16_565	= 4,
+	PIXEL_FORMAT_RGB30		= 5,
+}pixel_format_t;
+
+
+typedef struct render_st{
+	/* The width of render */
+	uint32_t width;
+
+	/* The height of render */
+	uint32_t height;
+
+	/* The pitch of one scan line */
+	uint32_t pitch;
+
+	/* Pixel format */
+	pixel_format_t format;
+
+	/* Pixel data */
+	void * pixels;
+
+	/* Pixel data length */
+	size_t pixlen;
+
+	/* Private data */
+	void * priv;
+}render_t;
+
 typedef struct framebuffer_st {
   /* Framebuffer name */
   char* name;

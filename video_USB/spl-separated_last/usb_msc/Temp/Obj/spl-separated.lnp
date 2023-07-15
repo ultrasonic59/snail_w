@@ -1,0 +1,33 @@
+--cpu ARM9E
+".\temp\obj\f1c100s-intc.o"
+".\temp\obj\sys-uart.o"
+".\temp\obj\startup_f1c100s.o"
+".\temp\obj\spl.o"
+".\temp\obj\uboot.o"
+".\temp\obj\mmu_a.o"
+".\temp\obj\mmu_c.o"
+".\temp\obj\retarget.o"
+".\temp\obj\ubox_a.o"
+".\temp\obj\target_f1c100s.o"
+".\temp\obj\rtx_conf_f1c100s.o"
+".\temp\obj\efx_main.o"
+".\temp\obj\clk-f1c100s-pll.o"
+".\temp\obj\fb-f1c100s.o"
+".\temp\obj\gpio-f1c100s.o"
+".\temp\obj\pwm-f1c100s.o"
+".\temp\obj\reset-f1c100s.o"
+".\temp\obj\usrentry.o"
+".\temp\obj\usb_descriptors.o"
+".\temp\obj\msc_disk_dual.o"
+".\temp\obj\tusb.o"
+".\temp\obj\usbd_control.o"
+".\temp\obj\usbd.o"
+".\temp\obj\tusb_fifo.o"
+".\temp\obj\hid_device.o"
+".\temp\obj\dcd_sunxi_musb.o"
+".\temp\obj\msc_device.o"
+C:\Keil_v5\ARM\RV31\LIB\RTX_ARM_LA.LIB
+--strict --scatter ".\..\system\ldscript.sct"
+--datacompressor=on --summary_stderr --info summarysizes --map --load_addr_map_info --symbols
+--info sizes --info totals --info unused
+--list ".\Temp\Lst\spl-separated.map" -o .\Temp\Obj\spl-separated.axf
