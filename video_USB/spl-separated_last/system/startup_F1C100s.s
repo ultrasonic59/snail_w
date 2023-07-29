@@ -34,7 +34,7 @@ Stack_Top
 
 Heap_Size       EQU     0x400000
 
-                AREA    HEAP, NOINIT, READWRITE, ALIGN=3
+                AREA    HEAP, NOINIT, READWRITE, ALIGN=4
 __heap_base
 Heap_Mem        SPACE   Heap_Size
 __heap_limit
@@ -190,15 +190,16 @@ __user_initial_stackheap
 ;*******************************************************************************
 ; 导入__use_realtime_heap标号，意为启用HEAP2模型
 ;*******************************************************************************
-                IMPORT  __use_realtime_heap
-                EXPORT  __user_heap_extent
-__user_heap_extent      ; 原型声明请看 <rt_misc.h>
-                BX      LR
+;////????
+;////????                IMPORT  __use_realtime_heap
+;////????                EXPORT  __user_heap_extent
+;////????__user_heap_extent      ; 原型声明请看 <rt_misc.h>
+;////????                BX      LR
 
-                EXPORT  __user_heap_extend
-__user_heap_extend      ; 原型声明请看 <rt_misc.h>
-                MOV     R0, #0
-                BX      LR
+;////????                EXPORT  __user_heap_extend
+;////????__user_heap_extend      ; 原型声明请看 <rt_misc.h>
+;////????                MOV     R0, #0
+;////????                BX      LR
                 
                 ENDIF
                 

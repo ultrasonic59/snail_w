@@ -73,8 +73,8 @@ void tvd_set_width(unsigned int id,unsigned int w)
 	unsigned int reg_val;
 	reg_val = TVD_RegRead(TVD_REG_BASE +0x008c+0x100*id);//0x134+0x100*id
 	reg_val &= ~(0xfff<<0);
-	reg_val |= ((w>720)?720:w)<<0;
-        TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
+	reg_val |= ((w>DEF_TWD_W)?DEF_TWD_W:w)<<0;
+  TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
 }
 
 void tvd_set_width_jump(unsigned int id,unsigned int j)
@@ -149,8 +149,8 @@ void tvd_config(unsigned int interface, unsigned int system, unsigned int format
 			} 
 			else 
 			{
-				tvd_set_width(0, 720);
-				tvd_set_width_jump(0, 720);
+				tvd_set_width(0, DEF_TWD_W);
+				tvd_set_width_jump(0, DEF_TWD_W);
 				tvd_set_height(0, 240);
 			}
 
@@ -200,8 +200,8 @@ void tvd_config(unsigned int interface, unsigned int system, unsigned int format
 						      0x28 + (576 - 448) / 2);
 
 			} else {
-				tvd_set_width(0, 720);
-				tvd_set_width_jump(0, 720);
+				tvd_set_width(0, DEF_TWD_W);
+				tvd_set_width_jump(0, DEF_TWD_W);
 				tvd_set_height(0, 288);
 			}
 			break;

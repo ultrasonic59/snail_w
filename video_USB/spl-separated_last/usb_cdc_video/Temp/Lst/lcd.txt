@@ -5,13 +5,13 @@
                           AREA ||.text||, CODE, READONLY, ALIGN=2
 
                   lcd_fill PROC
-;;;59     
-;;;60     void lcd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color) {
+;;;60     
+;;;61     void lcd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color) {
 000000  e92d41f0          PUSH     {r4-r8,lr}
 000004  e59d6018          LDR      r6,[sp,#0x18]
-;;;61         uint32_t offset = 0;
+;;;62         uint32_t offset = 0;
 000008  e3a05000          MOV      r5,#0
-;;;62         if((x + w > DISPLAY_W) || (y + h > DISPLAY_H)) return;
+;;;63         if((x + w > DISPLAY_W) || (y + h > DISPLAY_H)) return;
 00000c  e080c002          ADD      r12,r0,r2
 000010  e35c0e32          CMP      r12,#0x320
 000014  ca000002          BGT      |L1.36|
@@ -19,78 +19,78 @@
 00001c  e35c0f96          CMP      r12,#0x258
 000020  da000000          BLE      |L1.40|
                   |L1.36|
-;;;63         for(uint16_t ypos = y; ypos < (y + h); ypos++) {
-;;;64             offset = (uint32_t)ypos * DISPLAY_W;
-;;;65             for(uint16_t xpos = x; xpos < (x + w); xpos++) {
-;;;66                 lcd_fb[offset + xpos] = color;
-;;;67             }
-;;;68         }
-;;;69     }
+;;;64         for(uint16_t ypos = y; ypos < (y + h); ypos++) {
+;;;65             offset = (uint32_t)ypos * DISPLAY_W;
+;;;66             for(uint16_t xpos = x; xpos < (x + w); xpos++) {
+;;;67                 lcd_fb[offset + xpos] = color;
+;;;68             }
+;;;69         }
+;;;70     }
 000024  e8bd81f0          POP      {r4-r8,pc}
                   |L1.40|
-000028  e1a0c001          MOV      r12,r1                ;63
+000028  e1a0c001          MOV      r12,r1                ;64
 00002c  ea00000f          B        |L1.112|
                   |L1.48|
-000030  e3a04e32          MOV      r4,#0x320             ;64
-000034  e005049c          MUL      r5,r12,r4             ;64
-000038  e1a04000          MOV      r4,r0                 ;65
+000030  e3a04e32          MOV      r4,#0x320             ;65
+000034  e005049c          MUL      r5,r12,r4             ;65
+000038  e1a04000          MOV      r4,r0                 ;66
 00003c  ea000005          B        |L1.88|
                   |L1.64|
-000040  e0857004          ADD      r7,r5,r4              ;66
+000040  e0857004          ADD      r7,r5,r4              ;67
 000044  e59f839c          LDR      r8,|L1.1000|
-000048  e7886107          STR      r6,[r8,r7,LSL #2]     ;66
-00004c  e2847001          ADD      r7,r4,#1              ;65
-000050  e1a04807          LSL      r4,r7,#16             ;65
-000054  e1a04824          LSR      r4,r4,#16             ;65
+000048  e7886107          STR      r6,[r8,r7,LSL #2]     ;67
+00004c  e2847001          ADD      r7,r4,#1              ;66
+000050  e1a04807          LSL      r4,r7,#16             ;66
+000054  e1a04824          LSR      r4,r4,#16             ;66
                   |L1.88|
-000058  e0807002          ADD      r7,r0,r2              ;65
-00005c  e1570004          CMP      r7,r4                 ;65
+000058  e0807002          ADD      r7,r0,r2              ;66
+00005c  e1570004          CMP      r7,r4                 ;66
 000060  cafffff6          BGT      |L1.64|
-000064  e28c4001          ADD      r4,r12,#1             ;63
-000068  e1a0c804          LSL      r12,r4,#16            ;63
-00006c  e1a0c82c          LSR      r12,r12,#16           ;63
+000064  e28c4001          ADD      r4,r12,#1             ;64
+000068  e1a0c804          LSL      r12,r4,#16            ;64
+00006c  e1a0c82c          LSR      r12,r12,#16           ;64
                   |L1.112|
-000070  e0814003          ADD      r4,r1,r3              ;63
-000074  e154000c          CMP      r4,r12                ;63
+000070  e0814003          ADD      r4,r1,r3              ;64
+000074  e154000c          CMP      r4,r12                ;64
 000078  caffffec          BGT      |L1.48|
 00007c  e1a00000          MOV      r0,r0
 000080  eaffffe7          B        |L1.36|
-;;;70     
+;;;71     
                           ENDP
 
                   lcd_init PROC
-;;;29     
-;;;30     void lcd_init(uint8_t layer) {
+;;;30     
+;;;31     void lcd_init(uint8_t layer) {
 000084  e92d4038          PUSH     {r3-r5,lr}
 000088  e1a04000          MOV      r4,r0
-;;;31         debe_layer_init(layer);
+;;;32         debe_layer_init(layer);
 00008c  e1a00004          MOV      r0,r4
 000090  ebfffffe          BL       debe_layer_init
-;;;32         debe_layer_set_size(layer, DISPLAY_W, DISPLAY_H);
+;;;33         debe_layer_set_size(layer, DISPLAY_W, DISPLAY_H);
 000094  e3a02f96          MOV      r2,#0x258
 000098  e3a01e32          MOV      r1,#0x320
 00009c  e1a00004          MOV      r0,r4
 0000a0  ebfffffe          BL       debe_layer_set_size
-;;;33         debe_layer_set_addr(layer, lcd_fb);
+;;;34         debe_layer_set_addr(layer, lcd_fb);
 0000a4  e59f133c          LDR      r1,|L1.1000|
 0000a8  e1a00004          MOV      r0,r4
 0000ac  ebfffffe          BL       debe_layer_set_addr
-;;;34         debe_layer_enable(layer);
+;;;35         debe_layer_enable(layer);
 0000b0  e1a00004          MOV      r0,r4
 0000b4  ebfffffe          BL       debe_layer_enable
-;;;35     
-;;;36     #if LCD_BPP == 32
-;;;37         debe_layer_set_mode(layer, DEBE_MODE_32BPP_ARGB_8888);
+;;;36     
+;;;37     #if LCD_BPP == 32
+;;;38         debe_layer_set_mode(layer, DEBE_MODE_32BPP_ARGB_8888);
 0000b8  e59f132c          LDR      r1,|L1.1004|
 0000bc  e1a00004          MOV      r0,r4
 0000c0  ebfffffe          BL       debe_layer_set_mode
-;;;38     #elif LCD_BPP == 16
-;;;39         debe_layer_set_mode(layer, DEBE_MODE_16BPP_RGB_565);
-;;;40     #elif LCD_BPP == 8
-;;;41         debe_layer_set_mode(layer, DEBE_MODE_8BPP_MONO);
-;;;42     #endif
-;;;43     
-;;;44         lcd_fill(0, 0, DISPLAY_W, DISPLAY_H, COLOR_BLACK);
+;;;39     #elif LCD_BPP == 16
+;;;40         debe_layer_set_mode(layer, DEBE_MODE_16BPP_RGB_565);
+;;;41     #elif LCD_BPP == 8
+;;;42         debe_layer_set_mode(layer, DEBE_MODE_8BPP_MONO);
+;;;43     #endif
+;;;44     
+;;;45         lcd_fill(0, 0, DISPLAY_W, DISPLAY_H, COLOR_BLACK);
 0000c4  e3a004ff          MOV      r0,#0xff000000
 0000c8  e3a03f96          MOV      r3,#0x258
 0000cc  e3a02e32          MOV      r2,#0x320
@@ -98,32 +98,32 @@
 0000d4  e58d0000          STR      r0,[sp,#0]
 0000d8  e1a00001          MOV      r0,r1
 0000dc  ebfffffe          BL       lcd_fill
-;;;45         lcd_set_font(&t_12x24_full);
+;;;46         lcd_set_font(&t_12x24_full);
 0000e0  e59f0308          LDR      r0,|L1.1008|
 0000e4  ebfffffe          BL       lcd_set_font
-;;;46     }
+;;;47     }
 0000e8  e8bd8038          POP      {r3-r5,pc}
-;;;47     
+;;;48     
                           ENDP
 
                   lcd_draw_char PROC
-;;;70     
-;;;71     static void lcd_draw_char(uint16_t x, uint16_t y, uint8_t* start) {
+;;;71     
+;;;72     static void lcd_draw_char(uint16_t x, uint16_t y, uint8_t* start) {
 0000ec  e92d5ff0          PUSH     {r4-r12,lr}
 0000f0  e1a04000          MOV      r4,r0
 0000f4  e1a05001          MOV      r5,r1
 0000f8  e1a0a002          MOV      r10,r2
-;;;72         uint16_t xpos = 0;
+;;;73         uint16_t xpos = 0;
 0000fc  e3a06000          MOV      r6,#0
-;;;73         uint16_t ypos = 0;
+;;;74         uint16_t ypos = 0;
 000100  e3a07000          MOV      r7,#0
-;;;74         if(font->type == 0) {
+;;;75         if(font->type == 0) {
 000104  e59f02e8          LDR      r0,|L1.1012|
 000108  e5900000          LDR      r0,[r0,#0]  ; font
 00010c  e5d00006          LDRB     r0,[r0,#6]
 000110  e3500000          CMP      r0,#0
 000114  1a00003d          BNE      |L1.528|
-;;;75             uint16_t byte_num = font->char_w * font->char_h / 8;
+;;;76             uint16_t byte_num = font->char_w * font->char_h / 8;
 000118  e59f12d4          LDR      r1,|L1.1012|
 00011c  e5911000          LDR      r1,[r1,#0]  ; font
 000120  e5d11004          LDRB     r1,[r1,#4]
@@ -135,21 +135,21 @@
 000138  e0801ea1          ADD      r1,r0,r1,LSR #29
 00013c  e1a01681          LSL      r1,r1,#13
 000140  e1a0b821          LSR      r11,r1,#16
-;;;76             for(uint16_t byte_cnt = 0; byte_cnt < byte_num; byte_cnt++) {
+;;;77             for(uint16_t byte_cnt = 0; byte_cnt < byte_num; byte_cnt++) {
 000144  e3a08000          MOV      r8,#0
 000148  ea00002d          B        |L1.516|
                   |L1.332|
-;;;77                 for(uint8_t bit_cnt = 0; bit_cnt < 8; bit_cnt++) {
+;;;78                 for(uint8_t bit_cnt = 0; bit_cnt < 8; bit_cnt++) {
 00014c  e3a09000          MOV      r9,#0
 000150  ea000026          B        |L1.496|
                   |L1.340|
-;;;78                     if((start[byte_cnt] << bit_cnt) & 0x80)
+;;;79                     if((start[byte_cnt] << bit_cnt) & 0x80)
 000154  e7da0008          LDRB     r0,[r10,r8]
 000158  e1a00910          LSL      r0,r0,r9
 00015c  e2000080          AND      r0,r0,#0x80
 000160  e3500000          CMP      r0,#0
 000164  0a000009          BEQ      |L1.400|
-;;;79                         lcd_set_pixel(x + xpos, y + ypos, text_color);
+;;;80                         lcd_set_pixel(x + xpos, y + ypos, text_color);
 000168  e0852007          ADD      r2,r5,r7
 00016c  e1a01802          LSL      r1,r2,#16
 000170  e1a01821          LSR      r1,r1,#16
@@ -161,8 +161,8 @@
 000188  ebfffffe          BL       lcd_set_pixel
 00018c  ea000008          B        |L1.436|
                   |L1.400|
-;;;80                     else
-;;;81                         lcd_set_pixel(x + xpos, y + ypos, bg_color);
+;;;81                     else
+;;;82                         lcd_set_pixel(x + xpos, y + ypos, bg_color);
 000190  e0852007          ADD      r2,r5,r7
 000194  e1a01802          LSL      r1,r2,#16
 000198  e1a01821          LSR      r1,r1,#16
@@ -173,8 +173,8 @@
 0001ac  e5922000          LDR      r2,[r2,#0]  ; bg_color
 0001b0  ebfffffe          BL       lcd_set_pixel
                   |L1.436|
-;;;82     
-;;;83                     if((++xpos) >= font->char_w) {
+;;;83     
+;;;84                     if((++xpos) >= font->char_w) {
 0001b4  e2860001          ADD      r0,r6,#1
 0001b8  e1a00800          LSL      r0,r0,#16
 0001bc  e1a00820          LSR      r0,r0,#16
@@ -184,58 +184,58 @@
 0001cc  e5d11004          LDRB     r1,[r1,#4]
 0001d0  e1500001          CMP      r0,r1
 0001d4  ba000003          BLT      |L1.488|
-;;;84                         xpos = 0;
+;;;85                         xpos = 0;
 0001d8  e3a06000          MOV      r6,#0
-;;;85                         ypos++;
+;;;86                         ypos++;
 0001dc  e2870001          ADD      r0,r7,#1
 0001e0  e1a07800          LSL      r7,r0,#16
 0001e4  e1a07827          LSR      r7,r7,#16
                   |L1.488|
-0001e8  e2890001          ADD      r0,r9,#1              ;77
-0001ec  e20090ff          AND      r9,r0,#0xff           ;77
+0001e8  e2890001          ADD      r0,r9,#1              ;78
+0001ec  e20090ff          AND      r9,r0,#0xff           ;78
                   |L1.496|
-0001f0  e3590008          CMP      r9,#8                 ;77
+0001f0  e3590008          CMP      r9,#8                 ;78
 0001f4  baffffd6          BLT      |L1.340|
-0001f8  e2880001          ADD      r0,r8,#1              ;76
-0001fc  e1a08800          LSL      r8,r0,#16             ;76
-000200  e1a08828          LSR      r8,r8,#16             ;76
+0001f8  e2880001          ADD      r0,r8,#1              ;77
+0001fc  e1a08800          LSL      r8,r0,#16             ;77
+000200  e1a08828          LSR      r8,r8,#16             ;77
                   |L1.516|
-000204  e158000b          CMP      r8,r11                ;76
+000204  e158000b          CMP      r8,r11                ;77
 000208  baffffcf          BLT      |L1.332|
-;;;86                     }
-;;;87                 }
-;;;88             }
-;;;89         }
+;;;87                     }
+;;;88                 }
+;;;89             }
+;;;90         }
 00020c  e1a00000          MOV      r0,r0
                   |L1.528|
-;;;90     }
+;;;91     }
 000210  e8bd9ff0          POP      {r4-r12,pc}
-;;;91     
+;;;92     
                           ENDP
 
                   lcd_putchar PROC
-;;;92     void lcd_putchar(char chr) {
+;;;93     void lcd_putchar(char chr) {
 000214  e92d41f0          PUSH     {r4-r8,lr}
 000218  e1a04000          MOV      r4,r0
-;;;93         uint16_t cur_X = text_x;
+;;;94         uint16_t cur_X = text_x;
 00021c  e59f01dc          LDR      r0,|L1.1024|
 000220  e1d060b0          LDRH     r6,[r0,#0]  ; text_x
-;;;94         uint16_t cur_Y = text_y;
+;;;95         uint16_t cur_Y = text_y;
 000224  e59f01d8          LDR      r0,|L1.1028|
 000228  e1d070b0          LDRH     r7,[r0,#0]  ; text_y
-;;;95         if(chr == '\n') {
+;;;96         if(chr == '\n') {
 00022c  e354000a          CMP      r4,#0xa
 000230  1a00000e          BNE      |L1.624|
-;;;96     #ifdef SAVE_X_OFFSET
-;;;97             text_x = text_x_start;
+;;;97     #ifdef SAVE_X_OFFSET
+;;;98             text_x = text_x_start;
 000234  e59f01cc          LDR      r0,|L1.1032|
 000238  e1d000b0          LDRH     r0,[r0,#0]  ; text_x_start
 00023c  e59f11bc          LDR      r1,|L1.1024|
 000240  e1c100b0          STRH     r0,[r1,#0]  ; text_x
-;;;98     #else
-;;;99             text_x = 0;
-;;;100    #endif
-;;;101            text_y += font->char_h;
+;;;99     #else
+;;;100            text_x = 0;
+;;;101    #endif
+;;;102            text_y += font->char_h;
 000244  e59f01a8          LDR      r0,|L1.1012|
 000248  e5900000          LDR      r0,[r0,#0]  ; font
 00024c  e5d00005          LDRB     r0,[r0,#5]
@@ -245,12 +245,12 @@
 00025c  e3c00801          BIC      r0,r0,#0x10000
 000260  e59f119c          LDR      r1,|L1.1028|
 000264  e1c100b0          STRH     r0,[r1,#0]  ; text_y
-;;;102            chr = 0;
+;;;103            chr = 0;
 000268  e3a04000          MOV      r4,#0
 00026c  ea00001c          B        |L1.740|
                   |L1.624|
-;;;103        } else {
-;;;104            text_x += font->char_w;
+;;;104        } else {
+;;;105            text_x += font->char_w;
 000270  e59f017c          LDR      r0,|L1.1012|
 000274  e5900000          LDR      r0,[r0,#0]  ; font
 000278  e5d00004          LDRB     r0,[r0,#4]
@@ -260,7 +260,7 @@
 000288  e3c00801          BIC      r0,r0,#0x10000
 00028c  e59f116c          LDR      r1,|L1.1024|
 000290  e1c100b0          STRH     r0,[r1,#0]  ; text_x
-;;;105            if(text_x > (DISPLAY_W - font->char_w)) {
+;;;106            if(text_x > (DISPLAY_W - font->char_w)) {
 000294  e59f0158          LDR      r0,|L1.1012|
 000298  e5900000          LDR      r0,[r0,#0]  ; font
 00029c  e5d00004          LDRB     r0,[r0,#4]
@@ -268,16 +268,16 @@
 0002a4  e1d110b0          LDRH     r1,[r1,#0]  ; text_x
 0002a8  e1500001          CMP      r0,r1
 0002ac  aa00000c          BGE      |L1.740|
-;;;106    #ifdef SAVE_X_OFFSET
-;;;107                text_x = text_x_start;
+;;;107    #ifdef SAVE_X_OFFSET
+;;;108                text_x = text_x_start;
 0002b0  e59f0150          LDR      r0,|L1.1032|
 0002b4  e1d000b0          LDRH     r0,[r0,#0]  ; text_x_start
 0002b8  e59f1140          LDR      r1,|L1.1024|
 0002bc  e1c100b0          STRH     r0,[r1,#0]  ; text_x
-;;;108    #else
-;;;109                text_x = 0;
-;;;110    #endif
-;;;111                text_y += font->char_h;
+;;;109    #else
+;;;110                text_x = 0;
+;;;111    #endif
+;;;112                text_y += font->char_h;
 0002c0  e59f012c          LDR      r0,|L1.1012|
 0002c4  e5900000          LDR      r0,[r0,#0]  ; font
 0002c8  e5d00005          LDRB     r0,[r0,#5]
@@ -288,9 +288,9 @@
 0002dc  e59f1120          LDR      r1,|L1.1028|
 0002e0  e1c100b0          STRH     r0,[r1,#0]  ; text_y
                   |L1.740|
-;;;112            }
-;;;113        }
-;;;114        if(text_y > (DISPLAY_H - font->char_h)) text_y = 0;
+;;;113            }
+;;;114        }
+;;;115        if(text_y > (DISPLAY_H - font->char_h)) text_y = 0;
 0002e4  e59f0108          LDR      r0,|L1.1012|
 0002e8  e5900000          LDR      r0,[r0,#0]  ; font
 0002ec  e5d00005          LDRB     r0,[r0,#5]
@@ -303,8 +303,8 @@
 000308  e59f10f4          LDR      r1,|L1.1028|
 00030c  e1c100b0          STRH     r0,[r1,#0]  ; text_y
                   |L1.784|
-;;;115    
-;;;116        if(chr < font->offset) chr = font->offset;
+;;;116    
+;;;117        if(chr < font->offset) chr = font->offset;
 000310  e59f00dc          LDR      r0,|L1.1012|
 000314  e5900000          LDR      r0,[r0,#0]  ; font
 000318  e5d00007          LDRB     r0,[r0,#7]
@@ -314,17 +314,17 @@
 000328  e5900000          LDR      r0,[r0,#0]  ; font
 00032c  e5d04007          LDRB     r4,[r0,#7]
                   |L1.816|
-;;;117    
-;;;118        uint8_t* chardata = NULL;
+;;;118    
+;;;119        uint8_t* chardata = NULL;
 000330  e3a05000          MOV      r5,#0
-;;;119    
-;;;120        if(font->type == 0) {
+;;;120    
+;;;121        if(font->type == 0) {
 000334  e59f00b8          LDR      r0,|L1.1012|
 000338  e5900000          LDR      r0,[r0,#0]  ; font
 00033c  e5d00006          LDRB     r0,[r0,#6]
 000340  e3500000          CMP      r0,#0
 000344  1a000019          BNE      |L1.944|
-;;;121            if(chr < font->offset) chr = font->offset;
+;;;122            if(chr < font->offset) chr = font->offset;
 000348  e59f00a4          LDR      r0,|L1.1012|
 00034c  e5900000          LDR      r0,[r0,#0]  ; font
 000350  e5d00007          LDRB     r0,[r0,#7]
@@ -334,7 +334,7 @@
 000360  e5900000          LDR      r0,[r0,#0]  ; font
 000364  e5d04007          LDRB     r4,[r0,#7]
                   |L1.872|
-;;;122            chardata =
+;;;123            chardata =
 000368  e59f1084          LDR      r1,|L1.1012|
 00036c  e5911000          LDR      r1,[r1,#0]  ; font
 000370  e5d11004          LDRB     r1,[r1,#4]
@@ -354,25 +354,25 @@
 0003a8  e5933000          LDR      r3,[r3,#0]
 0003ac  e0253291          MLA      r5,r1,r2,r3
                   |L1.944|
-;;;123                (uint8_t*)&(font->data[(font->char_w * font->char_h / 8) * (chr - font->offset)]);
-;;;124        }
-;;;125    
-;;;126        lcd_draw_char(cur_X, cur_Y, chardata);
+;;;124                (uint8_t*)&(font->data[(font->char_w * font->char_h / 8) * (chr - font->offset)]);
+;;;125        }
+;;;126    
+;;;127        lcd_draw_char(cur_X, cur_Y, chardata);
 0003b0  e1a02005          MOV      r2,r5
 0003b4  e1a01007          MOV      r1,r7
 0003b8  e1a00006          MOV      r0,r6
 0003bc  ebfffffe          BL       lcd_draw_char
-;;;127    }
+;;;128    }
 0003c0  e8bd81f0          POP      {r4-r8,pc}
-;;;128    
+;;;129    
                           ENDP
 
                   lcd_print PROC
-;;;129    void lcd_print(char* str) {
+;;;130    void lcd_print(char* str) {
 0003c4  e92d4010          PUSH     {r4,lr}
 0003c8  e1a04000          MOV      r4,r0
-;;;130        //text_x_start = text_x;
-;;;131        while(*str) lcd_putchar(*str++);
+;;;131        //text_x_start = text_x;
+;;;132        while(*str) lcd_putchar(*str++);
 0003cc  ea000001          B        |L1.984|
                   |L1.976|
 0003d0  e4d40001          LDRB     r0,[r4],#1
@@ -381,9 +381,9 @@
 0003d8  e5d40000          LDRB     r0,[r4,#0]
 0003dc  e3500000          CMP      r0,#0
 0003e0  1afffffa          BNE      |L1.976|
-;;;132    }
+;;;133    }
 0003e4  e8bd8010          POP      {r4,pc}
-;;;133    
+;;;134    
                           ENDP
 
                   |L1.1000|
@@ -429,12 +429,12 @@
                           AREA ||i.lcd_set_font||, COMGROUP=lcd_set_font, CODE, READONLY, ALIGN=2
 
                   lcd_set_font PROC
-;;;151    
-;;;152    inline void lcd_set_font(const lcd_font_t* fnt) {
+;;;152    
+;;;153    inline void lcd_set_font(const lcd_font_t* fnt) {
 000000  e59f1004          LDR      r1,|L16.12|
-;;;153        font = (lcd_font_t*)fnt;
+;;;154        font = (lcd_font_t*)fnt;
 000004  e5810000          STR      r0,[r1,#0]  ; font
-;;;154    }
+;;;155    }
 000008  e12fff1e          BX       lr
                           ENDP
 
@@ -444,25 +444,25 @@
                           AREA ||i.lcd_set_pixel||, COMGROUP=lcd_set_pixel, CODE, READONLY, ALIGN=2
 
                   lcd_set_pixel PROC
-;;;47     
-;;;48     inline void lcd_set_pixel(uint16_t x, uint16_t y, uint32_t color) {
+;;;48     
+;;;49     inline void lcd_set_pixel(uint16_t x, uint16_t y, uint32_t color) {
 000000  e0813181          ADD      r3,r1,r1,LSL #3
-;;;49     #if LCD_BPP == 32
-;;;50         lcd_fb[x + y * DISPLAY_W] = color;
+;;;50     #if LCD_BPP == 32
+;;;51         lcd_fb[x + y * DISPLAY_W] = color;
 000004  e0833201          ADD      r3,r3,r1,LSL #4
 000008  e0803283          ADD      r3,r0,r3,LSL #5
 00000c  e59fc004          LDR      r12,|L22.24|
 000010  e78c2103          STR      r2,[r12,r3,LSL #2]
-;;;51     #elif LCD_BPP == 16
-;;;52         lcd_fb[x + y * DISPLAY_W] = color & 0xFFFF;
-;;;53     #elif LCD_BPP == 8
-;;;54         lcd_fb[x + y * DISPLAY_W] = color & 0xFF;
-;;;55     #else
-;;;56     
-;;;57     #endif
-;;;58     }
+;;;52     #elif LCD_BPP == 16
+;;;53         lcd_fb[x + y * DISPLAY_W] = color & 0xFFFF;
+;;;54     #elif LCD_BPP == 8
+;;;55         lcd_fb[x + y * DISPLAY_W] = color & 0xFF;
+;;;56     #else
+;;;57     
+;;;58     #endif
+;;;59     }
 000014  e12fff1e          BX       lr
-;;;59     
+;;;60     
                           ENDP
 
                   |L22.24|
@@ -471,31 +471,31 @@
                           AREA ||i.lcd_out||, COMGROUP=lcd_out, CODE, READONLY, ALIGN=2
 
                   lcd_out PROC
-;;;133    
-;;;134    inline void lcd_out(char character, void* arg) {
+;;;134    
+;;;135    inline void lcd_out(char character, void* arg) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
 000008  e1a05001          MOV      r5,r1
-;;;135        lcd_putchar(character);
+;;;136        lcd_putchar(character);
 00000c  e1a00004          MOV      r0,r4
 000010  ebfffffe          BL       lcd_putchar
-;;;136    }
+;;;137    }
 000014  e8bd8070          POP      {r4-r6,pc}
-;;;137    
+;;;138    
                           ENDP
 
 
                           AREA ||i.lcd_set_text_color||, COMGROUP=lcd_set_text_color, CODE, READONLY, ALIGN=2
 
                   lcd_set_text_color PROC
-;;;137    
-;;;138    inline void lcd_set_text_color(uint32_t color) {
+;;;138    
+;;;139    inline void lcd_set_text_color(uint32_t color) {
 000000  e59f1004          LDR      r1,|L35.12|
-;;;139        text_color = color;
+;;;140        text_color = color;
 000004  e5810000          STR      r0,[r1,#0]  ; text_color
-;;;140    }
+;;;141    }
 000008  e12fff1e          BX       lr
-;;;141    
+;;;142    
                           ENDP
 
                   |L35.12|
@@ -504,14 +504,14 @@
                           AREA ||i.lcd_set_bg_color||, COMGROUP=lcd_set_bg_color, CODE, READONLY, ALIGN=2
 
                   lcd_set_bg_color PROC
-;;;141    
-;;;142    inline void lcd_set_bg_color(uint32_t color) {
+;;;142    
+;;;143    inline void lcd_set_bg_color(uint32_t color) {
 000000  e59f1004          LDR      r1,|L42.12|
-;;;143        bg_color = color;
+;;;144        bg_color = color;
 000004  e5810000          STR      r0,[r1,#0]  ; bg_color
-;;;144    }
+;;;145    }
 000008  e12fff1e          BX       lr
-;;;145    
+;;;146    
                           ENDP
 
                   |L42.12|
@@ -520,22 +520,22 @@
                           AREA ||i.lcd_set_text_pos||, COMGROUP=lcd_set_text_pos, CODE, READONLY, ALIGN=2
 
                   lcd_set_text_pos PROC
-;;;145    
-;;;146    inline void lcd_set_text_pos(uint16_t x, uint16_t y) {
+;;;146    
+;;;147    inline void lcd_set_text_pos(uint16_t x, uint16_t y) {
 000000  e59f201c          LDR      r2,|L49.36|
-;;;147        text_x       = x;
+;;;148        text_x       = x;
 000004  e1c200b0          STRH     r0,[r2,#0]  ; text_x
-;;;148        text_y       = y;
+;;;149        text_y       = y;
 000008  e59f2018          LDR      r2,|L49.40|
 00000c  e1c210b0          STRH     r1,[r2,#0]  ; text_y
-;;;149        text_x_start = text_x;
+;;;150        text_x_start = text_x;
 000010  e59f200c          LDR      r2,|L49.36|
 000014  e1d220b0          LDRH     r2,[r2,#0]  ; text_x
 000018  e59f300c          LDR      r3,|L49.44|
 00001c  e1c320b0          STRH     r2,[r3,#0]  ; text_x_start
-;;;150    }
+;;;151    }
 000020  e12fff1e          BX       lr
-;;;151    
+;;;152    
                           ENDP
 
                   |L49.36|

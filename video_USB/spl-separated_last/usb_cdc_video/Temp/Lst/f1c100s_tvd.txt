@@ -5,905 +5,844 @@
                           AREA ||.text||, CODE, READONLY, ALIGN=2
 
                   tvd_set_ch PROC
-;;;218    // Input channel select
-;;;219    void tvd_set_ch(uint8_t ch) {
+;;;244    // Input channel select
+;;;245    void tvd_set_ch(uint8_t ch) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
-;;;220        if(ch == 0)
+;;;246        if(ch == 0)
 000008  e3540000          CMP      r4,#0
 00000c  1a000006          BNE      |L1.44|
-;;;221            clear32(TVD_BASE + TVD_REG_E04, (1 << 0));
-000010  e59f0568          LDR      r0,|L1.1408|
+;;;247            clear32(TVD_BASE + TVD_REG_E04, (1 << 0));
+000010  e59f065c          LDR      r0,|L1.1652|
 000014  ebfffffe          BL       read32
 000018  e3c05001          BIC      r5,r0,#1
 00001c  e1a01005          MOV      r1,r5
-000020  e59f0558          LDR      r0,|L1.1408|
+000020  e59f064c          LDR      r0,|L1.1652|
 000024  ebfffffe          BL       write32
 000028  ea000005          B        |L1.68|
                   |L1.44|
-;;;222        else
-;;;223            set32(TVD_BASE + TVD_REG_E04, (1 << 0));
-00002c  e59f054c          LDR      r0,|L1.1408|
+;;;248        else
+;;;249            set32(TVD_BASE + TVD_REG_E04, (1 << 0));
+00002c  e59f0640          LDR      r0,|L1.1652|
 000030  ebfffffe          BL       read32
 000034  e3805001          ORR      r5,r0,#1
 000038  e1a01005          MOV      r1,r5
-00003c  e59f053c          LDR      r0,|L1.1408|
+00003c  e59f0630          LDR      r0,|L1.1652|
 000040  ebfffffe          BL       write32
                   |L1.68|
-;;;224    }
+;;;250    }
 000044  e8bd8070          POP      {r4-r6,pc}
-;;;225    
-                          ENDP
-
-                  tvd_set_out_size PROC
-;;;185    
-;;;186    void tvd_set_out_size(uint16_t w, uint16_t h) {
-000048  e92d4070          PUSH     {r4-r6,lr}
-00004c  e1a04000          MOV      r4,r0
-000050  e1a05001          MOV      r5,r1
-;;;187        write32(TVD_BASE + TVD_DMA_SIZE, ((h / 2) << 16) | (w));
-000054  e1a06005          MOV      r6,r5
-000058  e0850fa6          ADD      r0,r5,r6,LSR #31
-00005c  e1a000c0          ASR      r0,r0,#1
-000060  e1841800          ORR      r1,r4,r0,LSL #16
-000064  e59f0518          LDR      r0,|L1.1412|
-000068  ebfffffe          BL       write32
-;;;188        write32(TVD_BASE + TVD_DMA_STRIDE, w);
-00006c  e1a01004          MOV      r1,r4
-000070  e59f0510          LDR      r0,|L1.1416|
-000074  ebfffffe          BL       write32
-;;;189        set32(TVD_BASE + TVD_DMA_CFG, (1 << 26)); // size_valid ?
-000078  e59f050c          LDR      r0,|L1.1420|
-00007c  ebfffffe          BL       read32
-000080  e3806301          ORR      r6,r0,#0x4000000
-000084  e1a01006          MOV      r1,r6
-000088  e59f04fc          LDR      r0,|L1.1420|
-00008c  ebfffffe          BL       write32
-;;;190        tvd.width  = w;
-000090  e59f04f8          LDR      r0,|L1.1424|
-000094  e1c040b0          STRH     r4,[r0,#0]  ; tvd
-;;;191        tvd.height = h;
-000098  e1c050b2          STRH     r5,[r0,#2]  ; tvd
-;;;192    }
-00009c  e8bd8070          POP      {r4-r6,pc}
-;;;193    
-                          ENDP
-
-                  tvd_set_mode PROC
-;;;46     
-;;;47     void tvd_set_mode(tvd_mode_e mode) {
-0000a0  e92d4010          PUSH     {r4,lr}
-0000a4  e1a04000          MOV      r4,r0
-;;;48         write32(TVD_BASE + TVD_REG_E04, 0x8002AAA8);
-0000a8  e59f14e4          LDR      r1,|L1.1428|
-0000ac  e59f04cc          LDR      r0,|L1.1408|
-0000b0  ebfffffe          BL       write32
-;;;49         write32(TVD_BASE + TVD_REG_E2C, 0x00110000);
-0000b4  e3a01811          MOV      r1,#0x110000
-0000b8  e59f04d8          LDR      r0,|L1.1432|
-0000bc  ebfffffe          BL       write32
-;;;50         write32(TVD_BASE + TVD_REG_040, 0x04000310);
-0000c0  e59f14d4          LDR      r1,|L1.1436|
-0000c4  e59f04d4          LDR      r0,|L1.1440|
-0000c8  ebfffffe          BL       write32
-;;;51         write32(TVD_BASE + TVD_REG_000, 0x00000000);
-0000cc  e3a01000          MOV      r1,#0
-0000d0  e59f04cc          LDR      r0,|L1.1444|
-0000d4  ebfffffe          BL       write32
-;;;52         write32(TVD_BASE + TVD_REG_014, 0x20000000);
-0000d8  e3a01202          MOV      r1,#0x20000000
-0000dc  e59f04c4          LDR      r0,|L1.1448|
-0000e0  ebfffffe          BL       write32
-;;;53         write32(TVD_BASE + TVD_REG_F24, 0x0682810A);
-0000e4  e59f14c0          LDR      r1,|L1.1452|
-0000e8  e59f04c0          LDR      r0,|L1.1456|
-0000ec  ebfffffe          BL       write32
-;;;54     
-;;;55         write32(TVD_BASE + TVD_REG_F28, 0x00006440);
-0000f0  e59f14bc          LDR      r1,|L1.1460|
-0000f4  e59f04bc          LDR      r0,|L1.1464|
-0000f8  ebfffffe          BL       write32
-;;;56         write32(TVD_BASE + TVD_REG_F4C, 0x0E70106C);
-0000fc  e59f14b8          LDR      r1,|L1.1468|
-000100  e59f04b8          LDR      r0,|L1.1472|
-000104  ebfffffe          BL       write32
-;;;57         write32(TVD_BASE + TVD_REG_F54, 0x00000000);
-000108  e3a01000          MOV      r1,#0
-00010c  e59f04b0          LDR      r0,|L1.1476|
-000110  ebfffffe          BL       write32
-;;;58         write32(TVD_BASE + TVD_REG_F58, 0x00000082);
-000114  e3a01082          MOV      r1,#0x82
-000118  e59f04a8          LDR      r0,|L1.1480|
-00011c  ebfffffe          BL       write32
-;;;59         write32(TVD_BASE + TVD_REG_F6C, 0x00FFFAD0);
-000120  e59f14a4          LDR      r1,|L1.1484|
-000124  e59f04a4          LDR      r0,|L1.1488|
-000128  ebfffffe          BL       write32
-;;;60         write32(TVD_BASE + TVD_REG_F70, 0x0000A010);
-00012c  e59f14a0          LDR      r1,|L1.1492|
-000130  e59f04a0          LDR      r0,|L1.1496|
-000134  ebfffffe          BL       write32
-;;;61     
-;;;62         switch(mode) {
-000138  e3540006          CMP      r4,#6
-00013c  308ff104          ADDCC    pc,pc,r4,LSL #2
-000140  ea000151          B        |L1.1676|
-000144  ea000150          B        |L1.1676|
-000148  ea000003          B        |L1.348|
-00014c  ea000037          B        |L1.560|
-000150  ea00006b          B        |L1.772|
-000154  ea00009f          B        |L1.984|
-000158  ea0000d3          B        |L1.1196|
-                  |L1.348|
-;;;63         case TVD_MODE_NTSC: // NTSC 720x480
-00015c  e1a00000          MOV      r0,r0
-;;;64             write32(TVD_BASE + TVD_REG_008, 0x00010001);
-000160  e59f1474          LDR      r1,|L1.1500|
-000164  e59f0474          LDR      r0,|L1.1504|
-000168  ebfffffe          BL       write32
-;;;65             write32(TVD_BASE + TVD_REG_00C, 0x00202068);
-00016c  e59f1470          LDR      r1,|L1.1508|
-000170  e59f0470          LDR      r0,|L1.1512|
-000174  ebfffffe          BL       write32
-;;;66             write32(TVD_BASE + TVD_REG_010, 0x00300080);
-000178  e59f146c          LDR      r1,|L1.1516|
-00017c  e59f046c          LDR      r0,|L1.1520|
-000180  ebfffffe          BL       write32
-;;;67             write32(TVD_BASE + TVD_REG_018, 0x21F07C1F);
-000184  e59f1468          LDR      r1,|L1.1524|
-000188  e59f0468          LDR      r0,|L1.1528|
-00018c  ebfffffe          BL       write32
-;;;68             write32(TVD_BASE + TVD_REG_01C, 0x00820022);
-000190  e59f1464          LDR      r1,|L1.1532|
-000194  e59f0464          LDR      r0,|L1.1536|
-000198  ebfffffe          BL       write32
-;;;69     
-;;;70             write32(TVD_BASE + TVD_REG_F08, 0x00590100);
-00019c  e59f1460          LDR      r1,|L1.1540|
-0001a0  e59f0460          LDR      r0,|L1.1544|
-0001a4  ebfffffe          BL       write32
-;;;71             write32(TVD_BASE + TVD_REG_F0C, 0x00000010);
-0001a8  e3a01010          MOV      r1,#0x10
-0001ac  e59f0458          LDR      r0,|L1.1548|
-0001b0  ebfffffe          BL       write32
-;;;72             write32(TVD_BASE + TVD_REG_F10, 0x008A32DD);
-0001b4  e59f1454          LDR      r1,|L1.1552|
-0001b8  e59f0454          LDR      r0,|L1.1556|
-0001bc  ebfffffe          BL       write32
-;;;73             write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-0001c0  e59f1450          LDR      r1,|L1.1560|
-0001c4  e59f0450          LDR      r0,|L1.1564|
-0001c8  ebfffffe          BL       write32
-;;;74             write32(TVD_BASE + TVD_REG_F1C, 0x008A0000);
-0001cc  e3a0188a          MOV      r1,#0x8a0000
-0001d0  e59f0448          LDR      r0,|L1.1568|
-0001d4  ebfffffe          BL       write32
-;;;75             write32(TVD_BASE + TVD_REG_F2C, 0x0000CB74);
-0001d8  e59f1444          LDR      r1,|L1.1572|
-0001dc  e59f0444          LDR      r0,|L1.1576|
-0001e0  ebfffffe          BL       write32
-;;;76             write32(TVD_BASE + TVD_REG_F44, 0x00004632);
-0001e4  e59f1440          LDR      r1,|L1.1580|
-0001e8  e59f0440          LDR      r0,|L1.1584|
-0001ec  ebfffffe          BL       write32
-;;;77             write32(TVD_BASE + TVD_REG_F74, 0x000003C3);
-0001f0  e59f143c          LDR      r1,|L1.1588|
-0001f4  e59f043c          LDR      r0,|L1.1592|
-0001f8  ebfffffe          BL       write32
-;;;78             write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-0001fc  e3a01605          MOV      r1,#0x500000
-000200  e59f0434          LDR      r0,|L1.1596|
-000204  ebfffffe          BL       write32
-;;;79             write32(TVD_BASE + TVD_REG_F84, 0x00610000);
-000208  e3a01861          MOV      r1,#0x610000
-00020c  e59f042c          LDR      r0,|L1.1600|
-000210  ebfffffe          BL       write32
-;;;80     
-;;;81             write32(TVD_BASE + TVD_REG_000, 0x00000001);
-000214  e3a01001          MOV      r1,#1
-000218  e59f0384          LDR      r0,|L1.1444|
-00021c  ebfffffe          BL       write32
-;;;82     
-;;;83             tvd_set_out_size(720, 480);
-000220  e3a01e1e          MOV      r1,#0x1e0
-000224  e3a00e2d          MOV      r0,#0x2d0
-000228  ebfffffe          BL       tvd_set_out_size
-;;;84             break;
-00022c  ea000118          B        |L1.1684|
-                  |L1.560|
-;;;85         case TVD_MODE_PAL_B: // PAL-B/G 720x576
-000230  e1a00000          MOV      r0,r0
-;;;86             write32(TVD_BASE + TVD_REG_008, 0x01101001);
-000234  e59f1408          LDR      r1,|L1.1604|
-000238  e59f03a0          LDR      r0,|L1.1504|
-00023c  ebfffffe          BL       write32
-;;;87             write32(TVD_BASE + TVD_REG_00C, 0x00202068);
-000240  e59f139c          LDR      r1,|L1.1508|
-000244  e59f039c          LDR      r0,|L1.1512|
-000248  ebfffffe          BL       write32
-;;;88             write32(TVD_BASE + TVD_REG_010, 0x00300050);
-00024c  e59f13f4          LDR      r1,|L1.1608|
-000250  e59f0398          LDR      r0,|L1.1520|
-000254  ebfffffe          BL       write32
-;;;89             write32(TVD_BASE + TVD_REG_018, 0x2A098ACB);
-000258  e59f13ec          LDR      r1,|L1.1612|
-00025c  e59f0394          LDR      r0,|L1.1528|
-000260  ebfffffe          BL       write32
-;;;90             write32(TVD_BASE + TVD_REG_01C, 0x0087002A);
-000264  e59f13e4          LDR      r1,|L1.1616|
-000268  e59f0390          LDR      r0,|L1.1536|
-00026c  ebfffffe          BL       write32
-;;;91     
-;;;92             write32(TVD_BASE + TVD_REG_F08, 0x11590902);
-000270  e59f13dc          LDR      r1,|L1.1620|
-000274  e59f038c          LDR      r0,|L1.1544|
-000278  ebfffffe          BL       write32
-;;;93             write32(TVD_BASE + TVD_REG_F0C, 0x00000016);
-00027c  e3a01016          MOV      r1,#0x16
-000280  e59f0384          LDR      r0,|L1.1548|
-000284  ebfffffe          BL       write32
-;;;94             write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
-000288  e59f13c8          LDR      r1,|L1.1624|
-00028c  e59f0380          LDR      r0,|L1.1556|
-000290  ebfffffe          BL       write32
-;;;95             write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-000294  e59f137c          LDR      r1,|L1.1560|
-000298  e59f037c          LDR      r0,|L1.1564|
-00029c  ebfffffe          BL       write32
-;;;96             write32(TVD_BASE + TVD_REG_F1C, 0x00930000);
-0002a0  e3a01893          MOV      r1,#0x930000
-0002a4  e59f0374          LDR      r0,|L1.1568|
-0002a8  ebfffffe          BL       write32
-;;;97             write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
-0002ac  e59f13a8          LDR      r1,|L1.1628|
-0002b0  e59f0370          LDR      r0,|L1.1576|
-0002b4  ebfffffe          BL       write32
-;;;98             write32(TVD_BASE + TVD_REG_F44, 0x0000412D);
-0002b8  e59f13a0          LDR      r1,|L1.1632|
-0002bc  e59f036c          LDR      r0,|L1.1584|
-0002c0  ebfffffe          BL       write32
-;;;99             write32(TVD_BASE + TVD_REG_F74, 0x00000343);
-0002c4  e59f1398          LDR      r1,|L1.1636|
-0002c8  e59f0368          LDR      r0,|L1.1592|
-0002cc  ebfffffe          BL       write32
-;;;100            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-0002d0  e3a01605          MOV      r1,#0x500000
-0002d4  e59f0360          LDR      r0,|L1.1596|
-0002d8  ebfffffe          BL       write32
-;;;101            write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
-0002dc  e3a018c1          MOV      r1,#0xc10000
-0002e0  e59f0358          LDR      r0,|L1.1600|
-0002e4  ebfffffe          BL       write32
-;;;102    
-;;;103            write32(TVD_BASE + TVD_REG_000, 0x00000001);
-0002e8  e3a01001          MOV      r1,#1
-0002ec  e59f02b0          LDR      r0,|L1.1444|
-0002f0  ebfffffe          BL       write32
-;;;104    
-;;;105            tvd_set_out_size(720, 576);
-0002f4  e3a01d09          MOV      r1,#0x240
-0002f8  e3a00e2d          MOV      r0,#0x2d0
-0002fc  ebfffffe          BL       tvd_set_out_size
-;;;106            break;
-000300  ea0000e3          B        |L1.1684|
-                  |L1.772|
-;;;107        case TVD_MODE_PAL_M: // PAL-M  - not tested
-000304  e1a00000          MOV      r0,r0
-;;;108            write32(TVD_BASE + TVD_REG_008, 0x00002001);
-000308  e59f1358          LDR      r1,|L1.1640|
-00030c  e59f02cc          LDR      r0,|L1.1504|
-000310  ebfffffe          BL       write32
-;;;109            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
-000314  e3a01d82          MOV      r1,#0x2080
-000318  e59f02c8          LDR      r0,|L1.1512|
-00031c  ebfffffe          BL       write32
-;;;110            write32(TVD_BASE + TVD_REG_010, 0x00300080);
-000320  e59f12c4          LDR      r1,|L1.1516|
-000324  e59f02c4          LDR      r0,|L1.1520|
-000328  ebfffffe          BL       write32
-;;;111            write32(TVD_BASE + TVD_REG_018, 0x21E6EFE3);
-00032c  e59f1338          LDR      r1,|L1.1644|
-000330  e59f02c0          LDR      r0,|L1.1528|
-000334  ebfffffe          BL       write32
-;;;112            write32(TVD_BASE + TVD_REG_01C, 0x00820022);
-000338  e59f12bc          LDR      r1,|L1.1532|
-00033c  e59f02bc          LDR      r0,|L1.1536|
-000340  ebfffffe          BL       write32
-;;;113    
-;;;114            write32(TVD_BASE + TVD_REG_F08, 0x00590100);
-000344  e59f12b8          LDR      r1,|L1.1540|
-000348  e59f02b8          LDR      r0,|L1.1544|
-00034c  ebfffffe          BL       write32
-;;;115            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
-000350  e3a01040          MOV      r1,#0x40
-000354  e59f02b0          LDR      r0,|L1.1548|
-000358  ebfffffe          BL       write32
-;;;116            write32(TVD_BASE + TVD_REG_F10, 0x008A32DD);
-00035c  e59f12ac          LDR      r1,|L1.1552|
-000360  e59f02ac          LDR      r0,|L1.1556|
-000364  ebfffffe          BL       write32
-;;;117            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-000368  e59f12a8          LDR      r1,|L1.1560|
-00036c  e59f02a8          LDR      r0,|L1.1564|
-000370  ebfffffe          BL       write32
-;;;118            write32(TVD_BASE + TVD_REG_F1C, 0x008A0000);
-000374  e3a0188a          MOV      r1,#0x8a0000
-000378  e59f02a0          LDR      r0,|L1.1568|
-00037c  ebfffffe          BL       write32
-;;;119            write32(TVD_BASE + TVD_REG_F2C, 0x0000CB74);
-000380  e59f129c          LDR      r1,|L1.1572|
-000384  e59f029c          LDR      r0,|L1.1576|
-000388  ebfffffe          BL       write32
-;;;120            write32(TVD_BASE + TVD_REG_F44, 0x00004632);
-00038c  e59f1298          LDR      r1,|L1.1580|
-000390  e59f0298          LDR      r0,|L1.1584|
-000394  ebfffffe          BL       write32
-;;;121            write32(TVD_BASE + TVD_REG_F74, 0x000003C3);
-000398  e59f1294          LDR      r1,|L1.1588|
-00039c  e59f0294          LDR      r0,|L1.1592|
-0003a0  ebfffffe          BL       write32
-;;;122            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-0003a4  e3a01605          MOV      r1,#0x500000
-0003a8  e59f028c          LDR      r0,|L1.1596|
-0003ac  ebfffffe          BL       write32
-;;;123            write32(TVD_BASE + TVD_REG_F84, 0x00610000);
-0003b0  e3a01861          MOV      r1,#0x610000
-0003b4  e59f0284          LDR      r0,|L1.1600|
-0003b8  ebfffffe          BL       write32
-;;;124    
-;;;125            write32(TVD_BASE + TVD_REG_000, 0x00000001);
-0003bc  e3a01001          MOV      r1,#1
-0003c0  e59f01dc          LDR      r0,|L1.1444|
-0003c4  ebfffffe          BL       write32
-;;;126    
-;;;127            tvd_set_out_size(720, 480);
-0003c8  e3a01e1e          MOV      r1,#0x1e0
-0003cc  e3a00e2d          MOV      r0,#0x2d0
-0003d0  ebfffffe          BL       tvd_set_out_size
-;;;128            break;
-0003d4  ea0000ae          B        |L1.1684|
-                  |L1.984|
-;;;129        case TVD_MODE_PAL_N: // PAL-N - not tested
-0003d8  e1a00000          MOV      r0,r0
-;;;130            write32(TVD_BASE + TVD_REG_008, 0x01103001);
-0003dc  e59f128c          LDR      r1,|L1.1648|
-0003e0  e59f01f8          LDR      r0,|L1.1504|
-0003e4  ebfffffe          BL       write32
-;;;131            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
-0003e8  e3a01d82          MOV      r1,#0x2080
-0003ec  e59f01f4          LDR      r0,|L1.1512|
-0003f0  ebfffffe          BL       write32
-;;;132            write32(TVD_BASE + TVD_REG_010, 0x00300080);
-0003f4  e59f11f0          LDR      r1,|L1.1516|
-0003f8  e59f01f0          LDR      r0,|L1.1520|
-0003fc  ebfffffe          BL       write32
-;;;133            write32(TVD_BASE + TVD_REG_018, 0x21F69446);
-000400  e59f126c          LDR      r1,|L1.1652|
-000404  e59f01ec          LDR      r0,|L1.1528|
-000408  ebfffffe          BL       write32
-;;;134            write32(TVD_BASE + TVD_REG_01C, 0x00870026);
-00040c  e59f1264          LDR      r1,|L1.1656|
-000410  e59f01e8          LDR      r0,|L1.1536|
-000414  ebfffffe          BL       write32
-;;;135    
-;;;136            write32(TVD_BASE + TVD_REG_F08, 0x11590902);
-000418  e59f1234          LDR      r1,|L1.1620|
-00041c  e59f01e4          LDR      r0,|L1.1544|
-000420  ebfffffe          BL       write32
-;;;137            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
-000424  e3a01040          MOV      r1,#0x40
-000428  e59f01dc          LDR      r0,|L1.1548|
-00042c  ebfffffe          BL       write32
-;;;138            write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
-000430  e59f1220          LDR      r1,|L1.1624|
-000434  e59f01d8          LDR      r0,|L1.1556|
-000438  ebfffffe          BL       write32
-;;;139            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-00043c  e59f11d4          LDR      r1,|L1.1560|
-000440  e59f01d4          LDR      r0,|L1.1564|
-000444  ebfffffe          BL       write32
-;;;140            write32(TVD_BASE + TVD_REG_F1C, 0x00DC0000);
-000448  e3a01737          MOV      r1,#0xdc0000
-00044c  e59f01cc          LDR      r0,|L1.1568|
-000450  ebfffffe          BL       write32
-;;;141            write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
-000454  e59f1200          LDR      r1,|L1.1628|
-000458  e59f01c8          LDR      r0,|L1.1576|
-00045c  ebfffffe          BL       write32
-;;;142            write32(TVD_BASE + TVD_REG_F44, 0x00004632);
-000460  e59f11c4          LDR      r1,|L1.1580|
-000464  e59f01c4          LDR      r0,|L1.1584|
-000468  ebfffffe          BL       write32
-;;;143            write32(TVD_BASE + TVD_REG_F74, 0x00000343);
-00046c  e59f11f0          LDR      r1,|L1.1636|
-000470  e59f01c0          LDR      r0,|L1.1592|
-000474  ebfffffe          BL       write32
-;;;144            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-000478  e3a01605          MOV      r1,#0x500000
-00047c  e59f01b8          LDR      r0,|L1.1596|
-000480  ebfffffe          BL       write32
-;;;145            write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
-000484  e3a018c1          MOV      r1,#0xc10000
-000488  e59f01b0          LDR      r0,|L1.1600|
-00048c  ebfffffe          BL       write32
-;;;146    
-;;;147            write32(TVD_BASE + TVD_REG_000, 0x00000001);
-000490  e3a01001          MOV      r1,#1
-000494  e59f0108          LDR      r0,|L1.1444|
-000498  ebfffffe          BL       write32
-;;;148    
-;;;149            tvd_set_out_size(720, 576);
-00049c  e3a01d09          MOV      r1,#0x240
-0004a0  e3a00e2d          MOV      r0,#0x2d0
-0004a4  ebfffffe          BL       tvd_set_out_size
-;;;150            break;
-0004a8  ea000079          B        |L1.1684|
-                  |L1.1196|
-;;;151        case TVD_MODE_SECAM: // SECAM? 720x576 - not tested
-0004ac  e1a00000          MOV      r0,r0
-;;;152            write32(TVD_BASE + TVD_REG_008, 0x01104001);
-0004b0  e59f11c4          LDR      r1,|L1.1660|
-0004b4  e59f0124          LDR      r0,|L1.1504|
-0004b8  ebfffffe          BL       write32
-;;;153            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
-0004bc  e3a01d82          MOV      r1,#0x2080
-0004c0  e59f0120          LDR      r0,|L1.1512|
-0004c4  ebfffffe          BL       write32
-;;;154            write32(TVD_BASE + TVD_REG_010, 0x003100B0);
-0004c8  e59f11b0          LDR      r1,|L1.1664|
-0004cc  e59f011c          LDR      r0,|L1.1520|
-0004d0  ebfffffe          BL       write32
-;;;155            write32(TVD_BASE + TVD_REG_018, 0x28A33BB2);
-0004d4  e59f11a8          LDR      r1,|L1.1668|
-0004d8  e59f0118          LDR      r0,|L1.1528|
-0004dc  ebfffffe          BL       write32
-;;;156            write32(TVD_BASE + TVD_REG_01C, 0x00870026);
-0004e0  e59f1190          LDR      r1,|L1.1656|
-0004e4  e59f0114          LDR      r0,|L1.1536|
-0004e8  ebfffffe          BL       write32
-;;;157    
-;;;158            write32(TVD_BASE + TVD_REG_F08, 0x11590902);
-0004ec  e59f1160          LDR      r1,|L1.1620|
-0004f0  e59f0110          LDR      r0,|L1.1544|
-0004f4  ebfffffe          BL       write32
-;;;159            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
-0004f8  e3a01040          MOV      r1,#0x40
-0004fc  e59f0108          LDR      r0,|L1.1548|
-000500  ebfffffe          BL       write32
-;;;160            write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
-000504  e59f114c          LDR      r1,|L1.1624|
-000508  e59f0104          LDR      r0,|L1.1556|
-00050c  ebfffffe          BL       write32
-;;;161            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-000510  e59f1100          LDR      r1,|L1.1560|
-000514  e59f0100          LDR      r0,|L1.1564|
-000518  ebfffffe          BL       write32
-;;;162            write32(TVD_BASE + TVD_REG_F1C, 0x00DC0000);
-00051c  e3a01737          MOV      r1,#0xdc0000
-000520  e59f00f8          LDR      r0,|L1.1568|
-000524  ebfffffe          BL       write32
-;;;163            write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
-000528  e59f112c          LDR      r1,|L1.1628|
-00052c  e59f00f4          LDR      r0,|L1.1576|
-000530  ebfffffe          BL       write32
-;;;164            write32(TVD_BASE + TVD_REG_F44, 0x00005036);
-000534  e59f114c          LDR      r1,|L1.1672|
-000538  e59f00f0          LDR      r0,|L1.1584|
-00053c  ebfffffe          BL       write32
-;;;165            write32(TVD_BASE + TVD_REG_F74, 0x00000343);
-000540  e59f111c          LDR      r1,|L1.1636|
-000544  e59f00ec          LDR      r0,|L1.1592|
-000548  ebfffffe          BL       write32
-;;;166            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-00054c  e3a01605          MOV      r1,#0x500000
-000550  e59f00e4          LDR      r0,|L1.1596|
-000554  ebfffffe          BL       write32
-;;;167            write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
-000558  e3a018c1          MOV      r1,#0xc10000
-00055c  e59f00dc          LDR      r0,|L1.1600|
-000560  ebfffffe          BL       write32
-;;;168    
-;;;169            write32(TVD_BASE + TVD_REG_000, 0x00000001);
-000564  e3a01001          MOV      r1,#1
-000568  e59f0034          LDR      r0,|L1.1444|
-00056c  ebfffffe          BL       write32
-;;;170    
-;;;171            tvd_set_out_size(720, 576);
-000570  e3a01d09          MOV      r1,#0x240
-000574  e3a00e2d          MOV      r0,#0x2d0
-000578  ebfffffe          BL       tvd_set_out_size
-;;;172            break;
-00057c  ea000044          B        |L1.1684|
-                  |L1.1408|
-                          DCD      0x01c0be04
-                  |L1.1412|
-                          DCD      0x01c0b08c
-                  |L1.1416|
-                          DCD      0x01c0b090
-                  |L1.1420|
-                          DCD      0x01c0b088
-                  |L1.1424|
-                          DCD      tvd
-                  |L1.1428|
-                          DCD      0x8002aaa8
-                  |L1.1432|
-                          DCD      0x01c0be2c
-                  |L1.1436|
-                          DCD      0x04000310
-                  |L1.1440|
-                          DCD      0x01c0b040
-                  |L1.1444|
-                          DCD      0x01c0b000
-                  |L1.1448|
-                          DCD      0x01c0b014
-                  |L1.1452|
-                          DCD      0x0682810a
-                  |L1.1456|
-                          DCD      0x01c0bf24
-                  |L1.1460|
-                          DCD      0x00006440
-                  |L1.1464|
-                          DCD      0x01c0bf28
-                  |L1.1468|
-                          DCD      0x0e70106c
-                  |L1.1472|
-                          DCD      0x01c0bf4c
-                  |L1.1476|
-                          DCD      0x01c0bf54
-                  |L1.1480|
-                          DCD      0x01c0bf58
-                  |L1.1484|
-                          DCD      0x00fffad0
-                  |L1.1488|
-                          DCD      0x01c0bf6c
-                  |L1.1492|
-                          DCD      0x0000a010
-                  |L1.1496|
-                          DCD      0x01c0bf70
-                  |L1.1500|
-                          DCD      0x00010001
-                  |L1.1504|
-                          DCD      0x01c0b008
-                  |L1.1508|
-                          DCD      0x00202068
-                  |L1.1512|
-                          DCD      0x01c0b00c
-                  |L1.1516|
-                          DCD      0x00300080
-                  |L1.1520|
-                          DCD      0x01c0b010
-                  |L1.1524|
-                          DCD      0x21f07c1f
-                  |L1.1528|
-                          DCD      0x01c0b018
-                  |L1.1532|
-                          DCD      0x00820022
-                  |L1.1536|
-                          DCD      0x01c0b01c
-                  |L1.1540|
-                          DCD      0x00590100
-                  |L1.1544|
-                          DCD      0x01c0bf08
-                  |L1.1548|
-                          DCD      0x01c0bf0c
-                  |L1.1552|
-                          DCD      0x008a32dd
-                  |L1.1556|
-                          DCD      0x01c0bf10
-                  |L1.1560|
-                          DCD      0x800000a0
-                  |L1.1564|
-                          DCD      0x01c0bf14
-                  |L1.1568|
-                          DCD      0x01c0bf1c
-                  |L1.1572|
-                          DCD      0x0000cb74
-                  |L1.1576|
-                          DCD      0x01c0bf2c
-                  |L1.1580|
-                          DCD      0x00004632
-                  |L1.1584|
-                          DCD      0x01c0bf44
-                  |L1.1588|
-                          DCD      0x000003c3
-                  |L1.1592|
-                          DCD      0x01c0bf74
-                  |L1.1596|
-                          DCD      0x01c0bf80
-                  |L1.1600|
-                          DCD      0x01c0bf84
-                  |L1.1604|
-                          DCD      0x01101001
-                  |L1.1608|
-                          DCD      0x00300050
-                  |L1.1612|
-                          DCD      0x2a098acb
-                  |L1.1616|
-                          DCD      0x0087002a
-                  |L1.1620|
-                          DCD      0x11590902
-                  |L1.1624|
-                          DCD      0x008a32ec
-                  |L1.1628|
-                          DCD      0x00000d74
-                  |L1.1632|
-                          DCD      0x0000412d
-                  |L1.1636|
-                          DCD      0x00000343
-                  |L1.1640|
-                          DCD      0x00002001
-                  |L1.1644|
-                          DCD      0x21e6efe3
-                  |L1.1648|
-                          DCD      0x01103001
-                  |L1.1652|
-                          DCD      0x21f69446
-                  |L1.1656|
-                          DCD      0x00870026
-                  |L1.1660|
-                          DCD      0x01104001
-                  |L1.1664|
-                          DCD      0x003100b0
-                  |L1.1668|
-                          DCD      0x28a33bb2
-                  |L1.1672|
-                          DCD      0x00005036
-                  |L1.1676|
-;;;173        default:
-00068c  e1a00000          MOV      r0,r0
-;;;174            break;
-000690  e1a00000          MOV      r0,r0
-                  |L1.1684|
-000694  e1a00000          MOV      r0,r0                 ;84
-;;;175        }
-;;;176        write32(TVD_BASE + TVD_REG_E2C, 0x60000000);
-000698  e3a01206          MOV      r1,#0x60000000
-00069c  e51f010c          LDR      r0,|L1.1432|
-0006a0  ebfffffe          BL       write32
-;;;177        tvd.mode = mode;
-0006a4  e51f011c          LDR      r0,|L1.1424|
-0006a8  e5c04004          STRB     r4,[r0,#4]  ; tvd
-;;;178    }
-0006ac  e8bd8010          POP      {r4,pc}
-;;;179    
+;;;251    
                           ENDP
 
                   tvd_set_out_buf PROC
-;;;180    void tvd_set_out_buf(void* buf_y, void* buf_c) {
-0006b0  e92d4070          PUSH     {r4-r6,lr}
-0006b4  e1a04000          MOV      r4,r0
-0006b8  e1a05001          MOV      r5,r1
-;;;181        write32(TVD_BASE + TVD_DMA_ADDR_Y, (uint32_t)buf_y);
-0006bc  e1a01004          MOV      r1,r4
-0006c0  e59f0194          LDR      r0,|L1.2140|
-0006c4  ebfffffe          BL       write32
-;;;182        write32(TVD_BASE + TVD_DMA_ADDR_C, (uint32_t)buf_c);
-0006c8  e1a01005          MOV      r1,r5
-0006cc  e59f018c          LDR      r0,|L1.2144|
-0006d0  ebfffffe          BL       write32
-;;;183        set32(TVD_BASE + TVD_DMA_CFG, (1 << 28)); // addr_valid
-0006d4  e51f0150          LDR      r0,|L1.1420|
-0006d8  ebfffffe          BL       read32
-0006dc  e3806201          ORR      r6,r0,#0x10000000
-0006e0  e1a01006          MOV      r1,r6
-0006e4  e51f0160          LDR      r0,|L1.1420|
-0006e8  ebfffffe          BL       write32
-;;;184    }
-0006ec  e8bd8070          POP      {r4-r6,pc}
-;;;185    
+;;;205    
+;;;206    void tvd_set_out_buf(void* buf_y, void* buf_c) {
+000048  e92d4070          PUSH     {r4-r6,lr}
+00004c  e1a04000          MOV      r4,r0
+000050  e1a05001          MOV      r5,r1
+;;;207        write32(TVD_BASE + TVD_DMA_ADDR_Y, (uint32_t)buf_y);
+000054  e1a01004          MOV      r1,r4
+000058  e59f0618          LDR      r0,|L1.1656|
+00005c  ebfffffe          BL       write32
+;;;208        write32(TVD_BASE + TVD_DMA_ADDR_C, (uint32_t)buf_c);
+000060  e1a01005          MOV      r1,r5
+000064  e59f0610          LDR      r0,|L1.1660|
+000068  ebfffffe          BL       write32
+;;;209        set32(TVD_BASE + TVD_DMA_CFG, (1 << 28)); // addr_valid
+00006c  e59f060c          LDR      r0,|L1.1664|
+000070  ebfffffe          BL       read32
+000074  e3806201          ORR      r6,r0,#0x10000000
+000078  e1a01006          MOV      r1,r6
+00007c  e59f05fc          LDR      r0,|L1.1664|
+000080  ebfffffe          BL       write32
+;;;210    }
+000084  e8bd8070          POP      {r4-r6,pc}
+;;;211    
+                          ENDP
+
+                  tvd_set_out_size PROC
+;;;212    void tvd_set_out_size(uint16_t w, uint16_t h) {
+000088  e92d4070          PUSH     {r4-r6,lr}
+00008c  e1a04000          MOV      r4,r0
+000090  e1a05001          MOV      r5,r1
+;;;213        write32(TVD_BASE + TVD_DMA_SIZE, ((h / 2) << 16) | (w));
+000094  e1a06005          MOV      r6,r5
+000098  e0850fa6          ADD      r0,r5,r6,LSR #31
+00009c  e1a000c0          ASR      r0,r0,#1
+0000a0  e1841800          ORR      r1,r4,r0,LSL #16
+0000a4  e59f05d8          LDR      r0,|L1.1668|
+0000a8  ebfffffe          BL       write32
+;;;214        write32(TVD_BASE + TVD_DMA_STRIDE, w);
+0000ac  e1a01004          MOV      r1,r4
+0000b0  e59f05d0          LDR      r0,|L1.1672|
+0000b4  ebfffffe          BL       write32
+;;;215        set32(TVD_BASE + TVD_DMA_CFG, (1 << 26)); // size_valid ?
+0000b8  e59f05c0          LDR      r0,|L1.1664|
+0000bc  ebfffffe          BL       read32
+0000c0  e3806301          ORR      r6,r0,#0x4000000
+0000c4  e1a01006          MOV      r1,r6
+0000c8  e59f05b0          LDR      r0,|L1.1664|
+0000cc  ebfffffe          BL       write32
+;;;216        tvd.width  = w;
+0000d0  e59f05b4          LDR      r0,|L1.1676|
+0000d4  e1c040b0          STRH     r4,[r0,#0]  ; tvd
+;;;217        tvd.height = h;
+0000d8  e1c050b2          STRH     r5,[r0,#2]  ; tvd
+;;;218    }
+0000dc  e8bd8070          POP      {r4-r6,pc}
+;;;219    
+                          ENDP
+
+                  tvd_set_mode PROC
+;;;53     
+;;;54     void tvd_set_mode(tvd_mode_e mode) {
+0000e0  e92d4010          PUSH     {r4,lr}
+0000e4  e1a04000          MOV      r4,r0
+;;;55     /*	
+;;;56         write32(TVD_BASE + TVD_REG_E04, 0x8002AAA8);
+;;;57         write32(TVD_BASE + TVD_REG_E2C, 0x00110000);
+;;;58         write32(TVD_BASE + TVD_REG_040, 0x04000310);
+;;;59         write32(TVD_BASE + TVD_REG_000, 0x00000000);
+;;;60         write32(TVD_BASE + TVD_REG_014, 0x20000000);
+;;;61         write32(TVD_BASE + TVD_REG_F24, 0x0682810A);
+;;;62     
+;;;63         write32(TVD_BASE + TVD_REG_F28, 0x00006440);
+;;;64         write32(TVD_BASE + TVD_REG_F4C, 0x0E70106C);
+;;;65         write32(TVD_BASE + TVD_REG_F54, 0x00000000);
+;;;66         write32(TVD_BASE + TVD_REG_F58, 0x00000082);
+;;;67         write32(TVD_BASE + TVD_REG_F6C, 0x00FFFAD0);
+;;;68         write32(TVD_BASE + TVD_REG_F70, 0x0000A010);
+;;;69     */
+;;;70     	
+;;;71         switch(mode) {
+0000e8  e3540006          CMP      r4,#6
+0000ec  308ff104          ADDCC    pc,pc,r4,LSL #2
+0000f0  ea00010a          B        |L1.1312|
+0000f4  ea000109          B        |L1.1312|
+0000f8  ea000003          B        |L1.268|
+0000fc  ea000037          B        |L1.480|
+000100  ea000067          B        |L1.676|
+000104  ea00009b          B        |L1.888|
+000108  ea0000cf          B        |L1.1100|
+                  |L1.268|
+;;;72         case TVD_MODE_NTSC: // NTSC 720x480
+00010c  e1a00000          MOV      r0,r0
+;;;73             write32(TVD_BASE + TVD_REG_008, 0x00010001);
+000110  e59f1578          LDR      r1,|L1.1680|
+000114  e59f0578          LDR      r0,|L1.1684|
+000118  ebfffffe          BL       write32
+;;;74             write32(TVD_BASE + TVD_REG_00C, 0x00202068);
+00011c  e59f1574          LDR      r1,|L1.1688|
+000120  e59f0574          LDR      r0,|L1.1692|
+000124  ebfffffe          BL       write32
+;;;75             write32(TVD_BASE + TVD_REG_010, 0x00300080);
+000128  e59f1570          LDR      r1,|L1.1696|
+00012c  e59f0570          LDR      r0,|L1.1700|
+000130  ebfffffe          BL       write32
+;;;76             write32(TVD_BASE + TVD_REG_018, 0x21F07C1F);
+000134  e59f156c          LDR      r1,|L1.1704|
+000138  e59f056c          LDR      r0,|L1.1708|
+00013c  ebfffffe          BL       write32
+;;;77             write32(TVD_BASE + TVD_REG_01C, 0x00820022);
+000140  e59f1568          LDR      r1,|L1.1712|
+000144  e59f0568          LDR      r0,|L1.1716|
+000148  ebfffffe          BL       write32
+;;;78     
+;;;79             write32(TVD_BASE + TVD_REG_F08, 0x00590100);
+00014c  e59f1564          LDR      r1,|L1.1720|
+000150  e59f0564          LDR      r0,|L1.1724|
+000154  ebfffffe          BL       write32
+;;;80             write32(TVD_BASE + TVD_REG_F0C, 0x00000010);
+000158  e3a01010          MOV      r1,#0x10
+00015c  e59f055c          LDR      r0,|L1.1728|
+000160  ebfffffe          BL       write32
+;;;81             write32(TVD_BASE + TVD_REG_F10, 0x008A32DD);
+000164  e59f1558          LDR      r1,|L1.1732|
+000168  e59f0558          LDR      r0,|L1.1736|
+00016c  ebfffffe          BL       write32
+;;;82             write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+000170  e59f1554          LDR      r1,|L1.1740|
+000174  e59f0554          LDR      r0,|L1.1744|
+000178  ebfffffe          BL       write32
+;;;83             write32(TVD_BASE + TVD_REG_F1C, 0x008A0000);
+00017c  e3a0188a          MOV      r1,#0x8a0000
+000180  e59f054c          LDR      r0,|L1.1748|
+000184  ebfffffe          BL       write32
+;;;84             write32(TVD_BASE + TVD_REG_F2C, 0x0000CB74);
+000188  e59f1548          LDR      r1,|L1.1752|
+00018c  e59f0548          LDR      r0,|L1.1756|
+000190  ebfffffe          BL       write32
+;;;85             write32(TVD_BASE + TVD_REG_F44, 0x00004632);
+000194  e59f1544          LDR      r1,|L1.1760|
+000198  e59f0544          LDR      r0,|L1.1764|
+00019c  ebfffffe          BL       write32
+;;;86             write32(TVD_BASE + TVD_REG_F74, 0x000003C3);
+0001a0  e59f1540          LDR      r1,|L1.1768|
+0001a4  e59f0540          LDR      r0,|L1.1772|
+0001a8  ebfffffe          BL       write32
+;;;87             write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+0001ac  e3a01605          MOV      r1,#0x500000
+0001b0  e59f0538          LDR      r0,|L1.1776|
+0001b4  ebfffffe          BL       write32
+;;;88             write32(TVD_BASE + TVD_REG_F84, 0x00610000);
+0001b8  e3a01861          MOV      r1,#0x610000
+0001bc  e59f0530          LDR      r0,|L1.1780|
+0001c0  ebfffffe          BL       write32
+;;;89     
+;;;90             write32(TVD_BASE + TVD_REG_000, 0x00000001);
+0001c4  e3a01001          MOV      r1,#1
+0001c8  e59f0528          LDR      r0,|L1.1784|
+0001cc  ebfffffe          BL       write32
+;;;91     
+;;;92             tvd_set_out_size(720, 480);
+0001d0  e3a01e1e          MOV      r1,#0x1e0
+0001d4  e3a00e2d          MOV      r0,#0x2d0
+0001d8  ebfffffe          BL       tvd_set_out_size
+;;;93             break;
+0001dc  ea0000d1          B        |L1.1320|
+                  |L1.480|
+;;;94         case TVD_MODE_PAL_B: // PAL-B/G 720x576
+0001e0  e1a00000          MOV      r0,r0
+;;;95     				TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x01111001);
+0001e4  e59f0510          LDR      r0,|L1.1788|
+0001e8  e59f1508          LDR      r1,|L1.1784|
+0001ec  e5810008          STR      r0,[r1,#8]
+;;;96     ////        write32(TVD_BASE + TVD_REG_008, 0x01101001);
+;;;97     				TVD_RegWrite(TVD_REG_BASE + 0x000c,0x03714080); /* adjust luma brightness */
+0001f0  e59f0508          LDR      r0,|L1.1792|
+0001f4  e581000c          STR      r0,[r1,#0xc]
+;;;98      ////       write32(TVD_BASE + TVD_REG_00C, 0x00202068);
+;;;99     				TVD_RegWrite(TVD_REG_BASE + 0x0010, 0x00310080);
+0001f8  e59f0504          LDR      r0,|L1.1796|
+0001fc  e5810010          STR      r0,[r1,#0x10]
+;;;100     ////       write32(TVD_BASE + TVD_REG_010, 0x00300050);
+;;;101    				TVD_RegWrite(TVD_REG_BASE + 0x0018, 0x2a098acb); /* chroma dto */
+000200  e59f0500          LDR      r0,|L1.1800|
+000204  e5810018          STR      r0,[r1,#0x18]
+;;;102     /////       write32(TVD_BASE + TVD_REG_018, 0x2A098ACB);
+;;;103    				TVD_RegWrite(TVD_REG_BASE + 0x001c, 0x0087002f); /* hactive and vactive start */
+000208  e59f04fc          LDR      r0,|L1.1804|
+00020c  e581001c          STR      r0,[r1,#0x1c]
+;;;104    ////        write32(TVD_BASE + TVD_REG_01C, 0x0087002A);
+;;;105    			TVD_RegWrite(TVD_REG_BASE + 0x0f08,0x11590902); /* disable black level correction */
+000210  e59f04f8          LDR      r0,|L1.1808|
+000214  e59f14a0          LDR      r1,|L1.1724|
+000218  e5810000          STR      r0,[r1,#0]
+;;;106    ////        write32(TVD_BASE + TVD_REG_F08, 0x11590902);
+;;;107    			/* for 7.5 blank-to-black setup */
+;;;108    			/* cagc en */
+;;;109    			TVD_RegWrite(TVD_REG_BASE + 0x0f0c, 0x00000016); /* YC sep */
+00021c  e3a00016          MOV      r0,#0x16
+000220  e2811004          ADD      r1,r1,#4
+000224  e5810000          STR      r0,[r1,#0]
+;;;110         ////  write32(TVD_BASE + TVD_REG_F0C, 0x00000016);
+;;;111    			TVD_RegWrite(TVD_REG_BASE + 0x0f10, 0x008a32ec); /* */
+000228  e59f04e4          LDR      r0,|L1.1812|
+00022c  e0811ac0          ADD      r1,r1,r0,ASR #21
+000230  e5810000          STR      r0,[r1,#0]
+;;;112    		////        write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
+;;;113    			TVD_RegWrite(TVD_REG_BASE + 0x0f14,0x80000080); /* adjust YC delay */
+000234  e59f04dc          LDR      r0,|L1.1816|
+000238  e0411ec0          SUB      r1,r1,r0,ASR #29
+00023c  e5810000          STR      r0,[r1,#0]
+;;;114          ////  write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+;;;115    			TVD_RegWrite(TVD_REG_BASE + 0x0f1c, 0x00930000); /* chroma AGC target */
+000240  e3a00893          MOV      r0,#0x930000
+000244  e1811a41          ORR      r1,r1,r1,ASR #20
+000248  e5810000          STR      r0,[r1,#0]
+;;;116    	////    write32(TVD_BASE + TVD_REG_F1C, 0x00930000);
+;;;117    			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x00000d74);
+00024c  e59f04c8          LDR      r0,|L1.1820|
+000250  e2811010          ADD      r1,r1,#0x10
+000254  e5810000          STR      r0,[r1,#0]
+;;;118            ////write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
+;;;119    			TVD_RegWrite(TVD_REG_BASE + 0x0f44,0x0000412d); /* burst gate */
+000258  e59f04c0          LDR      r0,|L1.1824|
+00025c  e2811018          ADD      r1,r1,#0x18
+000260  e5810000          STR      r0,[r1,#0]
+;;;120            ////write32(TVD_BASE + TVD_REG_F44, 0x0000412D);
+;;;121    			/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); // */
+;;;122    			TVD_RegWrite(TVD_REG_BASE + 0x0f74, 0x00000343); /* */
+000264  e59f04b8          LDR      r0,|L1.1828|
+000268  e1811240          ORR      r1,r1,r0,ASR #4
+00026c  e5810000          STR      r0,[r1,#0]
+;;;123          ////  write32(TVD_BASE + TVD_REG_F74, 0x00000343);
+;;;124    			TVD_RegWrite(TVD_REG_BASE + 0x0f80, 0x00500000); /* hactive width */
+000270  e3a00605          MOV      r0,#0x500000
+000274  e281100c          ADD      r1,r1,#0xc
+000278  e5810000          STR      r0,[r1,#0]
+;;;125    ////        write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+;;;126    			TVD_RegWrite(TVD_REG_BASE + 0x0f84, 0x00c10000); /* vactive height */
+00027c  e3a008c1          MOV      r0,#0xc10000
+000280  e1811740          ORR      r1,r1,r0,ASR #14
+000284  e5810000          STR      r0,[r1,#0]
+;;;127     /////       write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
+;;;128    			TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000001); /* */
+000288  e3a00001          MOV      r0,#1
+00028c  e59f1464          LDR      r1,|L1.1784|
+000290  e5810000          STR      r0,[r1,#0]
+;;;129    /////        write32(TVD_BASE + TVD_REG_000, 0x00000001);
+;;;130    
+;;;131            tvd_set_out_size(720, 576);  ////???
+000294  e3a01d09          MOV      r1,#0x240
+000298  e3a00e2d          MOV      r0,#0x2d0
+00029c  ebfffffe          BL       tvd_set_out_size
+;;;132            break;
+0002a0  ea0000a0          B        |L1.1320|
+                  |L1.676|
+;;;133        case TVD_MODE_PAL_M: // PAL-M  - not tested
+0002a4  e1a00000          MOV      r0,r0
+;;;134            write32(TVD_BASE + TVD_REG_008, 0x00002001);
+0002a8  e59f1478          LDR      r1,|L1.1832|
+0002ac  e59f03e0          LDR      r0,|L1.1684|
+0002b0  ebfffffe          BL       write32
+;;;135            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
+0002b4  e3a01d82          MOV      r1,#0x2080
+0002b8  e59f03dc          LDR      r0,|L1.1692|
+0002bc  ebfffffe          BL       write32
+;;;136            write32(TVD_BASE + TVD_REG_010, 0x00300080);
+0002c0  e59f13d8          LDR      r1,|L1.1696|
+0002c4  e59f03d8          LDR      r0,|L1.1700|
+0002c8  ebfffffe          BL       write32
+;;;137            write32(TVD_BASE + TVD_REG_018, 0x21E6EFE3);
+0002cc  e59f1458          LDR      r1,|L1.1836|
+0002d0  e59f03d4          LDR      r0,|L1.1708|
+0002d4  ebfffffe          BL       write32
+;;;138            write32(TVD_BASE + TVD_REG_01C, 0x00820022);
+0002d8  e59f13d0          LDR      r1,|L1.1712|
+0002dc  e59f03d0          LDR      r0,|L1.1716|
+0002e0  ebfffffe          BL       write32
+;;;139    
+;;;140            write32(TVD_BASE + TVD_REG_F08, 0x00590100);
+0002e4  e59f13cc          LDR      r1,|L1.1720|
+0002e8  e59f03cc          LDR      r0,|L1.1724|
+0002ec  ebfffffe          BL       write32
+;;;141            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
+0002f0  e3a01040          MOV      r1,#0x40
+0002f4  e59f03c4          LDR      r0,|L1.1728|
+0002f8  ebfffffe          BL       write32
+;;;142            write32(TVD_BASE + TVD_REG_F10, 0x008A32DD);
+0002fc  e59f13c0          LDR      r1,|L1.1732|
+000300  e59f03c0          LDR      r0,|L1.1736|
+000304  ebfffffe          BL       write32
+;;;143            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+000308  e59f13bc          LDR      r1,|L1.1740|
+00030c  e59f03bc          LDR      r0,|L1.1744|
+000310  ebfffffe          BL       write32
+;;;144            write32(TVD_BASE + TVD_REG_F1C, 0x008A0000);
+000314  e3a0188a          MOV      r1,#0x8a0000
+000318  e59f03b4          LDR      r0,|L1.1748|
+00031c  ebfffffe          BL       write32
+;;;145            write32(TVD_BASE + TVD_REG_F2C, 0x0000CB74);
+000320  e59f13b0          LDR      r1,|L1.1752|
+000324  e59f03b0          LDR      r0,|L1.1756|
+000328  ebfffffe          BL       write32
+;;;146            write32(TVD_BASE + TVD_REG_F44, 0x00004632);
+00032c  e59f13ac          LDR      r1,|L1.1760|
+000330  e59f03ac          LDR      r0,|L1.1764|
+000334  ebfffffe          BL       write32
+;;;147            write32(TVD_BASE + TVD_REG_F74, 0x000003C3);
+000338  e59f13a8          LDR      r1,|L1.1768|
+00033c  e59f03a8          LDR      r0,|L1.1772|
+000340  ebfffffe          BL       write32
+;;;148            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+000344  e3a01605          MOV      r1,#0x500000
+000348  e59f03a0          LDR      r0,|L1.1776|
+00034c  ebfffffe          BL       write32
+;;;149            write32(TVD_BASE + TVD_REG_F84, 0x00610000);
+000350  e3a01861          MOV      r1,#0x610000
+000354  e59f0398          LDR      r0,|L1.1780|
+000358  ebfffffe          BL       write32
+;;;150    
+;;;151            write32(TVD_BASE + TVD_REG_000, 0x00000001);
+00035c  e3a01001          MOV      r1,#1
+000360  e59f0390          LDR      r0,|L1.1784|
+000364  ebfffffe          BL       write32
+;;;152    
+;;;153            tvd_set_out_size(720, 480);
+000368  e3a01e1e          MOV      r1,#0x1e0
+00036c  e3a00e2d          MOV      r0,#0x2d0
+000370  ebfffffe          BL       tvd_set_out_size
+;;;154            break;
+000374  ea00006b          B        |L1.1320|
+                  |L1.888|
+;;;155        case TVD_MODE_PAL_N: // PAL-N - not tested
+000378  e1a00000          MOV      r0,r0
+;;;156            write32(TVD_BASE + TVD_REG_008, 0x01103001);
+00037c  e59f13ac          LDR      r1,|L1.1840|
+000380  e59f030c          LDR      r0,|L1.1684|
+000384  ebfffffe          BL       write32
+;;;157            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
+000388  e3a01d82          MOV      r1,#0x2080
+00038c  e59f0308          LDR      r0,|L1.1692|
+000390  ebfffffe          BL       write32
+;;;158            write32(TVD_BASE + TVD_REG_010, 0x00300080);
+000394  e59f1304          LDR      r1,|L1.1696|
+000398  e59f0304          LDR      r0,|L1.1700|
+00039c  ebfffffe          BL       write32
+;;;159            write32(TVD_BASE + TVD_REG_018, 0x21F69446);
+0003a0  e59f138c          LDR      r1,|L1.1844|
+0003a4  e59f0300          LDR      r0,|L1.1708|
+0003a8  ebfffffe          BL       write32
+;;;160            write32(TVD_BASE + TVD_REG_01C, 0x00870026);
+0003ac  e59f1384          LDR      r1,|L1.1848|
+0003b0  e59f02fc          LDR      r0,|L1.1716|
+0003b4  ebfffffe          BL       write32
+;;;161    
+;;;162            write32(TVD_BASE + TVD_REG_F08, 0x11590902);
+0003b8  e59f1350          LDR      r1,|L1.1808|
+0003bc  e59f02f8          LDR      r0,|L1.1724|
+0003c0  ebfffffe          BL       write32
+;;;163            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
+0003c4  e3a01040          MOV      r1,#0x40
+0003c8  e59f02f0          LDR      r0,|L1.1728|
+0003cc  ebfffffe          BL       write32
+;;;164            write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
+0003d0  e59f133c          LDR      r1,|L1.1812|
+0003d4  e59f02ec          LDR      r0,|L1.1736|
+0003d8  ebfffffe          BL       write32
+;;;165            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+0003dc  e59f12e8          LDR      r1,|L1.1740|
+0003e0  e59f02e8          LDR      r0,|L1.1744|
+0003e4  ebfffffe          BL       write32
+;;;166            write32(TVD_BASE + TVD_REG_F1C, 0x00DC0000);
+0003e8  e3a01737          MOV      r1,#0xdc0000
+0003ec  e59f02e0          LDR      r0,|L1.1748|
+0003f0  ebfffffe          BL       write32
+;;;167            write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
+0003f4  e59f1320          LDR      r1,|L1.1820|
+0003f8  e59f02dc          LDR      r0,|L1.1756|
+0003fc  ebfffffe          BL       write32
+;;;168            write32(TVD_BASE + TVD_REG_F44, 0x00004632);
+000400  e59f12d8          LDR      r1,|L1.1760|
+000404  e59f02d8          LDR      r0,|L1.1764|
+000408  ebfffffe          BL       write32
+;;;169            write32(TVD_BASE + TVD_REG_F74, 0x00000343);
+00040c  e59f1310          LDR      r1,|L1.1828|
+000410  e59f02d4          LDR      r0,|L1.1772|
+000414  ebfffffe          BL       write32
+;;;170            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+000418  e3a01605          MOV      r1,#0x500000
+00041c  e59f02cc          LDR      r0,|L1.1776|
+000420  ebfffffe          BL       write32
+;;;171            write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
+000424  e3a018c1          MOV      r1,#0xc10000
+000428  e59f02c4          LDR      r0,|L1.1780|
+00042c  ebfffffe          BL       write32
+;;;172    
+;;;173            write32(TVD_BASE + TVD_REG_000, 0x00000001);
+000430  e3a01001          MOV      r1,#1
+000434  e59f02bc          LDR      r0,|L1.1784|
+000438  ebfffffe          BL       write32
+;;;174    
+;;;175            tvd_set_out_size(720, 576);
+00043c  e3a01d09          MOV      r1,#0x240
+000440  e3a00e2d          MOV      r0,#0x2d0
+000444  ebfffffe          BL       tvd_set_out_size
+;;;176            break;
+000448  ea000036          B        |L1.1320|
+                  |L1.1100|
+;;;177        case TVD_MODE_SECAM: // SECAM? 720x576 - not tested
+00044c  e1a00000          MOV      r0,r0
+;;;178            write32(TVD_BASE + TVD_REG_008, 0x01104001);
+000450  e59f12e4          LDR      r1,|L1.1852|
+000454  e59f0238          LDR      r0,|L1.1684|
+000458  ebfffffe          BL       write32
+;;;179            write32(TVD_BASE + TVD_REG_00C, 0x00002080);
+00045c  e3a01d82          MOV      r1,#0x2080
+000460  e59f0234          LDR      r0,|L1.1692|
+000464  ebfffffe          BL       write32
+;;;180            write32(TVD_BASE + TVD_REG_010, 0x003100B0);
+000468  e59f12d0          LDR      r1,|L1.1856|
+00046c  e59f0230          LDR      r0,|L1.1700|
+000470  ebfffffe          BL       write32
+;;;181            write32(TVD_BASE + TVD_REG_018, 0x28A33BB2);
+000474  e59f12c8          LDR      r1,|L1.1860|
+000478  e59f022c          LDR      r0,|L1.1708|
+00047c  ebfffffe          BL       write32
+;;;182            write32(TVD_BASE + TVD_REG_01C, 0x00870026);
+000480  e59f12b0          LDR      r1,|L1.1848|
+000484  e59f0228          LDR      r0,|L1.1716|
+000488  ebfffffe          BL       write32
+;;;183    
+;;;184            write32(TVD_BASE + TVD_REG_F08, 0x11590902);
+00048c  e59f127c          LDR      r1,|L1.1808|
+000490  e59f0224          LDR      r0,|L1.1724|
+000494  ebfffffe          BL       write32
+;;;185            write32(TVD_BASE + TVD_REG_F0C, 0x00000040);
+000498  e3a01040          MOV      r1,#0x40
+00049c  e59f021c          LDR      r0,|L1.1728|
+0004a0  ebfffffe          BL       write32
+;;;186            write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
+0004a4  e59f1268          LDR      r1,|L1.1812|
+0004a8  e59f0218          LDR      r0,|L1.1736|
+0004ac  ebfffffe          BL       write32
+;;;187            write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+0004b0  e59f1214          LDR      r1,|L1.1740|
+0004b4  e59f0214          LDR      r0,|L1.1744|
+0004b8  ebfffffe          BL       write32
+;;;188            write32(TVD_BASE + TVD_REG_F1C, 0x00DC0000);
+0004bc  e3a01737          MOV      r1,#0xdc0000
+0004c0  e59f020c          LDR      r0,|L1.1748|
+0004c4  ebfffffe          BL       write32
+;;;189            write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
+0004c8  e59f124c          LDR      r1,|L1.1820|
+0004cc  e59f0208          LDR      r0,|L1.1756|
+0004d0  ebfffffe          BL       write32
+;;;190            write32(TVD_BASE + TVD_REG_F44, 0x00005036);
+0004d4  e59f126c          LDR      r1,|L1.1864|
+0004d8  e59f0204          LDR      r0,|L1.1764|
+0004dc  ebfffffe          BL       write32
+;;;191            write32(TVD_BASE + TVD_REG_F74, 0x00000343);
+0004e0  e59f123c          LDR      r1,|L1.1828|
+0004e4  e59f0200          LDR      r0,|L1.1772|
+0004e8  ebfffffe          BL       write32
+;;;192            write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+0004ec  e3a01605          MOV      r1,#0x500000
+0004f0  e59f01f8          LDR      r0,|L1.1776|
+0004f4  ebfffffe          BL       write32
+;;;193            write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
+0004f8  e3a018c1          MOV      r1,#0xc10000
+0004fc  e59f01f0          LDR      r0,|L1.1780|
+000500  ebfffffe          BL       write32
+;;;194    
+;;;195            write32(TVD_BASE + TVD_REG_000, 0x00000001);
+000504  e3a01001          MOV      r1,#1
+000508  e59f01e8          LDR      r0,|L1.1784|
+00050c  ebfffffe          BL       write32
+;;;196    
+;;;197            tvd_set_out_size(720, 576);
+000510  e3a01d09          MOV      r1,#0x240
+000514  e3a00e2d          MOV      r0,#0x2d0
+000518  ebfffffe          BL       tvd_set_out_size
+;;;198            break;
+00051c  ea000001          B        |L1.1320|
+                  |L1.1312|
+;;;199        default:
+000520  e1a00000          MOV      r0,r0
+;;;200            break;
+000524  e1a00000          MOV      r0,r0
+                  |L1.1320|
+000528  e1a00000          MOV      r0,r0                 ;93
+;;;201        }
+;;;202        write32(TVD_BASE + TVD_REG_E2C, 0x60000000);
+00052c  e3a01206          MOV      r1,#0x60000000
+000530  e59f0214          LDR      r0,|L1.1868|
+000534  ebfffffe          BL       write32
+;;;203        tvd.mode = mode;
+000538  e59f014c          LDR      r0,|L1.1676|
+00053c  e5c04004          STRB     r4,[r0,#4]  ; tvd
+;;;204    }
+000540  e8bd8010          POP      {r4,pc}
+;;;205    
                           ENDP
 
                   tvd_init PROC
-;;;31     
-;;;32     void tvd_init(tvd_mode_e mode, void* buf_y, void* buf_c, uint8_t ch) {
-0006f0  e92d47f0          PUSH     {r4-r10,lr}
-0006f4  e1a07000          MOV      r7,r0
-0006f8  e1a04001          MOV      r4,r1
-0006fc  e1a05002          MOV      r5,r2
-000700  e1a06003          MOV      r6,r3
-;;;33         clk_enable(CCU_BUS_CLK_GATE1, 9); // TVD bus clock
-000704  e3a01009          MOV      r1,#9
-000708  e3a00064          MOV      r0,#0x64
-00070c  ebfffffe          BL       clk_enable
-;;;34         clk_enable(CCU_DRAM_CLK_GATE, 3); // DRAM access clock
-000710  e3a01003          MOV      r1,#3
-000714  e3a00c01          MOV      r0,#0x100
-000718  ebfffffe          BL       clk_enable
-;;;35     
-;;;36         // Determine tvd clock division value. PLL_VIDEO should be configured and enabled!
-;;;37         uint32_t tvd_clk_div = clk_pll_get_freq(PLL_VIDEO) / 27000000LU;
-00071c  e3a00010          MOV      r0,#0x10
-000720  ebfffffe          BL       clk_pll_get_freq
-000724  e1a09000          MOV      r9,r0
-000728  e59f1134          LDR      r1,|L1.2148|
-00072c  ebfffffe          BL       __aeabi_uidivmod
-000730  e1a08000          MOV      r8,r0
+;;;33     
+;;;34     void tvd_init(tvd_mode_e mode, void* buf_y, void* buf_c, uint8_t ch) {
+000544  e92d41f0          PUSH     {r4-r8,lr}
+000548  e1a07000          MOV      r7,r0
+00054c  e1a04001          MOV      r4,r1
+000550  e1a05002          MOV      r5,r2
+000554  e1a06003          MOV      r6,r3
+;;;35     #if 0	
+;;;36         clk_enable(CCU_BUS_CLK_GATE1, 9); // TVD bus clock
+;;;37         clk_enable(CCU_DRAM_CLK_GATE, 3); // DRAM access clock
 ;;;38     
-;;;39         clk_tvd_config(tvd_clk_div);
-000734  e20800ff          AND      r0,r8,#0xff
-000738  ebfffffe          BL       clk_tvd_config
-;;;40         clk_reset_clear(CCU_BUS_SOFT_RST1, 9);
-00073c  e3a01009          MOV      r1,#9
-000740  e3a00fb1          MOV      r0,#0x2c4
-000744  ebfffffe          BL       clk_reset_clear
+;;;39         // Determine tvd clock division value. PLL_VIDEO should be configured and enabled!
+;;;40         uint32_t tvd_clk_div = clk_pll_get_freq(PLL_VIDEO) / 27000000LU;
 ;;;41     
-;;;42         tvd_set_out_buf(buf_y, buf_c);
-000748  e1a01005          MOV      r1,r5
-00074c  e1a00004          MOV      r0,r4
-000750  ebfffffe          BL       tvd_set_out_buf
-;;;43         tvd_set_mode(mode);
-000754  e1a00007          MOV      r0,r7
-000758  ebfffffe          BL       tvd_set_mode
-;;;44         tvd_set_ch(ch);
-00075c  e1a00006          MOV      r0,r6
-000760  ebfffffe          BL       tvd_set_ch
-;;;45     }
-000764  e8bd87f0          POP      {r4-r10,pc}
-;;;46     
+;;;42         clk_tvd_config(tvd_clk_div);
+;;;43         clk_reset_clear(CCU_BUS_SOFT_RST1, 9);
+;;;44     #endif	
+;;;45     		tvd_bsp_init(0);
+000558  e3a00000          MOV      r0,#0
+00055c  ebfffffe          BL       tvd_bsp_init
+;;;46     	
+;;;47         tvd_set_mode(mode);
+000560  e1a00007          MOV      r0,r7
+000564  ebfffffe          BL       tvd_set_mode
+;;;48     
+;;;49         tvd_set_out_buf(buf_y, buf_c);
+000568  e1a01005          MOV      r1,r5
+00056c  e1a00004          MOV      r0,r4
+000570  ebfffffe          BL       tvd_set_out_buf
+;;;50      ////   tvd_set_mode(mode);
+;;;51         tvd_set_ch(ch);
+000574  e1a00006          MOV      r0,r6
+000578  ebfffffe          BL       tvd_set_ch
+;;;52     }
+00057c  e8bd81f0          POP      {r4-r8,pc}
+;;;53     
                           ENDP
 
                   tvd_get_out_size PROC
-;;;193    
-;;;194    void tvd_get_out_size(uint16_t* w, uint16_t* h) {
-000768  e51f21e0          LDR      r2,|L1.1424|
-;;;195        *w = tvd.width;
-00076c  e1d220b0          LDRH     r2,[r2,#0]  ; tvd
-000770  e1c020b0          STRH     r2,[r0,#0]
-;;;196        *h = tvd.height;
-000774  e51f21ec          LDR      r2,|L1.1424|
-000778  e1d220b2          LDRH     r2,[r2,#2]  ; tvd
-00077c  e1c120b0          STRH     r2,[r1,#0]
-;;;197    }
-000780  e12fff1e          BX       lr
-;;;198    
+;;;219    
+;;;220    void tvd_get_out_size(uint16_t* w, uint16_t* h) {
+000580  e59f2104          LDR      r2,|L1.1676|
+;;;221        *w = tvd.width;
+000584  e1d220b0          LDRH     r2,[r2,#0]  ; tvd
+000588  e1c020b0          STRH     r2,[r0,#0]
+;;;222        *h = tvd.height;
+00058c  e59f20f8          LDR      r2,|L1.1676|
+000590  e1d220b2          LDRH     r2,[r2,#2]  ; tvd
+000594  e1c120b0          STRH     r2,[r1,#0]
+;;;223    }
+000598  e12fff1e          BX       lr
+;;;224    
                           ENDP
 
                   tvd_set_out_fmt PROC
-;;;199    // Set output format (4:2:0/4:2:2, planar(semi-planar?)/mb(packed?/macroblock?), U/V swap)
-;;;200    void tvd_set_out_fmt(tvd_out_fmt_e fmt) {
-000784  e92d4070          PUSH     {r4-r6,lr}
-000788  e1a04000          MOV      r4,r0
-;;;201        uint32_t val = read32(TVD_BASE + TVD_DMA_CFG) & ~((1 << 4) | (1 << 24) | (1 << 8));
-00078c  e51f0208          LDR      r0,|L1.1420|
-000790  ebfffffe          BL       read32
-000794  e3c05401          BIC      r5,r0,#0x1000000
-000798  e3c55e11          BIC      r5,r5,#0x110
-;;;202        write32(TVD_BASE + TVD_DMA_CFG, val | fmt);
-00079c  e1851004          ORR      r1,r5,r4
-0007a0  e51f021c          LDR      r0,|L1.1420|
-0007a4  ebfffffe          BL       write32
-;;;203    }
-0007a8  e8bd8070          POP      {r4-r6,pc}
-;;;204    
+;;;225    // Set output format (4:2:0/4:2:2, planar(semi-planar?)/mb(packed?/macroblock?), U/V swap)
+;;;226    void tvd_set_out_fmt(tvd_out_fmt_e fmt) {
+00059c  e92d4070          PUSH     {r4-r6,lr}
+0005a0  e1a04000          MOV      r4,r0
+;;;227        uint32_t val = read32(TVD_BASE + TVD_DMA_CFG) & ~((1 << 4) | (1 << 24) | (1 << 8));
+0005a4  e59f00d4          LDR      r0,|L1.1664|
+0005a8  ebfffffe          BL       read32
+0005ac  e3c05401          BIC      r5,r0,#0x1000000
+0005b0  e3c55e11          BIC      r5,r5,#0x110
+;;;228        write32(TVD_BASE + TVD_DMA_CFG, val | fmt);
+0005b4  e1851004          ORR      r1,r5,r4
+0005b8  e59f00c0          LDR      r0,|L1.1664|
+0005bc  ebfffffe          BL       write32
+;;;229    }
+0005c0  e8bd8070          POP      {r4-r6,pc}
+;;;230    
                           ENDP
 
                   tvd_set_bluescreen_mode PROC
-;;;205    void tvd_set_bluescreen_mode(tvd_blue_mode_e mode) {
-0007ac  e92d4070          PUSH     {r4-r6,lr}
-0007b0  e1a04000          MOV      r4,r0
-;;;206        uint32_t val = read32(TVD_BASE + TVD_REG_F14) & ~(3 << 4);
-0007b4  e51f01a0          LDR      r0,|L1.1564|
-0007b8  ebfffffe          BL       read32
-0007bc  e3c05030          BIC      r5,r0,#0x30
-;;;207        write32(TVD_BASE + TVD_REG_F14, val | (mode << 4));
-0007c0  e1851204          ORR      r1,r5,r4,LSL #4
-0007c4  e51f01b0          LDR      r0,|L1.1564|
-0007c8  ebfffffe          BL       write32
-;;;208    }
-0007cc  e8bd8070          POP      {r4-r6,pc}
-;;;209    
+;;;231    void tvd_set_bluescreen_mode(tvd_blue_mode_e mode) {
+0005c4  e92d4070          PUSH     {r4-r6,lr}
+0005c8  e1a04000          MOV      r4,r0
+;;;232        uint32_t val = read32(TVD_BASE + TVD_REG_F14) & ~(3 << 4);
+0005cc  e59f00fc          LDR      r0,|L1.1744|
+0005d0  ebfffffe          BL       read32
+0005d4  e3c05030          BIC      r5,r0,#0x30
+;;;233        write32(TVD_BASE + TVD_REG_F14, val | (mode << 4));
+0005d8  e1851204          ORR      r1,r5,r4,LSL #4
+0005dc  e59f00ec          LDR      r0,|L1.1744|
+0005e0  ebfffffe          BL       write32
+;;;234    }
+0005e4  e8bd8070          POP      {r4-r6,pc}
+;;;235    
                           ENDP
 
                   tvd_dma_enable PROC
-;;;210    static void tvd_dma_enable(void) {
-0007d0  e92d4010          PUSH     {r4,lr}
-;;;211        set32(TVD_BASE + TVD_DMA_CFG, (1 << 0));
-0007d4  e51f0250          LDR      r0,|L1.1420|
-0007d8  ebfffffe          BL       read32
-0007dc  e3804001          ORR      r4,r0,#1
-0007e0  e1a01004          MOV      r1,r4
-0007e4  e51f0260          LDR      r0,|L1.1420|
-0007e8  ebfffffe          BL       write32
-;;;212    }
-0007ec  e8bd8010          POP      {r4,pc}
-;;;213    
+;;;236    static void tvd_dma_enable(void) {
+0005e8  e92d4010          PUSH     {r4,lr}
+;;;237        set32(TVD_BASE + TVD_DMA_CFG, (1 << 0));
+0005ec  e59f008c          LDR      r0,|L1.1664|
+0005f0  ebfffffe          BL       read32
+0005f4  e3804001          ORR      r4,r0,#1
+0005f8  e1a01004          MOV      r1,r4
+0005fc  e59f007c          LDR      r0,|L1.1664|
+000600  ebfffffe          BL       write32
+;;;238    }
+000604  e8bd8010          POP      {r4,pc}
+;;;239    
                           ENDP
 
                   tvd_dma_disable PROC
-;;;214    static void tvd_dma_disable(void) {
-0007f0  e92d4010          PUSH     {r4,lr}
-;;;215        clear32(TVD_BASE + TVD_DMA_CFG, (1 << 0));
-0007f4  e51f0270          LDR      r0,|L1.1420|
-0007f8  ebfffffe          BL       read32
-0007fc  e3c04001          BIC      r4,r0,#1
-000800  e1a01004          MOV      r1,r4
-000804  e51f0280          LDR      r0,|L1.1420|
-000808  ebfffffe          BL       write32
-;;;216    }
-00080c  e8bd8010          POP      {r4,pc}
-;;;217    
+;;;240    static void tvd_dma_disable(void) {
+000608  e92d4010          PUSH     {r4,lr}
+;;;241        clear32(TVD_BASE + TVD_DMA_CFG, (1 << 0));
+00060c  e59f006c          LDR      r0,|L1.1664|
+000610  ebfffffe          BL       read32
+000614  e3c04001          BIC      r4,r0,#1
+000618  e1a01004          MOV      r1,r4
+00061c  e59f005c          LDR      r0,|L1.1664|
+000620  ebfffffe          BL       write32
+;;;242    }
+000624  e8bd8010          POP      {r4,pc}
+;;;243    
                           ENDP
 
                   tvd_autoset PROC
-;;;225    
-;;;226    uint8_t tvd_autoset(void) {
-000810  e3a00000          MOV      r0,#0
-;;;227        return 0; // TODO:
-;;;228    }
-000814  e12fff1e          BX       lr
-;;;229    
+;;;251    
+;;;252    uint8_t tvd_autoset(void) {
+000628  e3a00000          MOV      r0,#0
+;;;253        return 0; // TODO:
+;;;254    }
+00062c  e12fff1e          BX       lr
+;;;255    
                           ENDP
 
                   tvd_get_state PROC
-;;;230    uint32_t tvd_get_state(void) {
-000818  e92d4010          PUSH     {r4,lr}
-;;;231        return read32(TVD_BASE + TVD_STATE_0);
-00081c  e59f0044          LDR      r0,|L1.2152|
-000820  ebfffffe          BL       read32
-;;;232    }
-000824  e8bd8010          POP      {r4,pc}
-;;;233    
+;;;256    uint32_t tvd_get_state(void) {
+000630  e92d4010          PUSH     {r4,lr}
+;;;257        return read32(TVD_BASE + TVD_STATE_0);
+000634  e59f0114          LDR      r0,|L1.1872|
+000638  ebfffffe          BL       read32
+;;;258    }
+00063c  e8bd8010          POP      {r4,pc}
+;;;259    
                           ENDP
 
                   tvd_get_input_mode PROC
-;;;234    tvd_mode_e tvd_get_input_mode(void) {
-000828  e3a00000          MOV      r0,#0
-;;;235        return (tvd_mode_e)0; // TODO::
-;;;236    }
-00082c  e12fff1e          BX       lr
-;;;237    
+;;;260    tvd_mode_e tvd_get_input_mode(void) {
+000640  e3a00000          MOV      r0,#0
+;;;261        return (tvd_mode_e)0; // TODO::
+;;;262    }
+000644  e12fff1e          BX       lr
+;;;263    
                           ENDP
 
                   tvd_enable PROC
-;;;238    void tvd_enable(void) {
-000830  e92d4010          PUSH     {r4,lr}
-;;;239        tvd_dma_enable();
-000834  ebfffffe          BL       tvd_dma_enable
-;;;240    }
-000838  e8bd8010          POP      {r4,pc}
-;;;241    
+;;;264    void tvd_enable(void) {
+000648  e92d4010          PUSH     {r4,lr}
+;;;265        tvd_dma_enable();
+00064c  ebfffffe          BL       tvd_dma_enable
+;;;266    }
+000650  e8bd8010          POP      {r4,pc}
+;;;267    
                           ENDP
 
                   tvd_disable PROC
-;;;242    void tvd_disable(void) {
-00083c  e92d4010          PUSH     {r4,lr}
-;;;243        tvd_dma_disable();
-000840  ebfffffe          BL       tvd_dma_disable
-;;;244        // TODO:
-;;;245    }
-000844  e8bd8010          POP      {r4,pc}
+;;;268    void tvd_disable(void) {
+000654  e92d4010          PUSH     {r4,lr}
+;;;269        tvd_dma_disable();
+000658  ebfffffe          BL       tvd_dma_disable
+;;;270        // TODO:
+;;;271    }
+00065c  e8bd8010          POP      {r4,pc}
                           ENDP
 
                   read32 PROC
 ;;;19     
 ;;;20     static __inline uint32_t read32(uint32_t addr)
-000848  e1a01000          MOV      r1,r0
+000660  e1a01000          MOV      r1,r0
 ;;;21     {
 ;;;22       return (*((volatile uint32_t*)(addr)));
-00084c  e5910000          LDR      r0,[r1,#0]
+000664  e5910000          LDR      r0,[r1,#0]
 ;;;23     }
-000850  e12fff1e          BX       lr
+000668  e12fff1e          BX       lr
 ;;;24     
                           ENDP
 
                   write32 PROC
 ;;;39     
 ;;;40     static __inline void write32(uint32_t addr, uint32_t value)
-000854  e5801000          STR      r1,[r0,#0]
+00066c  e5801000          STR      r1,[r0,#0]
 ;;;41     {
 ;;;42       *((volatile uint32_t*)(addr)) = value;
 ;;;43     }
-000858  e12fff1e          BX       lr
+000670  e12fff1e          BX       lr
 ;;;44     
                           ENDP
 
-                  |L1.2140|
+                  |L1.1652|
+                          DCD      0x01c0be04
+                  |L1.1656|
                           DCD      0x01c0b080
-                  |L1.2144|
+                  |L1.1660|
                           DCD      0x01c0b084
-                  |L1.2148|
-                          DCD      0x019bfcc0
-                  |L1.2152|
+                  |L1.1664|
+                          DCD      0x01c0b088
+                  |L1.1668|
+                          DCD      0x01c0b08c
+                  |L1.1672|
+                          DCD      0x01c0b090
+                  |L1.1676|
+                          DCD      tvd
+                  |L1.1680|
+                          DCD      0x00010001
+                  |L1.1684|
+                          DCD      0x01c0b008
+                  |L1.1688|
+                          DCD      0x00202068
+                  |L1.1692|
+                          DCD      0x01c0b00c
+                  |L1.1696|
+                          DCD      0x00300080
+                  |L1.1700|
+                          DCD      0x01c0b010
+                  |L1.1704|
+                          DCD      0x21f07c1f
+                  |L1.1708|
+                          DCD      0x01c0b018
+                  |L1.1712|
+                          DCD      0x00820022
+                  |L1.1716|
+                          DCD      0x01c0b01c
+                  |L1.1720|
+                          DCD      0x00590100
+                  |L1.1724|
+                          DCD      0x01c0bf08
+                  |L1.1728|
+                          DCD      0x01c0bf0c
+                  |L1.1732|
+                          DCD      0x008a32dd
+                  |L1.1736|
+                          DCD      0x01c0bf10
+                  |L1.1740|
+                          DCD      0x800000a0
+                  |L1.1744|
+                          DCD      0x01c0bf14
+                  |L1.1748|
+                          DCD      0x01c0bf1c
+                  |L1.1752|
+                          DCD      0x0000cb74
+                  |L1.1756|
+                          DCD      0x01c0bf2c
+                  |L1.1760|
+                          DCD      0x00004632
+                  |L1.1764|
+                          DCD      0x01c0bf44
+                  |L1.1768|
+                          DCD      0x000003c3
+                  |L1.1772|
+                          DCD      0x01c0bf74
+                  |L1.1776|
+                          DCD      0x01c0bf80
+                  |L1.1780|
+                          DCD      0x01c0bf84
+                  |L1.1784|
+                          DCD      0x01c0b000
+                  |L1.1788|
+                          DCD      0x01111001
+                  |L1.1792|
+                          DCD      0x03714080
+                  |L1.1796|
+                          DCD      0x00310080
+                  |L1.1800|
+                          DCD      0x2a098acb
+                  |L1.1804|
+                          DCD      0x0087002f
+                  |L1.1808|
+                          DCD      0x11590902
+                  |L1.1812|
+                          DCD      0x008a32ec
+                  |L1.1816|
+                          DCD      0x80000080
+                  |L1.1820|
+                          DCD      0x00000d74
+                  |L1.1824|
+                          DCD      0x0000412d
+                  |L1.1828|
+                          DCD      0x00000343
+                  |L1.1832|
+                          DCD      0x00002001
+                  |L1.1836|
+                          DCD      0x21e6efe3
+                  |L1.1840|
+                          DCD      0x01103001
+                  |L1.1844|
+                          DCD      0x21f69446
+                  |L1.1848|
+                          DCD      0x00870026
+                  |L1.1852|
+                          DCD      0x01104001
+                  |L1.1856|
+                          DCD      0x003100b0
+                  |L1.1860|
+                          DCD      0x28a33bb2
+                  |L1.1864|
+                          DCD      0x00005036
+                  |L1.1868|
+                          DCD      0x01c0be2c
+                  |L1.1872|
                           DCD      0x01c0be40
 
                           AREA ||.data||, DATA, ALIGN=1

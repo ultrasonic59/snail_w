@@ -6,134 +6,138 @@
 
                   tvd_irq_handle PROC
                   |L1.0|
-;;;16     int tcountt = 0;
-;;;17     void tvd_irq_handle(int arg)
+;;;19     
+;;;20     void tvd_irq_handle(int arg)
 000000  e92d4010          PUSH     {r4,lr}
-;;;18     {
+;;;21     {
 000004  e1a04000          MOV      r4,r0
-;;;19     //	TVD_Printf("tvd irq\n");
-;;;20     
-;;;21     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
-;;;22     //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
-;;;23     //			tvd_y_buf[4],tvd_y_buf[5],tvd_y_buf[6],tvd_y_buf[7]);
+;;;22     ////	TVD_Printf("tvd irq\n");
+;;;23     
 ;;;24     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
-;;;25     //				tvd_y_buf[1000],tvd_y_buf[1001],tvd_y_buf[1002],tvd_y_buf[1003],
-;;;26     //				tvd_y_buf[1004],tvd_y_buf[1005],tvd_y_buf[1006],tvd_y_buf[1007]);
-;;;27     	//tcountt ++;
-;;;28     	memcpy(tvd_y_buf_disp,tvd_y_buf,720*576);
+;;;25     //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
+;;;26     //			tvd_y_buf[4],tvd_y_buf[5],tvd_y_buf[6],tvd_y_buf[7]);
+;;;27     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
+;;;28     //				tvd_y_buf[1000],tvd_y_buf[1001],tvd_y_buf[1002],tvd_y_buf[1003],
+;;;29     //				tvd_y_buf[1004],tvd_y_buf[1005],tvd_y_buf[1006],tvd_y_buf[1007]);
+;;;30     	//tcountt ++;
+;;;31     ////????	
+;;;32     #if 1	
+;;;33     	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
 000008  e59f2108          LDR      r2,|L1.280|
 00000c  e59f1108          LDR      r1,|L1.284|
 000010  e59f0108          LDR      r0,|L1.288|
 000014  ebfffffe          BL       __aeabi_memcpy
-;;;29     	memcpy(tvd_c_buf_disp,tvd_c_buf,720*576);
+;;;34     	memcpy(tvd_c_buf_disp,tvd_c_buf,DEF_TWD_W*DEF_TWD_H);
 000018  e59f20f8          LDR      r2,|L1.280|
 00001c  e59f1100          LDR      r1,|L1.292|
 000020  e59f0100          LDR      r0,|L1.296|
 000024  ebfffffe          BL       __aeabi_memcpy
-;;;30     	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
+;;;35     	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
 000028  e3a01000          MOV      r1,#0
 00002c  e59f00f8          LDR      r0,|L1.300|
 000030  e5900000          LDR      r0,[r0,#0]  ; tvd_id
 000034  ebfffffe          BL       tvd_irq_status_clear
-;;;31     
-;;;32     	// dma_cache_sync(tvd_y_buf,720*576,3);
-;;;33     	// dma_cache_sync(tvd_c_buf,720*576,3);
-;;;34     	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,720,576);
+;;;36     ////	f1c100s_intc_clear_pend();
+;;;37     #endif
+;;;38     	// dma_cache_sync(tvd_y_buf,720*576,3);
+;;;39     	// dma_cache_sync(tvd_c_buf,720*576,3);
+;;;40     	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,DEF_TWD_W,DEF_TWD_H);
 000038  e3a03d09          MOV      r3,#0x240
 00003c  e3a02e2d          MOV      r2,#0x2d0
 000040  e59f10e0          LDR      r1,|L1.296|
 000044  e59f00d4          LDR      r0,|L1.288|
 000048  ebfffffe          BL       RefleshLcdWithTVD
-;;;35     	
-;;;36     
-;;;37     }
+;;;41     }
 00004c  e8bd8010          POP      {r4,pc}
-;;;38     
+;;;42     
                           ENDP
 
                   tv_in_decode_init PROC
-;;;39     
-;;;40     void tv_in_decode_init(int id)
+;;;43     
+;;;44     void tv_in_decode_init(int id)
 000050  e92d4070          PUSH     {r4-r6,lr}
-;;;41     {
+;;;45     {
 000054  e1a04000          MOV      r4,r0
-;;;42     	int		   	retval  = 0;
+;;;46     	int		   	retval  = 0;
 000058  e3a05000          MOV      r5,#0
-;;;43     	tvd_id = id;
+;;;47     	tvd_id = id;
 00005c  e59f00c8          LDR      r0,|L1.300|
 000060  e5804000          STR      r4,[r0,#0]  ; tvd_id
-;;;44     	retval = request_irq(IRQ_TVD, tvd_irq_handle,0);//first requet irq
-000064  e3a02000          MOV      r2,#0
-000068  e24f1070          ADR      r1,|L1.0|
-00006c  e3a0001b          MOV      r0,#0x1b
-000070  ebfffffe          BL       request_irq
-000074  e1a05000          MOV      r5,r0
-;;;45     	printf("request_irq \n");
+;;;48     	/////retval = request_irq(IRQ_TVD, tvd_irq_handle,0);//first requet irq
+;;;49       f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
+000064  e24f106c          ADR      r1,|L1.0|
+000068  e3a0001b          MOV      r0,#0x1b
+00006c  ebfffffe          BL       f1c100s_intc_set_isr
+;;;50       f1c100s_intc_enable_irq(IRQ_TVD);
+000070  e3a0001b          MOV      r0,#0x1b
+000074  ebfffffe          BL       f1c100s_intc_enable_irq
+;;;51     	
+;;;52     	printf("request_irq \n");
 000078  e28f00b0          ADR      r0,|L1.304|
 00007c  ebfffffe          BL       __2printf
-;;;46     
-;;;47     	tvd_bsp_init(0);//bsp init like open clk ,reset ...
+;;;53     
+;;;54     	tvd_bsp_init(0);//bsp init like open clk ,reset ...
 000080  e3a00000          MOV      r0,#0
 000084  ebfffffe          BL       tvd_bsp_init
-;;;48     	TVD_Printf("tvd_bsp_init \n");
+;;;55     	TVD_Printf("tvd_bsp_init \n");
 000088  e28f00b0          ADR      r0,|L1.320|
 00008c  ebfffffe          BL       __2printf
-;;;49     	tvd_config(TVD_SOURCE_CVBS,TVD_SOURCE_PAL,TVD_PL_YUV420);
+;;;56     	tvd_config(TVD_SOURCE_CVBS,TVD_SOURCE_PAL,TVD_PL_YUV420);
 000090  e3a02001          MOV      r2,#1
 000094  e1a01002          MOV      r1,r2
 000098  e3a00000          MOV      r0,#0
 00009c  ebfffffe          BL       tvd_config
-;;;50     	TVD_Printf("tvd_config \n");
+;;;57     	TVD_Printf("tvd_config \n");
 0000a0  e28f00a8          ADR      r0,|L1.336|
 0000a4  ebfffffe          BL       __2printf
-;;;51     
-;;;52     	tvd_set_fmt(id,TVD_PL_YUV420);
+;;;58     
+;;;59     	tvd_set_fmt(id,TVD_PL_YUV420);
 0000a8  e3a01001          MOV      r1,#1
 0000ac  e1a00004          MOV      r0,r4
 0000b0  ebfffffe          BL       tvd_set_fmt
-;;;53     	TVD_Printf("tvd_set_fmt \n");
+;;;60     	TVD_Printf("tvd_set_fmt \n");
 0000b4  e28f00a4          ADR      r0,|L1.352|
 0000b8  ebfffffe          BL       __2printf
-;;;54     	tvd_set_addr_y(id,tvd_y_buf);
+;;;61     	tvd_set_addr_y(id,tvd_y_buf);
 0000bc  e59f1058          LDR      r1,|L1.284|
 0000c0  e1a00004          MOV      r0,r4
 0000c4  ebfffffe          BL       tvd_set_addr_y
-;;;55     	tvd_set_addr_c(id,tvd_c_buf);
+;;;62     	tvd_set_addr_c(id,tvd_c_buf);
 0000c8  e59f1054          LDR      r1,|L1.292|
 0000cc  e1a00004          MOV      r0,r4
 0000d0  ebfffffe          BL       tvd_set_addr_c
-;;;56     	tvd_set_blue_flag(0);
+;;;63     	tvd_set_blue_flag(0);
 0000d4  e3a00000          MOV      r0,#0
 0000d8  ebfffffe          BL       tvd_set_blue_flag
-;;;57     	//Enable irq
-;;;58     	tvd_irq_status_clear(id,TVD_FRAME_DONE);
+;;;64     	//Enable irq
+;;;65     	tvd_irq_status_clear(id,TVD_FRAME_DONE);
 0000dc  e3a01000          MOV      r1,#0
 0000e0  e1a00004          MOV      r0,r4
 0000e4  ebfffffe          BL       tvd_irq_status_clear
-;;;59     	TVD_Printf("tvd_irq_status_clear \n");
+;;;66     	TVD_Printf("tvd_irq_status_clear \n");
 0000e8  e28f0080          ADR      r0,|L1.368|
 0000ec  ebfffffe          BL       __2printf
-;;;60     
-;;;61     	tvd_irq_enable(id,TVD_FRAME_DONE);
+;;;67     
+;;;68     	tvd_irq_enable(id,TVD_FRAME_DONE);
 0000f0  e3a01000          MOV      r1,#0
 0000f4  e1a00004          MOV      r0,r4
 0000f8  ebfffffe          BL       tvd_irq_enable
-;;;62     	TVD_Printf("tvd_irq_enable \n");
+;;;69     	TVD_Printf("tvd_irq_enable \n");
 0000fc  e28f0084          ADR      r0,|L1.392|
 000100  ebfffffe          BL       __2printf
-;;;63     	
-;;;64     	tvd_capture_on(id);
+;;;70     	
+;;;71     	tvd_capture_on(id);
 000104  e1a00004          MOV      r0,r4
 000108  ebfffffe          BL       tvd_capture_on
-;;;65     	TVD_Printf("tvd_capture_on \n");
+;;;72     	TVD_Printf("tvd_capture_on \n");
 00010c  e28f0088          ADR      r0,|L1.412|
 000110  ebfffffe          BL       __2printf
-;;;66     
-;;;67     
-;;;68     
-;;;69     }
+;;;73     
+;;;74     
+;;;75     
+;;;76     }
 000114  e8bd8070          POP      {r4-r6,pc}
-;;;70     
+;;;77     
                           ENDP
 
                   |L1.280|

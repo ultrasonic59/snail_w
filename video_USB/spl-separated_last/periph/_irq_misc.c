@@ -1,10 +1,12 @@
 #include "irq_misc.h"
 #include <arm32.h>
 #include <io.h>
+
 typedef struct {
 	irq_handle irq_hdl_proc;
 	int tag;
 }irq_handle_stu;
+
 static irq_handle_stu f1c100s_irq_vector[160]={0};
 static void irq_f1c100s_enable(int type)
 {

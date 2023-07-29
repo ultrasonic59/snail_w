@@ -1,3 +1,4 @@
+#include "lcd-cfg.h"
 #include "lcd.h"
 #include <math.h>
 #include <stdarg.h>

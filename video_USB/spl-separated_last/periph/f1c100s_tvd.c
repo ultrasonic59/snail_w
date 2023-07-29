@@ -4,6 +4,7 @@
 #include "f1c100s_de.h"
 #include "f1c100s_clock.h"
 #include "io.h"
+#include "tvd_reg.h"
 
 /* TODO:
  *
@@ -28,8 +29,10 @@ static tvd_params_t tvd;
 
 static void tvd_dma_enable(void);
 static void tvd_dma_disable(void);
+extern void tvd_bsp_init(int id);
 
 void tvd_init(tvd_mode_e mode, void* buf_y, void* buf_c, uint8_t ch) {
+#if 0	
     clk_enable(CCU_BUS_CLK_GATE1, 9); // TVD bus clock
     clk_enable(CCU_DRAM_CLK_GATE, 3); // DRAM access clock
 
@@ -38,13 +41,18 @@ void tvd_init(tvd_mode_e mode, void* buf_y, void* buf_c, uint8_t ch) {
 
     clk_tvd_config(tvd_clk_div);
     clk_reset_clear(CCU_BUS_SOFT_RST1, 9);
+#endif	
+		tvd_bsp_init(0);
+	
+    tvd_set_mode(mode);
 
     tvd_set_out_buf(buf_y, buf_c);
-    tvd_set_mode(mode);
+ ////   tvd_set_mode(mode);
     tvd_set_ch(ch);
 }
 
 void tvd_set_mode(tvd_mode_e mode) {
+/*	
     write32(TVD_BASE + TVD_REG_E04, 0x8002AAA8);
     write32(TVD_BASE + TVD_REG_E2C, 0x00110000);
     write32(TVD_BASE + TVD_REG_040, 0x04000310);
@@ -58,7 +66,8 @@ void tvd_set_mode(tvd_mode_e mode) {
     write32(TVD_BASE + TVD_REG_F58, 0x00000082);
     write32(TVD_BASE + TVD_REG_F6C, 0x00FFFAD0);
     write32(TVD_BASE + TVD_REG_F70, 0x0000A010);
-
+*/
+	
     switch(mode) {
     case TVD_MODE_NTSC: // NTSC 720x480
         write32(TVD_BASE + TVD_REG_008, 0x00010001);
@@ -83,26 +92,43 @@ void tvd_set_mode(tvd_mode_e mode) {
         tvd_set_out_size(720, 480);
         break;
     case TVD_MODE_PAL_B: // PAL-B/G 720x576
-        write32(TVD_BASE + TVD_REG_008, 0x01101001);
-        write32(TVD_BASE + TVD_REG_00C, 0x00202068);
-        write32(TVD_BASE + TVD_REG_010, 0x00300050);
-        write32(TVD_BASE + TVD_REG_018, 0x2A098ACB);
-        write32(TVD_BASE + TVD_REG_01C, 0x0087002A);
+				TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x01111001);
+////        write32(TVD_BASE + TVD_REG_008, 0x01101001);
+				TVD_RegWrite(TVD_REG_BASE + 0x000c,0x03714080); /* adjust luma brightness */
+ ////       write32(TVD_BASE + TVD_REG_00C, 0x00202068);
+				TVD_RegWrite(TVD_REG_BASE + 0x0010, 0x00310080);
+ ////       write32(TVD_BASE + TVD_REG_010, 0x00300050);
+				TVD_RegWrite(TVD_REG_BASE + 0x0018, 0x2a098acb); /* chroma dto */
+ /////       write32(TVD_BASE + TVD_REG_018, 0x2A098ACB);
+				TVD_RegWrite(TVD_REG_BASE + 0x001c, 0x0087002f); /* hactive and vactive start */
+////        write32(TVD_BASE + TVD_REG_01C, 0x0087002A);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f08,0x11590902); /* disable black level correction */
+////        write32(TVD_BASE + TVD_REG_F08, 0x11590902);
+			/* for 7.5 blank-to-black setup */
+			/* cagc en */
+			TVD_RegWrite(TVD_REG_BASE + 0x0f0c, 0x00000016); /* YC sep */
+     ////  write32(TVD_BASE + TVD_REG_F0C, 0x00000016);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f10, 0x008a32ec); /* */
+		////        write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f14,0x80000080); /* adjust YC delay */
+      ////  write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f1c, 0x00930000); /* chroma AGC target */
+	////    write32(TVD_BASE + TVD_REG_F1C, 0x00930000);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x00000d74);
+        ////write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f44,0x0000412d); /* burst gate */
+        ////write32(TVD_BASE + TVD_REG_F44, 0x0000412D);
+			/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); // */
+			TVD_RegWrite(TVD_REG_BASE + 0x0f74, 0x00000343); /* */
+      ////  write32(TVD_BASE + TVD_REG_F74, 0x00000343);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f80, 0x00500000); /* hactive width */
+////        write32(TVD_BASE + TVD_REG_F80, 0x00500000);
+			TVD_RegWrite(TVD_REG_BASE + 0x0f84, 0x00c10000); /* vactive height */
+ /////       write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
+			TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000001); /* */
+/////        write32(TVD_BASE + TVD_REG_000, 0x00000001);
 
-        write32(TVD_BASE + TVD_REG_F08, 0x11590902);
-        write32(TVD_BASE + TVD_REG_F0C, 0x00000016);
-        write32(TVD_BASE + TVD_REG_F10, 0x008A32EC);
-        write32(TVD_BASE + TVD_REG_F14, 0x800000A0);
-        write32(TVD_BASE + TVD_REG_F1C, 0x00930000);
-        write32(TVD_BASE + TVD_REG_F2C, 0x00000D74);
-        write32(TVD_BASE + TVD_REG_F44, 0x0000412D);
-        write32(TVD_BASE + TVD_REG_F74, 0x00000343);
-        write32(TVD_BASE + TVD_REG_F80, 0x00500000);
-        write32(TVD_BASE + TVD_REG_F84, 0x00C10000);
-
-        write32(TVD_BASE + TVD_REG_000, 0x00000001);
-
-        tvd_set_out_size(720, 576);
+        tvd_set_out_size(720, 576);  ////???
         break;
     case TVD_MODE_PAL_M: // PAL-M  - not tested
         write32(TVD_BASE + TVD_REG_008, 0x00002001);

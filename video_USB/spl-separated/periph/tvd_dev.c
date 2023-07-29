@@ -14,12 +14,12 @@ unsigned char tvd_c_buf[DEF_TWD_W*DEF_TWD_H];
 
 unsigned char tvd_y_buf_disp[DEF_TWD_W*DEF_TWD_H];
 unsigned char tvd_c_buf_disp[DEF_TWD_W*DEF_TWD_H];
-extern void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h);
+////extern void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h);
 int tcountt = 0;
 
 void tvd_irq_handle(int arg)
 {
-////	TVD_Printf("tvd irq\n");
+	TVD_Printf("tvd irq\n");
 
 //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
 //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
@@ -37,7 +37,7 @@ void tvd_irq_handle(int arg)
 #endif
 	// dma_cache_sync(tvd_y_buf,720*576,3);
 	// dma_cache_sync(tvd_c_buf,720*576,3);
-	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,DEF_TWD_W,DEF_TWD_H);
+/////	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,DEF_TWD_W,DEF_TWD_H);
 }
 
 

@@ -39,6 +39,14 @@
 
 #define phys_to_virt(x) (x)
 
+#if (LCD_PANEL_XSIZE == 800) && (LCD_PANEL_YSIZE == 600)
+#define FB_LCD_XSIZE    (LCD_PANEL_XSIZE)
+#define FB_LCD_YSIZE    (LCD_PANEL_YSIZE)
+#define LCD_CTRL_BPP    (LCD_PANEL_BITPP)
+#define LCD_BYTE_PP     (LCD_PANEL_BYTEPP)
+#define PIXEL_CLOCK     (33000000)  // ´óÔ¼67fps
+#endif
+
 #if (LCD_PANEL_XSIZE == 800) && (LCD_PANEL_YSIZE == 480)
 #define FB_LCD_XSIZE    (LCD_PANEL_XSIZE)
 #define FB_LCD_YSIZE    (LCD_PANEL_YSIZE)
@@ -451,6 +459,52 @@ int32_t fb_f1c100s_getbl(framebuffer_t* fb)
   // return led_get_brightness(pdat->backlight);
   return pwm_f1c100s_get_duty(pdat->backlight);
 }
+#if 1
+render_t * fb_f1c100s_create(framebuffer_t * fb)
+{
+	fb_f1c100s_priv_data_t * pdat = (fb_f1c100s_priv_data_t *)fb->priv;
+	render_t * render;
+
+__align(4)	uint8_t *pixels;
+	size_t pixlen;
+
+	pixlen = pdat->width * pdat->height * pdat->bytes_per_pixel;
+	////pixels = memalign(4, pixlen);
+		pixels = (uint8_t *)malloc(pixlen);
+#if 1		
+	if(!pixels)
+		{
+			return NULL;
+		}
+
+	render = malloc(sizeof(render_t));
+	if(!render)
+	{
+		free(pixels);
+		return NULL;
+	}
+
+	render->width = pdat->width;
+	render->height = pdat->height;
+	render->pitch = (pdat->width * pdat->bytes_per_pixel + 0x3) & ~0x3;
+	render->format = PIXEL_FORMAT_ARGB32;
+	render->pixels = pixels;
+	render->pixlen = pixlen;
+	render->priv = NULL;
+#endif
+	return render;
+}
+#endif
+
+void fb_f1c100s_destroy(framebuffer_t * fb, render_t * render)
+{
+	if(render)
+	{
+		free(render->pixels);
+		free(render);
+	}
+}
+
 
 void fb_f1c100s_present(framebuffer_t* fb, int index)
 {

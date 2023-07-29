@@ -5,9 +5,13 @@
 #include <ctype.h>
 #include "f1c100s_de.h"
 #include "f1c100s_tvd.h"
+#include "lcd-cfg.h"
+
 #include "display.h"
 #include "lcd.h"
 #include "io.h"
+#include "framebuffer.h"
+#include "tvd.h"
 
 extern void video_task(void);
 
@@ -66,9 +70,9 @@ tvd_init(TVD_MODE_PAL_B, fb_y, fb_c, 0);
 ///tvd_init(TVD_MODE_PAL_N, fb_y, fb_c, 0);
 ////tvd_init(TVD_MODE_PAL_M, fb_y, fb_c, 0);
 	
-  tvd_set_out_fmt(TVD_FMT_422_PL);
+tvd_set_out_fmt(TVD_FMT_422_PL);
  //// tvd_set_out_fmt(TVD_FMT_422_PL|TVD_FMT_SWAP_UV);
- //// tvd_set_out_fmt(TVD_FMT_420_PL);
+//// tvd_set_out_fmt(TVD_FMT_420_PL);
 ////  tvd_set_out_fmt(TVD_FMT_420_MB);
 	
     tvd_get_out_size(&tv_w, &tv_h);
@@ -85,6 +89,74 @@ tvd_init(TVD_MODE_PAL_B, fb_y, fb_c, 0);
 	
 return 0;	
 }
+////=====================================================================
+render_t* render;
+framebuffer_t fb_f1c100s;
+
+void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h)
+{
+	int lcdw = LCD_W;
+	int i,j;
+	int gray;
+	unsigned char r = 0;
+	unsigned int pos = 0;
+	for ( i= 0; i < LCD_H;i++)
+	{
+		for (j= 0; j < LCD_W;j++)
+		{
+			int y = ydat[i*w+j];
+			// float y16 = (float) ydat[i*w+j] - 16.0;
+
+			// float cb128 = (float) cbcr[i/4*2*(w)+(j/2)*2] - 128.0;
+			// float cr128 = (float) cbcr[(i/4*2)*(w)+j/2*2+1] - 128.0;
+
+			// float r = 1.164*y16 + 1.596*cr128; //this might exceed 255
+			// float g = 1.164*y16 - 0.813*cr128 - 0.391*cb128; //this could be less than 0 or greater than 255
+			// float b = 1.164*y16 + 2.018*cb128; //this might exceed 255
+			//YUV420 to RGB 
+			int cb128 =  (int)cbcr[(i/4*2)*(w)+(j/2)*2] - 128;
+			int cr128 =  (int)cbcr[(i/4*2)*(w)+j/2*2+1] - 128;
+			int rdif = cr128 + ((cr128 * 103) >> 8);
+			int invgdif = ((cb128 * 88) >> 8) +((cr128 * 183) >> 8);
+			int bdif = cb128 +( (cb128*198) >> 8);
+ 
+			int r = y + rdif;
+			int g  = y - invgdif;
+			int b = y + bdif;
+
+			if(r > 255)
+			{
+				r = 255;
+			}
+			else if(r < 0)
+			{
+				r = 0;
+			}
+			if(g < 0)
+			{
+				g = 0;
+			}
+			else if(g > 255)
+			{
+				g = 255;
+			}
+
+			if(b > 255)
+			{
+				b = 255;
+			}
+			else if(b < 0)
+			{
+				b  = 0;
+			}
+			((uint32_t*)render->pixels)[i*lcdw + j] = 0xFF000000|((int)b<<16)|((int)g<<8)|((int)r<<0);
+		}
+	}
+	fb_f1c100s_present(&fb_f1c100s, render);
+}
+
+
+#define TEST_FB 0
 ///==================================================================
 void UserEntryInit(void)
 {
@@ -93,15 +165,58 @@ target_wdt_feed();
 
 printf("DDR Size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
 ///===========================================
+	
+#if 1	
 display_init();
 display_set_bl(200);
-debe_set_bg_color(0x0000FF00);
+debe_set_bg_color(0xFFFF0000);
 debe_load(DEBE_UPDATE_AUTO);
+#endif
+#if TEST_FB
+
+   {
+    fb_f1c100s_init(&fb_f1c100s);
+      render = fb_f1c100s_create(&fb_f1c100s);
+	   printf("************ render->pixlen[%x]**********\n\r",(uint32_t)render->pixlen);
+	 
+       for (int i = 0; i < render->pixlen/4;i++)
+       {
+           ((uint32_t*)render->pixels)[i] =0xFFFFFFFF;
+       }
+//        for (int i = 0; i < 810;i++)
+//		{
+//			((uint32_t*)render->pixels)[i] = 0xFF00FF00;
+//		}
+//        for (int i = render->pixlen/4-1; i > render->pixlen/4 - 10;i--)
+//		   {
+//			   ((uint32_t*)render->pixels)[i] = 0xFF0000FF;
+//		   }
+       fb_f1c100s_present(&fb_f1c100s, render);
+       fb_f1c100s_setbl(&fb_f1c100s, 200);
+   }
+#endif
+
 ///==================================	
 tvin_init();
- ////  printf("Start main while!\n\r");
- //// 	tv_in_decode_init(0);
+#if 0
+   printf("Start main while!\n\r");
+  	tv_in_decode_init(0);
 	
+  printf("**************** tv_in_decode_init*********************\n\r");
+  	volatile int dly;
+    for(dly = 0;dly <10000;dly++)
+   	{
+   		;;;
+   	}
+   printf("**************** tvd_debugdump*********************\n\r");
+ ////   tvd_debugdump(0);
+ ////  RefleshLcdWithTVD((void*)0,480,272);
+#endif		
+/*		
+   while(1)
+    {
+		}
+*/		
 ///==================================	
     lcd_init(1); // Layer 1 - overlay
  ////   lcd_init(0); // Layer 1 - overlay

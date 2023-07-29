@@ -8,10 +8,18 @@
 #ifndef DRIVER_INCLUDE_TVD_H_
 #define DRIVER_INCLUDE_TVD_H_
 
+#include <stdbool.h>
+
+#define LCD_W 800 
+#define LCD_H 600 ////480
+
+#define DEF_TWD_W 720
+#define DEF_TWD_H 576
+
 typedef unsigned int __u32;
 typedef unsigned short __u16;
 typedef int __s32;
-typedef int bool;
+////typedef int bool;
 typedef unsigned long long __u64;
 typedef long long __s64;
 #define TVD_Printf   printf

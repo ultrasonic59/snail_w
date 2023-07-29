@@ -1,10 +1,9 @@
-#pragma once
+#ifndef __LCD_H_
+#define __LCD_H_
 
 #include <stdint.h>
 #include "lcd_font.h"
 #include "printf.h"
-#define DISPLAY_W 800 
-#define DISPLAY_H 600 ////480
 
 #define COLOR_RED 0xFFFF0000
 #define COLOR_GREEN 0xFF00FF00
@@ -34,3 +33,5 @@ void lcd_set_bg_color(uint32_t color);
 void lcd_set_text_pos(uint16_t x, uint16_t y);
 
 void lcd_set_font(const lcd_font_t* fnt);
+
+#endif

@@ -17,13 +17,19 @@ uint32_t board_millis(void)
 ////  return os_time_get();
 return 	sys_tick;
 }
-static uint8_t tst_offs=0;
-
-static void fill_color_bar(uint8_t *buffer, unsigned start_position)
-{
-	uint8_t btmp=0;
-  /* EBU color bars
-   * See also https://stackoverflow.com/questions/6939422 */
+#if 0
+    const RGB BAR_COLOUR[8] =
+    {
+        { 255, 255, 255 },  // 100% White
+        { 255, 255,   0 },  // Yellow
+        {   0, 255, 255 },  // Cyan
+        {   0, 255,   0 },  // Green
+        { 255,   0, 255 },  // Magenta
+        { 255,   0,   0 },  // Red
+        {   0,   0, 255 },  // Blue
+        {   0,   0,   0 },  // Black
+    };
+#endif
   static uint8_t const bar_color[8][4] = {
     /*  Y,   U,   Y,   V */
     { 235, 128, 235, 128}, /* 100% White */
@@ -35,6 +41,27 @@ static void fill_color_bar(uint8_t *buffer, unsigned start_position)
     {  32, 240,  32, 118}, /* Blue */
     {  16, 128,  16, 128}, /* Black */
   };
+
+static uint8_t tst_offs=0;
+
+static void _fill_color_bar(uint8_t *buffer, unsigned start_position)
+{
+	uint8_t btmp=0;
+  /* EBU color bars
+   * See also https://stackoverflow.com/questions/6939422 */
+#if 0	
+  static uint8_t const bar_color[8][4] = {
+    /*  Y,   U,   Y,   V */
+    { 235, 128, 235, 128}, /* 100% White */
+    { 219,  16, 219, 138}, /* Yellow */
+    { 188, 154, 188,  16}, /* Cyan */
+    { 173,  42, 173,  26}, /* Green */
+    {  78, 214,  78, 230}, /* Magenta */
+    {  63, 102,  63, 240}, /* Red */
+    {  32, 240,  32, 118}, /* Blue */
+    {  16, 128,  16, 128}, /* Black */
+  };
+#endif	
   uint8_t *p;
 
   /* Generate the 1st line */
@@ -60,10 +87,38 @@ static void fill_color_bar(uint8_t *buffer, unsigned start_position)
   }
 	tst_offs++;
 }
+extern uint8_t fb_y[];
+////static 
+extern	uint8_t fb_c[];
+
+static void fill_color_bar(uint8_t *buffer, unsigned start_position)
+{
+uint8_t *p;
+	unsigned yy=0;
+	unsigned cc=0;
+uint32_t *pbuf= (uint32_t *)&bar_color[4][0];
+	p = &buffer[0];
+for (unsigned i = 0; i < FRAME_HEIGHT; ++i) {
+		for(unsigned j = 0; j < FRAME_WIDTH*2; j++)
+		{
+		*p++	= fb_y[yy];
+		*p++	= fb_c[cc];
+		yy++;	
+		*p++	= fb_y[yy];
+		*p++	= fb_c[cc];
+		yy++;	
+		cc++;
+		}
+			
+	////		memset(p,*pbuf,FRAME_WIDTH * 2);
+ ///// memcpy(p, buffer, FRAME_WIDTH * 2);
+ /// p += FRAME_WIDTH * 2;
+  }
+}
 
 
 
-void video_task(void)
+void video_tsk(void)
 {
   static unsigned start_ms = 0;
   static unsigned already_sent = 0;
@@ -75,21 +130,14 @@ void video_task(void)
     return;
   }
 /////tu_printf("\r\n======video_task1=============");
+	
 
   if (!already_sent) {
     already_sent = 1;
     start_ms = board_millis();
-#ifdef CFG_EXAMPLE_VIDEO_READONLY
-# if defined(CFG_EXAMPLE_VIDEO_DISABLE_MJPG)
-    tud_video_n_frame_xfer(0, 0, (void*)(uintptr_t)&frame_buffer[(frame_num % (FRAME_WIDTH / 2)) * 4],
-                           FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-# else
-    tud_video_n_frame_xfer(0, 0, (void*)(uintptr_t)frames[frame_num % 8].buffer, frames[frame_num % 8].size);
-# endif
-#else
     fill_color_bar(frame_buffer, frame_num);
+		
     tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-#endif
   }
 
   unsigned cur = board_millis();
@@ -100,16 +148,18 @@ void video_task(void)
   start_ms += interval_ms;
 /////tu_printf("\r\n======video_task2=============");
 
-#ifdef CFG_EXAMPLE_VIDEO_READONLY
-# if defined(CFG_EXAMPLE_VIDEO_DISABLE_MJPG)
-  tud_video_n_frame_xfer(0, 0, (void*)(uintptr_t)&frame_buffer[(frame_num % (FRAME_WIDTH / 2)) * 4],
-                         FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-# else
-  tud_video_n_frame_xfer(0, 0, (void*)(uintptr_t)frames[frame_num % 8].buffer, frames[frame_num % 8].size);
-# endif
-#else
   fill_color_bar(frame_buffer, frame_num);
   tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-	
-#endif
 }
+
+void video_task(void)
+{
+printf("\r\n======video_task=============");
+	
+	for(;;)
+	{
+	video_tsk()	;
+	}
+}
+
+

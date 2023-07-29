@@ -33,8 +33,8 @@
 #define UVC_ENTITY_CAP_INPUT_TERMINAL  0x01
 #define UVC_ENTITY_CAP_OUTPUT_TERMINAL 0x02
 
-#define FRAME_WIDTH   320	////128
-#define FRAME_HEIGHT  240 ////96
+#define FRAME_WIDTH   720	////320	////128
+#define FRAME_HEIGHT  576	////240 ////96
 #define FRAME_RATE    20	////10
 
 enum {

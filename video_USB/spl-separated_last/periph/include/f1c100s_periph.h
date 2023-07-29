@@ -10,7 +10,9 @@ extern "C" {
 #define SPI0_BASE (0x01C05000)
 #define SPI1_BASE (0x01C06000)
 #define TVE_BASE (0x01C0A000)
+
 #define TVD_BASE (0x01C0B000)
+
 #define TCON_BASE (0x01C0C000)
 #define VE_BASE (0x01C0E000)
 #define SDC0_BASE (0x01C0F000)
