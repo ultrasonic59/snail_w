@@ -19,24 +19,3 @@ build/lib/malloc.o: lib/malloc.c lib/malloc.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\string.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\assert.h \
  lib/module.h
-lib/malloc.c lib/malloc.h :
- machine/include/core_types.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\string.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_ansi.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\newlib.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_newlib_version.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\config.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\ieeefp.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\features.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\reent.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_ansi.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_types.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\_types.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\_default_types.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\lock.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\cdefs.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_locale.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\string.h :
- c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\assert.h :
- lib/module.h :

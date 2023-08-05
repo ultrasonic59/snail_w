@@ -7,15 +7,18 @@
 #include <gpio-f1c100s.h>
 #include <pwm-f1c100s.h>
 #include "usb.h"
+#include "config.h"
 
 #define TEST_GPIO   0
 #define TEST_PWM    0
 #define TEST_FB     1
 
-/* return_to_fel() - Return to BROM from SPL
+/* 
+return_to_fel() - Return to BROM from SPL
  * @lr:		BROM link register value (return address)
  * @sp:		BROM stack pointer
  */
+
 extern void sys_uart_putc(char c);
 extern void return_to_fel(void);
 typedef void (*go_fel_mode)(void);
@@ -35,8 +38,7 @@ pwm_t led_pwm =
 
 int boot_main(int argc, char **argv) 
 {
-    
-    /* Do initial mem pool */
+     /* Do initial mem pool */
 	do_init_mem_pool();
     do_init_dma_pool();
     printf("Start main while!\n\r");
@@ -101,7 +103,7 @@ int boot_main(int argc, char **argv)
 //    printf("render->pixlen:%d\n",render->pixlen);
 //    printf("tvd_statues:0x%08x\n",tvd_get_status());
 
-    RefleshLcdWithTVD((void*)0,800,600);
+    RefleshLcdWithTVD((void*)0,DISPLAY_W,DISPLAY_H );
     while(1)
     {
 //    	if(!gpio_f1c100s_get_value(&GPIO_PE, 10))
@@ -129,14 +131,14 @@ int boot_main(int argc, char **argv)
 
 void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h)
 {
-	int lcdw = 480;
+	int lcdw = DISPLAY_W;
 	int i,j;
 	int gray;
 	unsigned char r = 0;
 	unsigned int pos = 0;
-	for ( i= 0; i < 272;i++)
+	for ( i= 0; i < DISPLAY_H;i++)
 	{
-		for (j= 0; j < 480;j++)
+		for (j= 0; j < DISPLAY_W;j++)
 		{
 			int y = ydat[i*w+j];
 			// float y16 = (float) ydat[i*w+j] - 16.0;
