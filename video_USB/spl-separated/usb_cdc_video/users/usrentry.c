@@ -12,6 +12,7 @@
 #include "io.h"
 #include "framebuffer.h"
 #include "tvd.h"
+#include "irq_misc.h"
 
 extern void video_task(void);
 
@@ -61,15 +62,14 @@ __task void usb_task() {
 		tud_task();
 	}
 }
+extern void tvd_irq_handle(void);
+
 ///==================================================================
 int tvin_init()
 {
 uint16_t tv_w, tv_h;
 tvd_init(TVD_MODE_PAL_B, fb_y, fb_c, 0);
 tvd_set_out_fmt(TVD_FMT_422_PL);
- //// tvd_set_out_fmt(TVD_FMT_422_PL|TVD_FMT_SWAP_UV);
-//// tvd_set_out_fmt(TVD_FMT_420_PL);
-////  tvd_set_out_fmt(TVD_FMT_420_MB);
 	
     tvd_get_out_size(&tv_w, &tv_h);
 	
@@ -77,7 +77,8 @@ tvd_set_out_fmt(TVD_FMT_422_PL);
 	
     tvd_set_bluescreen_mode(TVD_BLUE_OFF);
 
-    defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
+ ////   defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
+   defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
 
     debe_layer_init(0); // Layer 0 - video
     debe_layer_set_size(0, tv_w, tv_h);
@@ -87,12 +88,14 @@ tvd_set_out_fmt(TVD_FMT_422_PL);
 		
     debe_layer_enable(0);
     tvd_enable();
+  f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
+  f1c100s_intc_enable_irq(IRQ_TVD);
 	
 return 0;	
 }
 ////=====================================================================
-render_t* render;
-framebuffer_t fb_f1c100s;
+////render_t* render;
+////framebuffer_t fb_f1c100s;
 
 extern void lcd_task(void);
 
@@ -100,26 +103,26 @@ extern void lcd_task(void);
 ///==================================================================
 void UserEntryInit(void)
 {
-uint32_t *p_val;
+/////uint32_t *p_val;
 target_wdt_feed();
 
-printf("DDR Size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
+printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
 ///===========================================
 	
 #if 1	
 display_init();
 display_set_bl(100);
-debe_set_bg_color(0xFFFF0000);
+debe_set_bg_color(0xFF000000);
 debe_load(DEBE_UPDATE_AUTO);
 #endif
 ///==================================	
-tvin_init();
+ tvin_init();
 ///==================================	
 #if 1	
     lcd_init(1); // Layer 1 - overlay
  ////   lcd_init(0); // Layer 1 - overlay
     lcd_fill(0, 0, DISPLAY_W, DISPLAY_H, COLOR_TRANSPARENT);
-    lcd_set_bg_color(0x80080000);
+    lcd_set_bg_color(0x80088000);
     lcd_set_text_color(COLOR_WHITE);
     lcd_set_text_pos(300, 0);
     lcd_printf("====== PAL==========");
@@ -145,7 +148,7 @@ while(1) {
         lcd_printf("%08lX\n", val);
     }
 		#endif
-		#endif
+#endif
 ///===========================================
 ////	os_tsk_create(lcd_task, 11);
 
@@ -162,18 +165,28 @@ tusb_init();
 	
 }
 extern void video_tsk(void);
+extern	uint8_t frame_buffer[];
 
 ////////////////////////////////////////////////////////////////////////////////
-#define BEG_POS 20
+#define BEG_POS 80
 void UserEntryLoop(void)
 {
-	uint32_t *p_val;
+	uint32_t *p_val=(uint32_t *)fb_y;
 	uint32_t val;
+	uint8_t ii;
+				for(ii=0;ii<16;ii++)
+				{
+			  p_val[BEG_POS+ii*8]=0;
+				}
+
   for (;;) {
     target_wdt_feed();
 ////		sys_delay(500);
 		sys_delay(2);
-////		  printf("time1: %x\n", board_millis());
+		video_tsk();
+		
+	////	  printf("time1: %x\n", board_millis());
+		#if 1
 /////while(1) 
 	{
         lcd_set_text_pos(600, 0);
@@ -190,39 +203,15 @@ void UserEntryLoop(void)
         lcd_printf("%08lX\n", val);
 		#endif
 	////====================================
-				p_val= (uint32_t *)&fb_c[BEG_POS];
-        val = *p_val;
+		#if 1
+			for(ii=0;ii<16;ii++)
+				{
+			  val = p_val[BEG_POS+ii*8];
         lcd_printf("%08lX\n", val);
-				p_val= (uint32_t *)&fb_y[BEG_POS];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-		
-				p_val= (uint32_t *)&fb_c[BEG_POS+4];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-				p_val= (uint32_t *)&fb_y[BEG_POS+4];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-		
-		
-				p_val= (uint32_t *)&fb_c[BEG_POS+8];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-				p_val= (uint32_t *)&fb_y[BEG_POS+8];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-		
-				p_val= (uint32_t *)&fb_c[BEG_POS+12];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-				p_val= (uint32_t *)&fb_y[BEG_POS+12];
-        val = *p_val;
-        lcd_printf("%08lX\n", val);
-		
-	
-		
-    }
-		video_tsk();
+				}
+	#endif	
+	    }
+	#endif
   }
 }
 

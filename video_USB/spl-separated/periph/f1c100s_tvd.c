@@ -42,6 +42,8 @@ void tvd_init(tvd_mode_e mode, void* buf_y, void* buf_c, uint8_t ch) {
     clk_tvd_config(tvd_clk_div);
     clk_reset_clear(CCU_BUS_SOFT_RST1, 9);
 #endif	
+////		tvd_open_clock();
+
 		tvd_bsp_init(0);
 	
     tvd_set_mode(mode);

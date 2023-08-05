@@ -4,12 +4,15 @@
  *  Created on: 2018Äê12ÔÂ1ÈÕ
  *      Author: VeiLiang
  */
+ 
+#include <stdio.h>
 #include "irq_misc.h"
 #include "tvd.h"
 #include "io.h"
+extern void tvd_irq_enable(unsigned int id,tvd_irq_t irq);
 
 static int tvd_id = 0;
-unsigned char tvd_y_buf[DEF_TWD_W*DEF_TWD_H]; ///for PAL_B
+unsigned char tvd_y_buf[DEF_TWD_W*DEF_TWD_H]; 
 unsigned char tvd_c_buf[DEF_TWD_W*DEF_TWD_H];
 
 unsigned char tvd_y_buf_disp[DEF_TWD_W*DEF_TWD_H];
@@ -17,9 +20,10 @@ unsigned char tvd_c_buf_disp[DEF_TWD_W*DEF_TWD_H];
 ////extern void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h);
 int tcountt = 0;
 
-void tvd_irq_handle(int arg)
+////void tvd_irq_handle(int arg)
+void tvd_irq_handle(void)
 {
-	TVD_Printf("tvd irq\n");
+printf("tvd irq\n");
 
 //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
 //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
@@ -30,8 +34,8 @@ void tvd_irq_handle(int arg)
 	//tcountt ++;
 ////????	
 #if 1	
-	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
-	memcpy(tvd_c_buf_disp,tvd_c_buf,DEF_TWD_W*DEF_TWD_H);
+////	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
+/////	memcpy(tvd_c_buf_disp,tvd_c_buf,DEF_TWD_W*DEF_TWD_H);
 	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
 ////	f1c100s_intc_clear_pend();
 #endif
@@ -41,9 +45,9 @@ void tvd_irq_handle(int arg)
 }
 
 
-void tv_in_decode_init(int id)
+void _tv_in_decode_init(int id)
 {
-	int		   	retval  = 0;
+////	int		   	retval  = 0;
 	tvd_id = id;
 	/////retval = request_irq(IRQ_TVD, tvd_irq_handle,0);//first requet irq
   f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);

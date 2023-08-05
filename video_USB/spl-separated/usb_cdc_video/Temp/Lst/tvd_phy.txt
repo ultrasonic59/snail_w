@@ -11,57 +11,57 @@
                           REQUIRE _printf_x
                           REQUIRE _printf_longlong_hex
                   tvd_open_clock PROC
-;;;9      
-;;;10     void tvd_open_clock(void)
+;;;11     
+;;;12     void tvd_open_clock(void)
 000000  e59f0764          LDR      r0,|L1.1900|
-;;;11     {
-;;;12     	//TVD_REG_SET_BIT(TVD_CLK_REG,TVD_CLK_REG_SCLK_BIT);
-;;;13     //	TVD_RegWrite(TVD_CLK_REG,(1<<TVD_CLK_REG_SCLK_BIT)
-;;;14     //														|(1<<TVD_CLK_REG_SLE_BIT)
-;;;15     //														|(1<<TVD_CLK_REG_DIV_BIT));//[32] sclk switch 1:on  [26:24] sclk sel  000:pll(1x) 001:osc24Mhz 010:pll(2x) [3:0]:sclk div ratio
-;;;16     	TVD_RegWrite(PLL_VEDIO_CTRL_REG,0x83006207);
+;;;13     {
+;;;14     	//TVD_REG_SET_BIT(TVD_CLK_REG,TVD_CLK_REG_SCLK_BIT);
+;;;15     //	TVD_RegWrite(TVD_CLK_REG,(1<<TVD_CLK_REG_SCLK_BIT)
+;;;16     //														|(1<<TVD_CLK_REG_SLE_BIT)
+;;;17     //														|(1<<TVD_CLK_REG_DIV_BIT));//[32] sclk switch 1:on  [26:24] sclk sel  000:pll(1x) 001:osc24Mhz 010:pll(2x) [3:0]:sclk div ratio
+;;;18     	TVD_RegWrite(PLL_VEDIO_CTRL_REG,0x83006207);
 000004  e59f1764          LDR      r1,|L1.1904|
 000008  e5810010          STR      r0,[r1,#0x10]
-;;;17     	TVD_REG_SET_BIT(DRAM_CLK_GATE_REG,DRAM_CLK_TVD_BIT);//open dram  clk for tvd
+;;;19     	TVD_REG_SET_BIT(DRAM_CLK_GATE_REG,DRAM_CLK_TVD_BIT);//open dram  clk for tvd
 00000c  e1c10240          BIC      r0,r1,r0,ASR #4
 000010  e5900100          LDR      r0,[r0,#0x100]
 000014  e3800008          ORR      r0,r0,#8
 000018  e5810100          STR      r0,[r1,#0x100]
-;;;18     	TVD_RegWrite(TVD_CLK_REG,0x8000000a);
+;;;20     	TVD_RegWrite(TVD_CLK_REG,0x8000000a);
 00001c  e3a0012a          MOV      r0,#0x8000000a
 000020  e5810124          STR      r0,[r1,#0x124]
-;;;19     	TVD_REG_SET_BIT(BUS_CLK_GATE1_REG,BUS_CLK_TVD_BIT);//open ahb bus clk for tvd
+;;;21     	TVD_REG_SET_BIT(BUS_CLK_GATE1_REG,BUS_CLK_TVD_BIT);//open ahb bus clk for tvd
 000024  e1c10000          BIC      r0,r1,r0
 000028  e5900064          LDR      r0,[r0,#0x64]
 00002c  e3800c02          ORR      r0,r0,#0x200
 000030  e5810064          STR      r0,[r1,#0x64]
-;;;20     	TVD_REG_SET_BIT(BUS_CLK_RST1_REG,BUS_RST_TVD_BIT);//de-assert ahb bus rst for tvd
+;;;22     	TVD_REG_SET_BIT(BUS_CLK_RST1_REG,BUS_RST_TVD_BIT);//de-assert ahb bus rst for tvd
 000034  e1a00001          MOV      r0,r1
 000038  e59002c4          LDR      r0,[r0,#0x2c4]
 00003c  e3800c02          ORR      r0,r0,#0x200
 000040  e58102c4          STR      r0,[r1,#0x2c4]
-;;;21     
-;;;22     
-;;;23     }
+;;;23     
+;;;24     
+;;;25     }
 000044  e12fff1e          BX       lr
-;;;24     static void msleep(int ms)
+;;;26     static void msleep(int ms)
                           ENDP
 
                   msleep PROC
 000048  e92d400c          PUSH     {r2,r3,lr}
-;;;25     {
-;;;26     	volatile int i,j;
-;;;27     	while(ms--)
+;;;27     {
+;;;28     	volatile int i,j;
+;;;29     	while(ms--)
 00004c  ea000011          B        |L1.152|
                   |L1.80|
-;;;28     	{
-;;;29     		for(i = 0 ; i < 1000; i++)
+;;;30     	{
+;;;31     		for(i = 0 ; i < 1000; i++)
 000050  e3a01000          MOV      r1,#0
 000054  e58d1004          STR      r1,[sp,#4]
 000058  ea00000b          B        |L1.140|
                   |L1.92|
-;;;30     		{
-;;;31     			for(j = 0 ; j < 2400;j++)
+;;;32     		{
+;;;33     			for(j = 0 ; j < 2400;j++)
 00005c  e3a01000          MOV      r1,#0
 000060  e58d1000          STR      r1,[sp,#0]
 000064  ea000002          B        |L1.116|
@@ -73,118 +73,118 @@
 000074  e59d1000          LDR      r1,[sp,#0]
 000078  e3510e96          CMP      r1,#0x960
 00007c  bafffff9          BLT      |L1.104|
-000080  e59d1004          LDR      r1,[sp,#4]            ;29
-000084  e2811001          ADD      r1,r1,#1              ;29
-000088  e58d1004          STR      r1,[sp,#4]            ;29
+000080  e59d1004          LDR      r1,[sp,#4]            ;31
+000084  e2811001          ADD      r1,r1,#1              ;31
+000088  e58d1004          STR      r1,[sp,#4]            ;31
                   |L1.140|
-00008c  e59d1004          LDR      r1,[sp,#4]            ;29
-000090  e3510ffa          CMP      r1,#0x3e8             ;29
+00008c  e59d1004          LDR      r1,[sp,#4]            ;31
+000090  e3510ffa          CMP      r1,#0x3e8             ;31
 000094  bafffff0          BLT      |L1.92|
                   |L1.152|
-000098  e2501000          SUBS     r1,r0,#0              ;27
-00009c  e2400001          SUB      r0,r0,#1              ;27
+000098  e2501000          SUBS     r1,r0,#0              ;29
+00009c  e2400001          SUB      r0,r0,#1              ;29
 0000a0  1affffea          BNE      |L1.80|
-;;;32     			{
-;;;33     				;
-;;;34     			}
-;;;35     		}
-;;;36     	}
-;;;37     }
+;;;34     			{
+;;;35     				;
+;;;36     			}
+;;;37     		}
+;;;38     	}
+;;;39     }
 0000a4  e8bd800c          POP      {r2,r3,pc}
-;;;38     void tvd_set_hor_start(__u32 id, __u32 h_start)
+;;;40     void tvd_set_hor_start(__u32 id, __u32 h_start)
                           ENDP
 
                   tvd_set_hor_start PROC
 0000a8  e1a02000          MOV      r2,r0
-;;;39     {
-;;;40     	__u32 reg_val;
-;;;41     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
+;;;41     {
+;;;42     	__u32 reg_val;
+;;;43     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
 0000ac  e59f36c0          LDR      r3,|L1.1908|
 0000b0  e593001c          LDR      r0,[r3,#0x1c]
-;;;42     	reg_val &= ~(0xfff << 16);
+;;;44     	reg_val &= ~(0xfff << 16);
 0000b4  e3c0040f          BIC      r0,r0,#0xf000000
 0000b8  e3c008ff          BIC      r0,r0,#0xff0000
-;;;43     	reg_val |= (h_start & 0xfff) << 16;
+;;;45     	reg_val |= (h_start & 0xfff) << 16;
 0000bc  e3c13a0f          BIC      r3,r1,#0xf000
 0000c0  e1800803          ORR      r0,r0,r3,LSL #16
-;;;44     	TVD_RegWrite(TVD_REG_BASE + 0x001c, reg_val);
+;;;46     	TVD_RegWrite(TVD_REG_BASE + 0x001c, reg_val);
 0000c4  e59f36a8          LDR      r3,|L1.1908|
 0000c8  e583001c          STR      r0,[r3,#0x1c]
-;;;45     }
+;;;47     }
 0000cc  e12fff1e          BX       lr
-;;;46     
+;;;48     
                           ENDP
 
                   tvd_set_ver_start PROC
-;;;47     void tvd_set_ver_start(__u32 id, __u32 v_start)
+;;;49     void tvd_set_ver_start(__u32 id, __u32 v_start)
 0000d0  e1a02000          MOV      r2,r0
-;;;48     {
-;;;49     	__u32 reg_val;
-;;;50     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
+;;;50     {
+;;;51     	__u32 reg_val;
+;;;52     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
 0000d4  e59f3698          LDR      r3,|L1.1908|
 0000d8  e593001c          LDR      r0,[r3,#0x1c]
-;;;51     	reg_val &= ~(0x7ff << 0);
+;;;53     	reg_val &= ~(0x7ff << 0);
 0000dc  e1a005a0          LSR      r0,r0,#11
 0000e0  e1a00580          LSL      r0,r0,#11
-;;;52     	reg_val |= (v_start & 0x7ff) << 0;
+;;;54     	reg_val |= (v_start & 0x7ff) << 0;
 0000e4  e1a03a81          LSL      r3,r1,#21
 0000e8  e1a03aa3          LSR      r3,r3,#21
 0000ec  e1800003          ORR      r0,r0,r3
-;;;53     	TVD_RegWrite(TVD_REG_BASE + 0x001c, reg_val);
+;;;55     	TVD_RegWrite(TVD_REG_BASE + 0x001c, reg_val);
 0000f0  e59f367c          LDR      r3,|L1.1908|
 0000f4  e583001c          STR      r0,[r3,#0x1c]
-;;;54     }
+;;;56     }
 0000f8  e12fff1e          BX       lr
-;;;55     __u32 tvd_get_hor_start(__u32 id)
+;;;57     __u32 tvd_get_hor_start(__u32 id)
                           ENDP
 
                   tvd_get_hor_start PROC
 0000fc  e1a01000          MOV      r1,r0
-;;;56     {
-;;;57     	__u32 reg_val;
-;;;58     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
+;;;58     {
+;;;59     	__u32 reg_val;
+;;;60     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
 000100  e59f266c          LDR      r2,|L1.1908|
 000104  e592001c          LDR      r0,[r2,#0x1c]
-;;;59     	reg_val = (reg_val >> 16) & 0xfff;
+;;;61     	reg_val = (reg_val >> 16) & 0xfff;
 000108  e59f2668          LDR      r2,|L1.1912|
 00010c  e0020820          AND      r0,r2,r0,LSR #16
-;;;60     	return reg_val;
-;;;61     }
+;;;62     	return reg_val;
+;;;63     }
 000110  e12fff1e          BX       lr
-;;;62     
+;;;64     
                           ENDP
 
                   tvd_get_ver_start PROC
-;;;63     __u32 tvd_get_ver_start(__u32 id)
+;;;65     __u32 tvd_get_ver_start(__u32 id)
 000114  e1a01000          MOV      r1,r0
-;;;64     {
-;;;65     	__u32 reg_val;
-;;;66     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
+;;;66     {
+;;;67     	__u32 reg_val;
+;;;68     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x001c);
 000118  e59f2654          LDR      r2,|L1.1908|
 00011c  e592001c          LDR      r0,[r2,#0x1c]
-;;;67     	reg_val = reg_val & 0x7ff;
+;;;69     	reg_val = reg_val & 0x7ff;
 000120  e1a00a80          LSL      r0,r0,#21
 000124  e1a00aa0          LSR      r0,r0,#21
-;;;68     	return reg_val;
-;;;69     }
+;;;70     	return reg_val;
+;;;71     }
 000128  e12fff1e          BX       lr
-;;;70     
+;;;72     
                           ENDP
 
                   tvd_set_width PROC
-;;;71     void tvd_set_width(unsigned int id,unsigned int w)
+;;;73     void tvd_set_width(unsigned int id,unsigned int w)
 00012c  e1a02001          MOV      r2,r1
-;;;72     {
-;;;73     	unsigned int reg_val;
-;;;74     	reg_val = TVD_RegRead(TVD_REG_BASE +0x008c+0x100*id);//0x134+0x100*id
+;;;74     {
+;;;75     	unsigned int reg_val;
+;;;76     	reg_val = TVD_RegRead(TVD_REG_BASE +0x008c+0x100*id);//0x134+0x100*id
 000130  e1a03400          LSL      r3,r0,#8
 000134  e2833507          ADD      r3,r3,#0x1c00000
 000138  e2833a0b          ADD      r3,r3,#0xb000
 00013c  e593108c          LDR      r1,[r3,#0x8c]
-;;;75     	reg_val &= ~(0xfff<<0);
+;;;77     	reg_val &= ~(0xfff<<0);
 000140  e1a01621          LSR      r1,r1,#12
 000144  e1a01601          LSL      r1,r1,#12
-;;;76     	reg_val |= ((w>DEF_TWD_W)?DEF_TWD_W:w)<<0;
+;;;78     	reg_val |= ((w>DEF_TWD_W)?DEF_TWD_W:w)<<0;
 000148  e3520e2d          CMP      r2,#0x2d0
 00014c  9a000001          BLS      |L1.344|
 000150  e3a03e2d          MOV      r3,#0x2d0
@@ -193,430 +193,430 @@
 000158  e1a03002          MOV      r3,r2
                   |L1.348|
 00015c  e1811003          ORR      r1,r1,r3
-;;;77       TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
+;;;79       TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
 000160  e1a03400          LSL      r3,r0,#8
 000164  e2833507          ADD      r3,r3,#0x1c00000
 000168  e2833a0b          ADD      r3,r3,#0xb000
 00016c  e583108c          STR      r1,[r3,#0x8c]
-;;;78     }
+;;;80     }
 000170  e12fff1e          BX       lr
-;;;79     
+;;;81     
                           ENDP
 
                   tvd_set_width_jump PROC
-;;;80     void tvd_set_width_jump(unsigned int id,unsigned int j)
+;;;82     void tvd_set_width_jump(unsigned int id,unsigned int j)
 000174  e1a02400          LSL      r2,r0,#8
-;;;81     {
-;;;82             TVD_RegWrite(TVD_REG_BASE+0x0138+0x100*id, j);
+;;;83     {
+;;;84             TVD_RegWrite(TVD_REG_BASE+0x0138+0x100*id, j);
 000178  e2822507          ADD      r2,r2,#0x1c00000
 00017c  e2822a0b          ADD      r2,r2,#0xb000
 000180  e5821138          STR      r1,[r2,#0x138]
-;;;83     }
+;;;85     }
 000184  e12fff1e          BX       lr
-;;;84     
+;;;86     
                           ENDP
 
                   tvd_set_height PROC
-;;;85     void tvd_set_height(unsigned int id,unsigned int h)
+;;;87     void tvd_set_height(unsigned int id,unsigned int h)
 000188  e1a02001          MOV      r2,r1
-;;;86     {
-;;;87     	unsigned int reg_val;
-;;;88     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x008c+0x100*id);
+;;;88     {
+;;;89     	unsigned int reg_val;
+;;;90     	reg_val = TVD_RegRead(TVD_REG_BASE + 0x008c+0x100*id);
 00018c  e1a03400          LSL      r3,r0,#8
 000190  e2833507          ADD      r3,r3,#0x1c00000
 000194  e2833a0b          ADD      r3,r3,#0xb000
 000198  e593108c          LDR      r1,[r3,#0x8c]
-;;;89     	reg_val &= ~(0x7ff<<16);
+;;;91     	reg_val &= ~(0x7ff<<16);
 00019c  e3c11407          BIC      r1,r1,#0x7000000
 0001a0  e3c118ff          BIC      r1,r1,#0xff0000
-;;;90     	reg_val |= h<<16;
+;;;92     	reg_val |= h<<16;
 0001a4  e1811802          ORR      r1,r1,r2,LSL #16
-;;;91     	//reg_val |= h<<16;
-;;;92             TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
+;;;93     	//reg_val |= h<<16;
+;;;94             TVD_RegWrite(TVD_REG_BASE+0x008c+0x100*id, reg_val);
 0001a8  e1a03400          LSL      r3,r0,#8
 0001ac  e2833507          ADD      r3,r3,#0x1c00000
 0001b0  e2833a0b          ADD      r3,r3,#0xb000
 0001b4  e583108c          STR      r1,[r3,#0x8c]
-;;;93     }
+;;;95     }
 0001b8  e12fff1e          BX       lr
-;;;94     
+;;;96     
                           ENDP
 
                   tvd_config PROC
-;;;95     
-;;;96     void tvd_config(unsigned int interface, unsigned int system, unsigned int format)
+;;;97     
+;;;98     void tvd_config(unsigned int interface, unsigned int system, unsigned int format)
 0001bc  e92d4070          PUSH     {r4-r6,lr}
-;;;97     {
+;;;99     {
 0001c0  e1a05000          MOV      r5,r0
 0001c4  e1a06001          MOV      r6,r1
 0001c8  e1a04002          MOV      r4,r2
-;;;98     	/* global reg set here */
-;;;99     
-;;;100    	if (interface == TVD_SOURCE_CVBS) 
+;;;100    	/* global reg set here */
+;;;101    
+;;;102    	if (interface == TVD_SOURCE_CVBS) 
 0001cc  e3550000          CMP      r5,#0
 0001d0  1a000091          BNE      |L1.1052|
-;;;101    	{ /* composite */
-;;;102    		switch (system) 
+;;;103    	{ /* composite */
+;;;104    		switch (system) 
 0001d4  e3560000          CMP      r6,#0
 0001d8  0a000002          BEQ      |L1.488|
 0001dc  e3560001          CMP      r6,#1
 0001e0  1a00008c          BNE      |L1.1048|
 0001e4  ea000045          B        |L1.768|
                   |L1.488|
-;;;103    		{
-;;;104    		case TVD_SOURCE_NTSC:
+;;;105    		{
+;;;106    		case TVD_SOURCE_NTSC:
 0001e8  e1a00000          MOV      r0,r0
-;;;105    			TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x00010001);
+;;;107    			TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x00010001);
 0001ec  e59f0588          LDR      r0,|L1.1916|
 0001f0  e59f157c          LDR      r1,|L1.1908|
 0001f4  e5810008          STR      r0,[r1,#8]
-;;;106    			TVD_RegWrite(TVD_REG_BASE + 0x000c,
+;;;108    			TVD_RegWrite(TVD_REG_BASE + 0x000c,
 0001f8  e59f0580          LDR      r0,|L1.1920|
 0001fc  e581000c          STR      r0,[r1,#0xc]
-;;;107    				 0x00202068); /* adjust luma brightness */
-;;;108    			TVD_RegWrite(
+;;;109    				 0x00202068); /* adjust luma brightness */
+;;;110    			TVD_RegWrite(
 000200  e59f057c          LDR      r0,|L1.1924|
 000204  e5810010          STR      r0,[r1,#0x10]
-;;;109    			    TVD_REG_BASE + 0x0010,
-;;;110    			    0x00300080); /* just statruation and peak gain */
-;;;111    			TVD_RegWrite(
+;;;111    			    TVD_REG_BASE + 0x0010,
+;;;112    			    0x00300080); /* just statruation and peak gain */
+;;;113    			TVD_RegWrite(
 000208  e59f0578          LDR      r0,|L1.1928|
 00020c  e5810018          STR      r0,[r1,#0x18]
-;;;112    			    TVD_REG_BASE + 0x0018,
-;;;113    			    0x21f07c1f); /* 21f0_7c1f    262E_8BA2 Chroma DTO */
-;;;114    			TVD_RegWrite(TVD_REG_BASE + 0x001c,
+;;;114    			    TVD_REG_BASE + 0x0018,
+;;;115    			    0x21f07c1f); /* 21f0_7c1f    262E_8BA2 Chroma DTO */
+;;;116    			TVD_RegWrite(TVD_REG_BASE + 0x001c,
 000210  e59f0574          LDR      r0,|L1.1932|
 000214  e581001c          STR      r0,[r1,#0x1c]
-;;;115    				 0x00820022); /* hactive and vactive start */
-;;;116    			TVD_RegWrite(TVD_REG_BASE + 0x0f08,
+;;;117    				 0x00820022); /* hactive and vactive start */
+;;;118    			TVD_RegWrite(TVD_REG_BASE + 0x0f08,
 000218  e59f0570          LDR      r0,|L1.1936|
 00021c  e59f1570          LDR      r1,|L1.1940|
 000220  e5810000          STR      r0,[r1,#0]
-;;;117    				 0x00590100); /* notch width 0059_0100 */
-;;;118    			TVD_RegWrite(TVD_REG_BASE + 0x0f0c,
+;;;119    				 0x00590100); /* notch width 0059_0100 */
+;;;120    			TVD_RegWrite(TVD_REG_BASE + 0x0f0c,
 000224  e3a00010          MOV      r0,#0x10
 000228  e1811140          ORR      r1,r1,r0,ASR #2
 00022c  e5810000          STR      r0,[r1,#0]
-;;;119    				 0x00000010); /* YC sep */
-;;;120    			TVD_RegWrite(TVD_REG_BASE + 0x0f10,
+;;;121    				 0x00000010); /* YC sep */
+;;;122    			TVD_RegWrite(TVD_REG_BASE + 0x0f10,
 000230  e59f0560          LDR      r0,|L1.1944|
 000234  e0811ac0          ADD      r1,r1,r0,ASR #21
 000238  e5810000          STR      r0,[r1,#0]
-;;;121    				 0x008A32DD); /* sync height */
-;;;122    			TVD_RegWrite(TVD_REG_BASE + 0x0f14, 0x80000080); /* */
+;;;123    				 0x008A32DD); /* sync height */
+;;;124    			TVD_RegWrite(TVD_REG_BASE + 0x0f14, 0x80000080); /* */
 00023c  e59f0558          LDR      r0,|L1.1948|
 000240  e0411ec0          SUB      r1,r1,r0,ASR #29
 000244  e5810000          STR      r0,[r1,#0]
-;;;123    			/*?		TVD_RegWrite(TVD_REG_BASE+0x0018, */
-;;;124    			/*0x00002080); //adjust luma brightness */
-;;;125    			TVD_RegWrite(TVD_REG_BASE + 0x0f1c,
+;;;125    			/*?		TVD_RegWrite(TVD_REG_BASE+0x0018, */
+;;;126    			/*0x00002080); //adjust luma brightness */
+;;;127    			TVD_RegWrite(TVD_REG_BASE + 0x0f1c,
 000248  e3a0088a          MOV      r0,#0x8a0000
 00024c  e1811a40          ORR      r1,r1,r0,ASR #20
 000250  e5810000          STR      r0,[r1,#0]
-;;;126    				 0x008A0000); /* chroma AGC target */
-;;;127    			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x0000CB74);
+;;;128    				 0x008A0000); /* chroma AGC target */
+;;;129    			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x0000CB74);
 000254  e59f0544          LDR      r0,|L1.1952|
 000258  e2811010          ADD      r1,r1,#0x10
 00025c  e5810000          STR      r0,[r1,#0]
-;;;128    			TVD_RegWrite(TVD_REG_BASE + 0x0f44,
+;;;130    			TVD_RegWrite(TVD_REG_BASE + 0x0f44,
 000260  e59f053c          LDR      r0,|L1.1956|
 000264  e2811018          ADD      r1,r1,#0x18
 000268  e5810000          STR      r0,[r1,#0]
-;;;129    				 0x00004632); /* burst gate */
-;;;130    			TVD_RegWrite(TVD_REG_BASE + 0x0f74,
+;;;131    				 0x00004632); /* burst gate */
+;;;132    			TVD_RegWrite(TVD_REG_BASE + 0x0f74,
 00026c  e59f0534          LDR      r0,|L1.1960|
 000270  e1811200          ORR      r1,r1,r0,LSL #4
 000274  e5810000          STR      r0,[r1,#0]
-;;;131    				 0x000003c3); /* chroma edge enhance */
-;;;132    			/*		TVD_RegWrite(TVD_REG_BASE+0x0f74, */
-;;;133    			/*0x00000340); //default */
-;;;134    
-;;;135    			TVD_RegWrite(TVD_REG_BASE + 0x0f80,
+;;;133    				 0x000003c3); /* chroma edge enhance */
+;;;134    			/*		TVD_RegWrite(TVD_REG_BASE+0x0f74, */
+;;;135    			/*0x00000340); //default */
+;;;136    
+;;;137    			TVD_RegWrite(TVD_REG_BASE + 0x0f80,
 000278  e3a00605          MOV      r0,#0x500000
 00027c  e281100c          ADD      r1,r1,#0xc
 000280  e5810000          STR      r0,[r1,#0]
-;;;136    				 0x00500000); /* hactive width */
-;;;137    			TVD_RegWrite(TVD_REG_BASE + 0x0f84,
+;;;138    				 0x00500000); /* hactive width */
+;;;139    			TVD_RegWrite(TVD_REG_BASE + 0x0f84,
 000284  e3a00861          MOV      r0,#0x610000
 000288  e1811740          ORR      r1,r1,r0,ASR #14
 00028c  e5810000          STR      r0,[r1,#0]
-;;;138    				 0x00610000); /* vactive height */
-;;;139    			TVD_RegWrite(TVD_REG_BASE + 0x0000,
+;;;140    				 0x00610000); /* vactive height */
+;;;141    			TVD_RegWrite(TVD_REG_BASE + 0x0000,
 000290  e3a00001          MOV      r0,#1
 000294  e59f14d8          LDR      r1,|L1.1908|
 000298  e5810000          STR      r0,[r1,#0]
-;;;140    				 0x00000001); /* test = 0x80001f3f */
-;;;141    
-;;;142    			if (TVD_MB_YUV420 == format) 
+;;;142    				 0x00000001); /* test = 0x80001f3f */
+;;;143    
+;;;144    			if (TVD_MB_YUV420 == format) 
 00029c  e3540002          CMP      r4,#2
 0002a0  1a00000c          BNE      |L1.728|
-;;;143    			{
-;;;144    				tvd_set_width(0, 704);
+;;;145    			{
+;;;146    				tvd_set_width(0, 704);
 0002a4  e3a01d0b          MOV      r1,#0x2c0
 0002a8  e3a00000          MOV      r0,#0
 0002ac  ebfffffe          BL       tvd_set_width
-;;;145    				tvd_set_width_jump(0, 704);
+;;;147    				tvd_set_width_jump(0, 704);
 0002b0  e3a01d0b          MOV      r1,#0x2c0
 0002b4  e3a00000          MOV      r0,#0
 0002b8  ebfffffe          BL       tvd_set_width_jump
-;;;146    				tvd_set_height(0, 224);
+;;;148    				tvd_set_height(0, 224);
 0002bc  e3a010e0          MOV      r1,#0xe0
 0002c0  e3a00000          MOV      r0,#0
 0002c4  ebfffffe          BL       tvd_set_height
-;;;147    				tvd_set_ver_start(0,
+;;;149    				tvd_set_ver_start(0,
 0002c8  e3a01032          MOV      r1,#0x32
 0002cc  e3a00000          MOV      r0,#0
 0002d0  ebfffffe          BL       tvd_set_ver_start
 0002d4  ea000008          B        |L1.764|
                   |L1.728|
-;;;148    						      0x22 + (480 - 448) / 2);
-;;;149    			} 
-;;;150    			else 
-;;;151    			{
-;;;152    				tvd_set_width(0, DEF_TWD_W);
+;;;150    						      0x22 + (480 - 448) / 2);
+;;;151    			} 
+;;;152    			else 
+;;;153    			{
+;;;154    				tvd_set_width(0, DEF_TWD_W);
 0002d8  e3a01e2d          MOV      r1,#0x2d0
 0002dc  e3a00000          MOV      r0,#0
 0002e0  ebfffffe          BL       tvd_set_width
-;;;153    				tvd_set_width_jump(0, DEF_TWD_W);
+;;;155    				tvd_set_width_jump(0, DEF_TWD_W);
 0002e4  e3a01e2d          MOV      r1,#0x2d0
 0002e8  e3a00000          MOV      r0,#0
 0002ec  ebfffffe          BL       tvd_set_width_jump
-;;;154    				tvd_set_height(0, 240);
+;;;156    				tvd_set_height(0, 240);
 0002f0  e3a010f0          MOV      r1,#0xf0
 0002f4  e3a00000          MOV      r0,#0
 0002f8  ebfffffe          BL       tvd_set_height
                   |L1.764|
-;;;155    			}
-;;;156    
-;;;157    			break;
+;;;157    			}
+;;;158    
+;;;159    			break;
 0002fc  ea000045          B        |L1.1048|
                   |L1.768|
-;;;158    		case TVD_SOURCE_PAL:
+;;;160    		case TVD_SOURCE_PAL:
 000300  e1a00000          MOV      r0,r0
-;;;159    			TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x01111001);
+;;;161    			TVD_RegWrite(TVD_REG_BASE + 0x0008, 0x01111001);
 000304  e59f04a0          LDR      r0,|L1.1964|
 000308  e59f1464          LDR      r1,|L1.1908|
 00030c  e5810008          STR      r0,[r1,#8]
-;;;160    			TVD_RegWrite(TVD_REG_BASE + 0x000c,
+;;;162    			TVD_RegWrite(TVD_REG_BASE + 0x000c,
 000310  e59f0498          LDR      r0,|L1.1968|
 000314  e581000c          STR      r0,[r1,#0xc]
-;;;161    				 0x03714080); /* adjust luma brightness */
-;;;162    			TVD_RegWrite(TVD_REG_BASE + 0x0010, 0x00310080);
+;;;163    				 0x03714080); /* adjust luma brightness */
+;;;164    			TVD_RegWrite(TVD_REG_BASE + 0x0010, 0x00310080);
 000318  e59f0494          LDR      r0,|L1.1972|
 00031c  e5810010          STR      r0,[r1,#0x10]
-;;;163    			TVD_RegWrite(TVD_REG_BASE + 0x0018,
+;;;165    			TVD_RegWrite(TVD_REG_BASE + 0x0018,
 000320  e59f0490          LDR      r0,|L1.1976|
 000324  e5810018          STR      r0,[r1,#0x18]
-;;;164    				 0x2a098acb); /* chroma dto */
-;;;165    			TVD_RegWrite(TVD_REG_BASE + 0x001c,
+;;;166    				 0x2a098acb); /* chroma dto */
+;;;167    			TVD_RegWrite(TVD_REG_BASE + 0x001c,
 000328  e59f048c          LDR      r0,|L1.1980|
 00032c  e581001c          STR      r0,[r1,#0x1c]
-;;;166    				 0x0087002f); /* hactive and vactive start */
-;;;167    			TVD_RegWrite(
+;;;168    				 0x0087002f); /* hactive and vactive start */
+;;;169    			TVD_RegWrite(
 000330  e59f0488          LDR      r0,|L1.1984|
 000334  e59f1458          LDR      r1,|L1.1940|
 000338  e5810000          STR      r0,[r1,#0]
-;;;168    			    TVD_REG_BASE + 0x0f08,
-;;;169    			    0x11590902); /* disable black level correction */
-;;;170    			/* for 7.5 blank-to-black setup */
-;;;171    			/* cagc en */
-;;;172    			TVD_RegWrite(TVD_REG_BASE + 0x0f0c,
+;;;170    			    TVD_REG_BASE + 0x0f08,
+;;;171    			    0x11590902); /* disable black level correction */
+;;;172    			/* for 7.5 blank-to-black setup */
+;;;173    			/* cagc en */
+;;;174    			TVD_RegWrite(TVD_REG_BASE + 0x0f0c,
 00033c  e3a00016          MOV      r0,#0x16
 000340  e2811004          ADD      r1,r1,#4
 000344  e5810000          STR      r0,[r1,#0]
-;;;173    				 0x00000016); /* YC sep */
-;;;174    			TVD_RegWrite(TVD_REG_BASE + 0x0f10, 0x008a32ec); /* */
+;;;175    				 0x00000016); /* YC sep */
+;;;176    			TVD_RegWrite(TVD_REG_BASE + 0x0f10, 0x008a32ec); /* */
 000348  e59f0474          LDR      r0,|L1.1988|
 00034c  e0811ac0          ADD      r1,r1,r0,ASR #21
 000350  e5810000          STR      r0,[r1,#0]
-;;;175    			TVD_RegWrite(TVD_REG_BASE + 0x0f14,
+;;;177    			TVD_RegWrite(TVD_REG_BASE + 0x0f14,
 000354  e59f0440          LDR      r0,|L1.1948|
 000358  e0411ec0          SUB      r1,r1,r0,ASR #29
 00035c  e5810000          STR      r0,[r1,#0]
-;;;176    				 0x80000080); /* adjust YC delay */
-;;;177    			TVD_RegWrite(TVD_REG_BASE + 0x0f1c,
+;;;178    				 0x80000080); /* adjust YC delay */
+;;;179    			TVD_RegWrite(TVD_REG_BASE + 0x0f1c,
 000360  e3a00893          MOV      r0,#0x930000
 000364  e1811a41          ORR      r1,r1,r1,ASR #20
 000368  e5810000          STR      r0,[r1,#0]
-;;;178    				 0x00930000); /* chroma AGC target */
-;;;179    			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x00000d74);
+;;;180    				 0x00930000); /* chroma AGC target */
+;;;181    			TVD_RegWrite(TVD_REG_BASE + 0x0f2c, 0x00000d74);
 00036c  e59f0454          LDR      r0,|L1.1992|
 000370  e2811010          ADD      r1,r1,#0x10
 000374  e5810000          STR      r0,[r1,#0]
-;;;180    			TVD_RegWrite(TVD_REG_BASE + 0x0f44,
+;;;182    			TVD_RegWrite(TVD_REG_BASE + 0x0f44,
 000378  e59f044c          LDR      r0,|L1.1996|
 00037c  e2811018          ADD      r1,r1,#0x18
 000380  e5810000          STR      r0,[r1,#0]
-;;;181    				 0x0000412d); /* burst gate */
-;;;182    			/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); // */
-;;;183    			TVD_RegWrite(TVD_REG_BASE + 0x0f74, 0x00000343); /* */
+;;;183    				 0x0000412d); /* burst gate */
+;;;184    			/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); // */
+;;;185    			TVD_RegWrite(TVD_REG_BASE + 0x0f74, 0x00000343); /* */
 000384  e59f0444          LDR      r0,|L1.2000|
 000388  e1811240          ORR      r1,r1,r0,ASR #4
 00038c  e5810000          STR      r0,[r1,#0]
-;;;184    
-;;;185    			TVD_RegWrite(TVD_REG_BASE + 0x0f80,
+;;;186    
+;;;187    			TVD_RegWrite(TVD_REG_BASE + 0x0f80,
 000390  e3a00605          MOV      r0,#0x500000
 000394  e281100c          ADD      r1,r1,#0xc
 000398  e5810000          STR      r0,[r1,#0]
-;;;186    				 0x00500000); /* hactive width */
-;;;187    			TVD_RegWrite(TVD_REG_BASE + 0x0f84,
+;;;188    				 0x00500000); /* hactive width */
+;;;189    			TVD_RegWrite(TVD_REG_BASE + 0x0f84,
 00039c  e3a008c1          MOV      r0,#0xc10000
 0003a0  e1811740          ORR      r1,r1,r0,ASR #14
 0003a4  e5810000          STR      r0,[r1,#0]
-;;;188    				 0x00c10000); /* vactive height */
-;;;189    			TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000001); /* */
+;;;190    				 0x00c10000); /* vactive height */
+;;;191    			TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000001); /* */
 0003a8  e3a00001          MOV      r0,#1
 0003ac  e59f13c0          LDR      r1,|L1.1908|
 0003b0  e5810000          STR      r0,[r1,#0]
-;;;190    			/* TVD_RegWrite(TVD_REG_BASE+0x001c, 0x00870056); //hactive
-;;;191    			 */
-;;;192    			/* and vactive start */
-;;;193    
-;;;194    			/* TVD_RegWrite(TVD_REG_BASE+0x0e04, 0x00000000); */
-;;;195    			if (TVD_MB_YUV420 == format) {
+;;;192    			/* TVD_RegWrite(TVD_REG_BASE+0x001c, 0x00870056); //hactive
+;;;193    			 */
+;;;194    			/* and vactive start */
+;;;195    
+;;;196    			/* TVD_RegWrite(TVD_REG_BASE+0x0e04, 0x00000000); */
+;;;197    			if (TVD_MB_YUV420 == format) {
 0003b4  e3540002          CMP      r4,#2
 0003b8  1a00000c          BNE      |L1.1008|
-;;;196    				tvd_set_width(0, 704);
+;;;198    				tvd_set_width(0, 704);
 0003bc  e3a01d0b          MOV      r1,#0x2c0
 0003c0  e3a00000          MOV      r0,#0
 0003c4  ebfffffe          BL       tvd_set_width
-;;;197    				tvd_set_width_jump(0, 704);
+;;;199    				tvd_set_width_jump(0, 704);
 0003c8  e3a01d0b          MOV      r1,#0x2c0
 0003cc  e3a00000          MOV      r0,#0
 0003d0  ebfffffe          BL       tvd_set_width_jump
-;;;198    				tvd_set_height(0, 224);
+;;;200    				tvd_set_height(0, 224);
 0003d4  e3a010e0          MOV      r1,#0xe0
 0003d8  e3a00000          MOV      r0,#0
 0003dc  ebfffffe          BL       tvd_set_height
-;;;199    				tvd_set_ver_start(0,
+;;;201    				tvd_set_ver_start(0,
 0003e0  e3a01068          MOV      r1,#0x68
 0003e4  e3a00000          MOV      r0,#0
 0003e8  ebfffffe          BL       tvd_set_ver_start
 0003ec  ea000008          B        |L1.1044|
                   |L1.1008|
-;;;200    						      0x28 + (576 - 448) / 2);
-;;;201    
-;;;202    			} else {
-;;;203    				tvd_set_width(0, DEF_TWD_W);
+;;;202    						      0x28 + (576 - 448) / 2);
+;;;203    
+;;;204    			} else {
+;;;205    				tvd_set_width(0, DEF_TWD_W);
 0003f0  e3a01e2d          MOV      r1,#0x2d0
 0003f4  e3a00000          MOV      r0,#0
 0003f8  ebfffffe          BL       tvd_set_width
-;;;204    				tvd_set_width_jump(0, DEF_TWD_W);
+;;;206    				tvd_set_width_jump(0, DEF_TWD_W);
 0003fc  e3a01e2d          MOV      r1,#0x2d0
 000400  e3a00000          MOV      r0,#0
 000404  ebfffffe          BL       tvd_set_width_jump
-;;;205    				tvd_set_height(0, 288);
+;;;207    				tvd_set_height(0, 288);
 000408  e3a01e12          MOV      r1,#0x120
 00040c  e3a00000          MOV      r0,#0
 000410  ebfffffe          BL       tvd_set_height
                   |L1.1044|
-;;;206    			}
-;;;207    			break;
+;;;208    			}
+;;;209    			break;
 000414  e1a00000          MOV      r0,r0
                   |L1.1048|
-000418  e1a00000          MOV      r0,r0                 ;157
+000418  e1a00000          MOV      r0,r0                 ;159
                   |L1.1052|
-;;;208    		} /* switch */
-;;;209    		  /* TVD_RegWrite(TVD_REG_BASE+0x0504,0x00000000); */
-;;;210    		  /* TVD_RegWrite(TVD_REG_BASE+0x052c,0x00110000); */
-;;;211    		  /* 1 channel cvbs */
-;;;212    		  /* TVD_RegWrite(TVD_REG_BASE+0x0500,0x00000111); */
-;;;213    		  /* TVD_RegWrite(TVD_REG_BASE+0x0000,0x00000321); */
-;;;214    		  /* default open all 4 channels if you don't care power */
-;;;215    		  /* consumption */
-;;;216    		  /* TVD_RegWrite(TVD_REG_BASE+0x0500,0x00000f11); */
-;;;217    
-;;;218    		/*		TVD_RegWrite(TVD_REG_BASE+0x0e2c,0x60000000); */
-;;;219    	}
-;;;220    #if 1
-;;;221    	{
-;;;222    		__u32 v;
-;;;223    		v = TVD_RegRead(TVD_REG_BASE + 0x0f20);
+;;;210    		} /* switch */
+;;;211    		  /* TVD_RegWrite(TVD_REG_BASE+0x0504,0x00000000); */
+;;;212    		  /* TVD_RegWrite(TVD_REG_BASE+0x052c,0x00110000); */
+;;;213    		  /* 1 channel cvbs */
+;;;214    		  /* TVD_RegWrite(TVD_REG_BASE+0x0500,0x00000111); */
+;;;215    		  /* TVD_RegWrite(TVD_REG_BASE+0x0000,0x00000321); */
+;;;216    		  /* default open all 4 channels if you don't care power */
+;;;217    		  /* consumption */
+;;;218    		  /* TVD_RegWrite(TVD_REG_BASE+0x0500,0x00000f11); */
+;;;219    
+;;;220    		/*		TVD_RegWrite(TVD_REG_BASE+0x0e2c,0x60000000); */
+;;;221    	}
+;;;222    #if 1
+;;;223    	{
+;;;224    		__u32 v;
+;;;225    		v = TVD_RegRead(TVD_REG_BASE + 0x0f20);
 00041c  e59f13b0          LDR      r1,|L1.2004|
 000420  e5910000          LDR      r0,[r1,#0]
-;;;224    		/* DebugPrintf("1-----0x%x\n", TVD_RegRead(TVD_REG_BASE+0x0f20));
-;;;225    		 */
-;;;226    		v &= ~((1 << 6) | (1 << 7));
+;;;226    		/* DebugPrintf("1-----0x%x\n", TVD_RegRead(TVD_REG_BASE+0x0f20));
+;;;227    		 */
+;;;228    		v &= ~((1 << 6) | (1 << 7));
 000424  e3c000c0          BIC      r0,r0,#0xc0
-;;;227    		v |= ((0 << 6) | (1 << 7));
+;;;229    		v |= ((0 << 6) | (1 << 7));
 000428  e3800080          ORR      r0,r0,#0x80
-;;;228    		TVD_RegWrite(TVD_REG_BASE + 0x0f20, v);
+;;;230    		TVD_RegWrite(TVD_REG_BASE + 0x0f20, v);
 00042c  e5810000          STR      r0,[r1,#0]
-;;;229    		/* DebugPrintf("1-----0x%x\n", TVD_RegRead(TVD_REG_BASE+0x0f20));
-;;;230    		 */
-;;;231    	}
-;;;232    #endif
-;;;233    }
+;;;231    		/* DebugPrintf("1-----0x%x\n", TVD_RegRead(TVD_REG_BASE+0x0f20));
+;;;232    		 */
+;;;233    	}
+;;;234    #endif
+;;;235    }
 000430  e8bd8070          POP      {r4-r6,pc}
-;;;234    void tvd_set_other(int d,int y)
+;;;236    void tvd_set_other(int d,int y)
                           ENDP
 
                   tvd_set_other PROC
 000434  e1a02000          MOV      r2,r0
-;;;235    {
-;;;236    	unsigned int tmp;
-;;;237    	if(d)
+;;;237    {
+;;;238    	unsigned int tmp;
+;;;239    	if(d)
 000438  e3520000          CMP      r2,#0
 00043c  0a000010          BEQ      |L1.1156|
-;;;238    	{
-;;;239    		TVD_RegWrite(TVD_REG_BASE+0x004c,y);
+;;;240    	{
+;;;241    		TVD_RegWrite(TVD_REG_BASE+0x004c,y);
 000440  e59f332c          LDR      r3,|L1.1908|
 000444  e583104c          STR      r1,[r3,#0x4c]
-;;;240    		TVD_RegWrite(TVD_REG_BASE+0x0050,y+0x00200000);
+;;;242    		TVD_RegWrite(TVD_REG_BASE+0x0050,y+0x00200000);
 000448  e2813602          ADD      r3,r1,#0x200000
 00044c  e59fc320          LDR      r12,|L1.1908|
 000450  e58c3050          STR      r3,[r12,#0x50]
-;;;241    		TVD_RegWrite(TVD_REG_BASE+0x0054,0x00200000);
+;;;243    		TVD_RegWrite(TVD_REG_BASE+0x0054,0x00200000);
 000454  e3a03602          MOV      r3,#0x200000
 000458  e58c3054          STR      r3,[r12,#0x54]
-;;;242    		TVD_RegWrite(TVD_REG_BASE+0x0048,0x04040001);
+;;;244    		TVD_RegWrite(TVD_REG_BASE+0x0048,0x04040001);
 00045c  e59f3374          LDR      r3,|L1.2008|
 000460  e58c3048          STR      r3,[r12,#0x48]
-;;;243    		tmp = TVD_RegRead(TVD_REG_BASE+0x0008);
+;;;245    		tmp = TVD_RegRead(TVD_REG_BASE+0x0008);
 000464  e1cc3003          BIC      r3,r12,r3
 000468  e5930008          LDR      r0,[r3,#8]
-;;;244    		tmp &= 0xfffffffe;
+;;;246    		tmp &= 0xfffffffe;
 00046c  e3c00001          BIC      r0,r0,#1
-;;;245    		TVD_RegWrite(TVD_REG_BASE+0x0008,tmp);
+;;;247    		TVD_RegWrite(TVD_REG_BASE+0x0008,tmp);
 000470  e5830008          STR      r0,[r3,#8]
-;;;246    		tmp = TVD_RegRead(TVD_REG_BASE+0x0000);
+;;;248    		tmp = TVD_RegRead(TVD_REG_BASE+0x0000);
 000474  e5930000          LDR      r0,[r3,#0]
-;;;247    		tmp |= 0x00000010;
+;;;249    		tmp |= 0x00000010;
 000478  e3800010          ORR      r0,r0,#0x10
-;;;248    		TVD_RegWrite(TVD_REG_BASE+0x0000,tmp);
+;;;250    		TVD_RegWrite(TVD_REG_BASE+0x0000,tmp);
 00047c  e5830000          STR      r0,[r3,#0]
 000480  ea000006          B        |L1.1184|
                   |L1.1156|
-;;;249    	}
-;;;250    	else
-;;;251    	{
-;;;252    		tmp = TVD_RegRead(TVD_REG_BASE+0x0008);
+;;;251    	}
+;;;252    	else
+;;;253    	{
+;;;254    		tmp = TVD_RegRead(TVD_REG_BASE+0x0008);
 000484  e59f32e8          LDR      r3,|L1.1908|
 000488  e5930008          LDR      r0,[r3,#8]
-;;;253    		tmp |= 0x00000001;
+;;;255    		tmp |= 0x00000001;
 00048c  e3800001          ORR      r0,r0,#1
-;;;254    		TVD_RegWrite(TVD_REG_BASE+0x0008,tmp);
+;;;256    		TVD_RegWrite(TVD_REG_BASE+0x0008,tmp);
 000490  e5830008          STR      r0,[r3,#8]
-;;;255    		tmp = TVD_RegRead(TVD_REG_BASE+0x0000);
+;;;257    		tmp = TVD_RegRead(TVD_REG_BASE+0x0000);
 000494  e5930000          LDR      r0,[r3,#0]
-;;;256    		tmp &= ~0x00000010;
+;;;258    		tmp &= ~0x00000010;
 000498  e3c00010          BIC      r0,r0,#0x10
-;;;257    		TVD_RegWrite(TVD_REG_BASE+0x0000,tmp);
+;;;259    		TVD_RegWrite(TVD_REG_BASE+0x0000,tmp);
 00049c  e5830000          STR      r0,[r3,#0]
                   |L1.1184|
-;;;258    	}
-;;;259    }
+;;;260    	}
+;;;261    }
 0004a0  e12fff1e          BX       lr
-;;;260    
+;;;262    
                           ENDP
 
                   tvd_irq_enable PROC
-;;;263    
-;;;264    void tvd_irq_enable(unsigned int id,tvd_irq_t irq)
+;;;265    
+;;;266    void tvd_irq_enable(unsigned int id,tvd_irq_t irq)
 0004a4  e1a02000          MOV      r2,r0
-;;;265    {
-;;;266    	unsigned int reg_val;
-;;;267    	switch(irq){
+;;;267    {
+;;;268    	unsigned int reg_val;
+;;;269    	switch(irq){
 0004a8  e3510000          CMP      r1,#0
 0004ac  0a000004          BEQ      |L1.1220|
 0004b0  e3510001          CMP      r1,#1
@@ -625,63 +625,63 @@
 0004bc  1a000015          BNE      |L1.1304|
 0004c0  ea00000e          B        |L1.1280|
                   |L1.1220|
-;;;268    		case TVD_FRAME_DONE:
+;;;270    		case TVD_FRAME_DONE:
 0004c4  e1a00000          MOV      r0,r0
-;;;269    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x009c);
+;;;271    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x009c);
 0004c8  e59f32a4          LDR      r3,|L1.1908|
 0004cc  e593009c          LDR      r0,[r3,#0x9c]
-;;;270    			reg_val |= 1<<(24+id);
+;;;272    			reg_val |= 1<<(24+id);
 0004d0  e2823018          ADD      r3,r2,#0x18
 0004d4  e3a0c001          MOV      r12,#1
 0004d8  e180031c          ORR      r0,r0,r12,LSL r3
-;;;271    			TVD_RegWrite(TVD_REG_BASE + 0x009c, reg_val);
+;;;273    			TVD_RegWrite(TVD_REG_BASE + 0x009c, reg_val);
 0004dc  e59f3290          LDR      r3,|L1.1908|
 0004e0  e583009c          STR      r0,[r3,#0x9c]
-;;;272    			break;
+;;;274    			break;
 0004e4  ea00000d          B        |L1.1312|
                   |L1.1256|
-;;;273    		case TVD_LOCK:
+;;;275    		case TVD_LOCK:
 0004e8  e1a00000          MOV      r0,r0
-;;;274    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
+;;;276    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
 0004ec  e59f3280          LDR      r3,|L1.1908|
 0004f0  e59300a4          LDR      r0,[r3,#0xa4]
-;;;275    			reg_val |= 1 << (0);
+;;;277    			reg_val |= 1 << (0);
 0004f4  e3800001          ORR      r0,r0,#1
-;;;276    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
+;;;278    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
 0004f8  e58300a4          STR      r0,[r3,#0xa4]
-;;;277    			break;
+;;;279    			break;
 0004fc  ea000007          B        |L1.1312|
                   |L1.1280|
-;;;278    		case TVD_UNLOCK:
+;;;280    		case TVD_UNLOCK:
 000500  e1a00000          MOV      r0,r0
-;;;279    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
+;;;281    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
 000504  e59f3268          LDR      r3,|L1.1908|
 000508  e59300a4          LDR      r0,[r3,#0xa4]
-;;;280    			reg_val |= 1 << (1);
+;;;282    			reg_val |= 1 << (1);
 00050c  e3800002          ORR      r0,r0,#2
-;;;281    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
+;;;283    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
 000510  e58300a4          STR      r0,[r3,#0xa4]
-;;;282    			break;
+;;;284    			break;
 000514  ea000001          B        |L1.1312|
                   |L1.1304|
-;;;283    		default:
+;;;285    		default:
 000518  e1a00000          MOV      r0,r0
-;;;284    			break;
+;;;286    			break;
 00051c  e1a00000          MOV      r0,r0
                   |L1.1312|
-000520  e1a00000          MOV      r0,r0                 ;272
-;;;285    	}
-;;;286    }
+000520  e1a00000          MOV      r0,r0                 ;274
+;;;287    	}
+;;;288    }
 000524  e12fff1e          BX       lr
-;;;287    
+;;;289    
                           ENDP
 
                   tvd_irq_disable PROC
-;;;288    void tvd_irq_disable(unsigned int id,tvd_irq_t irq)
+;;;290    void tvd_irq_disable(unsigned int id,tvd_irq_t irq)
 000528  e1a02000          MOV      r2,r0
-;;;289    {
-;;;290    	unsigned int reg_val;
-;;;291    	switch(irq)
+;;;291    {
+;;;292    	unsigned int reg_val;
+;;;293    	switch(irq)
 00052c  e3510000          CMP      r1,#0
 000530  0a000004          BEQ      |L1.1352|
 000534  e3510001          CMP      r1,#1
@@ -690,103 +690,104 @@
 000540  1a000015          BNE      |L1.1436|
 000544  ea00000e          B        |L1.1412|
                   |L1.1352|
-;;;292    	{
-;;;293    		case TVD_FRAME_DONE:
+;;;294    	{
+;;;295    		case TVD_FRAME_DONE:
 000548  e1a00000          MOV      r0,r0
-;;;294    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x009c);// + 0x148
+;;;296    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x009c);// + 0x148
 00054c  e59f3220          LDR      r3,|L1.1908|
 000550  e593009c          LDR      r0,[r3,#0x9c]
-;;;295    			reg_val &= ~(1<<(24+id));
+;;;297    			reg_val &= ~(1<<(24+id));
 000554  e2823018          ADD      r3,r2,#0x18
 000558  e3a0c001          MOV      r12,#1
 00055c  e1c0031c          BIC      r0,r0,r12,LSL r3
-;;;296    			TVD_RegWrite(TVD_REG_BASE + 0x009c, reg_val);
+;;;298    			TVD_RegWrite(TVD_REG_BASE + 0x009c, reg_val);
 000560  e59f320c          LDR      r3,|L1.1908|
 000564  e583009c          STR      r0,[r3,#0x9c]
-;;;297    			break;
+;;;299    			break;
 000568  ea00000d          B        |L1.1444|
                   |L1.1388|
-;;;298    		case TVD_LOCK:
+;;;300    		case TVD_LOCK:
 00056c  e1a00000          MOV      r0,r0
-;;;299    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
+;;;301    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
 000570  e59f31fc          LDR      r3,|L1.1908|
 000574  e59300a4          LDR      r0,[r3,#0xa4]
-;;;300    			reg_val &= ~(1 << 0);
+;;;302    			reg_val &= ~(1 << 0);
 000578  e3c00001          BIC      r0,r0,#1
-;;;301    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
+;;;303    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
 00057c  e58300a4          STR      r0,[r3,#0xa4]
-;;;302    			break;
+;;;304    			break;
 000580  ea000007          B        |L1.1444|
                   |L1.1412|
-;;;303    		case TVD_UNLOCK:
+;;;305    		case TVD_UNLOCK:
 000584  e1a00000          MOV      r0,r0
-;;;304    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
+;;;306    			reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a4);
 000588  e59f31e4          LDR      r3,|L1.1908|
 00058c  e59300a4          LDR      r0,[r3,#0xa4]
-;;;305    			reg_val &= ~(1 << 1);
+;;;307    			reg_val &= ~(1 << 1);
 000590  e3c00002          BIC      r0,r0,#2
-;;;306    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
+;;;308    			TVD_RegWrite(TVD_REG_BASE + 0x00a4, reg_val);
 000594  e58300a4          STR      r0,[r3,#0xa4]
-;;;307    			break;
+;;;309    			break;
 000598  ea000001          B        |L1.1444|
                   |L1.1436|
-;;;308    		default:
+;;;310    		default:
 00059c  e1a00000          MOV      r0,r0
-;;;309    				break;
+;;;311    				break;
 0005a0  e1a00000          MOV      r0,r0
                   |L1.1444|
-0005a4  e1a00000          MOV      r0,r0                 ;297
-;;;310    	}
-;;;311    }
+0005a4  e1a00000          MOV      r0,r0                 ;299
+;;;312    	}
+;;;313    }
 0005a8  e12fff1e          BX       lr
-;;;312    
+;;;314    
                           ENDP
 
                   tvd_irq_status_get PROC
-;;;313    int tvd_irq_status_get(unsigned int id,tvd_irq_t irq)
+;;;315    int tvd_irq_status_get(unsigned int id,tvd_irq_t irq)
 0005ac  e92d41f0          PUSH     {r4-r8,lr}
-;;;314    {
+;;;316    {
 0005b0  e1a04000          MOV      r4,r0
 0005b4  e1a05001          MOV      r5,r1
-;;;315    	unsigned int reg_val, ret = -1;
+;;;317    	unsigned int reg_val;
+;;;318    	int ret = -1;
 0005b8  e3e07000          MVN      r7,#0
-;;;316    	switch(irq){
+;;;319    	switch(irq){
 0005bc  e3550000          CMP      r5,#0
 0005c0  1a000005          BNE      |L1.1500|
-;;;317    		case TVD_FRAME_DONE:
-;;;318    			reg_val = TVD_RegRead(TVD_REG_BASE+0x0094);//+0x140
+;;;320    		case TVD_FRAME_DONE:
+;;;321    			reg_val = TVD_RegRead(TVD_REG_BASE+0x0094);//+0x140
 0005c4  e59f01a8          LDR      r0,|L1.1908|
 0005c8  e5906094          LDR      r6,[r0,#0x94]
-;;;319    			ret = (reg_val>>(24+id))&1;
+;;;322    			ret = (reg_val>>(24+id))&1;
 0005cc  e2840018          ADD      r0,r4,#0x18
 0005d0  e1a00036          LSR      r0,r6,r0
 0005d4  e2007001          AND      r7,r0,#1
-;;;320    			break;
+;;;323    			break;
 0005d8  ea000003          B        |L1.1516|
                   |L1.1500|
-;;;321                    default:
+;;;324                    default:
 0005dc  e1a00000          MOV      r0,r0
-;;;322                    	TVD_Printf("tvd get irq status error\n");
+;;;325                    	TVD_Printf("tvd get irq status error\n");
 0005e0  e28f0f7d          ADR      r0,|L1.2012|
 0005e4  ebfffffe          BL       __2printf
-;;;323                            break;
+;;;326                            break;
 0005e8  e1a00000          MOV      r0,r0
                   |L1.1516|
-0005ec  e1a00000          MOV      r0,r0                 ;320
-;;;324    	}
-;;;325    	return ret;
+0005ec  e1a00000          MOV      r0,r0                 ;323
+;;;327    	}
+;;;328    	return ret;
 0005f0  e1a00007          MOV      r0,r7
-;;;326    }
+;;;329    }
 0005f4  e8bd81f0          POP      {r4-r8,pc}
-;;;327    
+;;;330    
                           ENDP
 
                   tvd_irq_status_clear PROC
-;;;328    void tvd_irq_status_clear(unsigned int id,tvd_irq_t irq)
+;;;331    void tvd_irq_status_clear(unsigned int id,tvd_irq_t irq)
 0005f8  e1a02000          MOV      r2,r0
-;;;329    {
-;;;330    	unsigned int reg_val;
-;;;331    	switch(irq){
+;;;332    {
+;;;333    	unsigned int reg_val;
+;;;334    	switch(irq){
 0005fc  e3510000          CMP      r1,#0
 000600  0a000004          BEQ      |L1.1560|
 000604  e3510001          CMP      r1,#1
@@ -795,140 +796,140 @@
 000610  1a000011          BNE      |L1.1628|
 000614  ea00000b          B        |L1.1608|
                   |L1.1560|
-;;;332    		case TVD_FRAME_DONE:
+;;;335    		case TVD_FRAME_DONE:
 000618  e1a00000          MOV      r0,r0
-;;;333    			reg_val = 1<<(24+id);
+;;;336    			reg_val = 1<<(24+id);
 00061c  e2823018          ADD      r3,r2,#0x18
 000620  e3a0c001          MOV      r12,#1
 000624  e1a0031c          LSL      r0,r12,r3
-;;;334    			TVD_RegWrite(TVD_REG_BASE+0x0094, reg_val);//+0x140
+;;;337    			TVD_RegWrite(TVD_REG_BASE+0x0094, reg_val);//+0x140
 000628  e59f3144          LDR      r3,|L1.1908|
 00062c  e5830094          STR      r0,[r3,#0x94]
-;;;335    			break;
+;;;338    			break;
 000630  ea00000b          B        |L1.1636|
                   |L1.1588|
-;;;336    		case TVD_LOCK:
+;;;339    		case TVD_LOCK:
 000634  e1a00000          MOV      r0,r0
-;;;337    			reg_val = 1 << 0;
+;;;340    			reg_val = 1 << 0;
 000638  e3a00001          MOV      r0,#1
-;;;338    			TVD_RegWrite(TVD_REG_BASE + 0x00a8, reg_val);
+;;;341    			TVD_RegWrite(TVD_REG_BASE + 0x00a8, reg_val);
 00063c  e59f3130          LDR      r3,|L1.1908|
 000640  e58300a8          STR      r0,[r3,#0xa8]
-;;;339    			break;
+;;;342    			break;
 000644  ea000006          B        |L1.1636|
                   |L1.1608|
-;;;340    		case TVD_UNLOCK:
+;;;343    		case TVD_UNLOCK:
 000648  e1a00000          MOV      r0,r0
-;;;341    			reg_val = 1 << 1;
+;;;344    			reg_val = 1 << 1;
 00064c  e3a00002          MOV      r0,#2
-;;;342    			TVD_RegWrite(TVD_REG_BASE + 0x00a8, reg_val);
+;;;345    			TVD_RegWrite(TVD_REG_BASE + 0x00a8, reg_val);
 000650  e59f311c          LDR      r3,|L1.1908|
 000654  e58300a8          STR      r0,[r3,#0xa8]
-;;;343    			break;
+;;;346    			break;
 000658  ea000001          B        |L1.1636|
                   |L1.1628|
-;;;344    		default:
+;;;347    		default:
 00065c  e1a00000          MOV      r0,r0
-;;;345    				break;
+;;;348    				break;
 000660  e1a00000          MOV      r0,r0
                   |L1.1636|
-000664  e1a00000          MOV      r0,r0                 ;335
-;;;346    	}
-;;;347    }
+000664  e1a00000          MOV      r0,r0                 ;338
+;;;349    	}
+;;;350    }
 000668  e12fff1e          BX       lr
-;;;348    
+;;;351    
                           ENDP
 
                   tvd_capture_on PROC
-;;;349    void tvd_capture_on(unsigned int id)
+;;;352    void tvd_capture_on(unsigned int id)
 00066c  e1a02400          LSL      r2,r0,#8
-;;;350    {
-;;;351    	unsigned int reg_val;
-;;;352    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0088+0x100*id);//+0x130
+;;;353    {
+;;;354    	unsigned int reg_val;
+;;;355    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0088+0x100*id);//+0x130
 000670  e2822507          ADD      r2,r2,#0x1c00000
 000674  e2822a0b          ADD      r2,r2,#0xb000
 000678  e5921088          LDR      r1,[r2,#0x88]
-;;;353    	reg_val |= 1 << 0;
+;;;356    	reg_val |= 1 << 0;
 00067c  e3811001          ORR      r1,r1,#1
-;;;354    	TVD_RegWrite(TVD_REG_BASE+0x0088+0x100*id, reg_val);
+;;;357    	TVD_RegWrite(TVD_REG_BASE+0x0088+0x100*id, reg_val);
 000680  e1a02400          LSL      r2,r0,#8
 000684  e2822507          ADD      r2,r2,#0x1c00000
 000688  e2822a0b          ADD      r2,r2,#0xb000
 00068c  e5821088          STR      r1,[r2,#0x88]
-;;;355    }
+;;;358    }
 000690  e12fff1e          BX       lr
-;;;356    void tvd_capture_off(unsigned int id)
+;;;359    void tvd_capture_off(unsigned int id)
                           ENDP
 
                   tvd_capture_off PROC
 000694  e1a02400          LSL      r2,r0,#8
-;;;357    {
-;;;358    	unsigned int reg_val;
-;;;359    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0088+0x100*id);
+;;;360    {
+;;;361    	unsigned int reg_val;
+;;;362    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0088+0x100*id);
 000698  e2822507          ADD      r2,r2,#0x1c00000
 00069c  e2822a0b          ADD      r2,r2,#0xb000
 0006a0  e5921088          LDR      r1,[r2,#0x88]
-;;;360    	reg_val &= ~(1<<0);
+;;;363    	reg_val &= ~(1<<0);
 0006a4  e3c11001          BIC      r1,r1,#1
-;;;361    	TVD_RegWrite(TVD_REG_BASE+0x0088+0x100*id, reg_val);
+;;;364    	TVD_RegWrite(TVD_REG_BASE+0x0088+0x100*id, reg_val);
 0006a8  e1a02400          LSL      r2,r0,#8
 0006ac  e2822507          ADD      r2,r2,#0x1c00000
 0006b0  e2822a0b          ADD      r2,r2,#0xb000
 0006b4  e5821088          STR      r1,[r2,#0x88]
-;;;362    }
+;;;365    }
 0006b8  e12fff1e          BX       lr
-;;;363    
+;;;366    
                           ENDP
 
                   tvd_set_addr_y PROC
-;;;364    void tvd_set_addr_y(unsigned int id,unsigned int addr)
+;;;367    void tvd_set_addr_y(unsigned int id,unsigned int addr)
 0006bc  e1a02000          MOV      r2,r0
-;;;365    {
-;;;366    	unsigned int tmp;
-;;;367    	TVD_RegWrite(TVD_REG_BASE + 0x0080, addr);//+ 0x100
+;;;368    {
+;;;369    	unsigned int tmp;
+;;;370    	TVD_RegWrite(TVD_REG_BASE + 0x0080, addr);//+ 0x100
 0006c0  e59f30ac          LDR      r3,|L1.1908|
 0006c4  e5831080          STR      r1,[r3,#0x80]
-;;;368    	tmp = TVD_RegRead(TVD_REG_BASE+0x0088);
+;;;371    	tmp = TVD_RegRead(TVD_REG_BASE+0x0088);
 0006c8  e5930088          LDR      r0,[r3,#0x88]
-;;;369    	tmp |= 0x10000000;
+;;;372    	tmp |= 0x10000000;
 0006cc  e3800201          ORR      r0,r0,#0x10000000
-;;;370    	TVD_RegWrite(TVD_REG_BASE+0x0088,tmp);
+;;;373    	TVD_RegWrite(TVD_REG_BASE+0x0088,tmp);
 0006d0  e5830088          STR      r0,[r3,#0x88]
-;;;371    }
+;;;374    }
 0006d4  e12fff1e          BX       lr
-;;;372    
+;;;375    
                           ENDP
 
                   tvd_set_addr_c PROC
-;;;373    void tvd_set_addr_c(unsigned int id,unsigned int addr)
+;;;376    void tvd_set_addr_c(unsigned int id,unsigned int addr)
 0006d8  e1a02000          MOV      r2,r0
-;;;374    {
-;;;375    	unsigned int tmp;
-;;;376    	TVD_RegWrite(TVD_REG_BASE + 0x0084, addr);//+ 0x110
+;;;377    {
+;;;378    	unsigned int tmp;
+;;;379    	TVD_RegWrite(TVD_REG_BASE + 0x0084, addr);//+ 0x110
 0006dc  e59f3090          LDR      r3,|L1.1908|
 0006e0  e5831084          STR      r1,[r3,#0x84]
-;;;377    	tmp = TVD_RegRead(TVD_REG_BASE+0x0088);
+;;;380    	tmp = TVD_RegRead(TVD_REG_BASE+0x0088);
 0006e4  e5930088          LDR      r0,[r3,#0x88]
-;;;378    	tmp |= 0x10000000;
+;;;381    	tmp |= 0x10000000;
 0006e8  e3800201          ORR      r0,r0,#0x10000000
-;;;379    	TVD_RegWrite(TVD_REG_BASE+0x0088,tmp);
+;;;382    	TVD_RegWrite(TVD_REG_BASE+0x0088,tmp);
 0006ec  e5830088          STR      r0,[r3,#0x88]
-;;;380    }
+;;;383    }
 0006f0  e12fff1e          BX       lr
-;;;381    
+;;;384    
                           ENDP
 
                   tvd_set_fmt PROC
-;;;382    void tvd_set_fmt(unsigned int id, tvd_fmt_t fmt)
+;;;385    void tvd_set_fmt(unsigned int id, tvd_fmt_t fmt)
 0006f4  e1a02000          MOV      r2,r0
-;;;383    {
-;;;384    	unsigned int reg_val;
-;;;385    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x0088+0x100*id);//+ 0x130
+;;;386    {
+;;;387    	unsigned int reg_val;
+;;;388    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x0088+0x100*id);//+ 0x130
 0006f8  e1a03402          LSL      r3,r2,#8
 0006fc  e2833507          ADD      r3,r3,#0x1c00000
 000700  e2833a0b          ADD      r3,r3,#0xb000
 000704  e5930088          LDR      r0,[r3,#0x88]
-;;;386    	switch(fmt){
+;;;389    	switch(fmt){
 000708  e3510000          CMP      r1,#0
 00070c  0a000004          BEQ      |L1.1828|
 000710  e3510001          CMP      r1,#1
@@ -937,41 +938,41 @@
 00071c  1a00000c          BNE      |L1.1876|
 000720  ea000007          B        |L1.1860|
                   |L1.1828|
-;;;387    		case TVD_PL_YUV422:
+;;;390    		case TVD_PL_YUV422:
 000724  e1a00000          MOV      r0,r0
-;;;388    			reg_val &= ~(1<<24);
+;;;391    			reg_val &= ~(1<<24);
 000728  e3c00401          BIC      r0,r0,#0x1000000
-;;;389    			reg_val |= 1<<4;
+;;;392    			reg_val |= 1<<4;
 00072c  e3800010          ORR      r0,r0,#0x10
-;;;390    			break;
+;;;393    			break;
 000730  ea000007          B        |L1.1876|
                   |L1.1844|
-;;;391    		case TVD_PL_YUV420:
+;;;394    		case TVD_PL_YUV420:
 000734  e1a00000          MOV      r0,r0
-;;;392    			reg_val &= ~(1<<24);
+;;;395    			reg_val &= ~(1<<24);
 000738  e3c00401          BIC      r0,r0,#0x1000000
-;;;393    			reg_val &= ~(1<<4);
+;;;396    			reg_val &= ~(1<<4);
 00073c  e3c00010          BIC      r0,r0,#0x10
-;;;394    			break;
+;;;397    			break;
 000740  ea000003          B        |L1.1876|
                   |L1.1860|
-;;;395    		case TVD_MB_YUV420:
+;;;398    		case TVD_MB_YUV420:
 000744  e1a00000          MOV      r0,r0
-;;;396    			reg_val |= 1<<24;
+;;;399    			reg_val |= 1<<24;
 000748  e3800401          ORR      r0,r0,#0x1000000
-;;;397    			reg_val &= ~(1<<4);
+;;;400    			reg_val &= ~(1<<4);
 00074c  e3c00010          BIC      r0,r0,#0x10
-;;;398    			break;
+;;;401    			break;
 000750  e1a00000          MOV      r0,r0
                   |L1.1876|
-000754  e1a00000          MOV      r0,r0                 ;390
-;;;399    	}
-;;;400    	TVD_RegWrite(TVD_REG_BASE + 0x0088+0x100*id, reg_val);
+000754  e1a00000          MOV      r0,r0                 ;393
+;;;402    	}
+;;;403    	TVD_RegWrite(TVD_REG_BASE + 0x0088+0x100*id, reg_val);
 000758  e1a03402          LSL      r3,r2,#8
 00075c  e2833507          ADD      r3,r3,#0x1c00000
 000760  e2833a0b          ADD      r3,r3,#0xb000
 000764  e5830088          STR      r0,[r3,#0x88]
-;;;401    }
+;;;404    }
 000768  e12fff1e          BX       lr
                   |L1.1900|
                           DCD      0x83006207
@@ -1042,20 +1043,20 @@
                           ENDP
 
                   tvd_get_status PROC
-;;;402    
-;;;403    unsigned int tvd_get_status(unsigned int id)
+;;;405    
+;;;406    unsigned int tvd_get_status(unsigned int id)
 0007f8  e1a0c000          MOV      r12,r0
-;;;404    {
-;;;405    	unsigned int reg_val = 0;
+;;;407    {
+;;;408    	unsigned int reg_val = 0;
 0007fc  e3a01000          MOV      r1,#0
-;;;406    	unsigned int det = 0;
+;;;409    	unsigned int det = 0;
 000800  e3a02000          MOV      r2,#0
-;;;407    	unsigned int system = 0;
+;;;410    	unsigned int system = 0;
 000804  e3a03000          MOV      r3,#0
-;;;408    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0e40);
+;;;411    	reg_val = TVD_RegRead(TVD_REG_BASE+0x0e40);
 000808  e59f03d0          LDR      r0,|L1.3040|
 00080c  e5901000          LDR      r1,[r0,#0]
-;;;409    	det = ((reg_val & 0x0000000e) == 0x0000000e)?1:0;
+;;;412    	det = ((reg_val & 0x0000000e) == 0x0000000e)?1:0;
 000810  e201000e          AND      r0,r1,#0xe
 000814  e350000e          CMP      r0,#0xe
 000818  1a000001          BNE      |L1.2084|
@@ -1065,541 +1066,541 @@
 000824  e3a00000          MOV      r0,#0
                   |L1.2088|
 000828  e1a02000          MOV      r2,r0
-;;;410    	if((reg_val&(1<<18)) && (reg_val & (1 << 16)))
+;;;413    	if((reg_val&(1<<18)) && (reg_val & (1 << 16)))
 00082c  e2010701          AND      r0,r1,#0x40000
 000830  e3500000          CMP      r0,#0
 000834  0a000004          BEQ      |L1.2124|
 000838  e2010801          AND      r0,r1,#0x10000
 00083c  e3500000          CMP      r0,#0
 000840  0a000001          BEQ      |L1.2124|
-;;;411    	{
-;;;412    		system = 1;//get system = pal
+;;;414    	{
+;;;415    		system = 1;//get system = pal
 000844  e3a03001          MOV      r3,#1
 000848  ea000000          B        |L1.2128|
                   |L1.2124|
-;;;413    	}
-;;;414    	else
-;;;415    	{
-;;;416    		system = 0;//get system = ntsc
+;;;416    	}
+;;;417    	else
+;;;418    	{
+;;;419    		system = 0;//get system = ntsc
 00084c  e3a03000          MOV      r3,#0
                   |L1.2128|
-;;;417    	}
-;;;418    	return ((det<<0)+(system<<4));//bit0=det bit4=system
+;;;420    	}
+;;;421    	return ((det<<0)+(system<<4));//bit0=det bit4=system
 000850  e0820203          ADD      r0,r2,r3,LSL #4
-;;;419    }
+;;;422    }
 000854  e12fff1e          BX       lr
-;;;420    
+;;;423    
                           ENDP
 
                   TVD_3D_COMB_Filter PROC
-;;;421    void TVD_3D_COMB_Filter(__u32 enable, __u32 addr)
+;;;424    void TVD_3D_COMB_Filter(__u32 enable, __u32 addr)
 000858  e1a02000          MOV      r2,r0
-;;;422    {
-;;;423    	__u32 reg_val;
-;;;424    
-;;;425    	if (enable) 
+;;;425    {
+;;;426    	__u32 reg_val;
+;;;427    
+;;;428    	if (enable) 
 00085c  e3520000          CMP      r2,#0
 000860  0a000010          BEQ      |L1.2216|
-;;;426    	{
-;;;427    		/* 3D config */
-;;;428    		TVD_RegWrite(TVD_REG_BASE + 0x004c, addr);
+;;;429    	{
+;;;430    		/* 3D config */
+;;;431    		TVD_RegWrite(TVD_REG_BASE + 0x004c, addr);
 000864  e51f30f8          LDR      r3,|L1.1908|
 000868  e583104c          STR      r1,[r3,#0x4c]
-;;;429    		TVD_RegWrite(TVD_REG_BASE + 0x0050, addr + 0x200000);
+;;;432    		TVD_RegWrite(TVD_REG_BASE + 0x0050, addr + 0x200000);
 00086c  e2813602          ADD      r3,r1,#0x200000
 000870  e51fc104          LDR      r12,|L1.1908|
 000874  e58c3050          STR      r3,[r12,#0x50]
-;;;430    		TVD_RegWrite(TVD_REG_BASE + 0x0054, 0x00200000);
+;;;433    		TVD_RegWrite(TVD_REG_BASE + 0x0054, 0x00200000);
 000878  e3a03602          MOV      r3,#0x200000
 00087c  e58c3054          STR      r3,[r12,#0x54]
-;;;431    		TVD_RegWrite(TVD_REG_BASE + 0x0048, 0x04040001);
+;;;434    		TVD_RegWrite(TVD_REG_BASE + 0x0048, 0x04040001);
 000880  e51f30b0          LDR      r3,|L1.2008|
 000884  e58c3048          STR      r3,[r12,#0x48]
-;;;432    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0008);
+;;;435    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0008);
 000888  e1cc3003          BIC      r3,r12,r3
 00088c  e5930008          LDR      r0,[r3,#8]
-;;;433    		reg_val &= ~(1 << 0);
+;;;436    		reg_val &= ~(1 << 0);
 000890  e3c00001          BIC      r0,r0,#1
-;;;434    		TVD_RegWrite(TVD_REG_BASE + 0x0008, reg_val);
+;;;437    		TVD_RegWrite(TVD_REG_BASE + 0x0008, reg_val);
 000894  e5830008          STR      r0,[r3,#8]
-;;;435    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0000);
+;;;438    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0000);
 000898  e5930000          LDR      r0,[r3,#0]
-;;;436    		reg_val |= (1 << 4);
+;;;439    		reg_val |= (1 << 4);
 00089c  e3800010          ORR      r0,r0,#0x10
-;;;437    		TVD_RegWrite(TVD_REG_BASE + 0x0000, reg_val);
+;;;440    		TVD_RegWrite(TVD_REG_BASE + 0x0000, reg_val);
 0008a0  e5830000          STR      r0,[r3,#0]
 0008a4  ea000006          B        |L1.2244|
                   |L1.2216|
-;;;438    	} 
-;;;439    	else 
-;;;440    	{
-;;;441    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0008);
+;;;441    	} 
+;;;442    	else 
+;;;443    	{
+;;;444    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0008);
 0008a8  e51f313c          LDR      r3,|L1.1908|
 0008ac  e5930008          LDR      r0,[r3,#8]
-;;;442    		reg_val |= (1 << 0);
+;;;445    		reg_val |= (1 << 0);
 0008b0  e3800001          ORR      r0,r0,#1
-;;;443    		TVD_RegWrite(TVD_REG_BASE + 0x0008, reg_val);
+;;;446    		TVD_RegWrite(TVD_REG_BASE + 0x0008, reg_val);
 0008b4  e5830008          STR      r0,[r3,#8]
-;;;444    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0000);
+;;;447    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0000);
 0008b8  e5930000          LDR      r0,[r3,#0]
-;;;445    		reg_val &= ~(1 << 4);
+;;;448    		reg_val &= ~(1 << 4);
 0008bc  e3c00010          BIC      r0,r0,#0x10
-;;;446    		TVD_RegWrite(TVD_REG_BASE + 0x0000, reg_val);
+;;;449    		TVD_RegWrite(TVD_REG_BASE + 0x0000, reg_val);
 0008c0  e5830000          STR      r0,[r3,#0]
                   |L1.2244|
-;;;447    	}
-;;;448    }
+;;;450    	}
+;;;451    }
 0008c4  e12fff1e          BX       lr
-;;;449    
+;;;452    
                           ENDP
 
                   tvd_y_peak PROC
-;;;450    void tvd_y_peak(__u32 enable)
+;;;453    void tvd_y_peak(__u32 enable)
 0008c8  e1a01000          MOV      r1,r0
-;;;451    {
-;;;452    	__u32 reg_val;
-;;;453    	if (enable) {
+;;;454    {
+;;;455    	__u32 reg_val;
+;;;456    	if (enable) {
 0008cc  e3510000          CMP      r1,#0
 0008d0  0a000004          BEQ      |L1.2280|
-;;;454    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x000c);
+;;;457    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x000c);
 0008d4  e51f2168          LDR      r2,|L1.1908|
 0008d8  e592000c          LDR      r0,[r2,#0xc]
-;;;455    		reg_val |= (1 << 16);
+;;;458    		reg_val |= (1 << 16);
 0008dc  e3800801          ORR      r0,r0,#0x10000
-;;;456    		TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
+;;;459    		TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
 0008e0  e582000c          STR      r0,[r2,#0xc]
 0008e4  ea000003          B        |L1.2296|
                   |L1.2280|
-;;;457    	} else {
-;;;458    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x000c);
+;;;460    	} else {
+;;;461    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x000c);
 0008e8  e51f217c          LDR      r2,|L1.1908|
 0008ec  e592000c          LDR      r0,[r2,#0xc]
-;;;459    		reg_val &= ~(1 << 16);
+;;;462    		reg_val &= ~(1 << 16);
 0008f0  e3c00801          BIC      r0,r0,#0x10000
-;;;460    		TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
+;;;463    		TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
 0008f4  e582000c          STR      r0,[r2,#0xc]
                   |L1.2296|
-;;;461    	}
-;;;462    }
+;;;464    	}
+;;;465    }
 0008f8  e12fff1e          BX       lr
-;;;463    void tvd_c_peak(__u32 enable)
+;;;466    void tvd_c_peak(__u32 enable)
                           ENDP
 
                   tvd_c_peak PROC
 0008fc  e1a01000          MOV      r1,r0
-;;;464    {
-;;;465    	__u32 reg_val;
-;;;466    	if (enable) {
+;;;467    {
+;;;468    	__u32 reg_val;
+;;;469    	if (enable) {
 000900  e3510000          CMP      r1,#0
 000904  0a000004          BEQ      |L1.2332|
-;;;467    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0010);
+;;;470    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0010);
 000908  e51f219c          LDR      r2,|L1.1908|
 00090c  e5920010          LDR      r0,[r2,#0x10]
-;;;468    		reg_val |= (1 << 16);
+;;;471    		reg_val |= (1 << 16);
 000910  e3800801          ORR      r0,r0,#0x10000
-;;;469    		TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);
+;;;472    		TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);
 000914  e5820010          STR      r0,[r2,#0x10]
 000918  ea000003          B        |L1.2348|
                   |L1.2332|
-;;;470    	} else {
-;;;471    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0010);
+;;;473    	} else {
+;;;474    		reg_val = TVD_RegRead(TVD_REG_BASE + 0x0010);
 00091c  e51f21b0          LDR      r2,|L1.1908|
 000920  e5920010          LDR      r0,[r2,#0x10]
-;;;472    		reg_val &= ~(1 << 16);
+;;;475    		reg_val &= ~(1 << 16);
 000924  e3c00801          BIC      r0,r0,#0x10000
-;;;473    		TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);
+;;;476    		TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);
 000928  e5820010          STR      r0,[r2,#0x10]
                   |L1.2348|
-;;;474    	}
-;;;475    }
+;;;477    	}
+;;;478    }
 00092c  e12fff1e          BX       lr
-;;;476    __s32 tvd_get_lock_state(void)
+;;;479    __s32 tvd_get_lock_state(void)
                           ENDP
 
                   tvd_get_lock_state PROC
 000930  e3a00000          MOV      r0,#0
-;;;477    {
-;;;478    	__u32 reg_val;
-;;;479    	__u32 lock = 0;
-;;;480    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a8);
+;;;480    {
+;;;481    	__u32 reg_val;
+;;;482    	__u32 lock = 0;
+;;;483    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x00a8);
 000934  e51f21c8          LDR      r2,|L1.1908|
 000938  e59210a8          LDR      r1,[r2,#0xa8]
-;;;481    
-;;;482    	if (reg_val & (1 << 0))
+;;;484    
+;;;485    	if (reg_val & (1 << 0))
 00093c  e2012001          AND      r2,r1,#1
 000940  e3520000          CMP      r2,#0
 000944  0a000001          BEQ      |L1.2384|
-;;;483    		lock = 1;/* lock */
+;;;486    		lock = 1;/* lock */
 000948  e3a00001          MOV      r0,#1
 00094c  ea000003          B        |L1.2400|
                   |L1.2384|
-;;;484    	else if (reg_val & (1 << 1))
+;;;487    	else if (reg_val & (1 << 1))
 000950  e2012002          AND      r2,r1,#2
 000954  e3520000          CMP      r2,#0
 000958  0a000000          BEQ      |L1.2400|
-;;;485    		lock = 0;/* unlock */
+;;;488    		lock = 0;/* unlock */
 00095c  e3a00000          MOV      r0,#0
                   |L1.2400|
-;;;486    	return lock;
-;;;487    }
+;;;489    	return lock;
+;;;490    }
 000960  e12fff1e          BX       lr
-;;;488    
+;;;491    
                           ENDP
 
                   tvd_get_tvin_system PROC
-;;;489    __s32 tvd_get_tvin_system()
+;;;492    __s32 tvd_get_tvin_system()
 000964  e3a01000          MOV      r1,#0
-;;;490    {
-;;;491    	__u32 reg_val = 0;
-;;;492    	__u32 system = 0;
+;;;493    {
+;;;494    	__u32 reg_val = 0;
+;;;495    	__u32 system = 0;
 000968  e3a00000          MOV      r0,#0
-;;;493    
-;;;494    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x0e40);
+;;;496    
+;;;497    	reg_val = TVD_RegRead(TVD_REG_BASE + 0x0e40);
 00096c  e59f226c          LDR      r2,|L1.3040|
 000970  e5921000          LDR      r1,[r2,#0]
-;;;495    	if (reg_val & (1 << 18)) {
+;;;498    	if (reg_val & (1 << 18)) {
 000974  e2012701          AND      r2,r1,#0x40000
 000978  e3520000          CMP      r2,#0
 00097c  0a000001          BEQ      |L1.2440|
-;;;496    		system = TVD_SOURCE_PAL; /* get system = pal */
+;;;499    		system = TVD_SOURCE_PAL; /* get system = pal */
 000980  e3a00001          MOV      r0,#1
 000984  ea000000          B        |L1.2444|
                   |L1.2440|
-;;;497    	} else {
-;;;498    		system = TVD_SOURCE_NTSC; /* get system = ntsc */
+;;;500    	} else {
+;;;501    		system = TVD_SOURCE_NTSC; /* get system = ntsc */
 000988  e3a00000          MOV      r0,#0
                   |L1.2444|
-;;;499    	}
-;;;500    
-;;;501    	return system;
-;;;502    }
-00098c  e12fff1e          BX       lr
+;;;502    	}
 ;;;503    
+;;;504    	return system;
+;;;505    }
+00098c  e12fff1e          BX       lr
+;;;506    
                           ENDP
 
                   tvd_set_color PROC
-;;;504    void tvd_set_color(unsigned int id,unsigned int luma,unsigned int contrast,unsigned int saturation,unsigned int hue)
+;;;507    void tvd_set_color(unsigned int id,unsigned int luma,unsigned int contrast,unsigned int saturation,unsigned int hue)
 000990  e92d4030          PUSH     {r4,r5,lr}
-;;;505    {
+;;;508    {
 000994  e1a04000          MOV      r4,r0
 000998  e59dc00c          LDR      r12,[sp,#0xc]
-;;;506            unsigned int reg_val=0;
+;;;509            unsigned int reg_val=0;
 00099c  e3a00000          MOV      r0,#0
-;;;507            reg_val  = TVD_RegRead(TVD_REG_BASE+0x000c);//0x0018
+;;;510            reg_val  = TVD_RegRead(TVD_REG_BASE+0x000c);//0x0018
 0009a0  e51f5234          LDR      r5,|L1.1908|
 0009a4  e595000c          LDR      r0,[r5,#0xc]
-;;;508            reg_val &= 0xffff0000;
+;;;511            reg_val &= 0xffff0000;
 0009a8  e1a00820          LSR      r0,r0,#16
 0009ac  e1a00800          LSL      r0,r0,#16
-;;;509            reg_val |= contrast;
+;;;512            reg_val |= contrast;
 0009b0  e1800002          ORR      r0,r0,r2
-;;;510            reg_val |= luma<<8;
+;;;513            reg_val |= luma<<8;
 0009b4  e1800401          ORR      r0,r0,r1,LSL #8
-;;;511            TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
+;;;514            TVD_RegWrite(TVD_REG_BASE + 0x000c, reg_val);
 0009b8  e585000c          STR      r0,[r5,#0xc]
-;;;512    
-;;;513    
-;;;514            reg_val  = TVD_RegRead(TVD_REG_BASE+0x0010);
+;;;515    
+;;;516    
+;;;517            reg_val  = TVD_RegRead(TVD_REG_BASE+0x0010);
 0009bc  e5950010          LDR      r0,[r5,#0x10]
-;;;515            reg_val &= 0xffff0000;
+;;;518            reg_val &= 0xffff0000;
 0009c0  e1a00820          LSR      r0,r0,#16
 0009c4  e1a00800          LSL      r0,r0,#16
-;;;516            reg_val |= saturation;
+;;;519            reg_val |= saturation;
 0009c8  e1800003          ORR      r0,r0,r3
-;;;517            reg_val |= hue<<8;
+;;;520            reg_val |= hue<<8;
 0009cc  e180040c          ORR      r0,r0,r12,LSL #8
-;;;518            TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);//0x001c
+;;;521            TVD_RegWrite(TVD_REG_BASE + 0x0010, reg_val);//0x001c
 0009d0  e5850010          STR      r0,[r5,#0x10]
-;;;519    }
+;;;522    }
 0009d4  e8bd8030          POP      {r4,r5,pc}
-;;;520    
+;;;523    
                           ENDP
 
                   tvd_set_chrom_gain PROC
-;;;521    // value from 00~ff
-;;;522    int tvd_set_chrom_gain(int val)
+;;;524    // value from 00~ff
+;;;525    int tvd_set_chrom_gain(int val)
 0009d8  e1a01000          MOV      r1,r0
-;;;523    {
-;;;524        int v = TVD_RegRead(TVD_REG_BASE+0x0f1c);
+;;;526    {
+;;;527        int v = TVD_RegRead(TVD_REG_BASE+0x0f1c);
 0009dc  e59f0200          LDR      r0,|L1.3044|
 0009e0  e5902000          LDR      r2,[r0,#0]
-;;;525    
-;;;526        v &= ~(0xff<<16);
+;;;528    
+;;;529        v &= ~(0xff<<16);
 0009e4  e3c228ff          BIC      r2,r2,#0xff0000
-;;;527        val &= 0xff;
+;;;530        val &= 0xff;
 0009e8  e20110ff          AND      r1,r1,#0xff
-;;;528        v |= (val<<16);
+;;;531        v |= (val<<16);
 0009ec  e1822801          ORR      r2,r2,r1,LSL #16
-;;;529        TVD_RegWrite(TVD_REG_BASE+0x0f1c, v);
+;;;532        TVD_RegWrite(TVD_REG_BASE+0x0f1c, v);
 0009f0  e5802000          STR      r2,[r0,#0]
-;;;530    
-;;;531        return 0;
-0009f4  e3a00000          MOV      r0,#0
-;;;532    }
-0009f8  e12fff1e          BX       lr
 ;;;533    
+;;;534        return 0;
+0009f4  e3a00000          MOV      r0,#0
+;;;535    }
+0009f8  e12fff1e          BX       lr
+;;;536    
                           ENDP
 
                   tvd_set_blue_flag PROC
-;;;534    ///flag: 0: 取消蓝屏，检测无信号也照样不蓝屏  1:直接输出蓝屏，不检测信号， 2:有信号则正常显示，无信号显示蓝屏
-;;;535    int tvd_set_blue_flag(int flag)
+;;;537    ///flag: 0: 取消蓝屏，检测无信号也照样不蓝屏  1:直接输出蓝屏，不检测信号， 2:有信号则正常显示，无信号显示蓝屏
+;;;538    int tvd_set_blue_flag(int flag)
 0009fc  e1a02000          MOV      r2,r0
-;;;536    {
-;;;537    //	return;
-;;;538    
-;;;539    #if 1
-;;;540        int v = TVD_RegRead(TVD_REG_BASE+0xf14);//对应R40 0x0004
+;;;539    {
+;;;540    //	return;
+;;;541    
+;;;542    #if 1
+;;;543        int v = TVD_RegRead(TVD_REG_BASE+0xf14);//对应R40 0x0004
 000a00  e59f01e0          LDR      r0,|L1.3048|
 000a04  e5901000          LDR      r1,[r0,#0]
-;;;541        v &= ~(0x3<<4);
+;;;544        v &= ~(0x3<<4);
 000a08  e3c11030          BIC      r1,r1,#0x30
-;;;542        v |= ((flag&0x3)<<4);
+;;;545        v |= ((flag&0x3)<<4);
 000a0c  e2020003          AND      r0,r2,#3
 000a10  e1811200          ORR      r1,r1,r0,LSL #4
-;;;543        TVD_RegWrite(TVD_REG_BASE+0xf14, v);
+;;;546        TVD_RegWrite(TVD_REG_BASE+0xf14, v);
 000a14  e59f01cc          LDR      r0,|L1.3048|
 000a18  e5801000          STR      r1,[r0,#0]
-;;;544    
-;;;545        return 0;
+;;;547    
+;;;548        return 0;
 000a1c  e3a00000          MOV      r0,#0
-;;;546    #endif
-;;;547    }
+;;;549    #endif
+;;;550    }
 000a20  e12fff1e          BX       lr
-;;;548    
+;;;551    
                           ENDP
 
                   tvd_bsp_init PROC
-;;;566    #define TVD_NUM 1
-;;;567    void tvd_bsp_init(int id)
+;;;569    #define TVD_NUM 1
+;;;570    void tvd_bsp_init(int id)
 000a24  e92d4010          PUSH     {r4,lr}
-;;;568    {
+;;;571    {
 000a28  e1a04000          MOV      r4,r0
-;;;569    	tvd_open_clock();
+;;;572    	tvd_open_clock();
 000a2c  ebfffffe          BL       tvd_open_clock
-;;;570    	TVD_RegWrite(TVD_REG_BASE + 0x0088, 0x04000000);
+;;;573    	TVD_RegWrite(TVD_REG_BASE + 0x0088, 0x04000000);
 000a30  e3a00301          MOV      r0,#0x4000000
 000a34  e51f12c8          LDR      r1,|L1.1908|
 000a38  e5810088          STR      r0,[r1,#0x88]
-;;;571    	TVD_RegWrite(TVD_REG_BASE + 0x0070, 0x00000100);
+;;;574    	TVD_RegWrite(TVD_REG_BASE + 0x0070, 0x00000100);
 000a3c  e3a00c01          MOV      r0,#0x100
 000a40  e5810070          STR      r0,[r1,#0x70]
-;;;572    	/*select tvin0 or tvin1*/
-;;;573    	if (id == 0)
+;;;575    	/*select tvin0 or tvin1*/
+;;;576    	if (id == 0)
 000a44  e3540000          CMP      r4,#0
 000a48  1a000003          BNE      |L1.2652|
-;;;574    		TVD_RegWrite(TVD_REG_BASE + 0x0e04, 0x8002AAA8);
+;;;577    		TVD_RegWrite(TVD_REG_BASE + 0x0e04, 0x8002AAA8);
 000a4c  e59f0198          LDR      r0,|L1.3052|
 000a50  e59f1198          LDR      r1,|L1.3056|
 000a54  e5810000          STR      r0,[r1,#0]
 000a58  ea000002          B        |L1.2664|
                   |L1.2652|
-;;;575    	else
-;;;576    		TVD_RegWrite(TVD_REG_BASE + 0x0e04, 0x8002AAA9);
+;;;578    	else
+;;;579    		TVD_RegWrite(TVD_REG_BASE + 0x0e04, 0x8002AAA9);
 000a5c  e59f0190          LDR      r0,|L1.3060|
 000a60  e59f1188          LDR      r1,|L1.3056|
 000a64  e5810000          STR      r0,[r1,#0]
                   |L1.2664|
-;;;577    
-;;;578    	TVD_RegWrite(TVD_REG_BASE + 0x0e2c, 0x000b0000);
+;;;580    
+;;;581    	TVD_RegWrite(TVD_REG_BASE + 0x0e2c, 0x000b0000);
 000a68  e3a0080b          MOV      r0,#0xb0000
 000a6c  e59f1184          LDR      r1,|L1.3064|
 000a70  e5810000          STR      r0,[r1,#0]
-;;;579    	TVD_RegWrite(TVD_REG_BASE + 0x0040, 0x04000310); /*? */
+;;;582    	TVD_RegWrite(TVD_REG_BASE + 0x0040, 0x04000310); /*? */
 000a74  e59f0180          LDR      r0,|L1.3068|
 000a78  e51f130c          LDR      r1,|L1.1908|
 000a7c  e5810040          STR      r0,[r1,#0x40]
-;;;580    
-;;;581    	/* reset tvd */
-;;;582    	TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000000);
+;;;583    
+;;;584    	/* reset tvd */
+;;;585    	TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00000000);
 000a80  e3a00000          MOV      r0,#0
 000a84  e5810000          STR      r0,[r1,#0]
-;;;583    	msleep(1); /* need delay here for tvd reset */
+;;;586    	msleep(1); /* need delay here for tvd reset */
 000a88  e3a00001          MOV      r0,#1
 000a8c  ebfffffe          BL       msleep
-;;;584    
-;;;585    	TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00001f01);
+;;;587    
+;;;588    	TVD_RegWrite(TVD_REG_BASE + 0x0000, 0x00001f01);
 000a90  e59f0168          LDR      r0,|L1.3072|
 000a94  e51f1328          LDR      r1,|L1.1908|
 000a98  e5810000          STR      r0,[r1,#0]
-;;;586    
-;;;587    	/* IP config */
-;;;588    	TVD_RegWrite(TVD_REG_BASE + 0x0014,
+;;;589    
+;;;590    	/* IP config */
+;;;591    	TVD_RegWrite(TVD_REG_BASE + 0x0014,
 000a9c  e3a00202          MOV      r0,#0x20000000
 000aa0  e5810014          STR      r0,[r1,#0x14]
-;;;589    		 0x20000000); /* 2000_0000    2400_0000 */
-;;;590    
-;;;591    	/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); //YC separation config */
-;;;592    	/*		TVD_RegWrite(TVD_REG_BASE+0x0f44, 0x00004632); //burst gate
-;;;593    	 */
-;;;594    	TVD_RegWrite(TVD_REG_BASE + 0x0f24,
+;;;592    		 0x20000000); /* 2000_0000    2400_0000 */
+;;;593    
+;;;594    	/* TVD_RegWrite(TVD_REG_BASE+0x0f6c, 0x00fffa0a); //YC separation config */
+;;;595    	/*		TVD_RegWrite(TVD_REG_BASE+0x0f44, 0x00004632); //burst gate
+;;;596    	 */
+;;;597    	TVD_RegWrite(TVD_REG_BASE + 0x0f24,
 000aa4  e59f0158          LDR      r0,|L1.3076|
 000aa8  e59f1158          LDR      r1,|L1.3080|
 000aac  e5810000          STR      r0,[r1,#0]
-;;;595    		 0x0682810a); /* DISABLE AGC GATE KILL!!!!!!!!!!!!!!!!! */
-;;;596    	/*TVD_RegWrite(TVD_REG_BASE+0x0f24, 0x0000b90a); //DISABLE AGC
-;;;597    	 */
-;;;598    	/*GATE KILL!!!!!!!!!!!!!!!!! */
-;;;599    	TVD_RegWrite(TVD_REG_BASE + 0x0f28,
+;;;598    		 0x0682810a); /* DISABLE AGC GATE KILL!!!!!!!!!!!!!!!!! */
+;;;599    	/*TVD_RegWrite(TVD_REG_BASE+0x0f24, 0x0000b90a); //DISABLE AGC
+;;;600    	 */
+;;;601    	/*GATE KILL!!!!!!!!!!!!!!!!! */
+;;;602    	TVD_RegWrite(TVD_REG_BASE + 0x0f28,
 000ab0  e59f0154          LDR      r0,|L1.3084|
 000ab4  e02115c0          EOR      r1,r1,r0,ASR #11
 000ab8  e5810000          STR      r0,[r1,#0]
-;;;600    		 0x00006440); /* 0000_6440    0000_5838 */
-;;;601    	TVD_RegWrite(TVD_REG_BASE + 0x0f4c,
+;;;603    		 0x00006440); /* 0000_6440    0000_5838 */
+;;;604    	TVD_RegWrite(TVD_REG_BASE + 0x0f4c,
 000abc  e59f014c          LDR      r0,|L1.3088|
 000ac0  e2811024          ADD      r1,r1,#0x24
 000ac4  e5810000          STR      r0,[r1,#0]
-;;;602    		 0x0e70106c); /* NO CLAMP DURING VSYNC!!!!!!!!!!!!!!!!! */
-;;;603    	TVD_RegWrite(TVD_REG_BASE + 0x0f54, 0x00000000); /* */
+;;;605    		 0x0e70106c); /* NO CLAMP DURING VSYNC!!!!!!!!!!!!!!!!! */
+;;;606    	TVD_RegWrite(TVD_REG_BASE + 0x0f54, 0x00000000); /* */
 000ac8  e3a00000          MOV      r0,#0
 000acc  e2811008          ADD      r1,r1,#8
 000ad0  e5810000          STR      r0,[r1,#0]
-;;;604    	TVD_RegWrite(TVD_REG_BASE + 0x0f58, 0x00000082); /* */
+;;;607    	TVD_RegWrite(TVD_REG_BASE + 0x0f58, 0x00000082); /* */
 000ad4  e3a00082          MOV      r0,#0x82
 000ad8  e08112c0          ADD      r1,r1,r0,ASR #5
 000adc  e5810000          STR      r0,[r1,#0]
-;;;605    	TVD_RegWrite(TVD_REG_BASE + 0x0f6c, 0x00fffad0); /* YC separation config */
+;;;608    	TVD_RegWrite(TVD_REG_BASE + 0x0f6c, 0x00fffad0); /* YC separation config */
 000ae0  e59f012c          LDR      r0,|L1.3092|
 000ae4  e2811014          ADD      r1,r1,#0x14
 000ae8  e5810000          STR      r0,[r1,#0]
-;;;606    	TVD_RegWrite(TVD_REG_BASE + 0x0f70, 0x0000a010); /* 0x00002010); */
+;;;609    	TVD_RegWrite(TVD_REG_BASE + 0x0f70, 0x0000a010); /* 0x00002010); */
 000aec  e59f0124          LDR      r0,|L1.3096|
 000af0  e2811004          ADD      r1,r1,#4
 000af4  e5810000          STR      r0,[r1,#0]
-;;;607    
-;;;608    }
+;;;610    
+;;;611    }
 000af8  e8bd8010          POP      {r4,pc}
-;;;609    
+;;;612    
                           ENDP
 
                   tvd_debugdump PROC
-;;;610    void tvd_debugdump(int id)
+;;;613    void tvd_debugdump(int id)
 000afc  e92d401c          PUSH     {r2-r4,lr}
-;;;611    {
+;;;614    {
 000b00  e1a04000          MOV      r4,r0
-;;;612    	int i;
-;;;613    //	 for( i = 0 ; i < 0xfff; i+=4 )
-;;;614    //		{
-;;;615    //			//TVD_Printf("Base+%03x : 0x%08x\n",i,TVD_RegRead(TVD_REG_BASE+0x0008));
-;;;616    //			TVD_RegWrite(TVD_REG_BASE + i, 0xffffffff);
-;;;617    //			 msleep(1);
-;;;618    //			 printf("%d\n",i);
-;;;619    //		}
-;;;620    
-;;;621    
-;;;622    
-;;;623    	TVD_Printf("TVD_CLK_REG: 0x%08x\n",TVD_RegRead(TVD_CLK_REG));
+;;;615    ////	int i;
+;;;616    //	 for( i = 0 ; i < 0xfff; i+=4 )
+;;;617    //		{
+;;;618    //			//TVD_Printf("Base+%03x : 0x%08x\n",i,TVD_RegRead(TVD_REG_BASE+0x0008));
+;;;619    //			TVD_RegWrite(TVD_REG_BASE + i, 0xffffffff);
+;;;620    //			 msleep(1);
+;;;621    //			 printf("%d\n",i);
+;;;622    //		}
+;;;623    
+;;;624    
+;;;625    
+;;;626    	TVD_Printf("TVD_CLK_REG: 0x%08x\n",TVD_RegRead(TVD_CLK_REG));
 000b04  e51f039c          LDR      r0,|L1.1904|
 000b08  e5901124          LDR      r1,[r0,#0x124]
 000b0c  e28f0f42          ADR      r0,|L1.3100|
 000b10  ebfffffe          BL       __2printf
-;;;624    	TVD_Printf("BUS_CLK_RST1_REG: 0x%08x\n",TVD_RegRead(BUS_CLK_RST1_REG));
+;;;627    	TVD_Printf("BUS_CLK_RST1_REG: 0x%08x\n",TVD_RegRead(BUS_CLK_RST1_REG));
 000b14  e51f03ac          LDR      r0,|L1.1904|
 000b18  e59012c4          LDR      r1,[r0,#0x2c4]
 000b1c  e28f0e11          ADR      r0,|L1.3124|
 000b20  ebfffffe          BL       __2printf
-;;;625    	TVD_Printf("BUS_CLK_GATE1_REG: 0x%08x\n",TVD_RegRead(BUS_CLK_GATE1_REG));
+;;;628    	TVD_Printf("BUS_CLK_GATE1_REG: 0x%08x\n",TVD_RegRead(BUS_CLK_GATE1_REG));
 000b24  e51f03bc          LDR      r0,|L1.1904|
 000b28  e5901064          LDR      r1,[r0,#0x64]
 000b2c  e28f0f47          ADR      r0,|L1.3152|
 000b30  ebfffffe          BL       __2printf
-;;;626    	TVD_Printf("DRAM_CLK_GATE_REG: 0x%08x\n",TVD_RegRead(DRAM_CLK_GATE_REG));
+;;;629    	TVD_Printf("DRAM_CLK_GATE_REG: 0x%08x\n",TVD_RegRead(DRAM_CLK_GATE_REG));
 000b34  e51f03cc          LDR      r0,|L1.1904|
 000b38  e5901100          LDR      r1,[r0,#0x100]
 000b3c  e28f0f4a          ADR      r0,|L1.3180|
 000b40  ebfffffe          BL       __2printf
-;;;627    	TVD_Printf("PLL_VEDIO_CTRL_REG: 0x%08x\n",TVD_RegRead(PLL_VEDIO_CTRL_REG));
+;;;630    	TVD_Printf("PLL_VEDIO_CTRL_REG: 0x%08x\n",TVD_RegRead(PLL_VEDIO_CTRL_REG));
 000b44  e51f03dc          LDR      r0,|L1.1904|
 000b48  e5901010          LDR      r1,[r0,#0x10]
 000b4c  e28f0f4d          ADR      r0,|L1.3208|
 000b50  ebfffffe          BL       __2printf
-;;;628    
-;;;629    	volatile unsigned int	addr ;
-;;;630    	volatile unsigned int reg_vule ;
-;;;631    	for(addr=0x01c0b000 ; addr <=(0x01c0b000+0xfc) ; addr = addr+4 )
+;;;631    
+;;;632    	volatile unsigned int	addr ;
+;;;633    	volatile unsigned int reg_vule ;
+;;;634    	for(addr=0x01c0b000 ; addr <=(0x01c0b000+0xfc) ; addr = addr+4 )
 000b54  e51f03e8          LDR      r0,|L1.1908|
 000b58  e58d0004          STR      r0,[sp,#4]
 000b5c  ea000009          B        |L1.2952|
                   |L1.2912|
-;;;632    	{
-;;;633    		reg_vule = *(volatile unsigned int*)addr ;
+;;;635    	{
+;;;636    		reg_vule = *(volatile unsigned int*)addr ;
 000b60  e59d0004          LDR      r0,[sp,#4]
 000b64  e5900000          LDR      r0,[r0,#0]
 000b68  e58d0000          STR      r0,[sp,#0]
-;;;634    		TVD_Printf("tvd reg[%x]=%8x\n",addr,reg_vule);
+;;;637    		TVD_Printf("tvd reg[%x]=%8x\n",addr,reg_vule);
 000b6c  e28f0e13          ADR      r0,|L1.3236|
 000b70  e59d1004          LDR      r1,[sp,#4]
 000b74  e59d2000          LDR      r2,[sp,#0]
 000b78  ebfffffe          BL       __2printf
-000b7c  e59d0004          LDR      r0,[sp,#4]            ;631
-000b80  e2800004          ADD      r0,r0,#4              ;631
-000b84  e58d0004          STR      r0,[sp,#4]            ;631
+000b7c  e59d0004          LDR      r0,[sp,#4]            ;634
+000b80  e2800004          ADD      r0,r0,#4              ;634
+000b84  e58d0004          STR      r0,[sp,#4]            ;634
                   |L1.2952|
-000b88  e59d0004          LDR      r0,[sp,#4]            ;631
+000b88  e59d0004          LDR      r0,[sp,#4]            ;634
 000b8c  e59f1124          LDR      r1,|L1.3256|
-000b90  e1500001          CMP      r0,r1                 ;631
+000b90  e1500001          CMP      r0,r1                 ;634
 000b94  9afffff1          BLS      |L1.2912|
-;;;635    	}
-;;;636    	for(addr=0x01c0be00 ; addr <=(0x01c0be00+0xfc) ; addr = addr+4 )
+;;;638    	}
+;;;639    	for(addr=0x01c0be00 ; addr <=(0x01c0be00+0xfc) ; addr = addr+4 )
 000b98  e59f011c          LDR      r0,|L1.3260|
 000b9c  e58d0004          STR      r0,[sp,#4]
 000ba0  ea000009          B        |L1.3020|
                   |L1.2980|
-;;;637    	{
-;;;638    		reg_vule = *(volatile unsigned int*)addr ;
+;;;640    	{
+;;;641    		reg_vule = *(volatile unsigned int*)addr ;
 000ba4  e59d0004          LDR      r0,[sp,#4]
 000ba8  e5900000          LDR      r0,[r0,#0]
 000bac  e58d0000          STR      r0,[sp,#0]
-;;;639    		TVD_Printf("tvd reg[%x]=%8x\n",addr,reg_vule);
+;;;642    		TVD_Printf("tvd reg[%x]=%8x\n",addr,reg_vule);
 000bb0  e28f00ec          ADR      r0,|L1.3236|
 000bb4  e59d1004          LDR      r1,[sp,#4]
 000bb8  e59d2000          LDR      r2,[sp,#0]
 000bbc  ebfffffe          BL       __2printf
-000bc0  e59d0004          LDR      r0,[sp,#4]            ;636
-000bc4  e2800004          ADD      r0,r0,#4              ;636
-000bc8  e58d0004          STR      r0,[sp,#4]            ;636
+000bc0  e59d0004          LDR      r0,[sp,#4]            ;639
+000bc4  e2800004          ADD      r0,r0,#4              ;639
+000bc8  e58d0004          STR      r0,[sp,#4]            ;639
                   |L1.3020|
-000bcc  e59d0004          LDR      r0,[sp,#4]            ;636
+000bcc  e59d0004          LDR      r0,[sp,#4]            ;639
 000bd0  e59f10e8          LDR      r1,|L1.3264|
-000bd4  e1500001          CMP      r0,r1                 ;636
+000bd4  e1500001          CMP      r0,r1                 ;639
 000bd8  9afffff1          BLS      |L1.2980|
-;;;640    	}
-;;;641    //	for( i = 0 ; i < 0xfff;i+=4 )
-;;;642    //	{
-;;;643    //		TVD_Printf("Base+%03x : 0x%08x\n",i,TVD_RegRead(TVD_REG_BASE+i));
-;;;644    //	}
-;;;645    
-;;;646    //	TVD_Printf("Base+0x0000 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0000));
-;;;647    //	TVD_Printf("Base+0x0F08 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F08));
-;;;648    //	TVD_Printf("Base+0x0F0c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F0c));
-;;;649    //	TVD_Printf("Base+0x0F10 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F10));
-;;;650    //	TVD_Printf("Base+0x0F14 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F14));
-;;;651    //	TVD_Printf("Base+0x0F18 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F18));
-;;;652    //	TVD_Printf("Base+0x0F1c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F1c));
-;;;653    //	TVD_Printf("Base+0x0F24 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F24));
-;;;654    //	TVD_Printf("Base+0x0F28 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F28));
-;;;655    //	TVD_Printf("Base+0x0F2c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F2c));
-;;;656    //	TVD_Printf("Base+0x0F44 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F44));
-;;;657    //	TVD_Printf("Base+0x0F4c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F4c));
-;;;658    //	TVD_Printf("Base+0x0F54 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F54));
-;;;659    //	TVD_Printf("Base+0x0F6c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F6c));
-;;;660    //	TVD_Printf("Base+0x0F74 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F74));
-;;;661    //	TVD_Printf("Base+0x0F80 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F80));
-;;;662    //	TVD_Printf("Base+0x0F84 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F84));
-;;;663    //
-;;;664    //	TVD_Printf("Base+0x000c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x000c));
-;;;665    //	TVD_Printf("Base+0x0014 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0014));
-;;;666    //	TVD_Printf("Base+0x008c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x008c));
-;;;667    //	TVD_Printf("Base+0x0E2c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0E2c));
-;;;668    //
-;;;669    //	TVD_Printf("Base+0x0094 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0094));
-;;;670    //	TVD_Printf("Base+0x009c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x009c));
+;;;643    	}
+;;;644    //	for( i = 0 ; i < 0xfff;i+=4 )
+;;;645    //	{
+;;;646    //		TVD_Printf("Base+%03x : 0x%08x\n",i,TVD_RegRead(TVD_REG_BASE+i));
+;;;647    //	}
+;;;648    
+;;;649    //	TVD_Printf("Base+0x0000 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0000));
+;;;650    //	TVD_Printf("Base+0x0F08 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F08));
+;;;651    //	TVD_Printf("Base+0x0F0c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F0c));
+;;;652    //	TVD_Printf("Base+0x0F10 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F10));
+;;;653    //	TVD_Printf("Base+0x0F14 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F14));
+;;;654    //	TVD_Printf("Base+0x0F18 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F18));
+;;;655    //	TVD_Printf("Base+0x0F1c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F1c));
+;;;656    //	TVD_Printf("Base+0x0F24 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F24));
+;;;657    //	TVD_Printf("Base+0x0F28 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F28));
+;;;658    //	TVD_Printf("Base+0x0F2c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F2c));
+;;;659    //	TVD_Printf("Base+0x0F44 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F44));
+;;;660    //	TVD_Printf("Base+0x0F4c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F4c));
+;;;661    //	TVD_Printf("Base+0x0F54 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F54));
+;;;662    //	TVD_Printf("Base+0x0F6c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F6c));
+;;;663    //	TVD_Printf("Base+0x0F74 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F74));
+;;;664    //	TVD_Printf("Base+0x0F80 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F80));
+;;;665    //	TVD_Printf("Base+0x0F84 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0F84));
+;;;666    //
+;;;667    //	TVD_Printf("Base+0x000c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x000c));
+;;;668    //	TVD_Printf("Base+0x0014 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0014));
+;;;669    //	TVD_Printf("Base+0x008c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x008c));
+;;;670    //	TVD_Printf("Base+0x0E2c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0E2c));
 ;;;671    //
-;;;672    //	TVD_Printf("Base+0x0080 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0080));
-;;;673    //	TVD_Printf("Base+0x0084 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0084));
+;;;672    //	TVD_Printf("Base+0x0094 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0094));
+;;;673    //	TVD_Printf("Base+0x009c : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x009c));
 ;;;674    //
-;;;675    //	TVD_Printf("Base+0x0088 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0088));
-;;;676    
-;;;677    }
+;;;675    //	TVD_Printf("Base+0x0080 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0080));
+;;;676    //	TVD_Printf("Base+0x0084 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0084));
+;;;677    //
+;;;678    //	TVD_Printf("Base+0x0088 : 0x%08x\n",TVD_RegRead(TVD_REG_BASE+0x0088));
+;;;679    
+;;;680    }
 000bdc  e8bd801c          POP      {r2-r4,pc}
                           ENDP
 

@@ -121,9 +121,9 @@ extern void sys_uart_putc(char c);
  */
 ///@{
 PRINTF_VISIBILITY
-int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
+int printf_(const char* format, ...) ;/////ATTR_PRINTF(1, 2);
 PRINTF_VISIBILITY
-int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
+int vprintf_(const char* format, va_list arg) ;/////ATTR_VPRINTF(1);
 ///@}
 
 /**
@@ -141,9 +141,9 @@ int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
  */
 ///@{
 PRINTF_VISIBILITY
-int sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
+int sprintf_(char* s, const char* format, ...);//// ATTR_PRINTF(2, 3);
 PRINTF_VISIBILITY
-int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
+int vsprintf_(char* s, const char* format, va_list arg) ;/////ATTR_VPRINTF(2);
 ///@}
 
 /**
@@ -163,9 +163,9 @@ int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
  */
 ///@{
 PRINTF_VISIBILITY
-int snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
+int snprintf_(char* s, size_t count, const char* format, ...);///// ATTR_PRINTF(3, 4);
 PRINTF_VISIBILITY
-int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
+int vsnprintf_(char* s, size_t count, const char* format, va_list arg);//// ATTR_VPRINTF(3);
 ///@}
 
 /**
@@ -183,14 +183,14 @@ int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRI
  *
  */
 PRINTF_VISIBILITY
-int fctprintf(void (*out)(char c, void* extra_arg), void* extra_arg, const char* format, ...)
-    ATTR_PRINTF(3, 4);
+int fctprintf(void (*out)(char c, void* extra_arg), void* extra_arg, const char* format, ...);
+/////    ATTR_PRINTF(3, 4);
 PRINTF_VISIBILITY
 int vfctprintf(
     void (*out)(char c, void* extra_arg),
     void* extra_arg,
     const char* format,
-    va_list arg) ATTR_VPRINTF(3);
+    va_list arg) ;/////ATTR_VPRINTF(3);
 
 #ifdef __cplusplus
 } // extern "C"

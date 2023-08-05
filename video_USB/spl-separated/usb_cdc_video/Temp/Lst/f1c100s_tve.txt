@@ -237,14 +237,14 @@
                   tve_enable PROC
 ;;;67     void tve_enable(void) {
 000290  e92d4010          PUSH     {r4,lr}
-;;;68         set32(TVE_BASE + TVE_DAC1, 0x1 << 0);
+;;;68         set32(TVE_BASE + TVE_DAC1, (0x1 << 0));
 000294  e59f0080          LDR      r0,|L1.796|
 000298  ebfffffe          BL       read32
 00029c  e3804001          ORR      r4,r0,#1
 0002a0  e1a01004          MOV      r1,r4
 0002a4  e59f0070          LDR      r0,|L1.796|
 0002a8  ebfffffe          BL       write32
-;;;69         set32(TVE_BASE + TVE_ENABLE, 0x1 << 0);
+;;;69         set32(TVE_BASE + TVE_ENABLE, (0x1 << 0));
 0002ac  e59f0114          LDR      r0,|L1.968|
 0002b0  ebfffffe          BL       read32
 0002b4  e3804001          ORR      r4,r0,#1
@@ -259,14 +259,14 @@
                   tve_disable PROC
 ;;;72     void tve_disable(void) {
 0002c8  e92d4010          PUSH     {r4,lr}
-;;;73         clear32(TVE_BASE + TVE_DAC1, 0x1 << 0);
+;;;73         clear32(TVE_BASE + TVE_DAC1, (0x1 << 0));
 0002cc  e59f0048          LDR      r0,|L1.796|
 0002d0  ebfffffe          BL       read32
 0002d4  e3c04001          BIC      r4,r0,#1
 0002d8  e1a01004          MOV      r1,r4
 0002dc  e59f0038          LDR      r0,|L1.796|
 0002e0  ebfffffe          BL       write32
-;;;74         clear32(TVE_BASE + TVE_ENABLE, 0x1 << 0);
+;;;74         clear32(TVE_BASE + TVE_ENABLE, (0x1 << 0));
 0002e4  e59f00dc          LDR      r0,|L1.968|
 0002e8  ebfffffe          BL       read32
 0002ec  e3c04001          BIC      r4,r0,#1

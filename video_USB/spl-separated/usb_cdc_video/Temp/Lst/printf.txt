@@ -837,11 +837,11 @@
 000828  e92d41f0          PUSH     {r4-r8,lr}
 00082c  e1a04000          MOV      r4,r0
 000830  e1a05001          MOV      r5,r1
-;;;640    #ifdef __GNUC__
+;;;640    //////#ifdef __GNUC__
 ;;;641    // accounting for a static analysis bug in GCC 6.x and earlier
-;;;642    #pragma GCC diagnostic push
-;;;643    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-;;;644    #endif
+;;;642    /////#pragma GCC diagnostic push
+;;;643    /////#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+;;;644    //////#endif
 ;;;645        return normalization.multiply ? normalized / normalization.raw_factor :
 000834  e5dd0028          LDRB     r0,[sp,#0x28]
 000838  e3500000          CMP      r0,#0
@@ -855,9 +855,9 @@
                   |L1.2136|
 000858  e8bd01f0          POP      {r4-r8}
 ;;;646                                        normalized * normalization.raw_factor;
-;;;647    #ifdef __GNUC__
-;;;648    #pragma GCC diagnostic pop
-;;;649    #endif
+;;;647    /////#ifdef __GNUC__
+;;;648    //////#pragma GCC diagnostic pop
+;;;649    //////#endif
 ;;;650    }
 00085c  e49df014          LDR      pc,[sp],#0x14
                   |L1.2144|

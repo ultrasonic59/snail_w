@@ -47,3 +47,4 @@ while(1) {
         lcd_printf("%08lX\n", val);
     }
 }
+

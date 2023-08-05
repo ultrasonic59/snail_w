@@ -14,7 +14,8 @@ static uint32_t pll_ddr_get_freq(void);
 /************** PLLs ***************/
 // Enable PLL
 inline void clk_pll_enable(pll_ch_e pll) {
-    write32(CCU_BASE + pll, (read32(CCU_BASE + pll) | (1 << 31)));
+    write32(CCU_BASE + pll, (read32(CCU_BASE + pll) 
+			|(uint32_t)(0x1 << 31)));
 }
 
 // Disable PLL
@@ -342,7 +343,7 @@ void clk_tvd_config(uint8_t div) { // TODO: source select
 // SD card controller clock
 uint32_t clk_sdc_config(uint32_t reg, uint32_t freq) {
     uint32_t in_freq = 0;
-    uint32_t reg_val = (1 << 31);
+    uint32_t reg_val = (uint32_t)(1 << 31);
 
     if(freq <= 24000000) {
         reg_val |= (0 << 24); // OSC24M

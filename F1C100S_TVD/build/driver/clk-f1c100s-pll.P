@@ -1,0 +1,16 @@
+build/driver/clk-f1c100s-pll.o: driver/clk-f1c100s-pll.c \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h \
+ driver/include/clk-f1c100s-pll.h \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h \
+ machine/include/core_types.h \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdbool.h \
+ machine/include/f1c100s/reg-ccu.h machine/include/io.h
+driver/clk-f1c100s-pll.c :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h :
+ driver/include/clk-f1c100s-pll.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h :
+ machine/include/core_types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdbool.h :
+ machine/include/f1c100s/reg-ccu.h machine/include/io.h :

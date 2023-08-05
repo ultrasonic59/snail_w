@@ -60,17 +60,17 @@
 ;;;253      }
 ;;;254    
 ;;;255      // when there is no built-in drivers BUILTIN_DRIVER_COUNT = 0 will cause -Wtype-limits warning
-;;;256    #ifdef __GNUC__
-;;;257    #pragma GCC diagnostic push
-;;;258    #pragma GCC diagnostic ignored "-Wtype-limits"
-;;;259    #endif
+;;;256    ////???#ifdef __GNUC__
+;;;257    ////???#pragma GCC diagnostic push
+;;;258    ////???#pragma GCC diagnostic ignored "-Wtype-limits"
+;;;259    ////???#endif
 ;;;260    
 ;;;261      // Built-in drivers
 ;;;262      if (drvid < BUILTIN_DRIVER_COUNT) return &_usbd_driver[drvid];
 ;;;263    
-;;;264    #ifdef __GNUC__
-;;;265    #pragma GCC diagnostic pop
-;;;266    #endif
+;;;264    ////???#ifdef __GNUC__
+;;;265    ////???#pragma GCC diagnostic pop
+;;;266    ////???#endif
 ;;;267    
 ;;;268      return NULL;
 ;;;269    }

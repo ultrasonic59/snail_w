@@ -35,3 +35,4 @@ void lcd_set_text_pos(uint16_t x, uint16_t y);
 void lcd_set_font(const lcd_font_t* fnt);
 
 #endif
+

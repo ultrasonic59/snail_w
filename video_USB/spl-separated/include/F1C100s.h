@@ -28,17 +28,17 @@ extern "C" {
 
 typedef void (*IRQHandleTypeDef)(void);
 
-uint8_t   f1c100s_intc_get_nirq(void);
-void      f1c100s_intc_dispatch(uint8_t nIRQ);
-void      f1c100s_intc_set_isr(uint8_t nIRQ, void (*handle)(void));
-void      f1c100s_intc_enable_irq(uint8_t nIRQ);
-uint8_t   f1c100s_intc_check_irq(uint8_t nIRQ);
-void      f1c100s_intc_disable_irq(uint8_t nIRQ);
-void      f1c100s_intc_unmask_irq(uint8_t nIRQ);
-void      f1c100s_intc_mask_irq(uint8_t nIRQ);
-void      f1c100s_intc_force_irq(uint8_t nIRQ);
-void      f1c100s_intc_clear_pend(uint8_t nIRQ);
-void      f1c100s_intc_init(void);
+extern uint8_t   f1c100s_intc_get_nirq(void);
+extern void      f1c100s_intc_dispatch(uint8_t nIRQ);
+extern void      f1c100s_intc_set_isr(uint8_t nIRQ, void (*handle)(void));
+extern void      f1c100s_intc_enable_irq(uint8_t nIRQ);
+extern uint8_t   f1c100s_intc_check_irq(uint8_t nIRQ);
+extern void      f1c100s_intc_disable_irq(uint8_t nIRQ);
+extern void      f1c100s_intc_unmask_irq(uint8_t nIRQ);
+extern void      f1c100s_intc_mask_irq(uint8_t nIRQ);
+extern void      f1c100s_intc_force_irq(uint8_t nIRQ);
+extern void      f1c100s_intc_clear_pend(uint8_t nIRQ);
+extern void      f1c100s_intc_init(void);
 
 #define I2C_M_TEN           0x0010    /* this is a ten bit chip address */
 #define I2C_M_RD            0x0001    /* read data, from slave to master */
@@ -69,15 +69,15 @@ int       f1c100s_twi_xfer(uint8_t mid, I2CMsg_TypeDef msgs[], int num);
 #define UART2_MID   (2)
 
 /* types declared by <f1c100s-uart.c> */
-bool_t   f1c100s_uart_init(uint8_t mid);
-int      f1c100s_uart_readFifo(uint8_t mid, uint8_t buf[], unsigned int max);
-void     f1c100s_uart_clearfifo(uint8_t mid);
-void     f1c100s_uart_setBaudrate(uint8_t mid, uint32_t baud);
-uint32_t f1c100s_uart_getBaudrate(uint8_t mid);
-void     f1c100s_uart_setRxCallback(uint8_t mid, void (*pf)(void));
-void     f1c100s_uart_setTxCallback(uint8_t mid, void (*pf)(void));
-void     f1c100s_uart_asyncTx(uint8_t mid, const void* ptr, unsigned int len);
-bool_t   f1c100s_uart_isTxEnd(uint8_t mid);
+extern bool_t   f1c100s_uart_init(uint8_t mid);
+extern int      f1c100s_uart_readFifo(uint8_t mid, uint8_t buf[], unsigned int max);
+extern void     f1c100s_uart_clearfifo(uint8_t mid);
+extern void     f1c100s_uart_setBaudrate(uint8_t mid, uint32_t baud);
+extern uint32_t f1c100s_uart_getBaudrate(uint8_t mid);
+extern void     f1c100s_uart_setRxCallback(uint8_t mid, void (*pf)(void));
+extern void     f1c100s_uart_setTxCallback(uint8_t mid, void (*pf)(void));
+extern void     f1c100s_uart_asyncTx(uint8_t mid, const void* ptr, unsigned int len);
+extern bool_t   f1c100s_uart_isTxEnd(uint8_t mid);
 
 #ifdef __cplusplus
 }

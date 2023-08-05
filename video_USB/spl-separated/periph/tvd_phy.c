@@ -4,7 +4,9 @@
  *  Created on: 2018Äê12ÔÂ1ÈÕ
  *      Author: VeiLiang
  */
-#include"tvd_reg.h"
+#include <stdio.h>
+ 
+#include "tvd_reg.h"
 #include "tvd.h"
 
 void tvd_open_clock(void)
@@ -312,7 +314,8 @@ void tvd_irq_disable(unsigned int id,tvd_irq_t irq)
 
 int tvd_irq_status_get(unsigned int id,tvd_irq_t irq)
 {
-	unsigned int reg_val, ret = -1;
+	unsigned int reg_val;
+	int ret = -1;
 	switch(irq){
 		case TVD_FRAME_DONE:
 			reg_val = TVD_RegRead(TVD_REG_BASE+0x0094);//+0x140
@@ -609,7 +612,7 @@ void tvd_bsp_init(int id)
 
 void tvd_debugdump(int id)
 {
-	int i;
+////	int i;
 //	 for( i = 0 ; i < 0xfff; i+=4 )
 //		{
 //			//TVD_Printf("Base+%03x : 0x%08x\n",i,TVD_RegRead(TVD_REG_BASE+0x0008));

@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: arm-eabi-gcc build active file",
+			"command": "make.exe",
+			"args": [
+				"-j8",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+			},
+			"problemMatcher": {
+				"fileLocation": ["relative", "${workspaceFolder}"],
+				"pattern": {
+					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "sunxi-fel download bin file",
+			"command": "${workspaceFolder}\\tools\\sunxitools\\sunxi-fel.exe",
+			"args": [
+                "-p",
+                "spiflash-write",
+                "0x0000",
+                "firmware.bin",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\build\\",
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+		}
+	]
+}

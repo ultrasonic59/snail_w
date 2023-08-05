@@ -65,11 +65,11 @@ void tve_init(tve_mode_e mode) {
 }
 
 void tve_enable(void) {
-    set32(TVE_BASE + TVE_DAC1, 0x1 << 0);
-    set32(TVE_BASE + TVE_ENABLE, 0x1 << 0);
+    set32(TVE_BASE + TVE_DAC1, (0x1 << 0));
+    set32(TVE_BASE + TVE_ENABLE, (0x1 << 0));
 }
 
 void tve_disable(void) {
-    clear32(TVE_BASE + TVE_DAC1, 0x1 << 0);
-    clear32(TVE_BASE + TVE_ENABLE, 0x1 << 0);
+    clear32(TVE_BASE + TVE_DAC1, (0x1 << 0));
+    clear32(TVE_BASE + TVE_ENABLE, (0x1 << 0));
 }

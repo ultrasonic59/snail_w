@@ -31,281 +31,137 @@ assembling uboot.s...
 assembling mmu_a.s...
 assembling spl.s...
 assembling startup_F1C100s.s...
+assembling ubox_a.s...
 compiling mmu_c.c...
 compiling sys-uart.c...
-assembling ubox_a.s...
 compiling Retarget.c...
 compiling target_F1C100s.c...
 compiling f1c100s-intc.c...
+compiling clk-f1c100s-pll.c...
 compiling f1c100s-uart.c...
 compiling efx_main.c...
-compiling clk-f1c100s-pll.c...
 compiling reset-f1c100s.c...
 compiling gpio-f1c100s.c...
 compiling pwm-f1c100s.c...
-compiling f1c100s_tvd.c...
-.\..\periph\include\f1c100s_tvd.h(157): warning:  #1-D: last line of file ends without a newline
-  #endif ////__F1C100S_TVD_H_
-..\periph\f1c100s_tvd.c: 1 warning, 0 errors
-compiling f1c100s_clock.c...
-..\periph\f1c100s_clock.c(17): warning:  #61-D: integer operation result is out of range
-      write32(CCU_BASE + pll, (read32(CCU_BASE + pll) | (1 << 31)));
-..\periph\f1c100s_clock.c(17): warning:  #68-D: integer conversion resulted in a change of sign
-      write32(CCU_BASE + pll, (read32(CCU_BASE + pll) | (1 << 31)));
-..\periph\f1c100s_clock.c(22): warning:  #61-D: integer operation result is out of range
-      write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(1 << 31)));
-..\periph\f1c100s_clock.c(103): warning:  #61-D: integer operation result is out of range
-      val &= (1 << 31) | (1 << 28);
-..\periph\f1c100s_clock.c(130): warning:  #61-D: integer operation result is out of range
-      val &= (1 << 31) | (1 << 28);
-..\periph\f1c100s_clock.c(156): warning:  #61-D: integer operation result is out of range
-      val &= (1 << 31) | (1 << 28);
-..\periph\f1c100s_clock.c(188): warning:  #61-D: integer operation result is out of range
-      val &= (1 << 31) | (1 << 28);
-..\periph\f1c100s_clock.c(231): warning:  #188-D: enumerated type mixed with another type
-      clk_source_cpu_e src = (read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3;
-..\periph\f1c100s_clock.c(272): warning:  #188-D: enumerated type mixed with another type
-      clk_source_ahb_e src = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3;
-..\periph\f1c100s_clock.c(300): warning:  #188-D: enumerated type mixed with another type
-      clk_div_apb_e div = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3;
-..\periph\f1c100s_clock.c(345): warning:  #61-D: integer operation result is out of range
-      uint32_t reg_val = (1 << 31);
-..\periph\f1c100s_clock.c(345): warning:  #68-D: integer conversion resulted in a change of sign
-      uint32_t reg_val = (1 << 31);
-..\periph\f1c100s_clock.c: 12 warnings, 0 errors
 compiling fb-f1c100s.c...
-compiling f1c100s_tve.c...
-..\periph\f1c100s_tve.c(73): warning:  #68-D: integer conversion resulted in a change of sign
-      clear32(TVE_BASE + TVE_DAC1, 0x1 << 0);
-..\periph\f1c100s_tve.c(74): warning:  #68-D: integer conversion resulted in a change of sign
-      clear32(TVE_BASE + TVE_ENABLE, 0x1 << 0);
-..\periph\f1c100s_tve.c: 2 warnings, 0 errors
-compiling f1c100s_gpio.c...
+compiling f1c100s_clock.c...
+..\periph\f1c100s_clock.c(18): warning:  #61-D: integer operation result is out of range
+  			|(uint32_t)(0x1 << 31)));
+..\periph\f1c100s_clock.c(23): warning:  #61-D: integer operation result is out of range
+      write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(1 << 31)));
+..\periph\f1c100s_clock.c(104): warning:  #61-D: integer operation result is out of range
+      val &= (1 << 31) | (1 << 28);
+..\periph\f1c100s_clock.c(131): warning:  #61-D: integer operation result is out of range
+      val &= (1 << 31) | (1 << 28);
+..\periph\f1c100s_clock.c(157): warning:  #61-D: integer operation result is out of range
+      val &= (1 << 31) | (1 << 28);
+..\periph\f1c100s_clock.c(189): warning:  #61-D: integer operation result is out of range
+      val &= (1 << 31) | (1 << 28);
+..\periph\f1c100s_clock.c(232): warning:  #188-D: enumerated type mixed with another type
+      clk_source_cpu_e src = (read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3;
+..\periph\f1c100s_clock.c(273): warning:  #188-D: enumerated type mixed with another type
+      clk_source_ahb_e src = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3;
+..\periph\f1c100s_clock.c(301): warning:  #188-D: enumerated type mixed with another type
+      clk_div_apb_e div = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3;
+..\periph\f1c100s_clock.c(346): warning:  #61-D: integer operation result is out of range
+      uint32_t reg_val = (uint32_t)(1 << 31);
+..\periph\f1c100s_clock.c: 10 warnings, 0 errors
+compiling RTX_Conf_F1C100s.c...
+compiling f1c100s_tvd.c...
 compiling f1c100s_pwm.c...
 ..\periph\f1c100s_pwm.c(14): warning:  #61-D: integer operation result is out of range
       uint32_t temp = read32(reg) &((uint32_t) ~(0xFFFF << 16));
 ..\periph\f1c100s_pwm.c: 1 warning, 0 errors
 compiling f1c100s_de.c...
-..\periph\f1c100s_de.c(123): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(125): warning:  #61-D: integer operation result is out of range
       uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(0xFF << 24);
-..\periph\f1c100s_de.c(280): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(283): warning:  #61-D: integer operation result is out of range
           set32(TCON_BASE + TCON0_CTRL, (1 << 31));
-..\periph\f1c100s_de.c(280): warning:  #68-D: integer conversion resulted in a change of sign
+..\periph\f1c100s_de.c(283): warning:  #68-D: integer conversion resulted in a change of sign
           set32(TCON_BASE + TCON0_CTRL, (1 << 31));
-..\periph\f1c100s_de.c(282): warning:  #61-D: integer operation result is out of range
-          set32(TCON_BASE + TCON1_CTRL, (1 << 31));
-..\periph\f1c100s_de.c(282): warning:  #68-D: integer conversion resulted in a change of sign
-          set32(TCON_BASE + TCON1_CTRL, (1 << 31));
 ..\periph\f1c100s_de.c(285): warning:  #61-D: integer operation result is out of range
-      set32(TCON_BASE + TCON_CTRL, (1 << 31));
+          set32(TCON_BASE + TCON1_CTRL, (1 << 31));
 ..\periph\f1c100s_de.c(285): warning:  #68-D: integer conversion resulted in a change of sign
+          set32(TCON_BASE + TCON1_CTRL, (1 << 31));
+..\periph\f1c100s_de.c(288): warning:  #61-D: integer operation result is out of range
       set32(TCON_BASE + TCON_CTRL, (1 << 31));
-..\periph\f1c100s_de.c(293): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(288): warning:  #68-D: integer conversion resulted in a change of sign
+      set32(TCON_BASE + TCON_CTRL, (1 << 31));
+..\periph\f1c100s_de.c(296): warning:  #61-D: integer operation result is out of range
       clear32(TCON_BASE + TCON_CTRL, (1 << 31));
-..\periph\f1c100s_de.c(305): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(309): warning:  #61-D: integer operation result is out of range
       set32(DEFE_BASE + DEFE_EN, (1 << 31)); // Enable CPU access
-..\periph\f1c100s_de.c(305): warning:  #68-D: integer conversion resulted in a change of sign
+..\periph\f1c100s_de.c(309): warning:  #68-D: integer conversion resulted in a change of sign
       set32(DEFE_BASE + DEFE_EN, (1 << 31)); // Enable CPU access
-..\periph\f1c100s_de.c(320): warning:  #2532-D: support for trigraphs is disabled
+..\periph\f1c100s_de.c(325): warning:  #2532-D: support for trigraphs is disabled
           write32(DEFE_BASE + DEFE_V_FACT, (2 << 16)); // V scale: 1/2 (??)
-..\periph\f1c100s_de.c(346): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(335): warning:  #223-D: function "printf" declared implicitly
+  		printf("DEFE_WB_ADDR: [%x][%x]\n",(uint32_t)frame_buffer,tmpbuff[5]);
+..\periph\f1c100s_de.c(358): warning:  #61-D: integer operation result is out of range
       clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
-..\periph\f1c100s_de.c(361): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(373): warning:  #61-D: integer operation result is out of range
       write32(TCON_BASE + TCON0_DCLK, (0xf << 28) | (val << 0));
-..\periph\f1c100s_de.c(361): warning:  #68-D: integer conversion resulted in a change of sign
+..\periph\f1c100s_de.c(373): warning:  #68-D: integer conversion resulted in a change of sign
       write32(TCON_BASE + TCON0_DCLK, (0xf << 28) | (val << 0));
-..\periph\f1c100s_de.c(403): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(415): warning:  #61-D: integer operation result is out of range
       write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (1 << 31));
-..\periph\f1c100s_de.c(403): warning:  #68-D: integer conversion resulted in a change of sign
+..\periph\f1c100s_de.c(415): warning:  #68-D: integer conversion resulted in a change of sign
       write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (1 << 31));
-..\periph\f1c100s_de.c(453): warning:  #61-D: integer operation result is out of range
+..\periph\f1c100s_de.c(465): warning:  #61-D: integer operation result is out of range
       write32(DEBE_BASE + TCON0_DCLK, (0xF << 28));
-..\periph\f1c100s_de.c(453): warning:  #68-D: integer conversion resulted in a change of sign
+..\periph\f1c100s_de.c(465): warning:  #68-D: integer conversion resulted in a change of sign
       write32(DEBE_BASE + TCON0_DCLK, (0xF << 28));
-..\periph\f1c100s_de.c: 18 warnings, 0 errors
-compiling RTX_Conf_F1C100s.c...
+..\periph\f1c100s_de.c: 19 warnings, 0 errors
+compiling f1c100s_gpio.c...
+compiling f1c100s_tve.c...
 compiling tvd_dev.c...
-.\..\periph\include\tvd.h(190): warning:  #2532-D: support for trigraphs is disabled
-  	 * ?????????4bit(?0???)?1??P???0??N?*/
-..\periph\tvd_dev.c(22): warning:  #223-D: function "printf" declared implicitly
-  	TVD_Printf("tvd irq\n");
-..\periph\tvd_dev.c(33): warning:  #223-D: function "memcpy" declared implicitly
-  	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
-..\periph\tvd_dev.c(35): warning:  #223-D: function "tvd_irq_status_clear" declared implicitly
+..\periph\tvd_dev.c(39): warning:  #223-D: function "tvd_irq_status_clear" declared implicitly
   	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
-..\periph\tvd_dev.c(49): warning:  #223-D: function "f1c100s_intc_set_isr" declared implicitly
+..\periph\tvd_dev.c(53): warning:  #223-D: function "f1c100s_intc_set_isr" declared implicitly
     f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
-..\periph\tvd_dev.c(50): warning:  #223-D: function "f1c100s_intc_enable_irq" declared implicitly
+..\periph\tvd_dev.c(54): warning:  #223-D: function "f1c100s_intc_enable_irq" declared implicitly
     f1c100s_intc_enable_irq(IRQ_TVD);
-..\periph\tvd_dev.c(52): warning:  #223-D: function "printf" declared implicitly
-  	printf("request_irq \n");
-..\periph\tvd_dev.c(54): warning:  #223-D: function "tvd_bsp_init" declared implicitly
+..\periph\tvd_dev.c(58): warning:  #223-D: function "tvd_bsp_init" declared implicitly
   	tvd_bsp_init(0);//bsp init like open clk ,reset ...
-..\periph\tvd_dev.c(56): warning:  #223-D: function "tvd_config" declared implicitly
+..\periph\tvd_dev.c(60): warning:  #223-D: function "tvd_config" declared implicitly
   	tvd_config(TVD_SOURCE_CVBS,TVD_SOURCE_PAL,TVD_PL_YUV420);
-..\periph\tvd_dev.c(59): warning:  #223-D: function "tvd_set_fmt" declared implicitly
+..\periph\tvd_dev.c(63): warning:  #223-D: function "tvd_set_fmt" declared implicitly
   	tvd_set_fmt(id,TVD_PL_YUV420);
-..\periph\tvd_dev.c(61): warning:  #223-D: function "tvd_set_addr_y" declared implicitly
+..\periph\tvd_dev.c(65): warning:  #223-D: function "tvd_set_addr_y" declared implicitly
   	tvd_set_addr_y(id,tvd_y_buf);
-..\periph\tvd_dev.c(62): warning:  #223-D: function "tvd_set_addr_c" declared implicitly
+..\periph\tvd_dev.c(66): warning:  #223-D: function "tvd_set_addr_c" declared implicitly
   	tvd_set_addr_c(id,tvd_c_buf);
-..\periph\tvd_dev.c(63): warning:  #223-D: function "tvd_set_blue_flag" declared implicitly
+..\periph\tvd_dev.c(67): warning:  #223-D: function "tvd_set_blue_flag" declared implicitly
   	tvd_set_blue_flag(0);
-..\periph\tvd_dev.c(65): warning:  #223-D: function "tvd_irq_status_clear" declared implicitly
+..\periph\tvd_dev.c(69): warning:  #223-D: function "tvd_irq_status_clear" declared implicitly
   	tvd_irq_status_clear(id,TVD_FRAME_DONE);
-..\periph\tvd_dev.c(68): warning:  #223-D: function "tvd_irq_enable" declared implicitly
-  	tvd_irq_enable(id,TVD_FRAME_DONE);
-..\periph\tvd_dev.c(71): warning:  #223-D: function "tvd_capture_on" declared implicitly
+..\periph\tvd_dev.c(75): warning:  #223-D: function "tvd_capture_on" declared implicitly
   	tvd_capture_on(id);
-..\periph\tvd_dev.c(46): warning:  #177-D: variable "retval"  was declared but never referenced
-  	int		   	retval  = 0;
-..\periph\tvd_dev.c: 17 warnings, 0 errors
+..\periph\tvd_dev.c: 11 warnings, 0 errors
 compiling tvd_phy.c...
-.\..\periph\include\tvd.h(190): warning:  #2532-D: support for trigraphs is disabled
-  	 * ?????????4bit(?0???)?1??P???0??N?*/
-..\periph\tvd_phy.c(315): warning:  #68-D: integer conversion resulted in a change of sign
-  	unsigned int reg_val, ret = -1;
-..\periph\tvd_phy.c(322): warning:  #223-D: function "printf" declared implicitly
-                  	TVD_Printf("tvd get irq status error\n");
-..\periph\tvd_phy.c(623): warning:  #223-D: function "printf" declared implicitly
-  	TVD_Printf("TVD_CLK_REG: 0x%08x\n",TVD_RegRead(TVD_CLK_REG));
-..\periph\tvd_phy.c(612): warning:  #177-D: variable "i"  was declared but never referenced
-  	int i;
-..\periph\tvd_phy.c: 5 warnings, 0 errors
 compiling usb_desc.c...
 compiling video_task.c...
-users\video_task.c(99): warning:  #177-D: variable "pbuf"  was declared but never referenced
-  uint32_t *pbuf= (uint32_t *)&bar_color[4][0];
-users\video_task.c(47): warning:  #177-D: function "_fill_color_bar"  was declared but never referenced
-  static void _fill_color_bar(uint8_t *buffer, unsigned start_position)
-users\video_task.c: 2 warnings, 0 errors
-compiling lcd_task.c...
-.\..\periph\include\f1c100s_tvd.h(157): warning:  #1-D: last line of file ends without a newline
-  #endif ////__F1C100S_TVD_H_
-.\..\display\display.h(9): warning:  #1-D: last line of file ends without a newline
-  #endif
-.\..\lib\printf\printf.h(124): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
-.\..\lib\printf\printf.h(126): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
-.\..\lib\printf\printf.h(144): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
-.\..\lib\printf\printf.h(146): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
-.\..\lib\printf\printf.h(166): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(168): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
-.\..\lib\printf\printf.h(187): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(193): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      va_list arg) ATTR_VPRINTF(3);
-.\..\lib\display_gfx\lcd.h(37): warning:  #1-D: last line of file ends without a newline
-  #endif
-.\..\periph\include\tvd.h(190): warning:  #2532-D: support for trigraphs is disabled
-  	 * ?????????4bit(?0???)?1??P???0??N?*/
-users\lcd_task.c(49): warning:  #1-D: last line of file ends without a newline
-  }
-users\lcd_task.c: 13 warnings, 0 errors
-compiling usrentry.c...
-.\..\periph\include\f1c100s_tvd.h(157): warning:  #1-D: last line of file ends without a newline
-  #endif ////__F1C100S_TVD_H_
-.\..\display\display.h(9): warning:  #1-D: last line of file ends without a newline
-  #endif
-.\..\lib\printf\printf.h(124): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
-.\..\lib\printf\printf.h(126): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
-.\..\lib\printf\printf.h(144): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
-.\..\lib\printf\printf.h(146): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
-.\..\lib\printf\printf.h(166): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(168): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
-.\..\lib\printf\printf.h(187): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(193): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      va_list arg) ATTR_VPRINTF(3);
-.\..\lib\display_gfx\lcd.h(37): warning:  #1-D: last line of file ends without a newline
-  #endif
-.\..\periph\include\tvd.h(190): warning:  #2532-D: support for trigraphs is disabled
-  	 * ?????????4bit(?0???)?1??P???0??N?*/
-users\usrentry.c(103): warning:  #177-D: variable "p_val"  was declared but never referenced
-  	uint32_t *p_val;
-users\usrentry.c: 13 warnings, 0 errors
 compiling usbd_control.c...
-compiling cdc_device.c...
+compiling usrentry.c...
 compiling tusb.c...
+compiling cdc_device.c...
+compiling lcd_task.c...
 compiling tusb_fifo.c...
 compiling display.c...
-..\display\display.h(9): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\display\display.c: 1 warning, 0 errors
 compiling usbd.c...
-..\tinyusb\src\device\usbd.c(257): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic push
-..\tinyusb\src\device\usbd.c(258): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic ignored "-Wtype-limits"
-..\tinyusb\src\device\usbd.c(265): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic pop
-..\tinyusb\src\device\usbd.c: 3 warnings, 0 errors
+compiling lcd.c...
 compiling lcd_font.c...
 compiling dcd_sunxi_musb.c...
-compiling lcd.c...
-.\..\lib\printf\printf.h(124): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
-.\..\lib\printf\printf.h(126): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
-.\..\lib\printf\printf.h(144): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
-.\..\lib\printf\printf.h(146): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
-.\..\lib\printf\printf.h(166): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(168): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
-.\..\lib\printf\printf.h(187): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(193): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      va_list arg) ATTR_VPRINTF(3);
-..\lib\display_gfx\lcd.h(37): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\lib\display_gfx\lcd.c: 9 warnings, 0 errors
 compiling printf.c...
-.\..\lib\printf\printf.h(124): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int printf_(const char* format, ...) ATTR_PRINTF(1, 2);
-.\..\lib\printf\printf.h(126): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vprintf_(const char* format, va_list arg) ATTR_VPRINTF(1);
-.\..\lib\printf\printf.h(144): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int sprintf_(char* s, const char* format, ...) ATTR_PRINTF(2, 3);
-.\..\lib\printf\printf.h(146): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsprintf_(char* s, const char* format, va_list arg) ATTR_VPRINTF(2);
-.\..\lib\printf\printf.h(166): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int snprintf_(char* s, size_t count, const char* format, ...) ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(168): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-  int vsnprintf_(char* s, size_t count, const char* format, va_list arg) ATTR_VPRINTF(3);
-.\..\lib\printf\printf.h(187): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      ATTR_PRINTF(3, 4);
-.\..\lib\printf\printf.h(193): warning:  #1362-D: unrecognized format function type "gnu_printf" ignored
-      va_list arg) ATTR_VPRINTF(3);
-..\lib\printf\printf.c(642): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic push
-..\lib\printf\printf.c(643): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-..\lib\printf\printf.c(648): warning:  #2803-D: unrecognized GCC pragma
-  #pragma GCC diagnostic pop
-..\lib\printf\printf.c: 11 warnings, 0 errors
 compiling video_device.c...
 linking...
-Program Size: Code=91292 RO-data=18184 RW-data=164 ZI-data=7806696  
+Program Size: Code=91160 RO-data=18148 RW-data=164 ZI-data=8789696  
 After Build - User command #1: fromelf --bincombined --output="W:\proj\velograph\snail_w\video_USB\spl-separated\usb_cdc_video\output\spl-separated.bin" .\Temp\Obj\spl-separated.axf
 After Build - User command #2: W:\proj\velograph\snail_w\video_USB\spl-separated\usb_cdc_video\output\postscript.bat spl-separated.bin
 ====== uboot head added ======
 The bootloader head has been fixed, spl size is 7168 bytes.
-".\Temp\Obj\spl-separated.axf" - 0 Error(s), 108 Warning(s).
-Build Time Elapsed:  00:00:03
+".\Temp\Obj\spl-separated.axf" - 0 Error(s), 41 Warning(s).
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

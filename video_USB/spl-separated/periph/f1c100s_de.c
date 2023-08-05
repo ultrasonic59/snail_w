@@ -88,7 +88,8 @@ void debe_layer_set_size(uint8_t layer, uint16_t w, uint16_t h) {
 }
 
 void debe_layer_set_mode(uint8_t layer, debe_color_mode_e mode) {
-    if(layer > 3) return;
+    if(layer > 3) 
+			return;
 
     if(mode == DEBE_MODE_DEFE_VIDEO) {
         uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(3 << 1);
@@ -114,7 +115,8 @@ void debe_layer_set_mode(uint8_t layer, debe_color_mode_e mode) {
 
 // Set framebufer address
 void debe_layer_set_addr(uint8_t layer, void* buf) {
-    if(layer > 3) return;
+    if(layer > 3) 
+			return;
     write32(DEBE_BASE + DEBE_LAY_ADDR + layer * 4, ((uint32_t)buf) << 3);
 }
 
@@ -131,7 +133,8 @@ void debe_layer_set_alpha(uint8_t layer, uint8_t alpha) {
 }
 
 static void debe_update_linewidth(uint8_t layer) {
-    if(layer > 3) return;
+    if(layer > 3) 
+			return;
     uint32_t val = de.layer[layer].width * de.layer[layer].bits_per_pixel;
     write32(DEBE_BASE + DEBE_LAY_STRIDE + layer * 4, val);
 }
@@ -298,6 +301,7 @@ void de_diable(void) {
 void debe_load(debe_reg_update_e mode) {
     write32(DEBE_BASE + DEBE_REGBUF_CTRL, mode);
 }
+extern	uint8_t frame_buffer[];
 
 // Initialize DEFE in semi-planar YUV 4:2:2 input mode
 void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* buf_uv) {
@@ -312,17 +316,24 @@ void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* bu
     write32(DEFE_BASE + DEFE_STRIDE1, in_w);
 
     write32(DEFE_BASE + DEFE_IN_SIZE, (in_w - 1) | ((in_h - 1) << 16)); // Out size = In size
-    write32(DEFE_BASE + DEFE_OUT_SIZE, (in_w - 1) | ((in_h - 1) << 16));
-    write32(DEFE_BASE + DEFE_H_FACT, (1 << 16)); // H scale: 1
+   write32(DEFE_BASE + DEFE_OUT_SIZE, (in_w - 1) | ((in_h - 1) << 16));
+ ////  write32(DEFE_BASE + DEFE_OUT_SIZE, (599) | ((799) << 16));
+   write32(DEFE_BASE + DEFE_H_FACT, (1 << 16)); // H scale: 1
     if(de.mode == DE_LCD)
         write32(DEFE_BASE + DEFE_V_FACT, (1 << 16)); // V scale: 1
     else if(de.mode == DE_TV)
         write32(DEFE_BASE + DEFE_V_FACT, (2 << 16)); // V scale: 1/2 (??)
 
     write32(DEFE_BASE + DEFE_IN_FMT, (2 << 8) | (1 << 4)); // UV combined | 422
-    set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)); //??
+   set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)); //??
+  ////  set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)|(6 << 0)); //??
     //write32(DEFE_BASE+DEFE_FIELD_CTRL, (1 << 12)); //?
-
+		{
+			uint32_t *tmpbuff=(uint32_t*)frame_buffer;
+		tmpbuff[5]=0x1234;
+		    write32(DEFE_BASE + DEFE_WB_ADDR,(uint32_t)frame_buffer); // 
+		printf("DEFE_WB_ADDR: [%x][%x]\n",(uint32_t)frame_buffer,tmpbuff[5]);
+		}
     for(uint8_t i = 0; i < 4; i++) // Color conversion table
     {
         write32(DEFE_BASE + DEFE_CSC_COEF + i * 4 + 0 * 4, csc_tab[i]);
@@ -343,6 +354,7 @@ void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* bu
     //    }
     //    clear32(DEFE_BASE+DEFE_FRM_CTRL, (1 << 23)); // Disable CPU access to filter RAM (enable filter?)
 
+ /////   clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
     clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
     set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 0)); // Registers ready
     set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 16)); // Start frame processing

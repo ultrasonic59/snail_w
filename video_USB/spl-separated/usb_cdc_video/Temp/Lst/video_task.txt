@@ -5,382 +5,155 @@
                           AREA ||.text||, CODE, READONLY, ALIGN=2
 
                   board_millis PROC
-;;;14     
-;;;15     uint32_t board_millis(void)
-000000  e59f026c          LDR      r0,|L1.628|
-;;;16     {
-;;;17     ////  return os_time_get();
-;;;18     return 	sys_tick;
+;;;15     
+;;;16     uint32_t board_millis(void)
+000000  e59f00e8          LDR      r0,|L1.240|
+;;;17     {
+;;;18     ////  return os_time_get();
+;;;19     return 	sys_tick;
 000004  e5900000          LDR      r0,[r0,#0]  ; os_time
-;;;19     }
+;;;20     }
 000008  e12fff1e          BX       lr
-;;;20     #if 0
-                          ENDP
-
-                  _fill_color_bar PROC
-;;;46     
-;;;47     static void _fill_color_bar(uint8_t *buffer, unsigned start_position)
-00000c  e92d5ff0          PUSH     {r4-r12,lr}
-;;;48     {
-000010  e1a04000          MOV      r4,r0
-000014  e1a07001          MOV      r7,r1
-;;;49     	uint8_t btmp=0;
-000018  e3a08000          MOV      r8,#0
-;;;50       /* EBU color bars
-;;;51        * See also https://stackoverflow.com/questions/6939422 */
-;;;52     #if 0	
-;;;53       static uint8_t const bar_color[8][4] = {
-;;;54         /*  Y,   U,   Y,   V */
-;;;55         { 235, 128, 235, 128}, /* 100% White */
-;;;56         { 219,  16, 219, 138}, /* Yellow */
-;;;57         { 188, 154, 188,  16}, /* Cyan */
-;;;58         { 173,  42, 173,  26}, /* Green */
-;;;59         {  78, 214,  78, 230}, /* Magenta */
-;;;60         {  63, 102,  63, 240}, /* Red */
-;;;61         {  32, 240,  32, 118}, /* Blue */
-;;;62         {  16, 128,  16, 128}, /* Black */
-;;;63       };
-;;;64     #endif	
-;;;65       uint8_t *p;
-;;;66     
-;;;67       /* Generate the 1st line */
-;;;68       uint8_t *end = &buffer[FRAME_WIDTH * 2];
-00001c  e284be5a          ADD      r11,r4,#0x5a0
-;;;69       unsigned idx = (FRAME_WIDTH / 2 - 1) - (start_position % (FRAME_WIDTH / 2));
-000020  e3a01f5a          MOV      r1,#0x168
-000024  e1a00007          MOV      r0,r7
-000028  ebfffffe          BL       __aeabi_uidivmod
-00002c  e59f0244          LDR      r0,|L1.632|
-000030  e0409001          SUB      r9,r0,r1
-;;;70       p = &buffer[idx * 4];
-000034  e0845109          ADD      r5,r4,r9,LSL #2
-;;;71       for (unsigned i = 0; i < 8; ++i) {
-000038  e3a06000          MOV      r6,#0
-00003c  ea000013          B        |L1.144|
-                  |L1.64|
-;;;72         for (int j = 0; j < FRAME_WIDTH / (2 * 8); ++j) {
-000040  e3a0a000          MOV      r10,#0
-000044  ea00000e          B        |L1.132|
-                  |L1.72|
-;;;73     			btmp=i+tst_offs;
-000048  e59f022c          LDR      r0,|L1.636|
-00004c  e5d00000          LDRB     r0,[r0,#0]  ; tst_offs
-000050  e0800006          ADD      r0,r0,r6
-000054  e20080ff          AND      r8,r0,#0xff
-;;;74     			btmp&=0x7;
-000058  e2088007          AND      r8,r8,#7
-;;;75           memcpy(p, &bar_color[btmp], 4);
-00005c  e59f021c          LDR      r0,|L1.640|
-000060  e0801108          ADD      r1,r0,r8,LSL #2
-000064  e3a02004          MOV      r2,#4
-000068  e1a00005          MOV      r0,r5
-00006c  ebfffffe          BL       __aeabi_memcpy
-;;;76           p += 4;
-000070  e2855004          ADD      r5,r5,#4
-;;;77           if (end <= p) {
-000074  e15b0005          CMP      r11,r5
-000078  8a000000          BHI      |L1.128|
-;;;78             p = buffer;
-00007c  e1a05004          MOV      r5,r4
-                  |L1.128|
-000080  e28aa001          ADD      r10,r10,#1            ;72
-                  |L1.132|
-000084  e35a002d          CMP      r10,#0x2d             ;72
-000088  baffffee          BLT      |L1.72|
-00008c  e2866001          ADD      r6,r6,#1              ;71
-                  |L1.144|
-000090  e3560008          CMP      r6,#8                 ;71
-000094  3affffe9          BCC      |L1.64|
-;;;79           }
-;;;80         }
-;;;81       }
-;;;82       /* Duplicate the 1st line to the others */
-;;;83       p = &buffer[FRAME_WIDTH * 2];
-000098  e2845e5a          ADD      r5,r4,#0x5a0
-;;;84       for (unsigned i = 1; i < FRAME_HEIGHT; ++i) {
-00009c  e3a06001          MOV      r6,#1
-0000a0  ea000005          B        |L1.188|
-                  |L1.164|
-;;;85         memcpy(p, buffer, FRAME_WIDTH * 2);
-0000a4  e3a02e5a          MOV      r2,#0x5a0
-0000a8  e1a01004          MOV      r1,r4
-0000ac  e1a00005          MOV      r0,r5
-0000b0  ebfffffe          BL       __aeabi_memcpy
-;;;86         p += FRAME_WIDTH * 2;
-0000b4  e2855e5a          ADD      r5,r5,#0x5a0
-0000b8  e2866001          ADD      r6,r6,#1              ;84
-                  |L1.188|
-0000bc  e3560d09          CMP      r6,#0x240             ;84
-0000c0  3afffff7          BCC      |L1.164|
-;;;87       }
-;;;88     	tst_offs++;
-0000c4  e59f01b0          LDR      r0,|L1.636|
-0000c8  e5d00000          LDRB     r0,[r0,#0]  ; tst_offs
-0000cc  e2800001          ADD      r0,r0,#1
-0000d0  e59f11a4          LDR      r1,|L1.636|
-0000d4  e5c10000          STRB     r0,[r1,#0]  ; tst_offs
-;;;89     }
-0000d8  e8bd9ff0          POP      {r4-r12,pc}
-;;;90     extern uint8_t fb_y[];
-                          ENDP
-
-                  fill_color_bar PROC
-;;;93     
-;;;94     static void fill_color_bar(uint8_t *buffer, unsigned start_position)
-0000dc  e92d40f0          PUSH     {r4-r7,lr}
-;;;95     {
-0000e0  e1a03000          MOV      r3,r0
-0000e4  e1a06001          MOV      r6,r1
-;;;96     uint8_t *p;
-;;;97     	unsigned yy=0;
-0000e8  e3a01000          MOV      r1,#0
-;;;98     	unsigned cc=0;
-0000ec  e3a02000          MOV      r2,#0
-;;;99     uint32_t *pbuf= (uint32_t *)&bar_color[4][0];
-0000f0  e59f518c          LDR      r5,|L1.644|
-;;;100    	p = &buffer[0];
-0000f4  e1a00003          MOV      r0,r3
-;;;101    for (unsigned i = 0; i < FRAME_HEIGHT; ++i) {
-0000f8  e3a0c000          MOV      r12,#0
-0000fc  ea000014          B        |L1.340|
-                  |L1.256|
-;;;102    		for(unsigned j = 0; j < FRAME_WIDTH*2; j++)
-000100  e3a04000          MOV      r4,#0
-000104  ea00000f          B        |L1.328|
-                  |L1.264|
-;;;103    		{
-;;;104    		*p++	= fb_y[yy];
-000108  e59f7178          LDR      r7,|L1.648|
-00010c  e7d77001          LDRB     r7,[r7,r1]
-000110  e4c07001          STRB     r7,[r0],#1
-;;;105    		*p++	= fb_c[cc];
-000114  e59f7170          LDR      r7,|L1.652|
-000118  e7d77002          LDRB     r7,[r7,r2]
-00011c  e4c07001          STRB     r7,[r0],#1
-;;;106    		yy++;	
-000120  e2811001          ADD      r1,r1,#1
-;;;107    		*p++	= fb_y[yy];
-000124  e59f715c          LDR      r7,|L1.648|
-000128  e7d77001          LDRB     r7,[r7,r1]
-00012c  e4c07001          STRB     r7,[r0],#1
-;;;108    		*p++	= fb_c[cc];
-000130  e59f7154          LDR      r7,|L1.652|
-000134  e7d77002          LDRB     r7,[r7,r2]
-000138  e4c07001          STRB     r7,[r0],#1
-;;;109    		yy++;	
-00013c  e2811001          ADD      r1,r1,#1
-;;;110    		cc++;
-000140  e2822001          ADD      r2,r2,#1
-000144  e2844001          ADD      r4,r4,#1              ;102
-                  |L1.328|
-000148  e3540e5a          CMP      r4,#0x5a0             ;102
-00014c  3affffed          BCC      |L1.264|
-000150  e28cc001          ADD      r12,r12,#1            ;101
-                  |L1.340|
-000154  e35c0d09          CMP      r12,#0x240            ;101
-000158  3affffe8          BCC      |L1.256|
-;;;111    		}
-;;;112    			
-;;;113    	////		memset(p,*pbuf,FRAME_WIDTH * 2);
-;;;114     ///// memcpy(p, buffer, FRAME_WIDTH * 2);
-;;;115     /// p += FRAME_WIDTH * 2;
-;;;116      }
-;;;117    }
-00015c  e8bd80f0          POP      {r4-r7,pc}
-;;;118    
+;;;21     #if 0
                           ENDP
 
                   video_tsk PROC
-;;;120    
-;;;121    void video_tsk(void)
-000160  e92d4010          PUSH     {r4,lr}
-;;;122    {
-;;;123      static unsigned start_ms = 0;
-;;;124      static unsigned already_sent = 0;
-;;;125    /////tu_printf("\r\n======video_task=============");
-;;;126    
-;;;127      if (!tud_video_n_streaming(0, 0)) {
-000164  e3a01000          MOV      r1,#0
-000168  e1a00001          MOV      r0,r1
-00016c  ebfffffe          BL       tud_video_n_streaming
-000170  e3500000          CMP      r0,#0
-000174  1a000005          BNE      |L1.400|
-;;;128        already_sent  = 0;
-000178  e3a00000          MOV      r0,#0
-00017c  e59f110c          LDR      r1,|L1.656|
-000180  e5810000          STR      r0,[r1,#0]  ; already_sent
-;;;129        frame_num     = 0;
-000184  e59f1108          LDR      r1,|L1.660|
-000188  e5810000          STR      r0,[r1,#0]  ; frame_num
-                  |L1.396|
-;;;130        return;
+;;;110    
+;;;111    void video_tsk(void)
+00000c  e92d4010          PUSH     {r4,lr}
+;;;112    {
+;;;113      static unsigned start_ms = 0;
+;;;114      static unsigned already_sent = 0;
+;;;115    ////tu_printf("\r\n======video_task=============");
+;;;116    
+;;;117      if (!tud_video_n_streaming(0, 0)) {
+000010  e3a01000          MOV      r1,#0
+000014  e1a00001          MOV      r0,r1
+000018  ebfffffe          BL       tud_video_n_streaming
+00001c  e3500000          CMP      r0,#0
+000020  1a000003          BNE      |L1.52|
+;;;118        already_sent  = 0;
+000024  e3a00000          MOV      r0,#0
+000028  e59f10c4          LDR      r1,|L1.244|
+00002c  e5810000          STR      r0,[r1,#0]  ; already_sent
+                  |L1.48|
+;;;119     ////   frame_num     = 0;
+;;;120        return;
+;;;121      }
+;;;122    /////tu_printf("\r\n======video_task1=============");
+;;;123    	
+;;;124    
+;;;125      if (!already_sent) {
+;;;126        already_sent = 1;
+;;;127        start_ms = board_millis();
+;;;128    /////    fill_color_bar(frame_buffer, frame_num);
+;;;129    		
+;;;130        tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
 ;;;131      }
-;;;132    /////tu_printf("\r\n======video_task1=============");
-;;;133    	
-;;;134    
-;;;135      if (!already_sent) {
-;;;136        already_sent = 1;
-;;;137        start_ms = board_millis();
-;;;138        fill_color_bar(frame_buffer, frame_num);
-;;;139    		
-;;;140        tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-;;;141      }
-;;;142    
-;;;143      unsigned cur = board_millis();
-;;;144      if (cur - start_ms < interval_ms) 
-;;;145    		return; // not enough time
-;;;146      if (tx_busy) 
-;;;147    		return;
-;;;148      start_ms += interval_ms;
-;;;149    /////tu_printf("\r\n======video_task2=============");
-;;;150    
-;;;151      fill_color_bar(frame_buffer, frame_num);
-;;;152      tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
-;;;153    }
-00018c  e8bd8010          POP      {r4,pc}
-                  |L1.400|
-000190  e59f00f8          LDR      r0,|L1.656|
-000194  e5900000          LDR      r0,[r0,#0]            ;135  ; already_sent
-000198  e3500000          CMP      r0,#0                 ;135
-00019c  1a00000e          BNE      |L1.476|
-0001a0  e3a00001          MOV      r0,#1                 ;136
-0001a4  e59f10e4          LDR      r1,|L1.656|
-0001a8  e5810000          STR      r0,[r1,#0]            ;136  ; already_sent
-0001ac  ebfffffe          BL       board_millis
-0001b0  e59f10e0          LDR      r1,|L1.664|
-0001b4  e5810000          STR      r0,[r1,#0]            ;137  ; start_ms
-0001b8  e59f00d4          LDR      r0,|L1.660|
-0001bc  e5901000          LDR      r1,[r0,#0]            ;138  ; frame_num
-0001c0  e59f00d4          LDR      r0,|L1.668|
-0001c4  ebfffffe          BL       fill_color_bar
-0001c8  e59f30d0          LDR      r3,|L1.672|
-0001cc  e59f20c8          LDR      r2,|L1.668|
-0001d0  e3a01000          MOV      r1,#0                 ;140
-0001d4  e1a00001          MOV      r0,r1                 ;140
-0001d8  ebfffffe          BL       tud_video_n_frame_xfer
-                  |L1.476|
-0001dc  ebfffffe          BL       board_millis
-0001e0  e1a04000          MOV      r4,r0                 ;143
-0001e4  e59f00ac          LDR      r0,|L1.664|
-0001e8  e5900000          LDR      r0,[r0,#0]            ;144  ; start_ms
-0001ec  e0440000          SUB      r0,r4,r0              ;144
-0001f0  e59f10ac          LDR      r1,|L1.676|
-0001f4  e5911000          LDR      r1,[r1,#0]            ;144  ; interval_ms
-0001f8  e1500001          CMP      r0,r1                 ;144
-0001fc  2a000000          BCS      |L1.516|
-000200  eaffffe1          B        |L1.396|
-                  |L1.516|
-000204  e59f009c          LDR      r0,|L1.680|
-000208  e5900000          LDR      r0,[r0,#0]            ;146  ; tx_busy
-00020c  e3500000          CMP      r0,#0                 ;146
-000210  0a000000          BEQ      |L1.536|
-000214  eaffffdc          B        |L1.396|
-                  |L1.536|
-000218  e59f0078          LDR      r0,|L1.664|
-00021c  e5900000          LDR      r0,[r0,#0]            ;148  ; start_ms
-000220  e59f107c          LDR      r1,|L1.676|
-000224  e5911000          LDR      r1,[r1,#0]            ;148  ; interval_ms
-000228  e0800001          ADD      r0,r0,r1              ;148
-00022c  e59f1064          LDR      r1,|L1.664|
-000230  e5810000          STR      r0,[r1,#0]            ;148  ; start_ms
-000234  e59f0058          LDR      r0,|L1.660|
-000238  e5901000          LDR      r1,[r0,#0]            ;151  ; frame_num
-00023c  e59f0058          LDR      r0,|L1.668|
-000240  ebfffffe          BL       fill_color_bar
-000244  e59f3054          LDR      r3,|L1.672|
-000248  e59f204c          LDR      r2,|L1.668|
-00024c  e3a01000          MOV      r1,#0                 ;152
-000250  e1a00001          MOV      r0,r1                 ;152
-000254  ebfffffe          BL       tud_video_n_frame_xfer
-000258  e1a00000          MOV      r0,r0
-00025c  eaffffca          B        |L1.396|
-;;;154    
+;;;132    
+;;;133      unsigned cur = board_millis();
+;;;134      if (cur - start_ms < interval_ms) 
+;;;135    		return; // not enough time
+;;;136      if (tx_busy) 
+;;;137    		return;
+;;;138      start_ms += interval_ms;
+;;;139    /////tu_printf("\r\n======video_task2=============");
+;;;140    
+;;;141    ////  fill_color_bar(frame_buffer, frame_num);
+;;;142      tud_video_n_frame_xfer(0, 0, (void*)frame_buffer, FRAME_WIDTH * FRAME_HEIGHT * 16/8);
+;;;143    }
+000030  e8bd8010          POP      {r4,pc}
+                  |L1.52|
+000034  e59f00b8          LDR      r0,|L1.244|
+000038  e5900000          LDR      r0,[r0,#0]            ;125  ; already_sent
+00003c  e3500000          CMP      r0,#0                 ;125
+000040  1a00000a          BNE      |L1.112|
+000044  e3a00001          MOV      r0,#1                 ;126
+000048  e59f10a4          LDR      r1,|L1.244|
+00004c  e5810000          STR      r0,[r1,#0]            ;126  ; already_sent
+000050  ebfffffe          BL       board_millis
+000054  e59f109c          LDR      r1,|L1.248|
+000058  e5810000          STR      r0,[r1,#0]            ;127  ; start_ms
+00005c  e3a03b96          MOV      r3,#0x25800           ;130
+000060  e59f2094          LDR      r2,|L1.252|
+000064  e3a01000          MOV      r1,#0                 ;130
+000068  e1a00001          MOV      r0,r1                 ;130
+00006c  ebfffffe          BL       tud_video_n_frame_xfer
+                  |L1.112|
+000070  ebfffffe          BL       board_millis
+000074  e1a04000          MOV      r4,r0                 ;133
+000078  e59f0078          LDR      r0,|L1.248|
+00007c  e5900000          LDR      r0,[r0,#0]            ;134  ; start_ms
+000080  e0440000          SUB      r0,r4,r0              ;134
+000084  e59f1074          LDR      r1,|L1.256|
+000088  e5911000          LDR      r1,[r1,#0]            ;134  ; interval_ms
+00008c  e1500001          CMP      r0,r1                 ;134
+000090  2a000000          BCS      |L1.152|
+000094  eaffffe5          B        |L1.48|
+                  |L1.152|
+000098  e59f0064          LDR      r0,|L1.260|
+00009c  e5900000          LDR      r0,[r0,#0]            ;136  ; tx_busy
+0000a0  e3500000          CMP      r0,#0                 ;136
+0000a4  0a000000          BEQ      |L1.172|
+0000a8  eaffffe0          B        |L1.48|
+                  |L1.172|
+0000ac  e59f0044          LDR      r0,|L1.248|
+0000b0  e5900000          LDR      r0,[r0,#0]            ;138  ; start_ms
+0000b4  e59f1044          LDR      r1,|L1.256|
+0000b8  e5911000          LDR      r1,[r1,#0]            ;138  ; interval_ms
+0000bc  e0800001          ADD      r0,r0,r1              ;138
+0000c0  e59f1030          LDR      r1,|L1.248|
+0000c4  e5810000          STR      r0,[r1,#0]            ;138  ; start_ms
+0000c8  e3a03b96          MOV      r3,#0x25800           ;142
+0000cc  e59f2028          LDR      r2,|L1.252|
+0000d0  e3a01000          MOV      r1,#0                 ;142
+0000d4  e1a00001          MOV      r0,r1                 ;142
+0000d8  ebfffffe          BL       tud_video_n_frame_xfer
+0000dc  e1a00000          MOV      r0,r0
+0000e0  eaffffd2          B        |L1.48|
+;;;144    
                           ENDP
 
                   video_task PROC
-;;;155    void video_task(void)
-000260  e28f0044          ADR      r0,|L1.684|
-;;;156    {
-;;;157    printf("\r\n======video_task=============");
-000264  ebfffffe          BL       __2printf
-;;;158    	
-;;;159    	for(;;)
-000268  e1a00000          MOV      r0,r0
-                  |L1.620|
-;;;160    	{
-;;;161    	video_tsk()	;
-00026c  ebfffffe          BL       video_tsk
-000270  eafffffd          B        |L1.620|
-;;;162    	}
-;;;163    }
-;;;164    
+;;;145    void video_task(void)
+0000e4  e92d4010          PUSH     {r4,lr}
+;;;146    {
+;;;147    /////printf("\r\n======video_task=============");
+;;;148    	
+;;;149    /////	for(;;)
+;;;150    	{
+;;;151    	video_tsk()	;
+0000e8  ebfffffe          BL       video_tsk
+;;;152    	}
+;;;153    }
+0000ec  e8bd8010          POP      {r4,pc}
+;;;154    
                           ENDP
 
-                  |L1.628|
+                  |L1.240|
                           DCD      os_time
-                  |L1.632|
-                          DCD      0x00000167
-                  |L1.636|
-                          DCD      tst_offs
-                  |L1.640|
-                          DCD      bar_color
-                  |L1.644|
-                          DCD      bar_color+0x10
-                  |L1.648|
-                          DCD      fb_y
-                  |L1.652|
-                          DCD      fb_c
-                  |L1.656|
+                  |L1.244|
                           DCD      already_sent
-                  |L1.660|
-                          DCD      frame_num
-                  |L1.664|
+                  |L1.248|
                           DCD      start_ms
-                  |L1.668|
+                  |L1.252|
                           DCD      frame_buffer
-                  |L1.672|
-                          DCD      0x000ca800
-                  |L1.676|
+                  |L1.256|
                           DCD      interval_ms
-                  |L1.680|
+                  |L1.260|
                           DCD      tx_busy
-                  |L1.684|
-0002ac  0d0a3d3d          DCB      "\r\n======video_task=============",0
-0002b0  3d3d3d3d
-0002b4  76696465
-0002b8  6f5f7461
-0002bc  736b3d3d
-0002c0  3d3d3d3d
-0002c4  3d3d3d3d
-0002c8  3d3d3d00
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=0
 
                   frame_buffer
-                          %        829440
-
-                          AREA ||.constdata||, DATA, READONLY, ALIGN=0
-
-                  bar_color
-000000  eb80eb80          DCB      0xeb,0x80,0xeb,0x80
-000004  db10db8a          DCB      0xdb,0x10,0xdb,0x8a
-000008  bc9abc10          DCB      0xbc,0x9a,0xbc,0x10
-00000c  ad2aad1a          DCB      0xad,0x2a,0xad,0x1a
-000010  4ed64ee6          DCB      0x4e,0xd6,0x4e,0xe6
-000014  3f663ff0          DCB      0x3f,0x66,0x3f,0xf0
-000018  20f02076          DCB      0x20,0xf0,0x20,0x76
-00001c  10801080          DCB      0x10,0x80,0x10,0x80
+                          %        153600
 
                           AREA ||.data||, DATA, ALIGN=2
 
                   tx_busy
                           DCD      0x00000000
-                  frame_num
-                          DCD      0x00000000
                   interval_ms
                           DCD      0x00000032
-                  tst_offs
-00000c  00000000          DCB      0x00,0x00,0x00,0x00
                   start_ms
                           DCD      0x00000000
                   already_sent

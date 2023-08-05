@@ -1,0 +1,10 @@
+build/./lib/libm/exp2.o: lib/libm/exp2.c lib/libm/math.h \
+ arch/arm32/include/types.h arch/arm32/include/float.h \
+ arch/arm32/include/endian.h arch/arm32/include/limits.h \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h \
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h
+lib/libm/exp2.c lib/libm/math.h :
+ arch/arm32/include/types.h arch/arm32/include/float.h :
+ arch/arm32/include/endian.h arch/arm32/include/limits.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h :

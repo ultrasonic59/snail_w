@@ -13,7 +13,7 @@
 #define LCD_W 800 
 #define LCD_H 600 ////480
 
-#define DEF_TWD_W 720
+#define DEF_TWD_W 720  ///for PAL_B
 #define DEF_TWD_H 576
 
 typedef unsigned int __u32;
@@ -186,11 +186,9 @@ typedef enum __DRV_TVD_CMD_SET {
 	DRV_TVD_CMD_SET_INPUT_CHANNEL, /*aux = __drv_TVD_INPUT_CHANNEL */
 	/* return : bit0: 1->plugin, 0->plugout ;bit4:1->pal,0:ntsc;bit8:*/
 	DRV_TVD_CMD_GET_ADC_STATUS,
-	/*??32?????0bit?1???????0??????
-	 * ?????????4bit(?0???)?1??P???0??N?*/
 	DRV_TVD_CMD_GET_STATUS,
 
-	DRV_TVD_CMD_,
+	DRV_TVD_CMD_////,
 
 } __drv_TVD_cmd_set_t;
 typedef struct tag_TVD_FRAME {
