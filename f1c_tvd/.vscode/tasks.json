@@ -30,7 +30,7 @@
 		{
 			"type": "shell",
 			"label": "sunxi-fel download bin file",
-			"command": "${workspaceFolder}\\tools\\sunxitools\\sunxi-fel.exe",
+			"command": "${workspaceFolder}/tools/sunxitools/sunxi-fel.exe",
 			"args": [
                 "-p",
                 "spiflash-write",

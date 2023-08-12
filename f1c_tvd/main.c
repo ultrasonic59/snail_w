@@ -52,6 +52,7 @@ int boot_main(int argc, char **argv)
 #endif
 
 #if TEST_FB
+    printf("===============TEST_FB===================\n\r");
 
    {
 
@@ -73,6 +74,10 @@ int boot_main(int argc, char **argv)
        fb_f1c100s_setbl(&fb_f1c100s, 100);
    }
 #endif
+for(;;)
+	{
+	;
+	}
 
 #if TEST_PWM
     pwm_t led_pwm_bl =
