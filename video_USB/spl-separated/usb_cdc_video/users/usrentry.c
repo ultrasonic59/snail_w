@@ -13,6 +13,7 @@
 #include "framebuffer.h"
 #include "tvd.h"
 #include "irq_misc.h"
+#include "misc.h"
 
 extern void video_task(void);
 
@@ -60,6 +61,8 @@ void tud_cdc_rx_cb(uint8_t itf) {
 __task void usb_task() {
   for (;;) {
 		tud_task();
+		sys_delay(2);
+
 	}
 }
 extern void tvd_irq_handle(void);
@@ -88,8 +91,8 @@ tvd_set_out_fmt(TVD_FMT_422_PL);
 		
     debe_layer_enable(0);
     tvd_enable();
-  f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
-  f1c100s_intc_enable_irq(IRQ_TVD);
+  f1c100s_intc_set_isr(F1C100S_IRQ_TVD, tvd_irq_handle);
+  f1c100s_intc_enable_irq(F1C100S_IRQ_TVD);
 	
 return 0;	
 }
@@ -104,11 +107,20 @@ extern void lcd_task(void);
 void UserEntryInit(void)
 {
 /////uint32_t *p_val;
+////uint8_t btst=0;	
 target_wdt_feed();
 
 printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
 ///===========================================
-	
+init_test1_pin();
+	#if 0
+for(;;)
+	{
+	put_test1_pin(btst)	;
+	btst++;
+	sys_delay(5);
+	}
+	#endif
 #if 1	
 display_init();
 display_set_bl(100);
@@ -155,7 +167,9 @@ while(1) {
 tusb_init();
 	
 ////  printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
-	os_tsk_create(usb_task, 10);
+////	os_tsk_create(usb_task, 8);
+	os_tsk_create(test_thr, 10);
+	
   /////printf("time: %x\n", board_millis());
 ////	os_tsk_create(video_task, 8);
   /////printf("time1: %x\n", board_millis());
@@ -168,15 +182,16 @@ extern void video_tsk(void);
 extern	uint8_t frame_buffer[];
 
 ////////////////////////////////////////////////////////////////////////////////
-#define BEG_POS 80
+#define BEG_POS 880
 void UserEntryLoop(void)
 {
 	uint32_t *p_val=(uint32_t *)fb_y;
-	uint32_t val;
-	uint8_t ii;
-				for(ii=0;ii<16;ii++)
+////	uint32_t val;
+	uint32_t ii;
+		uint32_t jj;
+			for(ii=0;ii<16;ii++)
 				{
-			  p_val[BEG_POS+ii*8]=0;
+			  p_val[BEG_POS+ii]=0;
 				}
 
   for (;;) {
@@ -189,7 +204,7 @@ void UserEntryLoop(void)
 		#if 1
 /////while(1) 
 	{
-        lcd_set_text_pos(600, 0);
+        lcd_set_text_pos(500, 0);
 	#if 0	
         uint32_t val = read32(TVD_BASE + TVD_STATE_0);
         lcd_printf("%08lX\n", val);
@@ -203,11 +218,25 @@ void UserEntryLoop(void)
         lcd_printf("%08lX\n", val);
 		#endif
 	////====================================
-		#if 1
-			for(ii=0;ii<16;ii++)
+
+	#if 1
+		#if 0	
+		for(ii=0;ii<720* 576;ii++)
 				{
-			  val = p_val[BEG_POS+ii*8];
-        lcd_printf("%08lX\n", val);
+			  fb_c[ii]=0xff;
+				}
+////fb_y[720* 576]
+				for(ii=0;ii<720* 576;ii++)
+				{
+			  if(fb_c[ii]!=0xff)
+					break;
+				}
+	#endif	
+	ii=576*2 +14;
+			for(jj=0;jj<16;jj++)
+				{
+			  ////val = p_val[BEG_POS+ii];
+        lcd_printf("[%x]%02X\n",jj+ii,fb_c[ii+jj]);
 				}
 	#endif	
 	    }

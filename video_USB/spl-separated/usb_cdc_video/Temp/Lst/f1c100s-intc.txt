@@ -7,7 +7,7 @@
                   f1c100s_intc_get_nirq PROC
 ;;;67     */
 ;;;68     uint8_t f1c100s_intc_get_nirq(void)
-000000  e59f0378          LDR      r0,|L1.896|
+000000  e59f0398          LDR      r0,|L1.928|
 ;;;69     {
 ;;;70       return ((INTC->INTC_VECTOR_REG >> 2) & 0x3F);
 000004  e5900000          LDR      r0,[r0,#0]
@@ -25,7 +25,7 @@
 ;;;79     {
 000018  e1a04000          MOV      r4,r0
 ;;;80       IRQHandleTypeDef handle = irq_table[nIRQ];
-00001c  e59f0360          LDR      r0,|L1.900|
+00001c  e59f0380          LDR      r0,|L1.932|
 000020  e7905104          LDR      r5,[r0,r4,LSL #2]
 ;;;81       if (handle)
 000024  e3550000          CMP      r5,#0
@@ -46,7 +46,7 @@
 ;;;93       if (nIRQ < COUNTOF(irq_table)) {
 000038  2a000001          BCS      |L1.68|
 ;;;94         irq_table[nIRQ] = handle;
-00003c  e59f2340          LDR      r2,|L1.900|
+00003c  e59f2360          LDR      r2,|L1.932|
 000040  e7821100          STR      r1,[r2,r0,LSL #2]
                   |L1.68|
 ;;;95       }
@@ -72,7 +72,7 @@
 000060  e1a02fc4          ASR      r2,r4,#31
 000064  e0842da2          ADD      r2,r4,r2,LSR #27
 000068  e1a022c2          ASR      r2,r2,#5
-00006c  e59f3314          LDR      r3,|L1.904|
+00006c  e59f3334          LDR      r3,|L1.936|
 000070  e7932102          LDR      r2,[r3,r2,LSL #2]
 000074  e1a01004          MOV      r1,r4
 000078  e1a03fc4          ASR      r3,r4,#31
@@ -85,7 +85,7 @@
 000094  e1a03fc4          ASR      r3,r4,#31
 000098  e0843da3          ADD      r3,r4,r3,LSR #27
 00009c  e1a032c3          ASR      r3,r3,#5
-0000a0  e59fc2e0          LDR      r12,|L1.904|
+0000a0  e59fc300          LDR      r12,|L1.936|
 0000a4  e78c2103          STR      r2,[r12,r3,LSL #2]
 ;;;109      CPU_EXIT_CRITICAL();
 0000a8  e1a00000          MOV      r0,r0
@@ -114,7 +114,7 @@
 0000d4  e1a02fc4          ASR      r2,r4,#31
 0000d8  e0842da2          ADD      r2,r4,r2,LSR #27
 0000dc  e1a022c2          ASR      r2,r2,#5
-0000e0  e59f32a0          LDR      r3,|L1.904|
+0000e0  e59f32c0          LDR      r3,|L1.936|
 0000e4  e7932102          LDR      r2,[r3,r2,LSL #2]
 0000e8  e1a01004          MOV      r1,r4
 0000ec  e1a03fc4          ASR      r3,r4,#31
@@ -127,7 +127,7 @@
 000108  e1a03fc4          ASR      r3,r4,#31
 00010c  e0843da3          ADD      r3,r4,r3,LSR #27
 000110  e1a032c3          ASR      r3,r3,#5
-000114  e59fc26c          LDR      r12,|L1.904|
+000114  e59fc28c          LDR      r12,|L1.936|
 000118  e78c2103          STR      r2,[r12,r3,LSL #2]
 ;;;123      CPU_EXIT_CRITICAL();
 00011c  e1a00000          MOV      r0,r0
@@ -156,7 +156,7 @@
 000148  e1a02fc4          ASR      r2,r4,#31
 00014c  e0842da2          ADD      r2,r4,r2,LSR #27
 000150  e1a022c2          ASR      r2,r2,#5
-000154  e59f3230          LDR      r3,|L1.908|
+000154  e59f3250          LDR      r3,|L1.940|
 000158  e7932102          LDR      r2,[r3,r2,LSL #2]
 00015c  e1a01004          MOV      r1,r4
 000160  e1a03fc4          ASR      r3,r4,#31
@@ -169,7 +169,7 @@
 00017c  e1a03fc4          ASR      r3,r4,#31
 000180  e0843da3          ADD      r3,r4,r3,LSR #27
 000184  e1a032c3          ASR      r3,r3,#5
-000188  e59fc1fc          LDR      r12,|L1.908|
+000188  e59fc21c          LDR      r12,|L1.940|
 00018c  e78c2103          STR      r2,[r12,r3,LSL #2]
 ;;;137      CPU_EXIT_CRITICAL();
 000190  e1a00000          MOV      r0,r0
@@ -198,7 +198,7 @@
 0001bc  e1a02fc4          ASR      r2,r4,#31
 0001c0  e0842da2          ADD      r2,r4,r2,LSR #27
 0001c4  e1a022c2          ASR      r2,r2,#5
-0001c8  e59f31bc          LDR      r3,|L1.908|
+0001c8  e59f31dc          LDR      r3,|L1.940|
 0001cc  e7932102          LDR      r2,[r3,r2,LSL #2]
 0001d0  e1a01004          MOV      r1,r4
 0001d4  e1a03fc4          ASR      r3,r4,#31
@@ -211,7 +211,7 @@
 0001f0  e1a03fc4          ASR      r3,r4,#31
 0001f4  e0843da3          ADD      r3,r4,r3,LSR #27
 0001f8  e1a032c3          ASR      r3,r3,#5
-0001fc  e59fc188          LDR      r12,|L1.908|
+0001fc  e59fc1a8          LDR      r12,|L1.940|
 000200  e78c2103          STR      r2,[r12,r3,LSL #2]
 ;;;151      CPU_EXIT_CRITICAL();
 000204  e1a00000          MOV      r0,r0
@@ -249,7 +249,7 @@
 000250  e1a03fc4          ASR      r3,r4,#31
 000254  e0843da3          ADD      r3,r4,r3,LSR #27
 000258  e1a032c3          ASR      r3,r3,#5
-00025c  e59fc12c          LDR      r12,|L1.912|
+00025c  e59fc14c          LDR      r12,|L1.944|
 000260  e78c2103          STR      r2,[r12,r3,LSL #2]
 ;;;166      CPU_EXIT_CRITICAL();
 000264  e1a00000          MOV      r0,r0
@@ -278,7 +278,7 @@
 00029c  e1a0cfc0          ASR      r12,r0,#31
 0002a0  e080cdac          ADD      r12,r0,r12,LSR #27
 0002a4  e1a0c2cc          ASR      r12,r12,#5
-0002a8  e59f40e4          LDR      r4,|L1.916|
+0002a8  e59f4104          LDR      r4,|L1.948|
 0002ac  e784310c          STR      r3,[r4,r12,LSL #2]
 ;;;177    }
 0002b0  e8bd8010          POP      {r4,pc}
@@ -299,7 +299,7 @@
 0002c4  e1a00000          MOV      r0,r0
 ;;;189      INTC->INTC_EN_REG[0] = INTC->INTC_EN_REG[1] = 0;
 0002c8  e3a00000          MOV      r0,#0
-0002cc  e59f10ac          LDR      r1,|L1.896|
+0002cc  e59f10cc          LDR      r1,|L1.928|
 0002d0  e5810024          STR      r0,[r1,#0x24]
 0002d4  e2811020          ADD      r1,r1,#0x20
 0002d8  e5810000          STR      r0,[r1,#0]
@@ -342,7 +342,7 @@
                   |L1.844|
 ;;;198        irq_table[i] = 0;
 00034c  e3a01000          MOV      r1,#0
-000350  e59f202c          LDR      r2,|L1.900|
+000350  e59f204c          LDR      r2,|L1.932|
 000354  e7821100          STR      r1,[r2,r0,LSL #2]
 000358  e2800001          ADD      r0,r0,#1              ;197
                   |L1.860|
@@ -351,52 +351,74 @@
 ;;;199      }
 ;;;200    }
 000364  e8bd8010          POP      {r4,pc}
-;;;201    
+;;;201    uint32_t get_en_intc(uint8_t num)
+                          ENDP
+
+                  get_en_intc PROC
+000368  e1a01000          MOV      r1,r0
+;;;202    {
+;;;203    return INTC->INTC_EN_REG[num];	
+00036c  e59f0034          LDR      r0,|L1.936|
+000370  e7900101          LDR      r0,[r0,r1,LSL #2]
+;;;204    }
+000374  e12fff1e          BX       lr
+;;;205    uint32_t get_mask_intc(uint8_t num)
+                          ENDP
+
+                  get_mask_intc PROC
+000378  e1a01000          MOV      r1,r0
+;;;206    {
+;;;207    return INTC->INTC_MASK_REG[num];
+00037c  e59f0028          LDR      r0,|L1.940|
+000380  e7900101          LDR      r0,[r0,r1,LSL #2]
+;;;208    }
+000384  e12fff1e          BX       lr
+;;;209    
                           ENDP
 
                   __fast_enter_critical PROC
 ;;;52     #define CPU_ENTER_CRITICAL()  do{cpu_sr = __fast_enter_critical();}while(0)
 ;;;53     static inline ubase_t __fast_enter_critical(void)
-000368  e10f0000          MRS      r0,APSR ; formerly CPSR
+000388  e10f0000          MRS      r0,APSR ; formerly CPSR
 ;;;54     {
 ;;;55       ubase_t cpu_sr, tmp_sr;
 ;;;56       __asm volatile {
 ;;;57         MRS cpu_sr, CPSR
 ;;;58         ORR tmp_sr, cpu_sr, #0xC0
-00036c  e38010c0          ORR      r1,r0,#0xc0
+00038c  e38010c0          ORR      r1,r0,#0xc0
 ;;;59         MSR CPSR_c, tmp_sr
-000370  e121f001          MSR      CPSR_c,r1
+000390  e121f001          MSR      CPSR_c,r1
 ;;;60       }
 ;;;61       return cpu_sr;
 ;;;62     }
-000374  e12fff1e          BX       lr
+000394  e12fff1e          BX       lr
 ;;;63     #endif
                           ENDP
 
                   __fast_exit_critical PROC
 ;;;68     #define CPU_EXIT_CRITICAL()   do{__fast_exit_critical(cpu_sr);}while(0)
 ;;;69     static inline void __fast_exit_critical(ubase_t cpu_sr)
-000378  e121f000          MSR      CPSR_c,r0
+000398  e121f000          MSR      CPSR_c,r0
 ;;;70     {
 ;;;71       __asm volatile {
 ;;;72         MSR CPSR_c, cpu_sr
 ;;;73       }
 ;;;74     }
-00037c  e12fff1e          BX       lr
+00039c  e12fff1e          BX       lr
 ;;;75     #endif
                           ENDP
 
-                  |L1.896|
+                  |L1.928|
                           DCD      0x01c20400
-                  |L1.900|
+                  |L1.932|
                           DCD      irq_table
-                  |L1.904|
+                  |L1.936|
                           DCD      0x01c20420
-                  |L1.908|
+                  |L1.940|
                           DCD      0x01c20430
-                  |L1.912|
+                  |L1.944|
                           DCD      0x01c20450
-                  |L1.916|
+                  |L1.948|
                           DCD      0x01c20410
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=5

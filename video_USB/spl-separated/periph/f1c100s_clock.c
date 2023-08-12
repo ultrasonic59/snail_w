@@ -15,12 +15,12 @@ static uint32_t pll_ddr_get_freq(void);
 // Enable PLL
 inline void clk_pll_enable(pll_ch_e pll) {
     write32(CCU_BASE + pll, (read32(CCU_BASE + pll) 
-			|(uint32_t)(0x1 << 31)));
+			|(uint32_t)(0x1U << 31)));
 }
 
 // Disable PLL
 inline void clk_pll_disable(pll_ch_e pll) {
-    write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(1 << 31)));
+    write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(0x1U << 31)));
 }
 
 // Get PLL lock state
@@ -101,7 +101,7 @@ static void pll_cpu_init(uint8_t mul, uint8_t div) {
     if(p == 3) p = 2;
 
     uint32_t val = read32(CCU_BASE + CCU_PLL_CPU_CTRL);
-    val &= (1 << 31) | (1 << 28);
+    val &= (0x1U << 31) | (0x1U << 28);
     val |= ((n - 1) << 8) | ((k - 1) << 4) | (m - 1) | (p << 16);
     write32(CCU_BASE + CCU_PLL_CPU_CTRL, val);
 }
@@ -128,7 +128,7 @@ static void pll_audio_init(uint16_t mul, uint8_t div) {
     // div = m
 
     uint32_t val = read32(CCU_BASE + CCU_PLL_AUDIO_CTRL);
-    val &= (1 << 31) | (1 << 28);
+    val &= (0x1U << 31) | (0x1U << 28);
     val |= ((n - 1) << 8) | (div - 1);
     write32(CCU_BASE + CCU_PLL_AUDIO_CTRL, val);
 }
@@ -154,7 +154,7 @@ static void pll_video_init(pll_ch_e pll, uint8_t mul, uint8_t div) {
     // div = m
 
     uint32_t val = read32(CCU_BASE + pll);
-    val &= (1 << 31) | (1 << 28);
+    val &= (0x1U << 31) | (0x1U << 28);
     val |= ((mul - 1) << 8) | (div - 1) | (1 << 24);
     write32(CCU_BASE + pll, val);
 }
@@ -162,9 +162,9 @@ static void pll_video_init(pll_ch_e pll, uint8_t mul, uint8_t div) {
 static uint32_t pll_video_get_freq(pll_ch_e pll) {
     uint32_t reg = read32(CCU_BASE + pll);
 
-    if((reg & (1 << 24)) == 0) {
+    if((reg & (0x1U << 24)) == 0) {
         // Fractional mode
-        if(reg & (1 << 25))
+        if(reg & (0x1U << 25))
             return 297000000;
         else
             return 270000000;
@@ -186,7 +186,7 @@ static void pll_periph_init(uint8_t mul, uint8_t div) {
     // div = m
 
     uint32_t val = read32(CCU_BASE + CCU_PLL_PERIPH_CTRL);
-    val &= (1 << 31) | (1 << 28);
+    val &= (0x1U << 31) | (0x1U << 28);
     val |= ((mul - 1) << 8) | ((div - 1) << 4) | (1 << 18); // do we need 24m output?
     write32(CCU_BASE + CCU_PLL_PERIPH_CTRL, val);
 }
@@ -229,7 +229,7 @@ void clk_cpu_config(clk_source_cpu_e source) {
 }
 
 uint32_t clk_cpu_get_freq(void) {
-    clk_source_cpu_e src = (read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3;
+    clk_source_cpu_e src = (clk_source_cpu_e)((read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3);
 
     switch(src) {
     case CLK_CPU_SRC_LOSC:
@@ -270,7 +270,7 @@ void clk_ahb_config(clk_source_ahb_e src, uint8_t prediv, uint8_t div) {
 }
 
 uint32_t clk_ahb_get_freq(void) {
-    clk_source_ahb_e src = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3;
+    clk_source_ahb_e src = ( clk_source_ahb_e)((read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3);
 
     uint8_t div    = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 4) & 0x3;
     uint8_t prediv = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 6) & 0x3;
@@ -298,7 +298,7 @@ void clk_apb_config(clk_div_apb_e div) {
 }
 
 uint32_t clk_apb_get_freq(void) {
-    clk_div_apb_e div = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3;
+    clk_div_apb_e div = (clk_div_apb_e)((read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3);
 
     switch(div) {
     case CLK_APB_DIV_4:
@@ -343,7 +343,7 @@ void clk_tvd_config(uint8_t div) { // TODO: source select
 // SD card controller clock
 uint32_t clk_sdc_config(uint32_t reg, uint32_t freq) {
     uint32_t in_freq = 0;
-    uint32_t reg_val = (uint32_t)(1 << 31);
+    uint32_t reg_val = (uint32_t)(0x1U << 31);
 
     if(freq <= 24000000) {
         reg_val |= (0 << 24); // OSC24M

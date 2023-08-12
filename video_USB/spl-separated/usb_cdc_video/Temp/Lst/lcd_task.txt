@@ -40,78 +40,78 @@
 ;;;29     while(1) {
 000050  ea000039          B        |L1.316|
                   |L1.84|
-;;;30             lcd_set_text_pos(600, 0);
+;;;30             lcd_set_text_pos(500, 0);
 000054  e3a01000          MOV      r1,#0
-000058  e3a00f96          MOV      r0,#0x258
+000058  e3a00f7d          MOV      r0,#0x1f4
 00005c  ebfffffe          BL       lcd_set_text_pos
 ;;;31             uint32_t val = read32(TVD_BASE + TVD_STATE_0);
 000060  e59f00ec          LDR      r0,|L1.340|
 000064  ebfffffe          BL       read32
 000068  e1a05000          MOV      r5,r0
-;;;32             lcd_printf("%08lX\n", val);
+;;;32             lcd_printf("TVD_STATE0=%08lX\n", val);
 00006c  e1a03005          MOV      r3,r5
 000070  e28f20e0          ADR      r2,|L1.344|
 000074  e3a01000          MOV      r1,#0
 000078  e59f00d0          LDR      r0,|L1.336|
 00007c  ebfffffe          BL       fctprintf
 ;;;33             val = read32(TVD_BASE + TVD_STATE_1);
-000080  e59f00d8          LDR      r0,|L1.352|
+000080  e59f00e4          LDR      r0,|L1.364|
 000084  ebfffffe          BL       read32
 000088  e1a05000          MOV      r5,r0
-;;;34             lcd_printf("%08lX\n", val);
+;;;34             lcd_printf("TVD_STATE1=%08lX\n", val);
 00008c  e1a03005          MOV      r3,r5
-000090  e28f20c0          ADR      r2,|L1.344|
+000090  e28f20d8          ADR      r2,|L1.368|
 000094  e3a01000          MOV      r1,#0
 000098  e59f00b0          LDR      r0,|L1.336|
 00009c  ebfffffe          BL       fctprintf
 ;;;35             val = read32(TVD_BASE + TVD_STATE_2);
-0000a0  e59f00bc          LDR      r0,|L1.356|
+0000a0  e59f00dc          LDR      r0,|L1.388|
 0000a4  ebfffffe          BL       read32
 0000a8  e1a05000          MOV      r5,r0
-;;;36             lcd_printf("ST2=%08lX\n", val);
+;;;36             lcd_printf("TVD_STATE2=%08lX\n", val);
 0000ac  e1a03005          MOV      r3,r5
-0000b0  e28f20b0          ADR      r2,|L1.360|
+0000b0  e28f20d0          ADR      r2,|L1.392|
 0000b4  e3a01000          MOV      r1,#0
 0000b8  e59f0090          LDR      r0,|L1.336|
 0000bc  ebfffffe          BL       fctprintf
 ;;;37             val = read32(TVD_BASE + TVD_STATE_3);
-0000c0  e59f00ac          LDR      r0,|L1.372|
+0000c0  e59f00d4          LDR      r0,|L1.412|
 0000c4  ebfffffe          BL       read32
 0000c8  e1a05000          MOV      r5,r0
-;;;38             lcd_printf("%08lX\n", val);
+;;;38             lcd_printf("TVD_STATE3=%08lX\n", val);
 0000cc  e1a03005          MOV      r3,r5
-0000d0  e28f2080          ADR      r2,|L1.344|
+0000d0  e28f20c8          ADR      r2,|L1.416|
 0000d4  e3a01000          MOV      r1,#0
 0000d8  e59f0070          LDR      r0,|L1.336|
 0000dc  ebfffffe          BL       fctprintf
 ;;;39             val = read32(TVD_BASE + TVD_STATE_4);
-0000e0  e59f0090          LDR      r0,|L1.376|
+0000e0  e59f00cc          LDR      r0,|L1.436|
 0000e4  ebfffffe          BL       read32
 0000e8  e1a05000          MOV      r5,r0
-;;;40             lcd_printf("%08lX\n", val);
+;;;40             lcd_printf("TVD_STATE4=%08lX\n", val);
 0000ec  e1a03005          MOV      r3,r5
-0000f0  e28f2060          ADR      r2,|L1.344|
+0000f0  e28f20c0          ADR      r2,|L1.440|
 0000f4  e3a01000          MOV      r1,#0
 0000f8  e59f0050          LDR      r0,|L1.336|
 0000fc  ebfffffe          BL       fctprintf
 ;;;41     	////====================================
 ;;;42     	p_val= (uint32_t *)&fb_c[4420];
-000100  e59f4074          LDR      r4,|L1.380|
+000100  e59f40c4          LDR      r4,|L1.460|
 ;;;43             val = *p_val;
 000104  e5945000          LDR      r5,[r4,#0]
-;;;44             lcd_printf("%08lX\n", val);
+;;;44             lcd_printf("c=%08lX\n", val);
 000108  e1a03005          MOV      r3,r5
-00010c  e28f2044          ADR      r2,|L1.344|
+00010c  e28f20bc          ADR      r2,|L1.464|
 000110  e3a01000          MOV      r1,#0
 000114  e59f0034          LDR      r0,|L1.336|
 000118  ebfffffe          BL       fctprintf
 ;;;45     	p_val= (uint32_t *)&fb_y[4420];
-00011c  e59f405c          LDR      r4,|L1.384|
+00011c  e59f40b8          LDR      r4,|L1.476|
 ;;;46             val = *p_val;
 000120  e5945000          LDR      r5,[r4,#0]
-;;;47             lcd_printf("%08lX\n", val);
+;;;47             lcd_printf("y=%08lX\n", val);
 000124  e1a03005          MOV      r3,r5
-000128  e28f2028          ADR      r2,|L1.344|
+000128  e28f20b0          ADR      r2,|L1.480|
 00012c  e3a01000          MOV      r1,#0
 000130  e59f0018          LDR      r0,|L1.336|
 000134  ebfffffe          BL       fctprintf
@@ -142,23 +142,68 @@
                   |L1.340|
                           DCD      0x01c0be40
                   |L1.344|
-000158  2530386c          DCB      "%08lX\n",0
-00015c  580a00  
-00015f  00                DCB      0
-                  |L1.352|
+000158  5456445f          DCB      "TVD_STATE0=%08lX\n",0
+00015c  53544154
+000160  45303d25
+000164  30386c58
+000168  0a00    
+00016a  00                DCB      0
+00016b  00                DCB      0
+                  |L1.364|
                           DCD      0x01c0be44
-                  |L1.356|
+                  |L1.368|
+000170  5456445f          DCB      "TVD_STATE1=%08lX\n",0
+000174  53544154
+000178  45313d25
+00017c  30386c58
+000180  0a00    
+000182  00                DCB      0
+000183  00                DCB      0
+                  |L1.388|
                           DCD      0x01c0be48
-                  |L1.360|
-000168  5354323d          DCB      "ST2=%08lX\n",0
-00016c  2530386c
-000170  580a00  
-000173  00                DCB      0
-                  |L1.372|
+                  |L1.392|
+000188  5456445f          DCB      "TVD_STATE2=%08lX\n",0
+00018c  53544154
+000190  45323d25
+000194  30386c58
+000198  0a00    
+00019a  00                DCB      0
+00019b  00                DCB      0
+                  |L1.412|
                           DCD      0x01c0be4c
-                  |L1.376|
+                  |L1.416|
+0001a0  5456445f          DCB      "TVD_STATE3=%08lX\n",0
+0001a4  53544154
+0001a8  45333d25
+0001ac  30386c58
+0001b0  0a00    
+0001b2  00                DCB      0
+0001b3  00                DCB      0
+                  |L1.436|
                           DCD      0x01c0be50
-                  |L1.380|
+                  |L1.440|
+0001b8  5456445f          DCB      "TVD_STATE4=%08lX\n",0
+0001bc  53544154
+0001c0  45343d25
+0001c4  30386c58
+0001c8  0a00    
+0001ca  00                DCB      0
+0001cb  00                DCB      0
+                  |L1.460|
                           DCD      fb_c+0x1144
-                  |L1.384|
+                  |L1.464|
+0001d0  633d2530          DCB      "c=%08lX\n",0
+0001d4  386c580a
+0001d8  00      
+0001d9  00                DCB      0
+0001da  00                DCB      0
+0001db  00                DCB      0
+                  |L1.476|
                           DCD      fb_y+0x1144
+                  |L1.480|
+0001e0  793d2530          DCB      "y=%08lX\n",0
+0001e4  386c580a
+0001e8  00      
+0001e9  00                DCB      0
+0001ea  00                DCB      0
+0001eb  00                DCB      0

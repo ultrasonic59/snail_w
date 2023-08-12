@@ -40,7 +40,7 @@
 ;;;186        // div = m
 ;;;187    
 ;;;188        uint32_t val = read32(CCU_BASE + CCU_PLL_PERIPH_CTRL);
-;;;189        val &= (1 << 31) | (1 << 28);
+;;;189        val &= (0x1U << 31) | (0x1U << 28);
 ;;;190        val |= ((mul - 1) << 8) | ((div - 1) << 4) | (1 << 18); // do we need 24m output?
 ;;;191        write32(CCU_BASE + CCU_PLL_PERIPH_CTRL, val);
 ;;;192    }
@@ -90,7 +90,7 @@
 ;;;154        // div = m
 ;;;155    
 ;;;156        uint32_t val = read32(CCU_BASE + pll);
-;;;157        val &= (1 << 31) | (1 << 28);
+;;;157        val &= (0x1U << 31) | (0x1U << 28);
 ;;;158        val |= ((mul - 1) << 8) | (div - 1) | (1 << 24);
 ;;;159        write32(CCU_BASE + pll, val);
 ;;;160    }
@@ -140,7 +140,7 @@
 ;;;128        // div = m
 ;;;129    
 ;;;130        uint32_t val = read32(CCU_BASE + CCU_PLL_AUDIO_CTRL);
-;;;131        val &= (1 << 31) | (1 << 28);
+;;;131        val &= (0x1U << 31) | (0x1U << 28);
 ;;;132        val |= ((n - 1) << 8) | (div - 1);
 ;;;133        write32(CCU_BASE + CCU_PLL_AUDIO_CTRL, val);
 ;;;134    }
@@ -209,7 +209,7 @@
 ;;;101        if(p == 3) p = 2;
 ;;;102    
 ;;;103        uint32_t val = read32(CCU_BASE + CCU_PLL_CPU_CTRL);
-;;;104        val &= (1 << 31) | (1 << 28);
+;;;104        val &= (0x1U << 31) | (0x1U << 28);
 ;;;105        val |= ((n - 1) << 8) | ((k - 1) << 4) | (m - 1) | (p << 16);
 ;;;106        write32(CCU_BASE + CCU_PLL_CPU_CTRL, val);
 ;;;107    }
@@ -455,12 +455,12 @@
 000410  ebfffffe          BL       read32
 000414  e1a04000          MOV      r4,r0
 ;;;164    
-;;;165        if((reg & (1 << 24)) == 0) {
+;;;165        if((reg & (0x1U << 24)) == 0) {
 000418  e2040401          AND      r0,r4,#0x1000000
 00041c  e3500000          CMP      r0,#0
 000420  1a000006          BNE      |L1.1088|
 ;;;166            // Fractional mode
-;;;167            if(reg & (1 << 25))
+;;;167            if(reg & (0x1U << 25))
 000424  e2040402          AND      r0,r4,#0x2000000
 000428  e3500000          CMP      r0,#0
 00042c  0a000001          BEQ      |L1.1080|
@@ -667,7 +667,7 @@
                   clk_cpu_get_freq PROC
 ;;;231    uint32_t clk_cpu_get_freq(void) {
 0005d4  e92d4010          PUSH     {r4,lr}
-;;;232        clk_source_cpu_e src = (read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3;
+;;;232        clk_source_cpu_e src = (clk_source_cpu_e)((read32(CCU_BASE + CCU_CPU_CFG) >> 16) & 0x3);
 0005d8  e59f04f8          LDR      r0,|L1.2776|
 0005dc  ebfffffe          BL       read32
 0005e0  e3a01003          MOV      r1,#3
@@ -822,7 +822,7 @@
                   clk_ahb_get_freq PROC
 ;;;272    uint32_t clk_ahb_get_freq(void) {
 000734  e92d41f0          PUSH     {r4-r8,lr}
-;;;273        clk_source_ahb_e src = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3;
+;;;273        clk_source_ahb_e src = ( clk_source_ahb_e)((read32(CCU_BASE + CCU_AHB_APB_CFG) >> 12) & 0x3);
 000738  e59f039c          LDR      r0,|L1.2780|
 00073c  ebfffffe          BL       read32
 000740  e3a01003          MOV      r1,#3
@@ -925,7 +925,7 @@
                   clk_apb_get_freq PROC
 ;;;300    uint32_t clk_apb_get_freq(void) {
 000830  e92d4010          PUSH     {r4,lr}
-;;;301        clk_div_apb_e div = (read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3;
+;;;301        clk_div_apb_e div = (clk_div_apb_e)((read32(CCU_BASE + CCU_AHB_APB_CFG) >> 8) & 0x3);
 000834  e59f02a0          LDR      r0,|L1.2780|
 000838  ebfffffe          BL       read32
 00083c  e3a01003          MOV      r1,#3
@@ -1080,7 +1080,7 @@
 000980  e1a06001          MOV      r6,r1
 ;;;345        uint32_t in_freq = 0;
 000984  e3a0b000          MOV      r11,#0
-;;;346        uint32_t reg_val = (uint32_t)(1 << 31);
+;;;346        uint32_t reg_val = (uint32_t)(0x1U << 31);
 000988  e3a04102          MOV      r4,#0x80000000
 ;;;347    
 ;;;348        if(freq <= 24000000) {
@@ -1280,7 +1280,7 @@
 00001c  e28008c2          ADD      r0,r0,#0xc20000
 000020  e1a01005          MOV      r1,r5
 000024  ebfffffe          BL       write32
-;;;18     			|(uint32_t)(0x1 << 31)));
+;;;18     			|(uint32_t)(0x1U << 31)));
 ;;;19     }
 000028  e8bd8070          POP      {r4-r6,pc}
 ;;;20     
@@ -1294,7 +1294,7 @@
 ;;;22     inline void clk_pll_disable(pll_ch_e pll) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
-;;;23         write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(1 << 31)));
+;;;23         write32(CCU_BASE + pll, (read32(CCU_BASE + pll) & ~(0x1U << 31)));
 000008  e2840401          ADD      r0,r4,#0x1000000
 00000c  e28008c2          ADD      r0,r0,#0xc20000
 000010  ebfffffe          BL       read32

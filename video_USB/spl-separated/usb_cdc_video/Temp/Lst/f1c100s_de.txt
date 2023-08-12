@@ -4,28 +4,25 @@
 
                           AREA ||.text||, CODE, READONLY, ALIGN=2
 
-                          REQUIRE _printf_percent
-                          REQUIRE _printf_x
-                          REQUIRE _printf_longlong_hex
                   debe_set_bg_color PROC
-;;;51     
-;;;52     void debe_set_bg_color(uint32_t color) {
+;;;52     
+;;;53     void debe_set_bg_color(uint32_t color) {
 000000  e92d4010          PUSH     {r4,lr}
 000004  e1a04000          MOV      r4,r0
-;;;53         write32(DEBE_BASE + DEBE_BACKCOLOR, color);
+;;;54         write32(DEBE_BASE + DEBE_BACKCOLOR, color);
 000008  e1a01004          MOV      r1,r4
 00000c  e59f0aec          LDR      r0,|L1.2816|
 000010  ebfffffe          BL       write32
-;;;54     }
+;;;55     }
 000014  e8bd8010          POP      {r4,pc}
-;;;55     
+;;;56     
                           ENDP
 
                   debe_layer_enable PROC
-;;;56     void debe_layer_enable(uint8_t layer) {
+;;;57     void debe_layer_enable(uint8_t layer) {
 000018  e92d4070          PUSH     {r4-r6,lr}
 00001c  e1a04000          MOV      r4,r0
-;;;57         set32(DEBE_BASE + DEBE_MODE, (1 << (layer + 8)));
+;;;58         set32(DEBE_BASE + DEBE_MODE, (1 << (layer + 8)));
 000020  e59f0adc          LDR      r0,|L1.2820|
 000024  ebfffffe          BL       read32
 000028  e2841008          ADD      r1,r4,#8
@@ -34,16 +31,16 @@
 000034  e1a01005          MOV      r1,r5
 000038  e59f0ac4          LDR      r0,|L1.2820|
 00003c  ebfffffe          BL       write32
-;;;58     }
+;;;59     }
 000040  e8bd8070          POP      {r4-r6,pc}
-;;;59     
+;;;60     
                           ENDP
 
                   debe_layer_disable PROC
-;;;60     void debe_layer_disable(uint8_t layer) {
+;;;61     void debe_layer_disable(uint8_t layer) {
 000044  e92d4070          PUSH     {r4-r6,lr}
 000048  e1a04000          MOV      r4,r0
-;;;61         clear32(DEBE_BASE + DEBE_MODE, (1 << (layer + 8)));
+;;;62         clear32(DEBE_BASE + DEBE_MODE, (1 << (layer + 8)));
 00004c  e59f0ab0          LDR      r0,|L1.2820|
 000050  ebfffffe          BL       read32
 000054  e2841008          ADD      r1,r4,#8
@@ -52,363 +49,363 @@
 000060  e1a01005          MOV      r1,r5
 000064  e59f0a98          LDR      r0,|L1.2820|
 000068  ebfffffe          BL       write32
-;;;62     }
+;;;63     }
 00006c  e8bd8070          POP      {r4-r6,pc}
-;;;63     
+;;;64     
                           ENDP
 
                   debe_update_linewidth PROC
-;;;134    
-;;;135    static void debe_update_linewidth(uint8_t layer) {
+;;;135    
+;;;136    static void debe_update_linewidth(uint8_t layer) {
 000070  e92d4070          PUSH     {r4-r6,lr}
 000074  e1a04000          MOV      r4,r0
-;;;136        if(layer > 3) 
+;;;137        if(layer > 3) 
 000078  e3540003          CMP      r4,#3
 00007c  da000000          BLE      |L1.132|
                   |L1.128|
-;;;137    			return;
-;;;138        uint32_t val = de.layer[layer].width * de.layer[layer].bits_per_pixel;
-;;;139        write32(DEBE_BASE + DEBE_LAY_STRIDE + layer * 4, val);
-;;;140    }
+;;;138    			return;
+;;;139        uint32_t val = de.layer[layer].width * de.layer[layer].bits_per_pixel;
+;;;140        write32(DEBE_BASE + DEBE_LAY_STRIDE + layer * 4, val);
+;;;141    }
 000080  e8bd8070          POP      {r4-r6,pc}
                   |L1.132|
-000084  e0840084          ADD      r0,r4,r4,LSL #1       ;138
+000084  e0840084          ADD      r0,r4,r4,LSL #1       ;139
 000088  e59f1a78          LDR      r1,|L1.2824|
-00008c  e0810080          ADD      r0,r1,r0,LSL #1       ;138
-000090  e1d000b0          LDRH     r0,[r0,#0]            ;138
-000094  e0841084          ADD      r1,r4,r4,LSL #1       ;138
+00008c  e0810080          ADD      r0,r1,r0,LSL #1       ;139
+000090  e1d000b0          LDRH     r0,[r0,#0]            ;139
+000094  e0841084          ADD      r1,r4,r4,LSL #1       ;139
 000098  e59f2a68          LDR      r2,|L1.2824|
-00009c  e0821081          ADD      r1,r2,r1,LSL #1       ;138
-0000a0  e5d11004          LDRB     r1,[r1,#4]            ;138
-0000a4  e0050190          MUL      r5,r0,r1              ;138
+00009c  e0821081          ADD      r1,r2,r1,LSL #1       ;139
+0000a0  e5d11004          LDRB     r1,[r1,#4]            ;139
+0000a4  e0050190          MUL      r5,r0,r1              ;139
 0000a8  e59f1a5c          LDR      r1,|L1.2828|
-0000ac  e0810104          ADD      r0,r1,r4,LSL #2       ;139
-0000b0  e1a01005          MOV      r1,r5                 ;139
+0000ac  e0810104          ADD      r0,r1,r4,LSL #2       ;140
+0000b0  e1a01005          MOV      r1,r5                 ;140
 0000b4  ebfffffe          BL       write32
 0000b8  e1a00000          MOV      r0,r0
 0000bc  eaffffef          B        |L1.128|
-;;;141    
+;;;142    
                           ENDP
 
                   debe_layer_init PROC
-;;;63     
-;;;64     void debe_layer_init(uint8_t layer) {
+;;;64     
+;;;65     void debe_layer_init(uint8_t layer) {
 0000c0  e92d4010          PUSH     {r4,lr}
 0000c4  e1a04000          MOV      r4,r0
-;;;65         if(layer > 3) return;
+;;;66         if(layer > 3) return;
 0000c8  e3540003          CMP      r4,#3
 0000cc  da000000          BLE      |L1.212|
                   |L1.208|
-;;;66         de.layer[layer].width  = de.width;
-;;;67         de.layer[layer].height = de.height;
-;;;68     
-;;;69         write32(DEBE_BASE + DEBE_LAY_POS + layer * 4, 0);
-;;;70         write32(DEBE_BASE + DEBE_LAY_SIZE + layer * 4, ((de.height - 1) << 16) | (de.width - 1));
-;;;71     
-;;;72         debe_update_linewidth(layer);
-;;;73     }
+;;;67         de.layer[layer].width  = de.width;
+;;;68         de.layer[layer].height = de.height;
+;;;69     
+;;;70         write32(DEBE_BASE + DEBE_LAY_POS + layer * 4, 0);
+;;;71         write32(DEBE_BASE + DEBE_LAY_SIZE + layer * 4, ((de.height - 1) << 16) | (de.width - 1));
+;;;72     
+;;;73         debe_update_linewidth(layer);
+;;;74     }
 0000d0  e8bd8010          POP      {r4,pc}
                   |L1.212|
 0000d4  e59f0a34          LDR      r0,|L1.2832|
-0000d8  e1d000b0          LDRH     r0,[r0,#0]            ;66  ; de
-0000dc  e0841084          ADD      r1,r4,r4,LSL #1       ;66
+0000d8  e1d000b0          LDRH     r0,[r0,#0]            ;67  ; de
+0000dc  e0841084          ADD      r1,r4,r4,LSL #1       ;67
 0000e0  e59f2a20          LDR      r2,|L1.2824|
-0000e4  e0821081          ADD      r1,r2,r1,LSL #1       ;66
-0000e8  e1c100b0          STRH     r0,[r1,#0]            ;66
-0000ec  e2420008          SUB      r0,r2,#8              ;67
-0000f0  e1d000b4          LDRH     r0,[r0,#4]            ;67  ; de
-0000f4  e0841084          ADD      r1,r4,r4,LSL #1       ;67
-0000f8  e0821081          ADD      r1,r2,r1,LSL #1       ;67
-0000fc  e1c100b2          STRH     r0,[r1,#2]            ;67
+0000e4  e0821081          ADD      r1,r2,r1,LSL #1       ;67
+0000e8  e1c100b0          STRH     r0,[r1,#0]            ;67
+0000ec  e2420008          SUB      r0,r2,#8              ;68
+0000f0  e1d000b4          LDRH     r0,[r0,#4]            ;68  ; de
+0000f4  e0841084          ADD      r1,r4,r4,LSL #1       ;68
+0000f8  e0821081          ADD      r1,r2,r1,LSL #1       ;68
+0000fc  e1c100b2          STRH     r0,[r1,#2]            ;68
 000100  e59f1a0c          LDR      r1,|L1.2836|
-000104  e0810104          ADD      r0,r1,r4,LSL #2       ;69
-000108  e3a01000          MOV      r1,#0                 ;69
+000104  e0810104          ADD      r0,r1,r4,LSL #2       ;70
+000108  e3a01000          MOV      r1,#0                 ;70
 00010c  ebfffffe          BL       write32
 000110  e59f29f8          LDR      r2,|L1.2832|
-000114  e5922000          LDR      r2,[r2,#0]            ;70  ; de
-000118  e2422001          SUB      r2,r2,#1              ;70
+000114  e5922000          LDR      r2,[r2,#0]            ;71  ; de
+000118  e2422001          SUB      r2,r2,#1              ;71
 00011c  e59f39ec          LDR      r3,|L1.2832|
-000120  e1d330b4          LDRH     r3,[r3,#4]            ;70  ; de
-000124  e2433001          SUB      r3,r3,#1              ;70
-000128  e1821803          ORR      r1,r2,r3,LSL #16      ;70
+000120  e1d330b4          LDRH     r3,[r3,#4]            ;71  ; de
+000124  e2433001          SUB      r3,r3,#1              ;71
+000128  e1821803          ORR      r1,r2,r3,LSL #16      ;71
 00012c  e59f29e4          LDR      r2,|L1.2840|
-000130  e0820104          ADD      r0,r2,r4,LSL #2       ;70
+000130  e0820104          ADD      r0,r2,r4,LSL #2       ;71
 000134  ebfffffe          BL       write32
-000138  e1a00004          MOV      r0,r4                 ;72
+000138  e1a00004          MOV      r0,r4                 ;73
 00013c  ebfffffe          BL       debe_update_linewidth
 000140  e1a00000          MOV      r0,r0
 000144  eaffffe1          B        |L1.208|
-;;;74     
+;;;75     
                           ENDP
 
                   debe_layer_set_pos PROC
-;;;75     void debe_layer_set_pos(uint8_t layer, int16_t x, int16_t y) {
+;;;76     void debe_layer_set_pos(uint8_t layer, int16_t x, int16_t y) {
 000148  e92d4070          PUSH     {r4-r6,lr}
 00014c  e1a04000          MOV      r4,r0
 000150  e1a05001          MOV      r5,r1
 000154  e1a06002          MOV      r6,r2
-;;;76         if(layer > 3) return;
+;;;77         if(layer > 3) return;
 000158  e3540003          CMP      r4,#3
 00015c  da000000          BLE      |L1.356|
                   |L1.352|
-;;;77         write32(DEBE_BASE + DEBE_LAY_POS + layer * 4, (y << 16) | (x & 0xFFFF));
-;;;78     }
+;;;78         write32(DEBE_BASE + DEBE_LAY_POS + layer * 4, (y << 16) | (x & 0xFFFF));
+;;;79     }
 000160  e8bd8070          POP      {r4-r6,pc}
                   |L1.356|
-000164  e1a02805          LSL      r2,r5,#16             ;77
-000168  e1a02822          LSR      r2,r2,#16             ;77
-00016c  e1821806          ORR      r1,r2,r6,LSL #16      ;77
+000164  e1a02805          LSL      r2,r5,#16             ;78
+000168  e1a02822          LSR      r2,r2,#16             ;78
+00016c  e1821806          ORR      r1,r2,r6,LSL #16      ;78
 000170  e59f299c          LDR      r2,|L1.2836|
-000174  e0820104          ADD      r0,r2,r4,LSL #2       ;77
+000174  e0820104          ADD      r0,r2,r4,LSL #2       ;78
 000178  ebfffffe          BL       write32
 00017c  e1a00000          MOV      r0,r0
 000180  eafffff6          B        |L1.352|
-;;;79     
+;;;80     
                           ENDP
 
                   debe_layer_set_size PROC
-;;;80     void debe_layer_set_size(uint8_t layer, uint16_t w, uint16_t h) {
+;;;81     void debe_layer_set_size(uint8_t layer, uint16_t w, uint16_t h) {
 000184  e92d4070          PUSH     {r4-r6,lr}
 000188  e1a04000          MOV      r4,r0
 00018c  e1a05001          MOV      r5,r1
 000190  e1a06002          MOV      r6,r2
-;;;81         if(layer > 3) return;
+;;;82         if(layer > 3) return;
 000194  e3540003          CMP      r4,#3
 000198  da000000          BLE      |L1.416|
                   |L1.412|
-;;;82         de.layer[layer].width  = w;
-;;;83         de.layer[layer].height = h;
-;;;84     
-;;;85         write32(DEBE_BASE + DEBE_LAY_SIZE + layer * 4, ((h - 1) << 16) | (w - 1));
-;;;86     
-;;;87         debe_update_linewidth(layer);
-;;;88     }
+;;;83         de.layer[layer].width  = w;
+;;;84         de.layer[layer].height = h;
+;;;85     
+;;;86         write32(DEBE_BASE + DEBE_LAY_SIZE + layer * 4, ((h - 1) << 16) | (w - 1));
+;;;87     
+;;;88         debe_update_linewidth(layer);
+;;;89     }
 00019c  e8bd8070          POP      {r4-r6,pc}
                   |L1.416|
-0001a0  e0840084          ADD      r0,r4,r4,LSL #1       ;82
+0001a0  e0840084          ADD      r0,r4,r4,LSL #1       ;83
 0001a4  e59f195c          LDR      r1,|L1.2824|
-0001a8  e0810080          ADD      r0,r1,r0,LSL #1       ;82
-0001ac  e1c050b0          STRH     r5,[r0,#0]            ;82
-0001b0  e0840084          ADD      r0,r4,r4,LSL #1       ;83
-0001b4  e0810080          ADD      r0,r1,r0,LSL #1       ;83
-0001b8  e1c060b2          STRH     r6,[r0,#2]            ;83
-0001bc  e2452001          SUB      r2,r5,#1              ;85
-0001c0  e2463001          SUB      r3,r6,#1              ;85
-0001c4  e1821803          ORR      r1,r2,r3,LSL #16      ;85
+0001a8  e0810080          ADD      r0,r1,r0,LSL #1       ;83
+0001ac  e1c050b0          STRH     r5,[r0,#0]            ;83
+0001b0  e0840084          ADD      r0,r4,r4,LSL #1       ;84
+0001b4  e0810080          ADD      r0,r1,r0,LSL #1       ;84
+0001b8  e1c060b2          STRH     r6,[r0,#2]            ;84
+0001bc  e2452001          SUB      r2,r5,#1              ;86
+0001c0  e2463001          SUB      r3,r6,#1              ;86
+0001c4  e1821803          ORR      r1,r2,r3,LSL #16      ;86
 0001c8  e59f2948          LDR      r2,|L1.2840|
-0001cc  e0820104          ADD      r0,r2,r4,LSL #2       ;85
+0001cc  e0820104          ADD      r0,r2,r4,LSL #2       ;86
 0001d0  ebfffffe          BL       write32
-0001d4  e1a00004          MOV      r0,r4                 ;87
+0001d4  e1a00004          MOV      r0,r4                 ;88
 0001d8  ebfffffe          BL       debe_update_linewidth
 0001dc  e1a00000          MOV      r0,r0
 0001e0  eaffffed          B        |L1.412|
-;;;89     
+;;;90     
                           ENDP
 
                   debe_layer_set_mode PROC
-;;;90     void debe_layer_set_mode(uint8_t layer, debe_color_mode_e mode) {
+;;;91     void debe_layer_set_mode(uint8_t layer, debe_color_mode_e mode) {
 0001e4  e92d41f0          PUSH     {r4-r8,lr}
 0001e8  e1a04000          MOV      r4,r0
 0001ec  e1a05001          MOV      r5,r1
-;;;91         if(layer > 3) 
+;;;92         if(layer > 3) 
 0001f0  e3540003          CMP      r4,#3
 0001f4  da000000          BLE      |L1.508|
                   |L1.504|
-;;;92     			return;
-;;;93     
-;;;94         if(mode == DEBE_MODE_DEFE_VIDEO) {
-;;;95             uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(3 << 1);
-;;;96             write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (1 << 1));
-;;;97         } else if(mode == DEBE_MODE_YUV) {
-;;;98             uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(3 << 1);
-;;;99             write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (1 << 2));
-;;;100        } else {
-;;;101            de.layer[layer].bits_per_pixel = (mode >> 8) & 0x00FF;
-;;;102    
-;;;103            if(mode & DEBE_PALETTE_EN) {
-;;;104                set32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 22));
-;;;105            } else {
-;;;106                clear32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 22));
-;;;107            }
-;;;108    
-;;;109            uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR1 + layer * 4) & ~(0x0F << 8);
-;;;110            write32(DEBE_BASE + DEBE_LAY_ATTR1 + layer * 4, val | ((mode & 0x0F) << 8));
-;;;111    
-;;;112            debe_update_linewidth(layer);
-;;;113        }
-;;;114    }
+;;;93     			return;
+;;;94     
+;;;95         if(mode == DEBE_MODE_DEFE_VIDEO) {
+;;;96             uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(3 << 1);
+;;;97             write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (1 << 1));
+;;;98         } else if(mode == DEBE_MODE_YUV) {
+;;;99             uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(3 << 1);
+;;;100            write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (1 << 2));
+;;;101        } else {
+;;;102            de.layer[layer].bits_per_pixel = (mode >> 8) & 0x00FF;
+;;;103    
+;;;104            if(mode & DEBE_PALETTE_EN) {
+;;;105                set32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 22));
+;;;106            } else {
+;;;107                clear32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 22));
+;;;108            }
+;;;109    
+;;;110            uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR1 + layer * 4) & ~(0x0F << 8);
+;;;111            write32(DEBE_BASE + DEBE_LAY_ATTR1 + layer * 4, val | ((mode & 0x0F) << 8));
+;;;112    
+;;;113            debe_update_linewidth(layer);
+;;;114        }
+;;;115    }
 0001f8  e8bd81f0          POP      {r4-r8,pc}
                   |L1.508|
-0001fc  e3550040          CMP      r5,#0x40              ;94
+0001fc  e3550040          CMP      r5,#0x40              ;95
 000200  1a000008          BNE      |L1.552|
 000204  e59f1910          LDR      r1,|L1.2844|
-000208  e0810104          ADD      r0,r1,r4,LSL #2       ;95
+000208  e0810104          ADD      r0,r1,r4,LSL #2       ;96
 00020c  ebfffffe          BL       read32
-000210  e3c06006          BIC      r6,r0,#6              ;95
-000214  e3861002          ORR      r1,r6,#2              ;96
+000210  e3c06006          BIC      r6,r0,#6              ;96
+000214  e3861002          ORR      r1,r6,#2              ;97
 000218  e59f28fc          LDR      r2,|L1.2844|
-00021c  e0820104          ADD      r0,r2,r4,LSL #2       ;96
+00021c  e0820104          ADD      r0,r2,r4,LSL #2       ;97
 000220  ebfffffe          BL       write32
 000224  ea000030          B        |L1.748|
                   |L1.552|
-000228  e3550041          CMP      r5,#0x41              ;97
+000228  e3550041          CMP      r5,#0x41              ;98
 00022c  1a000008          BNE      |L1.596|
 000230  e59f18e4          LDR      r1,|L1.2844|
-000234  e0810104          ADD      r0,r1,r4,LSL #2       ;98
+000234  e0810104          ADD      r0,r1,r4,LSL #2       ;99
 000238  ebfffffe          BL       read32
-00023c  e3c06006          BIC      r6,r0,#6              ;98
-000240  e3861004          ORR      r1,r6,#4              ;99
+00023c  e3c06006          BIC      r6,r0,#6              ;99
+000240  e3861004          ORR      r1,r6,#4              ;100
 000244  e59f28d0          LDR      r2,|L1.2844|
-000248  e0820104          ADD      r0,r2,r4,LSL #2       ;99
+000248  e0820104          ADD      r0,r2,r4,LSL #2       ;100
 00024c  ebfffffe          BL       write32
 000250  ea000025          B        |L1.748|
                   |L1.596|
-000254  e1a00805          LSL      r0,r5,#16             ;101
-000258  e1a00c20          LSR      r0,r0,#24             ;101
-00025c  e0841084          ADD      r1,r4,r4,LSL #1       ;101
+000254  e1a00805          LSL      r0,r5,#16             ;102
+000258  e1a00c20          LSR      r0,r0,#24             ;102
+00025c  e0841084          ADD      r1,r4,r4,LSL #1       ;102
 000260  e59f28a0          LDR      r2,|L1.2824|
-000264  e0821081          ADD      r1,r2,r1,LSL #1       ;101
-000268  e5c10004          STRB     r0,[r1,#4]            ;101
-00026c  e2050080          AND      r0,r5,#0x80           ;103
-000270  e3500000          CMP      r0,#0                 ;103
+000264  e0821081          ADD      r1,r2,r1,LSL #1       ;102
+000268  e5c10004          STRB     r0,[r1,#4]            ;102
+00026c  e2050080          AND      r0,r5,#0x80           ;104
+000270  e3500000          CMP      r0,#0                 ;104
 000274  0a000008          BEQ      |L1.668|
 000278  e59f189c          LDR      r1,|L1.2844|
-00027c  e0810104          ADD      r0,r1,r4,LSL #2       ;104
+00027c  e0810104          ADD      r0,r1,r4,LSL #2       ;105
 000280  ebfffffe          BL       read32
-000284  e3807501          ORR      r7,r0,#0x400000       ;104
+000284  e3807501          ORR      r7,r0,#0x400000       ;105
 000288  e59f188c          LDR      r1,|L1.2844|
-00028c  e0810104          ADD      r0,r1,r4,LSL #2       ;104
-000290  e1a01007          MOV      r1,r7                 ;104
+00028c  e0810104          ADD      r0,r1,r4,LSL #2       ;105
+000290  e1a01007          MOV      r1,r7                 ;105
 000294  ebfffffe          BL       write32
 000298  ea000007          B        |L1.700|
                   |L1.668|
 00029c  e59f1878          LDR      r1,|L1.2844|
-0002a0  e0810104          ADD      r0,r1,r4,LSL #2       ;106
+0002a0  e0810104          ADD      r0,r1,r4,LSL #2       ;107
 0002a4  ebfffffe          BL       read32
-0002a8  e3c07501          BIC      r7,r0,#0x400000       ;106
+0002a8  e3c07501          BIC      r7,r0,#0x400000       ;107
 0002ac  e59f1868          LDR      r1,|L1.2844|
-0002b0  e0810104          ADD      r0,r1,r4,LSL #2       ;106
-0002b4  e1a01007          MOV      r1,r7                 ;106
+0002b0  e0810104          ADD      r0,r1,r4,LSL #2       ;107
+0002b4  e1a01007          MOV      r1,r7                 ;107
 0002b8  ebfffffe          BL       write32
                   |L1.700|
 0002bc  e59f185c          LDR      r1,|L1.2848|
-0002c0  e0810104          ADD      r0,r1,r4,LSL #2       ;109
+0002c0  e0810104          ADD      r0,r1,r4,LSL #2       ;110
 0002c4  ebfffffe          BL       read32
-0002c8  e3c06c0f          BIC      r6,r0,#0xf00          ;109
-0002cc  e205200f          AND      r2,r5,#0xf            ;110
-0002d0  e1861402          ORR      r1,r6,r2,LSL #8       ;110
+0002c8  e3c06c0f          BIC      r6,r0,#0xf00          ;110
+0002cc  e205200f          AND      r2,r5,#0xf            ;111
+0002d0  e1861402          ORR      r1,r6,r2,LSL #8       ;111
 0002d4  e59f2844          LDR      r2,|L1.2848|
-0002d8  e0820104          ADD      r0,r2,r4,LSL #2       ;110
+0002d8  e0820104          ADD      r0,r2,r4,LSL #2       ;111
 0002dc  ebfffffe          BL       write32
-0002e0  e1a00004          MOV      r0,r4                 ;112
+0002e0  e1a00004          MOV      r0,r4                 ;113
 0002e4  ebfffffe          BL       debe_update_linewidth
-0002e8  e1a00000          MOV      r0,r0                 ;113
+0002e8  e1a00000          MOV      r0,r0                 ;114
                   |L1.748|
 0002ec  e1a00000          MOV      r0,r0
 0002f0  eaffffc0          B        |L1.504|
-;;;115    
+;;;116    
                           ENDP
 
                   debe_layer_set_addr PROC
-;;;116    // Set framebufer address
-;;;117    void debe_layer_set_addr(uint8_t layer, void* buf) {
+;;;117    // Set framebufer address
+;;;118    void debe_layer_set_addr(uint8_t layer, void* buf) {
 0002f4  e92d4070          PUSH     {r4-r6,lr}
 0002f8  e1a04000          MOV      r4,r0
 0002fc  e1a05001          MOV      r5,r1
-;;;118        if(layer > 3) 
+;;;119        if(layer > 3) 
 000300  e3540003          CMP      r4,#3
 000304  da000000          BLE      |L1.780|
                   |L1.776|
-;;;119    			return;
-;;;120        write32(DEBE_BASE + DEBE_LAY_ADDR + layer * 4, ((uint32_t)buf) << 3);
-;;;121    }
+;;;120    			return;
+;;;121        write32(DEBE_BASE + DEBE_LAY_ADDR + layer * 4, ((uint32_t)buf) << 3);
+;;;122    }
 000308  e8bd8070          POP      {r4-r6,pc}
                   |L1.780|
-00030c  e1a01185          LSL      r1,r5,#3              ;120
+00030c  e1a01185          LSL      r1,r5,#3              ;121
 000310  e59f280c          LDR      r2,|L1.2852|
-000314  e0820104          ADD      r0,r2,r4,LSL #2       ;120
+000314  e0820104          ADD      r0,r2,r4,LSL #2       ;121
 000318  ebfffffe          BL       write32
 00031c  e1a00000          MOV      r0,r0
 000320  eafffff8          B        |L1.776|
-;;;122    
+;;;123    
                           ENDP
 
                   debe_layer_set_alpha PROC
-;;;123    void debe_layer_set_alpha(uint8_t layer, uint8_t alpha) {
+;;;124    void debe_layer_set_alpha(uint8_t layer, uint8_t alpha) {
 000324  e92d41f0          PUSH     {r4-r8,lr}
 000328  e1a04000          MOV      r4,r0
 00032c  e1a05001          MOV      r5,r1
-;;;124        if(layer > 3) return;
+;;;125        if(layer > 3) return;
 000330  e3540003          CMP      r4,#3
 000334  da000000          BLE      |L1.828|
                   |L1.824|
-;;;125        uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(0xFF << 24);
-;;;126        write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (alpha << 24));
-;;;127    
-;;;128        if(alpha != 0) {
-;;;129            set32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 0));
-;;;130        } else {
-;;;131            clear32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 0));
-;;;132        }
-;;;133    }
+;;;126        uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(0xFFU << 24);
+;;;127        write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (alpha << 24));
+;;;128    
+;;;129        if(alpha != 0) {
+;;;130            set32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 0));
+;;;131        } else {
+;;;132            clear32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, (1 << 0));
+;;;133        }
+;;;134    }
 000338  e8bd81f0          POP      {r4-r8,pc}
                   |L1.828|
 00033c  e59f17d8          LDR      r1,|L1.2844|
-000340  e0810104          ADD      r0,r1,r4,LSL #2       ;125
+000340  e0810104          ADD      r0,r1,r4,LSL #2       ;126
 000344  ebfffffe          BL       read32
-000348  e3c064ff          BIC      r6,r0,#0xff000000     ;125
-00034c  e1861c05          ORR      r1,r6,r5,LSL #24      ;126
+000348  e3c064ff          BIC      r6,r0,#0xff000000     ;126
+00034c  e1861c05          ORR      r1,r6,r5,LSL #24      ;127
 000350  e59f27c4          LDR      r2,|L1.2844|
-000354  e0820104          ADD      r0,r2,r4,LSL #2       ;126
+000354  e0820104          ADD      r0,r2,r4,LSL #2       ;127
 000358  ebfffffe          BL       write32
-00035c  e3550000          CMP      r5,#0                 ;128
+00035c  e3550000          CMP      r5,#0                 ;129
 000360  0a000008          BEQ      |L1.904|
 000364  e59f17b0          LDR      r1,|L1.2844|
-000368  e0810104          ADD      r0,r1,r4,LSL #2       ;129
+000368  e0810104          ADD      r0,r1,r4,LSL #2       ;130
 00036c  ebfffffe          BL       read32
-000370  e3807001          ORR      r7,r0,#1              ;129
+000370  e3807001          ORR      r7,r0,#1              ;130
 000374  e59f17a0          LDR      r1,|L1.2844|
-000378  e0810104          ADD      r0,r1,r4,LSL #2       ;129
-00037c  e1a01007          MOV      r1,r7                 ;129
+000378  e0810104          ADD      r0,r1,r4,LSL #2       ;130
+00037c  e1a01007          MOV      r1,r7                 ;130
 000380  ebfffffe          BL       write32
 000384  ea000007          B        |L1.936|
                   |L1.904|
 000388  e59f178c          LDR      r1,|L1.2844|
-00038c  e0810104          ADD      r0,r1,r4,LSL #2       ;131
+00038c  e0810104          ADD      r0,r1,r4,LSL #2       ;132
 000390  ebfffffe          BL       read32
-000394  e3c07001          BIC      r7,r0,#1              ;131
+000394  e3c07001          BIC      r7,r0,#1              ;132
 000398  e59f177c          LDR      r1,|L1.2844|
-00039c  e0810104          ADD      r0,r1,r4,LSL #2       ;131
-0003a0  e1a01007          MOV      r1,r7                 ;131
+00039c  e0810104          ADD      r0,r1,r4,LSL #2       ;132
+0003a0  e1a01007          MOV      r1,r7                 ;132
 0003a4  ebfffffe          BL       write32
                   |L1.936|
 0003a8  e1a00000          MOV      r0,r0
 0003ac  eaffffe1          B        |L1.824|
-;;;134    
+;;;135    
                           ENDP
 
                   debe_write_palette PROC
-;;;141    
-;;;142    void debe_write_palette(uint32_t* data, uint16_t len) {
+;;;142    
+;;;143    void debe_write_palette(uint32_t* data, uint16_t len) {
 0003b0  e92d4070          PUSH     {r4-r6,lr}
 0003b4  e1a04000          MOV      r4,r0
 0003b8  e1a05001          MOV      r5,r1
-;;;143        memcpy((void*)(DEBE_BASE + DEBE_PALETTE), data, len * 4);
+;;;144        memcpy((void*)(DEBE_BASE + DEBE_PALETTE), data, len * 4);
 0003bc  e1a02105          LSL      r2,r5,#2
 0003c0  e1a01004          MOV      r1,r4
 0003c4  e59f075c          LDR      r0,|L1.2856|
 0003c8  ebfffffe          BL       __aeabi_memcpy4
-;;;144    }
+;;;145    }
 0003cc  e8bd8070          POP      {r4-r6,pc}
-;;;145    
+;;;146    
                           ENDP
 
                   de_lcd_8080_write PROC
-;;;146    void de_lcd_8080_write(uint16_t data, bool is_cmd) {
+;;;147    void de_lcd_8080_write(uint16_t data, bool is_cmd) {
 0003d0  e92d41f0          PUSH     {r4-r8,lr}
 0003d4  e1a04000          MOV      r4,r0
 0003d8  e1a05001          MOV      r5,r1
-;;;147        while(read32(TCON_BASE + TCON0_CPU_INTF) & 0x00C00000)
+;;;148        while(read32(TCON_BASE + TCON0_CPU_INTF) & 0x00C00000)
 0003dc  e1a00000          MOV      r0,r0
                   |L1.992|
 0003e0  e59f0744          LDR      r0,|L1.2860|
@@ -416,12 +413,12 @@
 0003e8  e2000503          AND      r0,r0,#0xc00000
 0003ec  e3500000          CMP      r0,#0
 0003f0  1afffffa          BNE      |L1.992|
-;;;148            ;
-;;;149    
-;;;150        if(is_cmd) {
+;;;149            ;
+;;;150    
+;;;151        if(is_cmd) {
 0003f4  e3550000          CMP      r5,#0
 0003f8  0a000006          BEQ      |L1.1048|
-;;;151            clear32(TCON_BASE + TCON0_CPU_INTF, (1 << 25));
+;;;152            clear32(TCON_BASE + TCON0_CPU_INTF, (1 << 25));
 0003fc  e59f0728          LDR      r0,|L1.2860|
 000400  ebfffffe          BL       read32
 000404  e3c07402          BIC      r7,r0,#0x2000000
@@ -430,8 +427,8 @@
 000410  ebfffffe          BL       write32
 000414  ea000005          B        |L1.1072|
                   |L1.1048|
-;;;152        } else {
-;;;153            set32(TCON_BASE + TCON0_CPU_INTF, (1 << 25));
+;;;153        } else {
+;;;154            set32(TCON_BASE + TCON0_CPU_INTF, (1 << 25));
 000418  e59f070c          LDR      r0,|L1.2860|
 00041c  ebfffffe          BL       read32
 000420  e3807402          ORR      r7,r0,#0x2000000
@@ -439,9 +436,9 @@
 000428  e59f06fc          LDR      r0,|L1.2860|
 00042c  ebfffffe          BL       write32
                   |L1.1072|
-;;;154        }
-;;;155    
-;;;156        while(read32(TCON_BASE + TCON0_CPU_INTF) & 0x00C00000)
+;;;155        }
+;;;156    
+;;;157        while(read32(TCON_BASE + TCON0_CPU_INTF) & 0x00C00000)
 000430  e1a00000          MOV      r0,r0
                   |L1.1076|
 000434  e59f06f0          LDR      r0,|L1.2860|
@@ -449,9 +446,9 @@
 00043c  e2000503          AND      r0,r0,#0xc00000
 000440  e3500000          CMP      r0,#0
 000444  1afffffa          BNE      |L1.1076|
-;;;157            ;
-;;;158    
-;;;159        uint32_t reg_data = ((data & 0xfc00) << 8) | ((data & 0x0300) << 6) | ((data & 0x00e0) << 5) |
+;;;158            ;
+;;;159    
+;;;160        uint32_t reg_data = ((data & 0xfc00) << 8) | ((data & 0x0300) << 6) | ((data & 0x00e0) << 5) |
 000448  e2040b3f          AND      r0,r4,#0xfc00
 00044c  e1a00400          LSL      r0,r0,#8
 000450  e2041c03          AND      r1,r4,#0x300
@@ -460,25 +457,25 @@
 00045c  e1800281          ORR      r0,r0,r1,LSL #5
 000460  e204101f          AND      r1,r4,#0x1f
 000464  e1806181          ORR      r6,r0,r1,LSL #3
-;;;160                            ((data & 0x001f) << 3);
-;;;161    
-;;;162        write32(TCON_BASE + TCON0_CPU_WR_DAT, reg_data);
+;;;161                            ((data & 0x001f) << 3);
+;;;162    
+;;;163        write32(TCON_BASE + TCON0_CPU_WR_DAT, reg_data);
 000468  e1a01006          MOV      r1,r6
 00046c  e59f06bc          LDR      r0,|L1.2864|
 000470  ebfffffe          BL       write32
-;;;163    }
+;;;164    }
 000474  e8bd81f0          POP      {r4-r8,pc}
-;;;164    
+;;;165    
                           ENDP
 
                   de_lcd_8080_auto_mode PROC
-;;;165    void de_lcd_8080_auto_mode(bool enabled) {
+;;;166    void de_lcd_8080_auto_mode(bool enabled) {
 000478  e92d4070          PUSH     {r4-r6,lr}
 00047c  e1a04000          MOV      r4,r0
-;;;166        if(enabled) {
+;;;167        if(enabled) {
 000480  e3540000          CMP      r4,#0
 000484  0a000006          BEQ      |L1.1188|
-;;;167            set32(TCON_BASE + TCON0_CPU_INTF, (1 << 28));
+;;;168            set32(TCON_BASE + TCON0_CPU_INTF, (1 << 28));
 000488  e59f069c          LDR      r0,|L1.2860|
 00048c  ebfffffe          BL       read32
 000490  e3805201          ORR      r5,r0,#0x10000000
@@ -487,8 +484,8 @@
 00049c  ebfffffe          BL       write32
 0004a0  ea000005          B        |L1.1212|
                   |L1.1188|
-;;;168        } else {
-;;;169            clear32(TCON_BASE + TCON0_CPU_INTF, (1 << 28));
+;;;169        } else {
+;;;170            clear32(TCON_BASE + TCON0_CPU_INTF, (1 << 28));
 0004a4  e59f0680          LDR      r0,|L1.2860|
 0004a8  ebfffffe          BL       read32
 0004ac  e3c05201          BIC      r5,r0,#0x10000000
@@ -496,36 +493,36 @@
 0004b4  e59f0670          LDR      r0,|L1.2860|
 0004b8  ebfffffe          BL       write32
                   |L1.1212|
-;;;170        }
-;;;171    }
+;;;171        }
+;;;172    }
 0004bc  e8bd8070          POP      {r4-r6,pc}
-;;;172    
+;;;173    
                           ENDP
 
                   debe_load PROC
-;;;300    // Update DEBE registers
-;;;301    void debe_load(debe_reg_update_e mode) {
+;;;301    // Update DEBE registers
+;;;302    void debe_load(debe_reg_update_e mode) {
 0004c0  e92d4010          PUSH     {r4,lr}
 0004c4  e1a04000          MOV      r4,r0
-;;;302        write32(DEBE_BASE + DEBE_REGBUF_CTRL, mode);
+;;;303        write32(DEBE_BASE + DEBE_REGBUF_CTRL, mode);
 0004c8  e1a01004          MOV      r1,r4
 0004cc  e59f0660          LDR      r0,|L1.2868|
 0004d0  ebfffffe          BL       write32
-;;;303    }
+;;;304    }
 0004d4  e8bd8010          POP      {r4,pc}
-;;;304    extern	uint8_t frame_buffer[];
+;;;305    extern	uint8_t frame_buffer[];
                           ENDP
 
                   de_enable PROC
-;;;280    
-;;;281    void de_enable(void) {
+;;;281    
+;;;282    void de_enable(void) {
 0004d8  e92d4010          PUSH     {r4,lr}
-;;;282        if(de.mode == DE_LCD) {
+;;;283        if(de.mode == DE_LCD) {
 0004dc  e59f062c          LDR      r0,|L1.2832|
 0004e0  e5d00020          LDRB     r0,[r0,#0x20]  ; de
 0004e4  e3500000          CMP      r0,#0
 0004e8  1a000006          BNE      |L1.1288|
-;;;283            set32(TCON_BASE + TCON0_CTRL, (1 << 31));
+;;;284            set32(TCON_BASE + TCON0_CTRL, (0x1U << 31));
 0004ec  e59f0644          LDR      r0,|L1.2872|
 0004f0  ebfffffe          BL       read32
 0004f4  e3804102          ORR      r4,r0,#0x80000000
@@ -534,39 +531,39 @@
 000500  ebfffffe          BL       write32
 000504  ea00000a          B        |L1.1332|
                   |L1.1288|
-;;;284        } else if(de.mode == DE_TV) {
+;;;285        } else if(de.mode == DE_TV) {
 000508  e59f0600          LDR      r0,|L1.2832|
 00050c  e5d00020          LDRB     r0,[r0,#0x20]  ; de
 000510  e3500001          CMP      r0,#1
 000514  1a000006          BNE      |L1.1332|
-;;;285            set32(TCON_BASE + TCON1_CTRL, (1 << 31));
+;;;286            set32(TCON_BASE + TCON1_CTRL, (0x1U << 31));
 000518  e59f061c          LDR      r0,|L1.2876|
 00051c  ebfffffe          BL       read32
 000520  e3804102          ORR      r4,r0,#0x80000000
 000524  e1a01004          MOV      r1,r4
 000528  e59f060c          LDR      r0,|L1.2876|
 00052c  ebfffffe          BL       write32
-;;;286            tve_enable();
+;;;287            tve_enable();
 000530  ebfffffe          BL       tve_enable
                   |L1.1332|
-;;;287        }
-;;;288        set32(TCON_BASE + TCON_CTRL, (1 << 31));
+;;;288        }
+;;;289        set32(TCON_BASE + TCON_CTRL, (0x1U << 31));
 000534  e59f0604          LDR      r0,|L1.2880|
 000538  ebfffffe          BL       read32
 00053c  e3804102          ORR      r4,r0,#0x80000000
 000540  e1a01004          MOV      r1,r4
 000544  e59f05f4          LDR      r0,|L1.2880|
 000548  ebfffffe          BL       write32
-;;;289        set32(DEBE_BASE + DEBE_MODE, (1 << 0));
+;;;290        set32(DEBE_BASE + DEBE_MODE, (1 << 0));
 00054c  e59f05b0          LDR      r0,|L1.2820|
 000550  ebfffffe          BL       read32
 000554  e3804001          ORR      r4,r0,#1
 000558  e1a01004          MOV      r1,r4
 00055c  e59f05a0          LDR      r0,|L1.2820|
 000560  ebfffffe          BL       write32
-;;;290    }
+;;;291    }
 000564  e8bd8010          POP      {r4,pc}
-;;;291    
+;;;292    
                           ENDP
 
                   tcon0_init PROC
@@ -598,7 +595,7 @@
 0005a4  e5941014          LDR      r1,[r4,#0x14]
 0005a8  ebfffffe          BL       __aeabi_uidivmod
 0005ac  e1a05000          MOV      r5,r0
-;;;373        write32(TCON_BASE + TCON0_DCLK, (0xf << 28) | (val << 0));
+;;;373        write32(TCON_BASE + TCON0_DCLK, (0xfU << 28) | (val << 0));
 0005b0  e385120f          ORR      r1,r5,#0xf0000000
 0005b4  e59f0588          LDR      r0,|L1.2884|
 0005b8  ebfffffe          BL       write32
@@ -763,7 +760,7 @@
 000780  e59f040c          LDR      r0,|L1.2964|
 000784  ebfffffe          BL       write32
 ;;;414    
-;;;415        write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (1 << 31));
+;;;415        write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (0x1U << 31));
 000788  e3a02102          MOV      r2,#0x80000000
 00078c  e5940008          LDR      r0,[r4,#8]
 000790  e1821200          ORR      r1,r2,r0,LSL #4
@@ -862,7 +859,7 @@
 000874  e59f0330          LDR      r0,|L1.2988|
 000878  ebfffffe          BL       write32
 ;;;464    
-;;;465        write32(DEBE_BASE + TCON0_DCLK, (0xF << 28));
+;;;465        write32(DEBE_BASE + TCON0_DCLK, (uint32_t)(0xFU << 28));
 00087c  e3a0120f          MOV      r1,#0xf0000000
 000880  e59f0328          LDR      r0,|L1.2992|
 000884  ebfffffe          BL       write32
@@ -979,94 +976,94 @@
                           ENDP
 
                   de_lcd_init PROC
-;;;173    /************** Initialization ***************/
-;;;174    void de_lcd_init(de_lcd_config_t* params) {
+;;;174    /************** Initialization ***************/
+;;;175    void de_lcd_init(de_lcd_config_t* params) {
 00095c  e92d4070          PUSH     {r4-r6,lr}
 000960  e1a04000          MOV      r4,r0
-;;;175        de.height = params->height;
+;;;176        de.height = params->height;
 000964  e59f11a4          LDR      r1,|L1.2832|
 000968  e5940004          LDR      r0,[r4,#4]
 00096c  e5810004          STR      r0,[r1,#4]  ; de
-;;;176        de.width  = params->width;
+;;;177        de.width  = params->width;
 000970  e5940000          LDR      r0,[r4,#0]
 000974  e5810000          STR      r0,[r1,#0]  ; de
-;;;177        de.mode   = DE_LCD;
+;;;178        de.mode   = DE_LCD;
 000978  e3a00000          MOV      r0,#0
 00097c  e5c10020          STRB     r0,[r1,#0x20]  ; de
-;;;178    
-;;;179        clk_reset_set(CCU_BUS_SOFT_RST1, 14);
+;;;179    
+;;;180        clk_reset_set(CCU_BUS_SOFT_RST1, 14);
 000980  e3a0100e          MOV      r1,#0xe
 000984  e3a00fb1          MOV      r0,#0x2c4
 000988  ebfffffe          BL       clk_reset_set
-;;;180        clk_reset_set(CCU_BUS_SOFT_RST1, 12);
+;;;181        clk_reset_set(CCU_BUS_SOFT_RST1, 12);
 00098c  e3a0100c          MOV      r1,#0xc
 000990  e3a00fb1          MOV      r0,#0x2c4
 000994  ebfffffe          BL       clk_reset_set
-;;;181        clk_reset_set(CCU_BUS_SOFT_RST1, 4);
+;;;182        clk_reset_set(CCU_BUS_SOFT_RST1, 4);
 000998  e3a01004          MOV      r1,#4
 00099c  e3a00fb1          MOV      r0,#0x2c4
 0009a0  ebfffffe          BL       clk_reset_set
-;;;182    
-;;;183        debe_clk_init();
+;;;183    
+;;;184        debe_clk_init();
 0009a4  ebfffffe          BL       debe_clk_init
-;;;184        defe_clk_init();
+;;;185        defe_clk_init();
 0009a8  ebfffffe          BL       defe_clk_init
-;;;185        tcon_clk_init();
+;;;186        tcon_clk_init();
 0009ac  ebfffffe          BL       tcon_clk_init
-;;;186    
-;;;187        defe_clk_enable();
+;;;187    
+;;;188        defe_clk_enable();
 0009b0  ebfffffe          BL       defe_clk_enable
-;;;188        debe_clk_enable();
+;;;189        debe_clk_enable();
 0009b4  ebfffffe          BL       debe_clk_enable
-;;;189        tcon_clk_enable();
+;;;190        tcon_clk_enable();
 0009b8  ebfffffe          BL       tcon_clk_enable
-;;;190    
-;;;191        clk_reset_clear(CCU_BUS_SOFT_RST1, 14);
+;;;191    
+;;;192        clk_reset_clear(CCU_BUS_SOFT_RST1, 14);
 0009bc  e3a0100e          MOV      r1,#0xe
 0009c0  e3a00fb1          MOV      r0,#0x2c4
 0009c4  ebfffffe          BL       clk_reset_clear
-;;;192        clk_reset_clear(CCU_BUS_SOFT_RST1, 12);
+;;;193        clk_reset_clear(CCU_BUS_SOFT_RST1, 12);
 0009c8  e3a0100c          MOV      r1,#0xc
 0009cc  e3a00fb1          MOV      r0,#0x2c4
 0009d0  ebfffffe          BL       clk_reset_clear
-;;;193        clk_reset_clear(CCU_BUS_SOFT_RST1, 4);
+;;;194        clk_reset_clear(CCU_BUS_SOFT_RST1, 4);
 0009d4  e3a01004          MOV      r1,#4
 0009d8  e3a00fb1          MOV      r0,#0x2c4
 0009dc  ebfffffe          BL       clk_reset_clear
-;;;194    
-;;;195        for(uint32_t i = 0x0800; i < 0x1000; i += 4) {
+;;;195    
+;;;196        for(uint32_t i = 0x0800; i < 0x1000; i += 4) {
 0009e0  e3a05b02          MOV      r5,#0x800
 0009e4  ea000004          B        |L1.2556|
                   |L1.2536|
-;;;196            write32(DEBE_BASE + i, 0);
+;;;197            write32(DEBE_BASE + i, 0);
 0009e8  e2850401          ADD      r0,r5,#0x1000000
 0009ec  e28008e6          ADD      r0,r0,#0xe60000
 0009f0  e3a01000          MOV      r1,#0
 0009f4  ebfffffe          BL       write32
-0009f8  e2855004          ADD      r5,r5,#4              ;195
+0009f8  e2855004          ADD      r5,r5,#4              ;196
                   |L1.2556|
-0009fc  e3550a01          CMP      r5,#0x1000            ;195
+0009fc  e3550a01          CMP      r5,#0x1000            ;196
 000a00  3afffff8          BCC      |L1.2536|
-;;;197        }
-;;;198    
-;;;199        tcon_deinit();
+;;;198        }
+;;;199    
+;;;200        tcon_deinit();
 000a04  ebfffffe          BL       tcon_deinit
-;;;200        debe_init();
+;;;201        debe_init();
 000a08  ebfffffe          BL       debe_init
-;;;201        tcon0_init(params);
+;;;202        tcon0_init(params);
 000a0c  e1a00004          MOV      r0,r4
 000a10  ebfffffe          BL       tcon0_init
-;;;202        debe_set_bg_color(0);
+;;;203        debe_set_bg_color(0);
 000a14  e3a00000          MOV      r0,#0
 000a18  ebfffffe          BL       debe_set_bg_color
-;;;203        de_enable();
+;;;204        de_enable();
 000a1c  ebfffffe          BL       de_enable
-;;;204        debe_load(DEBE_UPDATE_MANUAL);
+;;;205        debe_load(DEBE_UPDATE_MANUAL);
 000a20  e3a00003          MOV      r0,#3
 000a24  ebfffffe          BL       debe_load
-;;;205    }
+;;;206    }
 000a28  e8bd8070          POP      {r4-r6,pc}
-;;;206    
+;;;207    
                           ENDP
 
                   tcon1_init PROC
@@ -1278,19 +1275,19 @@
                           ENDP
 
                   de_tv_init PROC
-;;;235    
-;;;236    void de_tv_init(tve_mode_e mode, uint16_t hor_lines) {
+;;;236    
+;;;237    void de_tv_init(tve_mode_e mode, uint16_t hor_lines) {
 000c00  e92d4070          PUSH     {r4-r6,lr}
 000c04  e1a05000          MOV      r5,r0
 000c08  e1a06001          MOV      r6,r1
-;;;237        de.mode   = DE_TV;
+;;;238        de.mode   = DE_TV;
 000c0c  e3a00001          MOV      r0,#1
 000c10  e51f1108          LDR      r1,|L1.2832|
 000c14  e5c10020          STRB     r0,[r1,#0x20]  ; de
-;;;238        de.width  = 720;
+;;;239        de.width  = 720;
 000c18  e3a00e2d          MOV      r0,#0x2d0
 000c1c  e5810000          STR      r0,[r1,#0]  ; de
-;;;239        de.height = (mode == TVE_MODE_NTSC) ? (480) : (576);
+;;;240        de.height = (mode == TVE_MODE_NTSC) ? (480) : (576);
 000c20  e3550000          CMP      r5,#0
 000c24  1a000001          BNE      |L1.3120|
 000c28  e3a00e1e          MOV      r0,#0x1e0
@@ -1300,319 +1297,308 @@
                   |L1.3124|
 000c34  e51f112c          LDR      r1,|L1.2832|
 000c38  e5810004          STR      r0,[r1,#4]  ; de
-;;;240    
-;;;241        clk_reset_set(CCU_BUS_SOFT_RST1, 14);
+;;;241    
+;;;242        clk_reset_set(CCU_BUS_SOFT_RST1, 14);
 000c3c  e3a0100e          MOV      r1,#0xe
 000c40  e3a00fb1          MOV      r0,#0x2c4
 000c44  ebfffffe          BL       clk_reset_set
-;;;242        clk_reset_set(CCU_BUS_SOFT_RST1, 12);
+;;;243        clk_reset_set(CCU_BUS_SOFT_RST1, 12);
 000c48  e3a0100c          MOV      r1,#0xc
 000c4c  e3a00fb1          MOV      r0,#0x2c4
 000c50  ebfffffe          BL       clk_reset_set
-;;;243        clk_reset_set(CCU_BUS_SOFT_RST1, 4);
+;;;244        clk_reset_set(CCU_BUS_SOFT_RST1, 4);
 000c54  e3a01004          MOV      r1,#4
 000c58  e3a00fb1          MOV      r0,#0x2c4
 000c5c  ebfffffe          BL       clk_reset_set
-;;;244    
-;;;245        debe_clk_init();
+;;;245    
+;;;246        debe_clk_init();
 000c60  ebfffffe          BL       debe_clk_init
-;;;246        defe_clk_init();
+;;;247        defe_clk_init();
 000c64  ebfffffe          BL       defe_clk_init
-;;;247        tcon_clk_init();
+;;;248        tcon_clk_init();
 000c68  ebfffffe          BL       tcon_clk_init
-;;;248    
-;;;249        defe_clk_enable();
+;;;249    
+;;;250        defe_clk_enable();
 000c6c  ebfffffe          BL       defe_clk_enable
-;;;250        debe_clk_enable();
+;;;251        debe_clk_enable();
 000c70  ebfffffe          BL       debe_clk_enable
-;;;251        tcon_clk_enable();
+;;;252        tcon_clk_enable();
 000c74  ebfffffe          BL       tcon_clk_enable
-;;;252    
-;;;253        clk_reset_clear(CCU_BUS_SOFT_RST1, 14);
+;;;253    
+;;;254        clk_reset_clear(CCU_BUS_SOFT_RST1, 14);
 000c78  e3a0100e          MOV      r1,#0xe
 000c7c  e3a00fb1          MOV      r0,#0x2c4
 000c80  ebfffffe          BL       clk_reset_clear
-;;;254        clk_reset_clear(CCU_BUS_SOFT_RST1, 12);
+;;;255        clk_reset_clear(CCU_BUS_SOFT_RST1, 12);
 000c84  e3a0100c          MOV      r1,#0xc
 000c88  e3a00fb1          MOV      r0,#0x2c4
 000c8c  ebfffffe          BL       clk_reset_clear
-;;;255        clk_reset_clear(CCU_BUS_SOFT_RST1, 4);
+;;;256        clk_reset_clear(CCU_BUS_SOFT_RST1, 4);
 000c90  e3a01004          MOV      r1,#4
 000c94  e3a00fb1          MOV      r0,#0x2c4
 000c98  ebfffffe          BL       clk_reset_clear
-;;;256    
-;;;257        for(uint32_t i = 0x0800; i < 0x1000; i += 4) {
+;;;257    
+;;;258        for(uint32_t i = 0x0800; i < 0x1000; i += 4) {
 000c9c  e3a04b02          MOV      r4,#0x800
 000ca0  ea000004          B        |L1.3256|
                   |L1.3236|
-;;;258            write32(DEBE_BASE + i, 0);
+;;;259            write32(DEBE_BASE + i, 0);
 000ca4  e2840401          ADD      r0,r4,#0x1000000
 000ca8  e28008e6          ADD      r0,r0,#0xe60000
 000cac  e3a01000          MOV      r1,#0
 000cb0  ebfffffe          BL       write32
-000cb4  e2844004          ADD      r4,r4,#4              ;257
+000cb4  e2844004          ADD      r4,r4,#4              ;258
                   |L1.3256|
-000cb8  e3540a01          CMP      r4,#0x1000            ;257
+000cb8  e3540a01          CMP      r4,#0x1000            ;258
 000cbc  3afffff8          BCC      |L1.3236|
-;;;259        }
-;;;260    
-;;;261        tcon_deinit();
+;;;260        }
+;;;261    
+;;;262        tcon_deinit();
 000cc0  ebfffffe          BL       tcon_deinit
-;;;262        debe_init();
+;;;263        debe_init();
 000cc4  ebfffffe          BL       debe_init
-;;;263        tcon1_init(mode);
+;;;264        tcon1_init(mode);
 000cc8  e1a00005          MOV      r0,r5
 000ccc  ebfffffe          BL       tcon1_init
-;;;264    
-;;;265        // CSC configuration
-;;;266        for(uint8_t i = 0; i < 4; i++) {
+;;;265    
+;;;266        // CSC configuration
+;;;267        for(uint8_t i = 0; i < 4; i++) {
 000cd0  e3a04000          MOV      r4,#0
 000cd4  ea000018          B        |L1.3388|
                   |L1.3288|
-;;;267            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 0 * 4, csc_tab[12 * 3 + i] << 16);
+;;;268            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 0 * 4, csc_tab[12 * 3 + i] << 16);
 000cd8  e2842024          ADD      r2,r4,#0x24
-000cdc  e59f32fc          LDR      r3,|L1.4064|
+000cdc  e59f32d4          LDR      r3,|L1.4024|
 000ce0  e7932102          LDR      r2,[r3,r2,LSL #2]
 000ce4  e1a01802          LSL      r1,r2,#16
-000ce8  e59f22f4          LDR      r2,|L1.4068|
+000ce8  e59f22cc          LDR      r2,|L1.4028|
 000cec  e0820104          ADD      r0,r2,r4,LSL #2
 000cf0  ebfffffe          BL       write32
-;;;268            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 4 * 4, csc_tab[12 * 3 + i + 4] << 16);
+;;;269            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 4 * 4, csc_tab[12 * 3 + i + 4] << 16);
 000cf4  e2842028          ADD      r2,r4,#0x28
-000cf8  e59f32e0          LDR      r3,|L1.4064|
+000cf8  e59f32b8          LDR      r3,|L1.4024|
 000cfc  e7932102          LDR      r2,[r3,r2,LSL #2]
 000d00  e1a01802          LSL      r1,r2,#16
-000d04  e59f22d8          LDR      r2,|L1.4068|
+000d04  e59f22b0          LDR      r2,|L1.4028|
 000d08  e0822104          ADD      r2,r2,r4,LSL #2
 000d0c  e2820010          ADD      r0,r2,#0x10
 000d10  ebfffffe          BL       write32
-;;;269            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 8 * 4, csc_tab[12 * 3 + i + 8] << 16);
+;;;270            write32(DEBE_BASE + DEBE_COLOR_COEF + i * 4 + 8 * 4, csc_tab[12 * 3 + i + 8] << 16);
 000d14  e284202c          ADD      r2,r4,#0x2c
-000d18  e59f32c0          LDR      r3,|L1.4064|
+000d18  e59f3298          LDR      r3,|L1.4024|
 000d1c  e7932102          LDR      r2,[r3,r2,LSL #2]
 000d20  e1a01802          LSL      r1,r2,#16
-000d24  e59f22b8          LDR      r2,|L1.4068|
+000d24  e59f2290          LDR      r2,|L1.4028|
 000d28  e0822104          ADD      r2,r2,r4,LSL #2
 000d2c  e2820020          ADD      r0,r2,#0x20
 000d30  ebfffffe          BL       write32
-000d34  e2840001          ADD      r0,r4,#1              ;266
-000d38  e20040ff          AND      r4,r0,#0xff           ;266
+000d34  e2840001          ADD      r0,r4,#1              ;267
+000d38  e20040ff          AND      r4,r0,#0xff           ;267
                   |L1.3388|
-000d3c  e3540004          CMP      r4,#4                 ;266
+000d3c  e3540004          CMP      r4,#4                 ;267
 000d40  baffffe4          BLT      |L1.3288|
-;;;270        }
-;;;271    
-;;;272        set32(DEBE_BASE + DEBE_MODE, (1 << 5)); // CSC enable
+;;;271        }
+;;;272    
+;;;273        set32(DEBE_BASE + DEBE_MODE, (1 << 5)); // CSC enable
 000d44  e51f0248          LDR      r0,|L1.2820|
 000d48  ebfffffe          BL       read32
 000d4c  e3804020          ORR      r4,r0,#0x20
 000d50  e1a01004          MOV      r1,r4
 000d54  e51f0258          LDR      r0,|L1.2820|
 000d58  ebfffffe          BL       write32
-;;;273    
-;;;274        debe_set_bg_color(0);
+;;;274    
+;;;275        debe_set_bg_color(0);
 000d5c  e3a00000          MOV      r0,#0
 000d60  ebfffffe          BL       debe_set_bg_color
-;;;275        de_enable();
+;;;276        de_enable();
 000d64  ebfffffe          BL       de_enable
-;;;276        debe_load(DEBE_UPDATE_MANUAL);
+;;;277        debe_load(DEBE_UPDATE_MANUAL);
 000d68  e3a00003          MOV      r0,#3
 000d6c  ebfffffe          BL       debe_load
-;;;277    
-;;;278        tve_init(mode);
+;;;278    
+;;;279        tve_init(mode);
 000d70  e1a00005          MOV      r0,r5
 000d74  ebfffffe          BL       tve_init
-;;;279    }
+;;;280    }
 000d78  e8bd8070          POP      {r4-r6,pc}
-;;;280    
+;;;281    
                           ENDP
 
                   de_diable PROC
-;;;291    
-;;;292    void de_diable(void) {
+;;;292    
+;;;293    void de_diable(void) {
 000d7c  e92d4010          PUSH     {r4,lr}
-;;;293        if(de.mode == DE_TV) {
+;;;294        if(de.mode == DE_TV) {
 000d80  e51f0278          LDR      r0,|L1.2832|
 000d84  e5d00020          LDRB     r0,[r0,#0x20]  ; de
 000d88  e3500001          CMP      r0,#1
 000d8c  1a000000          BNE      |L1.3476|
-;;;294            tve_disable();
+;;;295            tve_disable();
 000d90  ebfffffe          BL       tve_disable
                   |L1.3476|
-;;;295        }
-;;;296        clear32(TCON_BASE + TCON_CTRL, (1 << 31));
+;;;296        }
+;;;297        clear32(TCON_BASE + TCON_CTRL, (0x1U << 31));
 000d94  e51f025c          LDR      r0,|L1.2880|
 000d98  ebfffffe          BL       read32
 000d9c  e3c04102          BIC      r4,r0,#0x80000000
 000da0  e1a01004          MOV      r1,r4
 000da4  e51f026c          LDR      r0,|L1.2880|
 000da8  ebfffffe          BL       write32
-;;;297        clear32(DEBE_BASE + DEBE_MODE, (1 << 0));
+;;;298        clear32(DEBE_BASE + DEBE_MODE, (1 << 0));
 000dac  e51f02b0          LDR      r0,|L1.2820|
 000db0  ebfffffe          BL       read32
 000db4  e3c04001          BIC      r4,r0,#1
 000db8  e1a01004          MOV      r1,r4
 000dbc  e51f02c0          LDR      r0,|L1.2820|
 000dc0  ebfffffe          BL       write32
-;;;298    }
+;;;299    }
 000dc4  e8bd8010          POP      {r4,pc}
-;;;299    
+;;;300    
                           ENDP
 
                   defe_init_spl_422 PROC
-;;;306    // Initialize DEFE in semi-planar YUV 4:2:2 input mode
-;;;307    void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* buf_uv) {
+;;;307    // Initialize DEFE in semi-planar YUV 4:2:2 input mode
+;;;308    void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* buf_uv) {
 000dc8  e92d41f0          PUSH     {r4-r8,lr}
 000dcc  e1a05000          MOV      r5,r0
 000dd0  e1a06001          MOV      r6,r1
 000dd4  e1a07002          MOV      r7,r2
 000dd8  e1a08003          MOV      r8,r3
-;;;308        set32(DEFE_BASE + DEFE_EN, 0x01); // Enable DEFE
+;;;309        set32(DEFE_BASE + DEFE_EN, 0x01); // Enable DEFE
 000ddc  e3a0061e          MOV      r0,#0x1e00000
 000de0  ebfffffe          BL       read32
 000de4  e3804001          ORR      r4,r0,#1
 000de8  e1a01004          MOV      r1,r4
 000dec  e3a0061e          MOV      r0,#0x1e00000
 000df0  ebfffffe          BL       write32
-;;;309        set32(DEFE_BASE + DEFE_EN, (1 << 31)); // Enable CPU access
+;;;310        set32(DEFE_BASE + DEFE_EN, (0x1U << 31)); // Enable CPU access
 000df4  e3a0061e          MOV      r0,#0x1e00000
 000df8  ebfffffe          BL       read32
 000dfc  e3804102          ORR      r4,r0,#0x80000000
 000e00  e1a01004          MOV      r1,r4
 000e04  e3a0061e          MOV      r0,#0x1e00000
 000e08  ebfffffe          BL       write32
-;;;310    
-;;;311        write32(DEFE_BASE + DEFE_BYPASS, (0 << 0) | (0 << 1)); // CSC/scaler bypass disabled
+;;;311    
+;;;312        write32(DEFE_BASE + DEFE_BYPASS, (0 << 0) | (0 << 1)); // CSC/scaler bypass disabled
 000e0c  e3a01000          MOV      r1,#0
-000e10  e59f01d0          LDR      r0,|L1.4072|
+000e10  e59f01a8          LDR      r0,|L1.4032|
 000e14  ebfffffe          BL       write32
-;;;312    
-;;;313        write32(DEFE_BASE + DEFE_ADDR0, (uint32_t)buf_y);
+;;;313    
+;;;314        write32(DEFE_BASE + DEFE_ADDR0, (uint32_t)buf_y);
 000e18  e1a01007          MOV      r1,r7
-000e1c  e59f01c8          LDR      r0,|L1.4076|
+000e1c  e59f01a0          LDR      r0,|L1.4036|
 000e20  ebfffffe          BL       write32
-;;;314        write32(DEFE_BASE + DEFE_ADDR1, (uint32_t)buf_uv);
+;;;315        write32(DEFE_BASE + DEFE_ADDR1, (uint32_t)buf_uv);
 000e24  e1a01008          MOV      r1,r8
-000e28  e59f01c0          LDR      r0,|L1.4080|
+000e28  e59f0198          LDR      r0,|L1.4040|
 000e2c  ebfffffe          BL       write32
-;;;315        write32(DEFE_BASE + DEFE_STRIDE0, in_w);
+;;;316        write32(DEFE_BASE + DEFE_STRIDE0, in_w);
 000e30  e1a01005          MOV      r1,r5
-000e34  e59f01b8          LDR      r0,|L1.4084|
+000e34  e59f0190          LDR      r0,|L1.4044|
 000e38  ebfffffe          BL       write32
-;;;316        write32(DEFE_BASE + DEFE_STRIDE1, in_w);
+;;;317        write32(DEFE_BASE + DEFE_STRIDE1, in_w);
 000e3c  e1a01005          MOV      r1,r5
-000e40  e59f01b0          LDR      r0,|L1.4088|
+000e40  e59f0188          LDR      r0,|L1.4048|
 000e44  ebfffffe          BL       write32
-;;;317    
-;;;318        write32(DEFE_BASE + DEFE_IN_SIZE, (in_w - 1) | ((in_h - 1) << 16)); // Out size = In size
+;;;318    
+;;;319        write32(DEFE_BASE + DEFE_IN_SIZE, (in_w - 1) | ((in_h - 1) << 16)); // Out size = In size
 000e48  e2450001          SUB      r0,r5,#1
 000e4c  e2462001          SUB      r2,r6,#1
 000e50  e1801802          ORR      r1,r0,r2,LSL #16
-000e54  e59f01a0          LDR      r0,|L1.4092|
+000e54  e59f0178          LDR      r0,|L1.4052|
 000e58  ebfffffe          BL       write32
-;;;319       write32(DEFE_BASE + DEFE_OUT_SIZE, (in_w - 1) | ((in_h - 1) << 16));
+;;;320       write32(DEFE_BASE + DEFE_OUT_SIZE, (in_w - 1) | ((in_h - 1) << 16));
 000e5c  e2450001          SUB      r0,r5,#1
 000e60  e2462001          SUB      r2,r6,#1
 000e64  e1801802          ORR      r1,r0,r2,LSL #16
-000e68  e59f0190          LDR      r0,|L1.4096|
+000e68  e59f0168          LDR      r0,|L1.4056|
 000e6c  ebfffffe          BL       write32
-;;;320     ////  write32(DEFE_BASE + DEFE_OUT_SIZE, (599) | ((799) << 16));
-;;;321       write32(DEFE_BASE + DEFE_H_FACT, (1 << 16)); // H scale: 1
+;;;321     ////  write32(DEFE_BASE + DEFE_OUT_SIZE, (599) | ((799) << 16));
+;;;322       write32(DEFE_BASE + DEFE_H_FACT, (1 << 16)); // H scale: 1
 000e70  e3a01801          MOV      r1,#0x10000
-000e74  e59f0188          LDR      r0,|L1.4100|
+000e74  e59f0160          LDR      r0,|L1.4060|
 000e78  ebfffffe          BL       write32
-;;;322        if(de.mode == DE_LCD)
+;;;323        if(de.mode == DE_LCD)
 000e7c  e51f0374          LDR      r0,|L1.2832|
 000e80  e5d00020          LDRB     r0,[r0,#0x20]  ; de
 000e84  e3500000          CMP      r0,#0
 000e88  1a000003          BNE      |L1.3740|
-;;;323            write32(DEFE_BASE + DEFE_V_FACT, (1 << 16)); // V scale: 1
+;;;324            write32(DEFE_BASE + DEFE_V_FACT, (1 << 16)); // V scale: 1
 000e8c  e3a01801          MOV      r1,#0x10000
-000e90  e59f0170          LDR      r0,|L1.4104|
+000e90  e59f0148          LDR      r0,|L1.4064|
 000e94  ebfffffe          BL       write32
 000e98  ea000006          B        |L1.3768|
                   |L1.3740|
-;;;324        else if(de.mode == DE_TV)
+;;;325        else if(de.mode == DE_TV)
 000e9c  e51f0394          LDR      r0,|L1.2832|
 000ea0  e5d00020          LDRB     r0,[r0,#0x20]  ; de
 000ea4  e3500001          CMP      r0,#1
 000ea8  1a000002          BNE      |L1.3768|
-;;;325            write32(DEFE_BASE + DEFE_V_FACT, (2 << 16)); // V scale: 1/2 (??)
+;;;326    			write32(DEFE_BASE + DEFE_V_FACT, (0x2U << 16)); 
 000eac  e3a01802          MOV      r1,#0x20000
-000eb0  e59f0150          LDR      r0,|L1.4104|
+000eb0  e59f0128          LDR      r0,|L1.4064|
 000eb4  ebfffffe          BL       write32
                   |L1.3768|
-;;;326    
-;;;327        write32(DEFE_BASE + DEFE_IN_FMT, (2 << 8) | (1 << 4)); // UV combined | 422
+;;;327    
+;;;328        write32(DEFE_BASE + DEFE_IN_FMT, (2 << 8) | (1 << 4)); // UV combined | 422
 000eb8  e3a01e21          MOV      r1,#0x210
-000ebc  e59f0148          LDR      r0,|L1.4108|
+000ebc  e59f0120          LDR      r0,|L1.4068|
 000ec0  ebfffffe          BL       write32
-;;;328       set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)); //??
-000ec4  e59f0144          LDR      r0,|L1.4112|
+;;;329       set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)); //??
+000ec4  e59f011c          LDR      r0,|L1.4072|
 000ec8  ebfffffe          BL       read32
 000ecc  e3804010          ORR      r4,r0,#0x10
 000ed0  e1a01004          MOV      r1,r4
-000ed4  e59f0134          LDR      r0,|L1.4112|
+000ed4  e59f010c          LDR      r0,|L1.4072|
 000ed8  ebfffffe          BL       write32
-;;;329      ////  set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)|(6 << 0)); //??
-;;;330        //write32(DEFE_BASE+DEFE_FIELD_CTRL, (1 << 12)); //?
-;;;331    		{
-;;;332    			uint32_t *tmpbuff=(uint32_t*)frame_buffer;
-000edc  e59f4130          LDR      r4,|L1.4116|
-;;;333    		tmpbuff[5]=0x1234;
-000ee0  e59f0130          LDR      r0,|L1.4120|
-000ee4  e5840014          STR      r0,[r4,#0x14]
-;;;334    		    write32(DEFE_BASE + DEFE_WB_ADDR,(uint32_t)frame_buffer); // 
-000ee8  e2841000          ADD      r1,r4,#0
-000eec  e59f0128          LDR      r0,|L1.4124|
-000ef0  ebfffffe          BL       write32
-;;;335    		printf("DEFE_WB_ADDR: [%x][%x]\n",(uint32_t)frame_buffer,tmpbuff[5]);
-000ef4  e2841000          ADD      r1,r4,#0
-000ef8  e28f0e12          ADR      r0,|L1.4128|
-000efc  e5942014          LDR      r2,[r4,#0x14]
-000f00  ebfffffe          BL       __2printf
-;;;336    		}
+;;;330      ////  set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)|(6 << 0)); //??
+;;;331        //write32(DEFE_BASE+DEFE_FIELD_CTRL, (1 << 12)); //?
+;;;332    	/////	{
+;;;333    	/////		uint32_t *tmpbuff=(uint32_t*)frame_buffer;
+;;;334    	////	tmpbuff[5]=0x1234;
+;;;335    	/////	    write32(DEFE_BASE + DEFE_WB_ADDR,(uint32_t)frame_buffer); // 
+;;;336    /////		}
 ;;;337        for(uint8_t i = 0; i < 4; i++) // Color conversion table
-000f04  e3a04000          MOV      r4,#0
-000f08  ea000014          B        |L1.3936|
-                  |L1.3852|
+000edc  e3a04000          MOV      r4,#0
+000ee0  ea000014          B        |L1.3896|
+                  |L1.3812|
 ;;;338        {
 ;;;339            write32(DEFE_BASE + DEFE_CSC_COEF + i * 4 + 0 * 4, csc_tab[i]);
-000f0c  e59f20cc          LDR      r2,|L1.4064|
-000f10  e7921104          LDR      r1,[r2,r4,LSL #2]
-000f14  e59f211c          LDR      r2,|L1.4152|
-000f18  e0820104          ADD      r0,r2,r4,LSL #2
-000f1c  ebfffffe          BL       write32
+000ee4  e59f20cc          LDR      r2,|L1.4024|
+000ee8  e7921104          LDR      r1,[r2,r4,LSL #2]
+000eec  e59f20f8          LDR      r2,|L1.4076|
+000ef0  e0820104          ADD      r0,r2,r4,LSL #2
+000ef4  ebfffffe          BL       write32
 ;;;340            write32(DEFE_BASE + DEFE_CSC_COEF + i * 4 + 4 * 4, csc_tab[i + 4]);
-000f20  e59f20b8          LDR      r2,|L1.4064|
-000f24  e2843004          ADD      r3,r4,#4
-000f28  e7921103          LDR      r1,[r2,r3,LSL #2]
-000f2c  e59f2104          LDR      r2,|L1.4152|
-000f30  e0822104          ADD      r2,r2,r4,LSL #2
-000f34  e2820010          ADD      r0,r2,#0x10
-000f38  ebfffffe          BL       write32
+000ef8  e59f20b8          LDR      r2,|L1.4024|
+000efc  e2843004          ADD      r3,r4,#4
+000f00  e7921103          LDR      r1,[r2,r3,LSL #2]
+000f04  e59f20e0          LDR      r2,|L1.4076|
+000f08  e0822104          ADD      r2,r2,r4,LSL #2
+000f0c  e2820010          ADD      r0,r2,#0x10
+000f10  ebfffffe          BL       write32
 ;;;341            write32(DEFE_BASE + DEFE_CSC_COEF + i * 4 + 8 * 4, csc_tab[i + 8]);
-000f3c  e59f209c          LDR      r2,|L1.4064|
-000f40  e2843008          ADD      r3,r4,#8
-000f44  e7921103          LDR      r1,[r2,r3,LSL #2]
-000f48  e59f20e8          LDR      r2,|L1.4152|
-000f4c  e0822104          ADD      r2,r2,r4,LSL #2
-000f50  e2820020          ADD      r0,r2,#0x20
-000f54  ebfffffe          BL       write32
-000f58  e2840001          ADD      r0,r4,#1              ;337
-000f5c  e20040ff          AND      r4,r0,#0xff           ;337
-                  |L1.3936|
-000f60  e3540004          CMP      r4,#4                 ;337
-000f64  baffffe8          BLT      |L1.3852|
+000f14  e59f209c          LDR      r2,|L1.4024|
+000f18  e2843008          ADD      r3,r4,#8
+000f1c  e7921103          LDR      r1,[r2,r3,LSL #2]
+000f20  e59f20c4          LDR      r2,|L1.4076|
+000f24  e0822104          ADD      r2,r2,r4,LSL #2
+000f28  e2820020          ADD      r0,r2,#0x20
+000f2c  ebfffffe          BL       write32
+000f30  e2840001          ADD      r0,r4,#1              ;337
+000f34  e20040ff          AND      r4,r0,#0xff           ;337
+                  |L1.3896|
+000f38  e3540004          CMP      r4,#4                 ;337
+000f3c  baffffe8          BLT      |L1.3812|
 ;;;342        }
 ;;;343    
 ;;;344        set32(
-000f68  e59f00cc          LDR      r0,|L1.4156|
-000f6c  ebfffffe          BL       read32
-000f70  e3804502          ORR      r4,r0,#0x800000
-000f74  e1a01004          MOV      r1,r4
-000f78  e59f00bc          LDR      r0,|L1.4156|
-000f7c  ebfffffe          BL       write32
+000f40  e59f00a8          LDR      r0,|L1.4080|
+000f44  ebfffffe          BL       read32
+000f48  e3804502          ORR      r4,r0,#0x800000
+000f4c  e1a01004          MOV      r1,r4
+000f50  e59f0098          LDR      r0,|L1.4080|
+000f54  ebfffffe          BL       write32
 ;;;345            DEFE_BASE + DEFE_FRM_CTRL,
 ;;;346            (1 << 23)); // Enable CPU access to filter RAM (if enabled, filter is bypassed?)
 ;;;347    
@@ -1626,97 +1612,84 @@
 ;;;355        //    clear32(DEFE_BASE+DEFE_FRM_CTRL, (1 << 23)); // Disable CPU access to filter RAM (enable filter?)
 ;;;356    
 ;;;357     /////   clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
-;;;358        clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
-000f80  e3a0061e          MOV      r0,#0x1e00000
-000f84  ebfffffe          BL       read32
-000f88  e3c04102          BIC      r4,r0,#0x80000000
-000f8c  e1a01004          MOV      r1,r4
-000f90  e3a0061e          MOV      r0,#0x1e00000
-000f94  ebfffffe          BL       write32
+;;;358        clear32(DEFE_BASE + DEFE_EN, (0x1U << 31)); // Disable CPU access (?)
+000f58  e3a0061e          MOV      r0,#0x1e00000
+000f5c  ebfffffe          BL       read32
+000f60  e3c04102          BIC      r4,r0,#0x80000000
+000f64  e1a01004          MOV      r1,r4
+000f68  e3a0061e          MOV      r0,#0x1e00000
+000f6c  ebfffffe          BL       write32
 ;;;359        set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 0)); // Registers ready
-000f98  e59f009c          LDR      r0,|L1.4156|
-000f9c  ebfffffe          BL       read32
-000fa0  e3804001          ORR      r4,r0,#1
-000fa4  e1a01004          MOV      r1,r4
-000fa8  e59f008c          LDR      r0,|L1.4156|
-000fac  ebfffffe          BL       write32
+000f70  e59f0078          LDR      r0,|L1.4080|
+000f74  ebfffffe          BL       read32
+000f78  e3804001          ORR      r4,r0,#1
+000f7c  e1a01004          MOV      r1,r4
+000f80  e59f0068          LDR      r0,|L1.4080|
+000f84  ebfffffe          BL       write32
 ;;;360        set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 16)); // Start frame processing
-000fb0  e59f0084          LDR      r0,|L1.4156|
-000fb4  ebfffffe          BL       read32
-000fb8  e3804801          ORR      r4,r0,#0x10000
-000fbc  e1a01004          MOV      r1,r4
-000fc0  e59f0074          LDR      r0,|L1.4156|
-000fc4  ebfffffe          BL       write32
+000f88  e59f0060          LDR      r0,|L1.4080|
+000f8c  ebfffffe          BL       read32
+000f90  e3804801          ORR      r4,r0,#0x10000
+000f94  e1a01004          MOV      r1,r4
+000f98  e59f0050          LDR      r0,|L1.4080|
+000f9c  ebfffffe          BL       write32
 ;;;361    }
-000fc8  e8bd81f0          POP      {r4-r8,pc}
+000fa0  e8bd81f0          POP      {r4-r8,pc}
 ;;;362    
                           ENDP
 
                   read32 PROC
 ;;;19     
 ;;;20     static __inline uint32_t read32(uint32_t addr)
-000fcc  e1a01000          MOV      r1,r0
+000fa4  e1a01000          MOV      r1,r0
 ;;;21     {
 ;;;22       return (*((volatile uint32_t*)(addr)));
-000fd0  e5910000          LDR      r0,[r1,#0]
+000fa8  e5910000          LDR      r0,[r1,#0]
 ;;;23     }
-000fd4  e12fff1e          BX       lr
+000fac  e12fff1e          BX       lr
 ;;;24     
                           ENDP
 
                   write32 PROC
 ;;;39     
 ;;;40     static __inline void write32(uint32_t addr, uint32_t value)
-000fd8  e5801000          STR      r1,[r0,#0]
+000fb0  e5801000          STR      r1,[r0,#0]
 ;;;41     {
 ;;;42       *((volatile uint32_t*)(addr)) = value;
 ;;;43     }
-000fdc  e12fff1e          BX       lr
+000fb4  e12fff1e          BX       lr
 ;;;44     
                           ENDP
 
-                  |L1.4064|
+                  |L1.4024|
                           DCD      csc_tab
-                  |L1.4068|
+                  |L1.4028|
                           DCD      0x01e60950
-                  |L1.4072|
+                  |L1.4032|
                           DCD      0x01e00008
-                  |L1.4076|
+                  |L1.4036|
                           DCD      0x01e00020
-                  |L1.4080|
+                  |L1.4040|
                           DCD      0x01e00024
-                  |L1.4084|
+                  |L1.4044|
                           DCD      0x01e00040
-                  |L1.4088|
+                  |L1.4048|
                           DCD      0x01e00044
-                  |L1.4092|
+                  |L1.4052|
                           DCD      0x01e00100
-                  |L1.4096|
+                  |L1.4056|
                           DCD      0x01e00104
-                  |L1.4100|
+                  |L1.4060|
                           DCD      0x01e00108
-                  |L1.4104|
+                  |L1.4064|
                           DCD      0x01e0010c
-                  |L1.4108|
+                  |L1.4068|
                           DCD      0x01e0004c
-                  |L1.4112|
+                  |L1.4072|
                           DCD      0x01e0005c
-                  |L1.4116|
-                          DCD      frame_buffer
-                  |L1.4120|
-                          DCD      0x00001234
-                  |L1.4124|
-                          DCD      0x01e00050
-                  |L1.4128|
-001020  44454645          DCB      "DEFE_WB_ADDR: [%x][%x]\n",0
-001024  5f57425f
-001028  41444452
-00102c  3a205b25
-001030  785d5b25
-001034  785d0a00
-                  |L1.4152|
+                  |L1.4076|
                           DCD      0x01e00070
-                  |L1.4156|
+                  |L1.4080|
                           DCD      0x01e00004
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=2

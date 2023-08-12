@@ -116,7 +116,8 @@ void sys_uart_init(void)
   /* ≈‰÷√UART≤Œ ˝115200-8-1-0 */
   addr = UART0_REG_BASE;
   write32(addr + UART_IER_REG, 0x0);
-  write32(addr + UART_FCR_REG, 0xf7);
+////  write32(addr + UART_FCR_REG, 0xf7);
+  write32(addr + UART_FCR_REG, 0xf6);    ////off fifo
   write32(addr + UART_MCR_REG, 0x0);
   val = read32(addr + UART_LCR_REG);
   val |= (1 << 7);
@@ -139,5 +140,21 @@ void sys_uart_putc(char c)
   while ((read32(addr + UART_USR_REG) & (1 << 1)) == 0);
   write32(addr + UART_THR_REG, c);
 }
-
+char sys_uart_getc(void)
+{
+char rez=0;
+while ((read32(UART0_REG_BASE + UART_USR_REG) & (1 << 3)) == 0); ///wait rx not empty
+rez= read32(UART0_REG_BASE+	UART_RBR_REG);
+return rez;	
+}
+uint8_t check_key(void)
+{
+/////uint32_t addr = UART0_REG_BASE;
+	
+/////return 	read32(addr + UART_USR_REG);
+if((read32(UART0_REG_BASE + UART_USR_REG) & (1 << 3)) == 0)
+	return 0;
+else
+	return 1;
+}
 #endif

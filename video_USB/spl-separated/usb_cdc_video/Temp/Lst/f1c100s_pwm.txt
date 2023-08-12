@@ -68,11 +68,11 @@
                           AREA ||i.pwm_disable||, COMGROUP=pwm_disable, CODE, READONLY, ALIGN=2
 
                   pwm_disable PROC
-;;;28     
-;;;29     inline void pwm_disable(uint8_t ch) {
+;;;29     
+;;;30     inline void pwm_disable(uint8_t ch) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
-;;;30         write32(PWM_BASE, (read32(PWM_BASE) & ~(1 << (4 + ch * 15))));
+;;;31         write32(PWM_BASE, (read32(PWM_BASE) & ~(1 << (4 + ch * 15))));
 000008  e59f0044          LDR      r0,|L13.84|
 00000c  ebfffffe          BL       read32
 000010  e0641204          RSB      r1,r4,r4,LSL #4
@@ -82,7 +82,7 @@
 000020  e1a01005          MOV      r1,r5
 000024  e59f0028          LDR      r0,|L13.84|
 000028  ebfffffe          BL       write32
-;;;31         write32(PWM_BASE, (read32(PWM_BASE) & ~(1 << (6 + ch * 15))));
+;;;32         write32(PWM_BASE, (read32(PWM_BASE) & ~(1 << (6 + ch * 15))));
 00002c  e59f0020          LDR      r0,|L13.84|
 000030  ebfffffe          BL       read32
 000034  e0641204          RSB      r1,r4,r4,LSL #4
@@ -92,9 +92,9 @@
 000044  e1a01005          MOV      r1,r5
 000048  e59f0004          LDR      r0,|L13.84|
 00004c  ebfffffe          BL       write32
-;;;32     }
+;;;33     }
 000050  e8bd8070          POP      {r4-r6,pc}
-;;;33     
+;;;34     
                           ENDP
 
                   |L13.84|
@@ -109,48 +109,50 @@
 000004  e1a04000          MOV      r4,r0
 000008  e1a05001          MOV      r5,r1
 ;;;13         uint32_t reg  = PWM_BASE + PWM_CH0 + ch * 4;
-00000c  e59f0020          LDR      r0,|L20.52|
-000010  e0806104          ADD      r6,r0,r4,LSL #2
-;;;14         uint32_t temp = read32(reg) &((uint32_t) ~(0xFFFF << 16));
-000014  e1a00006          MOV      r0,r6
+00000c  e59f0024          LDR      r0,|L20.56|
+000010  e0807104          ADD      r7,r0,r4,LSL #2
+;;;14         uint32_t temp = read32(reg);
+000014  e1a00007          MOV      r0,r7
 000018  ebfffffe          BL       read32
-00001c  e1a07800          LSL      r7,r0,#16
-000020  e1a07827          LSR      r7,r7,#16
-;;;15         write32(reg, temp | ((uint32_t)val << 16));
-000024  e1871805          ORR      r1,r7,r5,LSL #16
-000028  e1a00006          MOV      r0,r6
-00002c  ebfffffe          BL       write32
-;;;16     }
-000030  e8bd81f0          POP      {r4-r8,pc}
-;;;17     
+00001c  e1a06000          MOV      r6,r0
+;;;15     		temp&= (uint32_t)( ~(0xFFFFU << 16));
+000020  e1a06806          LSL      r6,r6,#16
+000024  e1a06826          LSR      r6,r6,#16
+;;;16         write32(reg, temp | ((uint32_t)val << 16));
+000028  e1861805          ORR      r1,r6,r5,LSL #16
+00002c  e1a00007          MOV      r0,r7
+000030  ebfffffe          BL       write32
+;;;17     }
+000034  e8bd81f0          POP      {r4-r8,pc}
+;;;18     
                           ENDP
 
-                  |L20.52|
+                  |L20.56|
                           DCD      0x01c21004
 
                           AREA ||i.pwm_set_pulse_len||, COMGROUP=pwm_set_pulse_len, CODE, READONLY, ALIGN=2
 
                   pwm_set_pulse_len PROC
-;;;17     
-;;;18     inline void pwm_set_pulse_len(uint8_t ch, uint16_t val) {
+;;;18     
+;;;19     inline void pwm_set_pulse_len(uint8_t ch, uint16_t val) {
 000000  e92d41f0          PUSH     {r4-r8,lr}
 000004  e1a04000          MOV      r4,r0
 000008  e1a05001          MOV      r5,r1
-;;;19         uint32_t reg  = PWM_BASE + PWM_CH0 + ch * 4;
+;;;20         uint32_t reg  = PWM_BASE + PWM_CH0 + ch * 4;
 00000c  e59f0020          LDR      r0,|L27.52|
 000010  e0806104          ADD      r6,r0,r4,LSL #2
-;;;20         uint32_t temp = read32(reg) & ~0xFFFF;
+;;;21         uint32_t temp = read32(reg) & ~0xFFFF;
 000014  e1a00006          MOV      r0,r6
 000018  ebfffffe          BL       read32
 00001c  e1a07820          LSR      r7,r0,#16
 000020  e1a07807          LSL      r7,r7,#16
-;;;21         write32(reg, temp | val);
+;;;22         write32(reg, temp | val);
 000024  e1871005          ORR      r1,r7,r5
 000028  e1a00006          MOV      r0,r6
 00002c  ebfffffe          BL       write32
-;;;22     }
+;;;23     }
 000030  e8bd81f0          POP      {r4-r8,pc}
-;;;23     
+;;;24     
                           ENDP
 
                   |L27.52|
@@ -159,11 +161,11 @@
                           AREA ||i.pwm_enable||, COMGROUP=pwm_enable, CODE, READONLY, ALIGN=2
 
                   pwm_enable PROC
-;;;23     
-;;;24     inline void pwm_enable(uint8_t ch) {
+;;;24     
+;;;25     inline void pwm_enable(uint8_t ch) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
-;;;25         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (6 + ch * 15))));
+;;;26         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (6 + ch * 15))));
 000008  e59f0044          LDR      r0,|L34.84|
 00000c  ebfffffe          BL       read32
 000010  e0641204          RSB      r1,r4,r4,LSL #4
@@ -173,7 +175,7 @@
 000020  e1a01005          MOV      r1,r5
 000024  e59f0028          LDR      r0,|L34.84|
 000028  ebfffffe          BL       write32
-;;;26         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (4 + ch * 15))));
+;;;27         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (4 + ch * 15))));
 00002c  e59f0020          LDR      r0,|L34.84|
 000030  ebfffffe          BL       read32
 000034  e0641204          RSB      r1,r4,r4,LSL #4
@@ -183,9 +185,9 @@
 000044  e1a01005          MOV      r1,r5
 000048  e59f0004          LDR      r0,|L34.84|
 00004c  ebfffffe          BL       write32
-;;;27     }
+;;;28     }
 000050  e8bd8070          POP      {r4-r6,pc}
-;;;28     
+;;;29     
                           ENDP
 
                   |L34.84|
@@ -194,11 +196,11 @@
                           AREA ||i.pwm_pulse_start||, COMGROUP=pwm_pulse_start, CODE, READONLY, ALIGN=2
 
                   pwm_pulse_start PROC
-;;;33     
-;;;34     inline void pwm_pulse_start(uint8_t ch) {
+;;;34     
+;;;35     inline void pwm_pulse_start(uint8_t ch) {
 000000  e92d4070          PUSH     {r4-r6,lr}
 000004  e1a04000          MOV      r4,r0
-;;;35         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (8 + ch * 15))));
+;;;36         write32(PWM_BASE, (read32(PWM_BASE) | (1 << (8 + ch * 15))));
 000008  e59f0020          LDR      r0,|L41.48|
 00000c  ebfffffe          BL       read32
 000010  e0641204          RSB      r1,r4,r4,LSL #4
@@ -208,7 +210,7 @@
 000020  e1a01005          MOV      r1,r5
 000024  e59f0004          LDR      r0,|L41.48|
 000028  ebfffffe          BL       write32
-;;;36     }
+;;;37     }
 00002c  e8bd8070          POP      {r4-r6,pc}
                           ENDP
 

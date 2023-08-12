@@ -11,7 +11,8 @@ void pwm_init(uint8_t ch, pwm_mode_e mode, uint8_t active_level, pwm_prescaller_
 
 inline void pwm_set_period(uint8_t ch, uint16_t val) {
     uint32_t reg  = PWM_BASE + PWM_CH0 + ch * 4;
-    uint32_t temp = read32(reg) &((uint32_t) ~(0xFFFF << 16));
+    uint32_t temp = read32(reg);
+		temp&= (uint32_t)( ~(0xFFFFU << 16));
     write32(reg, temp | ((uint32_t)val << 16));
 }
 

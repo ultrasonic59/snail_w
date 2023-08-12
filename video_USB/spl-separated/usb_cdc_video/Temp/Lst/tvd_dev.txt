@@ -5,206 +5,49 @@
                           AREA ||.text||, CODE, READONLY, ALIGN=2
 
                   tvd_irq_handle PROC
-                  |L1.0|
-;;;23     ////void tvd_irq_handle(int arg)
-;;;24     void tvd_irq_handle(void)
+;;;25     ////void tvd_irq_handle(int arg)
+;;;26     void tvd_irq_handle(void)
 000000  e92d4010          PUSH     {r4,lr}
-;;;25     {
-;;;26     printf("tvd irq\n");
-000004  e28f00d8          ADR      r0,|L1.228|
+;;;27     {
+;;;28     printf("tvd irq\n");
+000004  e28f0014          ADR      r0,|L1.32|
 000008  ebfffffe          BL       __2printf
-;;;27     
-;;;28     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
-;;;29     //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
-;;;30     //			tvd_y_buf[4],tvd_y_buf[5],tvd_y_buf[6],tvd_y_buf[7]);
-;;;31     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
-;;;32     //				tvd_y_buf[1000],tvd_y_buf[1001],tvd_y_buf[1002],tvd_y_buf[1003],
-;;;33     //				tvd_y_buf[1004],tvd_y_buf[1005],tvd_y_buf[1006],tvd_y_buf[1007]);
-;;;34     	//tcountt ++;
-;;;35     ////????	
-;;;36     #if 1	
-;;;37     ////	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
-;;;38     /////	memcpy(tvd_c_buf_disp,tvd_c_buf,DEF_TWD_W*DEF_TWD_H);
-;;;39     	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
+;;;29     
+;;;30     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
+;;;31     //			tvd_y_buf[0],tvd_y_buf[1],tvd_y_buf[2],tvd_y_buf[3],
+;;;32     //			tvd_y_buf[4],tvd_y_buf[5],tvd_y_buf[6],tvd_y_buf[7]);
+;;;33     //	TVD_Printf("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x\n",
+;;;34     //				tvd_y_buf[1000],tvd_y_buf[1001],tvd_y_buf[1002],tvd_y_buf[1003],
+;;;35     //				tvd_y_buf[1004],tvd_y_buf[1005],tvd_y_buf[1006],tvd_y_buf[1007]);
+;;;36     	//tcountt ++;
+;;;37     ////????	
+;;;38     #if 1	
+;;;39     ////	memcpy(tvd_y_buf_disp,tvd_y_buf,DEF_TWD_W*DEF_TWD_H);
+;;;40     /////	memcpy(tvd_c_buf_disp,tvd_c_buf,DEF_TWD_W*DEF_TWD_H);
+;;;41     	tvd_irq_status_clear(tvd_id,TVD_FRAME_DONE);
 00000c  e3a01000          MOV      r1,#0
-000010  e59f00d8          LDR      r0,|L1.240|
+000010  e59f0014          LDR      r0,|L1.44|
 000014  e5900000          LDR      r0,[r0,#0]  ; tvd_id
 000018  ebfffffe          BL       tvd_irq_status_clear
-;;;40     ////	f1c100s_intc_clear_pend();
-;;;41     #endif
-;;;42     	// dma_cache_sync(tvd_y_buf,720*576,3);
-;;;43     	// dma_cache_sync(tvd_c_buf,720*576,3);
-;;;44     /////	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,DEF_TWD_W,DEF_TWD_H);
-;;;45     }
+;;;42     ////	f1c100s_intc_clear_pend();
+;;;43     #endif
+;;;44     	// dma_cache_sync(tvd_y_buf,720*576,3);
+;;;45     	// dma_cache_sync(tvd_c_buf,720*576,3);
+;;;46     /////	RefleshLcdWithTVD(tvd_y_buf_disp,tvd_c_buf_disp,DEF_TWD_W,DEF_TWD_H);
+;;;47     }
 00001c  e8bd8010          POP      {r4,pc}
-;;;46     
+;;;48     
                           ENDP
 
-                  _tv_in_decode_init PROC
-;;;47     
-;;;48     void _tv_in_decode_init(int id)
-000020  e92d4010          PUSH     {r4,lr}
-;;;49     {
-000024  e1a04000          MOV      r4,r0
-;;;50     ////	int		   	retval  = 0;
-;;;51     	tvd_id = id;
-000028  e59f00c0          LDR      r0,|L1.240|
-00002c  e5804000          STR      r4,[r0,#0]  ; tvd_id
-;;;52     	/////retval = request_irq(IRQ_TVD, tvd_irq_handle,0);//first requet irq
-;;;53       f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
-000030  e24f1038          ADR      r1,|L1.0|
-000034  e3a0001b          MOV      r0,#0x1b
-000038  ebfffffe          BL       f1c100s_intc_set_isr
-;;;54       f1c100s_intc_enable_irq(IRQ_TVD);
-00003c  e3a0001b          MOV      r0,#0x1b
-000040  ebfffffe          BL       f1c100s_intc_enable_irq
-;;;55     	
-;;;56     	printf("request_irq \n");
-000044  e28f00a8          ADR      r0,|L1.244|
-000048  ebfffffe          BL       __2printf
-;;;57     
-;;;58     	tvd_bsp_init(0);//bsp init like open clk ,reset ...
-00004c  e3a00000          MOV      r0,#0
-000050  ebfffffe          BL       tvd_bsp_init
-;;;59     	TVD_Printf("tvd_bsp_init \n");
-000054  e28f00a8          ADR      r0,|L1.260|
-000058  ebfffffe          BL       __2printf
-;;;60     	tvd_config(TVD_SOURCE_CVBS,TVD_SOURCE_PAL,TVD_PL_YUV420);
-00005c  e3a02001          MOV      r2,#1
-000060  e1a01002          MOV      r1,r2
-000064  e3a00000          MOV      r0,#0
-000068  ebfffffe          BL       tvd_config
-;;;61     	TVD_Printf("tvd_config \n");
-00006c  e28f00a0          ADR      r0,|L1.276|
-000070  ebfffffe          BL       __2printf
-;;;62     
-;;;63     	tvd_set_fmt(id,TVD_PL_YUV420);
-000074  e3a01001          MOV      r1,#1
-000078  e1a00004          MOV      r0,r4
-00007c  ebfffffe          BL       tvd_set_fmt
-;;;64     	TVD_Printf("tvd_set_fmt \n");
-000080  e28f009c          ADR      r0,|L1.292|
-000084  ebfffffe          BL       __2printf
-;;;65     	tvd_set_addr_y(id,tvd_y_buf);
-000088  e59f10a4          LDR      r1,|L1.308|
-00008c  e1a00004          MOV      r0,r4
-000090  ebfffffe          BL       tvd_set_addr_y
-;;;66     	tvd_set_addr_c(id,tvd_c_buf);
-000094  e59f109c          LDR      r1,|L1.312|
-000098  e1a00004          MOV      r0,r4
-00009c  ebfffffe          BL       tvd_set_addr_c
-;;;67     	tvd_set_blue_flag(0);
-0000a0  e3a00000          MOV      r0,#0
-0000a4  ebfffffe          BL       tvd_set_blue_flag
-;;;68     	//Enable irq
-;;;69     	tvd_irq_status_clear(id,TVD_FRAME_DONE);
-0000a8  e3a01000          MOV      r1,#0
-0000ac  e1a00004          MOV      r0,r4
-0000b0  ebfffffe          BL       tvd_irq_status_clear
-;;;70     	TVD_Printf("tvd_irq_status_clear \n");
-0000b4  e28f0080          ADR      r0,|L1.316|
-0000b8  ebfffffe          BL       __2printf
-;;;71     
-;;;72     	tvd_irq_enable(id,TVD_FRAME_DONE);
-0000bc  e3a01000          MOV      r1,#0
-0000c0  e1a00004          MOV      r0,r4
-0000c4  ebfffffe          BL       tvd_irq_enable
-;;;73     	TVD_Printf("tvd_irq_enable \n");
-0000c8  e28f0084          ADR      r0,|L1.340|
-0000cc  ebfffffe          BL       __2printf
-;;;74     	
-;;;75     	tvd_capture_on(id);
-0000d0  e1a00004          MOV      r0,r4
-0000d4  ebfffffe          BL       tvd_capture_on
-;;;76     	TVD_Printf("tvd_capture_on \n");
-0000d8  e28f0088          ADR      r0,|L1.360|
-0000dc  ebfffffe          BL       __2printf
-;;;77     
-;;;78     
-;;;79     
-;;;80     }
-0000e0  e8bd8010          POP      {r4,pc}
-;;;81     
-                          ENDP
-
-                  |L1.228|
-0000e4  74766420          DCB      "tvd irq\n",0
-0000e8  6972710a
-0000ec  00      
-0000ed  00                DCB      0
-0000ee  00                DCB      0
-0000ef  00                DCB      0
-                  |L1.240|
+                  |L1.32|
+000020  74766420          DCB      "tvd irq\n",0
+000024  6972710a
+000028  00      
+000029  00                DCB      0
+00002a  00                DCB      0
+00002b  00                DCB      0
+                  |L1.44|
                           DCD      tvd_id
-                  |L1.244|
-0000f4  72657175          DCB      "request_irq \n",0
-0000f8  6573745f
-0000fc  69727120
-000100  0a00    
-000102  00                DCB      0
-000103  00                DCB      0
-                  |L1.260|
-000104  7476645f          DCB      "tvd_bsp_init \n",0
-000108  6273705f
-00010c  696e6974
-000110  200a00  
-000113  00                DCB      0
-                  |L1.276|
-000114  7476645f          DCB      "tvd_config \n",0
-000118  636f6e66
-00011c  6967200a
-000120  00      
-000121  00                DCB      0
-000122  00                DCB      0
-000123  00                DCB      0
-                  |L1.292|
-000124  7476645f          DCB      "tvd_set_fmt \n",0
-000128  7365745f
-00012c  666d7420
-000130  0a00    
-000132  00                DCB      0
-000133  00                DCB      0
-                  |L1.308|
-                          DCD      tvd_y_buf
-                  |L1.312|
-                          DCD      tvd_c_buf
-                  |L1.316|
-00013c  7476645f          DCB      "tvd_irq_status_clear \n",0
-000140  6972715f
-000144  73746174
-000148  75735f63
-00014c  6c656172
-000150  200a00  
-000153  00                DCB      0
-                  |L1.340|
-000154  7476645f          DCB      "tvd_irq_enable \n",0
-000158  6972715f
-00015c  656e6162
-000160  6c65200a
-000164  00      
-000165  00                DCB      0
-000166  00                DCB      0
-000167  00                DCB      0
-                  |L1.360|
-000168  7476645f          DCB      "tvd_capture_on \n",0
-00016c  63617074
-000170  7572655f
-000174  6f6e200a
-000178  00      
-000179  00                DCB      0
-00017a  00                DCB      0
-00017b  00                DCB      0
-
-                          AREA ||.bss||, DATA, NOINIT, ALIGN=0
-
-                  tvd_y_buf
-                          %        414720
-                  tvd_c_buf
-                          %        414720
-                  tvd_y_buf_disp
-                          %        414720
-                  tvd_c_buf_disp
-                          %        414720
 
                           AREA ||.data||, DATA, ALIGN=2
 

@@ -1,5 +1,6 @@
 #include "f1c100s_de.h"
 #include <string.h>
+#include <stdio.h>
 #include "f1c100s_clock.h"
 #include "f1c100s_tve.h"
 #include "io.h"
@@ -122,7 +123,7 @@ void debe_layer_set_addr(uint8_t layer, void* buf) {
 
 void debe_layer_set_alpha(uint8_t layer, uint8_t alpha) {
     if(layer > 3) return;
-    uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(0xFF << 24);
+    uint32_t val = read32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4) & ~(0xFFU << 24);
     write32(DEBE_BASE + DEBE_LAY_ATTR0 + layer * 4, val | (alpha << 24));
 
     if(alpha != 0) {
@@ -280,12 +281,12 @@ void de_tv_init(tve_mode_e mode, uint16_t hor_lines) {
 
 void de_enable(void) {
     if(de.mode == DE_LCD) {
-        set32(TCON_BASE + TCON0_CTRL, (1 << 31));
+        set32(TCON_BASE + TCON0_CTRL, (0x1U << 31));
     } else if(de.mode == DE_TV) {
-        set32(TCON_BASE + TCON1_CTRL, (1 << 31));
+        set32(TCON_BASE + TCON1_CTRL, (0x1U << 31));
         tve_enable();
     }
-    set32(TCON_BASE + TCON_CTRL, (1 << 31));
+    set32(TCON_BASE + TCON_CTRL, (0x1U << 31));
     set32(DEBE_BASE + DEBE_MODE, (1 << 0));
 }
 
@@ -293,7 +294,7 @@ void de_diable(void) {
     if(de.mode == DE_TV) {
         tve_disable();
     }
-    clear32(TCON_BASE + TCON_CTRL, (1 << 31));
+    clear32(TCON_BASE + TCON_CTRL, (0x1U << 31));
     clear32(DEBE_BASE + DEBE_MODE, (1 << 0));
 }
 
@@ -306,7 +307,7 @@ extern	uint8_t frame_buffer[];
 // Initialize DEFE in semi-planar YUV 4:2:2 input mode
 void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* buf_uv) {
     set32(DEFE_BASE + DEFE_EN, 0x01); // Enable DEFE
-    set32(DEFE_BASE + DEFE_EN, (1 << 31)); // Enable CPU access
+    set32(DEFE_BASE + DEFE_EN, (0x1U << 31)); // Enable CPU access
 
     write32(DEFE_BASE + DEFE_BYPASS, (0 << 0) | (0 << 1)); // CSC/scaler bypass disabled
 
@@ -322,18 +323,17 @@ void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* bu
     if(de.mode == DE_LCD)
         write32(DEFE_BASE + DEFE_V_FACT, (1 << 16)); // V scale: 1
     else if(de.mode == DE_TV)
-        write32(DEFE_BASE + DEFE_V_FACT, (2 << 16)); // V scale: 1/2 (??)
+			write32(DEFE_BASE + DEFE_V_FACT, (0x2U << 16)); 
 
     write32(DEFE_BASE + DEFE_IN_FMT, (2 << 8) | (1 << 4)); // UV combined | 422
    set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)); //??
   ////  set32(DEFE_BASE + DEFE_OUT_FMT, (1 << 4)|(6 << 0)); //??
     //write32(DEFE_BASE+DEFE_FIELD_CTRL, (1 << 12)); //?
-		{
-			uint32_t *tmpbuff=(uint32_t*)frame_buffer;
-		tmpbuff[5]=0x1234;
-		    write32(DEFE_BASE + DEFE_WB_ADDR,(uint32_t)frame_buffer); // 
-		printf("DEFE_WB_ADDR: [%x][%x]\n",(uint32_t)frame_buffer,tmpbuff[5]);
-		}
+	/////	{
+	/////		uint32_t *tmpbuff=(uint32_t*)frame_buffer;
+	////	tmpbuff[5]=0x1234;
+	/////	    write32(DEFE_BASE + DEFE_WB_ADDR,(uint32_t)frame_buffer); // 
+/////		}
     for(uint8_t i = 0; i < 4; i++) // Color conversion table
     {
         write32(DEFE_BASE + DEFE_CSC_COEF + i * 4 + 0 * 4, csc_tab[i]);
@@ -355,7 +355,7 @@ void defe_init_spl_422(uint16_t in_w, uint16_t in_h, uint8_t* buf_y, uint8_t* bu
     //    clear32(DEFE_BASE+DEFE_FRM_CTRL, (1 << 23)); // Disable CPU access to filter RAM (enable filter?)
 
  /////   clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
-    clear32(DEFE_BASE + DEFE_EN, (1 << 31)); // Disable CPU access (?)
+    clear32(DEFE_BASE + DEFE_EN, (0x1U << 31)); // Disable CPU access (?)
     set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 0)); // Registers ready
     set32(DEFE_BASE + DEFE_FRM_CTRL, (1 << 16)); // Start frame processing
 }
@@ -370,7 +370,7 @@ static void tcon0_init(de_lcd_config_t* params) {
     val = (params->v_front_porch + params->v_back_porch + params->v_sync_len);
     write32(TCON_BASE + TCON0_CTRL, ((val & 0x1f) << 4));
     val = tcon_clk / params->pixel_clock_hz;
-    write32(TCON_BASE + TCON0_DCLK, (0xf << 28) | (val << 0));
+    write32(TCON_BASE + TCON0_DCLK, (0xfU << 28) | (val << 0));
     write32(TCON_BASE + TCON0_TIMING_ACT, ((de.width - 1) << 16) | ((de.height - 1) << 0));
 
     bp    = params->h_sync_len + params->h_back_porch;
@@ -412,7 +412,7 @@ static void tcon0_init(de_lcd_config_t* params) {
     write32(TCON_BASE + TCON_FRM_TABLE + 2 * 4, 0x57575555);
     write32(TCON_BASE + TCON_FRM_TABLE + 3 * 4, 0x7f7f7777);
 
-    write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (1 << 31));
+    write32(TCON_BASE + TCON_FRM_CTRL, (params->bus_width << 4) | (0x1U << 31));
 
     val = (1 << 28);
     if(params->h_sync_invert) val |= (1 << 25); // io1 ?
@@ -462,7 +462,7 @@ static void tcon_deinit(void) {
     write32(DEBE_BASE + TCON_CTRL, 0);
     write32(DEBE_BASE + TCON_INT0, 0);
 
-    write32(DEBE_BASE + TCON0_DCLK, (0xF << 28));
+    write32(DEBE_BASE + TCON0_DCLK, (uint32_t)(0xFU << 28));
 
     write32(DEBE_BASE + TCON0_IO_TRISTATE, 0xFFFFFFFF);
     write32(DEBE_BASE + TCON1_IO_TRISTATE, 0xFFFFFFFF);

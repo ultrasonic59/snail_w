@@ -578,14 +578,24 @@
               <FilePath>.\users\usb_desc.c</FilePath>
             </File>
             <File>
+              <FileName>lcd_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\users\lcd_task.c</FilePath>
+            </File>
+            <File>
               <FileName>video_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\users\video_task.c</FilePath>
             </File>
             <File>
-              <FileName>lcd_task.c</FileName>
+              <FileName>misc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\users\lcd_task.c</FilePath>
+              <FilePath>.\users\misc.c</FilePath>
+            </File>
+            <File>
+              <FileName>misc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\users\misc.h</FilePath>
             </File>
           </Files>
         </Group>

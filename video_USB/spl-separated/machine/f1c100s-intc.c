@@ -198,6 +198,12 @@ void f1c100s_intc_init(void)
     irq_table[i] = 0;
   }
 }
-
-
+uint32_t get_en_intc(uint8_t num)
+{
+return INTC->INTC_EN_REG[num];	
+}
+uint32_t get_mask_intc(uint8_t num)
+{
+return INTC->INTC_MASK_REG[num];
+}
 

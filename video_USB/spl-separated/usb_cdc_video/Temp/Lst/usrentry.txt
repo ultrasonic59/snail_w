@@ -8,335 +8,371 @@
                           REQUIRE _printf_u
                           REQUIRE _printf_int_dec
                   usb_task PROC
-                  |L1.0|
-;;;59     #endif
-;;;60     __task void usb_task() {
+;;;60     #endif
+;;;61     __task void usb_task() {
 000000  e1a00000          MOV      r0,r0
                   |L1.4|
-;;;61       for (;;) {
-;;;62     		tud_task();
+;;;62       for (;;) {
+;;;63     		tud_task();
 000004  e1a00000          MOV      r0,r0
 000008  e3a01000          MOV      r1,#0
 00000c  e3e00000          MVN      r0,#0
 000010  ebfffffe          BL       tud_task_ext
 000014  e1a00000          MOV      r0,r0
-000018  eafffff9          B        |L1.4|
-;;;63     	}
-;;;64     }
-;;;65     extern void tvd_irq_handle(void);
+;;;64     		sys_delay(2);
+000018  e3a00002          MOV      r0,#2
+00001c  ebfffffe          BL       os_dly_wait
+000020  eafffff7          B        |L1.4|
+;;;65     
+;;;66     	}
+;;;67     }
+;;;68     extern void tvd_irq_handle(void);
                           ENDP
 
                   tvin_init PROC
-;;;67     ///==================================================================
-;;;68     int tvin_init()
-00001c  e92d401c          PUSH     {r2-r4,lr}
-;;;69     {
-;;;70     uint16_t tv_w, tv_h;
-;;;71     tvd_init(TVD_MODE_PAL_B, fb_y, fb_c, 0);
-000020  e3a03000          MOV      r3,#0
-000024  e59f21c0          LDR      r2,|L1.492|
-000028  e59f11c0          LDR      r1,|L1.496|
-00002c  e3a00002          MOV      r0,#2
-000030  ebfffffe          BL       tvd_init
-;;;72     tvd_set_out_fmt(TVD_FMT_422_PL);
-000034  e3a00010          MOV      r0,#0x10
-000038  ebfffffe          BL       tvd_set_out_fmt
-;;;73     	
-;;;74         tvd_get_out_size(&tv_w, &tv_h);
-00003c  e1a0100d          MOV      r1,sp
-000040  e28d0004          ADD      r0,sp,#4
-000044  ebfffffe          BL       tvd_get_out_size
-;;;75     	
-;;;76     		printf("tvin_init Size: [%u][%u]\n", tv_w,tv_h);
-000048  e1dd20b0          LDRH     r2,[sp,#0]
-00004c  e1dd10b4          LDRH     r1,[sp,#4]
-000050  e28f0f67          ADR      r0,|L1.500|
-000054  ebfffffe          BL       __2printf
-;;;77     	
-;;;78         tvd_set_bluescreen_mode(TVD_BLUE_OFF);
-000058  e3a00000          MOV      r0,#0
-00005c  ebfffffe          BL       tvd_set_bluescreen_mode
-;;;79     
-;;;80      ////   defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
-;;;81        defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
-000060  e59f3184          LDR      r3,|L1.492|
-000064  e59f2184          LDR      r2,|L1.496|
-000068  e1dd10b0          LDRH     r1,[sp,#0]
-00006c  e1dd00b4          LDRH     r0,[sp,#4]
-000070  ebfffffe          BL       defe_init_spl_422
+;;;70     ///==================================================================
+;;;71     int tvin_init()
+000024  e92d401c          PUSH     {r2-r4,lr}
+;;;72     {
+;;;73     uint16_t tv_w, tv_h;
+;;;74     tvd_init(TVD_MODE_PAL_B, fb_y, fb_c, 0);
+000028  e3a03000          MOV      r3,#0
+00002c  e59f21c4          LDR      r2,|L1.504|
+000030  e59f11c4          LDR      r1,|L1.508|
+000034  e3a00002          MOV      r0,#2
+000038  ebfffffe          BL       tvd_init
+;;;75     tvd_set_out_fmt(TVD_FMT_422_PL);
+00003c  e3a00010          MOV      r0,#0x10
+000040  ebfffffe          BL       tvd_set_out_fmt
+;;;76     	
+;;;77         tvd_get_out_size(&tv_w, &tv_h);
+000044  e1a0100d          MOV      r1,sp
+000048  e28d0004          ADD      r0,sp,#4
+00004c  ebfffffe          BL       tvd_get_out_size
+;;;78     	
+;;;79     		printf("tvin_init Size: [%u][%u]\n", tv_w,tv_h);
+000050  e1dd20b0          LDRH     r2,[sp,#0]
+000054  e1dd10b4          LDRH     r1,[sp,#4]
+000058  e28f0e1a          ADR      r0,|L1.512|
+00005c  ebfffffe          BL       __2printf
+;;;80     	
+;;;81         tvd_set_bluescreen_mode(TVD_BLUE_OFF);
+000060  e3a00000          MOV      r0,#0
+000064  ebfffffe          BL       tvd_set_bluescreen_mode
 ;;;82     
-;;;83         debe_layer_init(0); // Layer 0 - video
-000074  e3a00000          MOV      r0,#0
-000078  ebfffffe          BL       debe_layer_init
-;;;84         debe_layer_set_size(0, tv_w, tv_h);
-00007c  e1dd20b0          LDRH     r2,[sp,#0]
-000080  e1dd10b4          LDRH     r1,[sp,#4]
-000084  e3a00000          MOV      r0,#0
-000088  ebfffffe          BL       debe_layer_set_size
-;;;85     		
-;;;86         debe_layer_set_mode(0, DEBE_MODE_DEFE_VIDEO);
-00008c  e3a01040          MOV      r1,#0x40
-000090  e3a00000          MOV      r0,#0
-000094  ebfffffe          BL       debe_layer_set_mode
-;;;87      ////   debe_layer_set_mode(0, DEBE_MODE_YUV);
+;;;83      ////   defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
+;;;84        defe_init_spl_422(tv_w, tv_h, fb_y, fb_c);
+000068  e59f3188          LDR      r3,|L1.504|
+00006c  e59f2188          LDR      r2,|L1.508|
+000070  e1dd10b0          LDRH     r1,[sp,#0]
+000074  e1dd00b4          LDRH     r0,[sp,#4]
+000078  ebfffffe          BL       defe_init_spl_422
+;;;85     
+;;;86         debe_layer_init(0); // Layer 0 - video
+00007c  e3a00000          MOV      r0,#0
+000080  ebfffffe          BL       debe_layer_init
+;;;87         debe_layer_set_size(0, tv_w, tv_h);
+000084  e1dd20b0          LDRH     r2,[sp,#0]
+000088  e1dd10b4          LDRH     r1,[sp,#4]
+00008c  e3a00000          MOV      r0,#0
+000090  ebfffffe          BL       debe_layer_set_size
 ;;;88     		
-;;;89         debe_layer_enable(0);
+;;;89         debe_layer_set_mode(0, DEBE_MODE_DEFE_VIDEO);
+000094  e3a01040          MOV      r1,#0x40
 000098  e3a00000          MOV      r0,#0
-00009c  ebfffffe          BL       debe_layer_enable
-;;;90         tvd_enable();
-0000a0  ebfffffe          BL       tvd_enable
-;;;91       f1c100s_intc_set_isr(IRQ_TVD, tvd_irq_handle);
-0000a4  e59f1164          LDR      r1,|L1.528|
-0000a8  e3a0001b          MOV      r0,#0x1b
-0000ac  ebfffffe          BL       f1c100s_intc_set_isr
-;;;92       f1c100s_intc_enable_irq(IRQ_TVD);
+00009c  ebfffffe          BL       debe_layer_set_mode
+;;;90      ////   debe_layer_set_mode(0, DEBE_MODE_YUV);
+;;;91     		
+;;;92         debe_layer_enable(0);
+0000a0  e3a00000          MOV      r0,#0
+0000a4  ebfffffe          BL       debe_layer_enable
+;;;93         tvd_enable();
+0000a8  ebfffffe          BL       tvd_enable
+;;;94       f1c100s_intc_set_isr(F1C100S_IRQ_TVD, tvd_irq_handle);
+0000ac  e59f1168          LDR      r1,|L1.540|
 0000b0  e3a0001b          MOV      r0,#0x1b
-0000b4  ebfffffe          BL       f1c100s_intc_enable_irq
-;;;93     	
-;;;94     return 0;	
-0000b8  e3a00000          MOV      r0,#0
-;;;95     }
-0000bc  e8bd801c          POP      {r2-r4,pc}
-;;;96     ////=====================================================================
+0000b4  ebfffffe          BL       f1c100s_intc_set_isr
+;;;95       f1c100s_intc_enable_irq(F1C100S_IRQ_TVD);
+0000b8  e3a0001b          MOV      r0,#0x1b
+0000bc  ebfffffe          BL       f1c100s_intc_enable_irq
+;;;96     	
+;;;97     return 0;	
+0000c0  e3a00000          MOV      r0,#0
+;;;98     }
+0000c4  e8bd801c          POP      {r2-r4,pc}
+;;;99     ////=====================================================================
                           ENDP
 
                   UserEntryInit PROC
-;;;103    ///==================================================================
-;;;104    void UserEntryInit(void)
-0000c0  e92d4008          PUSH     {r3,lr}
-;;;105    {
-;;;106    /////uint32_t *p_val;
-;;;107    target_wdt_feed();
-0000c4  ebfffffe          BL       target_wdt_feed
-;;;108    
-;;;109    printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
-0000c8  e3a00000          MOV      r0,#0
-0000cc  e590005c          LDR      r0,[r0,#0x5c]
-0000d0  e3c014ff          BIC      r1,r0,#0xff000000
-0000d4  e28f0f4e          ADR      r0,|L1.532|
-0000d8  ebfffffe          BL       __2printf
-;;;110    ///===========================================
-;;;111    	
-;;;112    #if 1	
-;;;113    display_init();
-0000dc  ebfffffe          BL       display_init
-;;;114    display_set_bl(100);
-0000e0  e3a00064          MOV      r0,#0x64
-0000e4  ebfffffe          BL       display_set_bl
-;;;115    debe_set_bg_color(0xFF000000);
-0000e8  e3a004ff          MOV      r0,#0xff000000
-0000ec  ebfffffe          BL       debe_set_bg_color
-;;;116    debe_load(DEBE_UPDATE_AUTO);
-0000f0  e3a00000          MOV      r0,#0
-0000f4  ebfffffe          BL       debe_load
-;;;117    #endif
-;;;118    ///==================================	
-;;;119     tvin_init();
-0000f8  ebfffffe          BL       tvin_init
-;;;120    ///==================================	
-;;;121    #if 1	
-;;;122        lcd_init(1); // Layer 1 - overlay
-0000fc  e3a00001          MOV      r0,#1
-000100  ebfffffe          BL       lcd_init
-;;;123     ////   lcd_init(0); // Layer 1 - overlay
-;;;124        lcd_fill(0, 0, DISPLAY_W, DISPLAY_H, COLOR_TRANSPARENT);
-000104  e3a00000          MOV      r0,#0
-000108  e3a03f96          MOV      r3,#0x258
-00010c  e3a02e32          MOV      r2,#0x320
-000110  e58d0000          STR      r0,[sp,#0]
-000114  e1a01000          MOV      r1,r0
-000118  ebfffffe          BL       lcd_fill
-;;;125        lcd_set_bg_color(0x80088000);
-00011c  e59f0100          LDR      r0,|L1.548|
-000120  ebfffffe          BL       lcd_set_bg_color
-;;;126        lcd_set_text_color(COLOR_WHITE);
-000124  e3e00000          MVN      r0,#0
-000128  ebfffffe          BL       lcd_set_text_color
-;;;127        lcd_set_text_pos(300, 0);
-00012c  e3a01000          MOV      r1,#0
-000130  e3a00f4b          MOV      r0,#0x12c
-000134  ebfffffe          BL       lcd_set_text_pos
-;;;128        lcd_printf("====== PAL==========");
-000138  e28f20e8          ADR      r2,|L1.552|
-00013c  e3a01000          MOV      r1,#0
-000140  e59f00f8          LDR      r0,|L1.576|
-000144  ebfffffe          BL       fctprintf
-;;;129    #if 0		
-;;;130    while(1) {
-;;;131            lcd_set_text_pos(600, 0);
-;;;132            uint32_t val = read32(TVD_BASE + TVD_STATE_0);
-;;;133            lcd_printf("%08lX\n", val);
-;;;134            val = read32(TVD_BASE + TVD_STATE_1);
-;;;135            lcd_printf("%08lX\n", val);
-;;;136            val = read32(TVD_BASE + TVD_STATE_2);
-;;;137            lcd_printf("ST2=%08lX\n", val);
-;;;138            val = read32(TVD_BASE + TVD_STATE_3);
-;;;139            lcd_printf("%08lX\n", val);
-;;;140            val = read32(TVD_BASE + TVD_STATE_4);
-;;;141            lcd_printf("%08lX\n", val);
-;;;142    	////====================================
-;;;143    	p_val= (uint32_t *)&fb_c[4420];
-;;;144            val = *p_val;
+;;;106    ///==================================================================
+;;;107    void UserEntryInit(void)
+0000c8  e92d4008          PUSH     {r3,lr}
+;;;108    {
+;;;109    /////uint32_t *p_val;
+;;;110    ////uint8_t btst=0;	
+;;;111    target_wdt_feed();
+0000cc  ebfffffe          BL       target_wdt_feed
+;;;112    
+;;;113    printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
+0000d0  e3a00000          MOV      r0,#0
+0000d4  e590005c          LDR      r0,[r0,#0x5c]
+0000d8  e3c014ff          BIC      r1,r0,#0xff000000
+0000dc  e28f0f4f          ADR      r0,|L1.544|
+0000e0  ebfffffe          BL       __2printf
+;;;114    ///===========================================
+;;;115    init_test1_pin();
+0000e4  ebfffffe          BL       init_test1_pin
+;;;116    	#if 0
+;;;117    for(;;)
+;;;118    	{
+;;;119    	put_test1_pin(btst)	;
+;;;120    	btst++;
+;;;121    	sys_delay(5);
+;;;122    	}
+;;;123    	#endif
+;;;124    #if 1	
+;;;125    display_init();
+0000e8  ebfffffe          BL       display_init
+;;;126    display_set_bl(100);
+0000ec  e3a00064          MOV      r0,#0x64
+0000f0  ebfffffe          BL       display_set_bl
+;;;127    debe_set_bg_color(0xFF000000);
+0000f4  e3a004ff          MOV      r0,#0xff000000
+0000f8  ebfffffe          BL       debe_set_bg_color
+;;;128    debe_load(DEBE_UPDATE_AUTO);
+0000fc  e3a00000          MOV      r0,#0
+000100  ebfffffe          BL       debe_load
+;;;129    #endif
+;;;130    ///==================================	
+;;;131     tvin_init();
+000104  ebfffffe          BL       tvin_init
+;;;132    ///==================================	
+;;;133    #if 1	
+;;;134        lcd_init(1); // Layer 1 - overlay
+000108  e3a00001          MOV      r0,#1
+00010c  ebfffffe          BL       lcd_init
+;;;135     ////   lcd_init(0); // Layer 1 - overlay
+;;;136        lcd_fill(0, 0, DISPLAY_W, DISPLAY_H, COLOR_TRANSPARENT);
+000110  e3a00000          MOV      r0,#0
+000114  e3a03f96          MOV      r3,#0x258
+000118  e3a02e32          MOV      r2,#0x320
+00011c  e58d0000          STR      r0,[sp,#0]
+000120  e1a01000          MOV      r1,r0
+000124  ebfffffe          BL       lcd_fill
+;;;137        lcd_set_bg_color(0x80088000);
+000128  e59f0100          LDR      r0,|L1.560|
+00012c  ebfffffe          BL       lcd_set_bg_color
+;;;138        lcd_set_text_color(COLOR_WHITE);
+000130  e3e00000          MVN      r0,#0
+000134  ebfffffe          BL       lcd_set_text_color
+;;;139        lcd_set_text_pos(300, 0);
+000138  e3a01000          MOV      r1,#0
+00013c  e3a00f4b          MOV      r0,#0x12c
+000140  ebfffffe          BL       lcd_set_text_pos
+;;;140        lcd_printf("====== PAL==========");
+000144  e28f20e8          ADR      r2,|L1.564|
+000148  e3a01000          MOV      r1,#0
+00014c  e59f00f8          LDR      r0,|L1.588|
+000150  ebfffffe          BL       fctprintf
+;;;141    #if 0		
+;;;142    while(1) {
+;;;143            lcd_set_text_pos(600, 0);
+;;;144            uint32_t val = read32(TVD_BASE + TVD_STATE_0);
 ;;;145            lcd_printf("%08lX\n", val);
-;;;146    	p_val= (uint32_t *)&fb_y[4420];
-;;;147            val = *p_val;
-;;;148            lcd_printf("%08lX\n", val);
-;;;149        }
-;;;150    		#endif
-;;;151    #endif
-;;;152    ///===========================================
-;;;153    ////	os_tsk_create(lcd_task, 11);
-;;;154    
-;;;155    tusb_init();
-000148  ebfffffe          BL       tusb_init
-;;;156    	
-;;;157    ////  printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
-;;;158    	os_tsk_create(usb_task, 10);
-00014c  e3a03000          MOV      r3,#0
-000150  e1a02003          MOV      r2,r3
-000154  e3a0100a          MOV      r1,#0xa
-000158  e24f0e16          ADR      r0,|L1.0|
-00015c  ebfffffe          BL       os_tsk_create0
-;;;159      /////printf("time: %x\n", board_millis());
-;;;160    ////	os_tsk_create(video_task, 8);
-;;;161      /////printf("time1: %x\n", board_millis());
-;;;162    /////	os_tsk_create(video_task, 10);
-;;;163    	
-;;;164    /////  printf("\n\rvideo_probe_and_commit_control_t [%u]\n", sizeof(video_probe_and_commit_control_t));
-;;;165    	
-;;;166    }
-000160  e8bd8008          POP      {r3,pc}
-;;;167    extern void video_tsk(void);
+;;;146            val = read32(TVD_BASE + TVD_STATE_1);
+;;;147            lcd_printf("%08lX\n", val);
+;;;148            val = read32(TVD_BASE + TVD_STATE_2);
+;;;149            lcd_printf("ST2=%08lX\n", val);
+;;;150            val = read32(TVD_BASE + TVD_STATE_3);
+;;;151            lcd_printf("%08lX\n", val);
+;;;152            val = read32(TVD_BASE + TVD_STATE_4);
+;;;153            lcd_printf("%08lX\n", val);
+;;;154    	////====================================
+;;;155    	p_val= (uint32_t *)&fb_c[4420];
+;;;156            val = *p_val;
+;;;157            lcd_printf("%08lX\n", val);
+;;;158    	p_val= (uint32_t *)&fb_y[4420];
+;;;159            val = *p_val;
+;;;160            lcd_printf("%08lX\n", val);
+;;;161        }
+;;;162    		#endif
+;;;163    #endif
+;;;164    ///===========================================
+;;;165    ////	os_tsk_create(lcd_task, 11);
+;;;166    
+;;;167    tusb_init();
+000154  ebfffffe          BL       tusb_init
+;;;168    	
+;;;169    ////  printf("DDR size: %uMB\n", (*(uint32_t*)0x5c) & 0xFFFFFF);
+;;;170    ////	os_tsk_create(usb_task, 8);
+;;;171    	os_tsk_create(test_thr, 10);
+000158  e3a03000          MOV      r3,#0
+00015c  e1a02003          MOV      r2,r3
+000160  e3a0100a          MOV      r1,#0xa
+000164  e59f00e4          LDR      r0,|L1.592|
+000168  ebfffffe          BL       os_tsk_create0
+;;;172    	
+;;;173      /////printf("time: %x\n", board_millis());
+;;;174    ////	os_tsk_create(video_task, 8);
+;;;175      /////printf("time1: %x\n", board_millis());
+;;;176    /////	os_tsk_create(video_task, 10);
+;;;177    	
+;;;178    /////  printf("\n\rvideo_probe_and_commit_control_t [%u]\n", sizeof(video_probe_and_commit_control_t));
+;;;179    	
+;;;180    }
+00016c  e8bd8008          POP      {r3,pc}
+;;;181    extern void video_tsk(void);
                           ENDP
 
                   UserEntryLoop PROC
-;;;171    #define BEG_POS 80
-;;;172    void UserEntryLoop(void)
-000164  e59f5084          LDR      r5,|L1.496|
-;;;173    {
-;;;174    	uint32_t *p_val=(uint32_t *)fb_y;
-;;;175    	uint32_t val;
-;;;176    	uint8_t ii;
-;;;177    				for(ii=0;ii<16;ii++)
-000168  e3a04000          MOV      r4,#0
-00016c  ea000005          B        |L1.392|
-                  |L1.368|
-;;;178    				{
-;;;179    			  p_val[BEG_POS+ii*8]=0;
-000170  e3a00000          MOV      r0,#0
-000174  e3a01050          MOV      r1,#0x50
-000178  e0811184          ADD      r1,r1,r4,LSL #3
-00017c  e7850101          STR      r0,[r5,r1,LSL #2]
-000180  e2840001          ADD      r0,r4,#1              ;177
-000184  e20040ff          AND      r4,r0,#0xff           ;177
-                  |L1.392|
-000188  e3540010          CMP      r4,#0x10              ;177
-00018c  bafffff7          BLT      |L1.368|
-;;;180    				}
-;;;181    
-;;;182      for (;;) {
-000190  e1a00000          MOV      r0,r0
-                  |L1.404|
-;;;183        target_wdt_feed();
-000194  ebfffffe          BL       target_wdt_feed
-;;;184    ////		sys_delay(500);
-;;;185    		sys_delay(2);
-000198  e3a00002          MOV      r0,#2
-00019c  ebfffffe          BL       os_dly_wait
-;;;186    		video_tsk();
-0001a0  ebfffffe          BL       video_tsk
-;;;187    		
-;;;188    	////	  printf("time1: %x\n", board_millis());
-;;;189    		#if 1
-;;;190    /////while(1) 
-;;;191    	{
-;;;192            lcd_set_text_pos(600, 0);
-0001a4  e3a01000          MOV      r1,#0
-0001a8  e3a00f96          MOV      r0,#0x258
-0001ac  ebfffffe          BL       lcd_set_text_pos
-;;;193    	#if 0	
-;;;194            uint32_t val = read32(TVD_BASE + TVD_STATE_0);
-;;;195            lcd_printf("%08lX\n", val);
-;;;196            val = read32(TVD_BASE + TVD_STATE_1);
-;;;197            lcd_printf("%08lX\n", val);
-;;;198            val = read32(TVD_BASE + TVD_STATE_2);
-;;;199            lcd_printf("ST2=%08lX\n", val);
-;;;200            val = read32(TVD_BASE + TVD_STATE_3);
-;;;201            lcd_printf("%08lX\n", val);
-;;;202            val = read32(TVD_BASE + TVD_STATE_4);
-;;;203            lcd_printf("%08lX\n", val);
-;;;204    		#endif
-;;;205    	////====================================
-;;;206    		#if 1
-;;;207    			for(ii=0;ii<16;ii++)
-0001b0  e3a04000          MOV      r4,#0
-0001b4  ea000009          B        |L1.480|
-                  |L1.440|
-;;;208    				{
-;;;209    			  val = p_val[BEG_POS+ii*8];
-0001b8  e3a00050          MOV      r0,#0x50
-0001bc  e0800184          ADD      r0,r0,r4,LSL #3
-0001c0  e7956100          LDR      r6,[r5,r0,LSL #2]
+;;;185    #define BEG_POS 880
+;;;186    void UserEntryLoop(void)
+000170  e92d4008          PUSH     {r3,lr}
+;;;187    {
+;;;188    	uint32_t *p_val=(uint32_t *)fb_y;
+000174  e59f6080          LDR      r6,|L1.508|
+;;;189    ////	uint32_t val;
+;;;190    	uint32_t ii;
+;;;191    		uint32_t jj;
+;;;192    			for(ii=0;ii<16;ii++)
+000178  e3a04000          MOV      r4,#0
+00017c  ea000003          B        |L1.400|
+                  |L1.384|
+;;;193    				{
+;;;194    			  p_val[BEG_POS+ii]=0;
+000180  e3a00000          MOV      r0,#0
+000184  e2841e37          ADD      r1,r4,#0x370
+000188  e7860101          STR      r0,[r6,r1,LSL #2]
+00018c  e2844001          ADD      r4,r4,#1              ;192
+                  |L1.400|
+000190  e3540010          CMP      r4,#0x10              ;192
+000194  3afffff9          BCC      |L1.384|
+;;;195    				}
+;;;196    
+;;;197      for (;;) {
+000198  e1a00000          MOV      r0,r0
+                  |L1.412|
+;;;198        target_wdt_feed();
+00019c  ebfffffe          BL       target_wdt_feed
+;;;199    ////		sys_delay(500);
+;;;200    		sys_delay(2);
+0001a0  e3a00002          MOV      r0,#2
+0001a4  ebfffffe          BL       os_dly_wait
+;;;201    		video_tsk();
+0001a8  ebfffffe          BL       video_tsk
+;;;202    		
+;;;203    	////	  printf("time1: %x\n", board_millis());
+;;;204    		#if 1
+;;;205    /////while(1) 
+;;;206    	{
+;;;207            lcd_set_text_pos(500, 0);
+0001ac  e3a01000          MOV      r1,#0
+0001b0  e3a00f7d          MOV      r0,#0x1f4
+0001b4  ebfffffe          BL       lcd_set_text_pos
+;;;208    	#if 0	
+;;;209            uint32_t val = read32(TVD_BASE + TVD_STATE_0);
 ;;;210            lcd_printf("%08lX\n", val);
-0001c4  e1a03006          MOV      r3,r6
-0001c8  e28f2074          ADR      r2,|L1.580|
-0001cc  e3a01000          MOV      r1,#0
-0001d0  e59f0068          LDR      r0,|L1.576|
-0001d4  ebfffffe          BL       fctprintf
-0001d8  e2840001          ADD      r0,r4,#1              ;207
-0001dc  e20040ff          AND      r4,r0,#0xff           ;207
-                  |L1.480|
-0001e0  e3540010          CMP      r4,#0x10              ;207
-0001e4  aaffffea          BGE      |L1.404|
-0001e8  eafffff2          B        |L1.440|
-;;;211    				}
-;;;212    	#endif	
-;;;213    	    }
-;;;214    	#endif
-;;;215      }
-;;;216    }
-;;;217    
+;;;211            val = read32(TVD_BASE + TVD_STATE_1);
+;;;212            lcd_printf("%08lX\n", val);
+;;;213            val = read32(TVD_BASE + TVD_STATE_2);
+;;;214            lcd_printf("ST2=%08lX\n", val);
+;;;215            val = read32(TVD_BASE + TVD_STATE_3);
+;;;216            lcd_printf("%08lX\n", val);
+;;;217            val = read32(TVD_BASE + TVD_STATE_4);
+;;;218            lcd_printf("%08lX\n", val);
+;;;219    		#endif
+;;;220    	////====================================
+;;;221    
+;;;222    	#if 1
+;;;223    		#if 0	
+;;;224    		for(ii=0;ii<720* 576;ii++)
+;;;225    				{
+;;;226    			  fb_c[ii]=0xff;
+;;;227    				}
+;;;228    ////fb_y[720* 576]
+;;;229    				for(ii=0;ii<720* 576;ii++)
+;;;230    				{
+;;;231    			  if(fb_c[ii]!=0xff)
+;;;232    					break;
+;;;233    				}
+;;;234    	#endif	
+;;;235    	ii=576*2 +14;
+0001b8  e59f4094          LDR      r4,|L1.596|
+;;;236    			for(jj=0;jj<16;jj++)
+0001bc  e3a05000          MOV      r5,#0
+0001c0  ea000009          B        |L1.492|
+                  |L1.452|
+;;;237    				{
+;;;238    			  ////val = p_val[BEG_POS+ii];
+;;;239            lcd_printf("[%x]%02X\n",jj+ii,fb_c[ii+jj]);
+0001c4  e0840005          ADD      r0,r4,r5
+0001c8  e59f1028          LDR      r1,|L1.504|
+0001cc  e7d10000          LDRB     r0,[r1,r0]
+0001d0  e0853004          ADD      r3,r5,r4
+0001d4  e28f207c          ADR      r2,|L1.600|
+0001d8  e3a01000          MOV      r1,#0
+0001dc  e58d0000          STR      r0,[sp,#0]
+0001e0  e59f0064          LDR      r0,|L1.588|
+0001e4  ebfffffe          BL       fctprintf
+0001e8  e2855001          ADD      r5,r5,#1              ;236
+                  |L1.492|
+0001ec  e3550010          CMP      r5,#0x10              ;236
+0001f0  2affffe9          BCS      |L1.412|
+0001f4  eafffff2          B        |L1.452|
+;;;240    				}
+;;;241    	#endif	
+;;;242    	    }
+;;;243    	#endif
+;;;244      }
+;;;245    }
+;;;246    
                           ENDP
 
-                  |L1.492|
+                  |L1.504|
                           DCD      fb_c
-                  |L1.496|
+                  |L1.508|
                           DCD      fb_y
-                  |L1.500|
-0001f4  7476696e          DCB      "tvin_init Size: [%u][%u]\n",0
-0001f8  5f696e69
-0001fc  74205369
-000200  7a653a20
-000204  5b25755d
-000208  5b25755d
-00020c  0a00    
-00020e  00                DCB      0
-00020f  00                DCB      0
-                  |L1.528|
+                  |L1.512|
+000200  7476696e          DCB      "tvin_init Size: [%u][%u]\n",0
+000204  5f696e69
+000208  74205369
+00020c  7a653a20
+000210  5b25755d
+000214  5b25755d
+000218  0a00    
+00021a  00                DCB      0
+00021b  00                DCB      0
+                  |L1.540|
                           DCD      tvd_irq_handle
-                  |L1.532|
-000214  44445220          DCB      "DDR size: %uMB\n",0
-000218  73697a65
-00021c  3a202575
-000220  4d420a00
-                  |L1.548|
+                  |L1.544|
+000220  44445220          DCB      "DDR size: %uMB\n",0
+000224  73697a65
+000228  3a202575
+00022c  4d420a00
+                  |L1.560|
                           DCD      0x80088000
-                  |L1.552|
-000228  3d3d3d3d          DCB      "====== PAL==========",0
-00022c  3d3d2050
-000230  414c3d3d
-000234  3d3d3d3d
-000238  3d3d3d3d
-00023c  00      
-00023d  00                DCB      0
-00023e  00                DCB      0
-00023f  00                DCB      0
-                  |L1.576|
-                          DCD      lcd_out
-                  |L1.580|
-000244  2530386c          DCB      "%08lX\n",0
-000248  580a00  
+                  |L1.564|
+000234  3d3d3d3d          DCB      "====== PAL==========",0
+000238  3d3d2050
+00023c  414c3d3d
+000240  3d3d3d3d
+000244  3d3d3d3d
+000248  00      
+000249  00                DCB      0
+00024a  00                DCB      0
 00024b  00                DCB      0
+                  |L1.588|
+                          DCD      lcd_out
+                  |L1.592|
+                          DCD      test_thr
+                  |L1.596|
+                          DCD      0x0000048e
+                  |L1.600|
+000258  5b25785d          DCB      "[%x]%02X\n",0
+00025c  25303258
+000260  0a00    
+000262  00                DCB      0
+000263  00                DCB      0
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=0
 
