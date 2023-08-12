@@ -30,3 +30,35 @@ build/machine/exception.o: machine/exception.c \
  arch/arm32/include/arm32.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h
+machine/exception.c :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\stdio.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_ansi.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\newlib.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_newlib_version.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\config.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\ieeefp.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\features.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\cdefs.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\_default_types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdarg.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\reent.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\_ansi.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\_types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\lock.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\endian.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\_endian.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\select.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_sigset.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_timeval.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\timespec.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_timespec.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\_pthreadtypes.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\machine\types.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\arm-eabi\libc\usr\include\sys\stdio.h :
+ arch/arm32/include/arm32.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h :

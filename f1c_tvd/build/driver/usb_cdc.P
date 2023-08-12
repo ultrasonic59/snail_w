@@ -1,2 +1,4 @@
 build/driver/usb_cdc.o: driver/usb_cdc.c driver/include/usb.h \
  driver/include/usb_dev.h
+driver/usb_cdc.c driver/include/usb.h :
+ driver/include/usb_dev.h :

@@ -3,3 +3,8 @@ build/driver/reset-f1c100s.o: driver/reset-f1c100s.c \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h \
  machine/include/core_types.h machine/include/io.h
+driver/reset-f1c100s.c :
+ driver/include/reset-f1c100s.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h :
+ machine/include/core_types.h machine/include/io.h :

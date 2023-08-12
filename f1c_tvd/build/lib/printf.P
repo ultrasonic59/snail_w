@@ -4,3 +4,9 @@ build/lib/printf.o: lib/printf.c \
  lib/printf.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdarg.h \
  c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h
+lib/printf.c :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdint-gcc.h :
+ lib/printf.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stdarg.h :
+ c:\toolchans\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi\lib\gcc\arm-eabi\7.5.0\include\stddef.h :

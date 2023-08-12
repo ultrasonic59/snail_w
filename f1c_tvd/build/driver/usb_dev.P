@@ -1,3 +1,6 @@
 build/driver/usb_dev.o: driver/usb_dev.c driver/include/usb.h \
  driver/include/irq_misc.h driver/include/usb_phy.h driver/include/usb.h \
  driver/include/usb_dev.h
+driver/usb_dev.c driver/include/usb.h :
+ driver/include/irq_misc.h driver/include/usb_phy.h driver/include/usb.h :
+ driver/include/usb_dev.h :

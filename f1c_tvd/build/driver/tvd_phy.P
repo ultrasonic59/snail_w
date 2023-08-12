@@ -1,2 +1,4 @@
 build/driver/tvd_phy.o: driver/tvd_phy.c driver/include/tvd_reg.h \
  driver/include/tvd.h
+driver/tvd_phy.c driver/include/tvd_reg.h :
+ driver/include/tvd.h :

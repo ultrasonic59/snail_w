@@ -11,7 +11,7 @@
 
 #define TEST_GPIO   0
 #define TEST_PWM    0
-#define TEST_FB     1
+#define TEST_FB     0
 
 /* 
 return_to_fel() - Return to BROM from SPL
@@ -51,7 +51,6 @@ int boot_main(int argc, char **argv)
     }
 #endif
 
-#if TEST_FB
     printf("===============TEST_FB===================\n\r");
 
    {
@@ -60,7 +59,7 @@ int boot_main(int argc, char **argv)
        render = fb_f1c100s_create(&fb_f1c100s);
        for (int i = 0; i < render->pixlen/4;i++)
        {
-           ((uint32_t*)render->pixels)[i] = 0xFFFF0000;
+           ((uint32_t*)render->pixels)[i] = 0xFF0000ff;
        }
 //        for (int i = 0; i < 810;i++)
 //		{
@@ -73,12 +72,12 @@ int boot_main(int argc, char **argv)
        fb_f1c100s_present(&fb_f1c100s, render);
        fb_f1c100s_setbl(&fb_f1c100s, 100);
    }
-#endif
+#if TEST_FB
 for(;;)
 	{
 	;
 	}
-
+#endif
 #if TEST_PWM
     pwm_t led_pwm_bl =
         {
@@ -103,12 +102,12 @@ for(;;)
    	{
    		;;;
    	}
-    tvd_debugdump(0);
+ /////???   tvd_debugdump(0);
 //    //usb_reg_debugdump();//0x53555741
 //    printf("render->pixlen:%d\n",render->pixlen);
 //    printf("tvd_statues:0x%08x\n",tvd_get_status());
 
-    RefleshLcdWithTVD((void*)0,DISPLAY_W,DISPLAY_H );
+    RefleshLcdWithTVD((void*)0,(void*)0,DISPLAY_W,DISPLAY_H );
     while(1)
     {
 //    	if(!gpio_f1c100s_get_value(&GPIO_PE, 10))
@@ -134,18 +133,18 @@ for(;;)
     return 0;
 }
 
-void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h)
+void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int xx,int yy)
 {
 	int lcdw = DISPLAY_W;
 	int i,j;
 	int gray;
 	unsigned char r = 0;
 	unsigned int pos = 0;
-	for ( i= 0; i < DISPLAY_H;i++)
+	for ( i= 0; i < yy;i++)
 	{
-		for (j= 0; j < DISPLAY_W;j++)
+		for (j= 0; j < xx;j++)
 		{
-			int y = ydat[i*w+j];
+			int y = ydat[i*xx+j];
 			// float y16 = (float) ydat[i*w+j] - 16.0;
 
 			// float cb128 = (float) cbcr[i/4*2*(w)+(j/2)*2] - 128.0;
@@ -155,8 +154,8 @@ void RefleshLcdWithTVD(unsigned char *ydat,unsigned char * cbcr,int w,int h)
 			// float g = 1.164*y16 - 0.813*cr128 - 0.391*cb128; //this could be less than 0 or greater than 255
 			// float b = 1.164*y16 + 2.018*cb128; //this might exceed 255
 			//YUV420 to RGB 
-			int cb128 =  (int)cbcr[(i/4*2)*(w)+(j/2)*2] - 128;
-			int cr128 =  (int)cbcr[(i/4*2)*(w)+j/2*2+1] - 128;
+			int cb128 =  (int)cbcr[(i/4*2)*(xx)+(j/2)*2] - 128;
+			int cr128 =  (int)cbcr[(i/4*2)*(xx)+j/2*2+1] - 128;
 			int rdif = cr128 + ((cr128 * 103) >> 8);
 			int invgdif = ((cb128 * 88) >> 8) +((cr128 * 183) >> 8);
 			int bdif = cb128 +( (cb128*198) >> 8);

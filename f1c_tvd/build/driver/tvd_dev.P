@@ -1,2 +1,4 @@
 build/driver/tvd_dev.o: driver/tvd_dev.c driver/include/irq_misc.h \
- driver/include/tvd.h
+ driver/include/tvd.h machine/include/config.h
+driver/tvd_dev.c driver/include/irq_misc.h :
+ driver/include/tvd.h machine/include/config.h :

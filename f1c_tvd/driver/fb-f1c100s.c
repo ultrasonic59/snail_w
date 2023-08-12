@@ -36,6 +36,7 @@
 #include <f1c100s/reg-debe.h>
 #include <f1c100s/reg-ccu.h>
 #include <io.h>
+#include "config.h"
 
 #define phys_to_virt(x) (x)
 
@@ -453,8 +454,9 @@ void fb_f1c100s_present(framebuffer_t * fb, render_t * render)
 		dma_cache_sync(pdat->vram[pdat->index], render->pixlen, DMA_TO_DEVICE);
 		f1c100s_debe_set_address(pdat, pdat->vram[pdat->index]);
 	}
-}
-
+}   
+////#define LCD_PANEL_XSIZE 800
+/////#define LCD_PANEL_YSIZE 600
 	// "fb-f1c100s@0": {
 	// 	"clock-name-defe": "link-defe",
 	// 	"clock-name-debe": "link-debe",
@@ -495,8 +497,8 @@ void fb_f1c100s_init(framebuffer_t * fb)
 	pdat->rstdefe = 46;
 	pdat->rstdebe = 44;
 	pdat->rsttcon = 36;
-	pdat->width = 480;
-	pdat->height = 272;
+	pdat->width = LCD_PANEL_XSIZE;
+	pdat->height = LCD_PANEL_YSIZE;
 	pdat->pwidth = 216;
 	pdat->pheight = 135;
 	pdat->bits_per_pixel = 18;
@@ -505,13 +507,13 @@ void fb_f1c100s_init(framebuffer_t * fb)
 	pdat->vram[0] = dma_alloc_noncoherent(pdat->width * pdat->height * pdat->bytes_per_pixel);
 	pdat->vram[1] = dma_alloc_noncoherent(pdat->width * pdat->height * pdat->bytes_per_pixel);
 
-	pdat->timing.pixel_clock_hz = 8000000;
+	pdat->timing.pixel_clock_hz = 33000000;////8000000;
 	pdat->timing.h_front_porch = 40;
 	pdat->timing.h_back_porch = 88;
 	pdat->timing.h_sync_len = 1;
 	pdat->timing.v_front_porch = 13;
 	pdat->timing.v_back_porch = 32;
-	pdat->timing.v_sync_len = 1;
+	pdat->timing.v_sync_len = 3;///1;
 	pdat->timing.h_sync_active = false;
 	pdat->timing.v_sync_active = false;
 	pdat->timing.den_active = false;

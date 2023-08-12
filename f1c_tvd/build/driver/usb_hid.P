@@ -1,2 +1,4 @@
 build/driver/usb_hid.o: driver/usb_hid.c driver/include/usb.h \
  driver/include/usb_dev.h
+driver/usb_hid.c driver/include/usb.h :
+ driver/include/usb_dev.h :
