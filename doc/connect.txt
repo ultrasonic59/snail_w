@@ -75,3 +75,30 @@ LD15				9pin
 
 
 
+====== camera ==================================
+STM32F205	64
+
+DCMI_VSYNC 59 pb7
+DCMI_HSYNC 20 pa4
+DCMI_PIXCLK 22 pa6
+DCMI_D0    42 pa9  ;37 pc6 
+DCMI_D1    38 pc7  ;38 pc7
+DCMI_D2    39 pc8  ;39 pc8
+DCMI_D3    40 pc9
+DCMI_D4    52 pc11
+DCMI_D5    58 pb6
+DCMI_D6    61 pb8
+DCMI_D7    62 pb9
+DCMI_D8    51 pc10
+DCMI_D9    53 pc12
+
+
+OTG_FS_DM   44     pa11
+OTG_FS_DP   45     pa12
+
+i2c2_scl    29     pb10
+i2c2_sda    30     pb11
+
+usart2_tx   16     pa2
+usart2_rx   17     pa3
+
