@@ -26,7 +26,7 @@
 #define BRRED 			     0XFC07 //×ØºìÉ«
 #define GRAY  			     0X8430 //»ÒÉ«
 #define DARKBLUE      	 0X01CF	//ÉîÀ¶É«
-#define LIGHTBLUE      	 0X7D7C	//Ç³À¶É«  
+#define LIGHTBLUE      	 0X7D7C	//Ç³À¶É«
 #define GRAYBLUE       	 0X5458 //»ÒÀ¶É«
 #define LIGHTGREEN     	 0X841F //Ç³ÂÌÉ«
 #define LGRAY 			     0XC618 //Ç³»ÒÉ«(PANNEL),´°Ìå±³¾°É«
@@ -242,7 +242,7 @@ void LCD_Fill_Fast(u16 xsta,u16 ysta,u16 xend,u16 yend,u16 color)
 
 }
 
-#if 1
+#if 0
 /* 182 x 144 x 2 */
 const unsigned char gImage_test[52416] = { /* 0X10,0X10,0X00,0XB6,0X00,0X90,0X01,0X1B, */
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
@@ -3526,7 +3526,7 @@ const unsigned char gImage_test[52416] = { /* 0X10,0X10,0X00,0XB6,0X00,0X90,0X01
 
 
 
-#if 0
+#if 1
 const unsigned char gImage_1[3200] = { /* 0X10,0X10,0X00,0X28,0X00,0X28,0X01,0X1B, */
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XF7,0XBE,
@@ -3875,7 +3875,7 @@ int lcd_init()
 
 
     //LCD_ShowPicture_Slow(29,48,182,144,gImage_test);
-    LCD_ShowPicture_Fast(29,48,182,144,gImage_test);
+    LCD_ShowPicture_Fast(29,48,182,144,gImage_1);
 
     return 0;
 }
