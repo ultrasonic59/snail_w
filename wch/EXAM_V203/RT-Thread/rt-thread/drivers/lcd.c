@@ -3778,14 +3778,18 @@ void LCD_ShowPicture_Fast(u16 x,u16 y,u16 length,u16 width,const u8 pic[])
 int lcd_init()
 {
 	lcd_gpio_init();
-	
-	//LCD_RES_Clr();//¸´Î»
+////for(;;)
+{
+	LCD_RES_Clr();//¸´Î»
+    GPIO_ResetBits(GPIOA,GPIO_Pin_15);
+
 	Delay_Ms(100);
 
 	LCD_RES_Set();
+    GPIO_SetBits(GPIOA,GPIO_Pin_15);
 	Delay_Ms(100);
-	
-	LCD_BLK_Set();//´ò¿ª±³¹â
+}
+////	LCD_BLK_Set();//´ò¿ª±³¹â
     Delay_Ms(100);
 	
 	//************* Start Initial Sequence **********//
@@ -3793,10 +3797,14 @@ int lcd_init()
 	Delay_Ms(120);              //Delay 120ms 
 	//************* Start Initial Sequence **********// 
 	LCD_WR_REG(0x36);
-	if(USE_HORIZONTAL==0)LCD_WR_DATA8(0x00);
-	else if(USE_HORIZONTAL==1)LCD_WR_DATA8(0xC0);
-	else if(USE_HORIZONTAL==2)LCD_WR_DATA8(0x70);
-	else LCD_WR_DATA8(0xA0);
+	if(USE_HORIZONTAL==0)
+	    LCD_WR_DATA8(0x00);
+	else if(USE_HORIZONTAL==1)
+	    LCD_WR_DATA8(0xC0);
+	else if(USE_HORIZONTAL==2)
+	    LCD_WR_DATA8(0x70);
+	else
+	    LCD_WR_DATA8(0xA0);
 
 	LCD_WR_REG(0x3A);			
 	LCD_WR_DATA8(0x05);
@@ -3864,15 +3872,19 @@ int lcd_init()
 	LCD_WR_REG(0x21); 
 
 	LCD_WR_REG(0x29);
-
+for(;;)
+{
     Delay_Ms(100);
     LCD_Fill_Fast(0,0,LCD_W,LCD_H,BLUE);
-    //Delay_Ms(100);
+    Delay_Ms(100);
     LCD_Fill_Fast(0,0,LCD_W,LCD_H,RED);
+    Delay_Ms(100);
 
     LCD_Fill_Fast(0,0,LCD_W,LCD_H,BLACK);
-    LCD_Fill_Fast(0,0,LCD_W,LCD_H,WHITE);
+    Delay_Ms(100);
 
+    LCD_Fill_Fast(0,0,LCD_W,LCD_H,WHITE);
+}
 
     //LCD_ShowPicture_Slow(29,48,182,144,gImage_test);
     LCD_ShowPicture_Fast(29,48,182,144,gImage_1);

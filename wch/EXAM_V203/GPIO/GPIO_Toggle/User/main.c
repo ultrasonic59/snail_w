@@ -16,6 +16,7 @@
 */
 
 #include "debug.h"
+#include "lcd.h"
 
 /* Global define */
 
@@ -57,10 +58,11 @@ int main(void)
 
     printf("GPIO Toggle TEST\r\n");
     GPIO_Toggle_INIT();
+    lcd_init();
 
     while(1)
     {
         Delay_Ms(250);
-        GPIO_WriteBit(GPIOA, GPIO_Pin_0, (i == 0) ? (i = Bit_SET) : (i = Bit_RESET));
+        GPIO_WriteBit(GPIOA, GPIO_Pin_15, (i == 0) ? (i = Bit_SET) : (i = Bit_RESET));
     }
 }
