@@ -18,6 +18,7 @@
 
 #include "ch32v30x_usbhs_device.h"
 #include "debug.h"
+#include "cam_can_brd.h"
 
 /*********************************************************************
  * @fn      main
@@ -28,11 +29,14 @@
  */
 int main(void)
 {
+    uint8_t btst=0;
     Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%d\r\n",SystemCoreClock);
     RCC_Configuration( );
+    gpio_init();
 
+#if 0
     /* Tim2 init */
     TIM2_Init( );
 
@@ -42,10 +46,18 @@ int main(void)
     /* USB20 device init */
     USBHS_RCC_Init( );
     USBHS_Device_Init( ENABLE );
-
+#endif
     while(1)
     {
-        UART1_DataRx_Deal( );
-        UART1_DataTx_Deal( );
-    }
+        set_led(btst);
+        set_tst1(btst);
+        btst++;
+        Delay_Ms(20);
+   }
 }
+////      UART1_DataRx_Deal( );
+////      UART1_DataTx_Deal( );
+////      printf("SystemClk:%d\r\n",SystemCoreClock);
+
+
+
