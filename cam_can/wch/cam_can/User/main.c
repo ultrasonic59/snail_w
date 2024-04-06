@@ -10,15 +10,97 @@
 
 /*
  *@Note
- *Example routine to emulate a simulate USB-CDC Device, USE USART1(PA9/PA10)
- *Recommended to use UART2(PA2) as debug port, you can modify the debug port
- *by modifying the macro definition in debug.h
- *Merged HID devices, using endpoint 4 data downlink to fetch reverse upload;
+ task1 and task2 alternate printing
 */
 
-#include "ch32v30x_usbhs_device.h"
 #include "debug.h"
 #include "cam_can_brd.h"
+#include "ch32v30x_usbhs_device.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Global define */
+#define TASK1_TASK_PRIO     5
+#define TASK1_STK_SIZE      256
+#define TASK2_TASK_PRIO     5
+#define TASK2_STK_SIZE      256
+
+/* Global Variable */
+TaskHandle_t Task1Task_Handler;
+TaskHandle_t Task2Task_Handler;
+
+#if 0
+/*********************************************************************
+ * @fn      GPIO_Toggle_INIT
+ *
+ * @brief   Initializes GPIOA.0/1
+ *
+ * @return  none
+ */
+void GPIO_Toggle_INIT(void)
+{
+  GPIO_InitTypeDef  GPIO_InitStructure={0};
+
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+#endif
+
+/*********************************************************************
+ * @fn      task1_task
+ *
+ * @brief   task1 program.
+ *
+ * @param  *pvParameters - Parameters point of task1
+ *
+ * @return  none
+ */
+void task1_task(void *pvParameters)
+{
+    while(1)
+    {
+        printf("task1 entry\r\n");
+        set_led(1);
+        set_tst3(1);
+        on_off_dv(1);
+    ////   GPIO_SetBits(GPIOA, GPIO_Pin_0);
+        vTaskDelay(250);
+  ////      GPIO_ResetBits(GPIOA, GPIO_Pin_0);
+        set_led(0);
+        set_tst3(0);
+        on_off_dv(0);
+     vTaskDelay(250);
+    }
+}
+
+/*********************************************************************
+ * @fn      task2_task
+ *
+ * @brief   task2 program.
+ *
+ * @param  *pvParameters - Parameters point of task2
+ *
+ * @return  none
+ */
+void task2_task(void *pvParameters)
+{
+    while(1)
+    {
+        printf("task2 entry\r\n");
+        set_tst1(0);
+        set_tst2(0);
+////       GPIO_ResetBits(GPIOA, GPIO_Pin_1);
+        vTaskDelay(100);
+  ////      GPIO_SetBits(GPIOA, GPIO_Pin_1);
+        set_tst1(1);
+        set_tst2(1);
+      vTaskDelay(100);
+    }
+}
 
 /*********************************************************************
  * @fn      main
@@ -29,35 +111,43 @@
  */
 int main(void)
 {
-    uint8_t btst=0;
-    Delay_Init();
-    USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n",SystemCoreClock);
-    RCC_Configuration( );
-    gpio_init();
 
-#if 0
-    /* Tim2 init */
-    TIM2_Init( );
-
-    /* Usart1 init */
-    UART1_Init( 1, DEF_UARTx_BAUDRATE, DEF_UARTx_STOPBIT, DEF_UARTx_PARITY );
-
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	Delay_Init();
+	USART_Printf_Init(115200);
+	printf("SystemClk:%d\r\n",SystemCoreClock);
+	printf("FreeRTOS Kernel Version:%s\r\n",tskKERNEL_VERSION_NUMBER);
+	board_init();
+ /*
+    for(;;)
+    {
+     USART_SendData(USART1, 0x35);
+     Delay_Ms(100);
+    }
+*/
     /* USB20 device init */
     USBHS_RCC_Init( );
     USBHS_Device_Init( ENABLE );
-#endif
-    while(1)
-    {
-        set_led(btst);
-        set_tst1(btst);
-        btst++;
-        Delay_Ms(20);
-   }
+
+////	GPIO_Toggle_INIT();
+	/* create two task */
+    xTaskCreate((TaskFunction_t )task2_task,
+                        (const char*    )"task2",
+                        (uint16_t       )TASK2_STK_SIZE,
+                        (void*          )NULL,
+                        (UBaseType_t    )TASK2_TASK_PRIO,
+                        (TaskHandle_t*  )&Task2Task_Handler);
+
+    xTaskCreate((TaskFunction_t )task1_task,
+                    (const char*    )"task1",
+                    (uint16_t       )TASK1_STK_SIZE,
+                    (void*          )NULL,
+                    (UBaseType_t    )TASK1_TASK_PRIO,
+                    (TaskHandle_t*  )&Task1Task_Handler);
+    vTaskStartScheduler();
+
+	while(1)
+	{
+	    printf("shouldn't run at here!!\n");
+	}
 }
-////      UART1_DataRx_Deal( );
-////      UART1_DataTx_Deal( );
-////      printf("SystemClk:%d\r\n",SystemCoreClock);
-
-
-

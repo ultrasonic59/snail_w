@@ -28,7 +28,7 @@
 //#define SYSCLK_FREQ_72MHz_HSI  72000000
 //#define SYSCLK_FREQ_96MHz_HSI  96000000
 //#define SYSCLK_FREQ_120MHz_HSI  120000000
-////#define SYSCLK_FREQ_144MHz_HSI  144000000
+//#define SYSCLK_FREQ_144MHz_HSI  144000000
 
 /* Clock Definitions */
 #ifdef SYSCLK_FREQ_HSE
@@ -140,7 +140,7 @@ void SystemInit (void)
 void SystemCoreClockUpdate (void)
 {
   uint32_t tmp = 0, pllmull = 0, pllsource = 0, Pll_6_5 = 0;
-	
+
   tmp = RCC->CFGR0 & RCC_SWS;
   
   switch (tmp)
@@ -155,7 +155,7 @@ void SystemCoreClockUpdate (void)
       pllmull = RCC->CFGR0 & RCC_PLLMULL;
       pllsource = RCC->CFGR0 & RCC_PLLSRC; 
       pllmull = ( pllmull >> 18) + 2;
-	  
+
 #ifdef CH32V30x_D8
           if(pllmull == 17) pllmull = 18;
 #else
@@ -167,7 +167,7 @@ void SystemCoreClockUpdate (void)
           if(pllmull == 16) pllmull = 15;
           if(pllmull == 17) pllmull = 16;
 #endif
-	  
+
       if (pllsource == 0x00)
       {
           if(EXTEN->EXTEN_CTR & EXTEN_PLL_HSI_PRE){
@@ -241,7 +241,7 @@ static void SetSysClock(void)
  
  /* If none of the define above is enabled, the HSI is used as System clock
   * source (default after reset) 
-	*/ 
+    */
 }
 
 
@@ -296,9 +296,9 @@ static void SetSysClockToHSE(void)
   }
   else
   { 
-		/* If HSE fails to start-up, the application will have wrong clock 
+        /* If HSE fails to start-up, the application will have wrong clock
      * configuration. User can add here some code to deal with this error 
-		 */
+         */
   }  
 }
 
@@ -367,10 +367,10 @@ static void SetSysClockTo48_HSE(void)
   }
   else
   { 
-		/* 
-		 * If HSE fails to start-up, the application will have wrong clock 
+        /*
+         * If HSE fails to start-up, the application will have wrong clock
      * configuration. User can add here some code to deal with this error 
-		 */
+         */
   } 
 }
 
@@ -406,7 +406,7 @@ static void SetSysClockTo56_HSE(void)
   }  
 
   if (HSEStatus == (uint32_t)0x01)
-  {	
+  {
     /* HCLK = SYSCLK */
     RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV1;   
     /* PCLK2 = HCLK */
@@ -440,10 +440,10 @@ static void SetSysClockTo56_HSE(void)
   }
   else
   { 
-		/* 
-		 * If HSE fails to start-up, the application will have wrong clock 
+        /*
+         * If HSE fails to start-up, the application will have wrong clock
      * configuration. User can add here some code to deal with this error 
-		 */
+         */
   } 
 }
 
@@ -513,10 +513,10 @@ static void SetSysClockTo72_HSE(void)
   }
   else
   { 
-		/* 
-		 * If HSE fails to start-up, the application will have wrong clock 
+        /*
+         * If HSE fails to start-up, the application will have wrong clock
      * configuration. User can add here some code to deal with this error 
-		 */
+         */
   }
 }
 

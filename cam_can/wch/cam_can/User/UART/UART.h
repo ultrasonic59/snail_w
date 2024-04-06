@@ -92,7 +92,7 @@ extern void UART1_DMAInit( uint8_t type, uint8_t *pbuf, uint32_t len );         
 extern void UART1_Init( uint8_t mode, uint32_t baudrate, uint8_t stopbits, uint8_t parity ); /* Serial port 1 initialization */
 extern void UART1_DataTx_Deal( void );                                            /* Serial port 1 data sending processing  */
 extern void UART1_DataRx_Deal( void );                                            /* Serial port 1 data reception processing */
-extern void UART1_USB_Init( void );                                               /* USB serial port initialization*/
+extern void _UART1_USB_Init( void );                                               /* USB serial port initialization*/
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,16 @@
 
 static uint8_t  p_us = 0;
 static uint16_t p_ms = 0;
-
+void remap_uart1(void)
+{
+uint32_t tmpreg;
+tmpreg = AFIO->PCFR2;
+tmpreg|=0x1<<26;
+AFIO->PCFR2=tmpreg;
+tmpreg = AFIO->PCFR1;
+tmpreg&= ~(0x1<<2);
+AFIO->PCFR1= tmpreg;
+}
 /*********************************************************************
  * @fn      Delay_Init
  *
@@ -91,8 +100,13 @@ void USART_Printf_Init(uint32_t baudrate)
     USART_InitTypeDef USART_InitStructure;
 
 #if(DEBUG == DEBUG_UART1)
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE);
+     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOB, ENABLE);
+  // GPIO_PinRemapConfig(GPIO_Remap_USART1, DISABLE);
+  //  GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+  //  GPIO_PinRemapConfig(GPIO_Remap_USART1_HighBit, ENABLE);
+    remap_uart1();
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;

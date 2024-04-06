@@ -302,7 +302,7 @@ void UART1_Init( uint8_t mode, uint32_t baudrate, uint8_t stopbits, uint8_t pari
  *
  * @return  none
  */
-void UART1_USB_Init( void )
+void _UART1_USB_Init( void )
 {
     uint32_t baudrate;
     uint8_t  stopbits;

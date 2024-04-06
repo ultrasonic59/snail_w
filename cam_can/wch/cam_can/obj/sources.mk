@@ -23,12 +23,15 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-SRC/Core \
-SRC/Debug \
-SRC/Peripheral/src \
-SRC/Startup \
+FreeRTOS \
+FreeRTOS/portable/GCC/RISC-V \
+FreeRTOS/portable/MemMang \
 User/UART \
 User/USB_Device \
 User/brd \
 User \
+src/Core \
+src/Debug \
+src/Peripheral/src \
+src/Startup \
 

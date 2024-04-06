@@ -385,7 +385,7 @@ void USBHS_IRQHandler( void )
                                      Uart.Com_Cfg[ 7 ] = Uart.Rx_TimeOutMax;
 
                                      /* 串口初始化操作 */
-                                     UART1_USB_Init( );
+ //   ????                                  _UART1_USB_Init( );
                                  }
                                  else if( USBHS_SetupReqCode == HID_SET_REPORT )
                                  {
