@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_x_dbg.driver.xcl" 
 }
