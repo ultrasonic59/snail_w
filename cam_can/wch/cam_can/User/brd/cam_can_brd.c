@@ -286,7 +286,7 @@ void board_init(void)
 gpio_init();
 TIM_PWMOut_Init(DEF_PER, DEF_PRESC, DEF_VAL );
 /* Bps = 250Kbps */
-\\CAN_Mode_Init( CAN_SJW_1tq, CAN_BS2_5tq, CAN_BS1_6tq, 12, CAN_Mode_Normal );
+////CAN_Mode_Init( CAN_SJW_1tq, CAN_BS2_5tq, CAN_BS1_6tq, 12, CAN_Mode_Normal );
 
 }
 ////=============INH ==================================

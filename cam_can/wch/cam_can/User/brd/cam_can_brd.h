@@ -3,6 +3,8 @@
 
 #include "debug.h"
 
+#define DOZA_BRD    1
+
 #define DEF_PER    100
 #define DEF_PRESC  500-1   //48000-1
 #define DEF_VAL  90

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>booter_x_dbg</name>
         <toolchain>
@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>35</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -70,7 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.30.1.50052</state>
+                    <state>9.50.1.69462</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -98,7 +98,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>32</version>
+                    <version>33</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -115,7 +115,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>32</version>
+                    <version>33</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -138,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>32</version>
+                    <version>33</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -211,13 +211,18 @@
                     <name>FPU64</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>OG_32_64DeviceCoreSlave</name>
+                    <version>33</version>
+                    <state>38</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>37</version>
+                <version>38</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -354,16 +359,17 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\.</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\inc</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver</state>
-                    <state>$PROJ_DIR$\..\common\dbg</state>
-                    <state>$PROJ_DIR$\..\common\board</state>
-                    <state>$PROJ_DIR$\..\common\can</state>
-                    <state>$PROJ_DIR$\..\common\my_misc</state>
-                    <state>$PROJ_DIR$\..\common\libraries\eeprom_emul</state>
+                    <state>$PROJ_DIR$\..\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
+                    <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
+                    <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\..\common_stm32\board</state>
+                    <state>$PROJ_DIR$\..\common_stm32\can</state>
+                    <state>$PROJ_DIR$\..\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common_stm32\my_misc</state>
+                    <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -475,13 +481,21 @@
                     <name>CCStackProtection</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>CCPointerAutentiction</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCBranchTargetIdentification</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>11</version>
+                <version>12</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -643,6 +657,10 @@
                     <name>PreInclude</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>A_32_64Device</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -683,14 +701,6 @@
                 <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
-            </data>
-        </settings>
-        <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
             </data>
         </settings>
         <settings>
@@ -1088,6 +1098,11 @@
                 </option>
             </data>
         </settings>
+        <settings>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <group>
         <name>Board</name>
@@ -1095,22 +1110,22 @@
             <name>$PROJ_DIR$\src\boot_main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\board\dima_board.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\board\dima_board.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\my_misc\my_misc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\my_misc\my_misc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\retarget.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\board\zzzz.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\board\zzzz.c</name>
         </file>
     </group>
     <group>
         <name>dbg</name>
         <file>
-            <name>$PROJ_DIR$\..\common\dbg\printk1.c</name>
+            <name>$PROJ_DIR$\..\..\common\dbg\printk1.c</name>
         </file>
     </group>
     <group>
@@ -1119,28 +1134,28 @@
             <name>$PROJ_DIR$\src\booter_can_cmds.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\can\can_drv.c</name>
         </file>
     </group>
     <group>
         <name>FreeRTOS</name>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\MemMang\heap_2.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\MemMang\heap_2.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\list.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\port.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\port.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
         </file>
     </group>
     <group>
@@ -1149,43 +1164,43 @@
             <name>$PROJ_DIR$\src\boot_sys_stm32f2xx.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
         </file>
     </group>
     <group>
         <name>startup</name>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\startup_stm32f2xx.s</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\startup_stm32f2xx.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\stm32f2xx_it.c</name>
         </file>
     </group>
     <file>
         <name>$PROJ_DIR$\src\can_thr.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\..\common\libraries\eeprom_emul\emul_eeprom.c</name>
+        <name>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul\emul_eeprom.c</name>
     </file>
 </project>
