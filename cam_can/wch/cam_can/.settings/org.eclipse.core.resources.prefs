@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//FreeRTOS/tasks.c=GBK
 encoding//SRC/Debug/debug.c=GBK
+encoding//User/CAN/can_drv.c=GBK
 encoding//User/UART/PRINTF.h=GBK
 encoding//User/UART/UART.c=GBK
 encoding//User/UART/UART.h=GBK
@@ -13,6 +14,7 @@ encoding//User/main.c=GBK
 encoding//User/motor_tsk.c=GBK
 encoding//src/Core/core_riscv.h=GBK
 encoding//src/Debug/debug.c=GBK
+encoding//src/Peripheral/inc/ch32v30x_can.h=GBK
 encoding//src/Peripheral/inc/ch32v30x_gpio.h=GBK
 encoding//src/Peripheral/inc/ch32v30x_rcc.h=GBK
 encoding//src/Peripheral/src/ch32v30x_gpio.c=GBK

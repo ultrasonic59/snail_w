@@ -15,6 +15,8 @@
 #include "misc.h"
 #include "printk.h"
 #include "emul_eeprom.h"
+#define VERS          "snail_axis_v1.0"
+
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );
 extern void tst_task( void *pvParameters );
@@ -27,8 +29,6 @@ TaskHandle_t  can_send_thread_handle;
 ////============================================
 int main( void )
 {
-////uint8_t btst=0; 
-////uint32_t tst=0;
 uint16_t tmp=0;
 #ifdef DEBUG
   debug();
@@ -36,11 +36,11 @@ uint16_t tmp=0;
 __disable_irq();
 hw_board_init();
 #if STEP_X
-  printk("\n\r=== [app_step_x_axis] ==="); 
+  printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #elif STEP_Y
-  printk("\n\r=== [app_step_y_axis] ==="); 
+  printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #elif STEP_Z
-  printk("\n\r=== [app_step_z_axis] ==="); 
+  printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #else 
   #error "\n\r=== app STEP_... nodefined ==="; 
 #endif

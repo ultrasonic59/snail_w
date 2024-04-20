@@ -26,13 +26,13 @@ SUBDIRS := \
 FreeRTOS \
 FreeRTOS/portable/GCC/RISC-V \
 FreeRTOS/portable/MemMang \
-SRC/Core \
-SRC/Debug \
-SRC/Peripheral/src \
-SRC/Startup \
+User/CAN \
 User/UART \
 User/USB_Device \
 User/brd \
-User/can \
 User \
+src/Core \
+src/Debug \
+src/Peripheral/src \
+src/Startup \
 

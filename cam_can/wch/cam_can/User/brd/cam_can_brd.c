@@ -259,6 +259,8 @@ void gpio_init(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(INH_GPIO, &GPIO_InitStructure);
+    GPIO_ResetBits(INH_GPIO, INH_PIN);
+
     ////=============led ==================================
 
     GPIO_InitStructure.GPIO_Pin = LED_PIN;
