@@ -8,7 +8,7 @@
 #include <QColor>
 #include <QStateMachine>
 #include <QFinalState>
-#include "ui_snail.h"
+////#include "ui_snail.h"
 #include "gridscene.h"
 #include "cursorposlabel.h"
 #include "BoardPoinsModel.h"
@@ -33,7 +33,7 @@ signals:
 		void adjustImgFinished();
 private:
 	CursorPosLabel* cursorPosLabel;
-	Ui::SnailClass ui;
+////	Ui::SnailClass ui;
 	BoardPointsModel* boardPointsModel;
 	QStateMachine machine;
 	QFinalState *finalState;
@@ -42,7 +42,7 @@ private:
 
 	void additionalSetupUI();
 	void connectSignals(void);
-	void settingStateMachine(Ui::SnailClass& my_ui);
+	////void settingStateMachine(Ui::SnailClass& my_ui);
 	void setStateMachineInInitialState();
 	void setUpdateBtnTimer();
 };

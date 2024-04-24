@@ -103,7 +103,7 @@ void Snail::connectSignals()
 
 }
 
-
+#if 0
 
 void Snail::settingStateMachine(Ui::SnailClass& my_ui)
 {
@@ -151,6 +151,8 @@ void Snail::settingStateMachine(Ui::SnailClass& my_ui)
 
 
 }
+#endif
+
 void Snail::setStateMachineInInitialState()
 {
 	stateMachineFlag=false;
