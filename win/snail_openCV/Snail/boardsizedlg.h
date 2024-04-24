@@ -2,7 +2,7 @@
 #define BOARDSIZEDLG_H
 
 #include <QDialog>
-//// #include "ui_BoardSizeDlg.h"
+ #include "ui_BoardSizeDlg.h"
 class BoardSizeDlg : public QDialog,public Ui::boardSizeDlg
 {
 	Q_OBJECT

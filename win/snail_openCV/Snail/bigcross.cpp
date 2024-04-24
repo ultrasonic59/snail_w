@@ -1,5 +1,5 @@
 #include "bigcross.h"
-#include "qdebug.h"
+#include <QDebug>
 #include "gridscene.h"
 BigCross::BigCross()
 	: QGraphicsObject()

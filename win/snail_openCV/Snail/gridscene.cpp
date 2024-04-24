@@ -61,7 +61,7 @@ void GridScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	if(matchRect.contains(cursor_position)){
 
-		QApplication::setOverrideCursor(Qt::BlankCursor/*Qt::CrossCursor*/);
+	////???	QApplication::setOverrideCursor(Qt::BlankCursor/*Qt::CrossCursor*/);
 	
 		mousePointerInBoardImgRect=true;
 		QPointF boardCoordinate=translateToBoardCoordinate(cursor_position);

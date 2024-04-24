@@ -20,7 +20,7 @@ void  Transformer::findBoardBoundRect(cv::Rect& boundRect)
 	// Finds the contour with the largest area
 
 	QVector<cv::RotatedRect> boxes;//create vector RotatedRect for sorting later
-
+	/*
 	for(int i=0; i<vertexContours.size();i++) {
 
 		cv::RotatedRect box = cv::minAreaRect(vertexContours[i]);
@@ -28,6 +28,7 @@ void  Transformer::findBoardBoundRect(cv::Rect& boundRect)
 
 
 	}
+	*/
 	qSort(boxes.begin(),boxes.end(),Transformer::CompareRotateRect);//sorting RotatedRect
 
 
@@ -59,7 +60,7 @@ void Transformer::findContoursThreshold(double thresh,double maxval,int colorSch
 
 
 	// Finds contours
-	cv::findContours(imageEdge,vertexContours,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
+/////	cv::findContours(imageEdge,vertexContours,CV_RETR_LIST,CV_CHAIN_APPROX_NONE);
 
 }
 
@@ -73,6 +74,7 @@ void Transformer::findCenterRect(const cv::Rect& rect,cv::Point2f& centerPoint)
 
 void Transformer::find4FurthestPoints(const cv::Point2f& centerPoint,QVector<cv::Point2f>& furthestPoints)
 {
+#if 0
 	QVector<MinEnclosingCircle> circles;
 	for(int i=0; i<vertexContours.size();i++) {
 		cv::Point2f center;
@@ -102,7 +104,7 @@ void Transformer::find4FurthestPoints(const cv::Point2f& centerPoint,QVector<cv:
 		//cv::circle(undistort_img, circleWithDistantion[i].first.center, cvRound(circleWithDistantion[i].first.radius), cv::Scalar(255, 0, 255), 3);
 	}
 
-
+#endif
 }
 
 
@@ -150,7 +152,7 @@ cv::Mat Transformer::applyPerspectiveTransform(const QVector<cv::Point2f>& srcQu
 void Transformer::setTransformImg(const cv::Mat& img)
 {
 	currImg.release();
-	vertexContours.clear();
+/////???	vertexContours.clear();
 	currImg=img.clone();
 }
 

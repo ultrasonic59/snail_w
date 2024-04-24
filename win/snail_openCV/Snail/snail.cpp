@@ -1,9 +1,11 @@
 #include "snail.h"
 #include <QDesktopWidget>
 #include "boardsizedlg.h"
+
 Snail::Snail(QWidget *parent)
 	: QMainWindow(parent)
 {
+#if 0
 	ui.setupUi(this);
 	resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
 	additionalSetupUI();
@@ -15,10 +17,10 @@ Snail::Snail(QWidget *parent)
 
 	initialState = new QState();
 	finalState = new QFinalState();
-	settingStateMachine(ui);
+	////settingStateMachine(ui);
 	setStateMachineInInitialState();
 
-
+#endif
 
 }
 

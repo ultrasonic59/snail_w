@@ -1,12 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QTDIR>C:\Qt\Qt5.3.2\5.3\msvc2010_static</QTDIR>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerEnvironment>PATH=C:/Qt/Qt5.15.0/5.15.0/msvc2019_static_x64/bin;%PATH%</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QTDIR>C:\Qt\Qt5.3.2\5.3\msvc2010_static</QTDIR>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <QtTouchProperty>
+    </QtTouchProperty>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="QtSettings">
+    <QtTouchProperty>
+    </QtTouchProperty>
+  </PropertyGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <QtTouchProperty>
+    </QtTouchProperty>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="QtSettings">
+    <QtTouchProperty>
+    </QtTouchProperty>
   </PropertyGroup>
 </Project>

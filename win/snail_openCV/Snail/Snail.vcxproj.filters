@@ -41,23 +41,8 @@
     <ClCompile Include="snail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_snail.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_qscaledgraphview.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="qscaledgraphview.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_bigcross.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_crosspoint.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_gridscene.cpp">
-      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="bigcross.cpp">
       <Filter>Source Files</Filter>
@@ -77,17 +62,8 @@
     <ClCompile Include="griditem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_griditem.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="boardsizedlg.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_boardsizedlg.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_cursorposlabel.cpp">
-      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="cursorposlabel.cpp">
       <Filter>Source Files</Filter>
@@ -100,39 +76,39 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="snail.h">
+    <QtMoc Include="snail.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="snail.ui">
+    </QtMoc>
+    <QtUic Include="snail.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="snail.qrc">
+    </QtUic>
+    <QtRcc Include="snail.qrc">
       <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="qscaledgraphview.h">
+    </QtRcc>
+    <QtMoc Include="qscaledgraphview.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="bigcross.h">
+    </QtMoc>
+    <QtMoc Include="bigcross.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="crosspoint.h">
+    </QtMoc>
+    <QtMoc Include="crosspoint.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="gridscene.h">
+    </QtMoc>
+    <QtMoc Include="gridscene.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="griditem.h">
+    </QtMoc>
+    <QtMoc Include="griditem.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="BoardSizeDlg.ui">
+    </QtMoc>
+    <QtUic Include="BoardSizeDlg.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="boardsizedlg.h">
+    </QtUic>
+    <QtMoc Include="boardsizedlg.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="cursorposlabel.h">
+    </QtMoc>
+    <QtMoc Include="cursorposlabel.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asm_opencv.h">

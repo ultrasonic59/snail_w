@@ -3,6 +3,8 @@
  
 
 #include <QDebug>
+///#include "qdebug.h"
+
 #include <QImage>
 #include <QPixmap>
 #include <QtGlobal>

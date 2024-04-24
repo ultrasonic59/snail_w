@@ -19,7 +19,7 @@ public:
 	cv::Mat applyPerspectiveTransform(const QVector<cv::Point2f>& srcQuadr,const QVector<cv::Point2f>& destQuadr );
 private:
 	cv::Mat currImg;
-	cv::vector<cv::vector<cv::Point> >  vertexContours;
+////	vector<cv::vector<cv::Point> >  vertexContours;
 
 private:
 
