@@ -23,6 +23,7 @@ uint8_t ts2;
 }can_br_coef_t;
 
 extern can_br_coef_t can_br30[MAX_NUM_BR];
+extern can_br_coef_t can_br36[MAX_NUM_BR];
 
 #define STANDARD_FORMAT  0
 #define EXTENDED_FORMAT  1
