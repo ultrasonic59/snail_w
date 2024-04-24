@@ -44,6 +44,18 @@ can_br_coef_t can_br30[]=
 };
 
 #endif
+can_br_coef_t can_br36[]=
+{
+  {150,CAN_BS1_15tq,CAN_BS2_5tq},  ////10 kb
+  {75,CAN_BS1_15tq,CAN_BS2_5tq},  ////20 kb
+  {30,CAN_BS1_15tq,CAN_BS2_5tq},  ////50 kb
+  {30,CAN_BS1_8tq,CAN_BS2_2tq},  ////100 kb
+  {15,CAN_BS1_14tq,CAN_BS2_2tq},  ////125 kb
+  {12,CAN_BS1_6tq,CAN_BS2_5tq},  ////250 kb
+  {6,CAN_BS1_6tq,CAN_BS2_5tq},  ////500 kb
+  {3,CAN_BS1_11tq,CAN_BS2_2tq},  ////800 kb
+  {3,CAN_BS1_6tq,CAN_BS2_5tq}  ////1000 kb
+};
 
 CanRxMsg RxMessage;
 #if 0
@@ -257,6 +269,7 @@ void CAN1_TX_IRQHandler (void) {
 //	sendchar2(0x34);
   }
 }
+#endif
 ////==============================================================
 void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
 {
@@ -274,7 +287,6 @@ void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
   CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
   CAN_FilterInit(&CAN_FilterInitStructure);
 #endif
-
 }
 void canfilter_init(void)
 {
@@ -288,7 +300,7 @@ CAN_FilterConfig(0,id,mask);
 ////=============================================================================================
 
 
-#endif
+
 ////==============================================================
 int can_init( FunctionalState ttcm, FunctionalState abom, FunctionalState awum, FunctionalState nart,
          FunctionalState rflm, FunctionalState txfp, uint32_t sjw, uint32_t ts1, uint32_t ts2,
@@ -348,7 +360,7 @@ int can_speed(uint8_t index) {
 if(index>=MAX_NUM_BR )
   return -1;
 else
-  return _can_init(CAN_SJW_1tq, can_br30[index].ts1,can_br30[index].ts2,can_br30[index].pre);
+  return _can_init(CAN_SJW_1tq, can_br36[index].ts1,can_br36[index].ts2,can_br36[index].pre);
 }
 
 
