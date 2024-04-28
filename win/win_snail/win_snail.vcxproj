@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{154764AB-C21B-4446-BF66-98828A180B0B}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>5.15.0_static_x64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>5.15.0_static_x64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtNetwork;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtOpenGL;D:\proj\velograph\snail_w\win\win_snail;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5OpenGLd.lib;Qt5Networkd.lib;Qt5SerialPortd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <QtRcc Include="win_snail.qrc" />
+    <QtUic Include="frmabout.ui" />
+    <QtUic Include="frmsettings.ui" />
+    <QtUic Include="widgets\sliderbox.ui" />
+    <QtUic Include="win_snail.ui" />
+    <QtMoc Include="win_snail.h" />
+    <ClCompile Include="drawers\gcodedrawer.cpp" />
+    <ClCompile Include="drawers\heightmapborderdrawer.cpp" />
+    <ClCompile Include="drawers\heightmapgriddrawer.cpp" />
+    <ClCompile Include="drawers\heightmapinterpolationdrawer.cpp" />
+    <ClCompile Include="drawers\origindrawer.cpp" />
+    <ClCompile Include="drawers\selectiondrawer.cpp" />
+    <ClCompile Include="drawers\shaderdrawable.cpp" />
+    <ClCompile Include="drawers\tooldrawer.cpp" />
+    <ClCompile Include="frmabout.cpp" />
+    <ClCompile Include="frmmain_heightmap.cpp" />
+    <ClCompile Include="frmmain_util.cpp" />
+    <ClCompile Include="frmsettings.cpp" />
+    <ClCompile Include="parser\arcproperties.cpp" />
+    <ClCompile Include="parser\gcodeparser.cpp" />
+    <ClCompile Include="parser\gcodepreprocessorutils.cpp" />
+    <ClCompile Include="parser\gcodeviewparse.cpp" />
+    <ClCompile Include="parser\linesegment.cpp" />
+    <ClCompile Include="parser\pointsegment.cpp" />
+    <ClCompile Include="tables\gcodetablemodel.cpp" />
+    <ClCompile Include="tables\heightmaptablemodel.cpp" />
+    <ClCompile Include="utils\profiles.cpp" />
+    <ClCompile Include="widgets\colorpicker.cpp" />
+    <ClCompile Include="widgets\combobox.cpp" />
+    <ClCompile Include="widgets\comboboxkey.cpp" />
+    <ClCompile Include="widgets\glwidget.cpp" />
+    <ClCompile Include="widgets\groupbox.cpp" />
+    <ClCompile Include="widgets\scrollarea.cpp" />
+    <ClCompile Include="widgets\slider.cpp" />
+    <ClCompile Include="widgets\sliderbox.cpp" />
+    <ClCompile Include="widgets\styledtoolbutton.cpp" />
+    <ClCompile Include="widgets\widget.cpp" />
+    <ClCompile Include="win_snail.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fshader.glsl" />
+    <None Include="shaders\vshader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\widget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\slider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\combobox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\glwidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\groupbox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\sliderbox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\scrollarea.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="tables\gcodetablemodel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="tables\heightmaptablemodel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="drawers\heightmapborderdrawer.h" />
+    <ClInclude Include="drawers\heightmapgriddrawer.h" />
+    <ClInclude Include="drawers\tooldrawer.h" />
+    <ClInclude Include="utils\safequeue.h" />
+    <QtMoc Include="widgets\colorpicker.h" />
+    <QtMoc Include="frmsettings.h" />
+    <QtMoc Include="frmabout.h" />
+    <ClInclude Include="parser\arcproperties.h" />
+    <QtMoc Include="parser\gcodepreprocessorutils.h" />
+    <ClInclude Include="parser\linesegment.h" />
+    <ClInclude Include="parser\pointsegment.h" />
+    <QtMoc Include="drawers\gcodedrawer.h" />
+    <ClInclude Include="drawers\heightmapinterpolationdrawer.h" />
+    <ClInclude Include="drawers\origindrawer.h" />
+    <ClInclude Include="drawers\selectiondrawer.h" />
+    <QtMoc Include="parser\gcodeviewparse.h" />
+    <QtMoc Include="parser\gcodeparser.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
