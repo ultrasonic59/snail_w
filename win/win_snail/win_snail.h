@@ -35,6 +35,7 @@
 #include "frmsettings.h"
 #include "frmabout.h"
 #include "utils/safequeue.h"
+#include "interface/SerialInterface.h"
 
 //// #define sNan  65536
 
@@ -114,6 +115,10 @@ private:
     Ui::win_snail_windows *ui;
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);
+    void on_actFileNew_triggered();
+    void on_cmdFileReset_clicked();
+    void on_actFileSave_triggered();
+    void on_actFileSaveAs_triggered();
 
 private:
     void loadFile(QString fileName);
@@ -148,14 +153,13 @@ private:
     void on_cmdHeightMapBorderAuto_clicked();
     void on_txtHeightMapBorderWidth_valueChanged(double arg1);
     void on_cmdHeightMapCreate_clicked();
-    void on_txtHeightMapBorderY_valueChanged(double arg1);
-    void on_txtHeightMapBorderY_valueChanged(double arg1);
+     void on_txtHeightMapBorderY_valueChanged(double arg1);
     void on_txtHeightMapBorderHeight_valueChanged(double arg1);
     void on_chkHeightMapGridShow_toggled(bool checked);
     void on_txtHeightMapGridX_valueChanged(double arg1);
     void on_txtHeightMapGridY_valueChanged(double arg1);
-    void on_txtHeightMapGridZBottom_valueChanged(double arg1);
-    void on_txtHeightMapGridY_valueChanged(double arg1);
+  ///  void on_txtHeightMapGridZBottom_valueChanged(double arg1);
+ ////   void on_txtHeightMapGridY_valueChanged(double arg1);
     void on_txtHeightMapGridZBottom_valueChanged(double arg1);
     void on_txtHeightMapGridZTop_valueChanged(double arg1);
     void on_cmdHeightMapMode_toggled(bool checked);
@@ -164,16 +168,21 @@ private:
     void on_txtHeightMapInterpolationStepX_valueChanged(double arg1);
     void on_txtHeightMapInterpolationStepY_valueChanged(double arg1);
     void on_chkHeightMapUse_clicked(bool checked);
-    void on_cmdHeightMapCreate_clicked();
-    void on_cmdHeightMapBorderAuto_clicked();
+ ////   void on_cmdHeightMapCreate_clicked();
+ ////   void on_cmdHeightMapBorderAuto_clicked();
     void on_cmdFileAbort_clicked();
     void on_cmdSpindle_clicked(bool checked);
     bool saveHeightMap(QString fileName);
-
-   void clearTable();
+    void loadHeightMap(QString fileName);
+    QList<LineSegment*> subdivideSegment(LineSegment* segment);
+    void clearTable();
     void preloadSettings();
     void loadSettings();
- ///   void saveSettings();
+  ////  bool saveChanges(bool heightMapMode);
+    void applySettings();
+    bool saveProgramToFile(QString fileName, GCodeTableModel* model);
+
+  void saveSettings();
  ///   bool saveChanges(bool heightMapMode);
  ///   void updateControlsState();
  /// 

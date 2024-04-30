@@ -337,6 +337,7 @@ void win_snail::on_cmdFileOpen_clicked()
 
 void win_snail::loadFile(QList<QString> data)
 {
+#if 0
     QTime time;
     time.start();
 
@@ -459,6 +460,7 @@ void win_snail::loadFile(QList<QString> data)
 
     resetHeightmap();
     updateControlsState();
+#endif
 }
 
 void win_snail::loadFile(QString fileName)

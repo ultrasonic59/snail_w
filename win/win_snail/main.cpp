@@ -1,6 +1,8 @@
 #include "win_snail.h"
 #include <QtWidgets/QApplication>
 
+#pragma comment(lib, "comctl32.lib")
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -60,7 +60,7 @@ all: cam_can.elf secondary-outputs
 
 # Tool invocations
 cam_can.elf: $(OBJS) $(USER_OBJS)
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\cam_can\wch\cam_can\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"cam_can.map" --specs=nano.specs --specs=nosys.specs -o "cam_can.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w_\cam_can\wch\cam_can\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"cam_can.map" --specs=nano.specs --specs=nosys.specs -o "cam_can.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@	@
 cam_can.hex: cam_can.elf
 	@	riscv-none-embed-objcopy -O ihex "cam_can.elf"  "cam_can.hex"

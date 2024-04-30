@@ -18,11 +18,13 @@
 */
 #include <QFileDialog>
 
-#include "frmmain.h"
-#include "ui_frmmain.h"
+////#include "frmmain.h"
+////#include "ui_frmmain.h"
 
+#include "win_snail.h"
+#include "ui_win_snail.h"
 
-void frmMain::loadSettings()
+void win_snail::loadSettings()
 {
     QSettings set(m_settingsFilePath, QSettings::IniFormat);
     set.setIniCodec("UTF-8");
@@ -130,12 +132,13 @@ void frmMain::loadSettings()
     m_settings->setTouchCommand(set.value("touchCommand", "G21G91G38.2Z-30F80; G0Z1; G38.2Z-2F10").toString());
     m_settings->setSafePositionCommand(set.value("safePositionCommand", "G21G90; G53G0Z10").toString());
 
+#if 0
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         int i = button->objectName().right(1).toInt();
         m_settings->setUserCommands(i, set.value(QString("userCommands%1").arg(i)).toString());
     }
-
+#endif
     ui->cboJogStep->setItems(set.value("jogSteps").toStringList());
     ui->cboJogStep->setCurrentIndex(ui->cboJogStep->findText(set.value("jogStep").toString()));
     ui->cboJogFeed->setItems(set.value("jogFeeds").toStringList());
@@ -192,7 +195,7 @@ void frmMain::loadSettings()
     m_settingsLoading = false;
 }
 
-void frmMain::saveSettings()
+void win_snail::saveSettings()
 {
     QSettings set(m_settingsFilePath, QSettings::IniFormat);
     set.setIniCodec("UTF-8");
@@ -271,13 +274,13 @@ void frmMain::saveSettings()
     set.setValue("rapidOverrideValue", ui->slbRapidOverride->value());
     set.setValue("spindleOverride", ui->slbSpindleOverride->isChecked());
     set.setValue("spindleOverrideValue", ui->slbSpindleOverride->value());
-
+#if 0
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         int i = button->objectName().right(1).toInt();
         set.setValue(QString("userCommands%1").arg(i), m_settings->userCommands(i));
     }
-
+#endif
     set.setValue("jogSteps", ui->cboJogStep->items());
     set.setValue("jogStep", ui->cboJogStep->currentText());
     set.setValue("jogFeeds", ui->cboJogFeed->items());
@@ -315,7 +318,7 @@ void frmMain::saveSettings()
     set.setValue("interface", ui->comboInterface->currentText());
 }
 
-bool frmMain::saveChanges(bool heightMapMode)
+bool win_snail::saveChanges(bool heightMapMode)
 {
     // Check if gcode file was changed
     if ((!heightMapMode && m_fileChanged))
@@ -357,7 +360,7 @@ bool frmMain::saveChanges(bool heightMapMode)
     return true;
 }
 
-void frmMain::applySettings()
+void win_snail::applySettings()
 {
     m_originDrawer->setLineWidth(m_settings->lineWidth());
     m_toolDrawer.setToolDiameter(m_settings->toolDiameter());
@@ -393,7 +396,7 @@ void frmMain::applySettings()
     ui->grpOverriding->setVisible(m_settings->panelOverriding());
     ui->grpJog->setVisible(m_settings->panelJog());
 
-    ui->cboCommand->setAutoCompletion(m_settings->autoCompletion());
+ ////????   ui->cboCommand->setAutoCompletion(m_settings->autoCompletion());
 
     m_codeDrawer->setSimplify(m_settings->simplify());
     m_codeDrawer->setSimplifyPrecision(m_settings->simplifyPrecision());
@@ -448,10 +451,11 @@ void frmMain::applySettings()
     ui->cboCommand->setMinimumHeight(ui->cboCommand->height());
     ui->cmdClearConsole->setFixedHeight(ui->cboCommand->height());
     ui->cmdCommandSend->setFixedHeight(ui->cboCommand->height());
-
+#if 0
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         button->setToolTip(m_settings->userCommands(button->objectName().right(1).toInt()));
         button->setEnabled(!button->toolTip().isEmpty());
     }
+#endif
 }

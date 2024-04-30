@@ -521,7 +521,7 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
     // Reset table view
     QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
     ui->tblProgram->setModel(NULL);
-
+#if 0
     CancelException cancel;
 
     if (checked)
@@ -789,7 +789,7 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
     ui->grpHeightMap->setProperty("overrided", checked);
     style()->unpolish(ui->grpHeightMap);
     ui->grpHeightMap->ensurePolished();
-
+#endif
     // Update menu
     ui->actFileSaveTransformedAs->setVisible(checked);
 }

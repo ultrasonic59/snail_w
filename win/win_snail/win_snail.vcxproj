@@ -65,12 +65,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtNetwork;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtOpenGL;D:\proj\velograph\snail_w\win\win_snail;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtSerialPort;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtNetwork;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtOpenGL;D:\proj\velograph\snail_w\win\win_snail;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt5OpenGLd.lib;Qt5Networkd.lib;Qt5SerialPortd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5OpenGLd.lib;Qt5Networkd.lib;Qt5SerialPortd.lib;Setupapi.lib;Ws2_32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -118,8 +119,10 @@
     <ClCompile Include="drawers\tooldrawer.cpp" />
     <ClCompile Include="frmabout.cpp" />
     <ClCompile Include="frmmain_heightmap.cpp" />
+    <ClCompile Include="frmmain_settings.cpp" />
     <ClCompile Include="frmmain_util.cpp" />
     <ClCompile Include="frmsettings.cpp" />
+    <ClCompile Include="interface\SerialInterface.cpp" />
     <ClCompile Include="parser\arcproperties.cpp" />
     <ClCompile Include="parser\gcodeparser.cpp" />
     <ClCompile Include="parser\gcodepreprocessorutils.cpp" />
@@ -177,6 +180,7 @@
     <ClInclude Include="drawers\heightmapborderdrawer.h" />
     <ClInclude Include="drawers\heightmapgriddrawer.h" />
     <ClInclude Include="drawers\tooldrawer.h" />
+    <ClInclude Include="interface\SerialInterface.h" />
     <ClInclude Include="utils\safequeue.h" />
     <QtMoc Include="widgets\colorpicker.h" />
     <QtMoc Include="frmsettings.h" />

@@ -54,6 +54,12 @@
     <Filter Include="Source Files\utils">
       <UniqueIdentifier>{2f335154-bb90-47a8-9491-8351825cd5e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\interface">
+      <UniqueIdentifier>{f4a6849a-86b7-434c-b2a6-d502f474b727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\interface">
+      <UniqueIdentifier>{c88fdc38-bc10-462a-8377-536ea0afc2ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -166,6 +172,12 @@
     <ClCompile Include="frmmain_heightmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="frmmain_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\SerialInterface.cpp">
+      <Filter>Source Files\interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fshader.glsl">
@@ -266,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="utils\safequeue.h">
       <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\SerialInterface.h">
+      <Filter>Header Files\interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

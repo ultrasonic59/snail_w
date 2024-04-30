@@ -105,7 +105,7 @@ void win_snail::clearTable()
  ///   m_programModel.clear();
  ///   m_programModel.insertRow(0);
 }
-
+#if 0
 void win_snail::loadFile(QList<QString> data)
 {
  ///   QTime time;
@@ -234,6 +234,7 @@ void win_snail::loadFile(QList<QString> data)
     updateControlsState();
 #endif
 }
+#endif
 
 QString win_snail::findConfigPath() {
     QString profileNameFromEnvironment;//// = getenv("CANDLE_PROFILE");
@@ -274,181 +275,9 @@ void win_snail::preloadSettings()
     fmt.setSwapInterval(set.value("vsync", false).toBool() ? 1 : 0);
     QGLFormat::setDefaultFormat(fmt);
 }
-void win_snail::loadSettings()
-{
-    QSettings set(m_settingsFilePath, QSettings::IniFormat);
-    set.setIniCodec("UTF-8");
 
-    m_settingsLoading = true;
-////???
-#if 0
-    m_settings->setFontSize(set.value("fontSize", 9).toInt());
-    m_settings->setLayoutCompact(set.value("layoutCompact", false).toBool());
-    m_settings->setIgnoreErrors(set.value("ignoreErrors", false).toBool());
-    m_settings->setAutoLine(set.value("autoLine", true).toBool());
-    m_settings->setUseM6(set.value("useM6", false).toBool());
-    m_settings->setUseRotaryAxis(set.value("useRotary", false).toBool());
-    m_settings->setResetAfterConnect(set.value("resetConnect", true).toBool());
-    m_settings->setToolDiameter(set.value("toolDiameter", 3).toDouble());
-    m_settings->setToolLength(set.value("toolLength", 15).toDouble());
-    m_settings->setAntialiasing(set.value("antialiasing", true).toBool());
-    m_settings->setMsaa(set.value("msaa", true).toBool());
-    m_settings->setVsync(set.value("vsync", false).toBool());
-    m_settings->setZBuffer(set.value("zBuffer", false).toBool());
-    m_settings->setSimplify(set.value("simplify", false).toBool());
-    m_settings->setSimplifyPrecision(set.value("simplifyPrecision", 0).toDouble());
-    m_settings->setGrayscaleSegments(set.value("grayscaleSegments", false).toBool());
-    m_settings->setGrayscaleSCode(set.value("grayscaleSCode", true).toBool());
-    m_settings->setDrawModeVectors(set.value("drawModeVectors", true).toBool());
-    m_settings->setMoveOnRestore(set.value("moveOnRestore", false).toBool());
-    m_settings->setRestoreMode(set.value("restoreMode", 0).toInt());
-    m_settings->setLineWidth(set.value("lineWidth", 1).toDouble());
-    m_settings->setArcLength(set.value("arcLength", 0).toDouble());
-    m_settings->setArcDegree(set.value("arcDegree", 0).toDouble());
-    m_settings->setArcDegreeMode(set.value("arcDegreeMode", true).toBool());
-    m_settings->setShowProgramCommands(set.value("showProgramCommands", 0).toBool());
-    m_settings->setShowUICommands(set.value("showUICommands", 0).toBool());
-    m_settings->setSpindleSpeedMin(set.value("spindleSpeedMin", 0).toInt());
-    m_settings->setSpindleSpeedMax(set.value("spindleSpeedMax", 100).toInt());
-    m_settings->setLaserPowerMin(set.value("laserPowerMin", 0).toInt());
-    m_settings->setLaserPowerMax(set.value("laserPowerMax", 100).toInt());
-    m_settings->setRapidSpeed(set.value("rapidSpeed", 0).toInt());
-    m_settings->setHeightmapProbingFeed(set.value("heightmapProbingFeed", 0).toInt());
-    m_settings->setAcceleration(set.value("acceleration", 10).toInt());
-    m_settings->setToolAngle(set.value("toolAngle", 0).toDouble());
-    m_settings->setToolType(set.value("toolType", 0).toInt());
-    m_settings->setFps(set.value("fps", 60).toInt());
-    m_settings->setQueryStateTime(set.value("queryStateTime", 100).toInt());
-
-    m_settings->setPanelUserCommands(set.value("panelUserCommandsVisible", true).toBool());
-    m_settings->setPanelHeightmap(set.value("panelHeightmapVisible", true).toBool());
-    m_settings->setPanelSpindle(set.value("panelSpindleVisible", true).toBool());
-    m_settings->setPanelOverriding(set.value("panelOverridingVisible", true).toBool());
-    m_settings->setPanelJog(set.value("panelJogVisible", true).toBool());
-
-    ui->grpConsole->setMinimumHeight(set.value("consoleMinHeight", 100).toInt());
-
-    ui->chkAutoScroll->setChecked(set.value("autoScroll", true).toBool());
-
-    ui->slbSpindle->setRatio(100);
-    ui->slbSpindle->setMinimum(m_settings->spindleSpeedMin());
-    ui->slbSpindle->setMaximum(m_settings->spindleSpeedMax());
-    ui->slbSpindle->setValue(set.value("spindleSpeed", 100).toInt());
-
-    ui->slbFeedOverride->setChecked(set.value("feedOverride", false).toBool());
-    ui->slbFeedOverride->setValue(set.value("feedOverrideValue", 100).toInt());
-
-    ui->slbRapidOverride->setChecked(set.value("rapidOverride", false).toBool());
-    ui->slbRapidOverride->setValue(set.value("rapidOverrideValue", 100).toInt());
-
-    ui->slbSpindleOverride->setChecked(set.value("spindleOverride", false).toBool());
-    ui->slbSpindleOverride->setValue(set.value("spindleOverrideValue", 100).toInt());
-
-    m_settings->setUnits(set.value("units", 0).toInt());
-    m_storedX = set.value("storedX", 0).toDouble();
-    m_storedY = set.value("storedY", 0).toDouble();
-    m_storedZ = set.value("storedZ", 0).toDouble();
-
-    m_settings->setIPAddress(set.value("ipaddress", "192.168.1.20").toString());
-    m_settings->setPort(set.value("ip_port", 30501).toInt());
-
-    ui->cmdRestoreOrigin->setToolTip(QString(tr("Restore origin:\n%1, %2, %3")).arg(m_storedX).arg(m_storedY).arg(m_storedZ));
-
-    m_recentFiles = set.value("recentFiles", QStringList()).toStringList();
-    m_recentHeightmaps = set.value("recentHeightmaps", QStringList()).toStringList();
-    m_lastFolder = set.value("lastFolder", QDir::homePath()).toString();
-
-    this->restoreGeometry(set.value("formGeometry", QByteArray()).toByteArray());
-    m_settings->resize(set.value("formSettingsSize", m_settings->size()).toSize());
-    QByteArray splitterState = set.value("splitter", QByteArray()).toByteArray();
-
-    if (splitterState.length() == 0)
-    {
-        ui->splitter->setStretchFactor(0, 1);
-        ui->splitter->setStretchFactor(1, 1);
-    }
-    else
-        ui->splitter->restoreState(splitterState);
-
-    ui->chkAutoScroll->setVisible(ui->splitter->sizes()[1]);
-    resizeCheckBoxes();
-
-    ui->cboCommand->setMinimumHeight(ui->cboCommand->height());
-    ui->cmdClearConsole->setFixedHeight(ui->cboCommand->height());
-    ui->cmdCommandSend->setFixedHeight(ui->cboCommand->height());
-
-    m_storedKeyboardControl = set.value("keyboardControl", false).toBool();
-
-    m_settings->setAutoCompletion(set.value("autoCompletion", true).toBool());
-    m_settings->setTouchCommand(set.value("touchCommand", "G21G91G38.2Z-30F80; G0Z1; G38.2Z-2F10").toString());
-    m_settings->setSafePositionCommand(set.value("safePositionCommand", "G21G90; G53G0Z10").toString());
-
-    foreach(StyledToolButton * button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
-    {
-        int i = button->objectName().right(1).toInt();
-        m_settings->setUserCommands(i, set.value(QString("userCommands%1").arg(i)).toString());
-    }
-
-    ui->cboJogStep->setItems(set.value("jogSteps").toStringList());
-    ui->cboJogStep->setCurrentIndex(ui->cboJogStep->findText(set.value("jogStep").toString()));
-    ui->cboJogFeed->setItems(set.value("jogFeeds").toStringList());
-    ui->cboJogFeed->setCurrentIndex(ui->cboJogFeed->findText(set.value("jogFeed").toString()));
-
-    ui->txtHeightMapBorderX->setValue(set.value("heightmapBorderX", 0).toDouble());
-    ui->txtHeightMapBorderY->setValue(set.value("heightmapBorderY", 0).toDouble());
-    ui->txtHeightMapBorderWidth->setValue(set.value("heightmapBorderWidth", 1).toDouble());
-    ui->txtHeightMapBorderHeight->setValue(set.value("heightmapBorderHeight", 1).toDouble());
-    ui->chkHeightMapBorderShow->setChecked(set.value("heightmapBorderShow", false).toBool());
-
-    ui->txtHeightMapGridX->setValue(set.value("heightmapGridX", 1).toDouble());
-    ui->txtHeightMapGridY->setValue(set.value("heightmapGridY", 1).toDouble());
-    ui->txtHeightMapGridZTop->setValue(set.value("heightmapGridZTop", 1).toDouble());
-    ui->txtHeightMapGridZBottom->setValue(set.value("heightmapGridZBottom", -1).toDouble());
-    ui->chkHeightMapGridShow->setChecked(set.value("heightmapGridShow", false).toBool());
-
-    ui->txtHeightMapInterpolationStepX->setValue(set.value("heightmapInterpolationStepX", 1).toDouble());
-    ui->txtHeightMapInterpolationStepY->setValue(set.value("heightmapInterpolationStepY", 1).toDouble());
-    ui->cboHeightMapInterpolationType->setCurrentIndex(set.value("heightmapInterpolationType", 0).toInt());
-    ui->chkHeightMapInterpolationShow->setChecked(set.value("heightmapInterpolationShow", false).toBool());
-
-    m_settings->setToolpathNormal(QColor(set.value("ToolpathNormal", QColor(0, 0, 0)).toString()));
-    m_settings->setToolpathDrawn(QColor(set.value("ToolpathDrawn", QColor(217, 217, 217)).toString()));
-    m_settings->setToolpathHighlight(QColor(set.value("ToolpathHighlight", QColor(145, 130, 230)).toString()));
-    m_settings->setToolpathZMovement(QColor(set.value("ToolpathZMovement", QColor(255, 0, 0)).toString()));
-    m_settings->setToolpathStart(QColor(set.value("ToolpathStart", QColor(255, 0, 0)).toString()));
-    m_settings->setToolpathEnd(QColor(set.value("ToolpathEnd", QColor(0, 255, 0)).toString()));
-    m_settings->setVisualizerBackground(QColor(set.value("VisualizerBackground", QColor(255, 255, 255)).toString()));
-    m_settings->setVisualizerText(QColor(set.value("VisualizerText", QColor(0, 0, 0)).toString()));
-    m_settings->setTool(QColor(set.value("Tool", QColor(255, 153, 0)).toString()));
-
-    ui->comboInterface->setCurrentText(set.value("interface", "ETHERNET").toString());
-
-    updateRecentFilesMenu();
-
-    ui->tblProgram->horizontalHeader()->restoreState(set.value("header", QByteArray()).toByteArray());
-
-    // Update right panel width
-    applySettings();
-    show();
-    ui->scrollArea->updateMinimumWidth();
-
-    // Restore panels state
-    ui->grpUserCommands->setChecked(set.value("userCommandsPanel", true).toBool());
-    ui->grpHeightMap->setChecked(set.value("heightmapPanel", true).toBool());
-    ui->grpSpindle->setChecked(set.value("spindlePanel", true).toBool());
-    ui->grpOverriding->setChecked(set.value("feedPanel", true).toBool());
-
-    // Restore last commands list
-    ui->cboCommand->addItems(set.value("recentCommands", QStringList()).toStringList());
-    ui->cboCommand->setCurrentIndex(-1);
-
-    m_settingsLoading = false;
-#endif
-}
 void win_snail::updateControlsState()
 {
-///???
-    /*
     bool portOpened = SerialIf_IsOpen();
 
     // Disable interface options (shouldn't be changed while open)
@@ -567,5 +396,291 @@ void win_snail::updateControlsState()
     ui->cmdFileSend->menu()->actions().first()->setEnabled(!ui->cmdHeightMapMode->isChecked());
 
     m_selectionDrawer.setVisible(!ui->cmdHeightMapMode->isChecked());
-    */
+
+}
+void win_snail::on_actFileNew_triggered()
+{
+    qDebug() << "changes:" << m_fileChanged << m_heightMapChanged;
+
+    if (!saveChanges(m_heightMapMode))
+        return;
+
+    if (!m_heightMapMode)
+    {
+        // Reset tables
+        clearTable();
+        m_probeModel.clear();
+        m_programHeightmapModel.clear();
+        m_currentModel = &m_programModel;
+
+        // Reset parsers
+        m_viewParser.reset();
+        m_probeParser.reset();
+
+        // Reset code drawer
+        m_codeDrawer->update();
+        m_currentDrawer = m_codeDrawer;
+        ui->glwVisualizer->fitDrawable();
+        updateProgramEstimatedTime(QList<LineSegment*>());
+
+        m_programFileName = "";
+        ui->chkHeightMapUse->setChecked(false);
+        ui->grpHeightMap->setProperty("overrided", false);
+        style()->unpolish(ui->grpHeightMap);
+        ui->grpHeightMap->ensurePolished();
+
+        // Reset tableview
+        QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
+        ui->tblProgram->setModel(NULL);
+
+        // Set table model
+        ui->tblProgram->setModel(&m_programModel);
+        ui->tblProgram->horizontalHeader()->restoreState(headerState);
+
+        // Update tableview
+        connect(ui->tblProgram->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(onTableCurrentChanged(QModelIndex, QModelIndex)));
+        ui->tblProgram->selectRow(0);
+
+        // Clear selection marker
+        m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan));
+        m_selectionDrawer.update();
+
+        resetHeightmap();
+    }
+    else
+    {
+        m_heightMapModel.clear();
+        on_cmdFileReset_clicked();
+        ui->txtHeightMap->setText(tr("Untitled"));
+        m_heightMapFileName.clear();
+
+        updateHeightMapBorderDrawer();
+        updateHeightMapGrid();
+
+        m_heightMapChanged = false;
+    }
+
+    updateControlsState();
+}
+void win_snail::on_cmdFileReset_clicked()
+{
+    m_fileCommandIndex = 0;
+    m_fileProcessedCommandIndex = 0;
+    m_lastDrawnLineIndex = 0;
+    m_probeIndex = -1;
+    if (!m_heightMapMode)
+    {
+     ////   QTime time;
+        QElapsedTimer time;
+        time.start();
+
+        QList<LineSegment*> list = m_viewParser.getLineSegmentList();
+
+        QList<int> indexes;
+        for (int i = 0; i < list.count(); i++)
+        {
+            list[i]->setDrawn(false);
+            indexes.append(i);
+        }
+
+        m_codeDrawer->update(indexes);
+
+        qDebug() << "Drawn false:" << time.elapsed();
+
+        time.start();
+
+        ui->tblProgram->setUpdatesEnabled(false);
+
+        for (int i = 0; i < m_currentModel->data().count() - 1; i++)
+        {
+            m_currentModel->data()[i].state = GCodeItem::InQueue;
+            m_currentModel->data()[i].response = QString();
+        }
+
+        ui->tblProgram->setUpdatesEnabled(true);
+
+        qDebug() << "Table updated:" << time.elapsed();
+
+        ui->tblProgram->scrollTo(m_currentModel->index(0, 0));
+        ui->tblProgram->clearSelection();
+        ui->tblProgram->selectRow(0);
+
+        ui->glwVisualizer->setSpendTime(QTime(0, 0, 0));
+    }
+    else
+    {
+        ui->txtHeightMapGridX->setEnabled(true);
+        ui->txtHeightMapGridY->setEnabled(true);
+        ui->txtHeightMapGridZBottom->setEnabled(true);
+        ui->txtHeightMapGridZTop->setEnabled(true);
+
+        delete m_heightMapInterpolationDrawer.data();
+        m_heightMapInterpolationDrawer.setData(NULL);
+
+        m_heightMapModel.clear();
+        updateHeightMapGrid();
+    }
+}
+void win_snail::on_actFileSave_triggered()
+{
+    if (!m_heightMapMode)
+    {
+        // G-code saving
+        if (m_programFileName.isEmpty())
+        {
+            on_actFileSaveAs_triggered();
+        }
+        else
+        {
+            saveProgramToFile(m_programFileName, &m_programModel);
+            m_fileChanged = false;
+        }
+    }
+    else
+    {
+        // Height map saving
+        if (m_heightMapFileName.isEmpty())
+        {
+            on_actFileSaveAs_triggered();
+        }
+        else
+        {
+            saveHeightMap(m_heightMapFileName);
+        }
+    }
+}
+void win_snail::on_actFileSaveAs_triggered()
+{
+    if (!m_heightMapMode)
+    {
+        QString fileName = (QFileDialog::getSaveFileName(this, tr("Save file as"), m_lastFolder, tr("G-Code files (*.nc *.ncc *.ngc *.tap *.txt *.gcode)")));
+
+        if (!fileName.isEmpty()) if (saveProgramToFile(fileName, &m_programModel))
+        {
+            m_programFileName = fileName;
+            m_fileChanged = false;
+
+            addRecentFile(fileName);
+            updateRecentFilesMenu();
+
+            updateControlsState();
+        }
+    }
+    else
+    {
+        QString fileName = (QFileDialog::getSaveFileName(this, tr("Save file as"), m_lastFolder, tr("Heightmap files (*.map)")));
+
+        if (!fileName.isEmpty()) if (saveHeightMap(fileName))
+        {
+            ui->txtHeightMap->setText(fileName.mid(fileName.lastIndexOf("/") + 1));
+            m_heightMapFileName = fileName;
+            m_heightMapChanged = false;
+
+            addRecentHeightmap(fileName);
+            updateRecentFilesMenu();
+
+            updateControlsState();
+        }
+    }
+}
+bool win_snail::saveProgramToFile(QString fileName, GCodeTableModel* model)
+{
+    QFile file(fileName);
+    QDir dir;
+
+    qDebug() << "Saving program";
+
+    if (file.exists())
+        dir.remove(file.fileName());
+
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+
+    QTextStream textStream(&file);
+
+    for (int i = 0; i < model->rowCount() - 1; i++)
+    {
+        textStream << model->data(model->index(i, 1)).toString() << "\r\n";
+    }
+
+    file.close();
+
+    return true;
+}
+void win_snail::updateParser()
+{
+  ////  QTime time;
+    QElapsedTimer time;
+    qDebug() << "Updating parser:" << m_currentModel << m_currentDrawer;
+    time.start();
+
+    GcodeViewParse* parser = m_currentDrawer->viewParser();
+
+    GcodeParser gp;
+    gp.setTraverseSpeed(m_settings->rapidSpeed());
+    if (m_codeDrawer->getIgnoreZ()) gp.reset(QVector3D(qQNaN(), qQNaN(), 0));
+
+    ui->tblProgram->setUpdatesEnabled(false);
+
+    QString stripped;
+    QList<QString> args;
+
+    QProgressDialog progress(tr("Updating..."), tr("Abort"), 0, m_currentModel->rowCount() - 2, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setFixedSize(progress.sizeHint());
+
+    if (m_currentModel->rowCount() > PROGRESSMINLINES)
+    {
+        progress.show();
+        progress.setStyleSheet("QProgressBar {text-align: center; qproperty-format: \"\"}");
+    }
+
+    for (int i = 0; i < m_currentModel->rowCount() - 1; i++)
+    {
+        // Get stored args
+        args = m_currentModel->data().at(i).args;
+
+        // Store args if none
+        if (args.isEmpty())
+        {
+            stripped = GcodePreprocessorUtils::removeComment(m_currentModel->data().at(i).command);
+            args = GcodePreprocessorUtils::splitCommand(stripped);
+            m_currentModel->data()[i].args = args;
+        }
+
+        // Add command to parser
+        gp.addCommand(args);
+
+        // Update table model
+        m_currentModel->data()[i].state = GCodeItem::InQueue;
+        m_currentModel->data()[i].response = QString();
+        m_currentModel->data()[i].line = gp.getCommandNumber();
+
+        if (progress.isVisible() && (i % PROGRESSSTEP == 0))
+        {
+            progress.setValue(i);
+            qApp->processEvents();
+
+            if (progress.wasCanceled())
+                break;
+        }
+    }
+
+    progress.close();
+
+    ui->tblProgram->setUpdatesEnabled(true);
+
+    parser->reset();
+
+    updateProgramEstimatedTime(parser->getLinesFromParser(&gp, m_settings->arcPrecision(), m_settings->arcDegreeMode()));
+    m_currentDrawer->update();
+    ui->glwVisualizer->updateExtremes(m_currentDrawer);
+    updateControlsState();
+
+    if (m_currentModel == &m_programModel)
+    {
+        m_fileChanged = true;
+    }
+
+    qDebug() << "Update parser time: " << time.elapsed();
 }
