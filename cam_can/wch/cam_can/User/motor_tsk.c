@@ -1,7 +1,20 @@
 #include <string.h>
+#include <stdio.h>
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "semphr.h"
+#include "cam_can_brd.h"
+#include "snail_can_cmds.h"
+
+void motor_task( void *pvParameters )
+{
+printf("\n\r motor_task");
+for(;;)
+    {
+    msleep(20);
+    }
+}
+
 #if 0
 ////#include "board.h"
 #include "board.h"

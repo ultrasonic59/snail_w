@@ -13,6 +13,7 @@
 extern can_msg_t CAN_RxMsg;
 
 xQueueHandle queu_to_send;
+
 int stop_mot_cmd(void)
 {
 cur_stat=STATE_IDLE;  

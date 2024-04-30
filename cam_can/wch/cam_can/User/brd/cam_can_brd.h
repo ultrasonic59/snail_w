@@ -39,8 +39,18 @@
 ////=============tst3 ==================================
   #define TST3_PIN          GPIO_Pin_11
   #define TST3_GPIO         GPIOB
+///===================================================
+#define MOTOR_TASK_STACK_SIZE           1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define MOTOR_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
+#define CAN_SEND_STACK_SIZE                 1024////
+#define CAN_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define CAN_TASK_PRIORITY               ( tskIDLE_PRIORITY + 3 )
+#define APP_PRIORITY                           (6)
 
+#define TST_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define TST_TASK_PRIORITY               ( tskIDLE_PRIORITY + 3 )
 
+///===================================================
 extern void gpio_init(void);
 
 extern void on_off_dv(uint8_t on_off);
@@ -50,6 +60,8 @@ extern void set_tst1(uint8_t on_off);
 extern void set_tst2(uint8_t on_off);
 extern void set_tst3(uint8_t on_off);
 extern void board_init(void);
+
+#define msleep vTaskDelay
 
 
 #endif /* __CAM_CAN_BRD_H__ */

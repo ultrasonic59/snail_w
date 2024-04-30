@@ -18,7 +18,12 @@
 #include "ch32v30x_usbhs_device.h"
 
 #include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+
 #include "task.h"
+#include "can.h"
+#include "can_thr.h"
 
 /* Global define */
 #define TASK1_TASK_PRIO     5
@@ -29,6 +34,7 @@
 /* Global Variable */
 TaskHandle_t Task1Task_Handler;
 TaskHandle_t Task2Task_Handler;
+TaskHandle_t  can_send_thread_handle;
 
 #if 0
 /*********************************************************************
@@ -129,6 +135,12 @@ int main(void)
     USBHS_RCC_Init( );
     USBHS_Device_Init( ENABLE );
 
+ ////  xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+   xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
+   xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+ ////  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+
+#if 0
 ////	GPIO_Toggle_INIT();
 	/* create two task */
     xTaskCreate((TaskFunction_t )task2_task,
@@ -144,6 +156,7 @@ int main(void)
                     (void*          )NULL,
                     (UBaseType_t    )TASK1_TASK_PRIO,
                     (TaskHandle_t*  )&Task1Task_Handler);
+#endif
     vTaskStartScheduler();
 
 	while(1)

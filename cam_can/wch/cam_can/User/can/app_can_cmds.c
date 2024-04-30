@@ -6,6 +6,16 @@
 #include "task.h"
 #include "semphr.h"
 #include "queue.h"
+#include "cam_can_brd.h"
+#include "can.h"
+#include "can_cmds.h"
+#include "debug.h"
+#include "can_thr.h"
+
+
+
+
+
 #if 0
 #include "board.h"
 #include "can.h"
@@ -84,28 +94,6 @@ if(step_z)
 extern uint32_t cur_coord;
 extern uint8_t cur_stat;
 
-int put_can_cmd_stat(uint8_t state
-                   ,uint32_t coord)
-{
-///uint8_t btst=0;  
-can_msg_t  send_msg;
-put_stat_cmd_t t_put_stat_cmd;
-t_put_stat_cmd.cmd=PUT_STAT_CMD ;
-t_put_stat_cmd.axis= AXIS_BRD;
-
-////t_put_stat_cmd.coord=cur_coord;
-///t_put_stat_cmd.state=cur_stat;
-t_put_stat_cmd.coord=coord;
-t_put_stat_cmd.state=state;
-send_msg.len=CAN_MAX_NUM_BYTES;
-send_msg.format=STANDARD_FORMAT;
-send_msg.type=DATA_FRAME;
-memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
-send_msg.id=ID_MASTER_CMD; 
-xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
-
-  return 0;
-}
 int put_can_boot_ans(uint8_t cmd,uint8_t state)
 {
 can_msg_t  send_msg;
@@ -162,26 +150,6 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 }
 
 
-int put_can_ack(uint8_t cmd )
-{
-///uint8_t btst=0;  
-can_msg_t  send_msg;
-
-put_ack_t t_put_ack;
-
-t_put_ack.cmd=PUT_ACK ;
-t_put_ack.ack.axis= AXIS_BRD;
-
- t_put_ack.ack.ack_cmd=cmd;
-send_msg.len= sizeof(put_ack_t);
-send_msg.format=STANDARD_FORMAT;
-send_msg.type=DATA_FRAME;
-memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
-send_msg.id=ID_MASTER_CMD; 
-xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
-
-  return 0;
-}
 
 
 #endif
@@ -258,10 +226,52 @@ if(t_wr_eeprom_req->num_dates==2)
   }
 }
   
+#endif
+int put_can_cmd_stat(uint8_t state
+                   ,uint32_t coord)
+{
+///uint8_t btst=0;
+can_msg_t  send_msg;
+put_stat_cmd_t t_put_stat_cmd;
+t_put_stat_cmd.cmd=PUT_STAT_CMD ;
+t_put_stat_cmd.axis= AXIS_BRD;
+
+////t_put_stat_cmd.coord=cur_coord;
+///t_put_stat_cmd.state=cur_stat;
+t_put_stat_cmd.coord=coord;
+t_put_stat_cmd.state=state;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_stat_cmd,sizeof(put_stat_cmd_t));
+send_msg.id=ID_MASTER_CMD;
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
+
+int put_can_ack(uint8_t cmd )
+{
+can_msg_t  send_msg;
+
+put_ack_t t_put_ack;
+
+t_put_ack.cmd=PUT_ACK ;
+t_put_ack.ack.axis= AXIS_BRD;
+
+ t_put_ack.ack.ack_cmd=cmd;
+send_msg.len= sizeof(put_ack_t);
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_ack,sizeof(put_ack_t));
+send_msg.id=ID_MASTER_CMD;
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
 
 int obr_can_cmd(uint8_t *data)
 {
-////uint8_t tmp;  
 switch(data[0]) {
       case CMD_STOP:
         put_can_ack(CMD_STOP);
@@ -270,34 +280,37 @@ switch(data[0]) {
       case GO_CMD:
         {
         put_can_ack(GO_CMD);
-         go_cmd((go_cmd_t *)data);
+        go_cmd((go_cmd_t *)data);
   ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
         }
         break;
       case GET_STAT_CMD:
         {
-        put_can_cmd_stat(cur_stat,cur_coord);
-         printk("[stat=%x] ",cur_stat);
+        put_can_cmd_stat(cur_stat,0);
+         printf("[stat=%x] ",cur_stat);
          }
         break;
       case GO_TO_BOOTER:
-        goto_booter();
+///        goto_booter();
         break;
       case CHECK_CONN:
          put_can_ack(CHECK_CONN );
  ////   printk("CHECK_CONN[%x] ",cur_stat);
         break;
       case RD_EEPROM_REQ:
+       /*
         {
         rd_eeprom_ans_t t_rd_eeprom_ans;  
         t_rd_eeprom_ans.num_dates=data[1];
         t_rd_eeprom_ans.addr=data[2];
         rd_eeprom_dat(&t_rd_eeprom_ans);
         put_can_rd_eeprom_ans(&t_rd_eeprom_ans);
-////     printk("RD_EEPROM_REQ ");
+
         }
+        */
         break;
       case WR_EEPROM_REQ:
+ /*
         {
         wr_eeprom_req_t t_wr_eeprom_req;
         t_wr_eeprom_req.num_dates=data[1];
@@ -305,17 +318,18 @@ switch(data[0]) {
         memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
         wr_eeprom_dat(&t_wr_eeprom_req);
         put_can_wr_eeprom_ans(&t_wr_eeprom_req);
- ////    printk("WR_EEPROM_REQ ");
         }
+        */
         break;
       case RD_FLASH_REQ:
+          /*
         {
         rd_flash_ans_t t_rd_flash_ans;  
         memcpy(&t_rd_flash_ans.addr,&data[1],sizeof(uint32_t));
         rd_flash_dat(&t_rd_flash_ans);
         put_can_rd_flash_ans(&t_rd_flash_ans);
-////     printk("RD_EEPROM_REQ ");
         }
+        */
         break;
      default:
       break;
@@ -323,4 +337,4 @@ switch(data[0]) {
 return 0;  
 }
 ////======================================================
-#endif
+

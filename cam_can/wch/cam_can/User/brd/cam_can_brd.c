@@ -1,5 +1,8 @@
 
 #include "cam_can_brd.h"
+
+uint8_t cur_stat=0;
+
 //=========== tim_pwm ======================================
 /*********************************************************************
  * @fn      TIM1_OutCompare_Init
@@ -283,10 +286,14 @@ void gpio_init(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(TST3_GPIO, &GPIO_InitStructure);
 }
+
+extern void init_can(void);
 void board_init(void)
 {
 gpio_init();
 TIM_PWMOut_Init(DEF_PER, DEF_PRESC, DEF_VAL );
+init_can();
+
 /* Bps = 250Kbps */
 ////CAN_Mode_Init( CAN_SJW_1tq, CAN_BS2_5tq, CAN_BS1_6tq, 12, CAN_Mode_Normal );
 

@@ -6,14 +6,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../User/can/app_can_cmds.c \
+../User/can/cam_can_drv.c   \
 ../User/can/can_thr.c 
 
 OBJS += \
 ./User/can/app_can_cmds.o \
+./User/can/cam_can_drv.o   \
 ./User/can/can_thr.o 
 
 C_DEPS += \
 ./User/can/app_can_cmds.d \
+./User/can/cam_can_drv.d   \
 ./User/can/can_thr.d 
 
 
