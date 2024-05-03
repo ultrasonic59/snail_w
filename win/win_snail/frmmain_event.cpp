@@ -20,13 +20,14 @@
 #include <QMimeData>
 
 #include "frmmain.h"
-#include "ui_frmmain.h"
+#include "ui_win_snail.h"
 
 #include "interface/SerialInterface.h"
 
 
 bool frmMain::eventFilter(QObject *obj, QEvent *event)
 {
+#if 0
     // Main form events
     if (obj == this || obj == ui->tblProgram || obj == ui->cboJogStep || obj == ui->cboJogFeed)
     {
@@ -37,27 +38,27 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
 
             switch (static_cast<QKeyEvent*>(event)->key())
             {
-            case Qt::Key_4:
+            case Qt::Key_A:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdXMinus->pressed(); else emit ui->cmdXMinus->released();
                 break;
 
-            case Qt::Key_6:
+            case Qt::Key_D:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdXPlus->pressed(); else emit ui->cmdXPlus->released();
                 break;
 
-            case Qt::Key_8:
+            case Qt::Key_W:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdYPlus->pressed(); else emit ui->cmdYPlus->released();
                 break;
 
-            case Qt::Key_2:
+            case Qt::Key_X:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdYMinus->pressed(); else emit ui->cmdYMinus->released();
                 break;
 
-            case Qt::Key_9:
+            case Qt::Key_E:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdZPlus->pressed(); else emit ui->cmdZPlus->released();
                 break;
 
-            case Qt::Key_3:
+            case Qt::Key_C:
                 if (event->type() == QEvent::KeyPress) emit ui->cmdZMinus->pressed(); else emit ui->cmdZMinus->released();
                 break;
             }
@@ -76,11 +77,11 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
 
             if (!m_processingFile && ui->chkKeyboardControl->isChecked())
             {
-                if (keyEvent->key() == Qt::Key_7)
+                if (keyEvent->key() == Qt::Key_Q)
                 {
                     ui->cboJogStep->setCurrentPrevious();
                 }
-                else if (keyEvent->key() == Qt::Key_1)
+                else if (keyEvent->key() == Qt::Key_Z)
                 {
                     ui->cboJogStep->setCurrentNext();
                 }
@@ -92,7 +93,7 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
                 {
                     ui->cboJogFeed->setCurrentNext();
                 }
-                else if (keyEvent->key() == Qt::Key_5)
+                else if (keyEvent->key() == Qt::Key_S)
                 {
                     on_cmdStop_clicked();
                 }
@@ -120,6 +121,8 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
         }
 
     }
+    ////???==========================
+#if 0
     else if (obj == ui->splitPanels && event->type() == QEvent::Resize)
     {
         // Splitter events
@@ -175,7 +178,8 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
             break;
         }
     }
-
+#endif 
+#endif
     return QMainWindow::eventFilter(obj, event);
 }
 
@@ -195,16 +199,16 @@ void frmMain::showEvent(QShowEvent *se)
     }
 #endif
 
-    ui->glwVisualizer->setUpdatesEnabled(true);
+ ////   ui->glwVisualizer->setUpdatesEnabled(true);
 
-    resizeCheckBoxes();
+ ////   resizeCheckBoxes();
 }
 
 void frmMain::hideEvent(QHideEvent *he)
 {
     Q_UNUSED(he)
 
-    ui->glwVisualizer->setUpdatesEnabled(false);
+////    ui->glwVisualizer->setUpdatesEnabled(false);
 }
 
 void frmMain::resizeEvent(QResizeEvent *re)
@@ -212,12 +216,13 @@ void frmMain::resizeEvent(QResizeEvent *re)
     Q_UNUSED(re)
 
     placeVisualizerButtons();
-    resizeCheckBoxes();
-    resizeTableHeightMapSections();
+ ////   resizeCheckBoxes();
+ ////   resizeTableHeightMapSections();
 }
 
 void frmMain::timerEvent(QTimerEvent *te)
 {
+/*
     if (te->timerId() == m_timerToolAnimation.timerId())
     {
         m_toolDrawer.rotate((m_spindleCW ? -40 : 40) * (double)(ui->slbSpindle->currentValue()) / (ui->slbSpindle->maximum()));
@@ -226,6 +231,7 @@ void frmMain::timerEvent(QTimerEvent *te)
     {
         QMainWindow::timerEvent(te);
     }
+    */
 }
 
 void frmMain::closeEvent(QCloseEvent *ce)

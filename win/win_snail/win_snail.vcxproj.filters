@@ -1,286 +1,490 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
     <Filter Include="Form Files">
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Translation Files">
-      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
-      <Extensions>ts</Extensions>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
     </Filter>
-    <Filter Include="Source Files\widgets">
-      <UniqueIdentifier>{a48f46e1-6add-4994-9ed6-b0f6c0a382eb}</UniqueIdentifier>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
     </Filter>
-    <Filter Include="Source Files\shaders">
-      <UniqueIdentifier>{9a8884fe-93d2-44cc-a775-b23c465eb3b6}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\drawers">
-      <UniqueIdentifier>{c24a0e46-9f30-491c-9bae-20a5b2b3c791}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Header Files\widgets">
-      <UniqueIdentifier>{ddf43076-4358-4833-b653-4f93e1820a46}</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Source Files\tables">
-      <UniqueIdentifier>{25526e04-36f9-4dfd-89b0-922038ab3fd0}</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Header Files\tables">
-      <UniqueIdentifier>{2329a301-5379-4a25-958d-8c2244eb3aad}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files\drawer">
-      <UniqueIdentifier>{8aaf3a91-84c6-4fc7-8c5f-9dd74dad94a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\parse">
-      <UniqueIdentifier>{36197926-0a76-4531-bb4d-bfb6ebbda6d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\parse">
-      <UniqueIdentifier>{526dd24c-36c8-4f0d-979c-fbb5a670ec6a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\utils">
-      <UniqueIdentifier>{2f10bfe9-8ff5-4741-ab81-4a3bd1af2c44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\utils">
-      <UniqueIdentifier>{2f335154-bb90-47a8-9491-8351825cd5e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\interface">
-      <UniqueIdentifier>{f4a6849a-86b7-434c-b2a6-d502f474b727}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\interface">
-      <UniqueIdentifier>{c88fdc38-bc10-462a-8377-536ea0afc2ef}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="win_snail.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="win_snail.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtMoc Include="win_snail.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="win_snail.cpp">
+    <ClCompile Include="GrIP\CRC.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="GrIP\GrIP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\SerialInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\arcproperties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\colorpicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\combobox.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\glwidget.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\groupbox.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\widget.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\scrollarea.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\shaderdrawable.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\sliderbox.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\comboboxkey.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\styledtoolbutton.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\slider.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="utils\profiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tables\gcodetablemodel.cpp">
-      <Filter>Source Files\tables</Filter>
-    </ClCompile>
-    <ClCompile Include="tables\heightmaptablemodel.cpp">
-      <Filter>Source Files\tables</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\selectiondrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\heightmapinterpolationdrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\gcodeparser.cpp">
-      <Filter>Source Files\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\gcodeviewparse.cpp">
-      <Filter>Source Files\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\origindrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\gcodedrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\tooldrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\heightmapborderdrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawers\heightmapgriddrawer.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\linesegment.cpp">
-      <Filter>Source Files\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\pointsegment.cpp">
-      <Filter>Source Files\parse</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\gcodepreprocessorutils.cpp">
-      <Filter>Source Files\drawers</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\arcproperties.cpp">
-      <Filter>Source Files\parse</Filter>
+    <ClCompile Include="widgets\comboboxkey.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="frmabout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="frmsettings.cpp">
+    <ClCompile Include="frmmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\colorpicker.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="frmmain_util.cpp">
-      <Filter>Source Files\utils</Filter>
+    <ClCompile Include="frmmain_event.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="frmmain_heightmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frmmain_jogcontrol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frmmain_processresponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="frmmain_settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="interface\SerialInterface.cpp">
-      <Filter>Source Files\interface</Filter>
+    <ClCompile Include="frmmain_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frmsettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\gcodedrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\gcodeparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\gcodepreprocessorutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables\gcodetablemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\gcodeviewparse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\glwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\grbl1_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\groupbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\heightmapborderdrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\heightmapgriddrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\heightmapinterpolationdrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables\heightmaptablemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\linesegment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nantmpprovider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\origindrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\pointsegment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\scrollarea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\selectiondrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\shaderdrawable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\slider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sliderbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\styledtoolbutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\tooldrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include=".\win_snail_plugin_import.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fshader.glsl">
-      <Filter>Source Files\shaders</Filter>
-    </None>
-    <None Include="shaders\vshader.glsl">
-      <Filter>Source Files\shaders</Filter>
-    </None>
+    <ClInclude Include="GrIP\CRC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GrIP\GrIP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\SerialInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\arcproperties.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="widgets\colorpicker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\combobox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="widgets\comboboxkey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="frmabout.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="frmmain.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="frmsettings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="drawers\gcodedrawer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="parser\gcodeparser.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="parser\gcodepreprocessorutils.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="tables\gcodetablemodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="parser\gcodeviewparse.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\glwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="protocol\grbl1_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="widgets\groupbox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="drawers\heightmapborderdrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\heightmapgriddrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\heightmapinterpolationdrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="tables\heightmaptablemodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="utils\interpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\linesegment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nantmpprovider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\origindrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\pointsegment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\safequeue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="widgets\scrollarea.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="drawers\selectiondrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\shaderdrawable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="widgets\slider.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sliderbox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="widgets\styledtoolbutton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\tooldrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="widgets\widget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="widgets\sliderbox.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <QtUic Include="frmabout.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="frmsettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="widgets\sliderbox.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="win_snail.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="_frmmain.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\widget.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\slider.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\combobox.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\glwidget.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\groupbox.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\sliderbox.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\scrollarea.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="tables\gcodetablemodel.h">
-      <Filter>Header Files\tables</Filter>
-    </QtMoc>
-    <QtMoc Include="tables\heightmaptablemodel.h">
-      <Filter>Header Files\tables</Filter>
-    </QtMoc>
-    <QtMoc Include="parser\gcodeparser.h">
-      <Filter>Header Files\parse</Filter>
-    </QtMoc>
-    <QtMoc Include="parser\gcodeviewparse.h">
-      <Filter>Header Files\parse</Filter>
-    </QtMoc>
-    <QtMoc Include="drawers\gcodedrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </QtMoc>
-    <QtMoc Include="parser\gcodepreprocessorutils.h">
-      <Filter>Header Files\parse</Filter>
-    </QtMoc>
-    <QtMoc Include="frmabout.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="frmsettings.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\colorpicker.h">
-      <Filter>Header Files\widgets</Filter>
-    </QtMoc>
+    <None Include="images\1401561986_chevron-left.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\1401562173_chevron-down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\1401562173_chevron-right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\1401562173_chevron-up.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\1401562699_icon-arrow-down-b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\1401562699_icon-arrow-up-b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\axis_return.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\axis_zero.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\brake.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\candle_256.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\collapse.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\collapse_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\cube.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\cubeFront.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\cubeLeft.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\cubeTop.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\cutter.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\erase_1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\expand.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\expand_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\fit_1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\fshader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\guard.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle2s.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle2s1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle2sh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle_horizontal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle_small.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\handle_vertical.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\home.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\home.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\icon3png.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="images.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="images\num1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\num2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\num3.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\num4.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\origin.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\pause.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\play.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\restart.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\run.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\safe_z.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\search_for_home2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\search_for_z.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\send_1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="shaders.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="images\shadow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\small_arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\stop.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\unlock.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\vshader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\zero_z.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="drawers\selectiondrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="drawers\heightmapinterpolationdrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="drawers\origindrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="drawers\tooldrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="drawers\heightmapborderdrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="drawers\heightmapgriddrawer.h">
-      <Filter>Header Files\drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\linesegment.h">
-      <Filter>Header Files\parse</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\pointsegment.h">
-      <Filter>Header Files\parse</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\arcproperties.h">
-      <Filter>Header Files\parse</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\safequeue.h">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="interface\SerialInterface.h">
-      <Filter>Header Files\interface</Filter>
-    </ClInclude>
+    <ResourceCompile Include=".\win_snail_resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

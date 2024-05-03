@@ -33,17 +33,13 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QThread>
 
-////#include "frmmain.h"
-////#include "ui_frmmain.h"
-
-#include "win_snail.h"
+#include "frmmain.h"
 #include "ui_win_snail.h"
 
 
-QString win_snail::GetErrorMsg(int err_code)
+
+QString frmMain::GetErrorMsg(int err_code)
 {
-///???
-    /*
     switch (err_code)
     {
     case 1:
@@ -216,26 +212,10 @@ QString win_snail::GetErrorMsg(int err_code)
     }
 
     return tr("Unknown");
-    */
-return QString();
 }
 
-void win_snail::resizeTableHeightMapSections()
-{
-    if (ui->tblHeightMap->horizontalHeader()->defaultSectionSize() * ui->tblHeightMap->horizontalHeader()->count() < ui->glwVisualizer->width())
-        ui->tblHeightMap->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    else
-    {
-        ui->tblHeightMap->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
-    }
-}
-void win_snail::updateLayouts()
-{
-    this->update();
-    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
-}
-
-void win_snail::resizeCheckBoxes()
+#if 0
+void frmMain::resizeCheckBoxes()
 {
     static int widthCheckMode = ui->chkTestMode->sizeHint().width();
     static int widthAutoScroll = ui->chkAutoScroll->sizeHint().width();
@@ -260,7 +240,8 @@ void win_snail::resizeCheckBoxes()
         ui->chkAutoScroll->setMinimumWidth(ui->chkAutoScroll->sizeHint().width());
         updateLayouts();
     }
-
+    ///???
+/*
     if (ui->spacerBot->geometry().width() + ui->chkAutoScroll->sizeHint().width() - ui->spacerBot->sizeHint().width() > widthAutoScroll && ui->chkAutoScroll->text() == tr("Scroll"))
     {
         ui->chkAutoScroll->setText(tr("Autoscroll"));
@@ -272,28 +253,17 @@ void win_snail::resizeCheckBoxes()
         ui->chkTestMode->setText(tr("Check mode"));
         updateLayouts();
     }
-
+*/
     this->setUpdatesEnabled(true);
     this->repaint();
 }
-
-void win_snail::on_actFileExit_triggered()
+#endif
+void frmMain::on_actFileExit_triggered()
 {
     close();
 }
-void win_snail::addRecentFile(QString fileName)
-{
-    m_recentFiles.removeAll(fileName);
-    m_recentFiles.append(fileName);
 
-    if (m_recentFiles.count() > 5)
-    {
-        m_recentFiles.takeFirst();
-    }
-}
-
-
-void win_snail::on_cmdFileOpen_clicked()
+void frmMain::on_cmdFileOpen_clicked()
 {
     if (!m_heightMapMode)
     {
@@ -335,7 +305,7 @@ void win_snail::on_cmdFileOpen_clicked()
     }
 }
 
-void win_snail::loadFile(QList<QString> data)
+void frmMain::loadFile(QList<QString> data)
 {
 #if 0
     QTime time;
@@ -463,7 +433,7 @@ void win_snail::loadFile(QList<QString> data)
 #endif
 }
 
-void win_snail::loadFile(QString fileName)
+void frmMain::loadFile(QString fileName)
 {
     QFile file(fileName);
 
@@ -490,10 +460,11 @@ void win_snail::loadFile(QString fileName)
     loadFile(data);
 }
 
-QTime win_snail::updateProgramEstimatedTime(QList<LineSegment*> lines)
+QTime frmMain::updateProgramEstimatedTime(QList<LineSegment*> lines)
 {
     double time = 0;
-
+    ////???? 
+#if 0
     for (int i = 0; i < lines.count(); i++)
     {
         LineSegment *ls = lines[i];
@@ -506,23 +477,24 @@ QTime win_snail::updateProgramEstimatedTime(QList<LineSegment*> lines)
                              ? (ls->getSpeed() * ui->slbRapidOverride->value() / 100) : ls->getSpeed());        // TODO: Update for rapid override
     }
 
-    time *= 60;
+#endif
+     time *= 60;
 
     QTime t;
 
     t.setHMS(0, 0, 0);
     t = t.addSecs(time);
 
-    ui->glwVisualizer->setSpendTime(QTime(0, 0, 0));
-    ui->glwVisualizer->setEstimatedTime(t);
+    ///???   ui->glwVisualizer->setSpendTime(QTime(0, 0, 0));
+  ////????  ui->glwVisualizer->setEstimatedTime(t);
 
     return t;
 }
 
-void win_snail::onTableCellChanged(QModelIndex i1, QModelIndex i2)
+void frmMain::onTableCellChanged(QModelIndex i1, QModelIndex i2)
 {
     Q_UNUSED(i2)
-
+#if 0
     GCodeTableModel *model = (GCodeTableModel*)sender();
 
     if (i1.column() != 1)
@@ -560,9 +532,10 @@ void win_snail::onTableCellChanged(QModelIndex i1, QModelIndex i2)
             list[i]->setIsHightlight(true);
         }
     }
+#endif
 }
 
-void win_snail::onTableCurrentChanged(QModelIndex idx1, QModelIndex idx2)
+void frmMain::onTableCurrentChanged(QModelIndex idx1, QModelIndex idx2)
 {
     // Update toolpath hightlighting
     if (idx1.row() > m_currentModel->rowCount() - 2)
@@ -628,8 +601,9 @@ void win_snail::onTableCurrentChanged(QModelIndex idx1, QModelIndex idx2)
     m_selectionDrawer.update();
 }
 
-void win_snail::onTableInsertLine()
+void frmMain::onTableInsertLine()
 {
+/*
     if (ui->tblProgram->selectionModel()->selectedRows().count() == 0 || m_processingFile)
     {
         return;
@@ -643,10 +617,12 @@ void win_snail::onTableInsertLine()
     updateParser();
     m_cellChanged = true;
     ui->tblProgram->selectRow(row);
+    */
 }
 
-void win_snail::onTableDeleteLines()
+void frmMain::onTableDeleteLines()
 {
+#if 0
     if (ui->tblProgram->selectionModel()->selectedRows().count() == 0 || m_processingFile || QMessageBox::warning(this, this->windowTitle(), tr("Delete lines?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
     {
         return;
@@ -680,26 +656,5 @@ void win_snail::onTableDeleteLines()
     updateParser();
     m_cellChanged = true;
     ui->tblProgram->selectRow(firstRow.row());
-}
-void win_snail::updateRecentFilesMenu()
-{
-    foreach(QAction * action, ui->mnuRecent->actions())
-    {
-        if (action->text() == "")
-            break;
-        else
-        {
-            ui->mnuRecent->removeAction(action);
-            delete action;
-        }
-    }
-
-    foreach(QString file, !m_heightMapMode ? m_recentFiles : m_recentHeightmaps)
-    {
-        QAction* action = new QAction(file, this);
-        connect(action, SIGNAL(triggered()), this, SLOT(onActRecentFileTriggered()));
-        ui->mnuRecent->insertAction(ui->mnuRecent->actions()[0], action);
-    }
-
-    updateControlsState();
+#endif
 }

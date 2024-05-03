@@ -19,7 +19,7 @@
 #include <QScrollBar>
 
 #include "frmmain.h"
-#include "ui_frmmain.h"
+#include "ui_win_snail.h"
 
 #include "interface/SerialInterface.h"
 #include "GrIP/GrIP.h"
@@ -41,6 +41,7 @@ void frmMain::on_grpJog_toggled(bool checked)
 
 void frmMain::on_chkKeyboardControl_toggled(bool checked)
 {
+#if 0
     ui->grpJog->setProperty("overrided", checked);
     style()->unpolish(ui->grpJog);
     ui->grpJog->ensurePolished();
@@ -65,10 +66,12 @@ void frmMain::on_chkKeyboardControl_toggled(bool checked)
 
     updateJogTitle();
     updateControlsState();
+#endif
 }
 
 void frmMain::updateJogTitle()
 {
+/*
     if (ui->grpJog->isChecked() || !ui->chkKeyboardControl->isChecked())
     {
         ui->grpJog->setTitle(tr("Jog"));
@@ -77,6 +80,7 @@ void frmMain::updateJogTitle()
     {
         ui->grpJog->setTitle(tr("Jog") + QString(tr(" (%1/%2)")).arg(ui->cboJogStep->currentText().toDouble() > 0 ? ui->cboJogStep->currentText() : tr("C")).arg(ui->cboJogFeed->currentText()));
     }
+    */
 }
 
 void frmMain::jogStep()

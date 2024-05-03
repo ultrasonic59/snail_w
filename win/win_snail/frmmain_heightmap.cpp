@@ -17,17 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 #include <QFileDialog>
-#include "consts.h"
 
-///#include "frmmain.h"
-///#include "ui_frmmain.h"
-
-#include "win_snail.h"
+#include "frmmain.h"
 #include "ui_win_snail.h"
 
 
-void win_snail::resetHeightmap()
+
+void frmMain::resetHeightmap()
 {
+/*
     delete m_heightMapInterpolationDrawer.data();
     m_heightMapInterpolationDrawer.setData(NULL);
 
@@ -37,10 +35,11 @@ void win_snail::resetHeightmap()
     ui->txtHeightMap->clear();
     m_heightMapFileName.clear();
     m_heightMapChanged = false;
+    */
 }
 
 
-void win_snail::addRecentHeightmap(QString fileName)
+void frmMain::addRecentHeightmap(QString fileName)
 {
     m_recentHeightmaps.removeAll(fileName);
     m_recentHeightmaps.append(fileName);
@@ -50,24 +49,21 @@ void win_snail::addRecentHeightmap(QString fileName)
     }
 }
 
-void win_snail::on_grpHeightMap_toggled(bool arg1)
-{
-    ui->widgetHeightMap->setVisible(arg1);
-}
 
-QRectF win_snail::borderRectFromTextboxes()
-{
-    QRectF rect;
 
+QRectF frmMain::borderRectFromTextboxes()
+{
+    QRectF rect= QRectF();
+/*
     rect.setX(ui->txtHeightMapBorderX->value());
     rect.setY(ui->txtHeightMapBorderY->value());
     rect.setWidth(ui->txtHeightMapBorderWidth->value());
     rect.setHeight(ui->txtHeightMapBorderHeight->value());
-
+*/
     return rect;
 }
 
-QRectF win_snail::borderRectFromExtremes()
+QRectF frmMain::borderRectFromExtremes()
 {
     QRectF rect;
 
@@ -79,7 +75,7 @@ QRectF win_snail::borderRectFromExtremes()
     return rect;
 }
 
-void win_snail::updateHeightMapBorderDrawer()
+void frmMain::updateHeightMapBorderDrawer()
 {
     if (m_settingsLoading)
         return;
@@ -89,16 +85,19 @@ void win_snail::updateHeightMapBorderDrawer()
     m_heightMapBorderDrawer.setBorderRect(borderRectFromTextboxes());
 }
 
-void win_snail::updateHeightMapGrid(double arg1)
+void frmMain::updateHeightMapGrid(double arg1)
 {
+/*
     if (sender()->property("previousValue").toDouble() != arg1 && !updateHeightMapGrid())
         static_cast<QDoubleSpinBox*>(sender())->setValue(sender()->property("previousValue").toDouble());
     else
         sender()->setProperty("previousValue", arg1);
+        */
 }
 
-bool win_snail::updateHeightMapGrid()
+bool frmMain::updateHeightMapGrid()
 {
+#if 0
     if (m_settingsLoading)
         return true;
 
@@ -131,7 +130,7 @@ bool win_snail::updateHeightMapGrid()
     m_heightMapModel.resize(gridPointsX, gridPointsY);
     ui->tblHeightMap->setModel(NULL);
     ui->tblHeightMap->setModel(&m_heightMapModel);
-    resizeTableHeightMapSections();
+ ////   resizeTableHeightMapSections();
 
     // Update interpolation
     updateHeightMapInterpolationDrawer(true);
@@ -146,16 +145,12 @@ bool win_snail::updateHeightMapGrid()
     m_probeModel.clear();
     m_probeModel.insertRow(0);
 
-    double probingSpeed = m_settings->heightmapProbingFeed();
-    if (probingSpeed <= 0 || probingSpeed > 50)
-      probingSpeed = 10;
-
     m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G21G90F%1G0Z%2").
-                         arg(probingSpeed).arg(ui->txtHeightMapGridZTop->value()));
-    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0X0Y0F100"));
-    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G38.2Z%1F%2")
-                         .arg(ui->txtHeightMapGridZBottom->value()).arg(probingSpeed));
-    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0Z%1F100")
+                         arg(m_settings->heightmapProbingFeed()).arg(ui->txtHeightMapGridZTop->value()));
+    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0X0Y0"));
+    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G38.2Z%1")
+                         .arg(ui->txtHeightMapGridZBottom->value()));
+    m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0Z%1")
                          .arg(ui->txtHeightMapGridZTop->value()));
 
     double x, y;
@@ -167,11 +162,11 @@ bool win_snail::updateHeightMapGrid()
         for (int j = 0; j < gridPointsX; j++)
         {
             x = borderRect.left() + gridStepX * (i % 2 ? gridPointsX - 1 - j : j);
-            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0X%1Y%2F100")
+            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0X%1Y%2")
                                  .arg(x, 0, 'f', 3).arg(y, 0, 'f', 3));
-            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G38.2Z%1F%2")
-                                 .arg(ui->txtHeightMapGridZBottom->value()).arg(probingSpeed));
-            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0Z%1F100")
+            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G38.2Z%1")
+                                 .arg(ui->txtHeightMapGridZBottom->value()));
+            m_probeModel.setData(m_probeModel.index(m_probeModel.rowCount() - 1, 1), QString("G0Z%1")
                                  .arg(ui->txtHeightMapGridZTop->value()));
         }
     }
@@ -182,15 +177,15 @@ bool win_snail::updateHeightMapGrid()
         updateParser();
 
     m_heightMapChanged = true;
-
+#endif
     return true;
 }
 
-void win_snail::updateHeightMapInterpolationDrawer(bool reset)
+void frmMain::updateHeightMapInterpolationDrawer(bool reset)
 {
     if (m_settingsLoading)
         return;
-
+#if 0
     qDebug() << "Updating interpolation";
 
     QRectF borderRect = borderRectFromTextboxes();
@@ -234,68 +229,70 @@ void win_snail::updateHeightMapInterpolationDrawer(bool reset)
 
     // Reset heightmapped program model
     m_programHeightmapModel.clear();
+#endif
 }
 
-void win_snail::on_chkHeightMapBorderShow_toggled(bool checked)
+void frmMain::on_chkHeightMapBorderShow_toggled(bool checked)
 {
     Q_UNUSED(checked)
 
     updateControlsState();
 }
 
-void win_snail::on_txtHeightMapBorderX_valueChanged(double arg1)
+void frmMain::on_txtHeightMapBorderX_valueChanged(double arg1)
 {
     updateHeightMapBorderDrawer();
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapBorderWidth_valueChanged(double arg1)
+void frmMain::on_txtHeightMapBorderWidth_valueChanged(double arg1)
 {
     updateHeightMapBorderDrawer();
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapBorderY_valueChanged(double arg1)
+void frmMain::on_txtHeightMapBorderY_valueChanged(double arg1)
 {
     updateHeightMapBorderDrawer();
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapBorderHeight_valueChanged(double arg1)
+void frmMain::on_txtHeightMapBorderHeight_valueChanged(double arg1)
 {
     updateHeightMapBorderDrawer();
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_chkHeightMapGridShow_toggled(bool checked)
+void frmMain::on_chkHeightMapGridShow_toggled(bool checked)
 {
     Q_UNUSED(checked)
 
     updateControlsState();
 }
 
-void win_snail::on_txtHeightMapGridX_valueChanged(double arg1)
+void frmMain::on_txtHeightMapGridX_valueChanged(double arg1)
 {
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapGridY_valueChanged(double arg1)
+void frmMain::on_txtHeightMapGridY_valueChanged(double arg1)
 {
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapGridZBottom_valueChanged(double arg1)
+void frmMain::on_txtHeightMapGridZBottom_valueChanged(double arg1)
 {
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_txtHeightMapGridZTop_valueChanged(double arg1)
+void frmMain::on_txtHeightMapGridZTop_valueChanged(double arg1)
 {
     updateHeightMapGrid(arg1);
 }
 
-void win_snail::on_cmdHeightMapMode_toggled(bool checked)
+void frmMain::on_cmdHeightMapMode_toggled(bool checked)
 {
+#if 0
     // Update flag
     m_heightMapMode = checked;
 
@@ -313,7 +310,7 @@ void win_snail::on_cmdHeightMapMode_toggled(bool checked)
     if (checked)
     {
         ui->tblProgram->setModel(&m_probeModel);
-        resizeTableHeightMapSections();
+     ////   resizeTableHeightMapSections();
         m_currentModel = &m_probeModel;
         m_currentDrawer = m_probeDrawer;
         updateParser();  // Update probe program parser
@@ -328,7 +325,7 @@ void win_snail::on_cmdHeightMapMode_toggled(bool checked)
             connect(ui->tblProgram->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCurrentChanged(QModelIndex,QModelIndex)));
             ui->tblProgram->selectRow(0);
 
-            resizeTableHeightMapSections();
+        ////    resizeTableHeightMapSections();
             m_currentModel = &m_programModel;
             m_currentDrawer = m_codeDrawer;
 
@@ -357,10 +354,12 @@ void win_snail::on_cmdHeightMapMode_toggled(bool checked)
 
     updateRecentFilesMenu();
     updateControlsState();
+#endif
 }
 
-bool win_snail::saveHeightMap(QString fileName)
+bool frmMain::saveHeightMap(QString fileName)
 {
+#if 0
     QFile file(fileName);
     QDir dir;
 
@@ -395,12 +394,13 @@ bool win_snail::saveHeightMap(QString fileName)
     file.close();
 
     m_heightMapChanged = false;
-
+#endif
     return true;
 }
 
-void win_snail::loadHeightMap(QString fileName)
+void frmMain::loadHeightMap(QString fileName)
 {
+#if 0
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly))
@@ -465,63 +465,38 @@ void win_snail::loadHeightMap(QString fileName)
     ui->txtHeightMapInterpolationStepY->setValue(list[2].toDouble());
 
     updateHeightMapInterpolationDrawer();
+#endif
 }
 
-void win_snail::on_chkHeightMapInterpolationShow_toggled(bool checked)
+void frmMain::on_chkHeightMapInterpolationShow_toggled(bool checked)
 {
     Q_UNUSED(checked)
 
     updateControlsState();
 }
 
-void win_snail::on_cmdHeightMapLoad_clicked()
-{
-    if (!saveChanges(true))
-    {
-        return;
-    }
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), m_lastFolder, tr("Heightmap files (*.map)"));
-
-    if (fileName != "")
-    {
-        addRecentHeightmap(fileName);
-        loadHeightMap(fileName);
-
-        // If using heightmap
-        if (ui->chkHeightMapUse->isChecked() && !m_heightMapMode)
-        {
-            // Restore original file
-            on_chkHeightMapUse_clicked(false);
-            // Apply heightmap
-            on_chkHeightMapUse_clicked(true);
-        }
-
-        updateRecentFilesMenu();
-        updateControlsState(); // Enable 'cmdHeightMapMode' button
-    }
-}
-
-void win_snail::on_txtHeightMapInterpolationStepX_valueChanged(double arg1)
+void frmMain::on_txtHeightMapInterpolationStepX_valueChanged(double arg1)
 {
     Q_UNUSED(arg1)
 
     updateHeightMapInterpolationDrawer();
 }
 
-void win_snail::on_txtHeightMapInterpolationStepY_valueChanged(double arg1)
+void frmMain::on_txtHeightMapInterpolationStepY_valueChanged(double arg1)
 {
     Q_UNUSED(arg1)
 
     updateHeightMapInterpolationDrawer();
 }
 
-void win_snail::on_chkHeightMapUse_clicked(bool checked)
+void frmMain::on_chkHeightMapUse_clicked(bool checked)
 {
+#if 0
     // Reset table view
     QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
     ui->tblProgram->setModel(NULL);
-#if 0
+
     CancelException cancel;
 
     if (checked)
@@ -638,7 +613,6 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
             QString lastCode;
             bool isLinearMove;
             bool hasCommand;
-            bool isMachineCoords;
 
             m_programLoading = true;
             for (int i = 0; i < m_programModel.rowCount() - 1; i++) {
@@ -646,7 +620,6 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
                 line = m_programModel.data().at(i).line;
                 isLinearMove = false;
                 hasCommand = false;
-                isMachineCoords = false;
 
                 if (line < 0 || line == lastCommandIndex || lastSegmentIndex == list->count() - 1) {
                     item.command = command;
@@ -677,10 +650,6 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
                                     newCommand.append(arg);
                                 }
 
-                                if (codeNum == 53.0f) {
-                                    isMachineCoords = true;
-                                }
-
                                 hasCommand = true;                  // Command has 'G'
                             } else {
                                 if (m.contains(codeChar))
@@ -693,7 +662,7 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
                     // Find first linesegment by command index
                     for (int j = lastSegmentIndex; j < list->count(); j++) {
                         if (list->at(j)->getLineNumber() == line) {
-                            if (!qIsNaN(list->at(j)->getEnd().length()) && ((isLinearMove && !isMachineCoords) || (!hasCommand && !lastCode.isEmpty()))) {
+                            if (!qIsNaN(list->at(j)->getEnd().length()) && (isLinearMove || (!hasCommand && !lastCode.isEmpty()))) {
                                 // Create new commands for each linesegment with given command index
                                 while ((j < list->count()) && (list->at(j)->getLineNumber() == line)) {
 
@@ -789,15 +758,16 @@ void win_snail::on_chkHeightMapUse_clicked(bool checked)
     ui->grpHeightMap->setProperty("overrided", checked);
     style()->unpolish(ui->grpHeightMap);
     ui->grpHeightMap->ensurePolished();
-#endif
+
     // Update menu
     ui->actFileSaveTransformedAs->setVisible(checked);
+#endif
 }
 
-QList<LineSegment*> win_snail::subdivideSegment(LineSegment* segment)
+QList<LineSegment*> frmMain::subdivideSegment(LineSegment* segment)
 {
     QList<LineSegment*> list;
-
+#if 0
     QRectF borderRect = borderRectFromTextboxes();
 
     double interpolationStepX = borderRect.width() / (ui->txtHeightMapInterpolationStepX->value() - 1);
@@ -825,7 +795,7 @@ QList<LineSegment*> win_snail::subdivideSegment(LineSegment* segment)
     }
 
     QVector3D seg = vec.normalized() * length;
-    int count = trunc(vec.length() / length);
+    int count = /*trunc*/(vec.length() / length);
 
     if (count == 0) return QList<LineSegment*>();
 
@@ -844,18 +814,19 @@ QList<LineSegment*> win_snail::subdivideSegment(LineSegment* segment)
         line->setEnd(segment->getEnd());
         list.append(line);
     }
-
+#endif
     return list;
 }
 
-void win_snail::on_cmdHeightMapCreate_clicked()
+void frmMain::on_cmdHeightMapCreate_clicked()
 {
-    ui->cmdHeightMapMode->setChecked(true);
-    on_actFileNew_triggered();
+ ////???   ui->cmdHeightMapMode->setChecked(true);
+ ////????   on_actFileNew_triggered();
 }
 
-void win_snail::on_cmdHeightMapBorderAuto_clicked()
+void frmMain::on_cmdHeightMapBorderAuto_clicked()
 {
+#if 0
     QRectF rect = borderRectFromExtremes();
 
     if (!qIsNaN(rect.width()) && !qIsNaN(rect.height()))
@@ -865,4 +836,5 @@ void win_snail::on_cmdHeightMapBorderAuto_clicked()
         ui->txtHeightMapBorderWidth->setValue(rect.width());
         ui->txtHeightMapBorderHeight->setValue(rect.height());
     }
+#endif
 }

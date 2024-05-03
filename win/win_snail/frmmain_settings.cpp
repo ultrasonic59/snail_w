@@ -18,26 +18,21 @@
 */
 #include <QFileDialog>
 
-////#include "frmmain.h"
-////#include "ui_frmmain.h"
-
-#include "win_snail.h"
+#include "frmmain.h"
 #include "ui_win_snail.h"
 
-void win_snail::loadSettings()
+
+void frmMain::loadSettings()
 {
-    QSettings set(m_settingsFilePath, QSettings::IniFormat);
+    QSettings set(m_settingsFileName, QSettings::IniFormat);
     set.setIniCodec("UTF-8");
 
     m_settingsLoading = true;
-
+#if 0
     m_settings->setFontSize(set.value("fontSize", 9).toInt());
-    m_settings->setLayoutCompact(set.value("layoutCompact", false).toBool());
     m_settings->setIgnoreErrors(set.value("ignoreErrors", false).toBool());
     m_settings->setAutoLine(set.value("autoLine", true).toBool());
     m_settings->setUseM6(set.value("useM6", false).toBool());
-    m_settings->setUseRotaryAxis(set.value("useRotary", false).toBool());
-    m_settings->setResetAfterConnect(set.value("resetConnect", true).toBool());
     m_settings->setToolDiameter(set.value("toolDiameter", 3).toDouble());
     m_settings->setToolLength(set.value("toolLength", 15).toDouble());
     m_settings->setAntialiasing(set.value("antialiasing", true).toBool());
@@ -84,8 +79,8 @@ void win_snail::loadSettings()
     ui->slbSpindle->setMaximum(m_settings->spindleSpeedMax());
     ui->slbSpindle->setValue(set.value("spindleSpeed", 100).toInt());
 
-    ui->slbFeedOverride->setChecked(set.value("feedOverride", false).toBool());
-    ui->slbFeedOverride->setValue(set.value("feedOverrideValue", 100).toInt());
+ ////????   ui->slbFeedOverride->setChecked(set.value("feedOverride", false).toBool());
+  ////????    ui->slbFeedOverride->setValue(set.value("feedOverrideValue", 100).toInt());
 
     ui->slbRapidOverride->setChecked(set.value("rapidOverride", false).toBool());
     ui->slbRapidOverride->setValue(set.value("rapidOverrideValue", 100).toInt());
@@ -99,7 +94,6 @@ void win_snail::loadSettings()
     m_storedZ = set.value("storedZ", 0).toDouble();
 
     m_settings->setIPAddress(set.value("ipaddress", "192.168.1.20").toString());
-    m_settings->setPort(set.value("ip_port", 30501).toInt());
 
     ui->cmdRestoreOrigin->setToolTip(QString(tr("Restore origin:\n%1, %2, %3")).arg(m_storedX).arg(m_storedY).arg(m_storedZ));
 
@@ -110,7 +104,8 @@ void win_snail::loadSettings()
     this->restoreGeometry(set.value("formGeometry", QByteArray()).toByteArray());
     m_settings->resize(set.value("formSettingsSize", m_settings->size()).toSize());
     QByteArray splitterState = set.value("splitter", QByteArray()).toByteArray();
-
+    ////???? 
+    /*
     if (splitterState.length() == 0)
     {
         ui->splitter->setStretchFactor(0, 1);
@@ -120,30 +115,30 @@ void win_snail::loadSettings()
         ui->splitter->restoreState(splitterState);
 
     ui->chkAutoScroll->setVisible(ui->splitter->sizes()[1]);
+   
     resizeCheckBoxes();
 
     ui->cboCommand->setMinimumHeight(ui->cboCommand->height());
     ui->cmdClearConsole->setFixedHeight(ui->cboCommand->height());
     ui->cmdCommandSend->setFixedHeight(ui->cboCommand->height());
-
+ */
     m_storedKeyboardControl = set.value("keyboardControl", false).toBool();
 
     m_settings->setAutoCompletion(set.value("autoCompletion", true).toBool());
     m_settings->setTouchCommand(set.value("touchCommand", "G21G91G38.2Z-30F80; G0Z1; G38.2Z-2F10").toString());
     m_settings->setSafePositionCommand(set.value("safePositionCommand", "G21G90; G53G0Z10").toString());
 
-#if 0
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         int i = button->objectName().right(1).toInt();
         m_settings->setUserCommands(i, set.value(QString("userCommands%1").arg(i)).toString());
     }
-#endif
+
     ui->cboJogStep->setItems(set.value("jogSteps").toStringList());
     ui->cboJogStep->setCurrentIndex(ui->cboJogStep->findText(set.value("jogStep").toString()));
     ui->cboJogFeed->setItems(set.value("jogFeeds").toStringList());
     ui->cboJogFeed->setCurrentIndex(ui->cboJogFeed->findText(set.value("jogFeed").toString()));
-
+/*
     ui->txtHeightMapBorderX->setValue(set.value("heightmapBorderX", 0).toDouble());
     ui->txtHeightMapBorderY->setValue(set.value("heightmapBorderY", 0).toDouble());
     ui->txtHeightMapBorderWidth->setValue(set.value("heightmapBorderWidth", 1).toDouble());
@@ -160,29 +155,23 @@ void win_snail::loadSettings()
     ui->txtHeightMapInterpolationStepY->setValue(set.value("heightmapInterpolationStepY", 1).toDouble());
     ui->cboHeightMapInterpolationType->setCurrentIndex(set.value("heightmapInterpolationType", 0).toInt());
     ui->chkHeightMapInterpolationShow->setChecked(set.value("heightmapInterpolationShow", false).toBool());
+*/
+    foreach (ColorPicker* pick, m_settings->colors())
+    {
+        pick->setColor(QColor(set.value(pick->objectName().mid(3), "black").toString()));
+    }
 
-    m_settings->setToolpathNormal(QColor(set.value("ToolpathNormal", QColor(0, 0, 0)).toString()));
-    m_settings->setToolpathDrawn(QColor(set.value("ToolpathDrawn", QColor(217, 217, 217)).toString()));
-    m_settings->setToolpathHighlight(QColor(set.value("ToolpathHighlight", QColor(145, 130, 230)).toString()));
-    m_settings->setToolpathZMovement(QColor(set.value("ToolpathZMovement", QColor(255, 0, 0)).toString()));
-    m_settings->setToolpathStart(QColor(set.value("ToolpathStart", QColor(255, 0, 0)).toString()));
-    m_settings->setToolpathEnd(QColor(set.value("ToolpathEnd", QColor(0, 255, 0)).toString()));
-    m_settings->setVisualizerBackground(QColor(set.value("VisualizerBackground", QColor(255, 255, 255)).toString()));
-    m_settings->setVisualizerText(QColor(set.value("VisualizerText", QColor(0, 0, 0)).toString()));
-    m_settings->setTool(QColor(set.value("Tool", QColor(255, 153, 0)).toString()));
-
-    ui->comboInterface->setCurrentText(set.value("interface", "ETHERNET").toString());
-    
     updateRecentFilesMenu();
 
-    ui->tblProgram->horizontalHeader()->restoreState(set.value("header", QByteArray()).toByteArray());
+ ///???   ui->tblProgram->horizontalHeader()->restoreState(set.value("header", QByteArray()).toByteArray());
 
     // Update right panel width
     applySettings();
     show();
-    ui->scrollArea->updateMinimumWidth();
+    ////???? ui->scrollArea->updateMinimumWidth();
 
     // Restore panels state
+    /*
     ui->grpUserCommands->setChecked(set.value("userCommandsPanel", true).toBool());
     ui->grpHeightMap->setChecked(set.value("heightmapPanel", true).toBool());
     ui->grpSpindle->setChecked(set.value("spindlePanel", true).toBool());
@@ -191,21 +180,21 @@ void win_snail::loadSettings()
     // Restore last commands list
     ui->cboCommand->addItems(set.value("recentCommands", QStringList()).toStringList());
     ui->cboCommand->setCurrentIndex(-1);
+*/
 
+#endif
     m_settingsLoading = false;
 }
 
-void win_snail::saveSettings()
+void frmMain::saveSettings()
 {
-    QSettings set(m_settingsFilePath, QSettings::IniFormat);
+    QSettings set(m_settingsFileName, QSettings::IniFormat);
     set.setIniCodec("UTF-8");
-
+#if 0
     set.setValue("ipaddress", m_settings->IPAddress());
-    set.setValue("ip_port", m_settings->Port());
     set.setValue("ignoreErrors", m_settings->ignoreErrors());
     set.setValue("autoLine", m_settings->autoLine());
     set.setValue("useM6", m_settings->UseM6());
-    set.setValue("useRotary", m_settings->UseRotaryAxis());
     set.setValue("toolDiameter", m_settings->toolDiameter());
     set.setValue("toolLength", m_settings->toolLength());
     set.setValue("antialiasing", m_settings->antialiasing());
@@ -238,16 +227,16 @@ void win_snail::saveSettings()
     set.setValue("toolType", m_settings->toolType());
     set.setValue("fps", m_settings->fps());
     set.setValue("queryStateTime", m_settings->queryStateTime());
-    set.setValue("autoScroll", ui->chkAutoScroll->isChecked());
-    set.setValue("header", ui->tblProgram->horizontalHeader()->saveState());
-    set.setValue("splitter", ui->splitter->saveState());
+    ////????    set.setValue("autoScroll", ui->chkAutoScroll->isChecked());
+    ////????    set.setValue("header", ui->tblProgram->horizontalHeader()->saveState());
+    ////????    set.setValue("splitter", ui->splitter->saveState());
     set.setValue("formGeometry", this->saveGeometry());
     set.setValue("formSettingsSize", m_settings->size());
     set.setValue("userCommandsPanel", ui->grpUserCommands->isChecked());
     set.setValue("heightmapPanel", ui->grpHeightMap->isChecked());
-    set.setValue("spindlePanel", ui->grpSpindle->isChecked());
-    set.setValue("feedPanel", ui->grpOverriding->isChecked());
-    set.setValue("jogPanel", ui->grpJog->isChecked());
+    ////????     set.setValue("spindlePanel", ui->grpSpindle->isChecked());
+   ////????    set.setValue("feedPanel", ui->grpOverriding->isChecked());
+  ////????     set.setValue("jogPanel", ui->grpJog->isChecked());
     set.setValue("keyboardControl", ui->chkKeyboardControl->isChecked());
     set.setValue("autoCompletion", m_settings->autoCompletion());
     set.setValue("units", m_settings->units());
@@ -265,22 +254,21 @@ void win_snail::saveSettings()
     set.setValue("panelOverridingVisible", m_settings->panelOverriding());
     set.setValue("panelJogVisible", m_settings->panelJog());
     set.setValue("fontSize", m_settings->fontSize());
-    set.setValue("layoutCompact", m_settings->layoutCompact());
     set.setValue("consoleMinHeight", ui->grpConsole->minimumHeight());
 
-    set.setValue("feedOverride", ui->slbFeedOverride->isChecked());
-    set.setValue("feedOverrideValue", ui->slbFeedOverride->value());
+    ////????    set.setValue("feedOverride", ui->slbFeedOverride->isChecked());
+  ////????    set.setValue("feedOverrideValue", ui->slbFeedOverride->value());
     set.setValue("rapidOverride", ui->slbRapidOverride->isChecked());
     set.setValue("rapidOverrideValue", ui->slbRapidOverride->value());
     set.setValue("spindleOverride", ui->slbSpindleOverride->isChecked());
     set.setValue("spindleOverrideValue", ui->slbSpindleOverride->value());
-#if 0
+
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         int i = button->objectName().right(1).toInt();
         set.setValue(QString("userCommands%1").arg(i), m_settings->userCommands(i));
     }
-#endif
+
     set.setValue("jogSteps", ui->cboJogStep->items());
     set.setValue("jogStep", ui->cboJogStep->currentText());
     set.setValue("jogFeeds", ui->cboJogFeed->items());
@@ -314,11 +302,10 @@ void win_snail::saveSettings()
         list.append(ui->cboCommand->itemText(i));
 
     set.setValue("recentCommands", list);
-
-    set.setValue("interface", ui->comboInterface->currentText());
+#endif
 }
 
-bool win_snail::saveChanges(bool heightMapMode)
+bool frmMain::saveChanges(bool heightMapMode)
 {
     // Check if gcode file was changed
     if ((!heightMapMode && m_fileChanged))
@@ -360,8 +347,9 @@ bool win_snail::saveChanges(bool heightMapMode)
     return true;
 }
 
-void win_snail::applySettings()
+void frmMain::applySettings()
 {
+#if 0
     m_originDrawer->setLineWidth(m_settings->lineWidth());
     m_toolDrawer.setToolDiameter(m_settings->toolDiameter());
     m_toolDrawer.setToolLength(m_settings->toolLength());
@@ -396,7 +384,7 @@ void win_snail::applySettings()
     ui->grpOverriding->setVisible(m_settings->panelOverriding());
     ui->grpJog->setVisible(m_settings->panelJog());
 
- ////????   ui->cboCommand->setAutoCompletion(m_settings->autoCompletion());
+    ui->cboCommand->setAutoCompletion(m_settings->autoCompletion());
 
     m_codeDrawer->setSimplify(m_settings->simplify());
     m_codeDrawer->setSimplifyPrecision(m_settings->simplifyPrecision());
@@ -451,11 +439,12 @@ void win_snail::applySettings()
     ui->cboCommand->setMinimumHeight(ui->cboCommand->height());
     ui->cmdClearConsole->setFixedHeight(ui->cboCommand->height());
     ui->cmdCommandSend->setFixedHeight(ui->cboCommand->height());
-#if 0
+
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
     {
         button->setToolTip(m_settings->userCommands(button->objectName().right(1).toInt()));
         button->setEnabled(!button->toolTip().isEmpty());
     }
+
 #endif
 }

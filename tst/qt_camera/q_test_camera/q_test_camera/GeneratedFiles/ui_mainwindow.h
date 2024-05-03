@@ -17,7 +17,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QWidget>
-#include "qcameraviewfinder.h"
+#include <qcameraviewfinder.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -32,7 +32,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(497, 372);
+        MainWindow->resize(497, 382);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
