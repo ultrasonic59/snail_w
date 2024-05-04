@@ -3,15 +3,15 @@
     <Tool>
         <Name>compiler</Name>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_main.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\can\can_drv.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\can_drv.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -27,9 +27,9 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\retarget.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\dima_board.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -51,39 +51,27 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\my_misc\my_misc.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\my_misc.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
             <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_tim.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_main.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\dima_board.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
             <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\motor_tsk.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\motor_tsk.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\retarget.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\my_misc\my_misc.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\my_misc.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -102,6 +90,12 @@
             <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_can_cmds.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\app_can_cmds.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\can\can_drv.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\can_drv.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -156,6 +150,12 @@
             <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_flash.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
             </Output>
         </Parent>
     </Tool>

@@ -15,7 +15,7 @@
  extern "C" {
 #endif
 
-#include "stdio.h"
+#include <stdio.h>
 #include "ch32v30x.h"
 
 /* UART Printf Definition */

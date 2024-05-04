@@ -24,6 +24,13 @@
 ////============= ON_DV ==================================
   #define ON_DV_PIN          GPIO_Pin_8
   #define ON_DV_GPIO         GPIOC
+////============= CAN ==================================
+  #define CANx                CAN2
+
+  #define CAN_RX_PIN          GPIO_Pin_12
+  #define CAN_RX_GPIO         GPIOB
+  #define CAN_TX_PIN          GPIO_Pin_13
+  #define CAN_TX_GPIO         GPIOB
 ////============= INH ==================================
   #define INH_PIN          GPIO_Pin_7
   #define INH_GPIO         GPIOC
@@ -44,7 +51,7 @@
 #define MOTOR_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
 #define CAN_SEND_STACK_SIZE                 1024////
 #define CAN_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define CAN_TASK_PRIORITY               ( tskIDLE_PRIORITY + 3 )
+#define CAN_TASK_PRIORITY               ( tskIDLE_PRIORITY + 8 )
 #define APP_PRIORITY                           (6)
 
 #define TST_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )

@@ -12,10 +12,6 @@
 #include "debug.h"
 #include "can_thr.h"
 
-
-
-
-
 #if 0
 #include "board.h"
 #include "can.h"
@@ -272,6 +268,8 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
 int obr_can_cmd(uint8_t *data)
 {
+printf("[obr_can_cmd=%x] ",data[0]);
+
 switch(data[0]) {
       case CMD_STOP:
         put_can_ack(CMD_STOP);
@@ -331,6 +329,12 @@ switch(data[0]) {
         }
         */
         break;
+      case ON_DOZA:
+          put_can_ack(ON_DOZA);
+          on_off_dv(data[1]);
+          set_led(data[1]);
+
+          break;
      default:
       break;
     }

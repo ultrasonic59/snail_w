@@ -41,6 +41,8 @@ printf("\n\r can_rsv_task");
     {
     CAN_RxRdy=0;
     obr_can_cmd(CAN_RxMsg.data);
+ ///   printf("\n\r can_rsv_task");
+
     }
   else
   {

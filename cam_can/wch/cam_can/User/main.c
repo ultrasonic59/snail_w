@@ -55,7 +55,7 @@ void GPIO_Toggle_INIT(void)
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 #endif
-
+////extern int put_can_ack(uint8_t cmd );
 /*********************************************************************
  * @fn      task1_task
  *
@@ -67,19 +67,22 @@ void GPIO_Toggle_INIT(void)
  */
 void task1_task(void *pvParameters)
 {
+ ////   int rez=0;
     while(1)
     {
-        printf("task1 entry\r\n");
-        set_led(1);
-        set_tst3(1);
-        on_off_dv(1);
+     ////   printf("task1 entry\r\n");
+    ///    set_led(1);
+ ///       set_tst3(1);
+ ///       on_off_dv(1);
     ////   GPIO_SetBits(GPIOA, GPIO_Pin_0);
         vTaskDelay(250);
   ////      GPIO_ResetBits(GPIOA, GPIO_Pin_0);
-        set_led(0);
-        set_tst3(0);
-        on_off_dv(0);
+///        set_led(0);
+ ///       set_tst3(0);
+///        on_off_dv(0);
      vTaskDelay(250);
+  //// put_can_ack(0x3 );
+
     }
 }
 
@@ -117,7 +120,7 @@ void task2_task(void *pvParameters)
  */
 int main(void)
 {
-
+///int rez=0;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	Delay_Init();
 	USART_Printf_Init(115200);
@@ -136,8 +139,13 @@ int main(void)
     USBHS_Device_Init( ENABLE );
 
  ////  xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
-   xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
-   xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+  //// rez=
+           xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+   ////printf("rez:%d\r\n",rez);
+  ///rez=
+          xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
+  ////printf("rez1:%d\r\n",rez);
+ ////  xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
  ////  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 
 #if 0
@@ -149,14 +157,14 @@ int main(void)
                         (void*          )NULL,
                         (UBaseType_t    )TASK2_TASK_PRIO,
                         (TaskHandle_t*  )&Task2Task_Handler);
-
+#endif
     xTaskCreate((TaskFunction_t )task1_task,
                     (const char*    )"task1",
                     (uint16_t       )TASK1_STK_SIZE,
                     (void*          )NULL,
                     (UBaseType_t    )TASK1_TASK_PRIO,
                     (TaskHandle_t*  )&Task1Task_Handler);
-#endif
+
     vTaskStartScheduler();
 
 	while(1)
