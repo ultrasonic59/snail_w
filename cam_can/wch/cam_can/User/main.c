@@ -24,6 +24,7 @@
 #include "task.h"
 #include "can.h"
 #include "can_thr.h"
+#include "usb_hid_thr.h"
 
 /* Global define */
 #define TASK1_TASK_PRIO     5
@@ -144,6 +145,8 @@ int main(void)
    ////printf("rez:%d\r\n",rez);
   ///rez=
           xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
+ ////        xTaskCreate(usb_hid_thr, (const char*)"usb_hid_thr",USB_HID_STACK_SIZE/2, 0, USB_HID_TASK_PRIORITY, NULL);
+
   ////printf("rez1:%d\r\n",rez);
  ////  xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
  ////  xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );

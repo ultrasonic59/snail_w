@@ -1,17 +1,24 @@
 /********************************** (C) COPYRIGHT *******************************
-* File Name          : ch32v30x_usbhs_device.c
-* Author             : WCH
-* Version            : V1.0.0
-* Date               : 2022/08/20
-* Description        : This file provides all the USBHS firmware functions.
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* SPDX-License-Identifier: Apache-2.0
-*******************************************************************************/
-#include "ch32v30x_usbhs_device.h"
+ * File Name          : ch32v30x_usbfs_device.c
+ * Author             : WCH
+ * Version            : V1.0.0
+ * Date               : 2022/08/18
+ * Description        : ch32v30x series usb interrupt Processing.
+ * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
+ * SPDX-License-Identifier: Apache-2.0
+ *******************************************************************************/
 
-/******************************************************************************/
+
+/*******************************************************************************/
+/* Header File */
+#include "ch32v30x_usbhs_device.h"
+#include "usb_desc.h"
+#include "usbd_compatibility_hid.h"
+#include "ch32v30x_usb.h"
+/*******************************************************************************/
 /* Variable Definition */
-const uint8_t    *pUSBHS_Descr;
+/* Global */
+const    uint8_t  *pUSBHS_Descr;
 
 /* Setup Request */
 volatile uint8_t  USBHS_SetupReqCode;
@@ -33,19 +40,16 @@ volatile uint8_t USBHS_HidIdle;
 volatile uint8_t USBHS_HidProtocol;
 volatile uint16_t Hid_Report_Ptr;
 
-/* HID Report Buffer */
-__attribute__ ((aligned(4))) uint8_t  HID_Report_Buffer[DEF_USBD_HS_PACK_SIZE];
-
 /* Endpoint Buffer */
 __attribute__ ((aligned(4))) uint8_t USBHS_EP0_Buf[ DEF_USBD_UEP0_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP2_Tx_Buf[ DEF_USB_EP2_HS_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP2_Rx_Buf[ DEF_USB_EP2_HS_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP3_Tx_Buf[ DEF_USB_EP3_HS_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP4_Tx_Buf[ DEF_USB_EP2_HS_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP4_Rx_Buf[ DEF_USB_EP2_HS_SIZE ];
+__attribute__ ((aligned(4))) uint8_t USBHS_EP2_Tx_Buf[ DEF_USBD_HS_PACK_SIZE ];
 
-/* Endpoint tx busy flag */
+/* USB IN Endpoint Busy Flag */
 volatile uint8_t  USBHS_Endp_Busy[ DEF_UEP_NUM ];
+
+/* Ring buffer */
+RING_BUFF_COMM  RingBuffer_Comm;
+__attribute__ ((aligned(4))) uint8_t Data_Buffer[DEF_RING_BUFFER_SIZE];
 
 /******************************************************************************/
 /* Interrupt Service Routine Declaration*/
@@ -77,46 +81,20 @@ void USBHS_RCC_Init( void )
  */
 void USBHS_Device_Endp_Init ( void )
 {
-    uint8_t i;
-
-    USBHSD->ENDP_CONFIG = USBHS_UEP3_T_EN | USBHS_UEP3_R_EN |
-                          USBHS_UEP2_T_EN | USBHS_UEP2_R_EN |
-                          USBHS_UEP4_T_EN | USBHS_UEP4_R_EN;
+    USBHSD->ENDP_CONFIG = USBHS_UEP0_T_EN | USBHS_UEP0_R_EN | USBHS_UEP1_R_EN | USBHS_UEP2_T_EN;
 
     USBHSD->UEP0_MAX_LEN  = DEF_USBD_UEP0_SIZE;
+    USBHSD->UEP1_MAX_LEN  = DEF_USB_EP1_HS_SIZE;
     USBHSD->UEP2_MAX_LEN  = DEF_USB_EP2_HS_SIZE;
-    USBHSD->UEP3_MAX_LEN  = DEF_USB_EP3_HS_SIZE;
-    USBHSD->UEP4_MAX_LEN  = DEF_USB_EP4_HS_SIZE;
 
     USBHSD->UEP0_DMA    = (uint32_t)(uint8_t *)USBHS_EP0_Buf;
-
-    USBHSD->UEP2_RX_DMA = (uint32_t)(uint8_t *)&UART1_Tx_Buf[ 0 ];
+    USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
     USBHSD->UEP2_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP2_Tx_Buf;
-    USBHSD->UEP3_RX_DMA = (uint32_t)(uint8_t *)USBHS_EP3_Tx_Buf;
-    USBHSD->UEP4_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP4_Tx_Buf;
-    USBHSD->UEP4_RX_DMA = (uint32_t)(uint8_t *)USBHS_EP4_Rx_Buf;
 
-    USBHSD->UEP0_TX_LEN  = 0;
     USBHSD->UEP0_TX_CTRL = USBHS_UEP_T_RES_NAK;
     USBHSD->UEP0_RX_CTRL = USBHS_UEP_R_RES_ACK;
-
-    USBHSD->UEP2_TX_LEN  = 0;
+    USBHSD->UEP1_RX_CTRL = USBHS_UEP_R_RES_ACK;
     USBHSD->UEP2_TX_CTRL = USBHS_UEP_T_RES_NAK;
-    USBHSD->UEP2_RX_CTRL = USBHS_UEP_R_RES_ACK;
-
-    USBHSD->UEP3_TX_LEN  = 0;
-    USBHSD->UEP3_TX_CTRL = USBHS_UEP_T_RES_NAK;
-    USBHSD->UEP3_RX_CTRL = USBHS_UEP_R_RES_ACK;
-
-    USBHSD->UEP4_TX_LEN  = 0;
-    USBHSD->UEP4_TX_CTRL = USBHS_UEP_T_RES_NAK;
-    USBHSD->UEP4_RX_CTRL = USBHS_UEP_R_RES_ACK;
-
-    /* Clear End-points Busy Status */
-    for( i=0; i<DEF_UEP_NUM; i++ )
-    {
-        USBHS_Endp_Busy[ i ] = 0;
-    }
 }
 
 /*********************************************************************
@@ -144,9 +122,11 @@ void USBHS_Device_Init ( FunctionalState sta )
     {
         USBHSD->CONTROL = USBHS_UC_CLR_ALL | USBHS_UC_RESET_SIE;
         Delay_Us(10);
-        USBHSD->CONTROL = 0;
+        USBHSD->CONTROL &= ~USBHS_UC_RESET_SIE;
+		USBHSD->CONTROL = 0x00;
         NVIC_DisableIRQ( USBHS_IRQn );
     }
+    USBHS_Endp_Busy[ 2 ] = 0;
 }
 
 /*********************************************************************
@@ -165,12 +145,12 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
     uint8_t endp_buf_mode, endp_en, endp_tx_ctrl;
 
     /* DMA config, endp_ctrl config, endp_len config */
-    if( (endp>=DEF_UEP1) && (endp<=DEF_UEP15) )
+    if( ( endp >= DEF_UEP1 ) && ( endp <= DEF_UEP15 ) )
     {
         endp_en =  USBHSD->ENDP_CONFIG;
         if( endp_en & USBHSD_UEP_TX_EN( endp ) )
         {
-            if( (USBHS_Endp_Busy[ endp ] & DEF_UEP_BUSY) == 0x00 )
+            if( ( USBHS_Endp_Busy[ endp ] & DEF_UEP_BUSY ) == 0x00 )
             {
                 endp_buf_mode = USBHSD->BUF_MODE;
                 /* if end-point buffer mode is double buffer */
@@ -178,7 +158,7 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
                 {
                     /* end-point buffer mode is double buffer */
                     /* only end-point tx enable  */
-                    if( (endp_en & USBHSD_UEP_RX_EN( endp )) == 0x00 )
+                    if( ( endp_en & USBHSD_UEP_RX_EN( endp ) ) == 0x00 )
                     {
                         endp_tx_ctrl = USBHSD_UEP_TXCTRL( endp );
                         if( mod == DEF_UEP_DMA_LOAD )
@@ -199,7 +179,7 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
                             if( endp_tx_ctrl & USBHS_UEP_T_TOG_DATA1 )
                             {
                                 /* use UEPn_TX_DMA */
-                                memcpy( USBHSD_UEP_TXBUF(endp), pbuf, len );
+                                memcpy( USBHSD_UEP_TXBUF( endp ), pbuf, len );
                             }
                             else
                             {
@@ -236,10 +216,11 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
                     }
                 }
 
-                /* end-point n response tx ack */
+                /* endpoint n response tx ack */
                 USBHSD_UEP_TLEN( endp ) = len;
-                USBHSD_UEP_TXCTRL( endp ) = (USBHSD_UEP_TXCTRL( endp ) &= ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_ACK;
-                /* Set end-point busy */
+                USBHSD_UEP_TXCTRL( endp ) = ( USBHSD_UEP_TXCTRL( endp ) &= ~USBHS_UEP_T_RES_MASK ) | USBHS_UEP_T_RES_ACK;
+
+                /* Set endpoint busy */
                 USBHS_Endp_Busy[ endp ] |= DEF_UEP_BUSY;
             }
             else
@@ -270,15 +251,15 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
 void USBHS_IRQHandler( void )
 {
     uint8_t  intflag, intst, errflag;
-    uint16_t len, i;
-    uint32_t baudrate;
+    uint16_t len;
+
 
     intflag = USBHSD->INT_FG;
     intst = USBHSD->INT_ST;
 
     if( intflag & USBHS_UIF_TRANSFER )
     {
-        switch ( intst & USBHS_UIS_TOKEN_MASK )
+        switch( intst & USBHS_UIS_TOKEN_MASK )
         {
             /* data-in stage processing */
             case USBHS_UIS_TOKEN_IN:
@@ -293,15 +274,31 @@ void USBHS_IRQHandler( void )
                         if ( ( USBHS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
                         {
                             /* Non-standard request endpoint 0 Data upload */
+                            if (( USBHS_SetupReqType & USB_REQ_TYP_MASK ) == USB_REQ_TYP_CLASS)
+                            {
+                                switch( USBHS_SetupReqCode )
+                                {
+                                    case HID_GET_REPORT:
+                                        len = USBHS_SetupReqLen >= DEF_USBD_UEP0_SIZE ? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
+                                        memcpy(USBHS_EP0_Buf, &HID_Report_Buffer[Hid_Report_Ptr], len);
+                                        USBHS_SetupReqLen -= len;
+                                        Hid_Report_Ptr += len;
+                                        USBHSD->UEP0_TX_LEN = len;
+                                        USBHSD->UEP0_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+
                         }
                         else
                         {
-                            /* Standard request endpoint 0 Data upload */
                             switch( USBHS_SetupReqCode )
                             {
                                 case USB_GET_DESCRIPTOR:
-                                    len = USBHS_SetupReqLen >= DEF_USBD_UEP0_SIZE ? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
-                                    memcpy(USBHS_EP0_Buf, pUSBHS_Descr, len);
+                                    len = ( USBHS_SetupReqLen >= DEF_USBD_UEP0_SIZE )? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
+                                    memcpy( USBHS_EP0_Buf, pUSBHS_Descr, len );
                                     USBHS_SetupReqLen -= len;
                                     pUSBHS_Descr += len;
                                     USBHSD->UEP0_TX_LEN = len;
@@ -313,32 +310,20 @@ void USBHS_IRQHandler( void )
                                     break;
 
                                 default:
-                                    USBHSD->UEP0_TX_LEN = 0;
                                     break;
                             }
                         }
                         break;
 
                     /* end-point 1 data in interrupt */
+                    case USBHS_UIS_TOKEN_IN | DEF_UEP1:
+                        break;
+
+                    /* end-point 2 data in interrupt */
                     case USBHS_UIS_TOKEN_IN | DEF_UEP2:
                         USBHSD->UEP2_TX_CTRL = (USBHSD->UEP2_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
                         USBHSD->UEP2_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
                         USBHS_Endp_Busy[ DEF_UEP2 ] &= ~DEF_UEP_BUSY;
-                        Uart.USB_Up_IngFlag = 0x00;
-                        break;
-
-                    /* end-point 3 data in interrupt */
-                    case USBHS_UIS_TOKEN_IN | DEF_UEP3:
-                        USBHSD->UEP3_TX_CTRL = (USBHSD->UEP3_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
-                        USBHSD->UEP3_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
-                        USBHS_Endp_Busy[ DEF_UEP3 ] &= ~DEF_UEP_BUSY;
-                        break;
-
-                    /* end-point 4 data in interrupt */
-                    case USBHS_UIS_TOKEN_IN | DEF_UEP4:
-                        USBHSD->UEP4_TX_CTRL = (USBHSD->UEP4_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
-                        USBHSD->UEP4_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
-                        USBHS_Endp_Busy[ DEF_UEP4 ] &= ~DEF_UEP_BUSY;
                         break;
 
                     default :
@@ -352,106 +337,63 @@ void USBHS_IRQHandler( void )
                 {
                     /* end-point 0 data out interrupt */
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP0:
-                         len = USBHSH->RX_LEN;
-                         if ( intst & USBHS_UIS_TOG_OK )
-                         {
-                             /* if any processing about rx, set it here */
-                             if ( ( USBHS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
-                             {
-                                 USBHS_SetupReqLen = 0;
-                                 /* Non-standard request end-point 0 Data download */
-                                 if( USBHS_SetupReqCode == CDC_SET_LINE_CODING )
-                                 {
-                                     /* Save relevant parameters such as serial port baud rate */
-                                     /* The downlinked data is processed in the endpoint 0 OUT packet, the 7 bytes of the downlink are, in order
-                                        4 bytes: baud rate value: lowest baud rate byte, next lowest baud rate byte, next highest baud rate byte, highest baud rate byte.
-                                        1 byte: number of stop bits (0: 1 stop bit; 1: 1.5 stop bit; 2: 2 stop bits).
-                                        1 byte: number of parity bits (0: None; 1: Odd; 2: Even; 3: Mark; 4: Space).
-                                        1 byte: number of data bits (5,6,7,8,16); */
-                                     Uart.Com_Cfg[ 0 ] = USBHS_EP0_Buf[ 0 ];
-                                     Uart.Com_Cfg[ 1 ] = USBHS_EP0_Buf[ 1 ];
-                                     Uart.Com_Cfg[ 2 ] = USBHS_EP0_Buf[ 2 ];
-                                     Uart.Com_Cfg[ 3 ] = USBHS_EP0_Buf[ 3 ];
-                                     Uart.Com_Cfg[ 4 ] = USBHS_EP0_Buf[ 4 ];
-                                     Uart.Com_Cfg[ 5 ] = USBHS_EP0_Buf[ 5 ];
-                                     Uart.Com_Cfg[ 6 ] = USBHS_EP0_Buf[ 6 ];
-                                     Uart.Com_Cfg[ 7 ] = DEF_UARTx_RX_TIMEOUT;
-
-                                     /* 保存当前串口的波特率 */
-                                     baudrate = USBHS_EP0_Buf[ 0 ];
-                                     baudrate += ((uint32_t)USBHS_EP0_Buf[ 1 ] << 8 );
-                                     baudrate += ((uint32_t)USBHS_EP0_Buf[ 2 ] << 16 );
-                                     baudrate += ((uint32_t)USBHS_EP0_Buf[ 3 ] << 24 );
-                                     Uart.Com_Cfg[ 7 ] = Uart.Rx_TimeOutMax;
-
-                                     /* 串口初始化操作 */
- //   ????                                  _UART1_USB_Init( );
-                                 }
-                                 else if( USBHS_SetupReqCode == HID_SET_REPORT )
-                                 {
-                                     memcpy(&HID_Report_Buffer[Hid_Report_Ptr],USBHS_EP0_Buf,len);
-                                     USBHS_SetupReqLen -= len;
-                                     Hid_Report_Ptr += len;
-                                     USBHSD->UEP0_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
-                                     USBHSD->UEP0_RX_CTRL = (USBHSD->UEP0_RX_CTRL & USBHS_UEP_R_TOG_MASK) | USBHS_UEP_R_RES_ACK;
-                                 }
-                             }
-                             else
-                             {
-                                 /* Standard request end-point 0 Data download */
-                             }
-
-                             if( USBHS_SetupReqLen == 0 )
-                             {
-                                 USBHSD->UEP0_TX_LEN  = 0;
-                                 USBHSD->UEP0_TX_CTRL = USBHS_UEP_T_TOG_DATA1 | USBHS_UEP_T_RES_ACK;
-                             }
-                         }
-                            break;
-
-                    /* end-point 2 data out interrupt */
-                    case USBHS_UIS_TOKEN_OUT | DEF_UEP2:
-                        USBHSD->UEP2_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
-                        /* Record related information & Switch DMA Address*/
-                        Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = USBHSD->RX_LEN;
-                        Uart.Tx_LoadNum++;
-                        USBHSD->UEP2_RX_DMA = (uint32_t)(uint8_t *)&UART1_Tx_Buf[ ( Uart.Tx_LoadNum * DEF_USB_HS_PACK_LEN ) ];
-                        if( Uart.Tx_LoadNum >= DEF_UARTx_TX_BUF_NUM_MAX )
+                        if ( intst & USBHS_UIS_TOG_OK )
                         {
-                            Uart.Tx_LoadNum = 0x00;
-                            USBHSD->UEP2_RX_DMA = (uint32_t)(uint8_t *)&UART1_Tx_Buf[ 0 ];
-                        }
-                        Uart.Tx_RemainNum++;
-
-                        /* Determine if the downlink needs to be paused */
-                        if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )
-                        {
-                            USBHSD->UEP2_RX_CTRL &= ~USBHS_UEP_R_RES_MASK;
-                            USBHSD->UEP2_RX_CTRL |= USBHS_UEP_R_RES_NAK;
-                            Uart.USB_Down_StopFlag = 0x01;
+							len = USBHSH->RX_LEN;
+                            if ( ( USBHS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
+                            {
+								/* Non-standard request end-point 0 Data download */
+                                if (( USBHS_SetupReqType & USB_REQ_TYP_MASK ) == USB_REQ_TYP_CLASS)
+                                {
+                                    switch( USBHS_SetupReqCode )
+                                    {
+                                        case HID_SET_REPORT:
+                                            memcpy(&HID_Report_Buffer[Hid_Report_Ptr],USBHS_EP0_Buf,len);
+											USBHS_SetupReqLen -= len;
+											Hid_Report_Ptr += len;
+                                            if (Hid_Report_Ptr >= USBHS_DevMaxPackLen)
+                                            {
+                                                HID_Set_Report_Flag = SET_REPORT_WAIT_DEAL;
+                                            }
+											USBHSD->UEP0_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
+                                            USBHSD->UEP0_RX_CTRL = (USBHSD->UEP0_RX_CTRL & USBHS_UEP_R_TOG_MASK) | USBHS_UEP_R_RES_ACK;
+                                            
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+							else
+							{
+								/* Standard request end-point 0 Data download */
+							}
                         }
                         break;
 
-                    /* end-point 4 data out interrupt */
-                    case USBHS_UIS_TOKEN_OUT | DEF_UEP4:
-                        USBHSD->UEP4_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
-                        /* Reverse the data and re-upload */
-                        len = USBHSD->RX_LEN;
-                        for( i = 0; i < len; i++ )
+                    /* end-point 1 data out interrupt */
+                    case USBHS_UIS_TOKEN_OUT | DEF_UEP1:
+                        if ( intst & USBHS_UIS_TOG_OK )
                         {
-                            USBHS_EP4_Tx_Buf[ i ] = ~USBHS_EP4_Rx_Buf[ i ];
+                            /* Write In Buffer */
+                            USBHSD->UEP1_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
+                            RingBuffer_Comm.PackLen[RingBuffer_Comm.LoadPtr] = USBHSD->RX_LEN;
+                            RingBuffer_Comm.LoadPtr ++;
+                            if(RingBuffer_Comm.LoadPtr == DEF_Ring_Buffer_Max_Blks)
+                            {
+                                RingBuffer_Comm.LoadPtr = 0;
+                            }
+                            USBHSD->UEP1_RX_DMA = (uint32_t)(&Data_Buffer[(RingBuffer_Comm.LoadPtr) * DEF_USBD_HS_PACK_SIZE]);
+                            RingBuffer_Comm.RemainPack ++;
+                            if(RingBuffer_Comm.RemainPack >= DEF_Ring_Buffer_Max_Blks-DEF_RING_BUFFER_REMINE)
+                            {
+                                USBHSD->UEP1_RX_CTRL = ((USBHSD->UEP1_RX_CTRL) & ~USBHS_UEP_R_RES_MASK) | USBHS_UEP_R_RES_NAK;
+                                RingBuffer_Comm.StopFlag = 1;
+                            }
                         }
-                        USBHSD->UEP4_TX_LEN  = len;
-                        USBHSD->UEP4_TX_CTRL &= ~USBHS_UEP_R_RES_MASK;
-                        USBHSD->UEP4_TX_CTRL |= USBHS_UEP_R_RES_ACK;
-                        break;
-
-                    default:
-                        errflag = 0xFF;
                         break;
                 }
                 break;
-
             /* Sof pack processing */
             case USBHS_UIS_TOKEN_SOF:
                 break;
@@ -477,26 +419,11 @@ void USBHS_IRQHandler( void )
         errflag = 0;
         if ( ( USBHS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
         {
-            /* usb non-standard request processing */
-            if( USBHS_SetupReqType & USB_REQ_TYP_CLASS )
+
+            if (( USBHS_SetupReqType & USB_REQ_TYP_MASK ) == USB_REQ_TYP_CLASS)
             {
-                /* Class requests */
                 switch( USBHS_SetupReqCode )
                 {
-                    case CDC_GET_LINE_CODING:
-                        pUSBHS_Descr = (uint8_t *)&Uart.Com_Cfg[ 0 ];
-                        len = 7;
-                        break;
-
-                    case CDC_SET_LINE_CODING:
-                        break;
-
-                    case CDC_SET_LINE_CTLSTE:
-                        break;
-
-                    case CDC_SEND_BREAK:
-                        break;
-
                     case HID_SET_REPORT:                            /* 0x09: SET_REPORT */
                         Hid_Report_Ptr = 0;
                         break;
@@ -560,25 +487,11 @@ void USBHS_IRQHandler( void )
                             errflag = 0xFF;
                         }
                         break;
-
                     default:
-                        errflag = 0xff;
+                        errflag = 0xFF;
                         break;
                 }
             }
-            else if( USBHS_SetupReqType & USB_REQ_TYP_VENDOR )
-            {
-                /* Manufacturer request */
-            }
-            else
-            {
-                errflag = 0xFF;
-            }
-
-            /* Copy Descriptors to Endp0 DMA buffer */
-            len = (USBHS_SetupReqLen >= DEF_USBD_UEP0_SIZE) ? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
-            memcpy( USBHS_EP0_Buf, pUSBHS_Descr, len );
-            pUSBHS_Descr += len;
         }
         else
         {
@@ -603,15 +516,18 @@ void USBHS_IRQHandler( void )
                                 /* High speed mode */
                                 USBHS_DevSpeed = USBHS_SPEED_HIGH;
                                 USBHS_DevMaxPackLen = DEF_USBD_HS_PACK_SIZE;
+                                Head_Pack_Len = 2;
+                                Data_Pack_Max_Len = DEF_USBD_HS_PACK_SIZE - Head_Pack_Len;
+
                             }
                             else
                             {
                                 /* Full speed mode */
                                 USBHS_DevSpeed = USBHS_SPEED_FULL;
                                 USBHS_DevMaxPackLen = DEF_USBD_FS_PACK_SIZE;
+                                Head_Pack_Len = 1;
+                                Data_Pack_Max_Len = DEF_USBD_FS_PACK_SIZE - Head_Pack_Len;
                             }
-
-                            /* Load usb configuration descriptor by speed */
                             if( USBHS_DevSpeed == USBHS_SPEED_HIGH )
                             {
                                 /* High speed mode */
@@ -625,8 +541,6 @@ void USBHS_IRQHandler( void )
                                 len = DEF_USBD_CONFIG_FS_DESC_LEN;
                             }
                             break;
-
-                        /* get hid report descriptor */
                         case USB_DESCR_TYP_REPORT:
                             if( USBHS_DevSpeed == USBHS_SPEED_HIGH )
                             {
@@ -638,9 +552,8 @@ void USBHS_IRQHandler( void )
                                 pUSBHS_Descr = MyHIDReportDesc_FS;
                                 len = DEF_USBD_REPORT_DESC_LEN;
                             }
-                            break;
 
-                        /* get hid descriptor */
+                            break;
                         case USB_DESCR_TYP_HID:
                             if( USBHS_SetupReqIndex == 0x00 )
                             {
@@ -660,7 +573,6 @@ void USBHS_IRQHandler( void )
                                 errflag = 0xFF;
                             }
                             break;
-
                         /* get usb string descriptor */
                         case USB_DESCR_TYP_STRING:
                             switch( (uint8_t)(USBHS_SetupReqValue&0xFF) )
@@ -695,7 +607,7 @@ void USBHS_IRQHandler( void )
                             }
                             break;
 
-                        /* get usb device qualify descriptor */
+                        /* get usb qualifier descriptor */
                         case USB_DESCR_TYP_QUALIF:
                             pUSBHS_Descr = MyQuaDesc;
                             len = DEF_USBD_QUALFY_DESC_LEN;
@@ -728,7 +640,6 @@ void USBHS_IRQHandler( void )
                                 errflag = 0xFF;
                             }
                             break;
-
                         default :
                             errflag = 0xFF;
                             break;
@@ -760,13 +671,33 @@ void USBHS_IRQHandler( void )
 
                 /* Set usb configuration to use */
                 case USB_SET_CONFIGURATION:
-                    USBHS_DevConfig = (uint8_t)(USBHS_SetupReqValue&0xFF);
+                    USBHS_DevConfig = (uint16_t)(USBHS_SetupReqValue&0xFF);
                     USBHS_DevEnumStatus = 0x01;
                     break;
 
                 /* Clear or disable one usb feature */
                 case USB_CLEAR_FEATURE:
-                    if( ( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE )
+                    if ( ( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
+                    {
+                        /* Clear End-point Feature */
+                        switch( (uint8_t)(USBHS_SetupReqIndex&0xFF) )
+                        {
+                            case ( DEF_UEP_OUT | DEF_UEP1 ):
+                                /* Set End-point 1 OUT ACK */
+                                USBHSD->UEP1_RX_CTRL = ( USBHSD->UEP1_RX_CTRL & ~( USBHS_UEP_R_TOG_DATA1 | USBHS_UEP_R_RES_MASK ) ) | USBHS_UEP_R_RES_NAK;
+                                break;
+
+                            case ( DEF_UEP_IN | DEF_UEP2 ):
+                                /* Set End-point 2 IN NAK */
+                                USBHSD->UEP2_TX_CTRL = ( USBHSD->UEP2_TX_CTRL & ~( USBHS_UEP_T_TOG_DATA1 | USBHS_UEP_T_RES_MASK ) ) | USBHS_UEP_T_RES_NAK;
+                                break;
+
+                            default:
+                                errflag = 0xFF;
+                                break;
+                        }
+                    }
+                    else if(( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE)
                     {
                         /* clear one device feature */
                         if((uint8_t)(USBHS_SetupReqValue&0xFF) == 0x01)
@@ -774,54 +705,6 @@ void USBHS_IRQHandler( void )
                             /* clear usb sleep status, device not prepare to sleep */
                             USBHS_DevSleepStatus &= ~0x01;
                         }
-                        else
-                        {
-                            errflag = 0xFF;
-                        }
-                    }
-                    else if ( ( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
-                    {
-                        /* Set End-point Feature */
-                        if( (uint8_t)(USBHS_SetupReqValue&0xFF) == USB_REQ_FEAT_ENDP_HALT )
-                        {
-                            /* Clear End-point Feature */
-                            switch( (uint8_t)(USBHS_SetupReqIndex&0xFF) )
-                            {
-                                case (DEF_UEP2 | DEF_UEP_IN):
-                                    /* Set End-point 2 IN NAK */
-                                    USBHSD->UEP2_TX_CTRL = USBHS_UEP_T_RES_NAK;
-                                    break;
-
-                                case (DEF_UEP2 | DEF_UEP_OUT):
-                                    /* Set End-point 2 OUT ACK */
-                                    USBHSD->UEP2_RX_CTRL = USBHS_UEP_R_RES_ACK;
-                                    break;
-
-                                case (DEF_UEP3 | DEF_UEP_IN):
-                                    /* Set End-point 3 IN NAK */
-                                    USBHSD->UEP3_TX_CTRL = USBHS_UEP_T_RES_NAK;
-                                    break;
-
-                                case (DEF_UEP4 | DEF_UEP_IN):
-                                    /* Set End-point 4 IN NAK */
-                                    USBHSD->UEP4_TX_CTRL = USBHS_UEP_T_RES_NAK;
-                                    break;
-
-                                case (DEF_UEP4 | DEF_UEP_OUT):
-                                    /* Set End-point 4 OUT ACK */
-                                    USBHSD->UEP4_RX_CTRL = USBHS_UEP_R_RES_ACK;
-                                    break;
-
-                                default:
-                                    errflag = 0xFF;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            errflag = 0xFF;
-                        }
-
                     }
                     else
                     {
@@ -856,39 +739,24 @@ void USBHS_IRQHandler( void )
                         /* Set End-point Feature */
                         if( (uint8_t)(USBHS_SetupReqValue&0xFF) == USB_REQ_FEAT_ENDP_HALT )
                         {
-                            /* Set end-points status stall */
                             switch((uint8_t)(USBHS_SetupReqIndex&0xFF) )
                             {
-                                case (DEF_UEP2 | DEF_UEP_IN):
-                                    /* Set End-point 2 IN STALL */
+                                case ( DEF_UEP_OUT | DEF_UEP1 ) :
+                                    USBHSD->UEP1_RX_CTRL = ( USBHSD->UEP1_RX_CTRL & ~USBHS_UEP_R_RES_MASK ) | USBHS_UEP_R_RES_STALL;
+                                    break;
+
+                                case ( DEF_UEP_IN | DEF_UEP2 ):
                                     USBHSD->UEP2_TX_CTRL = ( USBHSD->UEP2_TX_CTRL & ~USBHS_UEP_T_RES_MASK ) | USBHS_UEP_T_RES_STALL;
                                     break;
-
-                                case (DEF_UEP2 | DEF_UEP_OUT):
-                                    /* Set End-point 2 OUT STALL */
-                                    USBHSD->UEP2_RX_CTRL = ( USBHSD->UEP2_RX_CTRL & ~USBHS_UEP_R_RES_MASK ) | USBHS_UEP_R_RES_STALL;
-                                    break;
-
-                                case (DEF_UEP3 | DEF_UEP_IN):
-                                    /* Set End-point 3 IN STALL */
-                                    USBHSD->UEP3_TX_CTRL = ( USBHSD->UEP3_TX_CTRL & ~USBHS_UEP_T_RES_MASK ) | USBHS_UEP_T_RES_STALL;
-                                    break;
-
-                                case (DEF_UEP4 | DEF_UEP_IN):
-                                    /* Set End-point 4 IN STALL */
-                                    USBHSD->UEP4_TX_CTRL = ( USBHSD->UEP4_TX_CTRL & ~USBHS_UEP_T_RES_MASK ) | USBHS_UEP_T_RES_STALL;
-                                    break;
-
-                                case (DEF_UEP4 | DEF_UEP_OUT):
-                                    /* Set End-point 4 OUT STALL */
-                                    USBHSD->UEP4_RX_CTRL = ( USBHSD->UEP4_RX_CTRL & ~USBHS_UEP_R_RES_MASK ) | USBHS_UEP_R_RES_STALL;
-                                    break;
-
                                 default:
                                     errflag = 0xFF;
                                     break;
                             }
                         }
+                    }
+                    else
+                    {
+                        errflag = 0xFF;
                     }
                     break;
 
@@ -900,7 +768,6 @@ void USBHS_IRQHandler( void )
                         USBHS_SetupReqLen = 1;
                     }
                     break;
-
                 case USB_SET_INTERFACE:
                     break;
 
@@ -910,46 +777,19 @@ void USBHS_IRQHandler( void )
                     USBHS_EP0_Buf[1] = 0x00;
                     if( ( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
                     {
-                        switch( (uint8_t)( USBHS_SetupReqIndex & 0xFF ) )
+                        if((uint8_t)(USBHS_SetupReqIndex&0xFF) == ( DEF_UEP_OUT | DEF_UEP1 ) )
                         {
-                            case (DEF_UEP2 | DEF_UEP_IN):
-                                if( ( (USBHSD->UEP2_TX_CTRL) & USBHS_UEP_T_RES_MASK ) == USBHS_UEP_T_RES_STALL )
-                                {
-                                    USBHS_EP0_Buf[ 0 ] = 0x01;
-                                }
-                                break;
-
-                            case (DEF_UEP2 | DEF_UEP_OUT):
-                                if( ( (USBHSD->UEP2_RX_CTRL) & USBHS_UEP_R_RES_MASK ) == USBHS_UEP_R_RES_STALL )
-                                {
-                                    USBHS_EP0_Buf[ 0 ] = 0x01;
-                                }
-                                break;
-
-                            case (DEF_UEP3 | DEF_UEP_IN):
-                                if( ( (USBHSD->UEP3_TX_CTRL) & USBHS_UEP_T_RES_MASK ) == USBHS_UEP_T_RES_STALL )
-                                {
-                                    USBHS_EP0_Buf[ 0 ] = 0x01;
-                                }
-                                break;
-
-                            case (DEF_UEP4 | DEF_UEP_IN):
-                                if( ( (USBHSD->UEP4_TX_CTRL) & USBHS_UEP_T_RES_MASK ) == USBHS_UEP_T_RES_STALL )
-                                {
-                                    USBHS_EP0_Buf[ 0 ] = 0x01;
-                                }
-                                break;
-
-                            case (DEF_UEP4 | DEF_UEP_OUT):
-                                if( ( (USBHSD->UEP4_RX_CTRL) & USBHS_UEP_R_RES_MASK ) == USBHS_UEP_R_RES_STALL )
-                                {
-                                    USBHS_EP0_Buf[ 0 ] = 0x01;
-                                }
-                                break;
-
-                            default:
-                                errflag = 0xFF;
-                                break;
+                            if( ( USBHSD->UEP1_RX_CTRL & USBHS_UEP_R_RES_MASK ) == USBHS_UEP_R_RES_STALL )
+                            {
+                                USBHS_EP0_Buf[ 0 ] = 0x01;
+                            }
+                        }
+                        else if((uint8_t)(USBHS_SetupReqIndex&0xFF) == (DEF_UEP2 | DEF_UEP_IN))
+                        {
+                            if( ( USBHSD->UEP2_TX_CTRL & USBHS_UEP_T_RES_MASK ) == USBHS_UEP_T_RES_STALL )
+                            {
+                                USBHS_EP0_Buf[ 0 ] = 0x01;
+                            }
                         }
                     }
                     else if( ( USBHS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE )
@@ -957,6 +797,10 @@ void USBHS_IRQHandler( void )
                           if( USBHS_DevSleepStatus & 0x01 )
                           {
                               USBHS_EP0_Buf[ 0 ] = 0x02;
+                          }
+                          else
+                          {
+                              USBHS_EP0_Buf[ 0 ] = 0x00;
                           }
                     }
 
@@ -984,15 +828,13 @@ void USBHS_IRQHandler( void )
             /* end-point 0 data Tx/Rx */
             if( USBHS_SetupReqType & DEF_UEP_IN )
             {
-                /* tx */
-                len = (USBHS_SetupReqLen>DEF_USBD_UEP0_SIZE) ? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
+                len = ( USBHS_SetupReqLen > DEF_USBD_UEP0_SIZE ) ? DEF_USBD_UEP0_SIZE : USBHS_SetupReqLen;
                 USBHS_SetupReqLen -= len;
                 USBHSD->UEP0_TX_LEN = len;
                 USBHSD->UEP0_TX_CTRL = USBHS_UEP_T_TOG_DATA1 | USBHS_UEP_T_RES_ACK;
             }
             else
             {
-                /* rx */
                 if( USBHS_SetupReqLen == 0 )
                 {
                     USBHSD->UEP0_TX_LEN = 0;
@@ -1013,22 +855,21 @@ void USBHS_IRQHandler( void )
         USBHS_DevAddr = 0;
         USBHS_DevSleepStatus = 0;
         USBHS_DevEnumStatus = 0;
-
         USBHSD->DEV_AD = 0;
         USBHS_Device_Endp_Init( );
-        UART1_ParaInit( 1 );
         USBHSD->INT_FG = USBHS_UIF_BUS_RST;
     }
     else if( intflag & USBHS_UIF_SUSPEND )
     {
-        USBHSD->INT_FG = USBHS_UIF_SUSPEND;
         /* usb suspend interrupt processing */
-        if ( USBHSD->MIS_ST & USBHS_UMS_SUSPEND  )
+        USBHSD->INT_FG = USBHS_UIF_SUSPEND;
+        if ( USBHSD->MIS_ST & USBHS_UMS_SUSPEND )
         {
             USBHS_DevSleepStatus |= 0x02;
             if( USBHS_DevSleepStatus == 0x03 )
             {
                 /* Handling usb sleep here */
+
             }
         }
         else
@@ -1044,13 +885,16 @@ void USBHS_IRQHandler( void )
 }
 
 /*********************************************************************
- * @fn      USBHD_Send_Resume
+ * @fn      USBHS_Send_Resume
  *
- * @brief   USBHD device sends wake-up signal to host
+ * @brief   Send usb k signal, Wake up usb host
  *
  * @return  none
  */
-void USBHD_Send_Resume(void)
+void USBHS_Send_Resume( void )
 {
-
+    USBHSH->HOST_CTRL |= USBHS_UH_REMOTE_WKUP;
+    Delay_Ms( 5 );
+    USBHSH->HOST_CTRL &= ~USBHS_UH_REMOTE_WKUP;
+    Delay_Ms( 1 );
 }

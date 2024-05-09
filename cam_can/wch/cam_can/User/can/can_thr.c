@@ -33,7 +33,7 @@ return 0;
 
 void can_rsv_thr( void *pvParameters )
 {
-printf("\n\r can_rsv_task");
+printf(" can_rsv_task \n\r");
 #if 1
  for(;;)
   {
@@ -41,7 +41,7 @@ printf("\n\r can_rsv_task");
     {
     CAN_RxRdy=0;
     obr_can_cmd(CAN_RxMsg.data);
- ///   printf("\n\r can_rsv_task");
+  ///  printf("\n\r can_rsv_task1\n\r");
 
     }
   else
@@ -57,7 +57,7 @@ void can_send_thr(void* pp)
 {
 can_msg_t  snd_msg;
 
-printf("\n\r can_send_thr");
+printf(" can_send_thr\n\r");
 
 ////goto_app();
 #if 1

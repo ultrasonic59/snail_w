@@ -50,8 +50,11 @@
 #define MOTOR_TASK_STACK_SIZE           1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
 #define CAN_SEND_STACK_SIZE                 1024////
-#define CAN_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define CAN_TASK_STACK_SIZE                 1024            ////
 #define CAN_TASK_PRIORITY               ( tskIDLE_PRIORITY + 8 )
+#define USB_HID_STACK_SIZE                 1024            ////
+#define USB_HID_TASK_PRIORITY               ( tskIDLE_PRIORITY + 8 )
+
 #define APP_PRIORITY                           (6)
 
 #define TST_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )

@@ -2,10 +2,13 @@
 
 #include <QtWidgets/QMainWindow>
 #include "PlotterWidget.h"
-
 #include "ui_win_snail.h"
 ///======================================================================
 #include <opencv2/opencv.hpp>
+#include "hidapi.h"
+
+#define DEF_HID_USB_VID                  0x1A86
+#define DEF_HID_USB_PID                  0xFE0C
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -27,8 +30,14 @@ private:
     QPen pen;
 
     VideoCapture _cap;
+    int frame_width;
+    int frame_height;
     Mat _frame;
     QImage    _image;
+   hid_device* hid_handle;
+ ///   struct hid_device_info* devs;
+  ///struct hid_device_info* cur_dev;
+
 public slots:
     void setCamImage(QImage ipm);
 

@@ -6,15 +6,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../User/USB_Device/ch32v30x_usbhs_device.c \
-../User/USB_Device/usb_desc.c 
+../User/USB_Device/usb_desc.c \
+../User/USB_Device/usb_hid_thr.c \
+../User/USB_Device/usbd_compatibility_hid.c 
 
 OBJS += \
 ./User/USB_Device/ch32v30x_usbhs_device.o \
-./User/USB_Device/usb_desc.o 
+./User/USB_Device/usb_desc.o \
+./User/USB_Device/usb_hid_thr.o \
+./User/USB_Device/usbd_compatibility_hid.o 
 
 C_DEPS += \
 ./User/USB_Device/ch32v30x_usbhs_device.d \
-./User/USB_Device/usb_desc.d 
+./User/USB_Device/usb_desc.d \
+./User/USB_Device/usb_hid_thr.d \
+./User/USB_Device/usbd_compatibility_hid.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

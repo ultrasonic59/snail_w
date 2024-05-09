@@ -2,25 +2,27 @@
  * File Name          : usb_desc.h
  * Author             : WCH
  * Version            : V1.0.0
- * Date               : 2022/08/20
+ * Date               : 2022/08/02
  * Description        : header file of usb_desc.c
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
-#ifndef USER_USB_DESC_H_
-#define USER_USB_DESC_H_
+#ifndef _USB_DESC_H_
+#define _USB_DESC_H_
 
 #include "debug.h"
 
 /******************************************************************************/
 /* global define */
+
 /* file version */
 #define DEF_FILE_VERSION             0x01
 /* usb device info define  */
 #define DEF_USB_VID                  0x1A86
-#define DEF_USB_PID                  0xFE0C
-/* USB device descriptor, device serial number£¨bcdDevice£© */
+#define DEF_USB_PID                  0xFE07
+/* USB device descriptor, device serial number(bcdDevice) */
 #define DEF_IC_PRG_VER               DEF_FILE_VERSION
+
 
 /******************************************************************************/
 /* usb device endpoint size define */
@@ -73,6 +75,7 @@
 extern const uint8_t MyDevDescr[ ];
 extern const uint8_t MyCfgDescr_FS[ ];
 extern const uint8_t MyCfgDescr_HS[ ];
+extern const uint8_t MyCfgDescr_HS_2[ ];
 extern const uint8_t MyLangDescr[ ];
 extern const uint8_t MyManuInfo[ ];
 extern const uint8_t MyProdInfo[ ];
@@ -84,4 +87,4 @@ extern const uint8_t MyHIDReportDesc_FS[ ];
 extern uint8_t TAB_USB_FS_OSC_DESC[ ];
 extern uint8_t TAB_USB_HS_OSC_DESC[ ];
 
-#endif /* USER_USB_DESC_H_ */
+#endif /* USB_DESC_H_ */

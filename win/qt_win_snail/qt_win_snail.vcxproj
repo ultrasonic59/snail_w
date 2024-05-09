@@ -36,7 +36,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.0_static_x64</QtInstall>
+    <QtInstall>5.15.0_msvc2019_static_x64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -65,11 +65,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\opencv\include;D:\proj\velograph\snail_w\win\qt_win_snail\widgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\proj\velograph\snail_w\win\qt_win_snail\hidapi;C:\opencv\include;D:\proj\velograph\snail_w\win\qt_win_snail\widgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\proj\velograph\snail_w\win\qt_win_snail\hidapi;C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Setupapi.lib;hidapi.lib;aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -117,6 +118,7 @@
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h" />
     <ClInclude Include="dev_interf.h" />
+    <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <ClInclude Include="widgets\plotterwidget.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />

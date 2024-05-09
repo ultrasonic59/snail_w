@@ -34,7 +34,7 @@ uint8_t RCC_Configuration( void )
     RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM2, ENABLE );
     return 0;
 }
-
+#if 0
 /*********************************************************************
  * @fn      TIM2_Init
  *
@@ -68,7 +68,7 @@ void TIM2_Init( void )
     /* TIM2 enable counter */
     TIM_Cmd( TIM2, ENABLE );
 }
-
+#endif
 /*********************************************************************
  * @fn      UART1_CfgInit
  *

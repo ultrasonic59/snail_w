@@ -2,7 +2,7 @@
  * File Name          : usb_desc.c
  * Author             : WCH
  * Version            : V1.0.0
- * Date               : 2022/08/20
+ * Date               : 2020/04/30
  * Description        : usb device descriptor,configuration descriptor,
  *                      string descriptors and other descriptors.
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -14,131 +14,121 @@
 /* Device Descriptor */
 const uint8_t  MyDevDescr[ ] =
 {
-    0x12,       // bLength
-    0x01,       // bDescriptorType (Device)
-    0x00, 0x02, // bcdUSB 2.00
-    0x00,       // bDeviceClass
-    0x00,       // bDeviceSubClass
-    0x00,       // bDeviceProtocol
-    DEF_USBD_UEP0_SIZE,   // bMaxPacketSize0 64
+    0x12,                                               // bLength
+    0x01,                                               // bDescriptorType (Device)
+    0x00, 0x02,                                         // bcdUSB 2.00
+    0x00,                                               // bDeviceClass (Use class information in the Interface Descriptors)
+    0x00,                                               // bDeviceSubClass
+    0x00,                                               // bDeviceProtocol
+    DEF_USBD_UEP0_SIZE,                                 // bMaxPacketSize0
     (uint8_t)DEF_USB_VID, (uint8_t)(DEF_USB_VID >> 8),  // idVendor 0x1A86
-    (uint8_t)DEF_USB_PID, (uint8_t)(DEF_USB_PID >> 8),  // idProduct 0x5537
-    DEF_IC_PRG_VER, 0x00, // bcdDevice 0.01
-    0x01,       // iManufacturer (String Index)
-    0x02,       // iProduct (String Index)
-    0x03,       // iSerialNumber (String Index)
-    0x01,       // bNumConfigurations 1
+    (uint8_t)DEF_USB_PID, (uint8_t)(DEF_USB_PID >> 8),  // idProduct 0xE6E1
+    0x00, DEF_IC_PRG_VER,                               // bcdDevice 1.00
+    0x01,                                               // iManufacturer (String Index)
+    0x02,                                               // iProduct (String Index)
+    0x03,                                               // iSerialNumber (String Index)
+    0x01,                                               // bNumConfigurations 2
 };
 
-/* Configuration Descriptor (FS) */
-const uint8_t  MyCfgDescr_FS[ ] =
-{
-    /* Configure descriptor */
-    0x09, 0x02, 0x6B, 0x00, 0x03, 0x01, 0x00, 0x80, 0x32,
-
-    /* IAD Descriptor(interface 0/1)*/
-    0x08, 0x0B, 0x00, 0x02, 0x02, 0x02, 0x01, 0x00,
-
-    /* Interface 0 (CDC) descriptor */
-    0x09, 0x04, 0x00, 0x00, 0x01, 0x02, 0x02, 0x01,  0x00,
-
-    /* Functional Descriptors */
-    0x05, 0x24, 0x00, 0x10, 0x01,
-
-    /* Length/management descriptor (data class interface 1) */
-    0x05, 0x24, 0x01, 0x00, 0x01,
-    0x04, 0x24, 0x02, 0x02,
-    0x05, 0x24, 0x06, 0x00, 0x01,
-
-    /* Interrupt upload endpoint descriptor */
-    0x07, 0x05, 0x83, 0x03, (uint8_t)DEF_USB_EP3_FS_SIZE, (uint8_t)( DEF_USB_EP3_FS_SIZE >> 8 ), 0x01,
-
-    /* Interface 1 (data interface) descriptor */
-    0x09, 0x04, 0x01, 0x00, 0x02, 0x0a, 0x00, 0x00, 0x00,
-
-    /* Endpoint descriptor */
-    0x07, 0x05, 0x02, 0x02, (uint8_t)DEF_USB_EP2_FS_SIZE, (uint8_t)( DEF_USB_EP2_FS_SIZE >> 8 ), 0x00,
-
-    /* Endpoint descriptor */
-    0x07, 0x05, 0x82, 0x02, (uint8_t)DEF_USB_EP2_FS_SIZE, (uint8_t)( DEF_USB_EP2_FS_SIZE >> 8 ), 0x00,
-
-    /* interface 2 (HID interface) descriptor */
-    0x09, 0x04, 0x02, 0x00, 0x02, 0x03, 0x00, 0x00, 0x00,
-
-    /* interface 2 HID descriptor */
-    0x09, 0x21, 0x00, 0x01, 0x00, 0x01, 0x22, DEF_USBD_REPORT_DESC_LEN, 0x00,
-
-    /* interface 2 endpoint descriptor*/
-    0x07, 0x05, 0x84, 0x03, (uint8_t)DEF_USB_EP4_FS_SIZE, (uint8_t)( DEF_USB_EP4_FS_SIZE >> 8 ), 0x01,
-
-    /* interface 2 endpoint descriptor */
-    0x07, 0x05, 0x04, 0x03, (uint8_t)DEF_USB_EP4_FS_SIZE, (uint8_t)( DEF_USB_EP4_FS_SIZE >> 8 ), 0x01,
-};
-
-/* Configuration Descriptor (HS) */
+/* Configuration Descriptor(HS) */
 const uint8_t  MyCfgDescr_HS[ ] =
 {
-    /* Configure descriptor */
-    0x09, 0x02, 0x6B, 0x00, 0x03, 0x01, 0x00, 0x80, 0x32,
+    /* Configuration Descriptor */
+    0x09,                           // bLength
+    0x02,                           // bDescriptorType
+    0x29, 0x00,                     // wTotalLength
+    0x01,                           // bNumInterfaces
+    0x01,                           // bConfigurationValue
+    0x00,                           // iConfiguration (String Index)
+    0x80,                           // bmAttributes
+    0x23,                           // bMaxPower 70mA
 
-    /* IAD Descriptor(interface 0/1)*/
-    0x08, 0x0B, 0x00, 0x02, 0x02, 0x02, 0x01, 0x00,
+    /* Interface Descriptor */
+    0x09,                           // bLength
+    0x04,                           // bDescriptorType (Interface)
+    0x00,                           // bInterfaceNumber 0
+    0x00,                           // bAlternateSetting
+    0x02,                           // bNumEndpoints 2
+    0x03,                           // bInterfaceClass
+    0x00,                           // bInterfaceSubClass
+    0x00,                           // bInterfaceProtocol
+    0x00,                           // iInterface (String Index)
 
-    /* Interface 0 (CDC) descriptor */
-    0x09, 0x04, 0x00, 0x00, 0x01, 0x02, 0x02, 0x01,  0x00,
+    /* HID Descriptor */
+    0x09,                           // bLength
+    0x21,                           // bDescriptorType
+    0x11, 0x01,                     // bcdHID
+    0x00,                           // bCountryCode
+    0x01,                           // bNumDescriptors
+    0x22,                           // bDescriptorType
+    0x22, 0x00,                     // wDescriptorLength
 
-    /* Functional Descriptors */
-    0x05, 0x24, 0x00, 0x10, 0x01,
+    /* Endpoint Descriptor */
+    0x07,                           // bLength
+    0x05,                           // bDescriptorType
+    0x01,                           // bEndpointAddress: OUT Endpoint 1
+    0x03,                           // bmAttributes
+    0x00, 0x02,                     // wMaxPacketSize
+    0x01,                           // bInterval: 1mS
 
-    /* Length/management descriptor (data class interface 1) */
-    0x05, 0x24, 0x01, 0x00, 0x01,
-    0x04, 0x24, 0x02, 0x02,
-    0x05, 0x24, 0x06, 0x00, 0x01,
-
-    /* Interrupt upload endpoint descriptor */
-    0x07, 0x05, 0x83, 0x03, (uint8_t)DEF_USB_EP3_HS_SIZE, (uint8_t)( DEF_USB_EP3_HS_SIZE >> 8 ), 0x01,
-
-    /* Interface 1 (data interface) descriptor */
-    0x09, 0x04, 0x01, 0x00, 0x02, 0x0a, 0x00, 0x00, 0x00,
-
-    /* Endpoint descriptor */
-    0x07, 0x05, 0x02, 0x02, (uint8_t)DEF_USB_EP2_HS_SIZE, (uint8_t)( DEF_USB_EP2_HS_SIZE >> 8 ), 0x00,
-
-    /* Endpoint descriptor */
-    0x07, 0x05, 0x82, 0x02, (uint8_t)DEF_USB_EP2_HS_SIZE, (uint8_t)( DEF_USB_EP2_HS_SIZE >> 8 ), 0x00,
-
-    /* interface 2 (HID interface) descriptor */
-    0x09, 0x04, 0x02, 0x00, 0x02, 0x03, 0x00, 0x00, 0x00,
-
-    /* interface 2 HID descriptor */
-    0x09, 0x21, 0x00, 0x01, 0x00, 0x01, 0x22, DEF_USBD_REPORT_DESC_LEN, 0x00,
-
-    /* interface 2 endpoint descriptor*/
-    0x07, 0x05, 0x84, 0x03, (uint8_t)DEF_USB_EP4_HS_SIZE, (uint8_t)( DEF_USB_EP4_HS_SIZE >> 8 ), 0x01,
-
-    /* interface 2 endpoint descriptor */
-    0x07, 0x05, 0x04, 0x03, (uint8_t)DEF_USB_EP4_HS_SIZE, (uint8_t)( DEF_USB_EP4_HS_SIZE >> 8 ), 0x01,
+    /* Endpoint Descriptor */
+    0x07,                           // bLength
+    0x05,                           // bDescriptorType
+    0x82,                           // bEndpointAddress: IN Endpoint 2
+    0x03,                           // bmAttributes
+    0x00, 0x02,                     // wMaxPacketSize
+    0x01,                           // bInterval: 1mS
 };
 
-/* HID Report Descriptor */
-const uint8_t  MyHIDReportDesc_FS[ ] =
+
+/* Configuration Descriptor */
+const uint8_t  MyCfgDescr_FS[ ] =
 {
-    0x06, 0x00, 0xFF,               // Usage Page (Vendor Defined 0xFF00)
-    0x09, 0x01,                     // Usage (0x01)
-    0xA1, 0x01,                     // Collection (Application)
-    0x09, 0x02,                     //   Usage (0x02)
-    0x26, 0xFF, 0x00,               //   Logical Maximum (255)
-    0x75, 0x08,                     //   Report Size (8)
-    0x15, 0x00,                     //   Logical Minimum (0)
-    0x95, 0x40,                     //   Report Count (64)
-    0x81, 0x06,                     //   Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
-    0x09, 0x02,                     //   Usage (0x02)
-    0x15, 0x00,                     //   Logical Minimum (0)
-    0x26, 0xFF, 0x00,               //   Logical Maximum (255)
-    0x75, 0x08,                     //   Report Size (8)
-    0x95, 0x40,                     //   Report Count (64)
-    0x91, 0x06,                     //   Output (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
-    0xC0,                           // End Collection
+    /* Configuration Descriptor */
+    0x09,                           // bLength
+    0x02,                           // bDescriptorType
+    0x29, 0x00,                     // wTotalLength
+    0x01,                           // bNumInterfaces
+    0x01,                           // bConfigurationValue
+    0x00,                           // iConfiguration (String Index)
+    0x80,                           // bmAttributes Remote Wakeup
+    0x23,                           // bMaxPower 70mA
+
+    /* Interface Descriptor */
+    0x09,                           // bLength
+    0x04,                           // bDescriptorType (Interface)
+    0x00,                           // bInterfaceNumber 0
+    0x00,                           // bAlternateSetting
+    0x02,                           // bNumEndpoints 2
+    0x03,                           // bInterfaceClass
+    0x00,                           // bInterfaceSubClass
+    0x00,                           // bInterfaceProtocol
+    0x00,                           // iInterface (String Index)
+
+    /* HID Descriptor */
+    0x09,                           // bLength
+    0x21,                           // bDescriptorType
+    0x11, 0x01,                     // bcdHID
+    0x00,                           // bCountryCode
+    0x01,                           // bNumDescriptors
+    0x22,                           // bDescriptorType
+    0x22, 0x00,                     // wDescriptorLength
+
+    /* Endpoint Descriptor */
+    0x07,                           // bLength
+    0x05,                           // bDescriptorType
+    0x01,                           // bEndpointAddress: OUT Endpoint 1
+    0x03,                           // bmAttributes
+    0x40, 0x00,                     // wMaxPacketSize
+    0x01,                           // bInterval: 1mS
+
+    /* Endpoint Descriptor */
+    0x07,                           // bLength
+    0x05,                           // bDescriptorType
+    0x82,                           // bEndpointAddress: IN Endpoint 2
+    0x03,                           // bmAttributes
+    0x40, 0x00,                     // wMaxPacketSize
+    0x01,                           // bInterval: 1mS
 };
 
 /* HID Report Descriptor */
@@ -162,36 +152,55 @@ const uint8_t  MyHIDReportDesc_HS[ ] =
     0xC0,                           // End Collection
 };
 
+const uint8_t  MyHIDReportDesc_FS[ ] =
+{
+    0x06, 0x00, 0xFF,               // Usage Page (Vendor Defined 0xFF00)
+    0x09, 0x01,                     // Usage (0x01)
+    0xA1, 0x01,                     // Collection (Application)
+    0x09, 0x02,                     //   Usage (0x02)
+    0x26, 0xFF, 0x00,               //   Logical Maximum (255)
+    0x75, 0x08,                     //   Report Size (8)
+    0x15, 0x00,                     //   Logical Minimum (0)
+    0x95, 0x40,                     //   Report Count (64)
+    0x81, 0x06,                     //   Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
+    0x09, 0x02,                     //   Usage (0x02)
+    0x15, 0x00,                     //   Logical Minimum (0)
+    0x26, 0xFF, 0x00,               //   Logical Maximum (255)
+    0x75, 0x08,                     //   Report Size (8)
+    0x95, 0x40,                     //   Report Count (64)
+    0x91, 0x06,                     //   Output (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
+    0xC0,                           // End Collection
+};
+
 /* Language Descriptor */
-const uint8_t  MyLangDescr[ ] =
+const uint8_t  MyLangDescr[] =
 {
     0x04, 0x03, 0x09, 0x04
 };
 
 /* Manufacturer Descriptor */
-const uint8_t  MyManuInfo[ ] =
+const uint8_t  MyManuInfo[] =
 {
     0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0
 };
 
 /* Product Information */
-const uint8_t  MyProdInfo[ ] =
+const uint8_t  MyProdInfo[] =
 {
-    0x16, 0x03, 'U', 0x00, 'S', 0x00, 'B', 0x00, ' ', 0x00, 'S', 0x00, 'e', 0x00,
-                'r', 0x00, 'i', 0x00, 'a', 0x00, 'l', 0x00
+    0x12, 0x03, 'C', 0, 'H', 0, '3', 0, '2', 0, 'V', 0, '3', 0, '0', 0, 'x', 0
 };
 
 /* Serial Number Information */
-const uint8_t  MySerNumInfo[ ] =
+const uint8_t  MySerNumInfo[] =
 {
-    0x16, 0x03, '0', 0x00, '1', 0x00, '2', 0x00, '3', 0x00, '4', 0x00, '5', 0x00
-              , '6', 0x00, '7', 0x00, '8', 0x00, '9', 0x00
+    0x16, 0x03, '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0
+              , '6', 0, '7', 0, '8', 0, '9', 0
 };
 
 /* Device Qualified Descriptor */
 const uint8_t MyQuaDesc[ ] =
 {
-    0x0A, 0x06, 0x00, 0x02, 0xFF, 0xFF, 0xFF, 0x40, 0x01, 0x00,
+        0x0A, 0x06, 0x00, 0x02, 0xFF, 0xFF, 0xFF, 0x40, 0x01, 0x00,
 };
 
 /* Device BOS Descriptor */

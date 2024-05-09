@@ -24,8 +24,8 @@ extern "C" {
 /******************************************************************************/
 /* Related macro definitions */
 /* Serial buffer related definitions */
-#define DEF_UARTx_RX_BUF_LEN       ( 6 * 1024 )                                 /* Serial x receive buffer size */
-#define DEF_UARTx_TX_BUF_LEN       2048                                         /* Serial x transmit buffer size */
+#define DEF_UARTx_RX_BUF_LEN       1024/// ( 6 * 1024 )                                 /* Serial x receive buffer size */
+#define DEF_UARTx_TX_BUF_LEN       1024///2048                                         /* Serial x transmit buffer size */
 //#define DEF_USB_FS_PACK_LEN        64                                           /* USB full speed mode packet size for serial x data */
 #define DEF_USB_HS_PACK_LEN        512                                          /* USB high speed mode packet size for serial x data */
 #define DEF_UARTx_TX_BUF_NUM_MAX   ( DEF_UARTx_TX_BUF_LEN / DEF_USB_HS_PACK_LEN ) /* Serial x transmit buffer size */

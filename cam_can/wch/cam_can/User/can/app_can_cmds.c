@@ -268,7 +268,7 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
 int obr_can_cmd(uint8_t *data)
 {
-printf("[obr_can_cmd=%x] ",data[0]);
+printf("obr_can_cmd[%x] \n\r",data[0]);
 
 switch(data[0]) {
       case CMD_STOP:
