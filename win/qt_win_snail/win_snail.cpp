@@ -70,7 +70,7 @@ void win_snail::setCamImage(QImage ipm)
 }
 void win_snail::timerEvent(QTimerEvent* e)
 {
-    bool rez;
+ ////   bool rez;
 #if 0
     if (_cap.isOpened())
     {

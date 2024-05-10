@@ -36,7 +36,7 @@ private:
  ////   VideoCapture _cap;
     int frame_width;
     int frame_height;
- ////   Mat _frame;
+   Mat _frame;
     QImage    _image;
    hid_device* hid_handle;
  ///   struct hid_device_info* devs;
