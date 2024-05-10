@@ -471,7 +471,7 @@
      <x>0</x>
      <y>0</y>
      <width>768</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuFile">
@@ -497,9 +497,9 @@
    </widget>
    <widget class="QMenu" name="mnuService">
     <property name="title">
-     <string>Edit</string>
+     <string>Camera</string>
     </property>
-    <addaction name="actServiceSettings"/>
+    <addaction name="actionSelect"/>
    </widget>
    <widget class="QMenu" name="mnuHelp">
     <property name="title">
@@ -531,9 +531,9 @@
     <string>E&amp;xit</string>
    </property>
   </action>
-  <action name="actServiceSettings">
+  <action name="actionSelect">
    <property name="text">
-    <string>&amp;Settings</string>
+    <string>Select</string>
    </property>
   </action>
   <action name="actFileNew">

@@ -33,6 +33,12 @@
     <Filter Include="Header Files\dial_debug">
       <UniqueIdentifier>{78b65dec-e89a-4f74-a2b2-ec0480fad203}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\camera">
+      <UniqueIdentifier>{a07db040-98b1-4d66-b8d4-e4b3f0c5a982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{6240d5bd-c312-466b-a07c-12e34422d0f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -70,6 +76,9 @@
     <ClCompile Include="dial_debug\dial_debug.cpp">
       <Filter>Source Files\dial_debug</Filter>
     </ClCompile>
+    <ClCompile Include="camera\my_camera.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\plotterwidget.h">
@@ -96,6 +105,9 @@
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
       <Filter>Header Files\dial_debug</Filter>
+    </QtMoc>
+    <QtMoc Include="camera\my_camera.h">
+      <Filter>Header Files\camera</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

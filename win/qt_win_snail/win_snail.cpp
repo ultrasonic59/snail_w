@@ -1,13 +1,17 @@
 #include "win_snail.h"
 ////#include "hidapi.h"
+#include <QCameraInfo>
 
-QImage Mat2QImage(cv::Mat cvImg);
+////QImage Mat2QImage(cv::Mat cvImg);
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
 {
     ui->setupUi(this);
+    createThreads();
+    setupActions();
+    qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
 #if 0
     if (hid_init() == 0)
@@ -35,6 +39,7 @@ win_snail::win_snail(QWidget *parent)
         }
     }
 #endif
+#if 0
     if (!_cap.open(camid))
     {
         qDebug() << "camera open failed.";
@@ -52,7 +57,7 @@ frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     p_CamView = ui->CamWidget;
     connect(this, SIGNAL(updateCamView(QImage)), this, SLOT(setCamImage(QImage)));
     startTimer(100);
-
+#endif
 }
 
 win_snail::~win_snail()
@@ -66,6 +71,7 @@ void win_snail::setCamImage(QImage ipm)
 void win_snail::timerEvent(QTimerEvent* e)
 {
     bool rez;
+#if 0
     if (_cap.isOpened())
     {
      ////  _frame = cv::Mat::zeros(640, 480, 3); // fill zeros for debug purpose
@@ -74,10 +80,7 @@ void win_snail::timerEvent(QTimerEvent* e)
          if (rez == false)
              return;
         ////  _cap >> _frame;
-           /// <summary>
-           /// 
-           /// </summary>
-           /// <param name="e"></param>
+             /// <param name="e"></param>
         _image = Mat2QImage(_frame);
         QPainter painter(&_image);    ////???   _label->setPixmap(QPixmap::fromImage(_image));
         painter.setPen(QPen(Qt::red, 40, Qt::SolidLine));
@@ -90,16 +93,54 @@ void win_snail::timerEvent(QTimerEvent* e)
         painter.end();
         emit updateCamView(_image);
     }
+#endif
+}
+///======================================================================
+void win_snail::setupActions()
+{
+    ui->actionSelect->setStatusTip(tr("Select video source"));
+    connect(ui->actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
+/*
+    ui->pausevideoAct->setStatusTip(tr("Pause video"));
+    connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));
+
+    ui->resumevideoAct->setStatusTip(tr("Resume video"));
+    connect(ui->resumevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(resume()));
+    */
+}
+void win_snail::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu menu(this);
+ ///   menu.addAction(ui->resumevideoAct);
+ ///   menu.addAction(ui->pausevideoAct);
+    menu.exec(event->globalPos());
+}
+void win_snail::__selectVideoSource()
+{
+    pt_camera->selectDevice();
+ ///   pt_qvideosource->open();
+}
+void win_snail::createThreads()
+{
+ ////   qRegisterMetaType<cv::Mat>("cv::Mat");
+
+    pt_camera = new MyCamera;
+/*
+    connect(pt_qvideosource, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), ui->displayW, SLOT(updateImage(cv::Mat, QImage::Format)));
+    connect(ui->actionRotate, SIGNAL(triggered()), pt_qvideosource, SLOT(nextTransform()));
+    connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));
+    */
 }
 
 ///=================================================================
+#if 0
 QImage Mat2QImage(cv::Mat cvImg)
 {
-    QImage qImg= QImage();
-if(cvImg.cols==0)
-    return qImg;
+    QImage qImg = QImage();
+    if (cvImg.cols == 0)
+        return qImg;
 
-     cv::cvtColor(cvImg, cvImg, COLOR_BGR2RGB); // color format conversion
+    cv::cvtColor(cvImg, cvImg, COLOR_BGR2RGB); // color format conversion
 ////    cv::cvtColor(cvImg, cvImg, COLOR_GRAY2RGB); // color format conversion
   ////cv::cvtColor(cvImg, cvImg, COLOR_BGR2GRAY); // color format conversion
     qImg = QImage((const unsigned char*)(cvImg.data),
@@ -109,4 +150,4 @@ if(cvImg.cols==0)
 
     return qImg;
 }
-///======================================================================
+#endif
