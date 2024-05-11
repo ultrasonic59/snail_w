@@ -8,6 +8,8 @@
 #include "usb_hid_thr.h"
 #include "ch32v30x_usbhs_device.h"
 
+extern void HID_Set_Report_Deal();
+
 void usb_hid_thr(void* pp)
 {
 printf(" usb_hid_thr\n\r");
@@ -18,7 +20,7 @@ for(;;)
         ;
 ////         UART2_Rx_Service();
 ////         UART2_Tx_Service();
-////         HID_Set_Report_Deal();
+         HID_Set_Report_Deal();
      }
 
   }

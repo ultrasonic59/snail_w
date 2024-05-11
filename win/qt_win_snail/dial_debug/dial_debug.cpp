@@ -1,20 +1,26 @@
 #include "dial_debug.h"
 
 DialDebug::DialDebug(QWidget *parent):
-    QDialog(parent, Qt::Window),
-    ui()
+    QDialog(parent, Qt::Window),pParent(parent)
+   , ui()
 {
 	ui.setupUi(this);
-	ui.comboBox_rej->addItem("XIL",XIL_REJ);
- 	ui.comboBox_rej->addItem("CONTR",CONTR_REJ);
-	ui.comboBox_rej->addItem("LIN",LIN_REJ);
+	ui.comboBox_rej->addItem("HID",HID_REJ);
+ 	ui.comboBox_rej->addItem("CAN",CAN_REJ);
+////	ui.comboBox_rej->addItem("LIN",LIN_REJ);
+    connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
+    connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
 
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
+
 ///	ui.buttonBox->hide();
 }
 
 DialDebug::~DialDebug()
 {
+    disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
+    disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
+
 }
 
 void  DialDebug::slot_butt_rd()
@@ -29,7 +35,7 @@ void  DialDebug::slot_butt_wr()
     dbg_dat_req.addr=ui.lineEdit_addr->text().toInt(0,16);
     dbg_dat_req.nbytes=1;
     dbg_dat_req.data[0]=ui.lineEdit_wr_dat->text().toInt(0,16);
-	if(ui.comboBox_rej->currentIndex()==CONTR_REJ)
+	if(ui.comboBox_rej->currentIndex()==CAN_REJ)
       dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
 
 	int num_rej=ui.comboBox_rej->currentIndex();

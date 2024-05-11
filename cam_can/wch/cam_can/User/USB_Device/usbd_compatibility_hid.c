@@ -64,7 +64,7 @@ void TIM2_IRQHandler(void)
     UART2_TimeOut++;
     TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
 }
-
+#if 0
 /*********************************************************************
  * @fn      UART2_DMA_Init
  *
@@ -105,7 +105,7 @@ void UART2_DMA_Init( void )
     DMA_Cmd( DMA1_Channel6, ENABLE );
     USART_DMACmd(USART2, USART_DMAReq_Rx, ENABLE);
 }
-
+#endif
 #if 0
 /*********************************************************************
  * @fn      UART2_Init
@@ -163,8 +163,9 @@ void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
  *
  * @return  none
  */
-void UART2_Rx_Service( void )
+void hid_tx_service( void )
 {
+#if 0
     uint16_t pkg_len;
     uint16_t u16_temp;
     uint16_t remain_len;
@@ -246,7 +247,7 @@ void UART2_Rx_Service( void )
             }
         }
     }
-
+#endif
 }
 
 /*********************************************************************
@@ -257,8 +258,9 @@ void UART2_Rx_Service( void )
  *
  * @return  none
  */
-void UART2_Tx_Service( void )
+void hid_rx_service( void )
 {
+#if 0
     uint16_t pkg_len = 0;
     uint8_t *pbuf;
     if (UART2_Tx_Flag)
@@ -326,7 +328,7 @@ void UART2_Tx_Service( void )
             USBHSD->UEP1_RX_CTRL = (USBHSD->UEP1_RX_CTRL & ~USBHS_UEP_R_RES_MASK) | USBHS_UEP_R_RES_ACK;
         }
     }
-
+#endif
 }
 
 /*********************************************************************

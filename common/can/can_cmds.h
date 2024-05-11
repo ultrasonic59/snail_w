@@ -1,7 +1,8 @@
 #ifndef __CAN_CMDS_H_
 #define __CAN_CMDS_H_
 ///=========================================================
-#define CAN_MAX_LEN_QUEU 16
+#define CAN_MAX_LEN_QUEU 4
+
 #define ID_MASK         (uint32_t)(0x7e0)
 
 #define AXIS_X           (0x1<<0)

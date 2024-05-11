@@ -314,7 +314,6 @@ void USBHS_IRQHandler( void )
                             }
                         }
                         break;
-
                     /* end-point 1 data in interrupt */
                     case USBHS_UIS_TOKEN_IN | DEF_UEP1:
                         break;
@@ -325,14 +324,13 @@ void USBHS_IRQHandler( void )
                         USBHSD->UEP2_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
                         USBHS_Endp_Busy[ DEF_UEP2 ] &= ~DEF_UEP_BUSY;
                         break;
-
                     default :
                         break;
                 }
                 break;
-
             /* data-out stage processing */
             case USBHS_UIS_TOKEN_OUT:
+                {
                 switch( intst & ( USBHS_UIS_TOKEN_MASK | USBHS_UIS_ENDP_MASK ) )
                 {
                     /* end-point 0 data out interrupt */
@@ -392,6 +390,7 @@ void USBHS_IRQHandler( void )
                             }
                         }
                         break;
+                }
                 }
                 break;
             /* Sof pack processing */

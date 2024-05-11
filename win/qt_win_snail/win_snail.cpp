@@ -7,6 +7,8 @@
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
+    , dial_dbg(this)
+    
 {
     ui->setupUi(this);
     createThreads();
@@ -30,7 +32,7 @@ win_snail::win_snail(QWidget *parent)
         hid_free_enumeration(devs);
          }
 #endif
-#if 0
+#if 1
     if (hid_init() == 0) {
         hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
         if (!hid_handle) {
@@ -58,6 +60,12 @@ frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     connect(this, SIGNAL(updateCamView(QImage)), this, SLOT(setCamImage(QImage)));
     startTimer(100);
 #endif
+///=======================================================
+  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+  connect(ui->buttCon, SIGNAL(clicked()), this, SLOT(on_butt_con()));
+
+///=======================================================
+
 }
 
 win_snail::~win_snail()
@@ -129,6 +137,98 @@ void win_snail::createThreads()
     connect(pt_qvideosource, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), ui->displayW, SLOT(updateImage(cv::Mat, QImage::Format)));
     connect(ui->actionRotate, SIGNAL(triggered()), pt_qvideosource, SLOT(nextTransform()));
     connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));
+    */
+}
+void win_snail::on_butt_debug()
+{
+    qDebug() << "start debug" ;
+    dial_dbg.show();
+ ////   qDebug() << "end debug" ;
+
+}
+void win_snail::on_butt_con()
+{
+    qDebug() << "start con";
+    if (hid_handle)
+        return;
+    if (hid_init() == 0) {
+        hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
+        if (!hid_handle) {
+            qDebug() << "unable to open device";
+            ///      return 1;
+        }
+    }
+
+
+ ///   dial_dbg.show();
+ ///   qDebug() << "end debug";
+
+}
+void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
+{
+    qDebug() << "slot_rd_dbg";
+    /*
+    device_CMD.UpdateDevice(false);
+    dbg_dat_req_t dbg_req;
+    dbg_req.addr = odat->addr;
+    dbg_req.nbytes = odat->nbytes;
+    switch (num)
+    {
+    case ALT_REJ:
+        if (device_CMD.p_dev_thr->dev_cmd.dev_put_req_alt(&dbg_req))
+        {
+            if (device_CMD.p_dev_thr->dev_cmd.dev_get_alt(odat))
+                emit put_alt_dat_dial(odat);
+        }
+        break;
+    case CONTR_REJ:
+        qDebug() << "CONTR_REJ" << dbg_req.addr;
+        if (device_CMD.p_dev_thr->dev_cmd.dev_put_req_contr(dbg_req.addr))
+        {
+            if (device_CMD.p_dev_thr->dev_cmd.dev_get_contr(odat))
+                emit put_alt_dat_dial(odat);
+}
+
+        break;
+    }
+    device_CMD.UpdateDevice(true);
+    */
+}
+
+void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
+{
+    qDebug() << "slot_wr_dbg";
+    switch (num)
+    {
+    case HID_REJ:
+        if (hid_handle)
+        {
+            quint8 tmp_buf[MAX_HID_BUG + 1];
+            tmp_buf[0] = 0;
+            tmp_buf[1] = idat->data[0];
+            hid_write(hid_handle, tmp_buf, 2);
+            qDebug() << "hid_write"<< tmp_buf[1];
+
+        }
+  ///      device_CMD.p_dev_thr->dev_cmd.dev_put_alt(idat);
+        break;
+    case CAN_REJ:
+ ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
+        break;
+    }
+
+    /*
+    device_CMD.UpdateDevice(false);
+    switch (num)
+    {
+    case ALT_REJ:
+        device_CMD.p_dev_thr->dev_cmd.dev_put_alt(idat);
+        break;
+    case CONTR_REJ:
+        device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
+        break;
+    }
+    device_CMD.UpdateDevice(true);
     */
 }
 

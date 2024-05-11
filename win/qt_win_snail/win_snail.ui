@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>768</width>
-    <height>783</height>
+    <height>789</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -28,7 +28,7 @@
     <property name="geometry">
      <rect>
       <x>600</x>
-      <y>500</y>
+      <y>520</y>
       <width>162</width>
       <height>237</height>
      </rect>
@@ -441,8 +441,8 @@
    <widget class="QPushButton" name="buttDebug">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>740</y>
+      <x>680</x>
+      <y>0</y>
       <width>41</width>
       <height>23</height>
      </rect>
@@ -462,6 +462,19 @@
     </property>
     <property name="text">
      <string>Conn</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="lightSlider">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>490</y>
+      <width>160</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
   </widget>

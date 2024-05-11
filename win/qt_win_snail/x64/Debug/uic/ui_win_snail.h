@@ -21,6 +21,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
 #include <plotterwidget.h>
@@ -66,6 +67,7 @@ public:
     QWidget *widget;
     QPushButton *buttDebug;
     QPushButton *buttCon;
+    QSlider *lightSlider;
     QMenuBar *menuBar;
     QMenu *mnuFile;
     QMenu *mnuRecent;
@@ -77,7 +79,7 @@ public:
     {
         if (win_snail->objectName().isEmpty())
             win_snail->setObjectName(QString::fromUtf8("win_snail"));
-        win_snail->resize(768, 783);
+        win_snail->resize(768, 789);
         win_snail->setAcceptDrops(true);
         win_snail->setWindowTitle(QString::fromUtf8("win_snail"));
         QIcon icon;
@@ -116,7 +118,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         widgetJog = new QWidget(centralWidget);
         widgetJog->setObjectName(QString::fromUtf8("widgetJog"));
-        widgetJog->setGeometry(QRect(600, 500, 162, 237));
+        widgetJog->setGeometry(QRect(600, 520, 162, 237));
         widgetJog->setStyleSheet(QString::fromUtf8("background-color: rgb(128, 255, 128);"));
         gridLayout = new QGridLayout(widgetJog);
         gridLayout->setSpacing(6);
@@ -276,10 +278,14 @@ public:
         splitter->addWidget(widget);
         buttDebug = new QPushButton(centralWidget);
         buttDebug->setObjectName(QString::fromUtf8("buttDebug"));
-        buttDebug->setGeometry(QRect(600, 740, 41, 23));
+        buttDebug->setGeometry(QRect(680, 0, 41, 23));
         buttCon = new QPushButton(centralWidget);
         buttCon->setObjectName(QString::fromUtf8("buttCon"));
         buttCon->setGeometry(QRect(720, 0, 41, 23));
+        lightSlider = new QSlider(centralWidget);
+        lightSlider->setObjectName(QString::fromUtf8("lightSlider"));
+        lightSlider->setGeometry(QRect(600, 490, 160, 21));
+        lightSlider->setOrientation(Qt::Horizontal);
         win_snail->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(win_snail);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

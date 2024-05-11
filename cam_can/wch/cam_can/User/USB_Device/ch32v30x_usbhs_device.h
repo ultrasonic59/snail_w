@@ -68,7 +68,7 @@ extern "C" {
 #define pUSBHS_SetupReqPak        ((PUSB_SETUP_REQ)USBHS_EP0_Buf)
 
 /* Ringbuffer define  */
-#define DEF_Ring_Buffer_Max_Blks      16
+#define DEF_Ring_Buffer_Max_Blks      1////16
 #define DEF_RING_BUFFER_SIZE          (DEF_Ring_Buffer_Max_Blks*DEF_USBD_HS_PACK_SIZE)
 #define DEF_RING_BUFFER_REMINE        4
 #define DEF_RING_BUFFER_RESTART       12

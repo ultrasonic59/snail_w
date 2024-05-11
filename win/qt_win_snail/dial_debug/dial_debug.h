@@ -11,9 +11,9 @@ namespace Ui {
     class Dial_debug;
 }
 
-#define XIL_REJ		0
-#define CONTR_REJ	1
-#define LIN_REJ		2
+#define HID_REJ		0
+#define CAN_REJ	    1
+///#define LIN_REJ		2
 
 class DialDebug : public QDialog
 {
@@ -25,6 +25,7 @@ protected:
 public:
 	DialDebug(QWidget *parent= 0);
 	virtual ~DialDebug();
+	QWidget* pParent;
 signals:
 	void req_wr_dbg(int num,dbg_dat_req_t*);
 	void req_rd_dbg(int num,dbg_dat_req_t*);

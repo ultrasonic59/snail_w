@@ -144,8 +144,8 @@ int main(void)
            xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
    ////printf("rez:%d\r\n",rez);
   ///rez=
-          xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
- ////        xTaskCreate(usb_hid_thr, (const char*)"usb_hid_thr",USB_HID_STACK_SIZE/2, 0, USB_HID_TASK_PRIORITY, NULL);
+ ////         xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
+        xTaskCreate(usb_hid_thr, (const char*)"usb_hid_thr",USB_HID_STACK_SIZE/2, 0, USB_HID_TASK_PRIORITY, NULL);
 
   ////printf("rez1:%d\r\n",rez);
  ////  xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );

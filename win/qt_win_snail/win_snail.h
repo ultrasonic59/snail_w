@@ -8,11 +8,12 @@
 ///======================================================================
 #include <opencv2/opencv.hpp>
 #include "hidapi.h"
+#include "dial_debug.h"
 
 #include "my_camera.h"
-
+#define MAX_HID_BUG                     16
 #define DEF_HID_USB_VID                  0x1A86
-#define DEF_HID_USB_PID                  0xFE0C
+#define DEF_HID_USB_PID                  0xFE07
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -57,6 +58,14 @@ protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
     void createThreads();
+protected:
+    DialDebug dial_dbg;
+public slots:
+    void on_butt_con();
+    ///===== for debug =======
+    void on_butt_debug();
+    void slot_rd_dbg(int num, dbg_dat_req_t* odat);
+    void slot_wr_dbg(int num, dbg_dat_req_t* idat);
 
 private slots:
     void __selectVideoSource();
