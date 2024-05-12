@@ -107,6 +107,7 @@
     <QtUic Include="win_snail.ui" />
     <QtMoc Include="win_snail.h" />
     <ClCompile Include="camera\my_camera.cpp" />
+    <ClCompile Include="camera\qcustomvideosurface.cpp" />
     <ClCompile Include="dial_debug\dial_debug.cpp" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
@@ -119,6 +120,7 @@
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h" />
     <QtMoc Include="camera\my_camera.h" />
+    <QtMoc Include="camera\qcustomvideosurface.h" />
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="widgets\comboboxkey.h" />

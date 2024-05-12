@@ -29,7 +29,7 @@ public:
     win_snail(QWidget *parent = nullptr);
     ~win_snail();
 public:
-    plotterwidget* p_CamView;
+ ////   plotterwidget* p_CamView;
 private:
     QLabel* _label;
     QPen pen;

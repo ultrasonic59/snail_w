@@ -15,6 +15,8 @@ win_snail::win_snail(QWidget *parent)
     setupActions();
     qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
+ ////   p_CamView = ui->CamWidget;
+
 #if 0
     if (hid_init() == 0)
         {
@@ -74,7 +76,7 @@ win_snail::~win_snail()
 }
 void win_snail::setCamImage(QImage ipm)
 {
-    p_CamView->_setImage(ipm);
+ ////   p_CamView->_setImage(ipm);
 }
 void win_snail::timerEvent(QTimerEvent* e)
 {
@@ -126,15 +128,20 @@ void win_snail::contextMenuEvent(QContextMenuEvent* event)
 void win_snail::__selectVideoSource()
 {
     pt_camera->selectDevice();
- ///   pt_qvideosource->open();
+    pt_camera->open();
 }
 void win_snail::createThreads()
 {
- ////   qRegisterMetaType<cv::Mat>("cv::Mat");
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+  ////  p_CamView = ui->CamWidget;
 
     pt_camera = new MyCamera;
+
+   connect(pt_camera, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat, QImage::Format)));
+////    connect(pt_camera, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), p_CamView, SLOT(updateImage(cv::Mat, QImage::Format)));
+  ////  connect(pt_camera, SIGNAL(frameUpdated(cv::Mat)), ui->CamWidget, SLOT(updateImage(cv::Mat)));
+
 /*
-    connect(pt_qvideosource, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), ui->displayW, SLOT(updateImage(cv::Mat, QImage::Format)));
     connect(ui->actionRotate, SIGNAL(triggered()), pt_qvideosource, SLOT(nextTransform()));
     connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));
     */

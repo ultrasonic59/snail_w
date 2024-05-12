@@ -79,6 +79,9 @@
     <ClCompile Include="camera\my_camera.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
+    <ClCompile Include="camera\qcustomvideosurface.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\plotterwidget.h">
@@ -107,6 +110,9 @@
       <Filter>Header Files\dial_debug</Filter>
     </QtMoc>
     <QtMoc Include="camera\my_camera.h">
+      <Filter>Header Files\camera</Filter>
+    </QtMoc>
+    <QtMoc Include="camera\qcustomvideosurface.h">
       <Filter>Header Files\camera</Filter>
     </QtMoc>
   </ItemGroup>
