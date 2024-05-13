@@ -70,7 +70,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib;$(ProjectDir)\hidapi;C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Setupapi.lib;hidapi.lib;aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Setupapi.lib;aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -109,6 +109,7 @@
     <ClCompile Include="camera\my_camera.cpp" />
     <ClCompile Include="camera\qcustomvideosurface.cpp" />
     <ClCompile Include="dial_debug\dial_debug.cpp" />
+    <ClCompile Include="hidapi\hid.c" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
     <ClCompile Include="widgets\styledtoolbutton.cpp" />

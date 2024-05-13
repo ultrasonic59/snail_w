@@ -40,8 +40,8 @@ private:
    Mat _frame;
     QImage    _image;
    hid_device* hid_handle;
- ///   struct hid_device_info* devs;
-  ///struct hid_device_info* cur_dev;
+    struct hid_device_info* devs;
+  struct hid_device_info* cur_dev;
 
 public slots:
     void setCamImage(QImage ipm);

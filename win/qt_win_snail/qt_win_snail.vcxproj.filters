@@ -39,6 +39,9 @@
     <Filter Include="Source Files\camera">
       <UniqueIdentifier>{6240d5bd-c312-466b-a07c-12e34422d0f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hidapi">
+      <UniqueIdentifier>{9e776ff6-622e-4e69-a3b1-e70911c28da7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="camera\qcustomvideosurface.cpp">
       <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="hidapi\hid.c">
+      <Filter>Source Files\hidapi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
