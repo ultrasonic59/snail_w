@@ -63,18 +63,33 @@ void Var_Init(void)
  *
  * @return  none
  */
+#define CNT_D_MAX 2000000
 int main(void)
 {
- ///   uint8_t tst=0;
+    uint32_t cnt_d=0;
+   uint8_t tst=0;
 	Delay_Init();
 	USART_Printf_Init(115200);
 	printf( "SystemClk:%d\r\n",SystemCoreClock) ;
-	printf( "Compatibility HID Running On USBHS Controller\n" );
+	printf( "Compatibility HID Running On USBHS Controller\r\n" );
 
 	 /* Variables init */
     Var_Init();
-////    board_init();
-
+    board_init();
+#if 0
+for(;;)
+{
+ cnt_d++;
+ if(cnt_d>=CNT_D_MAX)
+    {
+     cnt_d=0;
+      set_rled(tst);
+      tst++;
+    }
+///printf( "k\n" );
+///Delay_Ms (100);
+}
+#endif
     /* UART2 init */
     UART2_Init();
     UART2_DMA_Init();
@@ -94,8 +109,14 @@ int main(void)
             UART2_Tx_Service();
             HID_Set_Report_Deal();
         }
- ////       set_rled(tst);
-  ////      tst++;
- ////       Delay_Ms (100);
+        ///====================================
+        cnt_d++;
+        if(cnt_d>=CNT_D_MAX)
+           {
+            cnt_d=0;
+             set_rled(tst);
+             tst++;
+           }
+  ///=========================================
     }
 }

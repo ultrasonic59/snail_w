@@ -84,9 +84,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="widgets\plotterwidget.h">
-      <Filter>Header Files\widgets</Filter>
-    </ClInclude>
     <ClInclude Include="widgets\comboboxkey.h">
       <Filter>Header Files\widgets</Filter>
     </ClInclude>
@@ -114,6 +111,9 @@
     </QtMoc>
     <QtMoc Include="camera\qcustomvideosurface.h">
       <Filter>Header Files\camera</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\plotterwidget.h">
+      <Filter>Header Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

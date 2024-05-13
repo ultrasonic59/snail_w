@@ -31,6 +31,6 @@ private:
     QCustomVideoSurface m_qvideosurface;
     FrameTransform m_transform;
 signals:
-    void frameUpdated(const cv::Mat& _cvmat, QImage::Format format);
+    void frameUpdated(cv::Mat& _cvmat, QImage::Format format);
 
 };

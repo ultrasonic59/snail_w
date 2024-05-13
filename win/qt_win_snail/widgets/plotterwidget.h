@@ -4,6 +4,7 @@
 
 class plotterwidget : public QWidget
 {
+    Q_OBJECT
 public:
 	plotterwidget(QWidget *parent=0);
 ///	plotterwidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
@@ -12,10 +13,11 @@ public:
 
 public slots:
 	void _setImage(QImage);
+
 public slots:
-	void updateImage(const QImage& _qimg);
-	void updateImage(const cv::Mat& _cvmat);
-	void updateImage(cv::Mat _cvmat, QImage::Format _format);
+	void updateImage(cv::Mat& _cvmat, QImage::Format _format);
+	void _updateImage(const QImage& _qimg);
+	void _updateImage(const cv::Mat& _cvmat);
 
 protected:
     void paintEvent(QPaintEvent *);

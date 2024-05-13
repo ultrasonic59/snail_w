@@ -25,8 +25,8 @@ extern volatile uint16_t Head_Pack_Len;
 
 extern void UART2_Tx_Service( void );
 extern void UART2_Rx_Service( void );
-////extern void UART2_Init( void );
-////extern void UART2_DMA_Init( void );
+extern void UART2_Init( void );
+extern void UART2_DMA_Init( void );
 extern void TIM2_Init( void );
 extern void HID_Set_Report_Deal( void );
 

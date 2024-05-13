@@ -67,6 +67,11 @@ void gpio_init(void)
     GPIO_Init(PWM_LED_GPIO, &GPIO_InitStructure);
 
     ////============= RLED ==================================
+    GPIO_InitStructure.GPIO_Pin = RLED_PIN_;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+////    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(RLED_GPIO_, &GPIO_InitStructure);
+
     GPIO_InitStructure.GPIO_Pin = RLED_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -115,8 +120,8 @@ void gpio_init(void)
 extern void init_can(void);
 void board_init(void)
 {
-///gpio_init();
-///TIM_PWMOut_Init(DEF_PER, DEF_PRESC, DEF_VAL );
+gpio_init();
+TIM_PWMOut_Init(DEF_PER, DEF_PRESC, DEF_VAL );
 ///init_can();
 
 /* Bps = 250Kbps */

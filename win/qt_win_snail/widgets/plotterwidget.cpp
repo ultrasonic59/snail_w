@@ -19,14 +19,14 @@ plotterwidget::~plotterwidget(void)
 ////	pPlotter = nullptr;
 }
 
-void plotterwidget::updateImage(const QImage& _qimg)
+void plotterwidget::_updateImage(const QImage& _qimg)
 {
     m_qimg = _qimg.copy();
     __updateFPS();
     update();
 }
 
-void plotterwidget::updateImage(const cv::Mat& _cvmat)
+void plotterwidget::_updateImage(const cv::Mat& _cvmat)
 {
     switch (_cvmat.type()) {
     case CV_8UC1: {
@@ -46,13 +46,13 @@ void plotterwidget::updateImage(const cv::Mat& _cvmat)
     update();
 }
 
-void plotterwidget::updateImage(cv::Mat _cvmat, QImage::Format _format)
+void plotterwidget::updateImage(cv::Mat& _cvmat, QImage::Format _format)
 {
     ////   m_cvmat = _cvmat.clone();
     ////   m_qimg = QImage(m_cvmat.data, m_cvmat.cols, m_cvmat.rows, m_cvmat.channels()*m_cvmat.cols, _format);
     ////   __updateFPS();
     ////   update();
-    updateImage(_cvmat);
+    _updateImage(_cvmat);
 }
 
 #if 0

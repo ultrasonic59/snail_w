@@ -42,6 +42,10 @@ win_snail::win_snail(QWidget *parent)
             ///      return 1;
         }
     }
+    else
+    {
+        hid_set_nonblocking(hid_handle, 1);
+    }
 #endif
 #if 0
     if (!_cap.open(camid))
@@ -133,14 +137,13 @@ void win_snail::__selectVideoSource()
 void win_snail::createThreads()
 {
     qRegisterMetaType<cv::Mat>("cv::Mat");
-  ////  p_CamView = ui->CamWidget;
+    p_CamView = ui->CamWidget;
 
     pt_camera = new MyCamera;
 
-   connect(pt_camera, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat, QImage::Format)));
-////    connect(pt_camera, SIGNAL(frameUpdated(cv::Mat, QImage::Format)), p_CamView, SLOT(updateImage(cv::Mat, QImage::Format)));
-  ////  connect(pt_camera, SIGNAL(frameUpdated(cv::Mat)), ui->CamWidget, SLOT(updateImage(cv::Mat)));
-
+    connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
+  ///   connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), p_CamView, SLOT(updateImage(cv::Mat&, QImage::Format)));
+ 
 /*
     connect(ui->actionRotate, SIGNAL(triggered()), pt_qvideosource, SLOT(nextTransform()));
     connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));

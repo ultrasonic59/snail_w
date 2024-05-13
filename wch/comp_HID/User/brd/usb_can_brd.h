@@ -24,6 +24,8 @@
 ////============= RLED ==================================
   #define RLED_PIN          GPIO_Pin_8
   #define RLED_GPIO         GPIOA
+  #define RLED_PIN_          GPIO_Pin_9
+  #define RLED_GPIO_         GPIOC
 ////============= CAN ==================================
   #define CANx                CAN2
   #define CAN_RX_PIN          GPIO_Pin_12

@@ -124,7 +124,7 @@
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
-    <ClInclude Include="widgets\plotterwidget.h" />
+    <QtMoc Include="widgets\plotterwidget.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,15 +9,15 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include src/Startup/subdir.mk
--include src/Peripheral/src/subdir.mk
--include src/Debug/subdir.mk
--include src/Core/subdir.mk
+-include User/can/subdir.mk
 -include User/brd/subdir.mk
 -include User/USB_Device/subdir.mk
 -include User/UART/subdir.mk
--include User/CAN/subdir.mk
 -include User/subdir.mk
+-include SRC/Startup/subdir.mk
+-include SRC/Peripheral/src/subdir.mk
+-include SRC/Debug/subdir.mk
+-include SRC/Core/subdir.mk
 -include FreeRTOS/portable/MemMang/subdir.mk
 -include FreeRTOS/portable/GCC/RISC-V/subdir.mk
 -include FreeRTOS/subdir.mk
