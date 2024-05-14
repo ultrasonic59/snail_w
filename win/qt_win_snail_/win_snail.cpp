@@ -25,10 +25,13 @@ win_snail::win_snail(QWidget *parent)
         while (cur_dev) {
      ///      qDebug()<<"Device Found\n  type: %04hx %04hx\n  path: %s\n  serial_number: %ls", cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number;
      ///       qDebug("\n");
-            qDebug()<<"  Manufacturer: " << cur_dev->manufacturer_string;
-            qDebug() << "  Product:      "<< cur_dev->product_string;
-            qDebug() << "  Release:      "<< cur_dev->release_number;
-            qDebug() << "  Interface:    "<< cur_dev->interface_number;
+            qDebug() << "  vid: " << cur_dev->vendor_id <<"  pid: " << cur_dev->product_id;
+            qDebug()<<"  serial_number: " << cur_dev->serial_number;
+
+    ///        qDebug()<<"  Manufacturer: " << cur_dev->manufacturer_string;
+    ///        qDebug() << "  Product:      "<< cur_dev->product_string;
+    ///        qDebug() << "  Release:      "<< cur_dev->release_number;
+     ///       qDebug() << "  Interface:    "<< cur_dev->interface_number;
               cur_dev = cur_dev->next;
         }
         hid_free_enumeration(devs);
