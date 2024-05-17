@@ -39,34 +39,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-CH372Device.hex \
+CH372Device_hs.hex \
 
 SECONDARY_LIST += \
-CH372Device.lst \
+CH372Device_hs.lst \
 
 SECONDARY_SIZE += \
-CH372Device.siz \
+CH372Device_hs.siz \
 
 
 # All Target
-all: CH372Device.elf secondary-outputs
+all: CH372Device_hs.elf secondary-outputs
 
 # Tool invocations
-CH372Device.elf: $(OBJS) $(USER_OBJS)
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\common\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"CH372Device.map" --specs=nano.specs --specs=nosys.specs -o "CH372Device.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+CH372Device_hs.elf: $(OBJS) $(USER_OBJS)
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SRC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"CH372Device_hs.map" --specs=nano.specs --specs=nosys.specs -o "CH372Device_hs.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@	@
-CH372Device.hex: CH372Device.elf
-	@	riscv-none-embed-objcopy -O ihex "CH372Device.elf"  "CH372Device.hex"
+CH372Device_hs.hex: CH372Device_hs.elf
+	@	riscv-none-embed-objcopy -O ihex "CH372Device_hs.elf"  "CH372Device_hs.hex"
 	@	@
-CH372Device.lst: CH372Device.elf
-	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "CH372Device.elf" > "CH372Device.lst"
+CH372Device_hs.lst: CH372Device_hs.elf
+	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "CH372Device_hs.elf" > "CH372Device_hs.lst"
 	@	@
-CH372Device.siz: CH372Device.elf
-	@	riscv-none-embed-size --format=berkeley "CH372Device.elf"
+CH372Device_hs.siz: CH372Device_hs.elf
+	@	riscv-none-embed-size --format=berkeley "CH372Device_hs.elf"
 	@	@
 # Other Targets
 clean:
-	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) CH372Device.elf
+	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) CH372Device_hs.elf
 	-@
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST) $(SECONDARY_SIZE)
 

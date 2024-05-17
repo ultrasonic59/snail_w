@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CH372Device</name>
+	<name>CH372Device_hs</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -27,27 +27,27 @@
 		<link>
 			<name>Core</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/common/Core</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Core</location>
 		</link>
 		<link>
 			<name>Debug</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/common/Debug</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Debug</location>
 		</link>
 		<link>
 			<name>Ld</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/common/Ld</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Ld</location>
 		</link>
 		<link>
 			<name>Peripheral</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/common/Peripheral</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Peripheral</location>
 		</link>
 		<link>
 			<name>Startup</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/common/Startup</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Startup</location>
 		</link>
 	</linkedResources>
 	<filteredResources>

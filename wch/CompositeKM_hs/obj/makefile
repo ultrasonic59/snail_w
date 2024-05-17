@@ -39,34 +39,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-CompositeKM.hex \
+CompositeKM_hs.hex \
 
 SECONDARY_LIST += \
-CompositeKM.lst \
+CompositeKM_hs.lst \
 
 SECONDARY_SIZE += \
-CompositeKM.siz \
+CompositeKM_hs.siz \
 
 
 # All Target
-all: CompositeKM.elf secondary-outputs
+all: CompositeKM_hs.elf secondary-outputs
 
 # Tool invocations
-CompositeKM.elf: $(OBJS) $(USER_OBJS)
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\common\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"CompositeKM.map" --specs=nano.specs --specs=nosys.specs -o "CompositeKM.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+CompositeKM_hs.elf: $(OBJS) $(USER_OBJS)
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SRC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"CompositeKM_hs.map" --specs=nano.specs --specs=nosys.specs -o "CompositeKM_hs.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@	@
-CompositeKM.hex: CompositeKM.elf
-	@	riscv-none-embed-objcopy -O ihex "CompositeKM.elf"  "CompositeKM.hex"
+CompositeKM_hs.hex: CompositeKM_hs.elf
+	@	riscv-none-embed-objcopy -O ihex "CompositeKM_hs.elf"  "CompositeKM_hs.hex"
 	@	@
-CompositeKM.lst: CompositeKM.elf
-	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "CompositeKM.elf" > "CompositeKM.lst"
+CompositeKM_hs.lst: CompositeKM_hs.elf
+	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "CompositeKM_hs.elf" > "CompositeKM_hs.lst"
 	@	@
-CompositeKM.siz: CompositeKM.elf
-	@	riscv-none-embed-size --format=berkeley "CompositeKM.elf"
+CompositeKM_hs.siz: CompositeKM_hs.elf
+	@	riscv-none-embed-size --format=berkeley "CompositeKM_hs.elf"
 	@	@
 # Other Targets
 clean:
-	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) CompositeKM.elf
+	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) CompositeKM_hs.elf
 	-@
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST) $(SECONDARY_SIZE)
 
