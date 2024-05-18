@@ -46,7 +46,7 @@ const uint8_t  MyCfgDescr_HS[ ] =
     0x04,        // bDescriptorType (Interface)
     0x00,        // bInterfaceNumber 0
     0x00,        // bAlternateSetting
-    0x06,        // bNumEndpoints 6
+    0x02,        // bNumEndpoints 2 ///6
     0xFF,        // bInterfaceClass
     0xFF,        // bInterfaceSubClass
     0xFF,        // bInterfaceProtocol
@@ -61,11 +61,11 @@ const uint8_t  MyCfgDescr_HS[ ] =
 
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
-    0x81,        // bEndpointAddress (IN/D2H)
+    0x82,        // bEndpointAddress (IN/D2H)
     0x02,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP2_HS_SIZE, (uint8_t)( DEF_USB_EP2_HS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-
+    0x00///,        // bInterval 0 (unit depends on device speed)
+#if 0
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
     0x03,        // bEndpointAddress (OUT/H2D)
@@ -93,6 +93,7 @@ const uint8_t  MyCfgDescr_HS[ ] =
     0x02,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP6_HS_SIZE, (uint8_t)( DEF_USB_EP6_HS_SIZE >> 8 ), // wMaxPacketSize 8
     0x00,        // bInterval 0 (unit depends on device speed)
+#endif
 };
 
 /* Configuration Descriptor */
@@ -111,7 +112,7 @@ const uint8_t  MyCfgDescr_FS[ ] =
     0x04,        // bDescriptorType (Interface)
     0x00,        // bInterfaceNumber 0
     0x00,        // bAlternateSetting
-    0x06,        // bNumEndpoints 6
+    0x02,        // bNumEndpoints 2
     0xFF,        // bInterfaceClass
     0xFF,        // bInterfaceSubClass
     0xFF,        // bInterfaceProtocol
@@ -126,11 +127,11 @@ const uint8_t  MyCfgDescr_FS[ ] =
 
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
-    0x81,        // bEndpointAddress (IN/D2H)
+    0x82,        // bEndpointAddress (IN/D2H)
     0x02,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP2_FS_SIZE, (uint8_t)( DEF_USB_EP2_FS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-
+    0x00///,        // bInterval 0 (unit depends on device speed)
+#if 0
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
     0x03,        // bEndpointAddress (OUT/H2D)
@@ -158,6 +159,7 @@ const uint8_t  MyCfgDescr_FS[ ] =
     0x02,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP6_FS_SIZE, (uint8_t)( DEF_USB_EP6_FS_SIZE >> 8 ), // wMaxPacketSize 8
     0x00,        // bInterval 0 (unit depends on device speed)
+#endif
 };
 
 /* Language Descriptor */
@@ -169,20 +171,20 @@ const uint8_t  MyLangDescr[] =
 /* Manufacturer Descriptor */
 const uint8_t  MyManuInfo[] =
 {
-    0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0
+    0x0C, 0x03, 's', 0, 'n', 0, 'a', 0, 'i', 0, 'l', 0
 };
 
 /* Product Information */
 const uint8_t  MyProdInfo[] =
 {
-    0x12, 0x03, 'C', 0, 'H', 0, '3', 0, '2', 0, 'V', 0, '3', 0
-              , '0', 0, 'x', 0
+    0x10, 0x03, 'S', 0, 'N', 0, '-', 0, 'H', 0, 'I', 0, 'D', 0
+
 };
 
 /* Serial Number Information */
 const uint8_t  MySerNumInfo[] =
 {
-    0x16, 0x03, '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0
+    0x16, 0x03, '0', 0, '0', 0, '0', 0, '0', 0, '0', 0, '5', 0
               , '6', 0, '7', 0, '8', 0, '9', 0
 };
 

@@ -34,7 +34,7 @@ int main(void)
 	Delay_Init();
 	USART_Printf_Init(115200);
 	printf( "SystemClk:%d\r\n",SystemCoreClock) ;
-	printf( "CH372Device Running On USBHS Controller\n" );
+////	printf( "CH372Device Running On USBHS Controller\n" );
 	
     /* USB20 device init */
     USBHS_RCC_Init( );

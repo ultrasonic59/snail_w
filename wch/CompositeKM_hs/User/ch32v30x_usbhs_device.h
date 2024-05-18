@@ -65,6 +65,11 @@
 #define USBHSD_UEP_TXDMA( N )       ( *((volatile uint32_t *)( USBHSD_UEP_TXDMA_BASE + ( N - 1 ) * 0x04 ) ) )
 #define USBHSD_UEP_TXBUF( N )       ( (uint8_t *)(*((volatile uint32_t *)( USBHSD_UEP_TXDMA_BASE + ( N - 1 ) * 0x04 ) ) ) + 0x20000000 )
 #define USBHSD_UEP_TLEN( N )        ( *((volatile uint16_t *)( USBHSD_UEP_TXLEN_BASE + ( N - 1 ) * 0x04 ) ) )
+// USB SPEED TYPE
+#define USBHS_SPEED_TYPE_MASK         ((uint8_t)(0x03))
+#define USBHS_SPEED_LOW               ((uint8_t)(0x02))
+#define USBHS_SPEED_FULL              ((uint8_t)(0x00))
+#define USBHS_SPEED_HIGH              ((uint8_t)(0x01))
 
 /******************************************************************************/
 /* Variable Declaration */

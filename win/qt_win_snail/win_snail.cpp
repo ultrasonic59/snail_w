@@ -116,6 +116,7 @@ void win_snail::setupActions()
 {
     ui->actionSelect->setStatusTip(tr("Select video source"));
     connect(ui->actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
+   ui->
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
     connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));

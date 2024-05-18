@@ -36,6 +36,7 @@ extern "C" {
 #define DEF_UEP0                      0x00
 #define DEF_UEP1                      0x01
 #define DEF_UEP2                      0x02
+
 #define DEF_UEP3                      0x03
 #define DEF_UEP4                      0x04
 #define DEF_UEP5                      0x05
@@ -119,9 +120,9 @@ extern volatile uint8_t  USBHS_Endp_Busy[ ];
 /* Endpoint Buffer */
 extern  __attribute__ ((aligned(4))) uint8_t USBHS_EP0_Buf[ ];
 extern __attribute__ ((aligned(4))) uint8_t USBHS_EP3_Rx_Buf[ ];
-extern __attribute__ ((aligned(4))) uint8_t USBHS_EP5_Rx_Buf[ ];
-extern __attribute__ ((aligned(4))) uint8_t USBHS_EP4_Tx_Buf[ ];
-extern __attribute__ ((aligned(4))) uint8_t USBHS_EP6_Tx_Buf[ ];
+///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP5_Rx_Buf[ ];
+///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP4_Tx_Buf[ ];
+///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP6_Tx_Buf[ ];
 
 /********************************************************************************/
 /* Function Declaration */

@@ -484,7 +484,7 @@
      <x>0</x>
      <y>0</y>
      <width>768</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuFile">
@@ -498,8 +498,22 @@
      <addaction name="separator"/>
      <addaction name="actRecentClear"/>
     </widget>
-    <addaction name="actFileNew"/>
-    <addaction name="actFileOpen"/>
+    <widget class="QMenu" name="menu_New">
+     <property name="title">
+      <string>&amp;New</string>
+     </property>
+     <addaction name="actionProj"/>
+     <addaction name="actionFile"/>
+    </widget>
+    <widget class="QMenu" name="menu_Open">
+     <property name="title">
+      <string>&amp;Open</string>
+     </property>
+     <addaction name="actionProj_2"/>
+     <addaction name="actionFile_2"/>
+    </widget>
+    <addaction name="menu_New"/>
+    <addaction name="menu_Open"/>
     <addaction name="mnuRecent"/>
     <addaction name="separator"/>
     <addaction name="actFileSave"/>
@@ -534,11 +548,6 @@
    <addaction name="menuMachine"/>
    <addaction name="mnuHelp"/>
   </widget>
-  <action name="actFileOpen">
-   <property name="text">
-    <string>&amp;Open</string>
-   </property>
-  </action>
   <action name="actFileExit">
    <property name="text">
     <string>E&amp;xit</string>
@@ -547,11 +556,6 @@
   <action name="actionSelect">
    <property name="text">
     <string>Select</string>
-   </property>
-  </action>
-  <action name="actFileNew">
-   <property name="text">
-    <string>&amp;New</string>
    </property>
   </action>
   <action name="actFileSave">
@@ -605,6 +609,26 @@
   <action name="actionDisable_Stepper">
    <property name="text">
     <string>Disable Stepper</string>
+   </property>
+  </action>
+  <action name="actionProj">
+   <property name="text">
+    <string>Proj</string>
+   </property>
+  </action>
+  <action name="actionFile">
+   <property name="text">
+    <string>File</string>
+   </property>
+  </action>
+  <action name="actionProj_2">
+   <property name="text">
+    <string>Proj</string>
+   </property>
+  </action>
+  <action name="actionFile_2">
+   <property name="text">
+    <string>File</string>
    </property>
   </action>
  </widget>

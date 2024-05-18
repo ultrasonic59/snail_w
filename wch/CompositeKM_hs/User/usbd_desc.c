@@ -13,6 +13,9 @@
 /* Header File */
 #include "usbd_desc.h"
 
+#define DEF_USB_EP1_HS_SIZE          DEF_USBD_HS_PACK_SIZE
+#define DEF_USB_EP2_HS_SIZE          DEF_USBD_HS_PACK_SIZE
+
 /*******************************************************************************/
 /* Device Descriptor */
 const uint8_t MyDevDescr[ ] =
@@ -32,7 +35,43 @@ const uint8_t MyDevDescr[ ] =
     0x03,                                                   // iSerialNumber
     0x01,                                                   // bNumConfigurations
 };
+const uint8_t  MyCfgDescr[ ] =
+{
+    0x09,        // bLength
+    0x02,        // bDescriptorType (Configuration)
+    0x3C, 0x00,  // wTotalLength 60
+    0x01,        // bNumInterfaces 1
+    0x01,        // bConfigurationValue
+    0x00,        // iConfiguration (String Index)
+    0x80,        // bmAttributes
+    0x32,        // bMaxPower 100mA
 
+    0x09,        // bLength
+    0x04,        // bDescriptorType (Interface)
+    0x00,        // bInterfaceNumber 0
+    0x00,        // bAlternateSetting
+    0x02,        // bNumEndpoints 2
+    0xFF,        // bInterfaceClass
+    0x80,        // bInterfaceSubClass
+    0x55,        // bInterfaceProtocol
+    0x00,        // iInterface (String Index)
+
+    0x07,        // bLength
+    0x05,        // bDescriptorType (Endpoint)
+    0x82,        // bEndpointAddress (IN/D2H)
+    0x02,        // bmAttributes (Bulk)
+    (uint8_t)DEF_USB_EP2_HS_SIZE, (uint8_t)( DEF_USB_EP2_HS_SIZE >> 8 ), // wMaxPacketSize 8
+    0x00,        // bInterval 0 (unit depends on device speed)
+
+    0x07,        // bLength
+    0x05,        // bDescriptorType (Endpoint)
+    0x01,        // bEndpointAddress (OUT/H2D)
+    0x02,        // bmAttributes (Bulk)
+    (uint8_t)DEF_USB_EP1_HS_SIZE, (uint8_t)( DEF_USB_EP1_HS_SIZE >> 8 ), // wMaxPacketSize 8
+    0x00,        // bInterval 0 (unit depends on device speed)
+};
+
+#if 0
 /* Configuration Descriptor Set */
 const uint8_t MyCfgDescr[ ] =
 {
@@ -72,8 +111,8 @@ const uint8_t MyCfgDescr[ ] =
     0x81,                                                   // bEndpointAddress: IN Endpoint 1
     0x03,                                                   // bmAttributes
     0x08, 0x00,                                             // wMaxPacketSize
-    0x0A,                                                   // bInterval: 10mS
-
+    0x0A///,                                                   // bInterval: 10mS
+#if 0
     /* Interface Descriptor (Mouse) */
     0x09,                                                   // bLength
     0x04,                                                   // bDescriptorType
@@ -101,8 +140,11 @@ const uint8_t MyCfgDescr[ ] =
     0x03,                                                   // bmAttributes
     0x08, 0x00,                                             // wMaxPacketSize
     0x01                                                    // bInterval: 1mS
+#endif
 };
+#endif
 
+#if 0
 /* Keyboard Report Descriptor */
 const uint8_t KeyRepDesc[ ] =
 {
@@ -193,7 +235,7 @@ const uint8_t MyLangDescr[ ] =
     0x09,
     0x04
 };
-
+#endif
 /* Manufacturer Descriptor */
 const uint8_t MyManuInfo[ ] =
 {
