@@ -79,7 +79,7 @@ extern "C" {
 /* Variable Declaration */
 
 /* Ringbuffer define  */
-#define DEF_Ring_Buffer_Max_Blks      16
+#define DEF_Ring_Buffer_Max_Blks      1 ////16
 #define DEF_RING_BUFFER_SIZE          (DEF_Ring_Buffer_Max_Blks*DEF_USBD_HS_PACK_SIZE)
 #define DEF_RING_BUFFER_REMINE        4
 #define DEF_RING_BUFFER_RESTART       12
@@ -119,7 +119,7 @@ extern volatile uint8_t  USBHS_Endp_Busy[ ];
 
 /* Endpoint Buffer */
 extern  __attribute__ ((aligned(4))) uint8_t USBHS_EP0_Buf[ ];
-extern __attribute__ ((aligned(4))) uint8_t USBHS_EP3_Rx_Buf[ ];
+extern __attribute__ ((aligned(4))) uint8_t USBHS_EP1_Rx_Buf[ ];
 ///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP5_Rx_Buf[ ];
 ///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP4_Tx_Buf[ ];
 ///extern __attribute__ ((aligned(4))) uint8_t USBHS_EP6_Tx_Buf[ ];

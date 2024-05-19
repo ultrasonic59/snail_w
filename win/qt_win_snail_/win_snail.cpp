@@ -17,7 +17,7 @@ win_snail::win_snail(QWidget *parent)
     int camid = 0; // video device id
  ////   p_CamView = ui->CamWidget;
 
-#if 1
+#if 0
     if (hid_init() == 0)
         {
         devs = hid_enumerate(0x0, 0x0);
@@ -37,7 +37,7 @@ win_snail::win_snail(QWidget *parent)
         hid_free_enumeration(devs);
          }
 #endif
-#if 0
+#if 1
     if (hid_init() == 0) {
         hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
         if (!hid_handle) {

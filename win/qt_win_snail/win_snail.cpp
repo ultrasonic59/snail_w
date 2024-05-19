@@ -42,12 +42,12 @@ win_snail::win_snail(QWidget *parent)
             ///      return 1;
         }
     }
-    /*
+/*
     else
     {
        hid_set_nonblocking(hid_handle, 1);
     }
-    */
+ */   
 #endif
 #if 0
     if (!_cap.open(camid))
@@ -116,7 +116,7 @@ void win_snail::setupActions()
 {
     ui->actionSelect->setStatusTip(tr("Select video source"));
     connect(ui->actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
-   ui->
+ ////  ui->
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
     connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));
@@ -217,10 +217,13 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
         if (hid_handle)
         {
             quint8 tmp_buf[MAX_HID_BUG + 1];
-            tmp_buf[0] = 0;
-            tmp_buf[1] = idat->data[0];
-            hid_write(hid_handle, tmp_buf, 2);
-            qDebug() << "hid_write"<< tmp_buf[1];
+
+            tmp_buf[0] = 0x0;
+            for (int ii = 1; ii < MAX_HID_BUG; ii++)
+                tmp_buf[ii] = ii;
+ ///           tmp_buf[1] = idat->data[0];
+            int res=hid_write(hid_handle, tmp_buf, 6);
+            qDebug() << "hid_write"<< res;
 
         }
   ///      device_CMD.p_dev_thr->dev_cmd.dev_put_alt(idat);

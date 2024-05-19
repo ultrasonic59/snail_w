@@ -12,8 +12,10 @@
 
 #include "my_camera.h"
 #define MAX_HID_BUG                     16
-#define DEF_HID_USB_VID                  0x1A86
-#define DEF_HID_USB_PID                  0xFE07
+///#define DEF_HID_USB_VID                  0x1A86
+////#define DEF_HID_USB_PID                  0xFE07
+#define DEF_HID_USB_VID                  0x0483
+#define DEF_HID_USB_PID                  0x5711
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };

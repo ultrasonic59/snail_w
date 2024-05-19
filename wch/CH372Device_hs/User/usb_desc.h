@@ -15,14 +15,24 @@
 /******************************************************************************/
 /* global define */
 /* file version */
-#define DEF_FILE_VERSION             0x01
+#define DEF_FILE_VERSION             0x02
 /* usb device info define  */
-#define DEF_USB_VID                  0x0477         ///0x1A86
+#define DEF_USB_VID                  0x0483        ///0x1A86
 ////#define DEF_USB_PID                  0x5537
-#define DEF_USB_PID                  0x5667
+#define DEF_USB_PID                  0x5711
 ////#define DEF_USB_PID                  0xFE07
 /* USB device descriptor, device serial number£¨bcdDevice£© */
 #define DEF_IC_PRG_VER               DEF_FILE_VERSION
+///=======================================================
+#define USB_ENDPOINT_DESCRIPTOR_TYPE            0x05
+
+#define RHID_SIZ_CONFIG_DESC                41
+#define HID_DESCRIPTOR_TYPE                     0x21
+#define HID_REPORT_DESCRIPTOR_TYPE              0x22
+#define RHID_SIZ_REPORT_DESC                79
+
+#define RPT3_COUNT 0x01 //PC->STM32
+#define RPT4_COUNT 0x04 //STM32->PC
 
 /******************************************************************************/
 /* usb device endpoint size define */

@@ -35,7 +35,7 @@ const uint8_t  MyCfgDescr_HS[ ] =
 {
     0x09,        // bLength
     0x02,        // bDescriptorType (Configuration)
-    0x3C, 0x00,  // wTotalLength 60
+    RHID_SIZ_CONFIG_DESC, 0x00,  // wTotalLength 60
     0x01,        // bNumInterfaces 1
     0x01,        // bConfigurationValue
     0x00,        // iConfiguration (String Index)
@@ -47,53 +47,32 @@ const uint8_t  MyCfgDescr_HS[ ] =
     0x00,        // bInterfaceNumber 0
     0x00,        // bAlternateSetting
     0x02,        // bNumEndpoints 2 ///6
-    0xFF,        // bInterfaceClass
-    0xFF,        // bInterfaceSubClass
-    0xFF,        // bInterfaceProtocol
+    0x03,        // bInterfaceClass
+    0x00,        // bInterfaceSubClass
+    0x00,        // bInterfaceProtocol
     0x00,        // iInterface (String Index)
+    /******************** HID ********************/
+    0x09,         // bLength:
+    HID_DESCRIPTOR_TYPE, // bDescriptorType:  - HID
+    0x01, 0x01,   // bcdHID:  HID 1.1
+    0x00,         // bCountryCode:
+    0x01,         // bNumDescriptors:  report
+    HID_REPORT_DESCRIPTOR_TYPE,         // bDescriptorType: - report
+    RHID_SIZ_REPORT_DESC,   0x00, // wItemLength: report-
 
     0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x01,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
+    USB_ENDPOINT_DESCRIPTOR_TYPE,        // bDescriptorType (Endpoint)
+    0x81,        // bEndpointAddress (OUT/H2D)
+    0x03,        // bmAttributes (Interrupt endpoint)
     (uint8_t)DEF_USB_EP1_HS_SIZE, (uint8_t)( DEF_USB_EP1_HS_SIZE >> 8 ), // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
+    0x20,        // bInterval 0 (unit depends on device speed)
 
     0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x82,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
+    USB_ENDPOINT_DESCRIPTOR_TYPE,        // bDescriptorType (Endpoint)
+    0x01,        // bEndpointAddress (IN/D2H)
+    0x03,        // bmAttributes (Interrupt endpoint)
     (uint8_t)DEF_USB_EP2_HS_SIZE, (uint8_t)( DEF_USB_EP2_HS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00///,        // bInterval 0 (unit depends on device speed)
-#if 0
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x03,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP3_HS_SIZE, (uint8_t)( DEF_USB_EP3_HS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x84,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP4_HS_SIZE, (uint8_t)( DEF_USB_EP4_HS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x05,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP5_HS_SIZE, (uint8_t)( DEF_USB_EP5_HS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x86,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP6_HS_SIZE, (uint8_t)( DEF_USB_EP6_HS_SIZE >> 8 ), // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-#endif
+    0x20,        // bInterval 0 (unit depends on device speed)
 };
 
 /* Configuration Descriptor */
@@ -101,7 +80,7 @@ const uint8_t  MyCfgDescr_FS[ ] =
 {
     0x09,        // bLength
     0x02,        // bDescriptorType (Configuration)
-    0x3C, 0x00,  // wTotalLength 60
+    RHID_SIZ_CONFIG_DESC, 0x00,  // wTotalLength 60
     0x01,        // bNumInterfaces 1
     0x01,        // bConfigurationValue
     0x00,        // iConfiguration (String Index)
@@ -113,53 +92,77 @@ const uint8_t  MyCfgDescr_FS[ ] =
     0x00,        // bInterfaceNumber 0
     0x00,        // bAlternateSetting
     0x02,        // bNumEndpoints 2
-    0xFF,        // bInterfaceClass
-    0xFF,        // bInterfaceSubClass
-    0xFF,        // bInterfaceProtocol
+    0x03,        // bInterfaceClass
+    0x00,        // bInterfaceSubClass
+    0x00,        // bInterfaceProtocol
     0x00,        // iInterface (String Index)
+    /******************** HID ********************/
+    0x09,         // bLength:
+    HID_DESCRIPTOR_TYPE, // bDescriptorType:  - HID
+    0x01, 0x01,   // bcdHID:  HID 1.1
+    0x00,         // bCountryCode:
+    0x01,         // bNumDescriptors:  report
+    HID_REPORT_DESCRIPTOR_TYPE,         // bDescriptorType: - report
+    RHID_SIZ_REPORT_DESC,   0x00, // wItemLength: report-
 
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
-    0x01,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
+    0x81,        // bEndpointAddress (OUT/H2D)
+    0x03,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP1_FS_SIZE, (uint8_t)( DEF_USB_EP1_FS_SIZE >> 8 ), // wMaxPacketSize 8
     0x00,        // bInterval 0 (unit depends on device speed)
 
     0x07,        // bLength
     0x05,        // bDescriptorType (Endpoint)
-    0x82,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
+    0x01,        // bEndpointAddress (IN/D2H)
+    0x03,        // bmAttributes (Bulk)
     (uint8_t)DEF_USB_EP2_FS_SIZE, (uint8_t)( DEF_USB_EP2_FS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00///,        // bInterval 0 (unit depends on device speed)
-#if 0
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x03,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP3_FS_SIZE, (uint8_t)( DEF_USB_EP3_FS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
+    0x00        // bInterval 0 (unit depends on device speed)
+};
+const uint8_t RHID_ReportDescriptor[RHID_SIZ_REPORT_DESC] =
+  {
+    0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
+    0x09, 0x01,                    // USAGE (Vendor Usage 1)
+    0xa1, 0x01,                    // COLLECTION (Application)
+    0x85, 0x01,                    //   REPORT_ID (1)
+    0x09, 0x01,                    //   USAGE (Vendor Usage 1)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x01,                    //   REPORT_COUNT (1)
+    0xb1, 0x82,                    //   FEATURE (Data,Var,Abs,Vol)
+    0x85, 0x01,                    //   REPORT_ID (1)
+    0x09, 0x01,                    //   USAGE (Vendor Usage 1)
+    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
 
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x84,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP4_FS_SIZE, (uint8_t)( DEF_USB_EP4_FS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
+    0x85, 0x02,                    //   REPORT_ID (2)
+    0x09, 0x02,                    //   USAGE (Vendor Usage 2)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x01,                    //   REPORT_COUNT (1)
+    0xb1, 0x82,                    //   FEATURE (Data,Var,Abs,Vol)
+    0x85, 0x02,                    //   REPORT_ID (2)
+    0x09, 0x02,                    //   USAGE (Vendor Usage 2)
+    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
 
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x05,        // bEndpointAddress (OUT/H2D)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP5_FS_SIZE, (uint8_t)( DEF_USB_EP5_FS_SIZE >> 8 ),  // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
+    0x85, 0x03,                    //   REPORT_ID (3)
+    0x09, 0x03,                    //   USAGE (Vendor Usage 3)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, RPT3_COUNT,                    //   REPORT_COUNT (N)
+    0xb1, 0x82,                    //   FEATURE (Data,Var,Abs,Vol)
+    0x85, 0x03,                    //   REPORT_ID (3)
+    0x09, 0x03,                    //   USAGE (Vendor Usage 3)
+    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
 
-    0x07,        // bLength
-    0x05,        // bDescriptorType (Endpoint)
-    0x86,        // bEndpointAddress (IN/D2H)
-    0x02,        // bmAttributes (Bulk)
-    (uint8_t)DEF_USB_EP6_FS_SIZE, (uint8_t)( DEF_USB_EP6_FS_SIZE >> 8 ), // wMaxPacketSize 8
-    0x00,        // bInterval 0 (unit depends on device speed)
-#endif
+    0x85, 0x04,                    //   REPORT_ID (4)
+    0x09, 0x04,                    //   USAGE (Vendor Usage 4)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, RPT4_COUNT,                    //   REPORT_COUNT (N)
+    0x81, 0x82,                    //   INPUT (Data,Var,Abs,Vol)
+    0xc0                           // END_COLLECTION
 };
 
 /* Language Descriptor */
