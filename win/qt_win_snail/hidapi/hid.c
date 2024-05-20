@@ -36,7 +36,7 @@ typedef LONG NTSTATUS;
 #define _wcsdup wcsdup
 #endif
 
-//#define HIDAPI_USE_DDK
+#define HIDAPI_USE_DDK
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,8 @@ extern "C" {
 	#include <winioctl.h>
 	#ifdef HIDAPI_USE_DDK
 		#include <hidsdi.h>
+		#include <hidpi.h>
+
 	#endif
 
 	// Copied from inc/ddk/hidclass.h, part of the Windows DDK.
@@ -59,6 +61,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
+////#include <hidsdi.h>
 
 #include "hidapi.h"
 
@@ -120,6 +123,9 @@ extern "C" {
 
 	static HMODULE lib_handle = NULL;
 	static BOOLEAN initialized = FALSE;
+#else
+	typedef struct _HIDP_PREPARSED_DATA HIDP_PREPARSED_DATA;
+
 #endif // HIDAPI_USE_DDK
 
 struct hid_device_ {
@@ -575,11 +581,12 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 
 	OVERLAPPED ol;
 	memset(&ol, 0, sizeof(ol));
-#if 1
-	res = HidD_SetOutputReport(dev->device_handle, data, length);
-#else
-	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, &ol);
-#endif	
+////#ifdef HIDAPI_USE_DDK
+////	res = HidD_SetOutputReport(dev->device_handle, data, length);
+////#else
+////	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, &ol);
+	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, NULL);
+	////#endif	
 	if (!res) {
 		int l_error = GetLastError();
 		if (l_error != ERROR_IO_PENDING) {
