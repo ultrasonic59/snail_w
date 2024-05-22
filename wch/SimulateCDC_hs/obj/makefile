@@ -41,34 +41,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-SimulateCDC.hex \
+SimulateCDC_hs.hex \
 
 SECONDARY_LIST += \
-SimulateCDC.lst \
+SimulateCDC_hs.lst \
 
 SECONDARY_SIZE += \
-SimulateCDC.siz \
+SimulateCDC_hs.siz \
 
 
 # All Target
-all: SimulateCDC.elf secondary-outputs
+all: SimulateCDC_hs.elf secondary-outputs
 
 # Tool invocations
-SimulateCDC.elf: $(OBJS) $(USER_OBJS)
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SimulateCDC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"SimulateCDC.map" --specs=nano.specs --specs=nosys.specs -o "SimulateCDC.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+SimulateCDC_hs.elf: $(OBJS) $(USER_OBJS)
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SRC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"SimulateCDC_hs.map" --specs=nano.specs --specs=nosys.specs -o "SimulateCDC_hs.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@	@
-SimulateCDC.hex: SimulateCDC.elf
-	@	riscv-none-embed-objcopy -O ihex "SimulateCDC.elf"  "SimulateCDC.hex"
+SimulateCDC_hs.hex: SimulateCDC_hs.elf
+	@	riscv-none-embed-objcopy -O ihex "SimulateCDC_hs.elf"  "SimulateCDC_hs.hex"
 	@	@
-SimulateCDC.lst: SimulateCDC.elf
-	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "SimulateCDC.elf" > "SimulateCDC.lst"
+SimulateCDC_hs.lst: SimulateCDC_hs.elf
+	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "SimulateCDC_hs.elf" > "SimulateCDC_hs.lst"
 	@	@
-SimulateCDC.siz: SimulateCDC.elf
-	@	riscv-none-embed-size --format=berkeley "SimulateCDC.elf"
+SimulateCDC_hs.siz: SimulateCDC_hs.elf
+	@	riscv-none-embed-size --format=berkeley "SimulateCDC_hs.elf"
 	@	@
 # Other Targets
 clean:
-	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) SimulateCDC.elf
+	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) SimulateCDC_hs.elf
 	-@
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST) $(SECONDARY_SIZE)
 

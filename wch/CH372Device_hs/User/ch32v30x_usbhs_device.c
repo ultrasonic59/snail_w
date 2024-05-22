@@ -43,7 +43,7 @@ volatile uint8_t  USBHS_Endp_Busy[ DEF_UEP_NUM ];
 
 /* Ring buffer */
 RING_BUFF_COMM  RingBuffer_Comm;
-__attribute__ ((aligned(4))) uint8_t Data_Buffer[DEF_RING_BUFFER_SIZE];
+__attribute__ ((aligned(4))) uint8_t dataBuffer[DEF_RING_BUFFER_SIZE];
 
 /******************************************************************************/
 /* Interrupt Service Routine Declaration*/
@@ -89,11 +89,11 @@ void USBHS_Device_Endp_Init ( void )
 
     USBHSD->UEP0_DMA    = (uint32_t)(uint8_t *)USBHS_EP0_Buf;
 
-    USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
+    USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)dataBuffer;
  ///   USBHSD->UEP3_RX_DMA = (uint32_t)(uint8_t *)USBHS_EP3_Rx_Buf;
  ///   USBHSD->UEP5_RX_DMA = (uint32_t)(uint8_t *)USBHS_EP5_Rx_Buf;
 
-    USBHSD->UEP1_TX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
+    USBHSD->UEP1_TX_DMA = (uint32_t)(uint8_t *)dataBuffer;
  ///   USBHSD->UEP4_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP4_Tx_Buf;
  ///   USBHSD->UEP6_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP6_Tx_Buf;
 
@@ -262,6 +262,8 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
     return 0;
 }
 extern const uint8_t RHID_ReportDescriptor[RHID_SIZ_REPORT_DESC];
+extern void set_led(uint8_t on_off);
+volatile uint8_t btst=0;
 
 /*********************************************************************
  * @fn      USBHS_IRQHandler
@@ -270,6 +272,8 @@ extern const uint8_t RHID_ReportDescriptor[RHID_SIZ_REPORT_DESC];
  *
  * @return  none
  */
+volatile uint16_t t_len=0;
+
 void USBHS_IRQHandler( void )
 {
     uint8_t  intflag, intst, errflag;
@@ -362,23 +366,31 @@ void USBHS_IRQHandler( void )
 
                     /* end-point 1 data out interrupt */
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP1:
+
                         if ( intst & USBHS_UIS_TOG_OK )
                         {
                             /* Write In Buffer */
                             USBHSD->UEP1_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
-                            RingBuffer_Comm.PackLen[RingBuffer_Comm.LoadPtr] = USBHSD->RX_LEN;
+                            len = USBHSD->RX_LEN;
+                            RingBuffer_Comm.PackLen[RingBuffer_Comm.LoadPtr] = len;////USBHSD->RX_LEN;
+                            t_len=len;
                             RingBuffer_Comm.LoadPtr ++;
                             if(RingBuffer_Comm.LoadPtr == DEF_Ring_Buffer_Max_Blks)
                             {
                                 RingBuffer_Comm.LoadPtr = 0;
                             }
-                            USBHSD->UEP1_RX_DMA = (uint32_t)(&Data_Buffer[(RingBuffer_Comm.LoadPtr) * DEF_USBD_HS_PACK_SIZE]);
+                            ////USBHSD->UEP1_RX_DMA = (uint32_t)(&Data_Buffer[(RingBuffer_Comm.LoadPtr) * DEF_USBD_HS_PACK_SIZE]);
+                           ////// USBHSD->UEP1_RX_DMA = (uint32_t)(&dataBuffer);
                             RingBuffer_Comm.RemainPack ++;
                             if(RingBuffer_Comm.RemainPack >= DEF_Ring_Buffer_Max_Blks-DEF_RING_BUFFER_REMINE)
                             {
                                 USBHSD->UEP1_RX_CTRL = ((USBHSD->UEP1_RX_CTRL) & ~USBHS_UEP_R_RES_MASK) | USBHS_UEP_R_RES_NAK;
                                 RingBuffer_Comm.StopFlag = 1;
                             }
+                            ///====================================
+                                           btst++;
+                                           set_led(btst);
+                            ///====================================
                         }
                         break;
                     default:

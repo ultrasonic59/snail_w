@@ -96,7 +96,7 @@ typedef struct __attribute__((packed)) _RING_BUFF_COMM
 
 /* Ringbuffer variables */
 extern RING_BUFF_COMM  RingBuffer_Comm;
-extern __attribute__ ((aligned(4))) uint8_t  Data_Buffer[ ];
+extern __attribute__ ((aligned(4))) uint8_t  dataBuffer[ ];
 
 /* SetUp Request Values */
 extern const uint8_t *pUSBHS_Descr;

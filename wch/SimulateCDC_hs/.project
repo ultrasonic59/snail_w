@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <projectDescription>
-	<name>SimulateCDC</name>
-	<comment></comment>
+	<name>SimulateCDC_hs</name>
+	<comment/>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -27,33 +27,33 @@
 		<link>
 			<name>Core</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/SimulateCDC/Core</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Core</location>
 		</link>
 		<link>
 			<name>Debug</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/SimulateCDC/Debug</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Debug</location>
 		</link>
 		<link>
 			<name>Ld</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/SimulateCDC/Ld</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Ld</location>
 		</link>
 		<link>
 			<name>Peripheral</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/SimulateCDC/Peripheral</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Peripheral</location>
 		</link>
 		<link>
 			<name>Startup</name>
 			<type>2</type>
-			<location>D:/proj/velograph/snail_w/wch/SimulateCDC/Startup</location>
+			<location>D:/proj/velograph/snail_w/wch/SRC/Startup</location>
 		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1595986042669</id>
-			<name></name>
+			<name/>
 			<type>22</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
