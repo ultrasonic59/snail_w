@@ -584,8 +584,8 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 ////#ifdef HIDAPI_USE_DDK
 ////	res = HidD_SetOutputReport(dev->device_handle, data, length);
 ////#else
-////	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, &ol);
-	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, NULL);
+	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, &ol);
+////	res = WriteFile(dev->device_handle, (void*)data, length, &bytes_written, NULL);
 	////#endif	
 	if (!res) {
 		int l_error = GetLastError();

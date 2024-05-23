@@ -41,13 +41,20 @@ win_snail::win_snail(QWidget *parent)
             qDebug() << "unable to open device";
             ///      return 1;
         }
-    }
 /*
-    else
-    {
-       hid_set_nonblocking(hid_handle, 1);
+        else
+        {
+            qDebug() << "hid_blocking0:";
+
+            hid_set_nonblocking(hid_handle, 1);
+
+            qDebug() << "hid_blocking1:";
+
+        }
+*/
     }
- */   
+
+  
 #endif
 #if 0
     if (!_cap.open(camid))
@@ -222,9 +229,15 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
             for (int ii = 1; ii < MAX_HID_BUG; ii++)
                 tmp_buf[ii] = ii;
  ///           tmp_buf[1] = idat->data[0];
-            int res=hid_write(hid_handle, tmp_buf, 6);
-            qDebug() << "hid_write"<< res;
+            int res=hid_write(hid_handle, (const unsigned char*)tmp_buf, 2);
+            if (res < 0)
+            {
+                QString tsstr;
+           ////     wchar_t tsstr[256];
+                tsstr = QString::fromWCharArray(hid_error(hid_handle));
 
+                qDebug() << "hid_write error : " << tsstr;
+            }
         }
   ///      device_CMD.p_dev_thr->dev_cmd.dev_put_alt(idat);
         break;

@@ -16,8 +16,8 @@
 ////#define DEF_HID_USB_PID                  0xFE07
 ////#define DEF_HID_USB_PID                  0x5537
 ///#define DEF_HID_USB_PID                  0xFE00
-#define DEF_HID_USB_VID                  0x0483
-#define DEF_HID_USB_PID                  0x5711
+#define DEF_HID_USB_VID                 0x04d9/// 0x0483
+#define DEF_HID_USB_PID                 0x1503 /// 0x5711
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -34,6 +34,8 @@ public:
     ~win_snail();
 public:
     plotterwidget* p_CamView;
+    hid_device* hid_handle;
+
 private:
     QLabel* _label;
     QPen pen;
@@ -43,7 +45,7 @@ private:
     int frame_height;
    Mat _frame;
     QImage    _image;
-   hid_device* hid_handle;
+ ///  hid_device* hid_handle;
     struct hid_device_info* devs;
   struct hid_device_info* cur_dev;
 
