@@ -17,6 +17,9 @@
 
 #include "stdio.h"
 #include "ch32v30x.h"
+#include "ch32v30x_rcc.h"
+#include "ch32v30x_gpio.h"
+#include "ch32v30x_usart.h"
 
 /* UART Printf Definition */
 #define DEBUG_UART1    1

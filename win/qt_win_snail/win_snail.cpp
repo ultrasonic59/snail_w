@@ -226,9 +226,9 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
             quint8 tmp_buf[MAX_HID_BUG + 1];
 
             tmp_buf[0] = 0x0;
-            for (int ii = 1; ii < MAX_HID_BUG; ii++)
-                tmp_buf[ii] = ii;
- ///           tmp_buf[1] = idat->data[0];
+ ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
+ ////               tmp_buf[ii] = ii;
+            tmp_buf[1] = idat->data[0];
             int res=hid_write(hid_handle, (const unsigned char*)tmp_buf, 2);
             if (res < 0)
             {

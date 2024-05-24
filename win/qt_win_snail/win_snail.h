@@ -16,8 +16,10 @@
 ////#define DEF_HID_USB_PID                  0xFE07
 ////#define DEF_HID_USB_PID                  0x5537
 ///#define DEF_HID_USB_PID                  0xFE00
-#define DEF_HID_USB_VID                 0x04d9/// 0x0483
-#define DEF_HID_USB_PID                 0x1503 /// 0x5711
+///#define DEF_HID_USB_VID                 0x04d9/// 0x0483
+///#define DEF_HID_USB_PID                 0x1503 /// 0x5711
+#define DEF_HID_USB_VID                 0x04d8/// 0x0483
+#define DEF_HID_USB_PID                 0x900a /// 0x5711
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };

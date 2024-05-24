@@ -20,7 +20,7 @@
 
 #include "ch32v30x_usbhs_device.h"
 #include "debug.h"
-////============= ON_DV ==================================
+////============= LED_PIN ==================================
   #define LED_PIN          GPIO_Pin_3
   #define LED_GPIO         GPIOA
 volatile uint8_t leds=0;
