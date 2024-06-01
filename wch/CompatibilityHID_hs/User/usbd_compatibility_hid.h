@@ -21,7 +21,7 @@ extern uint8_t  HID_Report_Buffer[DEF_USBD_HS_PACK_SIZE];               // HID R
 extern volatile uint8_t HID_Set_Report_Flag;
 
 extern volatile uint16_t Data_Pack_Max_Len;
-extern volatile uint16_t Head_Pack_Len;
+extern volatile uint16_t _Head_Pack_Len;
 
 extern void UART2_Tx_Service( void );
 extern void UART2_Rx_Service( void );

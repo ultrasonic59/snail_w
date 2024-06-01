@@ -9,10 +9,11 @@
 #include "usbd_compatibility_hid.h"
 void TIM2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
-__attribute__ ((aligned(4))) uint8_t UART2_RxBuffer[DEF_UART2_BUF_SIZE];  // UART2 Rx Buffer
+////__attribute__ ((aligned(4))) uint8_t UART2_RxBuffer[DEF_UART2_BUF_SIZE];  // UART2 Rx Buffer
 __attribute__ ((aligned(4))) uint8_t  HID_Report_Buffer[DEF_USBD_HS_PACK_SIZE];              // HID Report Buffer
 volatile uint8_t HID_Set_Report_Flag = SET_REPORT_DEAL_OVER;               // HID SetReport flag
 
+#if 0
 volatile uint16_t UART2_TimeOut;                                           // UART2 RX timeout flag
 volatile uint8_t  UART2_Tx_Flag = 0;                                       // UART2 TX flag
 
@@ -20,9 +21,10 @@ volatile uint16_t UART2_RX_CurCnt = 0;                                     // UA
 volatile uint16_t UART2_RX_LastCnt = 0;                                    // UART2 DMA last remain count
 volatile uint16_t UART2_Rx_RemainLen = 0;                                  // UART2 RX data remain len
 volatile uint16_t UART2_Rx_Deal_Ptr = 0;                                   // UART2 RX data deal pointer
-
+#endif
 volatile uint16_t Data_Pack_Max_Len = 0;                                   // UART data packet length in hid packet
-volatile uint16_t Head_Pack_Len = 0;                                       // UART head packet( valid data length ) length in hid packet
+volatile uint16_t _Head_Pack_Len = 0;                                       // UART head packet( valid data length ) length in hid packet
+
 /*********************************************************************
  * @fn      TIM2_Init
  *
@@ -61,98 +63,11 @@ void TIM2_Init( void )
  */
 void TIM2_IRQHandler(void)
 {
-    UART2_TimeOut++;
+/////    UART2_TimeOut++;
     TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
 }
 
-/*********************************************************************
- * @fn      UART2_DMA_Init
- *
- * @brief   UART2 DMA initialization
- *
- * @return  none
- */
-void UART2_DMA_Init( void )
-{
-    DMA_InitTypeDef DMA_InitStructure = {0};
 
-    RCC_AHBPeriphClockCmd( RCC_AHBPeriph_DMA1, ENABLE );
-
-    /* UART2 Tx DMA initialization */
-    DMA_Cmd( DMA1_Channel7, DISABLE );
-    DMA_DeInit( DMA1_Channel7 );
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART2->DATAR);
-    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)Data_Buffer;
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
-    DMA_InitStructure.DMA_BufferSize = DEF_USBD_HS_PACK_SIZE;
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-    DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;
-    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-    DMA_Init( DMA1_Channel7, &DMA_InitStructure );
-
-    /* UART2 Rx DMA initialization */
-    DMA_Cmd( DMA1_Channel6, DISABLE );
-    DMA_DeInit( DMA1_Channel6 );
-    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)UART2_RxBuffer;
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-    DMA_InitStructure.DMA_BufferSize = DEF_UART2_BUF_SIZE;
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-    DMA_Init( DMA1_Channel6, &DMA_InitStructure );
-    DMA_Cmd( DMA1_Channel6, ENABLE );
-    USART_DMACmd(USART2, USART_DMAReq_Rx, ENABLE);
-}
-
-
-/*********************************************************************
- * @fn      UART2_Init
- *
- * @brief   UART2 DMA initialization
- *
- * @return  none
- */
-void UART2_Init( void )
-{
-    GPIO_InitTypeDef  GPIO_InitStructure = {0};
-    USART_InitTypeDef USART_InitStructure = {0};
-
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-
-    /* UART2 GPIO Init */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-    /* UART2 Init */
-    USART_InitStructure.USART_BaudRate = 115200;
-    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-    USART_InitStructure.USART_StopBits = USART_StopBits_1;
-    USART_InitStructure.USART_Parity = USART_Parity_No;
-    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
-    USART_Init(USART2, &USART_InitStructure);
-
-    USART_ClearFlag( USART2, USART_FLAG_TC );
-    USART_Cmd(USART2, ENABLE);
-}
-
-void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
-{
-    USART_ClearFlag(USART2, USART_FLAG_TC);
-    DMA_Cmd( DMA1_Channel7, DISABLE );
-    DMA1_Channel7->MADDR = (uint32_t)pbuf;
-    DMA1_Channel7->CNTR = (uint32_t)len;
-    DMA_Cmd( DMA1_Channel7, ENABLE );
-    USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
-}
 
 /*********************************************************************
  * @fn      UART2_Rx_Service
@@ -164,13 +79,13 @@ void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
  */
 void UART2_Rx_Service( void )
 {
-
+#if 0
     uint16_t pkg_len;
     uint16_t u16_temp;
     uint16_t remain_len;
 
     /* Get uart2 rx data */
-    UART2_RX_CurCnt = DMA_GetCurrDataCounter(DMA1_Channel6);                              // Get DMA remaining count
+    UART2_RX_CurCnt = DMA_GetCurrDataCounter(DMA1_Channel6);    // Get DMA remaining count
     if (UART2_RX_LastCnt != UART2_RX_CurCnt)
     {
         if (UART2_RX_LastCnt > UART2_RX_CurCnt)
@@ -231,9 +146,9 @@ void UART2_Rx_Service( void )
                 {
                     USBHS_EP2_Tx_Buf[1] = (uint8_t)(pkg_len >> 8) ;
                 }
-                memcpy(USBHS_EP2_Tx_Buf + Head_Pack_Len,&UART2_RxBuffer[UART2_Rx_Deal_Ptr],pkg_len);
+                memcpy(USBHS_EP2_Tx_Buf + _Head_Pack_Len,&UART2_RxBuffer[UART2_Rx_Deal_Ptr],pkg_len);
                 USBHSD->UEP2_TX_DMA  = (uint32_t)(uint8_t *)USBHS_EP2_Tx_Buf;
-                USBHSD->UEP2_TX_LEN  = pkg_len + Head_Pack_Len;
+                USBHSD->UEP2_TX_LEN  = pkg_len + _Head_Pack_Len;
                 USBHS_Endp_Busy[ 2 ] |= DEF_UEP_BUSY;
                 USBHSD->UEP2_TX_CTRL = ((USBHSD->UEP2_TX_CTRL) & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_ACK;
                 UART2_Rx_RemainLen -= pkg_len;
@@ -246,7 +161,7 @@ void UART2_Rx_Service( void )
             }
         }
     }
-
+#endif
 }
 
 /*********************************************************************
@@ -263,10 +178,30 @@ void UART2_Tx_Service( void )
  uint8_t *pbuf;
  if(RingBuffer_Comm._RemainPack)
   {
-  printf( "dat:%x\r\n",Data_Buffer[0]) ;
+  printf( "dat[%x:%x]\r\n",Data_Buffer[0],Data_Buffer[1]) ;
 
   RingBuffer_Comm._RemainPack--;
+ ///============================================================================
+  USBHSD->UEP1_RX_CTRL = (USBHSD->UEP1_RX_CTRL & ~USBHS_UEP_R_RES_MASK) | USBHS_UEP_R_RES_ACK;
+///==============================================================================
 
+////  if(Data_Buffer[0]==0x3) ///read data
+      {
+      printf( "rd data\r\n") ;
+     USBHS_EP2_Tx_Buf[0] = 1;
+      USBHS_EP2_Tx_Buf[1] = 0;
+      USBHS_EP2_Tx_Buf[2] = 0x35;
+
+ ////      if (USBHS_DevSpeed == USBHS_SPEED_HIGH)
+ ////      {
+ ////          USBHS_EP2_Tx_Buf[1] = (uint8_t)(pkg_len >> 8) ;
+ ////      }
+ ////      memcpy(USBHS_EP2_Tx_Buf + 2,&UART2_RxBuffer[UART2_Rx_Deal_Ptr],3);
+       USBHSD->UEP2_TX_DMA  = (uint32_t)(uint8_t *)USBHS_EP2_Tx_Buf;
+       USBHSD->UEP2_TX_LEN  = 3;
+       USBHS_Endp_Busy[ 2 ] |= DEF_UEP_BUSY;
+       USBHSD->UEP2_TX_CTRL = ((USBHSD->UEP2_TX_CTRL) & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_ACK;
+      }
   }
 #if 0
     if (UART2_Tx_Flag)
@@ -336,6 +271,7 @@ void UART2_Tx_Service( void )
         }
     }
 #endif
+
 }
 
 /*********************************************************************

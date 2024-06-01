@@ -187,6 +187,53 @@ void win_snail::on_butt_con()
 void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
+    unsigned char buf[256];
+    memset(buf, 0, sizeof(buf));
+ int   res = 0;
+  int  ii = 0;
+#if 0
+  buf[0] = 0x0;
+  ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
+  ////               tmp_buf[ii] = ii;
+  buf[1] = 0x3;   ///cmd
+ res = hid_write(hid_handle, (const unsigned char*)buf, 2);
+  if (res < 0)
+  {
+      QString tsstr;
+      ////     wchar_t tsstr[256];
+      tsstr = QString::fromWCharArray(hid_error(hid_handle));
+
+      qDebug() << "hid_write error : " << tsstr;
+  }
+#endif
+res = 0;
+ii = 0;
+
+    while (res == 0) {
+        res = hid_read(hid_handle, buf, sizeof(buf));
+        if (res == 0) {
+            qDebug() << "waiting...";
+        }
+        if (res < 0) {
+            qDebug() << "Unable to read(): "<< QString::fromWCharArray(hid_error(hid_handle));
+            break;
+        }
+
+        ii++;
+        if (ii >= 10) { /* 10 tries by 500 ms - 5 seconds of waiting*/
+            qDebug() << "read() timeout";
+            break;
+        }
+        Sleep(500);
+    }
+    if (res)
+    {
+        odat->data[0] = buf[0];
+  ////      emit put_alt_dat_dial(odat);
+        qDebug() << "rd data:" << buf[0];
+
+    }
+
     /*
     device_CMD.UpdateDevice(false);
     dbg_dat_req_t dbg_req;
@@ -228,8 +275,9 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
             tmp_buf[0] = 0x0;
  ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
  ////               tmp_buf[ii] = ii;
-            tmp_buf[1] = idat->data[0];
-            int res=hid_write(hid_handle, (const unsigned char*)tmp_buf, 2);
+            tmp_buf[1] = idat->addr;   ///cmd
+            tmp_buf[2] = idat->data[0];
+            int res=hid_write(hid_handle, (const unsigned char*)tmp_buf, 3);
             if (res < 0)
             {
                 QString tsstr;

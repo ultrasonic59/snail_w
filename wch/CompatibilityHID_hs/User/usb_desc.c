@@ -125,7 +125,7 @@ const uint8_t  MyCfgDescr_FS[ ] =
     /* Endpoint Descriptor */
     0x07,                           // bLength
     0x05,                           // bDescriptorType
-    0x82,                           // bEndpointAddress: IN Endpoint 2
+    0x81,                           // bEndpointAddress: IN Endpoint 1
     0x03,                           // bmAttributes
     0x40, 0x00,                     // wMaxPacketSize
     0x01,                           // bInterval: 1mS

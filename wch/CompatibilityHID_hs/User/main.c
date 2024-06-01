@@ -93,7 +93,7 @@ else
  */
 int main(void)
 {
-    uint8_t btst=0;
+////    uint8_t btst=0;
 	Delay_Init();
 	USART_Printf_Init(115200);
 	printf( "SystemClk:%d\r\n",SystemCoreClock) ;
@@ -127,7 +127,7 @@ int main(void)
     {
         if (USBHS_DevEnumStatus)
         {
-         ////   UART2_Rx_Service();
+          UART2_Rx_Service();
             UART2_Tx_Service();
             HID_Set_Report_Deal();
         }

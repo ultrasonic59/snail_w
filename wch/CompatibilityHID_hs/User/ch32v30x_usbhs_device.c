@@ -129,7 +129,7 @@ void USBHS_Device_Init ( FunctionalState sta )
     }
     USBHS_Endp_Busy[ 2 ] = 0;
 }
-
+#if 0
 /*********************************************************************
  * @fn      USBHS_Endp_DataUp
  *
@@ -241,6 +241,8 @@ uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mo
 
     return 0;
 }
+#endif
+
 volatile uint16_t t_len=0;
 extern void set_led(uint8_t on_off);
 volatile uint8_t btst=0;
@@ -527,8 +529,8 @@ void USBHS_IRQHandler( void )
                                 /* High speed mode */
                                 USBHS_DevSpeed = USBHS_SPEED_HIGH;
                                 USBHS_DevMaxPackLen = DEF_USBD_HS_PACK_SIZE;
-                                Head_Pack_Len = 2;
-                                Data_Pack_Max_Len = DEF_USBD_HS_PACK_SIZE - Head_Pack_Len;
+                                _Head_Pack_Len = 2;
+                                Data_Pack_Max_Len = DEF_USBD_HS_PACK_SIZE - _Head_Pack_Len;
 
                             }
                             else
@@ -536,8 +538,8 @@ void USBHS_IRQHandler( void )
                                 /* Full speed mode */
                                 USBHS_DevSpeed = USBHS_SPEED_FULL;
                                 USBHS_DevMaxPackLen = DEF_USBD_FS_PACK_SIZE;
-                                Head_Pack_Len = 1;
-                                Data_Pack_Max_Len = DEF_USBD_FS_PACK_SIZE - Head_Pack_Len;
+                                _Head_Pack_Len = 1;
+                                Data_Pack_Max_Len = DEF_USBD_FS_PACK_SIZE - _Head_Pack_Len;
                             }
                             if( USBHS_DevSpeed == USBHS_SPEED_HIGH )
                             {

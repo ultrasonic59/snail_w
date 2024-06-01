@@ -1034,7 +1034,7 @@ HID_API_EXPORT hid_device * HID_API_CALL hid_open_path(const char *path)
 	device_handle = INVALID_HANDLE_VALUE;
 
 	dev->output_report_length = caps.OutputReportByteLength;
-	dev->input_report_length = caps.InputReportByteLength;
+	dev->input_report_length = 513;/// caps.InputReportByteLength;
 	dev->feature_report_length = caps.FeatureReportByteLength;
 	dev->read_buf = (char*) malloc(dev->input_report_length);
 	dev->device_info = hid_internal_get_device_info(interface_path, dev->device_handle);
@@ -1145,6 +1145,7 @@ int HID_API_EXPORT HID_API_CALL hid_read_timeout(hid_device *dev, unsigned char 
 		memset(dev->read_buf, 0, dev->input_report_length);
 		ResetEvent(ev);
 		res = ReadFile(dev->device_handle, dev->read_buf, (DWORD) dev->input_report_length, &bytes_read, &dev->ol);
+///		res = ReadFile(dev->device_handle, dev->read_buf, (DWORD)dev->input_report_length, &bytes_read, 0);
 
 		if (!res) {
 			if (GetLastError() != ERROR_IO_PENDING) {
@@ -1210,7 +1211,8 @@ end_of_function:
 
 int HID_API_EXPORT HID_API_CALL hid_read(hid_device *dev, unsigned char *data, size_t length)
 {
-	return hid_read_timeout(dev, data, length, (dev->blocking)? -1: 0);
+////	return hid_read_timeout(dev, data, length, (dev->blocking)? -1: 0);
+	return hid_read_timeout(dev, data, length, 0);
 }
 
 int HID_API_EXPORT HID_API_CALL hid_set_nonblocking(hid_device *dev, int nonblock)
