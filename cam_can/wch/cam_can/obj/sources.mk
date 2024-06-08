@@ -30,7 +30,6 @@ SRC/Core \
 SRC/Debug \
 SRC/Peripheral/src \
 SRC/Startup \
-User/UART \
 User/USB_Device \
 User/brd \
 User/can \

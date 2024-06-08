@@ -12,7 +12,6 @@ RM := rm -rf
 -include User/can/subdir.mk
 -include User/brd/subdir.mk
 -include User/USB_Device/subdir.mk
--include User/UART/subdir.mk
 -include User/subdir.mk
 -include SRC/Startup/subdir.mk
 -include SRC/Peripheral/src/subdir.mk

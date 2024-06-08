@@ -74,7 +74,7 @@ const uint8_t  MyCfgDescr_HS[ ] =
     /* Endpoint Descriptor */
     0x07,                           // bLength
     0x05,                           // bDescriptorType
-    0x82,                           // bEndpointAddress: IN Endpoint 2
+    0x81,                           // bEndpointAddress: IN Endpoint 1
     0x03,                           // bmAttributes
     0x00, 0x02,                     // wMaxPacketSize
     0x01,                           // bInterval: 1mS
@@ -125,7 +125,7 @@ const uint8_t  MyCfgDescr_FS[ ] =
     /* Endpoint Descriptor */
     0x07,                           // bLength
     0x05,                           // bDescriptorType
-    0x82,                           // bEndpointAddress: IN Endpoint 2
+    0x81,                           // bEndpointAddress: IN Endpoint 1
     0x03,                           // bmAttributes
     0x40, 0x00,                     // wMaxPacketSize
     0x01,                           // bInterval: 1mS
@@ -194,7 +194,7 @@ const uint8_t  MyProdInfo[] =
 const uint8_t  MySerNumInfo[] =
 {
     0x16, 0x03, '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0
-              , '6', 0, '7', 0, '8', 0, '9', 0
+              , '6', 0, '7', 0, '7', 0, '6', 0
 };
 
 /* Device Qualified Descriptor */

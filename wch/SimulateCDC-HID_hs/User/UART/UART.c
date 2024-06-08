@@ -84,33 +84,33 @@ void UART1_CfgInit( uint32_t baudrate, uint8_t stopbits, uint8_t parity )
 
     /* First set the serial port introduction to output high then close the TE and RE of CTLR1 register (note that USART1->CTLR1 register setting 9 bits has a limit) */
     /* Note: This operation must be performed, the TX pin otherwise the level will be pulled low */
-    GPIO_SetBits( GPIOA, GPIO_Pin_9 );
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_9;
+    GPIO_SetBits( GPIOB, GPIO_Pin_15 );
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-    GPIO_Init( GPIOA, &GPIO_InitStructure );
+    GPIO_Init( GPIOB, &GPIO_InitStructure );
 
     /* clear te/re */
     USART1->CTLR1 &= ~0x0C;
 
     /* USART1 Hard configured: */
-    /* Configure USART1 Rx (PA10) as input floating */
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10;
+    /* Configure USART1 Rx (PA8) as input floating */
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
     GPIO_Init( GPIOA, &GPIO_InitStructure );
 
     /* Configure USART1 Tx (PA9) as alternate function push-pull */
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
-    GPIO_Init( GPIOA, &GPIO_InitStructure );
-
+    GPIO_Init( GPIOB, &GPIO_InitStructure );
+#if 0
     /* Test IO */
     GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
     GPIO_Init( GPIOA, &GPIO_InitStructure );
-
+#endif
     /* USART1 configured as follow:
         - BaudRate = 115200 baud  
         - Word Length = 8 Bits

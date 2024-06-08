@@ -64,7 +64,7 @@ void TIM2_IRQHandler(void)
     UART2_TimeOut++;
     TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
 }
-#if 1
+
 /*********************************************************************
  * @fn      UART2_DMA_Init
  *
@@ -105,8 +105,8 @@ void UART2_DMA_Init( void )
     DMA_Cmd( DMA1_Channel6, ENABLE );
     USART_DMACmd(USART2, USART_DMAReq_Rx, ENABLE);
 }
-#endif
-#if 1
+
+
 /*********************************************************************
  * @fn      UART2_Init
  *
@@ -143,8 +143,7 @@ void UART2_Init( void )
     USART_ClearFlag( USART2, USART_FLAG_TC );
     USART_Cmd(USART2, ENABLE);
 }
-#endif
-#if 1
+
 void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
 {
     USART_ClearFlag(USART2, USART_FLAG_TC);
@@ -154,7 +153,7 @@ void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
     DMA_Cmd( DMA1_Channel7, ENABLE );
     USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
 }
-#endif
+
 /*********************************************************************
  * @fn      UART2_Rx_Service
  *
@@ -163,10 +162,8 @@ void UART2_DMA_Tx(uint8_t *pbuf,uint16_t len)
  *
  * @return  none
  */
-////void hid_tx_service( void )
 void UART2_Rx_Service( void )
 {
-#if 1
     uint16_t pkg_len;
     uint16_t u16_temp;
     uint16_t remain_len;
@@ -248,7 +245,7 @@ void UART2_Rx_Service( void )
             }
         }
     }
-#endif
+
 }
 
 /*********************************************************************
@@ -259,10 +256,8 @@ void UART2_Rx_Service( void )
  *
  * @return  none
  */
-////void hid_rx_service( void )
 void UART2_Tx_Service( void )
 {
-#if 1
     uint16_t pkg_len = 0;
     uint8_t *pbuf;
     if (UART2_Tx_Flag)
@@ -302,7 +297,7 @@ void UART2_Tx_Service( void )
                     pkg_len = Data_Pack_Max_Len;                                                        // Limit the length of this transmission
                 }
                 pbuf = &Data_Buffer[(RingBuffer_Comm.DealPtr) * DEF_USBD_HS_PACK_SIZE] + Head_Pack_Len;
-               UART2_DMA_Tx( pbuf, pkg_len );
+                UART2_DMA_Tx( pbuf, pkg_len );
                 UART2_Tx_Flag = 1;
             }
             else
@@ -330,7 +325,7 @@ void UART2_Tx_Service( void )
             USBHSD->UEP1_RX_CTRL = (USBHSD->UEP1_RX_CTRL & ~USBHS_UEP_R_RES_MASK) | USBHS_UEP_R_RES_ACK;
         }
     }
-#endif
+
 }
 
 /*********************************************************************

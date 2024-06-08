@@ -42,7 +42,8 @@ volatile uint16_t Hid_Report_Ptr;
 
 /* Endpoint Buffer */
 __attribute__ ((aligned(4))) uint8_t USBHS_EP0_Buf[ DEF_USBD_UEP0_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBHS_EP2_Tx_Buf[ DEF_USBD_HS_PACK_SIZE ];
+__attribute__ ((aligned(4))) uint8_t USBHS_EP1_Rx_Buf[ DEF_USBD_HS_PACK_SIZE ];
+__attribute__ ((aligned(4))) uint8_t USBHS_EP1_Tx_Buf[ DEF_USBD_HS_PACK_SIZE ];
 
 /* USB IN Endpoint Busy Flag */
 volatile uint8_t  USBHS_Endp_Busy[ DEF_UEP_NUM ];
@@ -81,20 +82,27 @@ void USBHS_RCC_Init( void )
  */
 void USBHS_Device_Endp_Init ( void )
 {
-    USBHSD->ENDP_CONFIG = USBHS_UEP0_T_EN | USBHS_UEP0_R_EN | USBHS_UEP1_R_EN | USBHS_UEP2_T_EN;
+    uint8_t i;
+   USBHSD->ENDP_CONFIG = USBHS_UEP0_T_EN | USBHS_UEP0_R_EN | USBHS_UEP1_R_EN | USBHS_UEP1_T_EN;
 
     USBHSD->UEP0_MAX_LEN  = DEF_USBD_UEP0_SIZE;
     USBHSD->UEP1_MAX_LEN  = DEF_USB_EP1_HS_SIZE;
-    USBHSD->UEP2_MAX_LEN  = DEF_USB_EP2_HS_SIZE;
+    ////USBHSD->UEP2_MAX_LEN  = DEF_USB_EP2_HS_SIZE;
 
     USBHSD->UEP0_DMA    = (uint32_t)(uint8_t *)USBHS_EP0_Buf;
-    USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
-    USBHSD->UEP2_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP2_Tx_Buf;
+    USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)USBHS_EP1_Rx_Buf;
+    USBHSD->UEP1_TX_DMA = (uint32_t)(uint8_t *)USBHS_EP1_Tx_Buf;
 
     USBHSD->UEP0_TX_CTRL = USBHS_UEP_T_RES_NAK;
     USBHSD->UEP0_RX_CTRL = USBHS_UEP_R_RES_ACK;
     USBHSD->UEP1_RX_CTRL = USBHS_UEP_R_RES_ACK;
-    USBHSD->UEP2_TX_CTRL = USBHS_UEP_T_RES_NAK;
+    USBHSD->UEP1_TX_CTRL = USBHS_UEP_T_RES_NAK;
+    /* Clear End-points Busy Status */
+     for( i=0; i<DEF_UEP_NUM; i++ )
+     {
+         USBHS_Endp_Busy[ i ] = 0;
+     }
+
 }
 
 /*********************************************************************
@@ -257,7 +265,7 @@ volatile uint8_t btst=0;
 void USBHS_IRQHandler( void )
 {
     uint8_t  intflag, intst, errflag;
-    uint16_t len;
+    uint16_t len, i;
 
 
     intflag = USBHSD->INT_FG;
@@ -321,15 +329,15 @@ void USBHS_IRQHandler( void )
                         }
                         break;
 
-                    /* end-point 1 data in interrupt */
-                    case USBHS_UIS_TOKEN_IN | DEF_UEP1:
-                        break;
-
                     /* end-point 2 data in interrupt */
                     case USBHS_UIS_TOKEN_IN | DEF_UEP2:
-                        USBHSD->UEP2_TX_CTRL = (USBHSD->UEP2_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
-                        USBHSD->UEP2_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
-                        USBHS_Endp_Busy[ DEF_UEP2 ] &= ~DEF_UEP_BUSY;
+                        break;
+
+                    /* end-point 1 data in interrupt */
+                    case USBHS_UIS_TOKEN_IN | DEF_UEP1:
+                        USBHSD->UEP1_TX_CTRL = (USBHSD->UEP1_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
+                        USBHSD->UEP1_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
+                        USBHS_Endp_Busy[ DEF_UEP1 ] &= ~DEF_UEP_BUSY;
                         break;
 
                     default :
@@ -379,6 +387,17 @@ void USBHS_IRQHandler( void )
 
                     /* end-point 1 data out interrupt */
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP1:
+                    USBHSD->UEP1_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
+                    len = USBHSD->RX_LEN;
+                    for( i = 0; i < len; i++ )
+                     {
+                         USBHS_EP1_Tx_Buf[ i ] = (~USBHS_EP1_Rx_Buf[ i ])+3;
+                     }
+                     USBHSD->UEP1_TX_LEN  = len;
+                     USBHSD->UEP1_TX_CTRL &= ~USBHS_UEP_R_RES_MASK;
+                     USBHSD->UEP1_TX_CTRL |= USBHS_UEP_R_RES_ACK;
+
+#if 0
                         if ( intst & USBHS_UIS_TOG_OK )
                         {
                             /* Write In Buffer */
@@ -399,6 +418,7 @@ void USBHS_IRQHandler( void )
                                 RingBuffer_Comm.StopFlag = 1;
                             }
                         }
+#endif
                         ///====================================
                                        btst++;
                                        set_led(btst);

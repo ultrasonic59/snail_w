@@ -41,34 +41,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-SimulateCDC-HID.hex \
+SimulateCDC-HID_hs.hex \
 
 SECONDARY_LIST += \
-SimulateCDC-HID.lst \
+SimulateCDC-HID_hs.lst \
 
 SECONDARY_SIZE += \
-SimulateCDC-HID.siz \
+SimulateCDC-HID_hs.siz \
 
 
 # All Target
-all: SimulateCDC-HID.elf secondary-outputs
+all: SimulateCDC-HID_hs.elf secondary-outputs
 
 # Tool invocations
-SimulateCDC-HID.elf: $(OBJS) $(USER_OBJS)
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SRC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"SimulateCDC-HID.map" --specs=nano.specs --specs=nosys.specs -o "SimulateCDC-HID.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+SimulateCDC-HID_hs.elf: $(OBJS) $(USER_OBJS)
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -T "D:\proj\velograph\snail_w\wch\SRC\Ld\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"SimulateCDC-HID_hs.map" --specs=nano.specs --specs=nosys.specs -o "SimulateCDC-HID_hs.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@	@
-SimulateCDC-HID.hex: SimulateCDC-HID.elf
-	@	riscv-none-embed-objcopy -O ihex "SimulateCDC-HID.elf"  "SimulateCDC-HID.hex"
+SimulateCDC-HID_hs.hex: SimulateCDC-HID_hs.elf
+	@	riscv-none-embed-objcopy -O ihex "SimulateCDC-HID_hs.elf"  "SimulateCDC-HID_hs.hex"
 	@	@
-SimulateCDC-HID.lst: SimulateCDC-HID.elf
-	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "SimulateCDC-HID.elf" > "SimulateCDC-HID.lst"
+SimulateCDC-HID_hs.lst: SimulateCDC-HID_hs.elf
+	@	riscv-none-embed-objdump --all-headers --demangle --disassemble -M xw "SimulateCDC-HID_hs.elf" > "SimulateCDC-HID_hs.lst"
 	@	@
-SimulateCDC-HID.siz: SimulateCDC-HID.elf
-	@	riscv-none-embed-size --format=berkeley "SimulateCDC-HID.elf"
+SimulateCDC-HID_hs.siz: SimulateCDC-HID_hs.elf
+	@	riscv-none-embed-size --format=berkeley "SimulateCDC-HID_hs.elf"
 	@	@
 # Other Targets
 clean:
-	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) SimulateCDC-HID.elf
+	-$(RM) $(ASM_UPPER_DEPS)$(OBJS)$(SECONDARY_FLASH)$(SECONDARY_LIST)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) SimulateCDC-HID_hs.elf
 	-@
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST) $(SECONDARY_SIZE)
 

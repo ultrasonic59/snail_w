@@ -318,7 +318,7 @@ void USBHS_IRQHandler( void )
                             }
                         }
                         break;
-
+#if 0
                     /* end-point 1 data in interrupt */
                     case USBHS_UIS_TOKEN_IN | DEF_UEP2:
                         USBHSD->UEP2_TX_CTRL = (USBHSD->UEP2_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
@@ -333,7 +333,7 @@ void USBHS_IRQHandler( void )
                         USBHSD->UEP3_TX_CTRL ^= USBHS_UEP_T_TOG_DATA1;
                         USBHS_Endp_Busy[ DEF_UEP3 ] &= ~DEF_UEP_BUSY;
                         break;
-
+#endif
                     /* end-point 4 data in interrupt */
                     case USBHS_UIS_TOKEN_IN | DEF_UEP4:
                         USBHSD->UEP4_TX_CTRL = (USBHSD->UEP4_TX_CTRL & ~USBHS_UEP_T_RES_MASK) | USBHS_UEP_T_RES_NAK;
@@ -408,7 +408,7 @@ void USBHS_IRQHandler( void )
                              }
                          }
                             break;
-
+#if 0
                     /* end-point 2 data out interrupt */
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP2:
                         USBHSD->UEP2_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
@@ -431,7 +431,7 @@ void USBHS_IRQHandler( void )
                             Uart.USB_Down_StopFlag = 0x01;
                         }
                         break;
-
+#endif
                     /* end-point 4 data out interrupt */
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP4:
                         USBHSD->UEP4_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;

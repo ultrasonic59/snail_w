@@ -7,8 +7,8 @@
 #include "debug.h"
 #include "usb_hid_thr.h"
 #include "ch32v30x_usbhs_device.h"
-#include "usbd_compatibility_hid.h"
-
+////#include "usbd_compatibility_hid.h"
+#if 0
 extern void HID_Set_Report_Deal();
 void Var_Init(void)
 {
@@ -22,20 +22,20 @@ void Var_Init(void)
         RingBuffer_Comm.PackLen[i] = 0;
     }
 }
-
+#endif
 void usb_hid_thr(void* pp)
 {
 printf(" usb_hid_thr\n\r");
-Var_Init();
+////Var_Init();
 
 for(;;)
   {
   if (USBHS_DevEnumStatus)
      {
- ////       ;
-         UART2_Rx_Service();
-         UART2_Tx_Service();
-         HID_Set_Report_Deal();
+       ;
+  ///       UART2_Rx_Service();
+   ////      UART2_Tx_Service();
+   ////      HID_Set_Report_Deal();
      }
 
   }

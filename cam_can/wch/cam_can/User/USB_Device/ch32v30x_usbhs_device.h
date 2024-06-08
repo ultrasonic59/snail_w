@@ -76,7 +76,12 @@ extern "C" {
 
 /******************************************************************************/
 extern __attribute__ ((aligned(16))) uint8_t USBHS_EP0_Buf[ ];
-extern __attribute__ ((aligned(16))) uint8_t USBHS_EP2_Tx_Buf[ ];
+extern __attribute__ ((aligned(16))) uint8_t USBHS_EP1_Tx_Buf[ ];
+extern __attribute__ ((aligned(16))) uint8_t USBHS_EP1_Rx_Buf[ ];
+
+
+#define SET_REPORT_DEAL_OVER          0x00
+#define SET_REPORT_WAIT_DEAL          0x01
 
 
 

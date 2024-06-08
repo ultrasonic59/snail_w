@@ -17,11 +17,11 @@
 /* file version */
 #define DEF_FILE_VERSION             0x01
 /* usb device info define  */
-////#define DEF_USB_VID                  0x1A86
-////#define DEF_USB_PID                  0xFE0C
-#define DEF_USB_VID                  0x0483        ///0x1A86
-////#define DEF_USB_PID                  0x5537
-#define DEF_USB_PID                  0x5711
+///#define DEF_USB_VID                  0x1A86
+///#define DEF_USB_PID                  0xFE0C
+#define DEF_USB_VID                  0x04d8
+#define DEF_USB_PID                  0x900a
+
 
 /* USB device descriptor, device serial number£¨bcdDevice£© */
 #define DEF_IC_PRG_VER               DEF_FILE_VERSION

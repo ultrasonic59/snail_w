@@ -125,11 +125,14 @@ int main(void)
 
     while(1)
     {
+        ;
+ /*
         if (USBHS_DevEnumStatus)
         {
           UART2_Rx_Service();
             UART2_Tx_Service();
             HID_Set_Report_Deal();
         }
+        */
     }
 }

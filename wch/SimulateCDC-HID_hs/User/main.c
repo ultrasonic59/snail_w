@@ -18,6 +18,34 @@
 
 #include "ch32v30x_usbhs_device.h"
 #include "debug.h"
+////============= LED_PIN ==================================
+  #define LED_PIN          GPIO_Pin_3
+  #define LED_GPIO         GPIOA
+volatile uint8_t leds=0;
+
+void init_led(void)
+{
+GPIO_InitTypeDef GPIO_InitStructure = {0};
+RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+GPIO_InitStructure.GPIO_Pin = LED_PIN;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_Init(LED_GPIO, &GPIO_InitStructure);
+
+}
+void set_led(uint8_t on_off)
+{
+if(on_off&0x1)
+{
+    leds|=0x1;
+   GPIO_WriteBit(LED_GPIO,LED_PIN,Bit_RESET);
+}
+else
+{
+    leds&=~(0x1);
+   GPIO_WriteBit(LED_GPIO,LED_PIN, Bit_SET);
+}
+}
 
 /*********************************************************************
  * @fn      main
@@ -45,7 +73,8 @@ int main(void)
 
     while(1)
     {
-        UART1_DataRx_Deal( );
-        UART1_DataTx_Deal( );
+     ///   UART1_DataRx_Deal( );
+     ////   UART1_DataTx_Deal( );
+        ;
     }
 }
