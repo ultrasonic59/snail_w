@@ -1106,7 +1106,7 @@ void TIM_CCPreloadControl(TIM_TypeDef *TIMx, FunctionalState NewState)
  *          TIM_OCPreload - new state of the TIMx peripheral Preload register.
  *            TIM_OCPreload_Enable.
  *            TIM_OCPreload_Disable.
- *
+ *TIM_Pulse
  * @return  none
  */
 void TIM_OC1PreloadConfig(TIM_TypeDef *TIMx, uint16_t TIM_OCPreload)

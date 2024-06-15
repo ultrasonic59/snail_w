@@ -15,6 +15,12 @@
 #include "usb_desc.h"
 ///#include "usbd_compatibility_hid.h"
 #include "ch32v30x_usb.h"
+#include "FreeRTOS.h"
+#include "portmacro.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+
 /*******************************************************************************/
 /* Variable Definition */
 /* Global */
@@ -154,6 +160,11 @@ void USBHS_IRQHandler( void )
 uint8_t  intflag, intst, errflag;
 uint16_t len;
 uint16_t i;
+int32_t xHigherPriorityTaskWoken= pdFALSE;
+///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+///signed portBASE_TYPE xTaskWoken= pdFALSE;
+///int32_t xTaskWoken= pdFALSE;
+hid_cmd_t t_hid_cmd;
 
     intflag = USBHSD->INT_FG;
     intst = USBHSD->INT_ST;
@@ -274,6 +285,16 @@ uint16_t i;
                     case USBHS_UIS_TOKEN_OUT | DEF_UEP1:
                          USBHSD->UEP1_RX_CTRL ^= USBHS_UEP_R_TOG_DATA1;
                          len = USBHSD->RX_LEN;
+                         t_hid_cmd.cmd=USBHS_EP1_Rx_Buf[0];
+                         t_hid_cmd.num_bytes=USBHS_EP1_Rx_Buf[1];
+                         if(t_hid_cmd.num_bytes>MAX_DAT_CNT)
+                             t_hid_cmd.num_bytes=MAX_DAT_CNT;
+                         for( i = 0; i < t_hid_cmd.num_bytes; i++ )
+                             {
+                             t_hid_cmd.dat[i]=  USBHS_EP1_Rx_Buf[i+2];
+                             }
+                          xQueueSendFromISR(ev_rsv_hid, &t_hid_cmd, &xHigherPriorityTaskWoken);
+/*
                          for( i = 0; i < len; i++ )
                             {
                             USBHS_EP1_Tx_Buf[ i ] = (~USBHS_EP1_Rx_Buf[ i ])+3;
@@ -281,7 +302,7 @@ uint16_t i;
                          USBHSD->UEP1_TX_LEN  = len;
                          USBHSD->UEP1_TX_CTRL &= ~USBHS_UEP_R_RES_MASK;
                          USBHSD->UEP1_TX_CTRL |= USBHS_UEP_R_RES_ACK;
-
+*/
 #if 0
                         if ( intst & USBHS_UIS_TOG_OK )
                         {
@@ -810,3 +831,32 @@ void USBHS_Send_Resume( void )
     USBHSH->HOST_CTRL &= ~USBHS_UH_REMOTE_WKUP;
     Delay_Ms( 1 );
 }
+///=============================================
+void USBHS_Send_hid_dat(hid_cmd_t *p_hid_cmd)
+{
+int ii;
+int len=512;
+USBHS_EP1_Tx_Buf[0]=p_hid_cmd->cmd;
+USBHS_EP1_Tx_Buf[1]=p_hid_cmd->num_bytes;
+if(p_hid_cmd->num_bytes>MAX_DAT_CNT)
+    p_hid_cmd->num_bytes=MAX_DAT_CNT;
+for( ii = 0; ii < p_hid_cmd->num_bytes; ii++ )
+    {
+    USBHS_EP1_Tx_Buf[ ii+2 ] = p_hid_cmd->dat[ii];
+    }
+USBHSD->UEP1_TX_LEN  = len;
+USBHSD->UEP1_TX_CTRL &= ~USBHS_UEP_R_RES_MASK;
+USBHSD->UEP1_TX_CTRL |= USBHS_UEP_R_RES_ACK;
+
+}
+/*
+                         for( i = 0; i < len; i++ )
+                            {
+                            USBHS_EP1_Tx_Buf[ i ] = (~USBHS_EP1_Rx_Buf[ i ])+3;
+                            }
+                         USBHSD->UEP1_TX_LEN  = len;
+                         USBHSD->UEP1_TX_CTRL &= ~USBHS_UEP_R_RES_MASK;
+                         USBHSD->UEP1_TX_CTRL |= USBHS_UEP_R_RES_ACK;
+*/
+
+///=============================================

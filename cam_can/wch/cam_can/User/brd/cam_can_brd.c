@@ -4,6 +4,15 @@
 uint8_t cur_stat=0;
 
 //=========== tim_pwm ======================================
+void TIM_PWM_set_val( uint16_t ccp )
+{
+    TIM_OCInitTypeDef TIM_OCInitStructure={0};
+   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = ccp;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC1Init( TIM_PWM, &TIM_OCInitStructure );
+
+}
 /*********************************************************************
  * @fn      TIM1_OutCompare_Init
  *
@@ -172,6 +181,11 @@ void set_tst3(uint8_t on_off)
      GPIO_WriteBit(TST3_GPIO,TST3_PIN, Bit_RESET);
 }
 
+///=============== led pwm =======================================
+void set_led_pwm(uint16_t led_pwm)
+{
+    TIM_PWM_set_val(led_pwm);
+}
 
 #if 0
 /*********************************************************************

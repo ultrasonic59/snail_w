@@ -14,6 +14,8 @@
 #include "string.h"
 #include "usb_desc.h"
 #include "ch32v30x_usb.h"
+#include "usb_hid_thr.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
