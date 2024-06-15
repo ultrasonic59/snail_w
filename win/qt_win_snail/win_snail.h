@@ -11,6 +11,8 @@
 #include "dial_debug.h"
 
 #include "my_camera.h"
+#include "hid_cmd.h"
+
 #define MAX_HID_BUG                     64
 ////#define DEF_HID_USB_VID                  0x1A86
 ////#define DEF_HID_USB_PID                  0xFE07
@@ -66,11 +68,14 @@ protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
     void createThreads();
+    bool put_hid_cmd(hid_cmd_t* cmd);
+
 protected:
     DialDebug dial_dbg;
 public slots:
     void on_butt_con();
     ///===== for debug =======
+    void on_value_changed(int value);
     void on_butt_debug();
     void slot_rd_dbg(int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);

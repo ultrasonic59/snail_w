@@ -36,7 +36,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>qt515static</QtInstall>
+    <QtInstall>5.15.0_msvc2019_static_x64</QtInstall>
     <QtModules>core;network;gui;multimedia;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -103,7 +103,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc" />
-    <QtUic Include="dial_debug\dial_debug.ui" />
+    <QtUic Include="dial_debug\dial_debug.ui">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </QtUic>
     <QtUic Include="win_snail.ui" />
     <QtMoc Include="win_snail.h" />
     <ClCompile Include="camera\my_camera.cpp" />

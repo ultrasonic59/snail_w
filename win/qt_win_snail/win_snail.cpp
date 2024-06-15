@@ -75,9 +75,11 @@ frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     connect(this, SIGNAL(updateCamView(QImage)), this, SLOT(setCamImage(QImage)));
     startTimer(100);
 #endif
+
 ///=======================================================
   connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
   connect(ui->buttCon, SIGNAL(clicked()), this, SLOT(on_butt_con()));
+  connect(ui->lightSlider, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
 
 ///=======================================================
 
@@ -166,6 +168,20 @@ void win_snail::on_butt_debug()
  ////   qDebug() << "end debug" ;
 
 }
+void win_snail::on_value_changed(int value)
+{
+    hid_cmd_t t_cmd;
+    t_cmd.cmd = CMD_SET_LED;
+    t_cmd.num_bytes = 2;
+    t_cmd.dat[0] = value & 0xff;
+    t_cmd.dat[1] = (value>>8) & 0xff;
+
+ ///   int value = ui->lightSlider->value();
+    qDebug() << "on_value_changed"<< value<< t_cmd.dat[0]<< t_cmd.dat[1];
+
+    put_hid_cmd(&t_cmd);
+
+}
 void win_snail::on_butt_con()
 {
     qDebug() << "start con";
@@ -191,22 +207,29 @@ void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
     memset(buf, 0, sizeof(buf));
  int   res = 0;
   int  ii = 0;
-#if 0
-  buf[0] = 0x0;
-  ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
-  ////               tmp_buf[ii] = ii;
-  buf[1] = 0x3;   ///cmd
- res = hid_write(hid_handle, (const unsigned char*)buf, 2);
-  if (res < 0)
+  if (hid_handle)
   {
-      QString tsstr;
-      ////     wchar_t tsstr[256];
-      tsstr = QString::fromWCharArray(hid_error(hid_handle));
+      quint8 tmp_buf[MAX_HID_BUG + 1];
 
-      qDebug() << "hid_write error : " << tsstr;
-  }
-#endif
-res = 0;
+      tmp_buf[0] = 0x0;
+      ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
+      ////               tmp_buf[ii] = ii;
+      tmp_buf[1] = 0x2;   ///cmd
+      tmp_buf[2] = 1; ///numbytes
+      tmp_buf[3] = 0;
+      tmp_buf[4] = 0;
+
+      int res = hid_write(hid_handle, (const unsigned char*)tmp_buf, 3);
+      if (res < 0)
+      {
+          QString tsstr;
+          ////     wchar_t tsstr[256];
+          tsstr = QString::fromWCharArray(hid_error(hid_handle));
+
+          qDebug() << "hid_write error : " << tsstr;
+      }
+}
+  res = 0;
 ii = 0;
 
     while (res == 0) {
@@ -230,7 +253,7 @@ ii = 0;
     {
         odat->data[0] = buf[0];
   ////      emit put_alt_dat_dial(odat);
-        qDebug() << "rd data:" << buf[0];
+        qDebug() << "rd data:" << buf[0] << buf[1] << buf[2] << buf[3];
 
     }
 
@@ -261,6 +284,29 @@ ii = 0;
     device_CMD.UpdateDevice(true);
     */
 }
+bool win_snail::put_hid_cmd(hid_cmd_t* cmd)
+{
+    if (hid_handle)
+    {
+        quint8 tmp_buf[MAX_HID_BUG + 1];
+        tmp_buf[0] = 0x0;
+        ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
+        ////               tmp_buf[ii] = ii;
+        tmp_buf[1] = cmd->cmd;   ///cmd
+        tmp_buf[2] = cmd->num_bytes; ///numbytes
+        if (cmd->num_bytes > MAX_DAT_CNT)
+            cmd->num_bytes = MAX_DAT_CNT;
+        for (int ii = 0; ii < cmd->num_bytes; ii++)
+            tmp_buf[3 + ii] = cmd->dat[ii];
+        int res = hid_write(hid_handle, (const unsigned char*)tmp_buf, cmd->num_bytes + 3);
+        if (res < 0)
+            return false;
+        return true;
+    }
+    else
+        return false;
+
+}
 
 void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
 {
@@ -276,8 +322,11 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
  ///           for (int ii = 1; ii < MAX_HID_BUG; ii++)
  ////               tmp_buf[ii] = ii;
             tmp_buf[1] = idat->addr;   ///cmd
-            tmp_buf[2] = idat->data[0];
-            int res=hid_write(hid_handle, (const unsigned char*)tmp_buf, 3);
+            tmp_buf[2] = 2; ///numbytes
+            tmp_buf[3] = idat->data[0]&0xff;
+            tmp_buf[4] = (idat->data[0] >>8)&0xff;
+
+            int res=hid_write(hid_handle, (const unsigned char*)tmp_buf,5);
             if (res < 0)
             {
                 QString tsstr;

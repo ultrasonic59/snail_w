@@ -6,12 +6,7 @@ uint8_t cur_stat=0;
 //=========== tim_pwm ======================================
 void TIM_PWM_set_val( uint16_t ccp )
 {
-    TIM_OCInitTypeDef TIM_OCInitStructure={0};
-   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-    TIM_OCInitStructure.TIM_Pulse = ccp;
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-    TIM_OC1Init( TIM_PWM, &TIM_OCInitStructure );
-
+ TIM_PWM->CH1CVR = ccp;
 }
 /*********************************************************************
  * @fn      TIM1_OutCompare_Init

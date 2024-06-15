@@ -4,6 +4,7 @@ ComboBoxKey::ComboBoxKey(QWidget *parent) : QComboBox(parent)
 {
 }
 
+
 void ComboBoxKey::setEditable(bool editable)
 {
     if (!editable) {

@@ -36,7 +36,8 @@ switch(p_hid_cmd->cmd)
     case CMD_SET_LED:
         curr_pwm_val= p_hid_cmd->dat[1]<<8|p_hid_cmd->dat[0];
         set_led_pwm(curr_pwm_val);
-        break;
+        printf(" CMD_SET_LED[%x]\n\r",curr_pwm_val);
+       break;
     case CMD_GET_LED:
         t_hid_cmd.cmd=CMD_GET_LED;
         t_hid_cmd.num_bytes=2;

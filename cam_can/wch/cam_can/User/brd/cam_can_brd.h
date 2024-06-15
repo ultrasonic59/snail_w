@@ -5,9 +5,9 @@
 
 #define DOZA_BRD    1
 
-#define DEF_PER    100
-#define DEF_PRESC  500-1   //48000-1
-#define DEF_VAL  90
+#define DEF_PER    1000
+#define DEF_PRESC  50-1   //48000-1
+#define DEF_VAL  900
 
 /* PWM Output Mode Definition */
 #define PWM_MODE1   0
