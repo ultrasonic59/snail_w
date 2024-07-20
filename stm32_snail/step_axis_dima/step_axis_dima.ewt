@@ -9,9 +9,9 @@
         <debug>1</debug>
         <settings>
             <name>C-STAT</name>
-            <archiveVersion>515</archiveVersion>
+            <archiveVersion>516</archiveVersion>
             <data>
-                <version>515</version>
+                <version>516</version>
                 <cstatargs>
                     <useExtraArgs>0</useExtraArgs>
                     <extraArgs></extraArgs>
@@ -25,7 +25,7 @@
                     <outputDir>step_x_dbg\C-STAT</outputDir>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>2.3.1</cstat_version>
+                    <cstat_version>2.4.1</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">
@@ -841,6 +841,8 @@
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_u" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_v" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_w" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.4_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.4_b" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-2">
                                 <check enabled="true" name="MISRAC2012-Rule-2.1_a" />
@@ -1063,6 +1065,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-21.19_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.19_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.20" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.21" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-22">
                                 <check enabled="true" name="MISRAC2012-Rule-22.1_a" />
@@ -1447,37 +1450,37 @@
     <group>
         <name>dbg</name>
         <file>
-            <name>$PROJ_DIR$\..\common\dbg\printk1.c</name>
+            <name>$PROJ_DIR$\..\..\common\dbg\printk1.c</name>
         </file>
     </group>
     <group>
         <name>drv</name>
         <file>
-            <name>$PROJ_DIR$\..\common\can\can_cmds.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\can\can_cmds.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\can\can_drv.c</name>
         </file>
     </group>
     <group>
         <name>FreeRTOS</name>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\MemMang\heap_2.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\MemMang\heap_2.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\list.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\port.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\port.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
         </file>
     </group>
     <group>
@@ -1541,42 +1544,48 @@
         </file>
     </group>
     <group>
+        <name>lib</name>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul\emul_eeprom.c</name>
+        </file>
+    </group>
+    <group>
         <name>ST Library</name>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\system_stm32f2xx.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\system_stm32f2xx.c</name>
         </file>
     </group>
     <group>
         <name>startup</name>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\startup_stm32f2xx.s</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\startup_stm32f2xx.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\stm32f2xx_it.c</name>
         </file>
     </group>
     <group>
@@ -1620,8 +1629,5 @@
     </group>
     <file>
         <name>$PROJ_DIR$\src\can_thr.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\..\common\libraries\eeprom_emul\emul_eeprom.c</name>
     </file>
 </project>

@@ -18,7 +18,7 @@ uint8_t cur_stat=0;
 
 void mot_spi_wr(uint8_t addr,uint16_t idata);
 uint16_t mot_spi_rd(uint8_t addr);
-void CAN_Config(void);
+void _CAN_Config(void);
 
 ///=============================
 int send_char_dbg (int c) 
@@ -580,13 +580,15 @@ void CAN1_Init (void)
 {
 uint32_t id;
  uint32_t mask;
-CAN_Config();
+_CAN_Config();
 
 mask= ID_MASK << 21; ///5+16
+id=ID_BRD<<21; ///5+16
 
-#if STEP_X
-  id=ID_X_CMD<<21; ///5+16
-
+////#if STEP_X
+/*
+  id=ID_BRD<<21; ///5+16
+#if 0
 #elif STEP_Y
   id=ID_Y_CMD<<21; ///5+16
 #elif STEP_Z
@@ -594,7 +596,7 @@ mask= ID_MASK << 21; ///5+16
 #else 
   #error "\n\r=== STEP_... nodefined ==="; 
 #endif
-
+*/
 CAN_FilterConfig(0,id,mask);	
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);

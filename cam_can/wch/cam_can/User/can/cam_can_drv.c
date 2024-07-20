@@ -234,6 +234,7 @@ uint32_t id;
 uint32_t mask= ID_MASK << 21; ///5+16;
 
 id=ID_BRD<<21; ///5+16
+printf("id=%x[%x]\n\r ",ID_BRD,id);
 
 CAN_FilterConfig(0,id,mask);	
 }

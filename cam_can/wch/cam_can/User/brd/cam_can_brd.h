@@ -7,7 +7,7 @@
 
 #define DEF_PER    1000
 #define DEF_PRESC  50-1   //48000-1
-#define DEF_VAL  900
+#define INIT_VAL  0
 
 /* PWM Output Mode Definition */
 #define PWM_MODE1   0
@@ -47,18 +47,18 @@
   #define TST3_PIN          GPIO_Pin_11
   #define TST3_GPIO         GPIOB
 ///===================================================
-#define MOTOR_TASK_STACK_SIZE           1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define MOTOR_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
-#define CAN_SEND_STACK_SIZE                 1024////
-#define CAN_TASK_STACK_SIZE                 1024            ////
+////#define MOTOR_TASK_STACK_SIZE           1024            ////( configMINIMAL_STACK_SIZE + 50 )
+////#define MOTOR_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
+#define CAN_SEND_STACK_SIZE                 512////1024////
+#define CAN_TASK_STACK_SIZE                 512///1024            ////
 #define CAN_TASK_PRIORITY               ( tskIDLE_PRIORITY + 8 )
-#define USB_HID_STACK_SIZE                 1024            ////
+#define USB_HID_STACK_SIZE                 512  ////1024            ////
 #define USB_HID_TASK_PRIORITY               ( tskIDLE_PRIORITY + 8 )
 
 #define APP_PRIORITY                           (6)
 
-#define TST_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define TST_TASK_PRIORITY               ( tskIDLE_PRIORITY + 3 )
+////#define TST_TASK_STACK_SIZE         1024            ////( configMINIMAL_STACK_SIZE + 50 )
+////#define TST_TASK_PRIORITY               ( tskIDLE_PRIORITY + 3 )
 
 ///===================================================
 extern void gpio_init(void);

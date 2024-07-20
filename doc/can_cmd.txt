@@ -18,3 +18,8 @@ Z_AXIS_CAN_ID   ((0x1<<2) <<5)   0x80
 DOZA_ID         ((0x1<<3) <<5)   0x100
 
 DEF_SPEED  500
+
+ON_DOZA   0x11
+
+                              cmd    dir   step_per  steps
+#define GO_CMD                0x1    0x0   0x0005    0x00000010

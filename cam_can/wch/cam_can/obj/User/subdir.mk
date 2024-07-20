@@ -7,19 +7,16 @@
 C_SRCS += \
 ../User/ch32v30x_it.c \
 ../User/main.c \
-../User/motor_tsk.c \
 ../User/system_ch32v30x.c 
 
 OBJS += \
 ./User/ch32v30x_it.o \
 ./User/main.o \
-./User/motor_tsk.o \
 ./User/system_ch32v30x.o 
 
 C_DEPS += \
 ./User/ch32v30x_it.d \
 ./User/main.d \
-./User/motor_tsk.d \
 ./User/system_ch32v30x.d 
 
 

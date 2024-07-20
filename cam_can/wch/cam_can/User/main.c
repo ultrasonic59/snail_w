@@ -147,10 +147,10 @@ int main(void)
 
  ////  xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
   //// rez=
- ////          xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
+          xTaskCreate( can_rsv_thr, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
    ////printf("rez:%d\r\n",rez);
   ///rez=
- ////         xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
+        xTaskCreate(can_send_thr, (const char*)"can_send_thr",CAN_SEND_STACK_SIZE/2, 0, CAN_TASK_PRIORITY, &can_send_thread_handle);
         xTaskCreate(usb_hid_thr, (const char*)"usb_hid_thr",USB_HID_STACK_SIZE/2, 0, USB_HID_TASK_PRIORITY, NULL);
 
   ////printf("rez1:%d\r\n",rez);
@@ -167,12 +167,14 @@ int main(void)
                         (UBaseType_t    )TASK2_TASK_PRIO,
                         (TaskHandle_t*  )&Task2Task_Handler);
 #endif
+    /*
     xTaskCreate((TaskFunction_t )task1_task,
                     (const char*    )"task1",
                     (uint16_t       )TASK1_STK_SIZE,
                     (void*          )NULL,
                     (UBaseType_t    )TASK1_TASK_PRIO,
                     (TaskHandle_t*  )&Task1Task_Handler);
+  */
 
     vTaskStartScheduler();
 

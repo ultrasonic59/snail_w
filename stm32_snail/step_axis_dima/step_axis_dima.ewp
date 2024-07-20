@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>33</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -62,7 +62,7 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
+                    <state>A complete configuration of the C/C++14 runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -70,7 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.10.2.39304</state>
+                    <state>9.30.1.50052</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -98,7 +98,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>30</version>
+                    <version>32</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -115,7 +115,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>30</version>
+                    <version>32</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -138,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>30</version>
+                    <version>32</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -198,6 +198,18 @@
                 <option>
                     <name>OG_32_64Device</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>BuildFilesPath</name>
+                    <state>step_x_dbg</state>
+                </option>
+                <option>
+                    <name>PointerAuthentication</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>FPU64</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -341,16 +353,18 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\.</state>
                     <state>$PROJ_DIR$\src\board</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\inc</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
-                    <state>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver</state>
-                    <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common\usb\drv\inc</state>
                     <state>$PROJ_DIR$\..\common\board</state>
                     <state>$PROJ_DIR$\..\common\my_grbl</state>
                     <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
+                    <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
+                    <state>$PROJ_DIR$\..\common_stm32\board</state>
+                    <state>$PROJ_DIR$\..\..\common\can</state>
+                    <state>$PROJ_DIR$\..\..\common\dbg</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -684,7 +698,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>25</version>
+                <version>27</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -697,7 +711,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>RTOSDemo.out</state>
+                    <state>step_axis_dima.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1036,6 +1050,22 @@
                     <name>IlinkDemangle</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>IlinkWrapperFileEnable</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkWrapperFile</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkProcessor</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkFpuProcessor</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1090,37 +1120,37 @@
     <group>
         <name>dbg</name>
         <file>
-            <name>$PROJ_DIR$\..\common\dbg\printk1.c</name>
+            <name>$PROJ_DIR$\..\..\common\dbg\printk1.c</name>
         </file>
     </group>
     <group>
         <name>drv</name>
         <file>
-            <name>$PROJ_DIR$\..\common\can\can_cmds.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\can\can_cmds.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\can\can_drv.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\can\can_drv.c</name>
         </file>
     </group>
     <group>
         <name>FreeRTOS</name>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\MemMang\heap_2.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\MemMang\heap_2.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\list.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\port.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\port.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\freertos\source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
         </file>
     </group>
     <group>
@@ -1244,42 +1274,48 @@
         </file>
     </group>
     <group>
+        <name>lib</name>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul\emul_eeprom.c</name>
+        </file>
+    </group>
+    <group>
         <name>ST Library</name>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\libraries\STM32F2xx_StdPeriph_Driver\system_stm32f2xx.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\system_stm32f2xx.c</name>
         </file>
     </group>
     <group>
         <name>startup</name>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\startup_stm32f2xx.s</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\startup_stm32f2xx.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\common\startup\stm32f2xx_it.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\startup\stm32f2xx_it.c</name>
         </file>
     </group>
     <group>
@@ -1326,8 +1362,5 @@
     </group>
     <file>
         <name>$PROJ_DIR$\src\can_thr.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\..\common\libraries\eeprom_emul\emul_eeprom.c</name>
     </file>
 </project>

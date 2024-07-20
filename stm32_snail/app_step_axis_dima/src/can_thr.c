@@ -47,29 +47,6 @@ printk("\n\r can_rsv_task");
     {
     CAN_RxRdy=0;
     obr_can_cmd(CAN_RxMsg.data);
-#if 0   
-    switch(CAN_RxMsg.data[0]) {
-      case GO_CMD:
-        {
-        put_can_ack(GO_CMD);
-          
-        go_cmd((go_cmd_t *)CAN_RxMsg.data);
-  ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
-         
-        }
-        break;
-      case GET_STAT_CMD:
-        {
-        put_can_cmd_stat(cur_stat,cur_coord);
-         printk("[stat=%x] ",cur_stat);
-
-         }
-        break;
-        
-    default:
-      break;
-    }
-#endif
 #if 1   
     printk("\n\r can_rx"); 
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
