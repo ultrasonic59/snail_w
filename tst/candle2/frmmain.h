@@ -148,7 +148,7 @@ private slots:
     void onActSendFromLineTriggered();
 
     void on_actFileExit_triggered();
-    void on_cmdFileOpen_clicked();
+ 
     void on_cmdFit_clicked();
     void on_cmdFileSend_clicked();
     void onTableCellChanged(QModelIndex i1, QModelIndex i2);
