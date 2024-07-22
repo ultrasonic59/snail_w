@@ -78,7 +78,9 @@ frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
 
 ///=======================================================
   connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
-  connect(ui->buttCon, SIGNAL(clicked()), this, SLOT(on_butt_con()));
+ connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
+ connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
+
   connect(ui->lightSlider, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
 
 ///=======================================================
@@ -182,7 +184,7 @@ void win_snail::on_value_changed(int value)
     put_hid_cmd(&t_cmd);
 
 }
-void win_snail::on_butt_con()
+void win_snail::on_butt_con_hid()
 {
     qDebug() << "start con";
     if (hid_handle)
@@ -194,11 +196,62 @@ void win_snail::on_butt_con()
             ///      return 1;
         }
     }
+}
+#if 0
+void platypus::connecting()
+{
+    if (m_cmd_sender->isConnected())
+    {
+        m_cmd_sender->disconnectToDev();
+        ui.pushButton_connect->setText(tr("Connect"));
+        ui.pushButton_connect->setStyleSheet("");
+
+    }
+    else
+    {
+        PortPropDialog* port_dialog;
+        port_dialog = new PortPropDialog();
+        port_dialog->SetProperties(ComPortName);
+
+        port_dialog->show();
+
+        if (port_dialog->exec() == QDialog::Accepted)
+        {
+            port_dialog->GetProperties(ComPortName);
+            saveSettings();
+            m_cmd_sender->COM_port_name = ComPortName;		// 
+
+            m_cmd_sender->connectToDev();
+            if (m_cmd_sender->isConnected())
+            {
+                ui.pushButton_connect->setStyleSheet("background-color: green;");
+                qDebug() << "connected " << ComPortName;
+                ui.pushButton_connect->setText(tr("Disconnect"));
+            }
+        }
+        delete port_dialog;
+    }
+}
+#endif
+void win_snail::on_butt_con_can()
+{
+    qDebug() << "start can";
+    /*
+    if (hid_handle)
+        return;
+    if (hid_init() == 0) {
+        hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
+        if (!hid_handle) {
+            qDebug() << "unable to open device";
+            ///      return 1;
+        }
+    }
 
 
- ///   dial_dbg.show();
- ///   qDebug() << "end debug";
 
+///   dial_dbg.show();
+///   qDebug() << "end debug";
+*/
 }
 void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
 {

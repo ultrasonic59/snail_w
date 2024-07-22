@@ -192,7 +192,7 @@ uint8_t CAN_Init(CAN_TypeDef *CANx, CAN_InitTypeDef *CAN_InitStruct)
  *
  * @return  none
  */
-void CAN_FilterInit(CAN_FilterInitTypeDef *CAN_FilterInitStruct)
+void CAN1_FilterInit(CAN_FilterInitTypeDef *CAN_FilterInitStruct)
 {
     uint32_t filter_number_bit_pos = 0;
 
@@ -251,6 +251,66 @@ void CAN_FilterInit(CAN_FilterInitTypeDef *CAN_FilterInitStruct)
     }
 
     CAN1->FCTLR &= ~FCTLR_FINIT;
+}
+void CAN2_FilterInit(CAN_FilterInitTypeDef *CAN_FilterInitStruct)
+{
+    uint32_t filter_number_bit_pos = 0;
+
+    filter_number_bit_pos = ((uint32_t)1) << CAN_FilterInitStruct->CAN_FilterNumber;
+    CAN2->FCTLR |= FCTLR_FINIT;
+    CAN2->FWR &= ~(uint32_t)filter_number_bit_pos;
+
+    if(CAN_FilterInitStruct->CAN_FilterScale == CAN_FilterScale_16bit)
+    {
+        CAN2->FSCFGR &= ~(uint32_t)filter_number_bit_pos;
+
+        CAN2->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 =
+            ((0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterMaskIdLow) << 16) |
+            (0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterIdLow);
+
+        CAN2->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 =
+            ((0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterMaskIdHigh) << 16) |
+            (0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterIdHigh);
+    }
+
+    if(CAN_FilterInitStruct->CAN_FilterScale == CAN_FilterScale_32bit)
+    {
+        CAN2->FSCFGR |= filter_number_bit_pos;
+
+        CAN2->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 =
+            ((0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterIdHigh) << 16) |
+            (0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterIdLow);
+
+        CAN2->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 =
+            ((0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterMaskIdHigh) << 16) |
+            (0x0000FFFF & (uint32_t)CAN_FilterInitStruct->CAN_FilterMaskIdLow);
+    }
+
+    if(CAN_FilterInitStruct->CAN_FilterMode == CAN_FilterMode_IdMask)
+    {
+        CAN2->FMCFGR &= ~(uint32_t)filter_number_bit_pos;
+    }
+    else
+    {
+        CAN2->FMCFGR |= (uint32_t)filter_number_bit_pos;
+    }
+
+    if(CAN_FilterInitStruct->CAN_FilterFIFOAssignment == CAN_Filter_FIFO0)
+    {
+        CAN2->FAFIFOR &= ~(uint32_t)filter_number_bit_pos;
+    }
+
+    if(CAN_FilterInitStruct->CAN_FilterFIFOAssignment == CAN_Filter_FIFO1)
+    {
+        CAN2->FAFIFOR |= (uint32_t)filter_number_bit_pos;
+    }
+
+    if(CAN_FilterInitStruct->CAN_FilterActivation == ENABLE)
+    {
+        CAN2->FWR |= filter_number_bit_pos;
+    }
+
+    CAN2->FCTLR &= ~FCTLR_FINIT;
 }
 
 /*********************************************************************

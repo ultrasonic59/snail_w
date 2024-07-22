@@ -42,6 +42,12 @@
     <Filter Include="Source Files\hidapi">
       <UniqueIdentifier>{9e776ff6-622e-4e69-a3b1-e70911c28da7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\can">
+      <UniqueIdentifier>{75e49a35-3d91-4320-a18e-07ddde7b8635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\can">
+      <UniqueIdentifier>{e491e98f-04c5-443a-853a-a8cd28e4d38b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -88,6 +94,9 @@
     <ClCompile Include="hidapi\hid.c">
       <Filter>Source Files\hidapi</Filter>
     </ClCompile>
+    <ClCompile Include="can\cmd_sender.cpp">
+      <Filter>Source Files\can</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -107,6 +116,9 @@
     <QtUic Include="dial_debug\dial_debug.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="port_prop_dialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
@@ -120,6 +132,9 @@
     </QtMoc>
     <QtMoc Include="widgets\plotterwidget.h">
       <Filter>Header Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="can\cmd_sender.h">
+      <Filter>Header Files\can</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

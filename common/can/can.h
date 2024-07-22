@@ -37,6 +37,7 @@ typedef struct  CAN_msg_s_{
   unsigned char  len;                // Length of data field in bytes
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
+  unsigned char  fmi;
 } can_msg_t;
 
 /* CAN identifier type */

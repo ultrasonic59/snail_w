@@ -4,6 +4,8 @@
 #define CAN_MAX_LEN_QUEU 4
 
 #define ID_MASK         (uint32_t)(0x7e0)
+///#define ID_MASK         (uint32_t)(0x7ff)
+////#define ID_MASK         (uint32_t)(0x0)
 
 #define AXIS_X           (0x1<<0)
 #define AXIS_Y           (0x1<<1)

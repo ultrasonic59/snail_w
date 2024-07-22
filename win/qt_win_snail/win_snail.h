@@ -12,6 +12,9 @@
 
 #include "my_camera.h"
 #include "hid_cmd.h"
+#include "port_prop_dialog.h"
+#include "cmd_sender.h"
+///======================================================================
 
 #define MAX_HID_BUG                     64
 ////#define DEF_HID_USB_VID                  0x1A86
@@ -52,6 +55,11 @@ private:
  ///  hid_device* hid_handle;
     struct hid_device_info* devs;
   struct hid_device_info* cur_dev;
+private:
+    QThread* m_pThread;
+    QThread* d_Thread;
+    CcmdSender* m_cmd_sender;
+ ////   BBworker* b_worker;
 
 public slots:
     void setCamImage(QImage ipm);
@@ -73,7 +81,8 @@ protected:
 protected:
     DialDebug dial_dbg;
 public slots:
-    void on_butt_con();
+    void on_butt_con_hid();
+    void on_butt_con_can();
     ///===== for debug =======
     void on_value_changed(int value);
     void on_butt_debug();

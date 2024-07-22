@@ -225,7 +225,7 @@ void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
   CAN_FilterInitStructure.CAN_FilterMaskIdLow =  mask&0xffff;
   //CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
   CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-  CAN_FilterInit(&CAN_FilterInitStructure);
+  CAN1_FilterInit(&CAN_FilterInitStructure);
 #endif
 }
 void canfilter_init(void)
@@ -236,7 +236,7 @@ uint32_t mask= ID_MASK << 21; ///5+16;
 id=ID_BRD<<21; ///5+16
 printf("id=%x[%x]\n\r ",ID_BRD,id);
 
-CAN_FilterConfig(0,id,mask);	
+CAN_FilterConfig(14,id,mask);
 }
 ////=============================================================================================
 
@@ -249,7 +249,10 @@ int can_init( FunctionalState ttcm, FunctionalState abom, FunctionalState awum, 
 {
   uint8_t tmp=0;
 CAN_InitTypeDef   CAN_InitStructure;
+RCC_APB1PeriphClockCmd( RCC_APB1Periph_CAN1, ENABLE );
+
 RCC_APB1PeriphClockCmd( RCC_APB1Periph_CAN2, ENABLE );
+////RCC_APB1PeriphClockCmd( RCC_APB1Periph_CAN1, ENABLE );
 CAN_DeInit(CANx);               // CAN register deinit
 
 CAN_StructInit(&CAN_InitStructure);
