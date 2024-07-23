@@ -18,6 +18,7 @@ bool CcmdSender::isConnected() const
     return m_isConnected;
 
 }
+#if 0
 bool CcmdSender::CheckSetResvData(QByteArray in_data,sent_dat_t *out_data)
 {
 quint16 ii=0;
@@ -92,6 +93,7 @@ if(!CheckSetResvData(resvData,res_data))
 return true;
 
 }
+#endif
 void CcmdSender::config_port()
 {
 m_pSerialPort->setPortName(COM_port_name);
@@ -110,6 +112,7 @@ m_isConnected=false;
 void CcmdSender::connectToDev()
 {
 config_port();
+#if 0
 if (m_pSerialPort->open(QSerialPort::ReadWrite))
 	{
     m_isConnected = getStat();
@@ -127,7 +130,9 @@ if (m_pSerialPort->open(QSerialPort::ReadWrite))
         qDebug() << "dev no connected";
         m_isConnected = false;
     }
+#endif
 }
+#if 0
 void CcmdSender::OnOffAirCmd(bool on_off)
 {
 sent_dat_t send_dat;
@@ -214,7 +219,8 @@ qDebug() << "ChangeAirCmd"<< resv_dat.cmd;
 }
 }
 
-
+#endif
+#if 0
 bool CcmdSender::getStat() 
 {
 #if 1
@@ -231,6 +237,8 @@ if(SendRes(&send_dat,&resv_dat))
 #endif
 return false;  ///
 }
+#endif
+#if 0
 bool CcmdSender::getAllData(sensors_data_t *data ) 
 {
 #if 1
@@ -251,4 +259,4 @@ if(SendRes(&send_dat,&resv_dat))
 #endif
 return false;  ///
 }
-
+#endif

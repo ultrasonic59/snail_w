@@ -58,7 +58,7 @@ private:
 private:
     QThread* m_pThread;
     QThread* d_Thread;
-    CcmdSender* m_cmd_sender;
+  ///  CcmdSender* m_cmd_sender;
  ////   BBworker* b_worker;
 
 public slots:

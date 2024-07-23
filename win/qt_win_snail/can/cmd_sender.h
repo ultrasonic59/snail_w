@@ -77,13 +77,13 @@ public:
 private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
-	bool getStat(); 
+///	bool getStat(); 
 	////bool getAllData(sensors_data_t *data ) ;
 ///	QByteArray SendRes(sent_dat_t *sent_data);
-	bool SendRes(sent_dat_t *sent_data,sent_dat_t *res_data);
-	bool CheckSetResvData(QByteArray in_data,sent_dat_t *out_data);
+///	bool SendRes(sent_dat_t *sent_data,sent_dat_t *res_data);
+///	bool CheckSetResvData(QByteArray in_data,sent_dat_t *out_data);
 	char *out_buffer;
-	QByteArray SetSendData(sent_dat_t *sentData);
+///	QByteArray SetSendData(sent_dat_t *sentData);
 
 public:
 ////	void OnOffAirCmd(bool on_off);

@@ -37,7 +37,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.0_msvc2019_static_x64</QtInstall>
-    <QtModules>core;network;gui;multimedia;widgets</QtModules>
+    <QtModules>core;network;gui;multimedia;widgets;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
