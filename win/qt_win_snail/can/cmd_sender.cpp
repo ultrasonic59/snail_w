@@ -2,13 +2,13 @@
 #include <QDebug>
 #include "cmd_sender.h"
 
-extern void addfcs16( unsigned char *cp, int len );
-extern int checkfcs16(unsigned char *cp, const int len );
+////extern void addfcs16( unsigned char *cp, int len );
+/////extern int checkfcs16(unsigned char *cp, const int len );
 
 CcmdSender::CcmdSender(QObject *parent) : 
 			QObject(parent),
 			m_isConnected(false),
-			COM_port_name("COM10")
+			COM_port_name("COM16")
 {
 m_pSerialPort = new QSerialPort(this);
 out_buffer=new char[MAX_BUFF_SIZE];
@@ -18,82 +18,22 @@ bool CcmdSender::isConnected() const
     return m_isConnected;
 
 }
-#if 0
-bool CcmdSender::CheckSetResvData(QByteArray in_data,sent_dat_t *out_data)
+bool CcmdSender::SendRes(char *sent_data,char *res_data)
 {
-quint16 ii=0;
-quint16 jj=0;
-quint8 ch;
-quint8 *tmpbuf= new quint8[in_data.size()];
-do
-	{
-	ch=in_data[ii];
-	ii++;
-	}
-while((ii < in_data.size()) && (ch != PPP_FRAME));	// ищем начало фрейма
-	
-if(ii==in_data.size())
+if ((sent_data == 0) || (res_data == 0))
 	return false;
-while(ii < in_data.size())
-    {
-	if((in_data[ii] == (char)PPP_ESCAPE)&&(ii+1 <in_data.size()))
-		{
-		tmpbuf[jj]= in_data[++ii] ^ PPP_ESCAPE_BIT;
-		ii++;
-		}
-	else if(in_data[ii] != (char)PPP_FRAME)
-		{
-		tmpbuf[jj++]= in_data[ii++];
-		}
-	else
-		break;
-	}
-if(!checkfcs16((unsigned char*)tmpbuf, jj - 2 ))
-	return false;
-memcpy((quint8*)out_data,tmpbuf,jj-2);
-delete tmpbuf;
-return true;
-}
-
-QByteArray CcmdSender::SetSendData(sent_dat_t *sentData)
-{
-quint8 *p_char_send_dat = new quint8[sentData->len+16];
-memcpy(p_char_send_dat,(quint8*)sentData,sentData->len+4);
-addfcs16(p_char_send_dat, sentData->len+4);	
-
-quint16 out_size = 0;
-out_buffer[out_size++] = PPP_FRAME;
-for(int ii = 0; ii < sentData->len+6; ii++)
-	{
-	if( p_char_send_dat[ii] == PPP_FRAME || p_char_send_dat[ii] == PPP_ESCAPE )			// Замена "FLAG" или "ESC" на ESC-последовательность
-		{
-		out_buffer[out_size++] = PPP_ESCAPE;
-		out_buffer[out_size++] = p_char_send_dat[ii] ^ PPP_ESCAPE_BIT;
-		}
-	else
-		out_buffer[out_size++] = p_char_send_dat[ii];
-	}
-out_buffer[out_size++] = PPP_FRAME;
-QByteArray rez(out_buffer,out_size);
-delete p_char_send_dat;
-return rez;
-}
-
-bool CcmdSender::SendRes(sent_dat_t *sent_data,sent_dat_t *res_data)
-{
-QByteArray sentData=SetSendData(sent_data);
-m_pSerialPort->write(sentData);
+m_pSerialPort->write(sent_data);
 if(!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
 	return false;
 if(!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
 	return false;
-QByteArray resvData=m_pSerialPort->readAll();
-if(!CheckSetResvData(resvData,res_data))
+quint64 len = m_pSerialPort->read(res_data, 256);
+if (len == 0)
 	return false;
 return true;
 
 }
-#endif
+
 void CcmdSender::config_port()
 {
 m_pSerialPort->setPortName(COM_port_name);
@@ -112,132 +52,136 @@ m_isConnected=false;
 void CcmdSender::connectToDev()
 {
 config_port();
-#if 0
-if (m_pSerialPort->open(QSerialPort::ReadWrite))
+m_isConnected = false;
+bool tmp_rez = false;
+if (!m_pSerialPort->open(QSerialPort::ReadWrite))
+     return;
+	tmp_rez = getVers(vers);
+	if (!tmp_rez)
+		return;
+	tmp_rez = setBaudRate(DEFAULT_CAN_BR);
+	if (!tmp_rez)
+		return;
+	tmp_rez = canOpen();
+	if (!tmp_rez)
+		return;
+m_isConnected = true;
+ }
+bool CcmdSender::getVers(char *vers) 
+{
+	char snd_dat[16];
+	char rsv_dat[64] = { 0 };
+	snd_dat[0] = CMD_VERS;
+	snd_dat[1] = '\r';
+	snd_dat[2] = 0;
+
+	if(SendRes(snd_dat, rsv_dat))
 	{
-    m_isConnected = getStat();
-    if (m_isConnected)
-        {
-        qDebug() << "dev connected";
-        }
-    else
-        {
-        qDebug() << "no dev!";
-        }
-    }
-    else
-    {
-        qDebug() << "dev no connected";
-        m_isConnected = false;
-    }
-#endif
-}
-#if 0
-void CcmdSender::OnOffAirCmd(bool on_off)
-{
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_PUT;
-send_dat.cmd=NUM_SET_CL3;
-send_dat.len=1;
-if(on_off)
-	send_dat.buff[0]=1;
-else
-	send_dat.buff[0]=0;
-
-if(SendRes(&send_dat,&resv_dat))
-	{
-	qDebug() << "OnOffAirCmd "<< resv_dat.cmd;
-	}
-}
-void CcmdSender::OnOffRedCmd(bool on_off)
-{
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_PUT;
-send_dat.cmd=NUM_SET_RED;
-send_dat.len=1;
-if(on_off)
-	send_dat.buff[0]=1;
-else
-	send_dat.buff[0]=0;
-
-if(SendRes(&send_dat,&resv_dat))
-	{
-	qDebug() << "OnOffRedCmd "<< resv_dat.cmd;
-	}
-}
-void CcmdSender::OnOffGreenCmd(bool on_off)
-{
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_PUT;
-send_dat.cmd=NUM_SET_GREEN;
-send_dat.len=1;
-if(on_off)
-	send_dat.buff[0]=1;
-else
-	send_dat.buff[0]=0;
-
-if(SendRes(&send_dat,&resv_dat))
-	{
-	qDebug() << "OnOffGreenCmd "<< resv_dat.cmd;
-	}
-}
-
-void CcmdSender::OnOffGazCmd(bool on_off)
-{
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_PUT;
-send_dat.cmd=NUM_SET_CL7;
-send_dat.len=1;
-if(on_off)
-	send_dat.buff[0]=1;
-else
-	send_dat.buff[0]=0;
-
-if(SendRes(&send_dat,&resv_dat))
-	{
-	qDebug() << "OnOffGazCmd "<< resv_dat.cmd;
-	}
-
-}
-void CcmdSender::ChangeAirCmd(quint16 val)
-{
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_PUT;
-send_dat.cmd=NUM_SET_AIR;
-send_dat.len=2;
-memcpy(&send_dat.buff[0],&val,sizeof(quint16));
-
-if(SendRes(&send_dat,&resv_dat))
-{
-qDebug() << "ChangeAirCmd"<< resv_dat.cmd;
-
-}
-}
-
-#endif
-#if 0
-bool CcmdSender::getStat() 
-{
-#if 1
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_REQ;
-send_dat.cmd=GET_STAT;
-send_dat.len=0;
-if(SendRes(&send_dat,&resv_dat))
-	{
-	qDebug() << "OnOffAirCmd "<< resv_dat.cmd;
+	////qDebug() << "getVers "<< rsv_dat;
+	if (vers)
+		strcpy(vers, rsv_dat);
 	return true;  ///
 	}
-#endif
+
 return false;  ///
 }
-#endif
+bool CcmdSender::canOpen(void)
+{
+	char snd_dat[6];
+	char rsv_dat[8] = { 0 };
+	snd_dat[0] = CMD_OPEN;
+	snd_dat[1] = '\r';
+	snd_dat[2] = 0;
+	if (SendRes(snd_dat, rsv_dat))
+	{
+		return true;  ///
+	}
+return false;  ///
+}
+bool CcmdSender::canClose(void)
+{
+	char snd_dat[6];
+	char rsv_dat[8] = { 0 };
+	snd_dat[0] = CMD_CLOSE;
+	snd_dat[1] = '\r';
+	snd_dat[2] = 0;
+	if (SendRes(snd_dat, rsv_dat))
+	{
+		return true;  ///
+	}
+return false;  ///
+}
+///=================================================
+
+static char* put_hex_digit(char* str, quint8 val) {
+	char c;
+	val &= 0x0f;
+	if (val < 10) {
+		c = val + '0';
+	}
+	else {
+		c = val + 'A' - 10;
+	}
+*str++ = c;
+return str;
+}
+static char* put_hex_byte(char* str, quint8 val) {
+	str = put_hex_digit(str, val >> 4);
+	str = put_hex_digit(str, val);
+	return str;
+}
+
+///==================================================
+bool CcmdSender::canSendMsg(can_message_t* msg) {
+	char snd_dat[64];
+	char* t_str = snd_dat;
+	char rsv_dat[64] = { 0 };
+	*t_str++ = CMD_SEND;
+	t_str = put_hex_digit(t_str, msg->id >> 8);
+	t_str = put_hex_byte(t_str, msg->id & 0xff);
+	t_str = put_hex_digit(t_str, msg->dlc);
+	for (quint8 ii = 0; ii < msg->dlc; ii++) {
+		t_str = put_hex_byte(t_str, msg->data[ii]);
+	}
+*t_str++ = '\r';
+*t_str++ = 0;
+if (SendRes(snd_dat, rsv_dat))
+	{
+		return true;  ///
+	}
+	return false;  ///
+
+}
+
+const char* slcan_get_baud_string(quint32 bps) {
+	switch (bps) {
+	case   10000: return "S0\r";
+	case   20000: return "S1\r";
+	case   50000: return "S2\r";
+	case  100000: return "S3\r";
+	case  125000: return "S4\r";
+	case  250000: return "S5\r";
+	case  500000: return "S6\r";
+	case  800000: return "S7\r";
+	case 1000000: return "S8\r";
+	}
+	return 0;
+}
+
+bool CcmdSender::setBaudRate(quint32 bps)
+{
+	char snd_dat[16];
+	char rsv_dat[16] = { 0 };
+	strcpy(snd_dat, slcan_get_baud_string(bps));
+	
+	if (SendRes(snd_dat, rsv_dat))
+	{
+		return true;  ///
+	}
+
+	return false;  ///
+}
+
 #if 0
 bool CcmdSender::getAllData(sensors_data_t *data ) 
 {

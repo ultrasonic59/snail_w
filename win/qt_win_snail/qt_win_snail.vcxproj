@@ -66,7 +66,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\lib;C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -114,6 +114,7 @@
     <ClCompile Include="can\cmd_sender.cpp" />
     <ClCompile Include="dial_debug\dial_debug.cpp" />
     <ClCompile Include="hidapi\hid.c" />
+    <ClCompile Include="port_prop_dialog.cpp" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
     <ClCompile Include="widgets\styledtoolbutton.cpp" />
@@ -127,8 +128,10 @@
     <QtMoc Include="camera\my_camera.h" />
     <QtMoc Include="camera\qcustomvideosurface.h" />
     <QtMoc Include="can\cmd_sender.h" />
+    <ClInclude Include="can\can_message.h" />
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
+    <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />

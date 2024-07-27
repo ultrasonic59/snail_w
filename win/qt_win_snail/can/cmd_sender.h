@@ -8,7 +8,7 @@
 #include <QtCore/QtGlobal>
 #include <QtSerialPort/QSerialPort>
 #include <QTimer>
-////#include "sensors_data.h"
+#include "can_message.h"
 
 
 #define DEFAULT_BAUD_RATE QSerialPort::Baud115200
@@ -17,50 +17,16 @@
 #define READ_WAIT_DELAY 5000
 #define MAX_BUFF_SIZE  4096
 #define MAX_FRAME_LEN				4096
+#define DEFAULT_CAN_BR       500000
 
-#define CMD_PUT_DAT  				0x3
-#define CMD_REQ_DAT  				0x4
-#define CMD_PUT_CMD  				0x6	
-///================================================
-#define PPP_FRAME		0x7E					// разделитель кадров
-
-#define PPP_ESCAPE		0x7D					// доп. разделитель в случае бинарного формата
-#define PPP_ESCAPE_BIT	0x20
-///===============================================
-#define CDC_CMD_PUT                 0x3         /// 
-#define CDC_CMD_REQ                 0x4         /// 
-
-#define NUM_SET_AIR                 0x11        /// 
-#define NUM_SET_GAZ                 0x12        /// 
-#define NUM_SET_CL3                 0x13        /// 
-#define NUM_SET_CL7                 0x14        /// 
-#define STOP_ALL					0x15        
-#define NUM_SET_RED                 0x16        /// 
-#define NUM_SET_GREEN               0x17        /// 
-
-#define GET_TEMP_GAZ                0x21
-#define GET_TEMP_AIR                0x22
-#define GET_RASH_AIR                0x23
-#define GET_STAT					0x24
-#define GET_ALL_DATA                0x25
+#define CMD_VERS1  				'v'
+#define CMD_VERS  				'V'
+#define CMD_OPEN  				'O'
+#define CMD_CLOSE  				'C'
+#define CMD_SEND  				't'
 
 ///============================================
-struct sent_dat_t
-{
-quint8 type;
-quint8 cmd;
-quint16 len;
-quint8 buff[MAX_FRAME_LEN];
-#if 0
-	quint16 GetFullLength() const
-	{
-		if(type == CMD_REQ_DAT)
-			return 2*sizeof(quint8) + sizeof(quint16) + sizeof(quint16);
 
-		return 2*sizeof(quint8) + sizeof(quint16) + len + sizeof(quint16);
-	}
-#endif
-};
 
 class CcmdSender : public QObject
 {
@@ -77,12 +43,18 @@ public:
 private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
-///	bool getStat(); 
+	bool getVers(char *vers); 
+	bool setBaudRate(quint32 br);
+	bool canOpen(void);
+	bool canClose(void);
+	bool canSendMsg(can_message_t *msg);
+
 	////bool getAllData(sensors_data_t *data ) ;
 ///	QByteArray SendRes(sent_dat_t *sent_data);
-///	bool SendRes(sent_dat_t *sent_data,sent_dat_t *res_data);
+	bool SendRes(char *sent_data,char *res_data);
 ///	bool CheckSetResvData(QByteArray in_data,sent_dat_t *out_data);
 	char *out_buffer;
+	char vers[256];
 ///	QByteArray SetSendData(sent_dat_t *sentData);
 
 public:

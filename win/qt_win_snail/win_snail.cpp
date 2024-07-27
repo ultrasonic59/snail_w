@@ -17,23 +17,6 @@ win_snail::win_snail(QWidget *parent)
     int camid = 0; // video device id
  ////   p_CamView = ui->CamWidget;
 
-#if 0
-    if (hid_init() == 0)
-        {
-        devs = hid_enumerate(0x0, 0x0);
-        cur_dev = devs;
-        while (cur_dev) {
-     ///      qDebug()<<"Device Found\n  type: %04hx %04hx\n  path: %s\n  serial_number: %ls", cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number;
-     ///       qDebug("\n");
-            qDebug()<<"  Manufacturer: " << cur_dev->manufacturer_string;
-            qDebug() << "  Product:      "<< cur_dev->product_string;
-            qDebug() << "  Release:      "<< cur_dev->release_number;
-            qDebug() << "  Interface:    "<< cur_dev->interface_number;
-              cur_dev = cur_dev->next;
-        }
-        hid_free_enumeration(devs);
-         }
-#endif
 #if 1
     if (hid_init() == 0) {
         hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
@@ -56,25 +39,6 @@ win_snail::win_snail(QWidget *parent)
 
   
 #endif
-#if 0
-    if (!_cap.open(camid))
-    {
-        qDebug() << "camera open failed.";
-        return;
-    }
-   int fps = _cap.get(cv::CAP_PROP_FPS);
-   qDebug() << "fps"<< fps;
-
-frame_width = _cap.get(cv::CAP_PROP_FRAME_WIDTH);
- qDebug() << "frame_width" << frame_width;
-frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
- qDebug() << "frame_height" << frame_height;
-
-
-    p_CamView = ui->CamWidget;
-    connect(this, SIGNAL(updateCamView(QImage)), this, SLOT(setCamImage(QImage)));
-    startTimer(100);
-#endif
 
 ///=======================================================
   connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
@@ -82,14 +46,22 @@ frame_height = _cap.get(cv::CAP_PROP_FRAME_HEIGHT);
  connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
 
   connect(ui->lightSlider, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
-
+  ///===================================================
+  m_pThread = new QThread(this);
+  m_cmd_sender = new CcmdSender;
+  m_cmd_sender->moveToThread(m_pThread);
+  connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
+  m_pThread->start();
+  ///============================================
 ///=======================================================
+
 
 }
 
 win_snail::~win_snail()
 {
-    delete ui;
+ saveSettings();
+ delete ui;
 }
 void win_snail::setCamImage(QImage ipm)
 {
@@ -236,22 +208,36 @@ void platypus::connecting()
 void win_snail::on_butt_con_can()
 {
     qDebug() << "start can";
-    /*
-    if (hid_handle)
-        return;
-    if (hid_init() == 0) {
-        hid_handle = hid_open(DEF_HID_USB_VID, DEF_HID_USB_PID, NULL);
-        if (!hid_handle) {
-            qDebug() << "unable to open device";
-            ///      return 1;
-        }
+    if (m_cmd_sender->isConnected())
+    {
+        m_cmd_sender->disconnectToDev();
+        ui->buttConCAN->setText(tr("Connect"));
+        ui->buttConCAN->setStyleSheet("");
     }
+    else
+    {
+        PortPropDialog* port_dialog;
+        port_dialog = new PortPropDialog();
+        port_dialog->SetProperties(ComPortName);
 
+        port_dialog->show();
 
+        if (port_dialog->exec() == QDialog::Accepted)
+        {
+            port_dialog->GetProperties(ComPortName);
+            saveSettings();
+            m_cmd_sender->COM_port_name = ComPortName;		// 
 
-///   dial_dbg.show();
-///   qDebug() << "end debug";
-*/
+            m_cmd_sender->connectToDev();
+            if (m_cmd_sender->isConnected())
+            {
+                ui->buttConCAN->setStyleSheet("background-color: green;");
+                qDebug() << "connected " << ComPortName;
+                ui->buttConCAN->setText(tr("Disconnect"));
+            }
+        }
+        delete port_dialog;
+    }
 }
 void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
 {
@@ -410,7 +396,25 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
     device_CMD.UpdateDevice(true);
     */
 }
+void win_snail::slot_send_can_dbg(can_message_t* idat)
+{
 
+    qDebug() << "slot_send_can_dbg";
+
+}
+void win_snail::saveSettings(void)
+{
+    QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
+        QSettings::IniFormat);
+    settings.setValue("PortName", ComPortName);
+}
+void win_snail::loadSettings(void)
+{
+    QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
+        QSettings::IniFormat);
+
+    ComPortName = settings.value("PortName", "COM16").toString();
+}
 ///=================================================================
 #if 0
 QImage Mat2QImage(cv::Mat cvImg)

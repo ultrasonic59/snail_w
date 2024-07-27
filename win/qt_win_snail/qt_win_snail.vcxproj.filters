@@ -97,6 +97,9 @@
     <ClCompile Include="can\cmd_sender.cpp">
       <Filter>Source Files\can</Filter>
     </ClCompile>
+    <ClCompile Include="port_prop_dialog.cpp">
+      <Filter>Source Files\can</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -110,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="hidapi\hidapi.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="port_prop_dialog.h">
+      <Filter>Header Files\can</Filter>
+    </ClInclude>
+    <ClInclude Include="can\can_message.h">
+      <Filter>Header Files\can</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

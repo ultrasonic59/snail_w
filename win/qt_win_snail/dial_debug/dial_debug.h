@@ -5,7 +5,7 @@
 
 #include "ui_dial_debug.h"
  #include "dev_interf.h"
-///#include "params.h"
+#include "can_message.h"
 
 namespace Ui {
     class Dial_debug;
@@ -30,8 +30,11 @@ signals:
 	void req_wr_dbg(int num,dbg_dat_req_t*);
 	void req_rd_dbg(int num,dbg_dat_req_t*);
 	void SignalTest();
-	
+	void req_send_can_dbg(can_message_t*);
+
 private slots:
+	void  slot_send_can_msg();
+
 	void  slot_butt_rd();
 	void  slot_butt_wr();
 	void  req_dbg_data_rdy(dbg_dat_req_t*);
@@ -46,7 +49,7 @@ private:
 	dbg_dat_req_t  dbg_dat;
 	xil_dat_req_t  xil_dat_req;
 	xil_dat_req_t  xil_dat;
-
+	can_message_t can_data;
 };
 
 #endif // DIAL_ED_PAR_H

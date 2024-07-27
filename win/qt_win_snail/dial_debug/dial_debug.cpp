@@ -10,16 +10,16 @@ DialDebug::DialDebug(QWidget *parent):
 ////	ui.comboBox_rej->addItem("LIN",LIN_REJ);
     connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
-
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
 
-///	ui.buttonBox->hide();
+    connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
 }
 
 DialDebug::~DialDebug()
 {
     disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
+    disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
 
 }
 
@@ -40,6 +40,23 @@ void  DialDebug::slot_butt_wr()
 
 	int num_rej=ui.comboBox_rej->currentIndex();
 	emit req_wr_dbg(num_rej,&dbg_dat_req);
+}
+void  DialDebug::slot_send_can_msg()
+{
+    can_data.id= ui.lineEdit_ID->text().toInt(0, 16);
+    can_data.dlc= ui.lineEdit_DLC->text().toInt(0, 16);
+    can_data.IDE = 0;
+    can_data.RTR = 0;
+    can_data.data[0]= ui.lineEdit_dat0->text().toInt(0, 16);
+    can_data.data[1] = ui.lineEdit_dat1->text().toInt(0, 16);
+    can_data.data[2] = ui.lineEdit_dat2->text().toInt(0, 16);
+    can_data.data[3] = ui.lineEdit_dat3->text().toInt(0, 16);
+    can_data.data[4] = ui.lineEdit_dat4->text().toInt(0, 16);
+    can_data.data[5] = ui.lineEdit_dat5->text().toInt(0, 16);
+    can_data.data[6] = ui.lineEdit_dat6->text().toInt(0, 16);
+    can_data.data[7] = ui.lineEdit_dat7->text().toInt(0, 16);
+    emit req_send_can_dbg( &can_data);
+
 }
 
 void  DialDebug::req_dbg_data_rdy(dbg_dat_req_t* p_dbg_dat)

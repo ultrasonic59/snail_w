@@ -58,7 +58,7 @@ private:
 private:
     QThread* m_pThread;
     QThread* d_Thread;
-  ///  CcmdSender* m_cmd_sender;
+    CcmdSender* m_cmd_sender;
  ////   BBworker* b_worker;
 
 public slots:
@@ -78,6 +78,11 @@ protected:
     void createThreads();
     bool put_hid_cmd(hid_cmd_t* cmd);
 
+    void saveSettings(void);
+    void loadSettings(void);
+ ////   void verify_data(void);
+    QString ComPortName;
+
 protected:
     DialDebug dial_dbg;
 public slots:
@@ -88,6 +93,7 @@ public slots:
     void on_butt_debug();
     void slot_rd_dbg(int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);
+    void slot_send_can_dbg(can_message_t* idat);
 
 private slots:
     void __selectVideoSource();

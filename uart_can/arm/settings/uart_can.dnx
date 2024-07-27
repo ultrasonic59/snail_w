@@ -32,14 +32,14 @@
     </Simulator>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.1\arm\CONFIG\debugger\ST\STM32F103C8.ddf</MemConfigValue>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.2\arm\config\debugger\ST\STM32F103C8.ddf</MemConfigValue>
     </PlDriver>
     <ArmDriver>
         <EnableCache>0</EnableCache>
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <StLinkDriver>
-        <stlinkserialNo>53FF70065270515016171167</stlinkserialNo>
+        <stlinkserialNo>48FF72065067545623571287</stlinkserialNo>
         <stlinkfoundProbes />
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>0</stlinkResetStrategy>
@@ -69,7 +69,7 @@
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
     <DebugChecksum>
-        <Checksum>2410524884</Checksum>
+        <Checksum>3019381925</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -78,6 +78,57 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
+        <Category2>_ 2</Category2>
+    </LogFile>
+    <TerminalIO>
+        <InputSource>1</InputSource>
+        <InputMode2>10</InputMode2>
+        <Filename>$PROJ_DIR$\TermIOInput.txt</Filename>
+        <InputEcho>1</InputEcho>
+        <ShowReset>0</ShowReset>
+        <InputEncodingICU>0</InputEncodingICU>
+        <OutputEncodingICU>0</OutputEncodingICU>
+    </TerminalIO>
+    <PlDdfRanges>
+        <ConfigRanges0>Memory ROM 536862720 6144 1</ConfigRanges0>
+        <ConfigRanges1>Memory OptionBytes 536868864 64 2</ConfigRanges1>
+        <ConfigRanges2>Memory Periph0 1073741824 144384 2</ConfigRanges2>
+        <ConfigRanges3>Memory Periph_BitBand 1107296256 4620288 2</ConfigRanges3>
+        <ConfigRanges4>Memory ExtDev 1610612736 1073741824 2</ConfigRanges4>
+        <ConfigRanges5>Memory Periph1 2684354560 4096 2</ConfigRanges5>
+        <ConfigRanges6>Memory SystemSFR 3758096384 1048576 2</ConfigRanges6>
+        <ConfigRanges7>Memory RemapMem 0 65536 1</ConfigRanges7>
+        <ConfigRanges8>Memory Flash 134217728 65536 1</ConfigRanges8>
+        <ConfigRanges9>Memory RAM 536870912 20480 0</ConfigRanges9>
+        <ConfigRanges10>Memory RAM_BitBand 570425344 655360 0</ConfigRanges10>
+    </PlDdfRanges>
+    <PlCacheRanges>
+        <CustomRanges0>0 0 65536 1 0</CustomRanges0>
+        <CustomRangesText0 />
+        <CustomRanges1>0 134217728 65536 1 0</CustomRanges1>
+        <CustomRangesText1 />
+        <CustomRanges2>0 536862720 6144 1 0</CustomRanges2>
+        <CustomRangesText2 />
+        <CustomRanges3>0 536868864 64 2 0</CustomRanges3>
+        <CustomRangesText3 />
+        <CustomRanges4>0 536870912 20480 0 0</CustomRanges4>
+        <CustomRangesText4 />
+        <CustomRanges5>0 570425344 655360 0 0</CustomRanges5>
+        <CustomRangesText5 />
+        <CustomRanges6>0 1073741824 144384 2 0</CustomRanges6>
+        <CustomRangesText6 />
+        <CustomRanges7>0 1107296256 4620288 2 0</CustomRanges7>
+        <CustomRangesText7 />
+        <CustomRanges8>0 1610612736 1073741824 2 0</CustomRanges8>
+        <CustomRangesText8 />
+        <CustomRanges9>0 2684354560 4096 2 0</CustomRanges9>
+        <CustomRangesText9 />
+        <CustomRanges10>0 3758096384 1048576 2 0</CustomRanges10>
+        <CustomRangesText10 />
+    </PlCacheRanges>
     <Trace2>
         <Enabled>0</Enabled>
         <ShowSource>0</ShowSource>
@@ -123,10 +174,6 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -134,16 +181,18 @@
         <Symbiont>0</Symbiont>
         <Exclusions />
     </DriverProfiling>
-    <LogFile>
+    <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
-        <Category2>_ 2</Category2>
-    </LogFile>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Count>0</Count>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\drv\can.c}.221.3" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\drv\serial.c}.212.9" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp2>_ 1 "EMUL_CODE" "{$PROJ_DIR$\drv\serial.c}.206.6" 0 0 1 "" 0 "" 0</Bp2>
+        <Count>3</Count>
     </Breakpoints2>
     <Aliases>
         <Count>0</Count>
