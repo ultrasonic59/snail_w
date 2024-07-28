@@ -254,7 +254,7 @@
     <string>Send</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -432,22 +432,6 @@
     <hint type="destinationlabel">
      <x>426</x>
      <y>367</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_send_can</sender>
-   <signal>clicked()</signal>
-   <receiver>Dial_debug</receiver>
-   <slot>slot_butt_wr()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>385</x>
-     <y>441</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>225</x>
-     <y>232</y>
     </hint>
    </hints>
   </connection>

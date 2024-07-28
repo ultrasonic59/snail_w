@@ -103,6 +103,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc" />
+    <QtUic Include="csv\csv_dlg.ui" />
     <QtUic Include="dial_debug\dial_debug.ui">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </QtUic>
@@ -112,6 +113,7 @@
     <ClCompile Include="camera\my_camera.cpp" />
     <ClCompile Include="camera\qcustomvideosurface.cpp" />
     <ClCompile Include="can\cmd_sender.cpp" />
+    <ClCompile Include="csv\csv_dlg.cpp" />
     <ClCompile Include="dial_debug\dial_debug.cpp" />
     <ClCompile Include="hidapi\hid.c" />
     <ClCompile Include="port_prop_dialog.cpp" />
@@ -129,6 +131,7 @@
     <QtMoc Include="camera\qcustomvideosurface.h" />
     <QtMoc Include="can\cmd_sender.h" />
     <ClInclude Include="can\can_message.h" />
+    <QtMoc Include="csv\csv_dlg.h" />
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="port_prop_dialog.h" />

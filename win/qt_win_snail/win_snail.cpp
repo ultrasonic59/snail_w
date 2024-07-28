@@ -1,13 +1,16 @@
 #include "win_snail.h"
 ////#include "hidapi.h"
 #include <QCameraInfo>
+////#include "csv/csvdlg.h"
+////#include "csv/csv_dlg.h"
+////#include "port_prop_dialog.h"
 
-////QImage Mat2QImage(cv::Mat cvImg);
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
-    , dial_dbg(this)
+    , tdlg(this)
+    ///, dial_dbg(this)
     
 {
     ui->setupUi(this);
@@ -138,8 +141,18 @@ void win_snail::createThreads()
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
-    dial_dbg.show();
+  ////  DialDebug dial_dbg(this);
+
+  ///  dial_dbg.show();
  ////   qDebug() << "end debug" ;
+
+ ///   CsvDlg tdlg;
+  ///  csv_dlg tdlg;
+  /// 
+  /// 
+ ///   PortPropDialog tdlg;
+    tdlg.show();
+
 
 }
 void win_snail::on_value_changed(int value)
@@ -169,42 +182,6 @@ void win_snail::on_butt_con_hid()
         }
     }
 }
-#if 0
-void platypus::connecting()
-{
-    if (m_cmd_sender->isConnected())
-    {
-        m_cmd_sender->disconnectToDev();
-        ui.pushButton_connect->setText(tr("Connect"));
-        ui.pushButton_connect->setStyleSheet("");
-
-    }
-    else
-    {
-        PortPropDialog* port_dialog;
-        port_dialog = new PortPropDialog();
-        port_dialog->SetProperties(ComPortName);
-
-        port_dialog->show();
-
-        if (port_dialog->exec() == QDialog::Accepted)
-        {
-            port_dialog->GetProperties(ComPortName);
-            saveSettings();
-            m_cmd_sender->COM_port_name = ComPortName;		// 
-
-            m_cmd_sender->connectToDev();
-            if (m_cmd_sender->isConnected())
-            {
-                ui.pushButton_connect->setStyleSheet("background-color: green;");
-                qDebug() << "connected " << ComPortName;
-                ui.pushButton_connect->setText(tr("Disconnect"));
-            }
-        }
-        delete port_dialog;
-    }
-}
-#endif
 void win_snail::on_butt_con_can()
 {
     qDebug() << "start can";

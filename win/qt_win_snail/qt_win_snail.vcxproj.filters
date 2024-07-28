@@ -48,6 +48,12 @@
     <Filter Include="Source Files\can">
       <UniqueIdentifier>{e491e98f-04c5-443a-853a-a8cd28e4d38b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\csv">
+      <UniqueIdentifier>{92840dc2-ca0c-4b6f-8301-0870e51e6fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\csv">
+      <UniqueIdentifier>{737646a1-4767-4117-adcd-54c69135a0b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -100,6 +106,9 @@
     <ClCompile Include="port_prop_dialog.cpp">
       <Filter>Source Files\can</Filter>
     </ClCompile>
+    <ClCompile Include="csv\csv_dlg.cpp">
+      <Filter>Source Files\csv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -128,6 +137,9 @@
     <QtUic Include="port_prop_dialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="csv\csv_dlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
@@ -144,6 +156,9 @@
     </QtMoc>
     <QtMoc Include="can\cmd_sender.h">
       <Filter>Header Files\can</Filter>
+    </QtMoc>
+    <QtMoc Include="csv\csv_dlg.h">
+      <Filter>Header Files\csv</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

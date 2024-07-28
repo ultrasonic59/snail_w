@@ -14,6 +14,8 @@
 #include "hid_cmd.h"
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
+#include "csv/csv_dlg.h"
+
 ///======================================================================
 
 #define MAX_HID_BUG                     64
@@ -84,7 +86,9 @@ protected:
     QString ComPortName;
 
 protected:
-    DialDebug dial_dbg;
+ ////   DialDebug dial_dbg;
+       csv_dlg tdlg;
+
 public slots:
     void on_butt_con_hid();
     void on_butt_con_can();
