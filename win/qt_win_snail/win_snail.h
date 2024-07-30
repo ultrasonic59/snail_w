@@ -15,6 +15,7 @@
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
+#include "snail_data.h"
 
 ///======================================================================
 
@@ -44,6 +45,9 @@ public:
 public:
     plotterwidget* p_CamView;
     hid_device* hid_handle;
+
+public:
+    snail_data_t snail_data;
 
 private:
     QLabel* _label;

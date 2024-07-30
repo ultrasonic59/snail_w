@@ -74,12 +74,14 @@ image=ipm;
 //qDebug() << "updating plotter widget image..";
 update();
 }
+
 #if 1
 void plotterwidget::resizeEvent(QResizeEvent *event)
 {
 QWidget::resizeEvent(event);  // 
 }
 #endif
+
 void plotterwidget::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
@@ -131,4 +133,23 @@ void plotterwidget::__drawFPS(QPainter& painter, const QRect& _rect)
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::gray);
     painter.drawPath(path);
+}
+///==========================================================
+void plotterwidget::mousePressEvent(QMouseEvent* event)
+{
+    qDebug() << "mousePressEvent"<< event->pos().x() << event->pos().y();
+#if 0
+    PlotterWidget::mousePressEvent(event);
+    ////qDebug() << "P"<<"curX1 " << curX1 <<"curX2 "<< curX2<<"curY1 " << curY1 <<"curY2 "<< curY2;
+    if (event->button() == Qt::LeftButton)
+    {
+        mousePressed = true;
+        curX1 = event->pos().x();
+        curY1 = event->pos().y();
+    }
+    if (event->button() == Qt::RightButton)
+    {
+        emit show_tips(event->pos());
+    }
+#endif
 }
