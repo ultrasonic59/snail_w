@@ -23,7 +23,7 @@ struct snail_data_t
 	quint32 offs_y;
 
 	element_dat_t *p_elements;
-	quint8 points[MAX_PONTS_Y][MAX_PONTS_X];
+////	quint8 points[MAX_PONTS_Y][MAX_PONTS_X];
 };
 
 #endif /// __SNAIL_DATA_H__

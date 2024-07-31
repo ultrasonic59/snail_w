@@ -64,7 +64,7 @@ win_snail::win_snail(QWidget *parent)
 win_snail::~win_snail()
 {
  saveSettings();
- delete ui;
+//// delete ui;
 }
 void win_snail::setCamImage(QImage ipm)
 {

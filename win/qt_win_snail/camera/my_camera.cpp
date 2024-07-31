@@ -8,6 +8,9 @@
 #include <QComboBox>
 #include <QVariant>
 #include <QByteArray>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp> // drawing shapes
 
 MyCamera::MyCamera(QObject* parent) : QObject(parent),
     pt_qcam(nullptr),
@@ -130,6 +133,17 @@ void MyCamera::__transformFrame(const cv::Mat& _mat, QImage::Format format)
         cv::transpose(tmpmat, tmpmat);
         break;
     }
+ ////    cv::circle(tmpmat, (900, 500), 100, (0, 0, 255), 5, cv::LINE_AA);
+    //####################(  Draw Circle  )#########################
+    // unfilled circle
+    cv::Point centerCircle1(250, 250);
+    int radiusCircle = 10;
+    cv::Scalar colorCircle1(0, 0, 255);
+    int thicknessCircle1 = 2;
+
+    cv::circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
+
+
     emit frameUpdated(tmpmat, format);
 }
 
