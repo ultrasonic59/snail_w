@@ -117,6 +117,7 @@
     <ClCompile Include="dial_debug\dial_debug.cpp" />
     <ClCompile Include="hidapi\hid.c" />
     <ClCompile Include="port_prop_dialog.cpp" />
+    <ClCompile Include="snail_data.cpp" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
     <ClCompile Include="widgets\styledtoolbutton.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="port_prop_dialog.h" />
+    <ClInclude Include="snail_data.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />

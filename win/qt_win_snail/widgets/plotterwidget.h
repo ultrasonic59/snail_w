@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <opencv2/core.hpp>
+#include "snail_data.h"
 
 class plotterwidget : public QWidget
 {
@@ -38,6 +39,8 @@ protected:
 	virtual void mousePressEvent(QMouseEvent* event) override;
 ///	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 ///	virtual void wheelEvent(QWheelEvent* event) override;
+signals:
+    void sSetPoint(point_data_t* pd);
 
 
 };

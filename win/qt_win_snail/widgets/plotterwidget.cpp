@@ -152,4 +152,8 @@ void plotterwidget::mousePressEvent(QMouseEvent* event)
         emit show_tips(event->pos());
     }
 #endif
+    point_data_t t_point_data;
+
+   emit sSetPoint(&t_point_data);
+
 }

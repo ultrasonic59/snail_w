@@ -14,7 +14,15 @@ win_snail::win_snail(QWidget *parent)
     
 {
     ui->setupUi(this);
-    createThreads();
+///====================================
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+    p_CamView = ui->CamWidget;
+    pt_camera = new MyCamera(0, &snail_data);
+    connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
+ ///===================================================
+    connect(p_CamView, SIGNAL(sSetPoint(point_data_t *)), this, SLOT(slSetPoint(point_data_t*)));
+
+ ////   createThreads();
     setupActions();
     qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
@@ -123,12 +131,13 @@ void win_snail::__selectVideoSource()
     pt_camera->selectDevice();
     pt_camera->open();
 }
+#if 0
 void win_snail::createThreads()
 {
     qRegisterMetaType<cv::Mat>("cv::Mat");
     p_CamView = ui->CamWidget;
 
-    pt_camera = new MyCamera;
+    pt_camera = new MyCamera(0,&snail_data);
 
     connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
   ///   connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), p_CamView, SLOT(updateImage(cv::Mat&, QImage::Format)));
@@ -138,6 +147,7 @@ void win_snail::createThreads()
     connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));
     */
 }
+#endif
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
@@ -391,7 +401,14 @@ void win_snail::loadSettings(void)
         QSettings::IniFormat);
 
     ComPortName = settings.value("PortName", "COM16").toString();
+
 }
+void win_snail::slSetPoint(point_data_t* pd)
+{
+    qDebug() << "slSetPoint";
+
+}
+
 ///=================================================================
 #if 0
 QImage Mat2QImage(cv::Mat cvImg)

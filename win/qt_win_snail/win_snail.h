@@ -47,7 +47,7 @@ public:
     hid_device* hid_handle;
 
 public:
-    snail_data_t snail_data;
+    c_snail_data snail_data;
 
 private:
     QLabel* _label;
@@ -69,6 +69,7 @@ private:
 
 public slots:
     void setCamImage(QImage ipm);
+    void slSetPoint(point_data_t *pd);
 
 protected:
     void timerEvent(QTimerEvent* e);
@@ -81,7 +82,7 @@ private:
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
-    void createThreads();
+ ////   void createThreads();
     bool put_hid_cmd(hid_cmd_t* cmd);
 
     void saveSettings(void);

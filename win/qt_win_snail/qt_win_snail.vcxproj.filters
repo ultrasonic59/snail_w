@@ -109,6 +109,9 @@
     <ClCompile Include="csv\csv_dlg.cpp">
       <Filter>Source Files\csv</Filter>
     </ClCompile>
+    <ClCompile Include="snail_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="can\can_message.h">
       <Filter>Header Files\can</Filter>
+    </ClInclude>
+    <ClInclude Include="snail_data.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

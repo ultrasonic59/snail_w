@@ -5,13 +5,17 @@
 
 #include <qcustomvideosurface.h>
 #include <opencv2/core.hpp>
+#include "snail_data.h"
 
 class MyCamera : public QObject
 {
     Q_OBJECT
 public:
     enum FrameTransform { NoTransform, RotateClockWise90Degree, RotateClockOpposite90Degree, FlipVertically, FlipHorizontally };
-    explicit MyCamera(QObject* parent = 0);
+    explicit MyCamera(QObject* parent = 0, c_snail_data* _snail_data=0);
+public:
+    c_snail_data *p_snail_data;
+
 public slots:
     void selectDevice();
     bool open();

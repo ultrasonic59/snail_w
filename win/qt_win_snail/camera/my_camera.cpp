@@ -12,8 +12,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp> // drawing shapes
 
-MyCamera::MyCamera(QObject* parent) : QObject(parent),
-    pt_qcam(nullptr),
+MyCamera::MyCamera(QObject* parent, c_snail_data* _snail_data) : QObject(parent),
+    pt_qcam(nullptr), p_snail_data(_snail_data),
     m_transform(MyCamera::NoTransform)
 {
     connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
