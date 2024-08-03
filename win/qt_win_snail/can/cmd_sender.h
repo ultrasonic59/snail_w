@@ -26,6 +26,16 @@
 #define CMD_SEND  				't'
 
 ///============================================
+#define X_AXIS_CAN_ID   ((0x1 << 0) << 5)   ///0x20
+#define Y_AXIS_CAN_ID   ((0x1 << 1) << 5)   ///0x40
+#define Z_AXIS_CAN_ID    ((0x1 << 2) << 5)  /// 0x80
+
+typedef struct  go_cmd_s_ {
+	uint8_t  cmd;                       /// 
+	uint8_t  dirs;                     /// Dirs X,Y,Z ....
+	uint16_t  step_per;                 /// period step
+	uint32_t  steps;                 /// steps X,Y , Z 
+}go_cmd_t;
 
 
 class CcmdSender : public QObject
@@ -47,7 +57,7 @@ private:
 	bool setBaudRate(quint32 br);
 	bool canOpen(void);
 	bool canClose(void);
-	bool canSendMsg(can_message_t *msg);
+///	bool canSendMsg(can_message_t *msg);
 
 	////bool getAllData(sensors_data_t *data ) ;
 ///	QByteArray SendRes(sent_dat_t *sent_data);
@@ -58,11 +68,8 @@ private:
 ///	QByteArray SetSendData(sent_dat_t *sentData);
 
 public:
-////	void OnOffAirCmd(bool on_off);
-////	void OnOffGazCmd(bool on_off);
-///	void ChangeAirCmd(quint16 val);
-///	void OnOffRedCmd(bool on_off);
-///	void OnOffGreenCmd(bool on_off);
+	bool canSendMsg(can_message_t* msg);
+	bool canSendCmdGo(quint32 id, go_cmd_t cmd);
 
 ///signals:
 ///	void sig_set_pb_val(quint32 val);

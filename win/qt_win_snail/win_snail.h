@@ -16,6 +16,7 @@
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
+#include "wrk_wrk.h"
 
 ///======================================================================
 
@@ -63,9 +64,9 @@ private:
   struct hid_device_info* cur_dev;
 private:
     QThread* m_pThread;
-    QThread* d_Thread;
+    QThread* wrk_Thread;
     CcmdSender* m_cmd_sender;
- ////   BBworker* b_worker;
+    Cwrk_wrk* p_wrk;
 
 public slots:
     void setCamImage(QImage ipm);
@@ -91,8 +92,10 @@ protected:
     QString ComPortName;
 
 protected:
- ////   DialDebug dial_dbg;
+    DialDebug dial_dbg;
        csv_dlg tdlg;
+private :
+    bool eventFilter(QObject* obj, QEvent* event);
 
 public slots:
     void on_butt_con_hid();
@@ -106,8 +109,15 @@ public slots:
 
 private slots:
     void __selectVideoSource();
+private slots:
+    void on_cmdXPlus_pressed();
+    void on_cmdXPlus_released();
+    void on_cmdXMinus_pressed();
+    void on_cmdXMinus_released();
+
 
 signals:
     void updateCamView(QImage);
+    void sSendCmd(can_message_t* msg);
 
 };

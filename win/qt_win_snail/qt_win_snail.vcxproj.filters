@@ -112,6 +112,9 @@
     <ClCompile Include="snail_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wrk_wrk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -165,6 +168,9 @@
     </QtMoc>
     <QtMoc Include="csv\csv_dlg.h">
       <Filter>Header Files\csv</Filter>
+    </QtMoc>
+    <QtMoc Include="wrk_wrk.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

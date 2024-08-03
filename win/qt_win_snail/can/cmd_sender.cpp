@@ -181,26 +181,16 @@ bool CcmdSender::setBaudRate(quint32 bps)
 
 	return false;  ///
 }
-
-#if 0
-bool CcmdSender::getAllData(sensors_data_t *data ) 
+bool CcmdSender::canSendCmdGo(quint32 id, go_cmd_t cmd)
 {
-#if 1
-sent_dat_t send_dat;
-sent_dat_t resv_dat;
-send_dat.type=CDC_CMD_REQ;
-send_dat.cmd=GET_ALL_DATA;
-send_dat.len=0;
-if(SendRes(&send_dat,&resv_dat))
-	{
-////	qDebug() << "GET_ALL_DATA "<< resv_dat.cmd;
-	if(resv_dat.cmd==GET_ALL_DATA)
-		{
-		memcpy(data,&resv_dat.buff,resv_dat.len);
-		return true;  ///
-		}
-	}
-#endif
-return false;  ///
+can_message_t t_can_message;
+t_can_message.id = id;
+t_can_message.dlc = 8;
+t_can_message.IDE = 0;
+t_can_message.RTR = 0;
+memcpy(t_can_message.data, (quint8*)&cmd, 8);
+return canSendMsg(&t_can_message);
 }
-#endif
+
+///====================================================
+

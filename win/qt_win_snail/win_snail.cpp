@@ -10,7 +10,7 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , tdlg(this)
-    ///, dial_dbg(this)
+    , dial_dbg(this)
     
 {
     ui->setupUi(this);
@@ -64,6 +64,13 @@ win_snail::win_snail(QWidget *parent)
   connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
   m_pThread->start();
   ///============================================
+  wrk_Thread = new QThread(this);
+ p_wrk=new Cwrk_wrk(m_cmd_sender);
+ p_wrk->moveToThread(wrk_Thread);
+ connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
+ wrk_Thread->start();
+ connect(this, SIGNAL(sSendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+
 ///=======================================================
 
 
@@ -153,7 +160,7 @@ void win_snail::on_butt_debug()
     qDebug() << "start debug" ;
   ////  DialDebug dial_dbg(this);
 
-  ///  dial_dbg.show();
+   dial_dbg.show();
  ////   qDebug() << "end debug" ;
 
  ///   CsvDlg tdlg;
@@ -161,7 +168,7 @@ void win_snail::on_butt_debug()
   /// 
   /// 
  ///   PortPropDialog tdlg;
-    tdlg.show();
+ ////   tdlg.show();
 
 
 }
@@ -385,8 +392,13 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
 }
 void win_snail::slot_send_can_dbg(can_message_t* idat)
 {
-
-    qDebug() << "slot_send_can_dbg";
+    bool rez;
+    qDebug() << "slot_send_can_dbg :";
+    rez=  m_cmd_sender->canSendMsg(idat);
+if(rez)
+    qDebug() << "OK ";
+else
+   qDebug() << "BAD ";
 
 }
 void win_snail::saveSettings(void)
@@ -403,9 +415,53 @@ void win_snail::loadSettings(void)
     ComPortName = settings.value("PortName", "COM16").toString();
 
 }
+
 void win_snail::slSetPoint(point_data_t* pd)
 {
     qDebug() << "slSetPoint";
+
+}
+///=================== X ===========================
+void win_snail::on_cmdXPlus_pressed()
+{
+    qDebug() << "on_cmdXPlus_pressed";
+    can_message_t t_can_message;
+    t_can_message.id = 0x20;
+    t_can_message.dlc = 8;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+
+sSendCmd(&t_can_message);
+  ////  m_jogVector += QVector3D(1, 0, 0);
+  ///  jogStep();
+}
+
+void win_snail::on_cmdXPlus_released()
+{
+    qDebug() << "on_cmdXPlus_released";
+
+  ////  m_jogVector -= QVector3D(1, 0, 0);
+ ////   jogStep();
+}
+
+void win_snail::on_cmdXMinus_pressed()
+{
+    qDebug() << "on_cmdXMinus_pressed";
+ ////   m_jogVector += QVector3D(-1, 0, 0);
+  ////  jogStep();
+}
+
+void win_snail::on_cmdXMinus_released()
+{
+    qDebug() << "on_cmdXMinus_released";
+    ///   m_jogVector -= QVector3D(-1, 0, 0);
+    ///   jogStep();
+}
+bool win_snail::eventFilter(QObject* obj, QEvent* event)
+{
+    qDebug() << "eventFilter";
+
+    return QMainWindow::eventFilter(obj, event);
 
 }
 
