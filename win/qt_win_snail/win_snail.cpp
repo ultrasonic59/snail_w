@@ -419,6 +419,8 @@ void win_snail::loadSettings(void)
 void win_snail::slSetPoint(point_data_t* pd)
 {
     qDebug() << "slSetPoint";
+    snail_data.insertPoint(*pd);
+
 
 }
 ///=================== X ===========================

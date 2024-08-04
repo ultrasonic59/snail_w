@@ -110,6 +110,8 @@ void MyCamera::resume()
         pt_qcam->start();
     }
 }
+int t_cols;
+int t_rows;
 
 void MyCamera::__transformFrame(const cv::Mat& _mat, QImage::Format format)
 {
@@ -136,12 +138,35 @@ void MyCamera::__transformFrame(const cv::Mat& _mat, QImage::Format format)
  ////    cv::circle(tmpmat, (900, 500), 100, (0, 0, 255), 5, cv::LINE_AA);
     //####################(  Draw Circle  )#########################
     // unfilled circle
-    cv::Point centerCircle1(250, 250);
-    int radiusCircle = 10;
+  ///  cv::Point centerCircle1(1200, 250);
+    int radiusCircle = 4;
     cv::Scalar colorCircle1(0, 0, 255);
     int thicknessCircle1 = 2;
+#if 1
+  ///  p_snail_data
+    t_cols= _mat.cols;
+    t_rows= _mat.rows;
+    /*
+    float coef_x;
+    float coef_y;
+    int cur_x;
+    int cur_y;
+    coef_x = t_cols;
+    coef_y = t_rows;
+*/
+        point_data_t t_point_data;
+    for (int ii = 0; ii < p_snail_data->points.size(); ++ii) {
+        t_point_data = p_snail_data->points.at(ii);
+        cv::Point centerCircle1(t_point_data.coord.x(), t_point_data.coord.y());
+        cv::circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
+   ////     qDebug() << "mousePressEvent" << curX1 << curY1;
 
-    cv::circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
+
+      }
+#endif
+
+
+    ///cv::circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
 
 
     emit frameUpdated(tmpmat, format);

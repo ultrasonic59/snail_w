@@ -248,42 +248,11 @@ bool QCustomVideoSurface::present(const QVideoFrame& frame)
     if (frame.isValid()) {
         QVideoFrame cloneFrame(frame); // makes a shallow copy (since QVideoFrame is explicitly shared), to get the access to the pixel data
         cloneFrame.map(QAbstractVideoBuffer::ReadOnly);
-////        qDebug() << cloneFrame.pixelFormat();
         QImage::Format format = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
-        ////       QVideoFrame::pixelFormat format = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
- ////       qDebug() << "format=" << format;
 
-        int cvtype = CV_8UC1;
-#if 0
-        switch (format) {
-        case QImage::Format_RGB32:
-            cvtype = CV_8UC4;
-            break;
-        case QImage::Format_RGB888:
-            cvtype = CV_8UC3;
-            break;
-            ///           case QImage::Format_Jpeg:
-        default:
-            cvtype = CV_8UC1;
-            break;
-
-            /*
-            case QImage::Format_Invalid:
-                       qDebug("QCustomVideoSurface Warning: image format is QImage::Format_Invalid");
-           */            return false;
-
-           ////        default:
-                       // TO DO add the new formats if find
-               ////        qDebug("QCustomVideoSurface Warning: image format is not implemented (QImage::Format %d)", format);
-               ////        return false;
-        }
-#endif
+      ///  int cvtype = CV_8UC1;
         QImage img = QVideoFrameToQImage(cloneFrame);
-        ////       QImage t_image = cloneFrame.image();
-            ///   cv::Mat mat(cloneFrame.height(), cloneFrame.width(), cvtype, (void *)cloneFrame.bits());
-        ////       cv::Mat mat = QImage2Mat(t_image);
-         ////      cv::Mat videoFrame = QImageToCvMat(img);
-        cv::Mat mat = QImageToCvMat(img);
+         cv::Mat mat = QImageToCvMat(img);
 
         cv::flip(mat, mat, 0);
         emit frameAvailable(mat, format);
