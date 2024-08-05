@@ -27,6 +27,7 @@ private:
     QRect __getRectInsideWidget(const QRect& _rect);
     void __updateFPS();
     void __drawFPS(QPainter& painter, const QRect& _rect);
+    QPoint getMouseInsideCoord(QPoint inPoint);
 
     QImage m_qimg;
     cv::Mat m_cvmat;
@@ -35,12 +36,16 @@ private:
     double m_fps;
 protected:
 
-///	virtual void mouseMoveEvent(QMouseEvent* event) override;
+	virtual void mouseMoveEvent(QMouseEvent* event) override;
 	virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
+
 ///	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 ///	virtual void wheelEvent(QWheelEvent* event) override;
 signals:
     void sSetPoint(point_data_t* pd);
+    void sMovePoint(point_data_t* pd);
+    void sClrPoint(QPoint* pn);
 
 
 };

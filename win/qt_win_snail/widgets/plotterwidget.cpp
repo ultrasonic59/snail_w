@@ -140,8 +140,80 @@ extern int t_cols;
 extern int t_rows;
 ////QRect t_viewR;
 ///==========================================================
+QPoint plotterwidget::getMouseInsideCoord(QPoint inPos)
+{
+    QPoint rez;
+  QRect viewR = QRect();
+  if (!m_qimg.isNull()) {
+        viewR = __getRectInsideWidget(m_qimg.rect());
+  }
+  float coef_x = t_cols;
+  coef_x /= viewR.width();
+  float coef_y = t_rows;
+  coef_y /= viewR.height();
+  float xx = (inPos.x() - viewR.x()) * coef_x;
+  float yy = (inPos.y() - viewR.y()) * coef_y;
+ /// xx = (inPos.x() - viewR.x())* coef_x;
+ /// yy = (inPos.y() - viewR.y())* coef_y;
+ /// xx *= coef_x;
+ /// yy *= coef_y;
+  rez.setX( (int)xx);
+  rez.setY( (int)yy);
+
+  return rez;
+}
+
 void plotterwidget::mousePressEvent(QMouseEvent* event)
 {
+point_data_t t_point_data;
+QPoint pos = getMouseInsideCoord(event->pos());
+ ////t_point_data.coord.setX(cur_x);
+if (event->button() == Qt::LeftButton)
+    {
+    if (event->modifiers() == Qt::ShiftModifier)
+    {
+        t_point_data.coord = pos;
+        emit sSetPoint(&t_point_data);
+    }
+ else if (event->modifiers() == Qt::ControlModifier)
+        {
+   ///     t_point_data.coord = pos;
+   ///     emit sSetPoint(&t_point_data);
+        emit sClrPoint(&pos);
+    }
+    }
+}
+void plotterwidget::mouseMoveEvent(QMouseEvent* event)
+{
+    point_data_t t_point_data;
+    QPoint pos = getMouseInsideCoord(event->pos());
+
+////    if (event->button() == Qt::LeftButton)
+    {
+        if (event->modifiers() == Qt::ShiftModifier)
+        {
+            t_point_data.coord = pos;
+            emit sMovePoint(&t_point_data);
+        }
+    }
+
+}
+void plotterwidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    QPoint pos = getMouseInsideCoord(event->pos());
+
+ ///   qDebug() << "mouseDoubleClickEvent";
+    if (event->button() == Qt::LeftButton)
+    {
+        ;
+  ///      t_point_data.coord = pos;
+  ////      emit sClrPoint(&pos);
+  ///   qDebug() << "mouseDoubleClickEvent left" ;
+    }
+
+}
+
+#if 0
 int curX1 = event->pos().x();
 int curY1 = event->pos().y();
 point_data_t t_point_data;
@@ -149,8 +221,6 @@ QRect viewR = QRect();
 if (!m_qimg.isNull()) {
     viewR = __getRectInsideWidget(m_qimg.rect());
 }
-///QRect cr = contentsRect();
-///qDebug() << "cr=" << cr;
  
 qDebug() << "t_viewR=" << viewR;
 int offs_x;
@@ -223,3 +293,4 @@ float coef_x;
  ///  emit sSetPoint(&t_point_data);
 
 }
+#endif

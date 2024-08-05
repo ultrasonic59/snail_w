@@ -71,10 +71,12 @@ private:
 public slots:
     void setCamImage(QImage ipm);
     void slSetPoint(point_data_t *pd);
+    void slClrPoint(QPoint* pn);
+    void slMovePoint(point_data_t* pd);
 
 protected:
     void timerEvent(QTimerEvent* e);
-
+    QPoint last_pn;
 private:
     Ui::win_snail *ui;
 private:

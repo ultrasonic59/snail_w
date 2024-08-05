@@ -21,6 +21,9 @@ win_snail::win_snail(QWidget *parent)
     connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
  ///===================================================
     connect(p_CamView, SIGNAL(sSetPoint(point_data_t *)), this, SLOT(slSetPoint(point_data_t*)));
+    connect(p_CamView, SIGNAL(sMovePoint(point_data_t*)), this, SLOT(slMovePoint(point_data_t*)));
+
+    connect(p_CamView, SIGNAL(sClrPoint(QPoint*)), this, SLOT(slClrPoint(QPoint*)));
 
  ////   createThreads();
     setupActions();
@@ -420,9 +423,25 @@ void win_snail::slSetPoint(point_data_t* pd)
 {
     qDebug() << "slSetPoint";
     snail_data.insertPoint(*pd);
+    last_pn = pd->coord;
+
+}
+void win_snail::slMovePoint(point_data_t* pd)
+{
+    qDebug() << "slMovePoint";
+    slClrPoint(&last_pn);
+    slSetPoint(pd);
+ ////   snail_data.insertPoint(*pd);
+}
+
+void win_snail::slClrPoint(QPoint* pn)
+{
+    qDebug() << "slClrPoint";
+    snail_data.removePoint(*pn);
 
 
 }
+
 ///=================== X ===========================
 void win_snail::on_cmdXPlus_pressed()
 {
