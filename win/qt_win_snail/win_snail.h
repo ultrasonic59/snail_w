@@ -30,6 +30,7 @@
 #define DEF_HID_USB_VID                 0x04d8/// 0x0483
 #define DEF_HID_USB_PID                 0x900a /// 0x5711
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
 QT_END_NAMESPACE
@@ -46,9 +47,14 @@ public:
 public:
     plotterwidget* p_CamView;
     hid_device* hid_handle;
+    quint16 setka_delt_x;
+    quint16 setka_delt_y;
 
 public:
     c_snail_data snail_data;
+ ///   Mat  mat_cam;
+    Mat  mat_setka;
+    Mat  mat_lines;
 
 private:
     QLabel* _label;

@@ -14,7 +14,7 @@
 
 MyCamera::MyCamera(QObject* parent, c_snail_data* _snail_data) : QObject(parent),
     pt_qcam(nullptr), p_snail_data(_snail_data),
-    m_transform(MyCamera::NoTransform)
+    m_transform(MyCamera::FlipVertically)
 {
     connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
 }
@@ -113,34 +113,37 @@ void MyCamera::resume()
 int t_cols;
 int t_rows;
 
-void MyCamera::__transformFrame(const cv::Mat& _mat, QImage::Format format)
+void MyCamera::__transformFrame(const Mat& _mat, QImage::Format format)
 {
-    cv::Mat tmpmat;
-    switch (m_transform) {
+  Mat tmpmat1;
+  Mat tmpmat;
+  switch (m_transform) {
     case NoTransform:
         tmpmat = _mat;
         break;
     case FlipVertically:
-        cv::flip(_mat, tmpmat, 0);
+ ////       flip(_mat, tmpmat, 0);
+        flip(_mat, tmpmat1, 1);
+        flip(tmpmat1, tmpmat, 0);
+
         break;
     case FlipHorizontally:
-        cv::flip(_mat, tmpmat, 1);
+        flip(_mat, tmpmat, 1);
         break;
     case RotateClockWise90Degree:
-        cv::flip(_mat, tmpmat, 0);
-        cv::transpose(tmpmat, tmpmat);
+        flip(_mat, tmpmat, 0);
+        transpose(tmpmat, tmpmat);
         break;
     case RotateClockOpposite90Degree:
-        cv::flip(_mat, tmpmat, 1);
-        cv::transpose(tmpmat, tmpmat);
+        flip(_mat, tmpmat, 1);
+        transpose(tmpmat, tmpmat);
         break;
     }
  ////    cv::circle(tmpmat, (900, 500), 100, (0, 0, 255), 5, cv::LINE_AA);
     //####################(  Draw Circle  )#########################
     // unfilled circle
-  ///  cv::Point centerCircle1(1200, 250);
-    int radiusCircle = 4;
-    cv::Scalar colorCircle1(0, 0, 255);
+     int radiusCircle = 4;
+    Scalar colorCircle1(0, 0, 255);
     int thicknessCircle1 = 2;
 #if 1
   ///  p_snail_data
@@ -157,8 +160,8 @@ void MyCamera::__transformFrame(const cv::Mat& _mat, QImage::Format format)
         point_data_t t_point_data;
     for (int ii = 0; ii < p_snail_data->points.size(); ++ii) {
         t_point_data = p_snail_data->points.at(ii);
-        cv::Point centerCircle1(t_point_data.coord.x(), t_point_data.coord.y());
-        cv::circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
+        Point centerCircle1(t_point_data.coord.x(), t_point_data.coord.y());
+        circle(tmpmat, centerCircle1, radiusCircle, colorCircle1, thicknessCircle1);
    ////     qDebug() << "mousePressEvent" << curX1 << curY1;
 
 

@@ -7,6 +7,8 @@
 #include <opencv2/core.hpp>
 #include "snail_data.h"
 
+using namespace cv;
+
 class MyCamera : public QObject
 {
     Q_OBJECT
