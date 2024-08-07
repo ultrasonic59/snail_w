@@ -10,6 +10,8 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , tdlg(this)
+    , setka_delt_x(DEF_DELT_X)
+    , setka_delt_y(DEF_DELT_Y)
     , dial_dbg(this)
     
 {
@@ -421,8 +423,20 @@ void win_snail::loadSettings(void)
 
 void win_snail::slSetPoint(point_data_t* pd)
 {
-    qDebug() << "slSetPoint";
+    qDebug() << "slSetPoint"<<pd->coord;
+    int tmp;
+    if (setka_delt_x)
+       {
+        tmp = (pd->coord.x() / setka_delt_x) * setka_delt_x;
+        pd->coord.setX(tmp);
+       }
+    if (setka_delt_y)
+        {
+        tmp = (pd->coord.y() / setka_delt_y) * setka_delt_y;
+        pd->coord.setY(tmp);
+    }
     snail_data.insertPoint(*pd);
+    qDebug() << "slSetPoint1" << pd->coord;
     last_pn = pd->coord;
 
 }
@@ -430,6 +444,7 @@ void win_snail::slMovePoint(point_data_t* pd)
 {
     qDebug() << "slMovePoint";
     slClrPoint(&last_pn);
+
     slSetPoint(pd);
  ////   snail_data.insertPoint(*pd);
 }
@@ -437,6 +452,18 @@ void win_snail::slMovePoint(point_data_t* pd)
 void win_snail::slClrPoint(QPoint* pn)
 {
     qDebug() << "slClrPoint";
+    int tmp;
+    if (setka_delt_x)
+    {
+        tmp = (pn->x() / setka_delt_x) * setka_delt_x;
+        pn->setX(tmp);
+    }
+    if (setka_delt_y)
+    {
+        tmp = (pn->y() / setka_delt_y) * setka_delt_y;
+        pn->setY(tmp);
+    }
+
     snail_data.removePoint(*pn);
 
 

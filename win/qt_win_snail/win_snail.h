@@ -30,6 +30,10 @@
 #define DEF_HID_USB_VID                 0x04d8/// 0x0483
 #define DEF_HID_USB_PID                 0x900a /// 0x5711
 
+#define DEF_DELT_X 10
+#define DEF_DELT_Y 10
+
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };

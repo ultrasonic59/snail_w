@@ -6,6 +6,8 @@
 #include <qcustomvideosurface.h>
 #include <opencv2/core.hpp>
 #include "snail_data.h"
+#define FLG_ON_KRS     (0x1<<0)
+#define FLG_ON_PNT     (0x1<<1)
 
 using namespace cv;
 
@@ -36,6 +38,10 @@ private:
     QCamera* pt_qcam;
     QCustomVideoSurface m_qvideosurface;
     FrameTransform m_transform;
+    void drawPoints(const Mat& _mat);
+
+private:
+    quint32 m_flags;
 signals:
     void frameUpdated(cv::Mat& _cvmat, QImage::Format format);
 
