@@ -17,6 +17,7 @@
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
 #include "wrk_wrk.h"
+#include "CamPlotter.h"
 
 ///======================================================================
 
@@ -33,8 +34,6 @@
 #define DEF_DELT_X 10
 #define DEF_DELT_Y 10
 
-
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
 QT_END_NAMESPACE
@@ -49,16 +48,26 @@ public:
     win_snail(QWidget *parent = nullptr);
     ~win_snail();
 public:
-    plotterwidget* p_CamView;
     hid_device* hid_handle;
+private:
+    struct hid_device_info* devs;
+    struct hid_device_info* cur_dev;
+protected:
+    bool put_hid_cmd(hid_cmd_t* cmd);
+
+public:
+    plotterwidget* p_CamView;
     quint16 setka_delt_x;
     quint16 setka_delt_y;
+    CamPlotter* p_cam_plotter;
+private:
+    QThread* pCamThread;
 
 public:
     c_snail_data snail_data;
  ///   Mat  mat_cam;
-    Mat  mat_setka;
-    Mat  mat_lines;
+///    Mat  mat_setka;
+///    Mat  mat_lines;
 
 private:
     QLabel* _label;
@@ -70,8 +79,6 @@ private:
    Mat _frame;
     QImage    _image;
  ///  hid_device* hid_handle;
-    struct hid_device_info* devs;
-  struct hid_device_info* cur_dev;
 private:
     QThread* m_pThread;
     QThread* wrk_Thread;
@@ -96,7 +103,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
  ////   void createThreads();
-    bool put_hid_cmd(hid_cmd_t* cmd);
 
     void saveSettings(void);
     void loadSettings(void);
@@ -126,8 +132,6 @@ private slots:
     void on_cmdXPlus_released();
     void on_cmdXMinus_pressed();
     void on_cmdXMinus_released();
-
-
 signals:
     void updateCamView(QImage);
     void sSendCmd(can_message_t* msg);

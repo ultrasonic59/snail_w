@@ -1,9 +1,5 @@
 #include "win_snail.h"
-////#include "hidapi.h"
 #include <QCameraInfo>
-////#include "csv/csvdlg.h"
-////#include "csv/csv_dlg.h"
-////#include "port_prop_dialog.h"
 
 
 win_snail::win_snail(QWidget *parent)
@@ -57,7 +53,7 @@ win_snail::win_snail(QWidget *parent)
 #endif
 
 ///=======================================================
-  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+ connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
  connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
  connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
 
@@ -69,16 +65,19 @@ win_snail::win_snail(QWidget *parent)
   connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
   m_pThread->start();
   ///============================================
-  wrk_Thread = new QThread(this);
+ wrk_Thread = new QThread(this);
  p_wrk=new Cwrk_wrk(m_cmd_sender);
  p_wrk->moveToThread(wrk_Thread);
  connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
  wrk_Thread->start();
  connect(this, SIGNAL(sSendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
-
 ///=======================================================
+ pCamThread= new QThread(this);
+ p_cam_plotter=new CamPlotter;
+ p_cam_plotter->ConnectToWidget(ui->CamWidget);
 
-
+ connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
+ pCamThread->start();
 }
 
 win_snail::~win_snail()

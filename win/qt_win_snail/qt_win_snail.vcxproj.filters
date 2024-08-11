@@ -54,6 +54,12 @@
     <Filter Include="Source Files\csv">
       <UniqueIdentifier>{737646a1-4767-4117-adcd-54c69135a0b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\plotters">
+      <UniqueIdentifier>{2e3f0aff-6d29-49fb-bbec-c5b456345344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\plotters">
+      <UniqueIdentifier>{88dd85f5-27d9-4b73-89cf-51034eb4cdeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -115,6 +121,12 @@
     <ClCompile Include="wrk_wrk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plotters\camplotter.cpp">
+      <Filter>Source Files\plotters</Filter>
+    </ClCompile>
+    <ClCompile Include="plotters\PlotProperties.cpp">
+      <Filter>Source Files\plotters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -137,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="snail_data.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plotters\PlotProperties.h">
+      <Filter>Header Files\plotters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +186,9 @@
     </QtMoc>
     <QtMoc Include="wrk_wrk.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="plotters\camplotter.h">
+      <Filter>Header Files\plotters</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

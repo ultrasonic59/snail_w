@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -103,6 +103,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="plotters\camplotter.cpp" />
+    <ClCompile Include="plotters\PlotProperties.cpp" />
     <ClCompile Include="wrk_wrk.cpp" />
     <QtRcc Include="win_snail.qrc" />
     <QtUic Include="csv\csv_dlg.ui" />
@@ -138,6 +140,8 @@
     <QtMoc Include="csv\csv_dlg.h" />
     <ClInclude Include="dev_interf.h" />
     <ClInclude Include="hidapi\hidapi.h" />
+    <QtMoc Include="plotters\camplotter.h" />
+    <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_data.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
