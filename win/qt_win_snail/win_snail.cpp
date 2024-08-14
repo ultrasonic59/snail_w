@@ -16,8 +16,9 @@ win_snail::win_snail(QWidget *parent)
     qRegisterMetaType<cv::Mat>("cv::Mat");
     p_CamView = ui->CamWidget;
     pt_camera = new MyCamera(0, &snail_data);
-    connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
- ///===================================================
+   //// connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
+    connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+    ///===================================================
     connect(p_CamView, SIGNAL(sSetPoint(point_data_t *)), this, SLOT(slSetPoint(point_data_t*)));
     connect(p_CamView, SIGNAL(sMovePoint(point_data_t*)), this, SLOT(slMovePoint(point_data_t*)));
 

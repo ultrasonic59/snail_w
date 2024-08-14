@@ -45,6 +45,12 @@ void plotterwidget::_updateImage(const cv::Mat& _cvmat)
     __updateFPS();
     update();
 }
+void plotterwidget::_update_image(const QImage& img)
+{
+    m_qimg = img.copy();
+    __updateFPS();
+    update();
+}
 
 void plotterwidget::updateImage(cv::Mat& _cvmat, QImage::Format _format)
 {
@@ -53,6 +59,16 @@ void plotterwidget::updateImage(cv::Mat& _cvmat, QImage::Format _format)
     ////   __updateFPS();
     ////   update();
     _updateImage(_cvmat);
+}
+void plotterwidget::update_image(QImage& img, QImage::Format _format)
+{
+ ////   m_qimg = img.copy();
+
+    ////   m_cvmat = _cvmat.clone();
+    ////   m_qimg = QImage(m_cvmat.data, m_cvmat.cols, m_cvmat.rows, m_cvmat.channels()*m_cvmat.cols, _format);
+    ////   __updateFPS();
+    ////   update();
+    _update_image(img);
 }
 
 #if 0

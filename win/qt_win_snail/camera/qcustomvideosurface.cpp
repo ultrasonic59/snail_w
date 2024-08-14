@@ -256,6 +256,8 @@ bool QCustomVideoSurface::present(const QVideoFrame& frame)
 
         cv::flip(mat, mat, 0);
         emit frameAvailable(mat, format);
+        emit frame_available(img, format);
+
         cloneFrame.unmap();
         return true;
     }

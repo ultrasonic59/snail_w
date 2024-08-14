@@ -17,8 +17,13 @@ public slots:
 
 public slots:
 	void updateImage(cv::Mat& _cvmat, QImage::Format _format);
-	void _updateImage(const QImage& _qimg);
-	void _updateImage(const cv::Mat& _cvmat);
+    void update_image(QImage& img, QImage::Format _format);
+
+	void _update_image(const QImage& _qimg);
+    void _updateImage(const QImage& _qimg);
+    void _updateImage(const cv::Mat& _cvmat);
+  ////  void update_image(const QImage& img);
+
 
 protected:
     void paintEvent(QPaintEvent *);

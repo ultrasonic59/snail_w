@@ -32,6 +32,8 @@ public slots:
 
 private slots:
     void __transformFrame(const cv::Mat& _mat, QImage::Format format);
+    void __translateFrame(const QImage& img, QImage::Format format);
+
     void __onError(QCamera::Error  _error);
 
 private:
@@ -44,5 +46,6 @@ private:
     quint32 m_flags;
 signals:
     void frameUpdated(cv::Mat& _cvmat, QImage::Format format);
+    void frame_updated(QImage& img, QImage::Format format);
 
 };

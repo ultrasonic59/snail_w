@@ -16,7 +16,8 @@ MyCamera::MyCamera(QObject* parent, c_snail_data* _snail_data) : QObject(parent)
     pt_qcam(nullptr), p_snail_data(_snail_data), m_flags(FLG_ON_KRS),
     m_transform(MyCamera::FlipVertically)
 {
-    connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
+ ////   connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
+    connect(&m_qvideosurface, SIGNAL(frame_available(QImage , QImage::Format)), this, SLOT(__translateFrame(QImage , QImage::Format)));
 }
 
 void MyCamera::selectDevice()
@@ -126,7 +127,13 @@ point_data_t t_point_data;
         ////     qDebug() << "mousePressEvent" << curX1 << curY1;
     }
 }
+void MyCamera::__translateFrame(const QImage& img, QImage::Format format)
+{
+    QImage _img = img.copy();
 
+    emit frame_updated(_img, format);
+
+}
 void MyCamera::__transformFrame(const Mat& _mat, QImage::Format format)
 {
   Mat tmpmat1;
