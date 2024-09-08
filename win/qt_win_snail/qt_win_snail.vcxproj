@@ -105,6 +105,9 @@
   <ItemGroup>
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
+    <ClCompile Include="ViewProperties.cpp" />
+    <ClCompile Include="widgets\param_ed.cpp" />
+    <ClCompile Include="widgets\QPushButtonColored.cpp" />
     <ClCompile Include="wrk_wrk.cpp" />
     <QtRcc Include="win_snail.qrc" />
     <QtUic Include="csv\csv_dlg.ui" />
@@ -112,6 +115,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </QtUic>
     <QtUic Include="port_prop_dialog.ui" />
+    <QtUic Include="ViewProperies.ui" />
     <QtUic Include="win_snail.ui" />
     <QtMoc Include="win_snail.h" />
     <ClCompile Include="camera\my_camera.cpp" />
@@ -143,9 +147,13 @@
     <QtMoc Include="plotters\camplotter.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
+    <ClInclude Include="snail_consts.h" />
     <ClInclude Include="snail_data.h" />
+    <QtMoc Include="ViewProperties.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
+    <QtMoc Include="widgets\param_ed.h" />
+    <ClInclude Include="widgets\QPushButtonColored.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,14 +1,16 @@
 #include "win_snail.h"
 #include <QCameraInfo>
+#include "ViewProperties.h"
+#include <QColorDialog>
 
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
-    , tdlg(this)
+    ////, CsvDlg(this)
     , setka_delt_x(DEF_DELT_X)
     , setka_delt_y(DEF_DELT_Y)
-    , dial_dbg(this)
+    ////, dial_dbg(this)
     
 {
     ui->setupUi(this);
@@ -17,15 +19,16 @@ win_snail::win_snail(QWidget *parent)
     p_CamView = ui->CamWidget;
     pt_camera = new MyCamera(0, &snail_data);
    //// connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
-    connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+ ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+ ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
+ ///   connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+
     ///===================================================
-    connect(p_CamView, SIGNAL(sSetPoint(point_data_t *)), this, SLOT(slSetPoint(point_data_t*)));
-    connect(p_CamView, SIGNAL(sMovePoint(point_data_t*)), this, SLOT(slMovePoint(point_data_t*)));
-
-    connect(p_CamView, SIGNAL(sClrPoint(QPoint*)), this, SLOT(slClrPoint(QPoint*)));
-
+   createMenus();
  ////   createThreads();
     setupActions();
+    loadSettings();
+     /// ====================================
     qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
  ////   p_CamView = ui->CamWidget;
@@ -74,22 +77,41 @@ win_snail::win_snail(QWidget *parent)
  connect(this, SIGNAL(sSendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
 ///=======================================================
  pCamThread= new QThread(this);
- p_cam_plotter=new CamPlotter;
+ p_cam_plotter=new CamPlotter(&PlotProp, &snail_data);
  p_cam_plotter->ConnectToWidget(ui->CamWidget);
+#if 0
+   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+#else
+   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
+   connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+   
+   connect(p_CamView, SIGNAL(sSetPoint(QPoint*)), p_cam_plotter, SLOT(slSetPoint(QPoint*)));
+   connect(p_CamView, SIGNAL(sMovePoint(QPoint*)), p_cam_plotter, SLOT(slMovePoint(QPoint*)));
+   connect(p_CamView, SIGNAL(sClrPoint(QPoint*)), p_cam_plotter, SLOT(slClrPoint(QPoint*)));
+
+#endif
+   connect(p_CamView, SIGNAL(sel_rect_changet(QRect)), p_cam_plotter, SLOT(sl_set_sel_rect(QRect)), Qt::QueuedConnection);
+   connect(p_cam_plotter, SIGNAL(s_show_rule_coord(QRect&)), this, SLOT(sl_show_rule_coord(QRect&)));
 
  connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
+
  pCamThread->start();
+
+
 }
 
 win_snail::~win_snail()
 {
  saveSettings();
+ m_pThread->quit();
 //// delete ui;
 }
+#if 0
 void win_snail::setCamImage(QImage ipm)
 {
  ////   p_CamView->_setImage(ipm);
 }
+#endif
 void win_snail::timerEvent(QTimerEvent* e)
 {
  ////   bool rez;
@@ -120,8 +142,20 @@ void win_snail::timerEvent(QTimerEvent* e)
 ///======================================================================
 void win_snail::setupActions()
 {
+  ////  connect(actionSet_colors, &QAction::triggered, this, SLOT(sl_setDrawProp()));
+  connect(actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
+
+
+///====    actionFile_csv ========
+#if 0
+    ui->actionFile_csv->setStatusTip(tr("Open csv file"));
+    connect(ui->actionFile_csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
+
     ui->actionSelect->setStatusTip(tr("Select video source"));
     connect(ui->actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
+
+    connect(ui->actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
+#endif
  ////  ui->
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
@@ -143,6 +177,38 @@ void win_snail::__selectVideoSource()
     pt_camera->selectDevice();
     pt_camera->open();
 }
+void win_snail::sl_setDrawProp()
+{
+    qDebug() << "sl_setDrawProp";
+    ViewProperties* viewProp;
+    viewProp = new ViewProperties(this, this, &PlotProp);
+    if (viewProp->exec())
+    {
+        saveSettings();
+    }
+  delete viewProp;
+  ////  viewProp->show();
+}
+
+void win_snail::sl_openCsvFile()
+{
+ qDebug() << "sl_openCsvFile";
+  csv_dlg CsvDlg(this);
+
+ if (CsvDlg.exec())
+ {
+     qDebug() << "Ok";
+
+ }
+ else
+ {
+     qDebug() << "cancel";
+
+ }
+ ////ViewProperties* viewProp;
+ ////viewProp = new ViewProperties(this, this, &PlotProp);
+ ////viewProp->show();
+}
 #if 0
 void win_snail::createThreads()
 {
@@ -163,9 +229,19 @@ void win_snail::createThreads()
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
-  ////  DialDebug dial_dbg(this);
+    DialDebug _dial_dbg(this);
 
-   dial_dbg.show();
+if(_dial_dbg.exec())
+{ 
+    qDebug() << "OK";
+
+}
+else
+{
+    qDebug() << "Cancel";
+
+}
+ ///  dial_dbg.show();
  ////   qDebug() << "end debug" ;
 
  ///   CsvDlg tdlg;
@@ -406,11 +482,29 @@ else
    qDebug() << "BAD ";
 
 }
+
 void win_snail::saveSettings(void)
 {
     QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
         QSettings::IniFormat);
     settings.setValue("PortName", ComPortName);
+    ///================ Colors =======================================================
+    settings.setValue("BackgroundColor", PlotProp.BGColor.rgb());
+    settings.setValue("SelectColor", PlotProp.SelColor.rgb());
+    settings.setValue("RuleColor", PlotProp.RuleColor.rgb());
+    settings.setValue("CircleColor", PlotProp.CircleColor.rgb());
+    settings.setValue("CrossColor", PlotProp.CrossColor.rgb());
+    ///================ thicknesses =======================================================
+    settings.setValue("Thickness select", PlotProp.thick_sel);
+    settings.setValue("Thickness Rule", PlotProp.thick_rule);
+    settings.setValue("Thickness circle", PlotProp.thick_circle);
+    settings.setValue("Thickness cross", PlotProp.thick_crs);
+    settings.setValue("Radius circle", PlotProp.rad_circle);
+
+    ///================ Grid =======================================================
+    settings.setValue("Grid X", PlotProp.setka_delt_x);
+    settings.setValue("Grid Y", PlotProp.setka_delt_y);
+ 
 }
 void win_snail::loadSettings(void)
 {
@@ -418,58 +512,26 @@ void win_snail::loadSettings(void)
         QSettings::IniFormat);
 
     ComPortName = settings.value("PortName", "COM16").toString();
+    ///================ Colors =======================================================
+    PlotProp.BGColor.setRgb(settings.value("BackgroundColor", PlotProp.BGColor.rgb()).toInt());
+    PlotProp.SelColor.setRgb(settings.value("SelectColor", PlotProp.SelColor.rgb()).toInt());
+    PlotProp.RuleColor.setRgb(settings.value("RuleColor", PlotProp.RuleColor.rgb()).toInt());
+    PlotProp.CircleColor.setRgb(settings.value("CircleColor", PlotProp.CircleColor.rgb()).toInt());
+    PlotProp.CrossColor.setRgb(settings.value("CrossColor", PlotProp.CrossColor.rgb()).toInt());
+    ///================ thicknesses =======================================================
+    PlotProp.thick_sel= settings.value("Thickness select", 1).toInt();
+    PlotProp.thick_rule = settings.value("Thickness rule", 1).toInt();
+    PlotProp.thick_circle = settings.value("Thickness circle", DEF_THICK_CIRCLE).toInt();
+    PlotProp.thick_crs = settings.value("Thickness cross", 1).toInt();
+    PlotProp.rad_circle = settings.value("Radius circle", DEF_RAD_CIRCLE).toInt();
+    ///================ Grid =======================================================
+    PlotProp.setka_delt_x= settings.value("Grid X", DEF_DELT_X).toInt();
+    PlotProp.setka_delt_y = settings.value("Grid Y", DEF_DELT_Y).toInt();
 
 }
 
-void win_snail::slSetPoint(point_data_t* pd)
-{
-    qDebug() << "slSetPoint"<<pd->coord;
-    int tmp;
-    if (setka_delt_x)
-       {
-        tmp = (pd->coord.x() / setka_delt_x) * setka_delt_x;
-        pd->coord.setX(tmp);
-       }
-    if (setka_delt_y)
-        {
-        tmp = (pd->coord.y() / setka_delt_y) * setka_delt_y;
-        pd->coord.setY(tmp);
-    }
-    snail_data.insertPoint(*pd);
-    qDebug() << "slSetPoint1" << pd->coord;
-    last_pn = pd->coord;
-
-}
-void win_snail::slMovePoint(point_data_t* pd)
-{
-    qDebug() << "slMovePoint";
-    slClrPoint(&last_pn);
-
-    slSetPoint(pd);
- ////   snail_data.insertPoint(*pd);
-}
-
-void win_snail::slClrPoint(QPoint* pn)
-{
-    qDebug() << "slClrPoint";
-    int tmp;
-    if (setka_delt_x)
-    {
-        tmp = (pn->x() / setka_delt_x) * setka_delt_x;
-        pn->setX(tmp);
-    }
-    if (setka_delt_y)
-    {
-        tmp = (pn->y() / setka_delt_y) * setka_delt_y;
-        pn->setY(tmp);
-    }
-
-    snail_data.removePoint(*pn);
-
-
-}
-
-///=================== X ===========================
+/// /==============================================================
+ ///=================== X ===========================
 void win_snail::on_cmdXPlus_pressed()
 {
     qDebug() << "on_cmdXPlus_pressed";
@@ -511,6 +573,30 @@ bool win_snail::eventFilter(QObject* obj, QEvent* event)
 
     return QMainWindow::eventFilter(obj, event);
 
+}
+void win_snail::sl_show_rule_coord(QRect& rc)
+{
+    qDebug() << "sl_show_rule_coord:"<< rc;
+
+}
+///horizontalLayout_menu
+void win_snail::createMenus() {
+    QMenuBar* menubar = menuBar();
+    QMenu* menuFile = menubar->addMenu(tr("&File"));
+    QMenu* menuNew = menuFile->addMenu(tr("&New"));
+    QMenu* menuOpen = menuFile->addMenu(tr("&Open"));
+    QMenu* menuRecent = menuFile->addMenu(tr("&Recent"));
+    menuFile->addSeparator();
+    actionSet_colors = new QAction("Set colors", this);
+    menuFile->addAction(actionSet_colors);
+
+    QMenu* menuCamera = menubar->addMenu(tr("&Camera"));
+    QMenu* menuHelp = menubar->addMenu(tr("&Help"));
+
+     menuFile->addAction(new QAction("Open", this));
+    menuFile->addAction(new QAction("Close", this));
+    ///layout->setMenuBar(mainMenu);
+    ui->horizontalLayout_menu->setMenuBar(menubar);
 }
 
 ///=================================================================

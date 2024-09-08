@@ -60,6 +60,8 @@ public:
     quint16 setka_delt_x;
     quint16 setka_delt_y;
     CamPlotter* p_cam_plotter;
+    PlotProperties PlotProp;
+
 private:
     QThread* pCamThread;
 
@@ -84,16 +86,14 @@ private:
     QThread* wrk_Thread;
     CcmdSender* m_cmd_sender;
     Cwrk_wrk* p_wrk;
-
-public slots:
-    void setCamImage(QImage ipm);
-    void slSetPoint(point_data_t *pd);
-    void slClrPoint(QPoint* pn);
-    void slMovePoint(point_data_t* pd);
-
+    ////QPoint getMouseInsideCoord(QPoint inPos);
+////public slots:
+////    void setCamImage(QImage ipm);
+ 
 protected:
     void timerEvent(QTimerEvent* e);
     QPoint last_pn;
+    QRect sel_rc;
 private:
     Ui::win_snail *ui;
 private:
@@ -110,10 +110,17 @@ protected:
     QString ComPortName;
 
 protected:
-    DialDebug dial_dbg;
-       csv_dlg tdlg;
+////    DialDebug dial_dbg;
+  ////     csv_dlg CsvDlg;
 private :
     bool eventFilter(QObject* obj, QEvent* event);
+    void createMenus();
+private:
+    QAction* actionProj;
+    QAction* actionFile;
+public:
+
+    QAction* actionSet_colors;
 
 public slots:
     void on_butt_con_hid();
@@ -132,6 +139,9 @@ private slots:
     void on_cmdXPlus_released();
     void on_cmdXMinus_pressed();
     void on_cmdXMinus_released();
+    void sl_show_rule_coord(QRect& rc);
+    void sl_setDrawProp();
+    void sl_openCsvFile();
 signals:
     void updateCamView(QImage);
     void sSendCmd(can_message_t* msg);

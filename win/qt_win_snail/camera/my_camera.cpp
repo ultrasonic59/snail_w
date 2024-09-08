@@ -13,7 +13,7 @@
 #include <opencv2/imgproc.hpp> // drawing shapes
 
 MyCamera::MyCamera(QObject* parent, c_snail_data* _snail_data) : QObject(parent),
-    pt_qcam(nullptr), p_snail_data(_snail_data), m_flags(FLG_ON_KRS),
+    pt_qcam(nullptr),  p_snail_data(_snail_data), m_flags(FLG_ON_RULE), ////m_flags(FLG_ON_KRS),
     m_transform(MyCamera::FlipVertically)
 {
  ////   connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
@@ -111,8 +111,9 @@ void MyCamera::resume()
         pt_qcam->start();
     }
 }
-int t_cols;
-int t_rows;
+#if 0
+int t_cols=0;
+int t_rows=0;
 void MyCamera::drawPoints(const Mat& _mat)
 {
 //===================(  Draw Circle  )======================
@@ -127,6 +128,7 @@ point_data_t t_point_data;
         ////     qDebug() << "mousePressEvent" << curX1 << curY1;
     }
 }
+#endif
 void MyCamera::__translateFrame(const QImage& img, QImage::Format format)
 {
     QImage _img = img.copy();
@@ -134,6 +136,7 @@ void MyCamera::__translateFrame(const QImage& img, QImage::Format format)
     emit frame_updated(_img, format);
 
 }
+#if 0
 void MyCamera::__transformFrame(const Mat& _mat, QImage::Format format)
 {
   Mat tmpmat1;
@@ -180,7 +183,7 @@ void MyCamera::setTransform(FrameTransform _transform)
 {
     m_transform = _transform;
 }
-
+#endif
 void MyCamera::setViewfinderSettings()
 {
     if (pt_qcam) {

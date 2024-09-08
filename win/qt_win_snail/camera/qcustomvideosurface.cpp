@@ -151,7 +151,8 @@ static QImage QVideoFrameToQImage(const QVideoFrame& videoFrame) {
     return QImage();
 }
 ///===============================
-static cv::Mat QImageToCvMat(QImage inImage, bool inCloneImageData = true)
+////static 
+cv::Mat QImageToCvMat(QImage inImage, bool inCloneImageData = true)
 {
     switch (inImage.format())
     {
@@ -254,8 +255,8 @@ bool QCustomVideoSurface::present(const QVideoFrame& frame)
         QImage img = QVideoFrameToQImage(cloneFrame);
          cv::Mat mat = QImageToCvMat(img);
 
-        cv::flip(mat, mat, 0);
-        emit frameAvailable(mat, format);
+  /////      cv::flip(mat, mat, 0);
+////        emit frameAvailable(mat, format);
         emit frame_available(img, format);
 
         cloneFrame.unmap();

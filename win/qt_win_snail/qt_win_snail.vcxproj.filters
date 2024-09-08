@@ -127,6 +127,15 @@
     <ClCompile Include="plotters\PlotProperties.cpp">
       <Filter>Source Files\plotters</Filter>
     </ClCompile>
+    <ClCompile Include="ViewProperties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\QPushButtonColored.cpp">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\param_ed.cpp">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -153,6 +162,12 @@
     <ClInclude Include="plotters\PlotProperties.h">
       <Filter>Header Files\plotters</Filter>
     </ClInclude>
+    <ClInclude Include="snail_consts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\QPushButtonColored.h">
+      <Filter>Header Files\widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dial_debug\dial_debug.ui">
@@ -162,6 +177,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="csv\csv_dlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ViewProperies.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -189,6 +207,12 @@
     </QtMoc>
     <QtMoc Include="plotters\camplotter.h">
       <Filter>Header Files\plotters</Filter>
+    </QtMoc>
+    <QtMoc Include="ViewProperties.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\param_ed.h">
+      <Filter>Header Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

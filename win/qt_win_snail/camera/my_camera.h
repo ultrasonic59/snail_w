@@ -6,8 +6,8 @@
 #include <qcustomvideosurface.h>
 #include <opencv2/core.hpp>
 #include "snail_data.h"
-#define FLG_ON_KRS     (0x1<<0)
-#define FLG_ON_PNT     (0x1<<1)
+#include "snail_consts.h"
+
 
 using namespace cv;
 
@@ -26,12 +26,12 @@ public slots:
     void pause();
     void resume();
     void close();
-    void nextTransform();
-    void setTransform(FrameTransform transform);
+   //// void nextTransform();
+    ////void setTransform(FrameTransform transform);
     void setViewfinderSettings(); // works only after QCamera::start() call
 
 private slots:
-    void __transformFrame(const cv::Mat& _mat, QImage::Format format);
+  ////  void __transformFrame(const cv::Mat& _mat, QImage::Format format);
     void __translateFrame(const QImage& img, QImage::Format format);
 
     void __onError(QCamera::Error  _error);
@@ -40,12 +40,12 @@ private:
     QCamera* pt_qcam;
     QCustomVideoSurface m_qvideosurface;
     FrameTransform m_transform;
-    void drawPoints(const Mat& _mat);
+    ////void drawPoints(const Mat& _mat);
 
 private:
     quint32 m_flags;
 signals:
-    void frameUpdated(cv::Mat& _cvmat, QImage::Format format);
+  ////  void frameUpdated(cv::Mat& _cvmat, QImage::Format format);
     void frame_updated(QImage& img, QImage::Format format);
 
 };

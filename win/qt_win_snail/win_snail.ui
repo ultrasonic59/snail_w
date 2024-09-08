@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1063</width>
-    <height>789</height>
+    <width>1061</width>
+    <height>857</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -27,10 +27,10 @@
    <widget class="QSplitter" name="splitter">
     <property name="geometry">
      <rect>
-      <x>-21</x>
-      <y>10</y>
-      <width>911</width>
-      <height>751</height>
+      <x>0</x>
+      <y>50</y>
+      <width>891</width>
+      <height>801</height>
      </rect>
     </property>
     <property name="orientation">
@@ -559,160 +559,145 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QLabel" name="labRuleX">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>40</y>
+      <width>151</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RuleX</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labRuleY">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>70</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RuleY</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labRuleW">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>100</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Width</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labRuleH">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>130</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hight</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>241</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_menu">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>0</y>
+      <width>641</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButtonRule">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Rule</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCross">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Cross</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonGrid">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Grid</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonTest">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Test</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1063</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="mnuFile">
-    <property name="title">
-     <string>&amp;File</string>
-    </property>
-    <widget class="QMenu" name="mnuRecent">
-     <property name="title">
-      <string>&amp;Recent files</string>
-     </property>
-     <addaction name="separator"/>
-     <addaction name="actRecentClear"/>
-    </widget>
-    <widget class="QMenu" name="menu_New">
-     <property name="title">
-      <string>&amp;New</string>
-     </property>
-     <addaction name="actionProj"/>
-     <addaction name="actionFile"/>
-    </widget>
-    <widget class="QMenu" name="menu_Open">
-     <property name="title">
-      <string>&amp;Open</string>
-     </property>
-     <addaction name="actionProj_2"/>
-     <addaction name="actionFile_2"/>
-    </widget>
-    <addaction name="menu_New"/>
-    <addaction name="menu_Open"/>
-    <addaction name="mnuRecent"/>
-    <addaction name="separator"/>
-    <addaction name="actFileSave"/>
-    <addaction name="actFileSaveAs"/>
-    <addaction name="actFileSaveTransformedAs"/>
-    <addaction name="separator"/>
-    <addaction name="actFileExit"/>
-   </widget>
-   <widget class="QMenu" name="mnuService">
-    <property name="title">
-     <string>Camera</string>
-    </property>
-    <addaction name="actionSelect"/>
-   </widget>
-   <widget class="QMenu" name="mnuHelp">
-    <property name="title">
-     <string>&amp;Help</string>
-    </property>
-    <addaction name="actAbout"/>
-   </widget>
-   <widget class="QMenu" name="menuMachine">
-    <property name="title">
-     <string>Machine</string>
-    </property>
-    <addaction name="actionMachine_settings"/>
-    <addaction name="actionHard_Reset"/>
-    <addaction name="actionSet_TLS_Position"/>
-    <addaction name="actionDisable_Stepper"/>
-   </widget>
-   <addaction name="mnuFile"/>
-   <addaction name="mnuService"/>
-   <addaction name="menuMachine"/>
-   <addaction name="mnuHelp"/>
-  </widget>
-  <action name="actFileExit">
-   <property name="text">
-    <string>E&amp;xit</string>
-   </property>
-  </action>
-  <action name="actionSelect">
-   <property name="text">
-    <string>Select</string>
-   </property>
-  </action>
-  <action name="actFileSave">
-   <property name="text">
-    <string>&amp;Save</string>
-   </property>
-  </action>
-  <action name="actFileSaveAs">
-   <property name="text">
-    <string>Save &amp;as...</string>
-   </property>
-  </action>
-  <action name="actAbout">
-   <property name="text">
-    <string>&amp;About</string>
-   </property>
-  </action>
-  <action name="actRecentClear">
-   <property name="text">
-    <string>&amp;Clear</string>
-   </property>
-  </action>
-  <action name="actFileSaveTransformedAs">
-   <property name="text">
-    <string>Save &amp;transformed as...</string>
-   </property>
-  </action>
-  <action name="actionMachine_settings">
-   <property name="text">
-    <string>Machine settings</string>
-   </property>
-  </action>
-  <action name="actionHard_Reset">
-   <property name="text">
-    <string>Hard Reset</string>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Perform Hard Reset of machine control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </action>
-  <action name="actionSave_TLS_Position">
-   <property name="text">
-    <string>Set TLS Position</string>
-   </property>
-  </action>
-  <action name="actionSet_TLS_Position">
-   <property name="text">
-    <string>Set TLS Position</string>
-   </property>
-  </action>
-  <action name="actionDisable_Stepper">
-   <property name="text">
-    <string>Disable Stepper</string>
-   </property>
-  </action>
-  <action name="actionProj">
-   <property name="text">
-    <string>Proj</string>
-   </property>
-  </action>
-  <action name="actionFile">
-   <property name="text">
-    <string>File</string>
-   </property>
-  </action>
-  <action name="actionProj_2">
-   <property name="text">
-    <string>Proj</string>
-   </property>
-  </action>
-  <action name="actionFile_2">
-   <property name="text">
-    <string>File</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

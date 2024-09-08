@@ -6,18 +6,6 @@ csv_dlg::csv_dlg(QWidget* parent) :
 {
     ui.setupUi(this);
 
-/*
-    ui.comboBox_rej->addItem("HID", HID_REJ);
-    ui.comboBox_rej->addItem("CAN", CAN_REJ);
-     connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
-    connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
-
-    connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
-    connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
-
-
-    connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
-    */
 connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(SlotOpenFile()));
 
 }
