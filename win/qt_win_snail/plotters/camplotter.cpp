@@ -19,13 +19,13 @@ QColor scalar2qcolor(Scalar color)
 ///=================================================
 
 
-CamPlotter::CamPlotter(PlotProperties *Plot_Prop, c_snail_data* _snail_data) :
+CamPlotter::CamPlotter(PlotProperties *Plot_Prop, quint32* flags,c_snail_data* _snail_data) :
 								image(1000, 1000, QImage::Format_ARGB32),
 								pPlot_Prop(Plot_Prop), p_snail_data(_snail_data)
 	                           /// , setka_delt_x(DEF_DELT_X)
 	                           /// , setka_delt_y(DEF_DELT_Y)
 	                           //// , m_flags(FLG_ON_RULE| FLG_ON_SEL)
-							    , m_flags(FLG_ON_RULE )
+							    , p_flags(flags)
 	                            , redraw_sel_rc(false)
 	                           ///// ,m_flags(FLG_ON_KRS)
 
@@ -49,11 +49,11 @@ QImage _qimg = img.copy();
 
 mat_img = QImageToCvMat(_qimg);
 ///cv::flip(mat, mat, 0);
-if (m_flags & FLG_ON_KRS)
+if (*p_flags & FLG_ON_KRS)
 {
 	drawCrs(mat_img);
 }
-if (m_flags & FLG_ON_SEL)
+if (*p_flags & FLG_ON_SEL)
 {
 	///if (redraw_sel_rc)
 	   {
@@ -62,7 +62,7 @@ if (m_flags & FLG_ON_SEL)
 	    }
 }
 ////else 
-if (m_flags & FLG_ON_RULE)
+if (*p_flags & FLG_ON_RULE)
     {
 	drawRuleLine(mat_img);
     }
@@ -229,7 +229,7 @@ void CamPlotter::sl_set_sel_rect(QRect t_rect)
 ///	rule_rect.setBottomRight(getMouseInsideCoord(sel_rect.bottomRight()));
 ///	rule_rect.setTopLeft(getMouseInsideCoord(sel_rect.topLeft()));
 
-	if (m_flags & FLG_ON_RULE)
+	if (*p_flags & FLG_ON_RULE)
 	{
 		rule_rect.setBottomRight(getMouseInsideCoord(sel_rect.bottomRight()));
 		rule_rect.setTopLeft(getMouseInsideCoord(sel_rect.topLeft()));

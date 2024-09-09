@@ -31,8 +31,8 @@
 #define DEF_HID_USB_VID                 0x04d8/// 0x0483
 #define DEF_HID_USB_PID                 0x900a /// 0x5711
 
-#define DEF_DELT_X 10
-#define DEF_DELT_Y 10
+////#define DEF_DELT_X 10
+///#define DEF_DELT_Y 10
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -57,11 +57,11 @@ protected:
 
 public:
     plotterwidget* p_CamView;
-    quint16 setka_delt_x;
-    quint16 setka_delt_y;
+    ///quint16 setka_delt_x;
+    ///quint16 setka_delt_y;
     CamPlotter* p_cam_plotter;
     PlotProperties PlotProp;
-
+    quint32 cnf_flags;
 private:
     QThread* pCamThread;
 
@@ -146,6 +146,9 @@ private slots:
     void sl_show_rule_coord(QRect& rc);
     void sl_setDrawProp();
     void sl_openCsvFile();
+    void on_butt_cross();
+    void on_butt_sel();
+
 signals:
     void updateCamView(QImage);
     void sSendCmd(can_message_t* msg);

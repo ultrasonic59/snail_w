@@ -16,7 +16,7 @@ class CamPlotter : public QObject
 {
 	Q_OBJECT
 public:
-	CamPlotter(PlotProperties* Plot_Prop=0, c_snail_data* p_snail_data=0);
+	CamPlotter(PlotProperties* Plot_Prop=0,quint32 *flags=0, c_snail_data* p_snail_data=0);
 	virtual ~CamPlotter(void);
 
 protected:
@@ -45,7 +45,7 @@ protected:
 	Mat mat_img;
 	bool redraw_sel_rc;
 private:
-	quint32 m_flags;
+	quint32 *p_flags;
 
 
 public slots:

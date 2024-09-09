@@ -7,12 +7,12 @@
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
+    , cnf_flags(0)
     ////, CsvDlg(this)
-    , setka_delt_x(DEF_DELT_X)
-    , setka_delt_y(DEF_DELT_Y)
+    ///, setka_delt_x(DEF_DELT_X)
+    ///, setka_delt_y(DEF_DELT_Y)
     ////, dial_dbg(this)
-    
-{
+ {
     ui->setupUi(this);
 ///====================================
     qRegisterMetaType<cv::Mat>("cv::Mat");
@@ -77,7 +77,7 @@ win_snail::win_snail(QWidget *parent)
  connect(this, SIGNAL(sSendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
 ///=======================================================
  pCamThread= new QThread(this);
- p_cam_plotter=new CamPlotter(&PlotProp, &snail_data);
+ p_cam_plotter=new CamPlotter(&PlotProp,&cnf_flags, &snail_data);
  p_cam_plotter->ConnectToWidget(ui->CamWidget);
 #if 0
    connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
@@ -94,6 +94,15 @@ win_snail::win_snail(QWidget *parent)
    connect(p_cam_plotter, SIGNAL(s_show_rule_coord(QRect&)), this, SLOT(sl_show_rule_coord(QRect&)));
 
  connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
+ ///connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+
+ ///pushButtonCross
+ ///pushButtonRule
+ /// pushButtonGrid
+ /// pushButtonSel
+ /// 
+ connect(ui->pushButtonCross, SIGNAL(clicked()), this, SLOT(on_butt_cross()));
+ connect(ui->pushButtonSel, SIGNAL(clicked()), this, SLOT(on_butt_sel()));
 
  pCamThread->start();
 
@@ -233,6 +242,25 @@ void win_snail::createThreads()
     */
 }
 #endif
+void win_snail::on_butt_cross()
+{
+/// qDebug() << "on_butt_cross";
+cnf_flags ^= FLG_ON_KRS;
+if(cnf_flags& FLG_ON_KRS)
+    ui->pushButtonCross->setStyleSheet("background-color: green; ");
+else
+    ui->pushButtonCross->setStyleSheet("");
+}
+void win_snail::on_butt_sel()
+{
+    qDebug() << "on_butt_sel";
+    cnf_flags ^= FLG_ON_SEL;
+    if (cnf_flags & FLG_ON_SEL)
+        ui->pushButtonSel->setStyleSheet("background-color: green; ");
+    else
+        ui->pushButtonSel->setStyleSheet("");
+}
+
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
