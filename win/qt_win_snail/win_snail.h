@@ -118,9 +118,13 @@ private :
 private:
     QAction* actionProj;
     QAction* actionFile;
+    QAction* actionSelect;
+    QAction* actionFile_Csv;
+    QAction* actionSet_colors;
+
 public:
 
-    QAction* actionSet_colors;
+    ////QAction* actionSet_colors;
 
 public slots:
     void on_butt_con_hid();

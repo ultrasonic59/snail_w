@@ -104,7 +104,12 @@ win_snail::~win_snail()
 {
  saveSettings();
  m_pThread->quit();
-//// delete ui;
+ m_pThread->wait(200);
+ pCamThread->quit();
+ pCamThread->wait(200);
+ wrk_Thread->quit();
+ wrk_Thread->wait(200);
+ delete ui;
 }
 #if 0
 void win_snail::setCamImage(QImage ipm)
@@ -144,6 +149,8 @@ void win_snail::setupActions()
 {
   ////  connect(actionSet_colors, &QAction::triggered, this, SLOT(sl_setDrawProp()));
   connect(actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
+  connect(actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
+  connect(actionFile_Csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
 
 
 ///====    actionFile_csv ========
@@ -574,10 +581,12 @@ bool win_snail::eventFilter(QObject* obj, QEvent* event)
     return QMainWindow::eventFilter(obj, event);
 
 }
+////label_rule
 void win_snail::sl_show_rule_coord(QRect& rc)
 {
-    qDebug() << "sl_show_rule_coord:"<< rc;
-
+ double t_len = sqrt(rc.width() * rc.width() + rc.height() * rc.height());
+ QString rule_coord= QString("[Xb=%1 Yb=%2] [Xe=%3 Ye=%4][Len=%5]").arg(rc.x()).arg(rc.y()).arg(rc.x()+rc.width()).arg(rc.y()+rc.height()).arg(t_len);
+ui->label_rule->setText(rule_coord);
 }
 ///horizontalLayout_menu
 void win_snail::createMenus() {
@@ -589,12 +598,17 @@ void win_snail::createMenus() {
     menuFile->addSeparator();
     actionSet_colors = new QAction("Set colors", this);
     menuFile->addAction(actionSet_colors);
+    actionFile_Csv = new QAction("Open csv", this);
+    menuOpen->addAction(actionFile_Csv);
 
     QMenu* menuCamera = menubar->addMenu(tr("&Camera"));
+    actionSelect = new QAction("Select", this);
+    menuCamera->addAction(actionSelect);
+
     QMenu* menuHelp = menubar->addMenu(tr("&Help"));
 
-     menuFile->addAction(new QAction("Open", this));
-    menuFile->addAction(new QAction("Close", this));
+ ////    menuFile->addAction(new QAction("Open", this));
+ //////   menuFile->addAction(new QAction("Close", this));
     ///layout->setMenuBar(mainMenu);
     ui->horizontalLayout_menu->setMenuBar(menubar);
 }

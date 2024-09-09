@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
-    <height>857</height>
+    <width>1066</width>
+    <height>772</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -28,9 +28,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>50</y>
+      <y>30</y>
       <width>891</width>
-      <height>801</height>
+      <height>741</height>
      </rect>
     </property>
     <property name="orientation">
@@ -108,9 +108,9 @@
     <property name="geometry">
      <rect>
       <x>894</x>
-      <y>524</y>
-      <width>161</width>
-      <height>238</height>
+      <y>531</y>
+      <width>171</width>
+      <height>231</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -689,9 +689,22 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="label_rule">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
