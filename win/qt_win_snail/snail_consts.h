@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef FLG_ON_KRS
-#define FLG_ON_KRS     (0x1<<0)
+#ifndef FLG_ON_CRS
+#define FLG_ON_CRS     (0x1<<0)
 #endif
 #ifndef FLG_ON_PNT
 #define FLG_ON_PNT     (0x1<<1)
@@ -11,6 +11,9 @@
 #endif
 #ifndef FLG_ON_RULE
 #define FLG_ON_RULE     (0x1<<3)
+#endif
+#ifndef FLG_ON_GRID
+#define FLG_ON_GRID     (0x1<<4)
 #endif
 
 #ifndef DEF_DELT_X

@@ -382,19 +382,19 @@
    <item>
     <layout class="QHBoxLayout" name="Layout_col_marker">
      <item>
-      <widget class="QLabel" name="label_col_marker">
+      <widget class="QLabel" name="label_col_grid">
        <property name="font">
         <font>
          <pointsize>10</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>rrrr</string>
+        <string>Grid</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButtonColored" name="Button_col__">
+      <widget class="QPushButtonColored" name="Button_col_grid">
        <property name="maximumSize">
         <size>
          <width>150</width>

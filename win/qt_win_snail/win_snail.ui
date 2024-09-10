@@ -650,7 +650,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonCross">
+      <widget class="QPushButton" name="pushButtonPnt">
        <property name="maximumSize">
         <size>
          <width>40</width>
@@ -658,7 +658,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Cross</string>
+        <string>Pnt</string>
        </property>
       </widget>
      </item>
@@ -672,6 +672,19 @@
        </property>
        <property name="text">
         <string>Grid</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCross">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Cross</string>
        </property>
       </widget>
      </item>

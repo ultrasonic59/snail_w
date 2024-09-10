@@ -16,7 +16,10 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	PropInterface.Button_col_background->SetColor(plotProp->BGColor);
 	PropInterface.Button_col_sel->SetColor(plotProp->SelColor);
 	PropInterface.Button_col_rule->SetColor(plotProp->RuleColor);
-   //// PropInterface.Button_col_text->SetColor(plotProp->TextColor);
+    PropInterface.Button_col_crs->SetColor(plotProp->CrossColor);
+	PropInterface.Button_col_circle->SetColor(plotProp->CircleColor);
+
+	PropInterface.Button_col_grid->SetColor(plotProp->GridColor);
 
 	setWindowFlags(Qt::Drawer);
 
@@ -57,12 +60,11 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	connect(PropInterface.Button_col_background, SIGNAL(clicked()), this, SLOT(SetBackgroundColor()));
 	connect(PropInterface.Button_col_sel, SIGNAL(clicked()), this, SLOT(SetSelColor()));
 	connect(PropInterface.Button_col_rule, SIGNAL(clicked()), this, SLOT(SetRuleColor()));
+	connect(PropInterface.Button_col_crs, SIGNAL(clicked()), this, SLOT(SetCrsColor()));
+	connect(PropInterface.Button_col_circle, SIGNAL(clicked()), this, SLOT(SetCircleColor()));
+	connect(PropInterface.Button_col_grid, SIGNAL(clicked()), this, SLOT(SetGridColor()));
+
 #if 0
-	connect(PropInterface.Button_col_no_ak, SIGNAL(clicked()), this, SLOT(SetNoAKColor()));
-
-	/////connect(PropInterface.Button_col_norma, SIGNAL(clicked()), this, SLOT(SetNoDefColor()));
-
-	////connect(PropInterface.Button_col_RL, SIGNAL(clicked()), this, SLOT(SetRLColor()));
 	resize(390, 677);
 #endif
 }
@@ -88,7 +90,7 @@ void ViewProperties::SetBackgroundColor()
 		PlotProp->BGColor = tempColor;
 		PropInterface.Button_col_background->SetColor(tempColor);
 
-		emit BackgroundChanged();
+	///	emit BackgroundChanged();
 		emit PlotColorsChanged();
 	}
 }
@@ -107,15 +109,15 @@ void ViewProperties::SetSelColor()
 
 void ViewProperties::SetGridColor()
 {
-	/*
+
 QColor tempColor = QColorDialog::getColor(PlotProp->GridColor);
 if(tempColor.isValid())
 	{
 	PlotProp->GridColor = tempColor;
-	PropInterface.Button_col_cell->SetColor(tempColor);
+	PropInterface.Button_col_grid->SetColor(tempColor);
 	emit PlotColorsChanged();
 	}
-	*/
+	
 }
 
 void ViewProperties::SetCrsColor()

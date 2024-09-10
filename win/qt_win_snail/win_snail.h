@@ -148,6 +148,10 @@ private slots:
     void sl_openCsvFile();
     void on_butt_cross();
     void on_butt_sel();
+    void on_butt_rule();
+    void on_butt_grid();
+    void on_butt_pnt();
+
 
 signals:
     void updateCamView(QImage);

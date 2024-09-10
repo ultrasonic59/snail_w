@@ -49,7 +49,7 @@ QImage _qimg = img.copy();
 
 mat_img = QImageToCvMat(_qimg);
 ///cv::flip(mat, mat, 0);
-if (*p_flags & FLG_ON_KRS)
+if (*p_flags & FLG_ON_CRS)
 {
 	drawCrs(mat_img);
 }
@@ -66,7 +66,10 @@ if (*p_flags & FLG_ON_RULE)
     {
 	drawRuleLine(mat_img);
     }
-drawPoints(mat_img);
+if (*p_flags & FLG_ON_PNT)
+   {
+	drawPoints(mat_img);
+   }
 ////   m_cvmat = _cvmat.clone();
 QImage  t_qimg = QImage(mat_img.data, mat_img.cols, mat_img.rows, mat_img.channels()*mat_img.cols, QImage::Format_RGB32);
 

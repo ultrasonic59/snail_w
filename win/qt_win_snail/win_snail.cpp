@@ -103,6 +103,10 @@ win_snail::win_snail(QWidget *parent)
  /// 
  connect(ui->pushButtonCross, SIGNAL(clicked()), this, SLOT(on_butt_cross()));
  connect(ui->pushButtonSel, SIGNAL(clicked()), this, SLOT(on_butt_sel()));
+ connect(ui->pushButtonRule, SIGNAL(clicked()), this, SLOT(on_butt_rule()));
+ connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(on_butt_pnt()));
+
+ connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
 
  pCamThread->start();
 
@@ -245,21 +249,50 @@ void win_snail::createThreads()
 void win_snail::on_butt_cross()
 {
 /// qDebug() << "on_butt_cross";
-cnf_flags ^= FLG_ON_KRS;
-if(cnf_flags& FLG_ON_KRS)
+cnf_flags ^= FLG_ON_CRS;
+if(cnf_flags& FLG_ON_CRS)
     ui->pushButtonCross->setStyleSheet("background-color: green; ");
 else
     ui->pushButtonCross->setStyleSheet("");
 }
 void win_snail::on_butt_sel()
 {
-    qDebug() << "on_butt_sel";
+  ///  qDebug() << "on_butt_sel";
     cnf_flags ^= FLG_ON_SEL;
     if (cnf_flags & FLG_ON_SEL)
         ui->pushButtonSel->setStyleSheet("background-color: green; ");
     else
         ui->pushButtonSel->setStyleSheet("");
 }
+void win_snail::on_butt_rule()
+{
+ ///   qDebug() << "on_butt_sel";
+    cnf_flags ^= FLG_ON_RULE;
+    if (cnf_flags & FLG_ON_RULE)
+        ui->pushButtonRule->setStyleSheet("background-color: green; ");
+    else
+        ui->pushButtonRule->setStyleSheet("");
+}
+
+void win_snail::on_butt_grid()
+{
+ ///   qDebug() << "on_butt_sel";
+    cnf_flags ^= FLG_ON_GRID;
+    if (cnf_flags & FLG_ON_GRID)
+        ui->pushButtonGrid->setStyleSheet("background-color: green; ");
+    else
+        ui->pushButtonGrid->setStyleSheet("");
+}
+void win_snail::on_butt_pnt()
+{
+    ///   qDebug() << "on_butt_sel";
+    cnf_flags ^= FLG_ON_PNT;
+    if (cnf_flags & FLG_ON_PNT)
+        ui->pushButtonPnt->setStyleSheet("background-color: green; ");
+    else
+        ui->pushButtonPnt->setStyleSheet("");
+}
+
 
 void win_snail::on_butt_debug()
 {
