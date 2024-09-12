@@ -121,6 +121,8 @@ private:
     QAction* actionSelect;
     QAction* actionFile_Csv;
     QAction* actionSet_colors;
+    QAction* actionNew_prj;
+    QAction* actionNew_file;
 
 public:
 
@@ -146,6 +148,9 @@ private slots:
     void sl_show_rule_coord(QRect& rc);
     void sl_setDrawProp();
     void sl_openCsvFile();
+    void sl_newPrj();
+    void sl_newFile();
+
     void on_butt_cross();
     void on_butt_sel();
     void on_butt_rule();

@@ -17,8 +17,6 @@ QColor scalar2qcolor(Scalar color)
 	return QColor(color[2], color[1], color[0]); // swap RGB-->BGR
 }
 ///=================================================
-
-
 CamPlotter::CamPlotter(PlotProperties *Plot_Prop, quint32* flags,c_snail_data* _snail_data) :
 								image(1000, 1000, QImage::Format_ARGB32),
 								pPlot_Prop(Plot_Prop), p_snail_data(_snail_data)
@@ -48,7 +46,11 @@ void CamPlotter::sl_update_image(QImage& img, QImage::Format _format)
 QImage _qimg = img.copy();
 
 mat_img = QImageToCvMat(_qimg);
+
+///cv::flip(mat_img, mat_img, 0);
+
 ///cv::flip(mat, mat, 0);
+
 if (*p_flags & FLG_ON_CRS)
 {
 	drawCrs(mat_img);
@@ -76,13 +78,11 @@ QImage  t_qimg = QImage(mat_img.data, mat_img.cols, mat_img.rows, mat_img.channe
 emit s_update_image(t_qimg, _format);
 ///emit s_update_image(img, _format);
 }
-///SelColor
+///
 void CamPlotter::drawSelRect(const Mat& _mat)
 {
 Scalar colorRect(255, 0, 0);
 QColor tcolor = pPlot_Prop->SelColor;
-////	Scalar colorRect(pPlot_Prop->SelColor.rgb() .getRgb());
-///pPlot_Prop->
 int thickness = pPlot_Prop->thick_sel;
 QPoint pnt_tl = getMouseInsideCoord(sel_rect.topLeft());
 QPoint pnt_br = getMouseInsideCoord(sel_rect.bottomRight());
@@ -95,8 +95,8 @@ Point p2(pnt_br.x(), pnt_br.y());
 rectangle(_mat, p1, p2,
 	colorRect,
 	thickness, LINE_AA/*LINE_4*/);
-
 }
+
 void CamPlotter::drawRuleLine(const Mat& _mat)
 {
 	Scalar colorLine(255, 0, 255);
@@ -117,9 +117,7 @@ void CamPlotter::drawRuleLine(const Mat& _mat)
 	line(_mat, p1, p2,
 		colorLine,
 		thickness, LINE_AA/*LINE_4*/);
-
 }
-
 
 void CamPlotter::drawCrs(const Mat& _mat)
 {
@@ -167,13 +165,12 @@ QPoint CamPlotter::getMouseInsideCoord(QPoint inPos)
 	float yy = (inPos.y() - t_viewR.y()) * coef_y;
 	rez.setX((int)xx);
 	rez.setY((int)yy);
-
 	return rez;
 }
 
 void CamPlotter::slSetPoint(QPoint* pn)
 {
-	qDebug() << "slSetPoint" << *pn;
+///	qDebug() << "slSetPoint" << *pn;
 	int tmp;
 	QPoint t_pnt = getMouseInsideCoord(*pn);
 #if 1
@@ -190,14 +187,14 @@ void CamPlotter::slSetPoint(QPoint* pn)
 	point_data_t t_point_data;
 	t_point_data.coord = t_pnt;
 	p_snail_data->insertPoint(t_point_data);
-	qDebug() << "slSetPoint1" << t_point_data.coord;
+///	qDebug() << "slSetPoint1" << t_point_data.coord;
 ///	last_pn = t_pnt;
 	last_pn = *pn;
 #endif
 }
 void CamPlotter::slMovePoint(QPoint* pn)
 {
-	qDebug() << "slMovePoint";
+///	qDebug() << "slMovePoint";
 	slClrPoint(&last_pn);
 ///	QPoint t_pnt = getMouseInsideCoord(*pn);
 ///	slSetPoint(&t_pnt);
@@ -208,7 +205,7 @@ void CamPlotter::slMovePoint(QPoint* pn)
 
 void CamPlotter::slClrPoint(QPoint* pn)
 {
-	qDebug() << "slClrPoint";
+///	qDebug() << "slClrPoint";
 	int tmp;
 	QPoint t_pnt = getMouseInsideCoord(*pn);
 
@@ -240,4 +237,3 @@ void CamPlotter::sl_set_sel_rect(QRect t_rect)
 	}
 ////	redraw_sel_rc = true;
 }
-////labRuleX

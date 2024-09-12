@@ -19,6 +19,19 @@ csv_dlg::~csv_dlg()
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 */
 }
+#if 0
+newAct = new QAction(QIcon(":/images/new.png"), tr("&Новый"), this);
+//Параметры конструктора QAction: иконка из ресурсов, текст меню, родитель
+newAct->setShortcuts(QKeySequence::New);
+//В классе QKeySequence уже определены стандартные комбинации клавиш
+newAct->setStatusTip(tr("Создать новый файл"));
+//Подсказка для строки состояния;
+//tr() - макрос, который может пригодиться
+//при автоматической локализации приложения
+connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
+//Назначили слот для обработки выбора пункта меню
+#endif
+
 
 void csv_dlg::SlotOpenFile()
 {

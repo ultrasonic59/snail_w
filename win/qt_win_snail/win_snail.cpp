@@ -157,6 +157,7 @@ void win_snail::timerEvent(QTimerEvent* e)
     }
 #endif
 }
+
 ///======================================================================
 void win_snail::setupActions()
 {
@@ -164,6 +165,8 @@ void win_snail::setupActions()
   connect(actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
   connect(actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
   connect(actionFile_Csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
+  connect(actionNew_prj, SIGNAL(triggered()), this, SLOT(sl_newPrj()));
+  connect(actionNew_file, SIGNAL(triggered()), this, SLOT(sl_newFile()));
 
 
 ///====    actionFile_csv ========
@@ -229,6 +232,30 @@ void win_snail::sl_openCsvFile()
  ////viewProp = new ViewProperties(this, this, &PlotProp);
  ////viewProp->show();
 }
+#if 0
+static QString getExistingDirectory(QWidget* parent = nullptr,
+    const QString& caption = QString(),
+    const QString& dir = QString(),
+    Options options = ShowDirsOnly);
+#endif
+#if 0
+QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
+    tr("Csv Files (*.csv *.pnp)"));
+#endif
+void win_snail::sl_newPrj()
+{
+    qDebug() << "sl_newPrj";
+  ///  QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Dir"));
+
+}
+void win_snail::sl_newFile()
+{
+    qDebug() << "sl_newFile";
+
+}
+
+
+
 #if 0
 void win_snail::createThreads()
 {
@@ -649,6 +676,7 @@ void win_snail::sl_show_rule_coord(QRect& rc)
  QString rule_coord= QString("[Xb=%1 Yb=%2] [Xe=%3 Ye=%4][Len=%5]").arg(rc.x()).arg(rc.y()).arg(rc.x()+rc.width()).arg(rc.y()+rc.height()).arg(t_len);
 ui->label_rule->setText(rule_coord);
 }
+///actFileNew
 ///horizontalLayout_menu
 void win_snail::createMenus() {
     QMenuBar* menubar = menuBar();
@@ -661,6 +689,12 @@ void win_snail::createMenus() {
     menuFile->addAction(actionSet_colors);
     actionFile_Csv = new QAction("Open csv", this);
     menuOpen->addAction(actionFile_Csv);
+///====== new =======================================
+    actionNew_prj= new QAction("New proj", this);
+    actionNew_file = new QAction("New file", this);
+
+    menuNew->addAction(actionNew_prj);
+    menuNew->addAction(actionNew_file);
 
     QMenu* menuCamera = menubar->addMenu(tr("&Camera"));
     actionSelect = new QAction("Select", this);
