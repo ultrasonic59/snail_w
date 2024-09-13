@@ -242,9 +242,21 @@ static QString getExistingDirectory(QWidget* parent = nullptr,
 QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
     tr("Csv Files (*.csv *.pnp)"));
 #endif
+
 void win_snail::sl_newPrj()
 {
     qDebug() << "sl_newPrj";
+    QString path = QFileDialog::getSaveFileName(0); /*получаем путь к файлу, который будем создавать*/
+    QFile file(path); /*Создаем экземпляр класса QFile*/
+    if (file.open(QIODevice::WriteOnly)) /*Открываем файл в режиме только для записи. В этом с*/
+    {
+        QByteArray data;
+        data = QString("first string").toUtf8();
+        data.append(QString("second string"));
+        data.append(QString("%1").arg(100));
+        file.write(data); /*Записываем данные*/
+        file.close(); /*Закрываем файл*/
+    }
   ///  QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Dir"));
 
 }
