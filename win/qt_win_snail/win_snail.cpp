@@ -246,7 +246,7 @@ QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
 void win_snail::sl_newPrj()
 {
     qDebug() << "sl_newPrj";
-    QString path = QFileDialog::getSaveFileName(0); /*получаем путь к файлу, который будем создавать*/
+    QString path = QFileDialog::getSaveFileName(this, tr("New project"), tr("Project files (*.dprj)")); 
     QFile file(path); /*Создаем экземпляр класса QFile*/
     if (file.open(QIODevice::WriteOnly)) /*Открываем файл в режиме только для записи. В этом с*/
     {
@@ -721,21 +721,112 @@ void win_snail::createMenus() {
 }
 
 ///=================================================================
-#if 0
-QImage Mat2QImage(cv::Mat cvImg)
+void win_snail::setCurrentFile(const QString& fileName)
 {
-    QImage qImg = QImage();
-    if (cvImg.cols == 0)
-        return qImg;
+ curFile = fileName;
+ setWindowModified(false);
+ QString shownName = "Untitled";
 
-    cv::cvtColor(cvImg, cvImg, COLOR_BGR2RGB); // color format conversion
-////    cv::cvtColor(cvImg, cvImg, COLOR_GRAY2RGB); // color format conversion
-  ////cv::cvtColor(cvImg, cvImg, COLOR_BGR2GRAY); // color format conversion
-    qImg = QImage((const unsigned char*)(cvImg.data),
-        cvImg.cols, cvImg.rows,
-        cvImg.cols * cvImg.channels(),
-        QImage::Format_RGB888);
+if (!curFile.isEmpty()) {
+    shownName = strippedName(curFile);
+    recentFiles.removeAll(curFile);
+    recentFiles.prepend(curFile);
+    updateRecentFileActions();
+  
+    }
 
-    return qImg;
+ ////   setWindowTitle(tr("%1[*] - %2").arg(shownName)
+
+  ////     .arg(tr("Spreadsheet")));
+
+ }
+
+ QString win_snail::strippedName(const QString & fullFileName)
+{
+ return QFileInfo(fullFileName).fileName();
 }
+void win_snail::updateRecentFileActions()
+{
+ QMutableStringListIterator i(recentFiles);
+  while (i.hasNext()) {
+         if (!QFile::exists(i.next()))
+            i.remove();
+     }
+   for (int j = 0; j < MaxRecentFiles; ++j) {
+        if (j < recentFiles.count()) {
+            QString text = tr("&%1 %2")
+                 .arg(j + 1)
+                 .arg(strippedName(recentFiles[j]));
+            recentFileActions[j]->setText(text);
+            recentFileActions[j]->setData(recentFiles[j]);
+            recentFileActions[j]->setVisible(true);
+         }
+    else {
+         recentFileActions[j]->setVisible(false);
+         }
+     }
+
+ ///separatorAction->setVisible(!recentFiles.isEmpty());
+
+ }
+void win_snail::openRecentFile()
+{
+ if (okToContinue()) {
+        QAction * action = qobject_cast<QAction*>(sender());
+  ////      if(action)
+  ////          loadFile(action->data().toString());
+   }
+ }
+
+bool win_snail::save()
+{
+if (curFile.isEmpty()) {
+     return saveAs();
+   }
+else {
+    return saveFile(curFile);
+   }
+}
+
+bool win_snail::saveFile(const QString& fileName)
+{
+#if 0
+if (!spreadsheet->writeFile(fileName)) {
+       statusBar()->showMessage(tr("Saving canceled"), 2000);
+        return false;
+      }
+setCurrentFile(fileName);
+statusBar()->showMessage(tr("File saved"), 2000);
 #endif
+return true;
+}
+
+bool win_snail::okToContinue()
+{
+if (isWindowModified()) {
+     int r = QMessageBox::warning(this,
+     tr("Spreadsheet"), tr("The document has been modified. "
+     "Do you want to save your changes?"),
+      QMessageBox::Yes | QMessageBox::Default,
+      QMessageBox::No,
+      QMessageBox::Cancel | QMessageBox::Escape);
+     if (r == QMessageBox::Yes) {
+        return save();
+        }
+     else if (r == QMessageBox::Cancel) {
+         return false;
+         }
+    }
+   return true;
+}
+
+bool win_snail::saveAs()
+{
+QString fileName = QFileDialog::getSaveFileName(this,
+       tr("Project"),
+       tr("SProject files (*.dprj)"));
+if (fileName.isEmpty())
+    return false;
+return saveFile(fileName);
+}
+

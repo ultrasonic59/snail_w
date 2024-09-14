@@ -2,28 +2,53 @@
 #define __SNAIL_DATA_H__
 
 #include <QList>
+#include <QColor>
+#include <QRect>
 
 #define MAX_LEN_STR 64
 
 #define MAX_PONTS_X 5000
 #define MAX_PONTS_Y 5000
 
-struct element_data_t
-{
-	char RefDes[MAX_LEN_STR];
-	char PatternName[MAX_LEN_STR];
-	char Value[MAX_LEN_STR];
-	char Layer[MAX_LEN_STR];
-    float LocationX;
-    float LocationY;
-	float Rotation;
-};
 struct point_data_t
 {
-QPoint coord;
-quint8 point_type;
-quint8 rsv[3];
+	QPoint coord;
+	quint8 point_type;
+	quint8 rsv[3];
 };
+struct one_element_gr_t
+{
+quint8 type;
+quint16 thick;
+QColor color;
+QRect rc;
+};
+
+struct lib_element_t
+{
+	QString PatternName;
+	QList<point_data_t> points;
+	QList<one_element_gr_t> gr_els;
+
+};
+struct el_pos_t
+{
+	float LocationX;
+	float LocationY;
+	float Rotation;
+
+};
+struct element_data_t
+{
+	QString RefDes;
+	QString PatternName;
+	QString Value;
+	QString Layer;
+	el_pos_t cvs_pos;
+	el_pos_t mach_pos;
+	el_pos_t cur_pos;
+};
+
 
 class c_snail_data
 {

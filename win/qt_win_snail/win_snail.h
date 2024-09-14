@@ -123,10 +123,17 @@ private:
     QAction* actionSet_colors;
     QAction* actionNew_prj;
     QAction* actionNew_file;
-
+    QAction* separatorAction;
 public:
 
-    ////QAction* actionSet_colors;
+private:
+    QStringList recentFiles;
+    QString curFile;
+    enum { MaxRecentFiles = 5 };
+    QAction * recentFileActions[MaxRecentFiles];
+    QString strippedName(const QString& fullFileName);
+    void setCurrentFile(const QString& fileName);
+    void updateRecentFileActions();
 
 public slots:
     void on_butt_con_hid();
@@ -156,6 +163,11 @@ private slots:
     void on_butt_rule();
     void on_butt_grid();
     void on_butt_pnt();
+    void openRecentFile();
+    bool save();
+    bool saveFile(const QString& fileName);
+    bool okToContinue();
+    bool saveAs();
 
 
 signals:
