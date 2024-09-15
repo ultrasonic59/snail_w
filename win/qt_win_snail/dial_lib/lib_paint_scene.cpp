@@ -1,8 +1,15 @@
+#include <Qdebug>
+#include <QFont>
+#include <QMenu>
+#include <QMessageBox>
+#include <QPoint>
+
 #include "lib_paint_scene.h"
 
 LibPaintScene::LibPaintScene(QObject* parent) : QGraphicsScene(parent)
 {
-
+ ///   QBrush(Qt::yellow)
+    setBackgroundBrush(QBrush(Qt::yellow));
 }
 
 LibPaintScene::~LibPaintScene()
@@ -55,10 +62,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
     if (event->button() == Qt::RightButton)
     {
-#if 0
-        QPoint t_QPoint = event->screenPos().toPoint();
-        qDebug() << "t_QPoint" << pos;/// t_QPoint;
-        qDebug() << "sel_rc" << sel_rect;
+
+ ///       QPoint t_QPoint = event->screenPos().toPoint();
+  ///      qDebug() << "t_QPoint" << pos;/// t_QPoint;
+  ///      qDebug() << "sel_rc" << sel_rect;
 
         QMenu menu;
         QAction* a1 = menu.addAction(QString("Clear"));
@@ -66,12 +73,13 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         ////       QPointF t_QPointF = event->screenPos();
 
          ////      const QPoint t_QPoint = t_QPointF.toPoint();
-
+#if 0
         if (a2 == menu.exec(event->screenPos().toPoint())) {
             test2();
             //// _selected = true;
             update();
         }
+
 #endif
     }
 
