@@ -3,6 +3,7 @@
 #include "ViewProperties.h"
 #include <QColorDialog>
 
+#include "dial_lib.h"
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
@@ -332,12 +333,12 @@ void win_snail::on_butt_pnt()
         ui->pushButtonPnt->setStyleSheet("");
 }
 
-
+///================================
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
-    DialDebug _dial_dbg(this);
-
+  ///  DialDebug _dial_dbg(this);
+    DialLib _dial_dbg(this);
 if(_dial_dbg.exec())
 { 
     qDebug() << "OK";
@@ -348,6 +349,7 @@ else
     qDebug() << "Cancel";
 
 }
+
  ///  dial_dbg.show();
  ////   qDebug() << "end debug" ;
 
@@ -360,6 +362,7 @@ else
 
 
 }
+///=====================================================
 void win_snail::on_value_changed(int value)
 {
     hid_cmd_t t_cmd;

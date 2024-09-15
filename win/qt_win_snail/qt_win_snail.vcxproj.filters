@@ -60,6 +60,12 @@
     <Filter Include="Source Files\plotters">
       <UniqueIdentifier>{88dd85f5-27d9-4b73-89cf-51034eb4cdeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\dial_lib">
+      <UniqueIdentifier>{eaf5b0bd-e318-4680-bb3d-ab29228fc147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dial_lib">
+      <UniqueIdentifier>{7874e80b-b6c7-443c-b11b-91fc93da366a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -136,6 +142,15 @@
     <ClCompile Include="widgets\param_ed.cpp">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="dial_lib\dial_lib.cpp">
+      <Filter>Source Files\dial_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="dial_lib\lib_graph_view.cpp">
+      <Filter>Source Files\dial_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="dial_lib\lib_paint_scene.cpp">
+      <Filter>Source Files\dial_lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -182,6 +197,9 @@
     <QtUic Include="ViewProperies.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="dial_lib\dial_lib.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
@@ -213,6 +231,15 @@
     </QtMoc>
     <QtMoc Include="widgets\param_ed.h">
       <Filter>Header Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="dial_lib\dial_lib.h">
+      <Filter>Header Files\dial_lib</Filter>
+    </QtMoc>
+    <QtMoc Include="dial_lib\lib_graph_view.h">
+      <Filter>Header Files\dial_lib</Filter>
+    </QtMoc>
+    <QtMoc Include="dial_lib\lib_paint_scene.h">
+      <Filter>Header Files\dial_lib</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>
