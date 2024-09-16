@@ -5,6 +5,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 #include <QDebug>
+#include <QPainter>
 
 class LibPaintScene : public QGraphicsScene
 {
@@ -19,11 +20,15 @@ private:
     QPointF     previousPoint;      // Координаты предыдущей точки
     bool mousePressedLeft;
     bool mousePressedRight;
+    void drawBackground(QPainter* painter, const QRectF& rect);
 
 private:
      void mousePressEvent(QGraphicsSceneMouseEvent* event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+private:
+    void test1();
+    void test2();
 
 };
 

@@ -244,13 +244,13 @@ void plotterwidget::mousePressEvent(QMouseEvent* event)
  ////       QPointF t_QPointF = event->screenPos();
 
   ////      const QPoint t_QPoint = t_QPointF.toPoint();
-
+#if 1
          if (a2 == menu.exec(event->screenPos().toPoint())) {
                 test2();
            //// _selected = true;
-            update();
+ ////           update();
         }
-
+#endif
     }
 }
 void plotterwidget::test2() {
