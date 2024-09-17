@@ -338,7 +338,7 @@ void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
   ///  DialDebug _dial_dbg(this);
-    DialLib _dial_dbg(this);
+    DialLib _dial_dbg(this, &PlotProp);
 if(_dial_dbg.exec())
 { 
     qDebug() << "OK";

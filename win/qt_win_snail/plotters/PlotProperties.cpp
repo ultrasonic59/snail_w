@@ -10,13 +10,14 @@ PlotProperties::PlotProperties(void) :
 	            CrossColor(Qt::black),
 	            CircleColor(Qt::blue),
 	            GridColor(Qt::gray),
-	            SepLineColor(Qt::darkGray),
-	            ErrorColor(Qt::red),
+	            LibBGColor(Qt::darkGray),
+	            LibGridColor(Qt::red),
 	            setka_delt_x(DEF_DELT_X),
 	            setka_delt_y(DEF_DELT_Y),
 	            rad_circle(DEF_RAD_CIRCLE),
-                thick_circle(DEF_THICK_CIRCLE)
-
+                thick_circle(DEF_THICK_CIRCLE),
+	            lib_grid_delt_x(DEF_DELT_X),
+                lib_grid_delt_y(DEF_DELT_Y)
 {
 
 }

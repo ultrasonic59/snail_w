@@ -6,7 +6,7 @@
 
 #include "lib_paint_scene.h"
 
-LibPaintScene::LibPaintScene(QObject* parent) : QGraphicsScene(parent)
+LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop) : QGraphicsScene(parent), pPlot_Prop(Plot_Prop)
 {
  ///   QBrush(Qt::yellow)
  ////   setBackgroundBrush(QBrush(Qt::yellow));
@@ -193,22 +193,25 @@ void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 ////    Q_UNUSED(rect);
     QVector <qreal> dashes;
     dashes << 2 << 2 << 2 << 2;
+  ////dashes << 4 << 4 << 4 << 4;
 
     QPen pen;
-    pen.setColor(QColor(60, 60, 60));
+ ////   pen.setColor(QColor(60, 60, 60));
+    pen.setColor( pPlot_Prop->LibGridColor );
     pen.setWidth(1);
     pen.setDashPattern(dashes);
 
     painter->setPen(pen);
     qreal left = rect.left();
     qreal right = rect.right();
-    painter->fillRect(rect, Qt::darkGray);
+  ///  painter->fillRect(rect, Qt::darkGray);
+    painter->fillRect(rect, pPlot_Prop->LibBGColor);
 
-    for (int i = left; i < right; i += 20)
+    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_x)
     {
         painter->drawLine(left, i, right, i);
     }
-    for (int i = left; i < right; i += 20)
+    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_y)
     {
         painter->drawLine(i, left, i, right);
     }

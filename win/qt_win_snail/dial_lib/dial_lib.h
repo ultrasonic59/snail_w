@@ -2,6 +2,7 @@
 #define _DIAL_LIB_H_
 
 #include <QtWidgets/QtWidgets>
+#include "PlotProperties.h"
 
 #include "ui_dial_lib.h"
  #include "dev_interf.h"
@@ -24,9 +25,11 @@ protected:
 	Ui::Dial_lib ui;
 
 public:
-	DialLib(QWidget *parent= 0);
+	DialLib(QWidget *parent= 0, PlotProperties* Plot_Prop = 0);
 	virtual ~DialLib();
 	QWidget* pParent;
+	PlotProperties* pPlot_Prop;
+
 signals:
 	void req_wr_dbg(int num,dbg_dat_req_t*);
 	void req_rd_dbg(int num,dbg_dat_req_t*);

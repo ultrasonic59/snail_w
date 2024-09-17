@@ -1,16 +1,16 @@
 #include "dial_lib.h"
 
-DialLib::DialLib(QWidget *parent):
-    QDialog(parent, Qt::Window),pParent(parent)
+DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
+    QDialog(parent, Qt::Window),pParent(parent),pPlot_Prop(Plot_Prop)
    , ui()
 {
 	ui.setupUi(this);
-    scene = new LibPaintScene();       // 
-    ui.graphicsView->setScene(scene);  // Устанавливаем графическую сцену
+    scene = new LibPaintScene(this,pPlot_Prop);       // 
+    ui.graphicsView->setScene(scene);  // 
 
-    timer = new QTimer();       // Инициализируем таймер
+    timer = new QTimer();       // 
     connect(timer, &QTimer::timeout, this, &DialLib::slotTimer);
-    timer->start(100);          // Запускаем таймер
+    timer->start(100);          // 
 
 ///	ui.comboBox_rej->addItem("HID",HID_REJ);
 //// 	ui.comboBox_rej->addItem("CAN",CAN_REJ);
