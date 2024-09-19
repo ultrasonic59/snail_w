@@ -20,6 +20,8 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	PropInterface.Button_col_circle->SetColor(plotProp->CircleColor);
 
 	PropInterface.Button_col_grid->SetColor(plotProp->GridColor);
+	PropInterface.Button_col_lib_bg->SetColor(plotProp->LibBGColor);
+	PropInterface.Button_col_lib_grid->SetColor(plotProp->LibGridColor);
 
 	setWindowFlags(Qt::Drawer);
 
@@ -46,6 +48,37 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	PropInterface.ed_thick_rule->set_data(reinterpret_cast<unsigned char*>(&PlotProp->thick_rule));
 	PropInterface.ed_thick_rule->set_min_max(1,10);
 	PropInterface.ed_thick_rule->show_par();
+
+	PropInterface.ed_circle_thick->set_num_dig(2);
+	PropInterface.ed_circle_thick->set_data(reinterpret_cast<unsigned char*>(&PlotProp->thick_circle));
+	PropInterface.ed_circle_thick->set_min_max(1, 10);
+	PropInterface.ed_circle_thick->set_coeff(1);
+	PropInterface.ed_circle_thick->show_par();
+
+	PropInterface.ed_circle_rad->set_num_dig(2);
+	PropInterface.ed_circle_rad->set_data(reinterpret_cast<unsigned char*>(&PlotProp->rad_circle));
+	PropInterface.ed_circle_rad->set_min_max(1, 10);
+	PropInterface.ed_circle_rad->set_coeff(1);
+	PropInterface.ed_circle_rad->show_par();
+
+	PropInterface.ed_cross_thick->set_num_dig(2);
+	PropInterface.ed_cross_thick->set_data(reinterpret_cast<unsigned char*>(&PlotProp->thick_crs));
+	PropInterface.ed_cross_thick->set_min_max(1, 10);
+	PropInterface.ed_cross_thick->set_coeff(1);
+	PropInterface.ed_cross_thick->show_par();
+
+	PropInterface.ed_lib_gr_x->set_num_dig(3);
+	PropInterface.ed_lib_gr_x->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_x));
+	PropInterface.ed_lib_gr_x->set_min_max(1, 100);
+	PropInterface.ed_lib_gr_x->show_par();
+	///connect(PropInterface.lineCellX, SIGNAL(param_changed()), this, SLOT(sl_change_delt_x()));
+
+	PropInterface.ed_lib_gr_y->set_num_dig(3);
+	PropInterface.ed_lib_gr_y->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_y));
+	PropInterface.ed_lib_gr_y->set_min_max(1, 100);
+	PropInterface.ed_lib_gr_y->show_par();
+
+
 	////connect(PropInterface.ed_thick_rule, SIGNAL(param_changed()), reseiver, SLOT(ResetPlot())); ////???
 	
 
@@ -62,7 +95,8 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	connect(PropInterface.Button_col_rule, SIGNAL(clicked()), this, SLOT(SetRuleColor()));
 	connect(PropInterface.Button_col_crs, SIGNAL(clicked()), this, SLOT(SetCrsColor()));
 	connect(PropInterface.Button_col_circle, SIGNAL(clicked()), this, SLOT(SetCircleColor()));
-	connect(PropInterface.Button_col_grid, SIGNAL(clicked()), this, SLOT(SetGridColor()));
+	connect(PropInterface.Button_col_lib_grid, SIGNAL(clicked()), this, SLOT(SetLibGridColor()));
+	connect(PropInterface.Button_col_lib_bg, SIGNAL(clicked()), this, SLOT(SetLibBGColor()));
 
 #if 0
 	resize(390, 677);
@@ -106,10 +140,29 @@ void ViewProperties::SetSelColor()
 		emit PlotColorsChanged();
 	}
 }
+void ViewProperties::SetLibGridColor()
+{
+	QColor tempColor = QColorDialog::getColor(PlotProp->LibGridColor);
+	if (tempColor.isValid())
+	{
+		PlotProp->LibGridColor = tempColor;
+		PropInterface.Button_col_lib_grid->SetColor(tempColor);
+		emit PlotColorsChanged();
+	}
+}
+void ViewProperties::SetLibBGColor()
+{
+	QColor tempColor = QColorDialog::getColor(PlotProp->LibBGColor);
+	if (tempColor.isValid())
+	{
+		PlotProp->LibBGColor = tempColor;
+		PropInterface.Button_col_lib_bg->SetColor(tempColor);
+		emit PlotColorsChanged();
+	}
+}
 
 void ViewProperties::SetGridColor()
 {
-
 QColor tempColor = QColorDialog::getColor(PlotProp->GridColor);
 if(tempColor.isValid())
 	{
@@ -117,13 +170,11 @@ if(tempColor.isValid())
 	PropInterface.Button_col_grid->SetColor(tempColor);
 	emit PlotColorsChanged();
 	}
-	
 }
 
 void ViewProperties::SetCrsColor()
 {
 	QColor tempColor = QColorDialog::getColor(PlotProp->CrossColor);
-
 	if(tempColor.isValid())
 	{
 		PlotProp->CrossColor = tempColor;

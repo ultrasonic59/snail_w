@@ -314,12 +314,12 @@
      <item>
       <widget class="QLabel" name="label_c_thick">
        <property name="text">
-        <string>Circle tick:</string>
+        <string>Circle thick:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="param_ed" name="ed_circle_thick">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -336,7 +336,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_2">
+      <widget class="param_ed" name="ed_circle_rad">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -383,12 +383,12 @@
         </font>
        </property>
        <property name="text">
-        <string>Сrossline tick:</string>
+        <string>Сrossline thick:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="param_ed" name="lineCrossTick">
+      <widget class="param_ed" name="ed_cross_thick">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -489,7 +489,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_lib_gr_x">
+      <widget class="param_ed" name="ed_lib_gr_x">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -515,7 +515,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_lib_gr_y">
+      <widget class="param_ed" name="ed_lib_gr_y">
        <property name="maximumSize">
         <size>
          <width>50</width>

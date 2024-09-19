@@ -20,7 +20,11 @@ private slots:
 	void SetCircleColor();
 
 	void SetGridColor();
+	void SetLibGridColor();
+	void SetLibBGColor();
+
 	void sl_change_delt_x();
+
 signals:
 	void PlotColorsChanged();
 	void BackgroundChanged();
