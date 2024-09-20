@@ -195,6 +195,8 @@ void win_snail::contextMenuEvent(QContextMenuEvent* event)
  ///   menu.addAction(ui->resumevideoAct);
  ///   menu.addAction(ui->pausevideoAct);
     menu.exec(event->globalPos());
+ ///   menu.addSection
+ ///  menu.addSeparator
 }
 void win_snail::__selectVideoSource()
 {
