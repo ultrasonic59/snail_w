@@ -97,6 +97,7 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	connect(PropInterface.Button_col_circle, SIGNAL(clicked()), this, SLOT(SetCircleColor()));
 	connect(PropInterface.Button_col_lib_grid, SIGNAL(clicked()), this, SLOT(SetLibGridColor()));
 	connect(PropInterface.Button_col_lib_bg, SIGNAL(clicked()), this, SLOT(SetLibBGColor()));
+	connect(PropInterface.okButton, SIGNAL(clicked()), this, SLOT(slOKbutton()));
 
 #if 0
 	resize(390, 677);
@@ -114,7 +115,21 @@ void ViewProperties::closeEvent( QCloseEvent * event )
 }
 
 #endif
+///ApplyNewText()
+void ViewProperties::slOKbutton()
+{
+	PropInterface.ed_circle_rad->apply_current();
+	PropInterface.ed_circle_thick->apply_current();
+		PropInterface.ed_cross_thick->apply_current();
+		PropInterface.ed_lib_gr_x->apply_current();
+		PropInterface.ed_lib_gr_y->apply_current();
+		PropInterface.ed_thick_rule->apply_current();
+		PropInterface.ed_thick_sel->apply_current();
+		PropInterface.lineCellX->apply_current();
+		PropInterface.lineCellY->apply_current();
 
+
+}
 void ViewProperties::SetBackgroundColor()
 {
 	QColor tempColor = QColorDialog::getColor(PlotProp->BGColor);
@@ -208,12 +223,12 @@ void ViewProperties::SetCircleColor()
 	}
 
 }
-
+/*
 void ViewProperties::sl_change_delt_x()
 {
 	qDebug() << "sl_change_delt_x" ;
 
 }
-
+*/
 
 

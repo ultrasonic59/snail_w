@@ -23,7 +23,8 @@ private slots:
 	void SetLibGridColor();
 	void SetLibBGColor();
 
-	void sl_change_delt_x();
+///	void sl_change_delt_x();
+	void slOKbutton();
 
 signals:
 	void PlotColorsChanged();
