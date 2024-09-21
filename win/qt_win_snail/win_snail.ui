@@ -131,6 +131,7 @@
             <property name="font">
              <font>
               <pointsize>10</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -240,27 +241,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labRuleY">
-         <property name="text">
-          <string>RuleY</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labRuleW">
-         <property name="text">
-          <string>Width</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labRuleH">
-         <property name="text">
-          <string>Hight</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -274,7 +254,17 @@
         </spacer>
        </item>
        <item>
-        <widget class="QSlider" name="lightSlider">
+        <widget class="QSlider" name="lightSlider0">
+         <property name="maximum">
+          <number>999</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="lightSlider1">
          <property name="maximum">
           <number>999</number>
          </property>
@@ -458,6 +448,7 @@
           </property>
           <property name="font">
            <font>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>

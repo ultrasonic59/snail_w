@@ -25,6 +25,7 @@ void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mousePressEvent(event);
+  ///  currPoint = event->screenPos();
     ///   point_data_t t_point_data;
  ////   QPoint pos = event->pos();
     ////t_point_data.coord.setX(cur_x);
@@ -64,6 +65,8 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
     if (event->button() == Qt::RightButton)
     {
+        currPoint = event->screenPos();
+        qDebug() << "currPoint:" << currPoint;
 
  ///       QPoint t_QPoint = event->screenPos().toPoint();
   ///      qDebug() << "t_QPoint" << pos;/// t_QPoint;
@@ -71,9 +74,12 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
         QMenu menu;
         QAction* pact;
-
-        QAction* a1 = menu.addAction(QString("Clear"));
-        QAction* a2 = menu.addAction(QString("Move"));
+        QAction* a1 = menu.addAction(QString("Property"));
+        menu.addSection("Add");
+        menu.addSeparator();
+        QAction* a2 = menu.addAction(QString("Add Rect"));
+        QAction* a3 = menu.addAction(QString("Add FRect"));
+        QAction* a4 = menu.addAction(QString("Add Line"));
         ////       QPointF t_QPointF = event->screenPos();
 
          ////      const QPoint t_QPoint = t_QPointF.toPoint();
@@ -86,9 +92,11 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             update();
         }
         else if (a2 == pact) {
-            test2();
+            addRect();
+            ////test2();
+
             //// _selected = true;
-            update();
+ ///           update();
         }
 
 #endif
@@ -104,6 +112,23 @@ void LibPaintScene::test1() {
 void LibPaintScene::test2() {
     QMessageBox::information(nullptr, "test2", "test2");
 }
+
+void LibPaintScene::addRect() {
+
+ ///   QMessageBox::information(nullptr, "test2", "test2");
+////addRect(0, 0, 100, 100, QPen(Qt::red), QBrush(Qt::blue));
+    qDebug() << "currPoint1:" << currPoint;
+
+addEllipse(currPoint.x() - 5,
+    currPoint.y() - 5,
+    20,
+    20,
+    QPen(Qt::NoPen),
+    QBrush(Qt::red));
+update();
+
+}
+
 
 void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {

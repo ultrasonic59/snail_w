@@ -18,7 +18,8 @@ public:
     ~LibPaintScene();
 
 private:
-    QPointF     previousPoint;      // Координаты предыдущей точки
+    QPointF     previousPoint;      //
+    QPointF     currPoint;      //
     bool mousePressedLeft;
     bool mousePressedRight;
     void drawBackground(QPainter* painter, const QRectF& rect);
@@ -29,7 +30,8 @@ private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 private:
-    void test1();
+    void addRect();
+        void test1();
     void test2();
 
 };

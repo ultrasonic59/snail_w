@@ -139,7 +139,8 @@ public slots:
     void on_butt_con_hid();
     void on_butt_con_can();
     ///===== for debug =======
-    void on_value_changed(int value);
+    void on_value_led0_changed(int value);
+    void on_value_led1_changed(int value);
     void on_butt_debug();
     void slot_rd_dbg(int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);

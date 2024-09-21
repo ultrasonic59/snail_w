@@ -62,7 +62,8 @@ win_snail::win_snail(QWidget *parent)
  connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
  connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
 
-  connect(ui->lightSlider, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
+  connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(on_value_led0_changed(int)));
+  connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(on_value_led1_changed(int)));
   ///===================================================
   m_pThread = new QThread(this);
   m_cmd_sender = new CcmdSender;
@@ -339,8 +340,8 @@ void win_snail::on_butt_pnt()
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
-  ///  DialDebug _dial_dbg(this);
-    DialLib _dial_dbg(this, &PlotProp);
+    DialDebug _dial_dbg(this);
+ ///   DialLib _dial_dbg(this, &PlotProp);
 if(_dial_dbg.exec())
 { 
     qDebug() << "OK";
@@ -365,20 +366,35 @@ else
 
 }
 ///=====================================================
-void win_snail::on_value_changed(int value)
+void win_snail::on_value_led0_changed(int value)
 {
     hid_cmd_t t_cmd;
-    t_cmd.cmd = CMD_SET_LED;
+    t_cmd.cmd = CMD_SET_LED0;
     t_cmd.num_bytes = 2;
     t_cmd.dat[0] = value & 0xff;
     t_cmd.dat[1] = (value>>8) & 0xff;
 
  ///   int value = ui->lightSlider->value();
-    qDebug() << "on_value_changed"<< value<< t_cmd.dat[0]<< t_cmd.dat[1];
+    qDebug() << "on_value_led0_changed"<< value<< t_cmd.dat[0]<< t_cmd.dat[1];
 
     put_hid_cmd(&t_cmd);
 
 }
+void win_snail::on_value_led1_changed(int value)
+{
+    hid_cmd_t t_cmd;
+    t_cmd.cmd = CMD_SET_LED1;
+    t_cmd.num_bytes = 2;
+    t_cmd.dat[0] = value & 0xff;
+    t_cmd.dat[1] = (value >> 8) & 0xff;
+
+    ///   int value = ui->lightSlider->value();
+    qDebug() << "on_value_led1_changed" << value << t_cmd.dat[0] << t_cmd.dat[1];
+
+    put_hid_cmd(&t_cmd);
+
+}
+
 void win_snail::on_butt_con_hid()
 {
     qDebug() << "start con";
