@@ -30,11 +30,17 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QGraphicsView" name="graphicsView"/>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
         <widget class="QDialogButtonBox" name="buttonBox">
          <property name="sizePolicy">
@@ -42,6 +48,12 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -52,7 +64,21 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_rej">
+        <widget class="QPushButton" name="butt_select">
+         <property name="text">
+          <string>Select</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="butt_place">
+         <property name="text">
+          <string>Place</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_item">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -80,21 +106,7 @@
         <widget class="QLineEdit" name="lineEdit_count"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Rd</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLineEdit" name="lineEdit_wr_dat"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButt_wr">
-         <property name="text">
-          <string>Wr</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_clear">
@@ -307,7 +319,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>butt_select</sender>
    <signal>clicked()</signal>
    <receiver>Dial_lib</receiver>
    <slot>slot_butt_rd()</slot>
@@ -323,7 +335,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButt_wr</sender>
+   <sender>butt_place</sender>
    <signal>clicked()</signal>
    <receiver>Dial_lib</receiver>
    <slot>slot_butt_wr()</slot>

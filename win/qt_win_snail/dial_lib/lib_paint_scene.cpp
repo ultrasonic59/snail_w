@@ -6,7 +6,12 @@
 
 #include "lib_paint_scene.h"
 
-LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop) : QGraphicsScene(parent), pPlot_Prop(Plot_Prop)
+
+LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
+    , en_item_tipe* item_tipe , en_rej* _rej ) : QGraphicsScene(parent), pPlot_Prop(Plot_Prop) ,p_item_tipe(item_tipe),p_rej(_rej)
+    ,cur_rect(0,0,40,40), rect_color(Qt::darkCyan),cur_frect(0, 0, 40, 40),frect_color(Qt::cyan),cur_line(0, 0, 40, 40)
+    ,line_color(Qt::darkCyan), line_thick(2),circle_rad(20),circle_thick(4),circle_color(Qt::darkMagenta)
+
 {
  ///   QBrush(Qt::yellow)
  ////   setBackgroundBrush(QBrush(Qt::yellow));
@@ -25,45 +30,49 @@ void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mousePressEvent(event);
-  ///  currPoint = event->screenPos();
-    ///   point_data_t t_point_data;
- ////   QPoint pos = event->pos();
-    ////t_point_data.coord.setX(cur_x);
     if (event->button() == Qt::LeftButton)
     {
         mousePressedLeft = true;
 
-        // При нажатии кнопки мыши отрисовываем эллипс
-        addEllipse(event->scenePos().x() - 5,
-            event->scenePos().y() - 5,
-            10,
-            10,
-            QPen(Qt::NoPen),
-            QBrush(Qt::red));
-        // Сохраняем координаты точки нажатия
-        previousPoint = event->scenePos();
-        update();
+        if (*p_rej == REJ_SELECT)
+           {
 
-
-#if 0
-        mousePressed = true;
-        curX1 = event->pos().x();
-        curY1 = event->pos().y();
-
-        if (event->modifiers() == Qt::ShiftModifier)
+           }
+        else if (*p_rej == REJ_PLACE)
         {
-            ///           t_point_data.coord = pos;
-            emit sSetPoint(&pos);
+            switch (*p_item_tipe)
+            {
+            case RECT_TYPE:
+                break;
+            case FRECT_TYPE:
+                break;
+            case VLINE_TYPE:
+                addLine(event->scenePos().x(),
+                    event->scenePos().y(),
+                    event->scenePos().x(),
+                    cur_line.y2(),
+                    QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
+                break;
+            case HLINE_TYPE:
+                addLine(event->scenePos().x(),
+                    event->scenePos().y(),
+                    cur_line.x2(),
+                    event->scenePos().y(),
+                    QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
+                break;
+            case CIRCLE_TYPE:
+                addEllipse(event->scenePos().x(),
+                    event->scenePos().y(),
+                    circle_rad,
+                    circle_rad,
+                    QPen(Qt::NoPen),
+                    QBrush(rect_color));
+                break;
+            }
         }
-        else if (event->modifiers() == Qt::ControlModifier)
-        {
-            ///     t_point_data.coord = pos;
-            ///     emit sSetPoint(&t_point_data);
-            emit sClrPoint(&pos);
-        }
-#endif
+      update();
     }
-    if (event->button() == Qt::RightButton)
+   if (event->button() == Qt::RightButton)
     {
         currPoint = event->screenPos();
         qDebug() << "currPoint:" << currPoint;
@@ -133,6 +142,7 @@ update();
 void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mouseMoveEvent(event);
+#if 0
     if (mousePressedLeft)
     {
 
@@ -146,6 +156,7 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         update();
 
     }
+#endif
 }
 ///===========================================================
 #if 0

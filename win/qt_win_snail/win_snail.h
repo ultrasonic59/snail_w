@@ -145,6 +145,7 @@ public slots:
     void slot_rd_dbg(int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
+    void on_butt_test();
 
 private slots:
     void __selectVideoSource();

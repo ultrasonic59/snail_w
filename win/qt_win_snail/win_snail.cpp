@@ -56,8 +56,10 @@ win_snail::win_snail(QWidget *parent)
 
   
 #endif
-
+    
 ///=======================================================
+connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
+
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
  connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
  connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
@@ -365,6 +367,21 @@ else
 
 
 }
+void win_snail::on_butt_test()
+{
+    qDebug() << "start test";
+ ///   DialDebug _dial_dbg(this);
+    DialLib _dial_dbg(this, &PlotProp);
+    if (_dial_dbg.exec())
+    {
+        qDebug() << "OK";
+    }
+    else
+    {
+        qDebug() << "Cancel";
+    }
+}
+
 ///=====================================================
 void win_snail::on_value_led0_changed(int value)
 {

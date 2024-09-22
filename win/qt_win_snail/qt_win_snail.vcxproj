@@ -157,6 +157,7 @@
     <ClInclude Include="snail_consts.h" />
     <ClInclude Include="snail_data.h" />
     <QtMoc Include="ViewProperties.h" />
+    <ClInclude Include="snail_types.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />

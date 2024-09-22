@@ -183,6 +183,9 @@
     <ClInclude Include="widgets\QPushButtonColored.h">
       <Filter>Header Files\widgets</Filter>
     </ClInclude>
+    <ClInclude Include="snail_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dial_debug\dial_debug.ui">
