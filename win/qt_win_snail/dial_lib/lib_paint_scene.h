@@ -3,6 +3,11 @@
 ///#include <QtWidgets/QtWidgets>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+///#include <QGraphicsView>
+///#include <QGraphicsScene>
+///#include <QGraphicsItemGroup>
+#include <QGraphicsItem>
+
 #include <QTimer>
 #include <QDebug>
 #include <QPainter>
@@ -29,10 +34,13 @@ private:
     void drawBackground(QPainter* painter, const QRectF& rect);
     PlotProperties* pPlot_Prop;
 private:
+    QGraphicsItem* sel_item;
+    QGraphicsRectItem* rc_item;
     QRect cur_rect;
     QColor rect_color;
     QRect cur_frect;
     QColor frect_color;
+    QGraphicsLineItem* line_item;
     QLine cur_line;
     QColor line_color;
     quint16 line_thick;
@@ -46,7 +54,8 @@ private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 private:
-    void addRect();
+    void property(QGraphicsItem* _item);
+        ///void addRect();
     void test1();
     void test2();
 

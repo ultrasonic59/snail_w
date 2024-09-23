@@ -6,7 +6,12 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
 {
 	ui.setupUi(this);
     scene = new LibPaintScene(this,pPlot_Prop,&cur_item, &cur_rej);       // 
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
+
     ui.graphicsView->setScene(scene);  // 
+
+    scene->setSceneRect(0, 0, 1000, 1000); // Устанавливаем размер сцены
+
 
     timer = new QTimer();       // 
     connect(timer, &QTimer::timeout, this, &DialLib::slotTimer);
@@ -21,6 +26,7 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     connect(ui.butt_select, SIGNAL(clicked()), this, SLOT(on_butt_select()));
     connect(ui.butt_place, SIGNAL(clicked()), this, SLOT(on_butt_place()));
     connect(ui.comboBox_item, SIGNAL(currentIndexChanged(int)), this, SLOT(indexChanged(int)));
+    show_rej();
 
     ///   connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
  ///   connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
@@ -95,3 +101,6 @@ void DialLib::indexChanged(int index)
 
     // Do something here on ComboBox index change
 }
+///void DialLib::mousePressEvent(QGraphicsSceneMouseEvent* event)
+///{
+  ///  QGraphicsScene::mousePressEvent(event);
