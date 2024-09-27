@@ -1,4 +1,14 @@
 #include "dial_lib.h"
+#include <QSvgGenerator>
+#include <QFileDialog>
+#include <QDebug>
+#include <QGraphicsItem>
+#include <QMessageBox>
+#include "svgreader.h"
+///#include "veworkplace.h"
+#include "vepolyline.h"
+#include "verectangle.h"
+
 
 DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     QDialog(parent, Qt::Window),pParent(parent),pPlot_Prop(Plot_Prop)
@@ -9,8 +19,11 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
 
     ui.graphicsView->setScene(scene);  // 
+    ui.graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    ui.graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+    ui.graphicsView->setCursor(QCursor());
 
-    scene->setSceneRect(0, 0, 1000, 1000); // Устанавливаем размер сцены
+    scene->setSceneRect(0, 0, 2000, 2000); //
 
 
     timer = new QTimer();       // 
@@ -28,13 +41,16 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     connect(ui.comboBox_item, SIGNAL(currentIndexChanged(int)), this, SLOT(indexChanged(int)));
     show_rej();
 
-    ///   connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
- ///   connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
+    ui.rectangleSettings->setVisible(false);
+    ui.polylineSettings->setVisible(false);
 
-	////connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
-  ///  connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
-  
-  ///  connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
+    connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(LineType); });
+    connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
+    connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
+    connect(scene, &LibPaintScene::selectionChanged, this, &DialLib::checkSelection);
+    connect(scene, &LibPaintScene::currentActionChanged, this, &DialLib::checkActionStates);
+    connect(scene, &LibPaintScene::signalSelectItem, this, &DialLib::selectItem);
+    connect(scene, &LibPaintScene::signalNewSelectItem, this, &DialLib::selectNewItem);
 }
 
 DialLib::~DialLib()
@@ -104,3 +120,154 @@ void DialLib::indexChanged(int index)
 ///void DialLib::mousePressEvent(QGraphicsSceneMouseEvent* event)
 ///{
   ///  QGraphicsScene::mousePressEvent(event);
+///================================================================
+void DialLib::checkSelection()
+{
+    checkActionStates();
+#if 1
+    switch (scene->selectedItems().length()) {
+    case 0:
+        ui.rectangleSettings->deselect();
+        ui.polylineSettings->deselect();
+        checkActionStates();
+        ui.toolsWidget->setEnabled(true);
+        break;
+    case 1:
+        switch (scene->selectedItems().at(0)->type()) {
+        case QGraphicsRectItem::Type: {
+            ui.rectangleSettings->setVisible(true);
+            ui.polylineSettings->deselect();
+            ui.polylineSettings->setVisible(false);
+            break;
+        }
+        default: {
+            ui.rectangleSettings->deselect();
+            ui.rectangleSettings->setVisible(false);
+            ui.polylineSettings->setVisible(true);
+            break;
+        }
+        }
+        checkActionStates();
+        ui.toolsWidget->setEnabled(true);
+        break;
+    default:
+        ui.rectangleSettings->deselect();
+        ui.polylineSettings->deselect();
+        ui.toolsWidget->setEnabled(false);
+        break;
+    }
+#endif
+}
+void DialLib::checkActionStates()
+{
+#if 1
+    ui.graphicsView->setDragMode(QGraphicsView::NoDrag);
+    ui.rectangleSettings->setVisible(false);
+    ui.polylineSettings->setVisible(false);
+    switch (scene->currentAction()) {
+    case LineType:
+        ui.polylineSettings->setVisible(true);
+        break;
+    case RectangleType:
+        ui.rectangleSettings->setVisible(true);
+        break;
+    case SelectionType:
+        break;
+    default:
+        ui.graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+        break;
+    }
+#endif
+}
+void DialLib::selectItem(QGraphicsItem* item)
+{
+    switch (item->type()) {
+    case QGraphicsRectItem::Type: {
+        VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+        ui.rectangleSettings->loadRectangle(rect);
+        break;
+    }
+    case QGraphicsPathItem::Type: {
+        VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+        ui.polylineSettings->loadPolyline(polyline);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void DialLib::selectNewItem(QGraphicsItem* item)
+{
+    switch (item->type()) {
+    case QGraphicsRectItem::Type: {
+        VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+        ui.rectangleSettings->newRectangle(rect);
+        break;
+    }
+    case QGraphicsPathItem::Type: {
+        VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+        ui.polylineSettings->newPolyline(polyline);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void DialLib::on_butSave_clicked()
+{
+    QString newPath = QFileDialog::getSaveFileName(this, tr("Save SVG"),
+        path, tr("SVG files (*.svg)"));
+
+    if (newPath.isEmpty())
+        return;
+
+    path = newPath;
+
+    QSvgGenerator generator;
+    generator.setFileName(path);
+    generator.setSize(QSize(scene->width(), scene->height()));
+    generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
+    generator.setTitle(tr("Vector Editor"));
+    generator.setDescription(tr("File created by Vector Editor."));
+
+    QPainter painter;
+    painter.begin(&generator);
+    scene->render(&painter);
+    painter.end();
+}
+
+void DialLib::on_butOpen_clicked()
+{
+    QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
+        path, tr("SVG files (*.svg)"));
+    if (newPath.isEmpty())
+        return;
+
+    path = newPath;
+    scene->clear();
+
+    scene->setSceneRect(SvgReader::getSizes(path));
+
+    foreach(QGraphicsItem * item, SvgReader::getElements(path)) {
+        switch (item->type()) {
+        case QGraphicsPathItem::Type: {
+            VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+            scene->addItem(polyline);
+            connect(polyline, &VEPolyline::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(polyline, &VEPolyline::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+        case QGraphicsRectItem::Type: {
+            VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+            scene->addItem(rect);
+            connect(rect, &VERectangle::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(rect, &VERectangle::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+}

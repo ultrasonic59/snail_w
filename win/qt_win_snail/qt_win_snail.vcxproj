@@ -37,7 +37,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.0_msvc2019_static_x64</QtInstall>
-    <QtModules>core;network;gui;multimedia;widgets;serialport</QtModules>
+    <QtModules>core;xml;network;gui;svg;multimedia;widgets;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -106,11 +106,21 @@
     <ClCompile Include="dial_lib\dial_lib.cpp" />
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
+    <ClCompile Include="items\item_settings.cpp" />
+    <ClCompile Include="items\vepolyline.cpp" />
+    <ClCompile Include="items\vepolylinesettings.cpp" />
+    <ClCompile Include="items\verectangle.cpp" />
+    <ClCompile Include="items\verectanglesettings.cpp" />
+    <ClCompile Include="items\veselectionrect.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
+    <ClCompile Include="utils\colorlabel.cpp" />
+    <ClCompile Include="utils\dotsignal.cpp" />
+    <ClCompile Include="utils\svgreader.cpp" />
     <ClCompile Include="ViewProperties.cpp" />
     <ClCompile Include="widgets\param_ed.cpp" />
     <ClCompile Include="widgets\QPushButtonColored.cpp" />
+    <ClCompile Include="widgets\workplaceview.cpp" />
     <ClCompile Include="wrk_wrk.cpp" />
     <QtRcc Include="win_snail.qrc" />
     <QtUic Include="csv\csv_dlg.ui" />
@@ -118,6 +128,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </QtUic>
     <QtUic Include="dial_lib\dial_lib.ui" />
+    <QtUic Include="items\item_settings.ui" />
+    <QtUic Include="items\vepolylinesettings.ui" />
+    <QtUic Include="items\verectanglesettings.ui" />
     <QtUic Include="port_prop_dialog.ui" />
     <QtUic Include="ViewProperies.ui" />
     <QtUic Include="win_snail.ui" />
@@ -139,6 +152,7 @@
     <ResourceCompile Include="qt_win_snail.rc" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="widgets\workplaceview.h" />
     <QtMoc Include="wrk_wrk.h" />
     <QtMoc Include="dial_debug\dial_debug.h" />
     <QtMoc Include="camera\my_camera.h" />
@@ -152,17 +166,35 @@
     <QtMoc Include="dial_lib\lib_paint_scene.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <QtMoc Include="plotters\camplotter.h" />
+    <QtMoc Include="items\vepolyline.h" />
+    <QtMoc Include="items\vepolylinesettings.h" />
+    <QtMoc Include="items\verectangle.h" />
+    <QtMoc Include="items\verectanglesettings.h" />
+    <QtMoc Include="items\veselectionrect.h" />
+    <QtMoc Include="items\item_settings.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_consts.h" />
     <ClInclude Include="snail_data.h" />
     <QtMoc Include="ViewProperties.h" />
     <ClInclude Include="snail_types.h" />
+    <QtMoc Include="utils\colorlabel.h" />
+    <QtMoc Include="utils\dotsignal.h" />
+    <QtMoc Include="utils\svgreader.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />
     <ClInclude Include="widgets\QPushButtonColored.h" />
     <ClInclude Include="widgets\styledtoolbutton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icons\arrow-top-left.png" />
+    <Image Include="icons\arrow-up-down.png" />
+    <Image Include="icons\content-save.png" />
+    <Image Include="icons\folder-upload.png" />
+    <Image Include="icons\rotate-right.png" />
+    <Image Include="icons\vector-polyline.png" />
+    <Image Include="icons\vector-rectangle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

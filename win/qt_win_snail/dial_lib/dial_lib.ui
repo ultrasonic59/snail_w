@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1034</width>
-    <height>488</height>
+    <width>945</width>
+    <height>558</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -27,264 +27,485 @@
   <property name="toolTipDuration">
    <number>0</number>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <widget class="QGraphicsView" name="graphicsView"/>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetMinimumSize</enum>
-       </property>
-       <item>
-        <widget class="QDialogButtonBox" name="buttonBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="standardButtons">
-          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="butt_select">
-         <property name="text">
-          <string>Select</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="butt_place">
-         <property name="text">
-          <string>Place</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox_item">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Addr</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_addr">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_count"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_wr_dat"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_clear">
-         <property name="text">
-          <string>Очистить</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_test">
-         <property name="text">
-          <string>Test</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>400</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>500</width>
-       <height>60</height>
-      </size>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lineEdit_dat1">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="lineEdit_dat0">
-          <property name="minimumSize">
-           <size>
-            <width>10</width>
-            <height>10</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="6">
-         <widget class="QLineEdit" name="lineEdit_dat4">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_DLC">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="8">
-         <widget class="QLineEdit" name="lineEdit_dat6">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="9">
-         <widget class="QLineEdit" name="lineEdit_dat7">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLineEdit" name="lineEdit_ID">
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLineEdit" name="lineEdit_dat2">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="7">
-         <widget class="QLineEdit" name="lineEdit_dat5">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QLineEdit" name="lineEdit_dat3">
-          <property name="maximumSize">
-           <size>
-            <width>25</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_id">
-          <property name="text">
-           <string>ID</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_dlc">
-          <property name="text">
-           <string>DLC</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_data">
-          <property name="text">
-           <string>Data</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>489</y>
+     <width>420</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>400</width>
+     <height>60</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>500</width>
+     <height>60</height>
+    </size>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="lineEdit_dat1">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_send_can">
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="lineEdit_dat0">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLineEdit" name="lineEdit_dat4">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit_DLC">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="QLineEdit" name="lineEdit_dat6">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="9">
+       <widget class="QLineEdit" name="lineEdit_dat7">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="lineEdit_ID">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="lineEdit_dat2">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QLineEdit" name="lineEdit_dat5">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLineEdit" name="lineEdit_dat3">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_id">
         <property name="text">
-         <string>Send</string>
+         <string>ID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_dlc">
+        <property name="text">
+         <string>DLC</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_data">
+        <property name="text">
+         <string>Data</string>
         </property>
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-  </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_send_can">
+      <property name="text">
+       <string>Send</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="WorkplaceView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>691</width>
+     <height>471</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_addr">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>440</y>
+     <width>133</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_wr_dat">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>480</y>
+     <width>133</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_count">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>460</y>
+     <width>133</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_clear">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>500</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Очистить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_test">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>520</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test</string>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>10</y>
+     <width>71</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>50</height>
+    </size>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="butt_select">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>60</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="butt_place">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>80</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Place</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_item">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>100</y>
+     <width>71</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QWidget" name="toolsWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>230</y>
+     <width>231</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(150, 150, 150);</string>
+   </property>
+   <widget class="VEPolyLineSettings" name="polylineSettings" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>170</y>
+      <width>231</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(10, 80, 8);</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="butDefault">
+    <property name="geometry">
+     <rect>
+      <x>26</x>
+      <y>42</y>
+      <width>31</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../win_snail.qrc">
+      <normaloff>:/icons/arrow-top-left.png</normaloff>:/icons/arrow-top-left.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>20</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="butLine">
+    <property name="geometry">
+     <rect>
+      <x>67</x>
+      <y>40</y>
+      <width>31</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../win_snail.qrc">
+      <normaloff>:/icons/vector-polyline.png</normaloff>:/icons/vector-polyline.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="butRectangle">
+    <property name="geometry">
+     <rect>
+      <x>108</x>
+      <y>40</y>
+      <width>31</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../win_snail.qrc">
+      <normaloff>:/icons/vector-rectangle.png</normaloff>:/icons/vector-rectangle.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QToolButton" name="butOpen">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>60</y>
+     <width>31</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../win_snail.qrc">
+     <normaloff>:/icons/folder-upload.png</normaloff>:/icons/folder-upload.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="butSave">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>60</y>
+     <width>31</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../win_snail.qrc">
+     <normaloff>:/icons/content-save.png</normaloff>:/icons/content-save.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="VERectangleSettings" name="rectangleSettings" native="true">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>120</y>
+     <width>181</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(150, 128, 128);</string>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>WorkplaceView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">workplaceview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VERectangleSettings</class>
+   <extends>QWidget</extends>
+   <header location="global">verectanglesettings.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VEPolyLineSettings</class>
+   <extends>QWidget</extends>
+   <header location="global">vepolylinesettings.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../win_snail.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

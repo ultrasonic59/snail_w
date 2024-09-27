@@ -13,17 +13,41 @@
 #include <QPainter>
 #include "PlotProperties.h"
 #include "snail_types.h"
+#if 1
+enum ActionTypes {
+    DefaultType,
+    LineType,
+    RectangleType,
+    SelectionType
+};
+#endif
 
 class LibPaintScene : public QGraphicsScene
 {
 
 Q_OBJECT
 
+///Q_PROPERTY(int currentAction READ currentAction WRITE setCurrentAction NOTIFY currentActionChanged)
+///Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
+
 public:
     explicit LibPaintScene(QObject* parent = 0, PlotProperties* Plot_Prop = 0, en_item_tipe* item_tipe=0, en_rej* _rej=0);
     ~LibPaintScene();
+///=======================================================
+public:
+   int currentAction() const;
+   QPointF previousPosition() const;
+   void setCurrentAction(const int type);
+   void setPreviousPosition(const QPointF previousPosition);
 
+signals:
+   void previousPositionChanged();
+   void currentActionChanged(int);
+   void signalSelectItem(QGraphicsItem* item);
+   void signalNewSelectItem(QGraphicsItem* item);
 
+///=======================================================
+public:
     en_item_tipe* p_item_tipe;
     en_rej* p_rej;
 private:
@@ -50,14 +74,29 @@ private:
     QColor circle_color;
 
 private:
-     void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void mousePressEvent(QGraphicsSceneMouseEvent* event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+
 private:
     void property(QGraphicsItem* _item);
-        ///void addRect();
-    void test1();
+     void test1();
     void test2();
+///================================================
+private slots:
+   void deselectItems();
+
+public slots:
+    void slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy);
+
+private:
+    QGraphicsItem* currentItem;
+    int m_currentAction;
+    int m_previousAction;
+    QPointF m_previousPosition;
+    bool m_leftMouseButtonPressed;
 
 };
 

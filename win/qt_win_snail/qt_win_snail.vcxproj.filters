@@ -66,6 +66,18 @@
     <Filter Include="Source Files\dial_lib">
       <UniqueIdentifier>{7874e80b-b6c7-443c-b11b-91fc93da366a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{cf431c02-37f4-4aa1-9c29-f9f7c6f5d9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\items">
+      <UniqueIdentifier>{16666a69-9524-4493-a451-d983789772e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\items">
+      <UniqueIdentifier>{a55522d7-e2cc-4315-97e2-931c3f5f0c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{99af5b0c-ce05-423a-a595-fc06a5c99627}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -151,6 +163,36 @@
     <ClCompile Include="dial_lib\lib_paint_scene.cpp">
       <Filter>Source Files\dial_lib</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\workplaceview.cpp">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="items\vepolyline.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="items\vepolylinesettings.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="items\verectangle.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="items\verectanglesettings.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="items\veselectionrect.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\colorlabel.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\dotsignal.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\svgreader.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="items\item_settings.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -203,6 +245,15 @@
     <QtUic Include="dial_lib\dial_lib.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="items\vepolylinesettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="items\verectanglesettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="items\item_settings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
@@ -244,5 +295,58 @@
     <QtMoc Include="dial_lib\lib_paint_scene.h">
       <Filter>Header Files\dial_lib</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\workplaceview.h">
+      <Filter>Header Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="items\vepolyline.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\vepolylinesettings.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\verectangle.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\verectanglesettings.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\veselectionrect.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="utils\colorlabel.h">
+      <Filter>Header Files\utils</Filter>
+    </QtMoc>
+    <QtMoc Include="utils\dotsignal.h">
+      <Filter>Header Files\utils</Filter>
+    </QtMoc>
+    <QtMoc Include="utils\svgreader.h">
+      <Filter>Header Files\utils</Filter>
+    </QtMoc>
+    <QtMoc Include="items\item_settings.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icons\arrow-top-left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\arrow-up-down.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\content-save.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\folder-upload.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\rotate-right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\vector-polyline.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\vector-rectangle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

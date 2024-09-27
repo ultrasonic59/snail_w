@@ -63,8 +63,18 @@ private:
 	LibPaintScene* scene;
 	QTimer* timer;
 	void resizeEvent(QResizeEvent* event);
+	QString path;
+
 private slots:
 	void slotTimer();
+private slots:
+	void on_butSave_clicked();
+	void on_butOpen_clicked();
+	void checkSelection();
+	void checkActionStates();
+	void selectItem(QGraphicsItem* item);
+	void selectNewItem(QGraphicsItem* item);
+///	void slotHelp();
 
 
 };

@@ -4,7 +4,14 @@
 #include <QMessageBox>
 #include <QPoint>
 
-///#include <QGraphicsItem>
+#include <QApplication>
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
+#include <QDebug>
+
+#include "verectangle.h"
+#include "veselectionrect.h"
+#include "vepolyline.h"
 
 #include "lib_paint_scene.h"
 
@@ -13,6 +20,11 @@ LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
     , en_item_tipe* item_tipe , en_rej* _rej ) : QGraphicsScene(parent), pPlot_Prop(Plot_Prop) ,p_item_tipe(item_tipe),p_rej(_rej)
     ,cur_rect(0,0,40,40), rect_color(Qt::darkCyan),cur_frect(0, 0, 40, 40),frect_color(Qt::cyan),cur_line(0, 0, 40, 40)
     ,line_color(Qt::darkCyan), line_thick(2),circle_rad(20),circle_thick(4),circle_color(Qt::darkMagenta), sel_item(nullptr)
+    ,currentItem(nullptr)
+    ,m_currentAction(0)
+    ,m_previousAction(0)
+    ,m_leftMouseButtonPressed(false)
+
 
 {
  ///   QBrush(Qt::yellow)
@@ -22,6 +34,162 @@ LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
 LibPaintScene::~LibPaintScene()
 {
 
+}
+///===================================================================
+void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+#if 1
+    if (event->button() & Qt::LeftButton) {
+        m_leftMouseButtonPressed = true;
+        setPreviousPosition(event->scenePos());
+        if (QApplication::keyboardModifiers() & Qt::ShiftModifier) {
+            m_previousAction = m_currentAction;
+            setCurrentAction(SelectionType);
+        }
+    }
+    switch (m_currentAction) {
+    case LineType: {
+        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
+            deselectItems();
+            VEPolyline* polyline = new VEPolyline();
+            currentItem = polyline;
+            addItem(currentItem);
+            connect(polyline, &VEPolyline::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(polyline, &VEPolyline::signalMove, this, &LibPaintScene::slotMove);
+            QPainterPath path;
+            path.moveTo(m_previousPosition);
+            polyline->setPath(path);
+            emit signalNewSelectItem(polyline);
+        }
+        break;
+    }
+    case RectangleType: {
+        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
+            deselectItems();
+            VERectangle* rectangle = new VERectangle();
+            currentItem = rectangle;
+            addItem(currentItem);
+            connect(rectangle, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(rectangle, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
+            emit signalNewSelectItem(rectangle);
+        }
+        break;
+    }
+    case SelectionType: {
+        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
+            deselectItems();
+            VESelectionRect* selection = new VESelectionRect();
+            currentItem = selection;
+            addItem(currentItem);
+        }
+        break;
+    }
+    default: {
+        QGraphicsScene::mousePressEvent(event);
+        break;
+    }
+    }
+#endif
+}
+
+void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+#if 1
+    switch (m_currentAction) {
+    case LineType: {
+        if (m_leftMouseButtonPressed) {
+            VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(currentItem);
+            QPainterPath path;
+            path.moveTo(m_previousPosition);
+            path.lineTo(event->scenePos());
+            polyline->setPath(path);
+        }
+        break;
+    }
+    case RectangleType: {
+        if (m_leftMouseButtonPressed) {
+            auto dx = event->scenePos().x() - m_previousPosition.x();
+            auto dy = event->scenePos().y() - m_previousPosition.y();
+            VERectangle* rectangle = qgraphicsitem_cast<VERectangle*>(currentItem);
+            rectangle->setRect((dx > 0) ? m_previousPosition.x() : event->scenePos().x(),
+                (dy > 0) ? m_previousPosition.y() : event->scenePos().y(),
+                qAbs(dx), qAbs(dy));
+        }
+        break;
+    }
+    case SelectionType: {
+        if (m_leftMouseButtonPressed) {
+            auto dx = event->scenePos().x() - m_previousPosition.x();
+            auto dy = event->scenePos().y() - m_previousPosition.y();
+            VESelectionRect* selection = qgraphicsitem_cast<VESelectionRect*>(currentItem);
+            selection->setRect((dx > 0) ? m_previousPosition.x() : event->scenePos().x(),
+                (dy > 0) ? m_previousPosition.y() : event->scenePos().y(),
+                qAbs(dx), qAbs(dy));
+        }
+        break;
+    }
+    default: {
+        QGraphicsScene::mouseMoveEvent(event);
+        break;
+    }
+    }
+#endif
+}
+
+void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+#if 1
+    if (event->button() & Qt::LeftButton) m_leftMouseButtonPressed = false;
+    switch (m_currentAction) {
+    case LineType:
+    case RectangleType: {
+        if (!m_leftMouseButtonPressed &&
+            !(event->button() & Qt::RightButton) &&
+            !(event->button() & Qt::MiddleButton)) {
+            currentItem = nullptr;
+        }
+        break;
+    }
+    case SelectionType: {
+        if (!m_leftMouseButtonPressed &&
+            !(event->button() & Qt::RightButton) &&
+            !(event->button() & Qt::MiddleButton)) {
+            VESelectionRect* selection = qgraphicsitem_cast<VESelectionRect*>(currentItem);
+            if (!selection->collidingItems().isEmpty()) {
+                foreach(QGraphicsItem * item, selection->collidingItems()) {
+                    item->setSelected(true);
+                }
+            }
+            selection->deleteLater();
+            if (selectedItems().length() == 1) {
+                signalSelectItem(selectedItems().at(0));
+            }
+            setCurrentAction(m_previousAction);
+            currentItem = nullptr;
+        }
+        break;
+    }
+    default: {
+        QGraphicsScene::mouseReleaseEvent(event);
+        break;
+    }
+    }
+#endif
+}
+///===================================================================
+#if 0
+
+void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+    switch (m_currentAction) {
+    case LineType:
+    case RectangleType:
+    case SelectionType:
+        break;
+    default:
+        QGraphicsScene::mouseDoubleClickEvent(event);
+        break;
+    }
 }
 void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -142,29 +310,9 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 #endif
     }
 
-/*
-   void removeItem(QGraphicsItem * item);
-
-   QGraphicsItem* focusItem() const;
-   void setFocusItem(QGraphicsItem * item, Qt::FocusReason focusReason = Qt::OtherFocusReason);
-*/
- ///  QGraphicsItem* sel_item
 ///===============================================
 
   }
-void LibPaintScene::property(QGraphicsItem* _item) {
- ///   _item->sceneBoundingRect();
-qDebug()<<"sceneBoundingRect"<< _item->sceneBoundingRect();
-  ///    QMessageBox::information(nullptr, "test1", "test1");
-  }
-
-void LibPaintScene::test1() {
-    QMessageBox::information(nullptr, "test1", "test1");
-}
-
-void LibPaintScene::test2() {
-    QMessageBox::information(nullptr, "test2", "test2");
-}
 
 void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -189,86 +337,23 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
         }
     }
-#if 0
-    if (mousePressedLeft)
-    {
-
-        addLine(previousPoint.x(),
-            previousPoint.y(),
-            event->scenePos().x(),
-            event->scenePos().y(),
-            QPen(Qt::red, 10, Qt::SolidLine, Qt::RoundCap));
-        // Обновляем данные о предыдущей координате
-        previousPoint = event->scenePos();
-        update();
-
-    }
-#endif
 }
-///===========================================================
-#if 0
-QPolygonF myPolygon1;
-myPolygon1 << QPointF(0, 10) << QPointF(20, 10);
-QPolygonF myPolygon2;
-myPolygon2 << QPointF(10, 0) << QPointF(10, 20);
-QPixmap pixmap(20, 20);
-pixmap.fill(Qt::transparent);
-QPainter painter(&pixmap);
+#endif
 
-QVector<qreal> dashes;//Line style - dashed line  
-qreal space = 2;
-dashes << 2 << space << 2 << space;
-QPen pen(Qt::lightGray, 1);
-pen.setDashPattern(dashes);
-pen.setWidth(1);
-
-painter.setPen(pen);
-painter.translate(0, 0);
-painter.drawPolyline(myPolygon1);
-painter.drawPolyline(myPolygon2);
-this->setBackgroundBrush(pixmap); */
-
-QPolygonF mypolygon1, mypolygon2;
-mypolygon1 << QPointF(0, 5) << QPointF(10, 5);
-mypolygon2 << QPointF(5, 0) << QPointF(5, 10);
-QPixmap pix(10, 10);
-pix.fill(Qt::transparent);
-QPainter painter(&pix);
-QVector <qreal> dashes;
-dashes << 2 << 2 << 2 << 2;
-QPen pen(Qt::darkCyan, 0.2);
-pen.setDashPattern(dashes);
-painter.setPen(pen);
-painter.translate(0, 0);
-painter.drawPolyline(mypolygon1);
-painter.drawPolyline(mypolygon2);
-this->setBackgroundBrush(pix);
-
-void CustomQGraphicsScene::drawBackground(QPainter* painter, const QRectF& rect)
-{
-    int step = GRID_STEP;
-    painter->setPen(QPen(QColor(200, 200, 255, 125)));
-    // draw horizontal grid
-    qreal start = round(rect.top(), step);
-    if (start > rect.top()) {
-        start -= step;
-    }
-    for (qreal y = start - step; y < rect.bottom(); ) {
-        y += step;
-        painter->drawLine(rect.left(), y, rect.right(), y);
-    }
-    // now draw vertical grid
-    start = round(rect.left(), step);
-    if (start > rect.left()) {
-        start -= step;
-    }
-    for (qreal x = start - step; x < rect.right(); ) {
-        x += step;
-        painter->drawLine(x, rect.top(), x, rect.bottom());
-    }
+void LibPaintScene::property(QGraphicsItem* _item) {
+    ///   _item->sceneBoundingRect();
+    qDebug() << "sceneBoundingRect" << _item->sceneBoundingRect();
+    ///    QMessageBox::information(nullptr, "test1", "test1");
 }
 
-#endif
+void LibPaintScene::test1() {
+    QMessageBox::information(nullptr, "test1", "test1");
+}
+
+void LibPaintScene::test2() {
+    QMessageBox::information(nullptr, "test2", "test2");
+}
+
 ///===========================================================
 
 void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
@@ -308,4 +393,81 @@ void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
         painter->drawLine(i, left, i, 2068);
     }
     */
+}
+
+///======================================================================
+int LibPaintScene::currentAction() const
+{
+    return m_currentAction;
+}
+
+QPointF LibPaintScene::previousPosition() const
+{
+    return m_previousPosition;
+}
+
+void LibPaintScene::setCurrentAction(const int type)
+{
+    m_currentAction = type;
+   emit currentActionChanged(m_currentAction);
+}
+void LibPaintScene::setPreviousPosition(const QPointF previousPosition)
+{
+    if (m_previousPosition == previousPosition)
+        return;
+
+    m_previousPosition = previousPosition;
+    emit previousPositionChanged();
+}
+void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+#if 1
+    switch (m_currentAction) {
+    case LineType:
+    case RectangleType:
+    case SelectionType:
+        break;
+    default:
+        QGraphicsScene::mouseDoubleClickEvent(event);
+        break;
+    }
+#endif
+}
+void LibPaintScene::deselectItems()
+{
+    foreach(QGraphicsItem * item, selectedItems()) {
+        item->setSelected(false);
+    }
+    selectedItems().clear();
+}
+void LibPaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
+{
+    foreach(QGraphicsItem * item, selectedItems()) {
+        if (item != signalOwner) item->moveBy(dx, dy);
+    }
+}
+void LibPaintScene::keyPressEvent(QKeyEvent* event)
+{
+    switch (event->key()) {
+    case Qt::Key_Delete: {
+        foreach(QGraphicsItem * item, selectedItems()) {
+            removeItem(item);
+            delete item;
+        }
+        deselectItems();
+        break;
+    }
+    case Qt::Key_A: {
+        if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+            foreach(QGraphicsItem * item, items()) {
+                item->setSelected(true);
+            }
+           if (selectedItems().length() == 1) signalSelectItem(selectedItems().at(0));
+        }
+        break;
+    }
+    default:
+        break;
+    }
+    QGraphicsScene::keyPressEvent(event);
 }
