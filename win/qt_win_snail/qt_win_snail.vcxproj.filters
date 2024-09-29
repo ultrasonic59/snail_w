@@ -190,7 +190,7 @@
     <ClCompile Include="utils\svgreader.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
-    <ClCompile Include="items\item_settings.cpp">
+    <ClCompile Include="items\itemSettings.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
   </ItemGroup>
@@ -251,7 +251,7 @@
     <QtUic Include="items\verectanglesettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="items\item_settings.ui">
+    <QtUic Include="items\itemSettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -322,7 +322,7 @@
     <QtMoc Include="utils\svgreader.h">
       <Filter>Header Files\utils</Filter>
     </QtMoc>
-    <QtMoc Include="items\item_settings.h">
+    <QtMoc Include="items\itemSettings.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
   </ItemGroup>

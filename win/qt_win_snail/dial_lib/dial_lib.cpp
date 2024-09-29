@@ -41,12 +41,14 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     connect(ui.comboBox_item, SIGNAL(currentIndexChanged(int)), this, SLOT(indexChanged(int)));
     show_rej();
 
+    ui.itemSettings->setVisible(true);
     ui.rectangleSettings->setVisible(false);
     ui.polylineSettings->setVisible(false);
 
-    connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(LineType); });
+    connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
     connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
-    connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
+ ///   connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
+
     connect(scene, &LibPaintScene::selectionChanged, this, &DialLib::checkSelection);
     connect(scene, &LibPaintScene::currentActionChanged, this, &DialLib::checkActionStates);
     connect(scene, &LibPaintScene::signalSelectItem, this, &DialLib::selectItem);
@@ -79,6 +81,7 @@ void  DialLib::show_rej()
 }
 void  DialLib::on_butt_select()
 {
+    scene->setCurrentAction(_DefaultType);
     cur_rej = REJ_SELECT;
     show_rej();
 }
@@ -87,6 +90,20 @@ void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
     show_rej();
+    switch (cur_item)
+    {
+    case RECT_TYPE:
+        scene->setCurrentAction(RectangleType);
+        break;
+    case VLINE_TYPE:
+        scene->setCurrentAction(VLineType);
+        break;
+    case HLINE_TYPE:
+        scene->setCurrentAction(HLineType);
+        break;
+
+    }
+
 }
 
 
@@ -114,6 +131,19 @@ void DialLib::resizeEvent(QResizeEvent* event)
 void DialLib::indexChanged(int index)
 {
  cur_item = (en_item_tipe)ui.comboBox_item->currentIndex();
+ switch (cur_item)
+ {
+ case RECT_TYPE:
+     scene->setCurrentAction(RectangleType);
+     break;
+ case VLINE_TYPE:
+     scene->setCurrentAction(VLineType);
+     break;
+ case HLINE_TYPE:
+     scene->setCurrentAction(HLineType);
+     break;
+
+ }
 
     // Do something here on ComboBox index change
 }
@@ -165,11 +195,17 @@ void DialLib::checkActionStates()
     ui.rectangleSettings->setVisible(false);
     ui.polylineSettings->setVisible(false);
     switch (scene->currentAction()) {
-    case LineType:
+    case HLineType:
+       ui.itemSettings->setVisible(true);
+        break;
+    case VLineType:
         ui.polylineSettings->setVisible(true);
         break;
     case RectangleType:
         ui.rectangleSettings->setVisible(true);
+        break;
+    case CircleType:
+ ///       ui.rectangleSettings->setVisible(true);
         break;
     case SelectionType:
         break;

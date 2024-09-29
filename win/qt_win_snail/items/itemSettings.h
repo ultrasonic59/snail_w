@@ -1,5 +1,5 @@
-#ifndef _ITEM_SETTINGS_H_
-#define _ITEM_SETTINGS_H_
+#ifndef _ITEMSETTINGS_H_
+#define _ITEMSETTINGS_H_
 
 #include <QWidget>
 
@@ -9,7 +9,7 @@ namespace Ui {
 class ItemSettings;
 }
 
-class itemSettings : public QWidget
+class item_Settings : public QWidget
 {
     Q_OBJECT
  ///   Q_PROPERTY(QColor color_1 READ color_1 WRITE setColor_1 NOTIFY color_1Changed)
@@ -18,29 +18,33 @@ class itemSettings : public QWidget
   ///  Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth NOTIFY borderWidthChanged)
 
 public:
-    explicit itemSettings(QWidget *parent = 0);
-    ~itemSettings();
+    explicit item_Settings(QWidget *parent = 0);
+    ~item_Settings();
 
-    QColor color_1() const;
+    QColor BGcolor() const;
     QColor color_2() const;
     QColor borderColor() const;
-    int borderWidth() const;
+    quint8 borderThick() const;
+    quint16 itemWidth() const;
+    quint16 itemHeight() const;
 
 public slots:
-    void setColor_1(const QColor &color);
-    void setColor_2(const QColor &color);
-    void setBorderColor(const QColor &color);
-    void setBorderWidth(const int &width);
-
+    void setBGColor(const QColor &color);
+    void setBorderColor(const QColor& color);
+    void setBorderThick(const quint8 &thick);
+    void setitemWidth(const quint16& width);
+    void setitemHeight(const quint16& height);
 signals:
-    void color_1Changed(const QColor &color);
-    void color_2Changed(const QColor &color);
+    void BGcolorChanged(const QColor &color);
     void borderColorChanged(const QColor &color);
-    void borderWidthChanged(const int &width);
+    void borderThickChanged(const qint8 &thick);
+    void itemWidthChanged(const quint16& width);
+    void itemHeightChanged(const quint16& height);
 
 private:
     Ui::ItemSettings*ui;
-    VERectangle *currentRectangle;
+  ///  VERectangle *currentItem;
+  ///  QAbstractGraphicsShapeItem* currentItem;
 
 public slots:
     void newRectangle(VERectangle *rect);
@@ -48,17 +52,12 @@ public slots:
     void deselect();
     void setVisible(bool visible) override;
 
-private slots:
-    void comboBoxIndexChanged(int index);
-
 private:
-    void setGradient(VERectangle *rectangle);
-
-private:
-    QColor m_color_1;
-    QColor m_color_2;
+    QColor m_BGcolor;
     QColor m_borderColor;
-    int m_borderWidth;
+    quint8 m_borderThick;
+    quint16 m_width;
+    quint16 m_height;
 };
 
 #endif // VERECTANGLESETTINGS_H

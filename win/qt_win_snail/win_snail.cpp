@@ -655,6 +655,12 @@ void win_snail::saveSettings(void)
     settings.setValue("Grid Y", PlotProp.setka_delt_y);
     settings.setValue("Lib Grid X", PlotProp.lib_grid_delt_x);
     settings.setValue("Lib Grid Y", PlotProp.lib_grid_delt_y);
+    ///======== lib items ========================================
+    settings.setValue("LibItemBGColor", PlotProp.LibItemBGColor.rgb());
+    settings.setValue("LibItemBrdColor", PlotProp.LibItemBrdColor.rgb());
+    settings.setValue("LibItemBrdThick", PlotProp.LibItemBrdThick);
+    settings.setValue("LibItemWidth", PlotProp.LibItemWidth);
+    settings.setValue("LibItemHeight", PlotProp.LibItemHeight);
 
 }
 void win_snail::loadSettings(void)
@@ -684,6 +690,13 @@ void win_snail::loadSettings(void)
 
     PlotProp.lib_grid_delt_x = settings.value("Lib Grid X", DEF_DELT_X).toInt();
     PlotProp.lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
+    ///======== lib items ========================================
+    PlotProp.LibItemBGColor.setRgb(settings.value("LibItemBGColor", PlotProp.LibItemBGColor).toInt());
+    PlotProp.LibItemBrdColor.setRgb(settings.value("LibItemBrdColor", PlotProp.LibItemBrdColor).toInt());
+    PlotProp.LibItemBrdThick = settings.value("LibItemBrdThick", 1).toInt();
+    PlotProp.LibItemWidth = settings.value("LibItemWidth", 100).toInt();
+    PlotProp.LibItemHeight = settings.value("LibItemHeight", 50).toInt();
+
 
 }    
 

@@ -8,6 +8,7 @@ class DotSignal;
 class QGraphicsSceneMouseEvent;
 
 class VERectangle : public QObject, public QGraphicsRectItem
+///class VERectangle : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)

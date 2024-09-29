@@ -48,7 +48,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         }
     }
     switch (m_currentAction) {
-    case LineType: {
+    case HLineType: {
         if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
             deselectItems();
             VEPolyline* polyline = new VEPolyline();
@@ -96,7 +96,7 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 #if 1
     switch (m_currentAction) {
-    case LineType: {
+    case HLineType: {
         if (m_leftMouseButtonPressed) {
             VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(currentItem);
             QPainterPath path;
@@ -141,7 +141,7 @@ void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 #if 1
     if (event->button() & Qt::LeftButton) m_leftMouseButtonPressed = false;
     switch (m_currentAction) {
-    case LineType:
+    case HLineType:
     case RectangleType: {
         if (!m_leftMouseButtonPressed &&
             !(event->button() & Qt::RightButton) &&
@@ -423,7 +423,7 @@ void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 #if 1
     switch (m_currentAction) {
-    case LineType:
+    case HLineType:
     case RectangleType:
     case SelectionType:
         break;

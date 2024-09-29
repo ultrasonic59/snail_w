@@ -106,7 +106,7 @@
     <ClCompile Include="dial_lib\dial_lib.cpp" />
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
-    <ClCompile Include="items\item_settings.cpp" />
+    <ClCompile Include="items\itemSettings.cpp" />
     <ClCompile Include="items\vepolyline.cpp" />
     <ClCompile Include="items\vepolylinesettings.cpp" />
     <ClCompile Include="items\verectangle.cpp" />
@@ -128,7 +128,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </QtUic>
     <QtUic Include="dial_lib\dial_lib.ui" />
-    <QtUic Include="items\item_settings.ui" />
+    <QtUic Include="items\itemSettings.ui" />
     <QtUic Include="items\vepolylinesettings.ui" />
     <QtUic Include="items\verectanglesettings.ui" />
     <QtUic Include="port_prop_dialog.ui" />
@@ -171,7 +171,7 @@
     <QtMoc Include="items\verectangle.h" />
     <QtMoc Include="items\verectanglesettings.h" />
     <QtMoc Include="items\veselectionrect.h" />
-    <QtMoc Include="items\item_settings.h" />
+    <QtMoc Include="items\itemSettings.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_consts.h" />

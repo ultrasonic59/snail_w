@@ -258,9 +258,9 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="Layout_col_cell">
+    <layout class="QHBoxLayout" name="Layout_col_cell1">
      <item>
-      <widget class="QLabel" name="label_col_rule">
+      <widget class="QLabel" name="label_col_rule1">
        <property name="font">
         <font>
          <pointsize>10</pointsize>
@@ -272,7 +272,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButtonColored" name="Button_col_rule">
+      <widget class="QPushButtonColored" name="Button_col_rule1">
        <property name="maximumSize">
         <size>
          <width>150</width>

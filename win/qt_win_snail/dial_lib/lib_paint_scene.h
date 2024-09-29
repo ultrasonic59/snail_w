@@ -1,11 +1,7 @@
 #ifndef LIBPAINTSCENE_H
 #define LIBPAINTSCENE_H
-///#include <QtWidgets/QtWidgets>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-///#include <QGraphicsView>
-///#include <QGraphicsScene>
-///#include <QGraphicsItemGroup>
 #include <QGraphicsItem>
 
 #include <QTimer>
@@ -15,9 +11,11 @@
 #include "snail_types.h"
 #if 1
 enum ActionTypes {
-    DefaultType,
-    LineType,
+    _DefaultType,
+    VLineType,
+    HLineType,
     RectangleType,
+    CircleType,
     SelectionType
 };
 #endif

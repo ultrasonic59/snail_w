@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>203</width>
-    <height>141</height>
+    <height>119</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="param_ed" name="ed_lib_border_thick">
+  <widget class="param_ed" name="item_border_thick">
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -104,7 +104,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
+     <y>70</y>
      <width>50</width>
      <height>16</height>
     </rect>
@@ -113,11 +113,11 @@
     <string>  Width</string>
    </property>
   </widget>
-  <widget class="param_ed" name="ed_lib_width">
+  <widget class="param_ed" name="item_width">
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>80</y>
+     <y>70</y>
      <width>80</width>
      <height>20</height>
     </rect>
@@ -139,20 +139,20 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>100</y>
+     <y>90</y>
      <width>50</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>  Hight</string>
+    <string>Height</string>
    </property>
   </widget>
-  <widget class="param_ed" name="ed_lib_hight">
+  <widget class="param_ed" name="item_height">
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>100</y>
+     <y>90</y>
      <width>80</width>
      <height>20</height>
     </rect>
