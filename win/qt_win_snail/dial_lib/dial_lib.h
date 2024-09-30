@@ -28,7 +28,7 @@ public:
 	QWidget* pParent;
 	PlotProperties* pPlot_Prop;
 	en_rej cur_rej;
-	en_item_tipe cur_item;
+	en_item_type cur_item;
 signals:
 ///	void req_wr_dbg(int num,dbg_dat_req_t*);
 ///	void req_rd_dbg(int num,dbg_dat_req_t*);

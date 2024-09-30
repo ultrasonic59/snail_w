@@ -5,7 +5,7 @@
 #define LINE_TYPE		2
 #define CIRCLE_TYPE		3
 */
-enum en_item_tipe {
+enum en_item_type {
 	RECT_TYPE = 0,
 	FRECT_TYPE = 1,
 	VLINE_TYPE = 2,
@@ -17,3 +17,13 @@ enum en_rej {
 	REJ_SELECT = 0,
 	REJ_PLACE = 1
 };
+#if 1
+enum ActionTypes {
+	_DefaultType,
+	VLineType,
+	HLineType,
+	RectangleType,
+	CircleType,
+	SelectionType
+};
+#endif

@@ -4,7 +4,7 @@
 #include <QBrush>
 #include <QPen>
 #include <QDebug>
-#include "verectangle.h"
+////#include "verectangle.h"
 
 item_Settings::item_Settings(QWidget *parent) :
     QWidget(parent),
@@ -67,6 +67,20 @@ quint8 item_Settings::borderThick() const
 {
     return m_borderThick;
 }
+quint16 item_Settings::itemWidth() const
+{
+    return m_width;
+
+}
+quint16 item_Settings::itemHeight() const
+{
+    return m_height;
+}
+
+en_item_type item_Settings::itemType() const
+{
+    return item_type;
+}
 
 void item_Settings::setBGColor(const QColor &color)
 {
@@ -112,14 +126,20 @@ void item_Settings::setBorderThick(const quint8& thick)
 }
 void item_Settings::setitemWidth(const quint16& width)
 {
-
+m_width= width;
+ 
 }
 void item_Settings::setitemHeight(const quint16& height)
 {
+ m_height= height;
 
 }
+void item_Settings::setitemType(const en_item_type& type)
+{
+    item_type = type;
+}
 
-
+#if 0
 void item_Settings::newRectangle(VERectangle *rect)
 {
 #if 0
@@ -153,7 +173,7 @@ void item_Settings::loadRectangle(VERectangle *rect)
     ui->borderWidth->setValue(m_borderWidth);
 #endif
 }
-
+#endif
 void item_Settings::deselect()
 {
  ////   currentItem = nullptr;
@@ -161,21 +181,66 @@ void item_Settings::deselect()
 
 void item_Settings::setVisible(bool visible)
 {
-    ui->BGcolor->setVisible(visible);
-    ui->BorderColor->setVisible(visible);
-    ui->labelBGColor->setVisible(visible);
-    ui->labelBorderColor->setVisible(visible);
-    ui->labelBorderThick->setVisible(visible);
-    ui->labelHight->setVisible(visible);
-    ui->labelWidth->setVisible(visible);
+    switch (item_type)
+    {
+    case RECT_TYPE:
+        ui->BGcolor->setVisible(false);
+        ui->BorderColor->setVisible(visible);
+        ui->labelBorderColor->setVisible(visible);
+        ui->labelBorderThick->setVisible(visible);
+        ui->labelHight->setVisible(visible);
+        ui->labelWidth->setVisible(visible);
+        ui->item_border_thick->setVisible(visible);
+        ui->item_height->setVisible(visible);
+        ui->item_width->setVisible(visible);
+        ui->item_width->show();
+        break;
+    case FRECT_TYPE:
+        ui->BGcolor->setVisible(visible);
+        ui->BorderColor->setVisible(visible);
+        ui->labelBGColor->setVisible(visible);
+        ui->labelBorderColor->setVisible(visible);
+        ui->labelBorderThick->setVisible(visible);
+        ui->labelHight->setVisible(visible);
+        ui->labelWidth->setVisible(visible);
+        ui->item_border_thick->setVisible(visible);
+        ui->item_height->setVisible(visible);
+        ui->item_width->setVisible(visible);
+        break;
+    case VLINE_TYPE:
+        ui->BGcolor->setVisible(false);
+        ui->BorderColor->setVisible(visible);
+        ui->labelBGColor->setVisible(false);
+        ui->labelBorderColor->setVisible(visible);
+        ui->labelBorderThick->setVisible(visible);
+        ui->labelHight->setVisible(visible);
+        ui->item_height->setVisible(visible);
+        ui->labelWidth->setVisible(false);
+        ui->item_border_thick->setVisible(visible);
+        break;
+    case HLINE_TYPE:
+        ui->BGcolor->setVisible(false);
+        ui->BorderColor->setVisible(visible);
+        ui->labelBGColor->setVisible(false);
+        ui->labelBorderColor->setVisible(visible);
+        ui->labelBorderThick->setVisible(visible);
+        ui->labelHight->setVisible(false);
+        ui->labelWidth->setVisible(visible);
+        ui->item_border_thick->setVisible(visible);
+        ui->item_width->setVisible(visible);
+        break;
+    case CIRCLE_TYPE:
+        ui->BGcolor->setVisible(visible);
+        ui->BorderColor->setVisible(visible);
+        ui->labelBGColor->setVisible(visible);
+        ui->labelBorderColor->setVisible(visible);
+        ui->labelBorderThick->setVisible(visible);
+        ui->labelHight->setVisible(visible);
+        ui->labelWidth->setVisible(visible);
+        ui->item_border_thick->setVisible(visible);
+        break;
 
-#if 0
-    if(!visible && currentItem != nullptr){
-        QWidget::setVisible(true);
-    } else {
-        QWidget::setVisible(visible);
     }
-#endif
 }
 
 

@@ -84,12 +84,17 @@ void  DialLib::on_butt_select()
     scene->setCurrentAction(_DefaultType);
     cur_rej = REJ_SELECT;
     show_rej();
+    ui.itemSettings->setVisible(false);
+
 }
 
 void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
     show_rej();
+    ui.itemSettings->setitemType(cur_item);
+    ui.itemSettings->setVisible(true);
+
     switch (cur_item)
     {
     case RECT_TYPE:
@@ -130,7 +135,10 @@ void DialLib::resizeEvent(QResizeEvent* event)
 }
 void DialLib::indexChanged(int index)
 {
- cur_item = (en_item_tipe)ui.comboBox_item->currentIndex();
+ cur_item = (en_item_type)ui.comboBox_item->currentIndex();
+ ui.itemSettings->setitemType(cur_item);
+ ui.itemSettings->setVisible(true);
+
  switch (cur_item)
  {
  case RECT_TYPE:

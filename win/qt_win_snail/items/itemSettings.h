@@ -2,8 +2,9 @@
 #define _ITEMSETTINGS_H_
 
 #include <QWidget>
+#include "snail_types.h"
 
-class VERectangle;
+///class VERectangle;
 
 namespace Ui {
 class ItemSettings;
@@ -22,18 +23,19 @@ public:
     ~item_Settings();
 
     QColor BGcolor() const;
-    QColor color_2() const;
     QColor borderColor() const;
     quint8 borderThick() const;
     quint16 itemWidth() const;
     quint16 itemHeight() const;
-
+    en_item_type itemType() const;
 public slots:
     void setBGColor(const QColor &color);
     void setBorderColor(const QColor& color);
     void setBorderThick(const quint8 &thick);
     void setitemWidth(const quint16& width);
     void setitemHeight(const quint16& height);
+    void setitemType(const en_item_type& height);
+
 signals:
     void BGcolorChanged(const QColor &color);
     void borderColorChanged(const QColor &color);
@@ -43,12 +45,13 @@ signals:
 
 private:
     Ui::ItemSettings*ui;
+    en_item_type item_type;
   ///  VERectangle *currentItem;
   ///  QAbstractGraphicsShapeItem* currentItem;
 
 public slots:
-    void newRectangle(VERectangle *rect);
-    void loadRectangle(VERectangle *rect);
+ ////   void newRectangle(VERectangle *rect);
+ ///   void loadRectangle(VERectangle *rect);
     void deselect();
     void setVisible(bool visible) override;
 
