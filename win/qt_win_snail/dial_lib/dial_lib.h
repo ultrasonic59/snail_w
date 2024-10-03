@@ -39,6 +39,9 @@ private slots:
 	void  on_butt_select();
 	void  on_butt_place();
 	void indexChanged(int index);
+	void setBGColor(const QColor& color);
+	void setBorderColor(const QColor& color);
+
 ///	void  slot_send_can_msg();
 
 ///	void  slot_butt_rd();
@@ -53,6 +56,7 @@ public slots:
 private: 
 ///	en_rej cur_rej;
 	void  show_rej();
+	void  show_params();
 
 ///	dbg_dat_req_t  dbg_dat_req;
 ///	dbg_dat_req_t  dbg_dat;

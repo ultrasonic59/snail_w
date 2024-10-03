@@ -9,12 +9,44 @@
 #include "vepolyline.h"
 #include "verectangle.h"
 
-
 DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
-    QDialog(parent, Qt::Window),pParent(parent),pPlot_Prop(Plot_Prop)
-   , ui(), cur_rej(REJ_SELECT), cur_item(RECT_TYPE)
+    QDialog(parent, Qt::Window),pParent(parent), pPlot_Prop(Plot_Prop)
+   , ui(), cur_rej(REJ_SELECT), cur_item(FRECT_TYPE)
 {
 	ui.setupUi(this);
+    ui.BorderColor->setColor(pPlot_Prop->LibItemBrdColor);
+    ui.BGcolor->setColor(pPlot_Prop->LibItemBGColor);
+    connect(ui.BorderColor, &ColorLabel::clicked,
+        [=]() {
+            QColorDialog dialog;
+            connect(&dialog, &QColorDialog::colorSelected, this, &DialLib::setBorderColor);
+            dialog.exec();
+        });
+    connect(ui.BGcolor, &ColorLabel::clicked,
+        [=]() {
+            QColorDialog dialog;
+            connect(&dialog, &QColorDialog::colorSelected, this, &DialLib::setBGColor);
+            dialog.exec();
+        });
+
+///===========================================================
+    ui.item_border_thick->set_num_dig(2);
+    ui.item_border_thick->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemBrdThick));
+    ui.item_border_thick->set_min_max(1, 10);
+    ui.item_border_thick->show_par();
+
+    ui.item_width->set_num_dig(3);
+    ui.item_width->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemWidth ));
+    ui.item_width->set_min_max(1, 999);
+    ui.item_width->show_par();
+
+    ui.item_height->set_num_dig(3);
+    ui.item_height->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemHeight ));
+    ui.item_height->set_min_max(1, 999);
+    ui.item_height->show_par();
+
+///===========================================================
+
     scene = new LibPaintScene(this,pPlot_Prop,&cur_item, &cur_rej);       // 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
 
@@ -40,9 +72,9 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     connect(ui.butt_place, SIGNAL(clicked()), this, SLOT(on_butt_place()));
     connect(ui.comboBox_item, SIGNAL(currentIndexChanged(int)), this, SLOT(indexChanged(int)));
     show_rej();
+    show_params();
 
-    ui.itemSettings->setVisible(true);
-    ui.rectangleSettings->setVisible(false);
+     ui.rectangleSettings->setVisible(false);
     ui.polylineSettings->setVisible(false);
 
     connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
@@ -84,16 +116,106 @@ void  DialLib::on_butt_select()
     scene->setCurrentAction(_DefaultType);
     cur_rej = REJ_SELECT;
     show_rej();
-    ui.itemSettings->setVisible(false);
+    show_params();
 
+ ///   ui.itemSettings->setVisible(false);
+
+}
+void  DialLib::show_params()
+{
+if (cur_rej == REJ_SELECT)
+    {
+    ui.labelBGColor->setVisible(false);
+    ui.BGcolor->setVisible(false);
+    ui.BorderColor->setVisible(false);
+    ui.labelBorderColor->setVisible(false);
+    ui.labelBorderThick->setVisible(false);
+    ui.labelHight->setVisible(false);
+    ui.labelWidth->setVisible(false);
+    ui.item_border_thick->setVisible(false);
+    ui.item_height->setVisible(false);
+    ui.item_width->setVisible(false);
+    }
+ else
+    {
+    switch (cur_item)
+    {
+    case RECT_TYPE:
+        ui.BGcolor->setVisible(false);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+        ///     ui->item_width->show();
+
+        break;
+    case FRECT_TYPE:
+        ui.labelBGColor->setVisible(true);
+        ui.BGcolor->setVisible(true);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+        ///     ui->item_width->show();
+
+        break;
+    case VLINE_TYPE:
+        ui.BGcolor->setVisible(false);
+        ui.BGcolor->setVisible(false);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+
+        break;
+    case HLINE_TYPE:
+        ui.BGcolor->setVisible(false);
+        ui.BGcolor->setVisible(false);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+        break;
+    case CIRCLE_TYPE:
+        ui.BGcolor->setVisible(false);
+        ui.BGcolor->setVisible(false);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+        break;
+    }
+}
 }
 
 void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
     show_rej();
-    ui.itemSettings->setitemType(cur_item);
-    ui.itemSettings->setVisible(true);
+    show_params();
+
+ ///   ui.itemSettings->setitemType(cur_item);
+ ///   ui.itemSettings->setVisible(true);
 
     switch (cur_item)
     {
@@ -136,8 +258,10 @@ void DialLib::resizeEvent(QResizeEvent* event)
 void DialLib::indexChanged(int index)
 {
  cur_item = (en_item_type)ui.comboBox_item->currentIndex();
- ui.itemSettings->setitemType(cur_item);
- ui.itemSettings->setVisible(true);
+ show_params();
+
+ ///ui.itemSettings->setitemType(cur_item);
+ ///ui.itemSettings->setVisible(true);
 
  switch (cur_item)
  {
@@ -204,7 +328,7 @@ void DialLib::checkActionStates()
     ui.polylineSettings->setVisible(false);
     switch (scene->currentAction()) {
     case HLineType:
-       ui.itemSettings->setVisible(true);
+  ///     ui.itemSettings->setVisible(true);
         break;
     case VLineType:
         ui.polylineSettings->setVisible(true);
@@ -314,4 +438,20 @@ void DialLib::on_butOpen_clicked()
             break;
         }
     }
+}
+///====================================================================
+void DialLib::setBGColor(const QColor& color)
+{
+
+ ///   m_BGcolor = color;
+ ui.BGcolor->setColor(color);
+ pPlot_Prop->LibItemBGColor = color;
+ ////   emit BGcolorChanged(m_BGcolor);
+}
+void DialLib::setBorderColor(const QColor& color)
+{
+///    m_borderColor = color;
+ ui.BorderColor->setColor(color);
+ pPlot_Prop->LibItemBrdColor = color;
+ ///emit borderColorChanged(m_borderColor);
 }

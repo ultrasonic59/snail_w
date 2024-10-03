@@ -375,6 +375,8 @@ void win_snail::on_butt_test()
     if (_dial_dbg.exec())
     {
         qDebug() << "OK";
+        saveSettings();
+
     }
     else
     {
