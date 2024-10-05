@@ -53,7 +53,7 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     ui.graphicsView->setScene(scene);  // 
     ui.graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     ui.graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
-    ui.graphicsView->setCursor(QCursor());
+    ////ui.graphicsView->setCursor(QCursor());
 
     scene->setSceneRect(0, 0, 2000, 2000); //
 
@@ -116,6 +116,7 @@ void  DialLib::on_butt_select()
     scene->setCurrentAction(_DefaultType);
     cur_rej = REJ_SELECT;
     show_rej();
+    ui.comboBox_item->setVisible(false);
     show_params();
 
  ///   ui.itemSettings->setVisible(false);
@@ -141,6 +142,7 @@ if (cur_rej == REJ_SELECT)
     switch (cur_item)
     {
     case RECT_TYPE:
+        ui.labelBGColor->setVisible(false);
         ui.BGcolor->setVisible(false);
         ui.BorderColor->setVisible(true);
         ui.labelBorderColor->setVisible(true);
@@ -168,7 +170,7 @@ if (cur_rej == REJ_SELECT)
 
         break;
     case VLINE_TYPE:
-        ui.BGcolor->setVisible(false);
+        ui.labelBGColor->setVisible(false);
         ui.BGcolor->setVisible(false);
         ui.BorderColor->setVisible(true);
         ui.labelBorderColor->setVisible(true);
@@ -181,7 +183,7 @@ if (cur_rej == REJ_SELECT)
 
         break;
     case HLINE_TYPE:
-        ui.BGcolor->setVisible(false);
+        ui.labelBGColor->setVisible(false);
         ui.BGcolor->setVisible(false);
         ui.BorderColor->setVisible(true);
         ui.labelBorderColor->setVisible(true);
@@ -193,7 +195,7 @@ if (cur_rej == REJ_SELECT)
         ui.item_width->setVisible(true);
         break;
     case CIRCLE_TYPE:
-        ui.BGcolor->setVisible(false);
+        ui.labelBGColor->setVisible(false);
         ui.BGcolor->setVisible(false);
         ui.BorderColor->setVisible(true);
         ui.labelBorderColor->setVisible(true);
@@ -211,6 +213,7 @@ if (cur_rej == REJ_SELECT)
 void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
+    ui.comboBox_item->setVisible(true);
     show_rej();
     show_params();
 
@@ -324,17 +327,17 @@ void DialLib::checkActionStates()
 {
 #if 1
     ui.graphicsView->setDragMode(QGraphicsView::NoDrag);
-    ui.rectangleSettings->setVisible(false);
-    ui.polylineSettings->setVisible(false);
+  ///  ui.rectangleSettings->setVisible(false);
+////    ui.polylineSettings->setVisible(false);
     switch (scene->currentAction()) {
     case HLineType:
   ///     ui.itemSettings->setVisible(true);
         break;
     case VLineType:
-        ui.polylineSettings->setVisible(true);
+     ///   ui.polylineSettings->setVisible(true);
         break;
     case RectangleType:
-        ui.rectangleSettings->setVisible(true);
+    ///    ui.rectangleSettings->setVisible(true);
         break;
     case CircleType:
  ///       ui.rectangleSettings->setVisible(true);

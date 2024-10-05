@@ -707,38 +707,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>butt_select</sender>
-   <signal>clicked()</signal>
-   <receiver>Dial_lib</receiver>
-   <slot>slot_butt_rd()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>410</x>
-     <y>175</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>421</x>
-     <y>191</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>butt_place</sender>
-   <signal>clicked()</signal>
-   <receiver>Dial_lib</receiver>
-   <slot>slot_butt_wr()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>402</x>
-     <y>233</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>420</x>
-     <y>258</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>pushButton_clear</sender>
    <signal>clicked()</signal>
    <receiver>Dial_lib</receiver>

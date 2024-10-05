@@ -45,6 +45,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     quint32 num_y = cur_y / pPlot_Prop->lib_grid_delt_y;
     cur_x = pPlot_Prop->lib_grid_delt_x * num_x;
     cur_y = pPlot_Prop->lib_grid_delt_y * num_y;
+
           VERectangle* rectangle = new VERectangle();
 
     if (event->button() == Qt::LeftButton)

@@ -18,8 +18,8 @@ SvgReader::~SvgReader()
 {
 
 }
-
-QList<VERectangle *> SvgReader::getRectangles(const QString filename)
+#if 0
+QList<VERectangle *> SvgReader::_getRectangles(const QString filename)
 {
     QList<VERectangle *> rectList;
     QList<QLinearGradient> gradientList;
@@ -110,7 +110,7 @@ QList<VERectangle *> SvgReader::getRectangles(const QString filename)
     return rectList;
 }
 
-QList<VEPolyline *> SvgReader::getPolylines(const QString filename)
+QList<VEPolyline *> SvgReader::_getPolylines(const QString filename)
 {
     QList<VEPolyline *> polylineList;
 
@@ -152,7 +152,7 @@ QList<VEPolyline *> SvgReader::getPolylines(const QString filename)
     file.close();
     return polylineList;
 }
-
+#endif
 QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
 {
     QList<QGraphicsItem *> graphicsList;

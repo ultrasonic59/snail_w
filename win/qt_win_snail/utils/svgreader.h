@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-class VERectangle;
-class VEPolyline;
+///class VERectangle;
+////class VEPolyline;
 class QGraphicsItem;
 
 class SvgReader : public QObject
@@ -13,14 +13,14 @@ class SvgReader : public QObject
 public:
     explicit SvgReader(QObject *parent = 0);
     ~SvgReader();
-    static QList<VERectangle *> getRectangles(const QString filename);
-    static QList<VEPolyline *> getPolylines(const QString filename);
+   /// static QList<VERectangle *> _getRectangles(const QString filename);
+ ///  static QList<VEPolyline *> _getPolylines(const QString filename);
     static QList<QGraphicsItem *> getElements(const QString filename);
     static QRectF getSizes(const QString filename);
 
-signals:
+////signals:
 
-public slots:
+////public slots:
 };
 
 #endif // SVGREADER_H

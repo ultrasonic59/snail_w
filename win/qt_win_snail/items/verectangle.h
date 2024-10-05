@@ -11,7 +11,7 @@ class VERectangle : public QObject, public QGraphicsRectItem
 ///class VERectangle : public QObject, public QGraphicsItem
 {
     Q_OBJECT
-    Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
+  ///  Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
     explicit VERectangle(QObject * parent = 0);
