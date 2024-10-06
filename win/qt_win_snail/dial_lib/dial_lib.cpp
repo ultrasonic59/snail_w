@@ -67,6 +67,7 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
 	ui.comboBox_item->addItem("VLine", VLINE_TYPE);
     ui.comboBox_item->addItem("HLine", HLINE_TYPE);
     ui.comboBox_item->addItem("Circle", CIRCLE_TYPE);
+    ui.comboBox_item->addItem("Point", POINT_TYPE);
 
     connect(ui.butt_select, SIGNAL(clicked()), this, SLOT(on_butt_select()));
     connect(ui.butt_place, SIGNAL(clicked()), this, SLOT(on_butt_place()));
@@ -74,11 +75,11 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     show_rej();
     show_params();
 
-     ui.rectangleSettings->setVisible(false);
-    ui.polylineSettings->setVisible(false);
+ ///    ui.rectangleSettings->setVisible(false);
+ ///   ui.polylineSettings->setVisible(false);
 
-    connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
-    connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
+ ///   connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
+  ///  connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
  ///   connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
 
     connect(scene, &LibPaintScene::selectionChanged, this, &DialLib::checkSelection);
@@ -206,6 +207,19 @@ if (cur_rej == REJ_SELECT)
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
         break;
+    case POINT_TYPE:
+        ui.labelBGColor->setVisible(false);
+        ui.BGcolor->setVisible(false);
+        ui.BorderColor->setVisible(true);
+        ui.labelBorderColor->setVisible(true);
+        ui.labelBorderThick->setVisible(true);
+        ui.labelHight->setVisible(true);
+        ui.labelWidth->setVisible(true);
+        ui.item_border_thick->setVisible(true);
+        ui.item_height->setVisible(true);
+        ui.item_width->setVisible(true);
+        break;
+
     }
 }
 }
@@ -292,40 +306,40 @@ void DialLib::checkSelection()
 #if 1
     switch (scene->selectedItems().length()) {
     case 0:
-        ui.rectangleSettings->deselect();
-        ui.polylineSettings->deselect();
+        ///ui.rectangleSettings->deselect();
+        ///ui.polylineSettings->deselect();
         checkActionStates();
-        ui.toolsWidget->setEnabled(true);
+     ///   ui.toolsWidget->setEnabled(true);
         break;
     case 1:
         switch (scene->selectedItems().at(0)->type()) {
         case QGraphicsRectItem::Type: {
-            ui.rectangleSettings->setVisible(true);
-            ui.polylineSettings->deselect();
-            ui.polylineSettings->setVisible(false);
+            ///ui.rectangleSettings->setVisible(true);
+            ///ui.polylineSettings->deselect();
+            ///ui.polylineSettings->setVisible(false);
             break;
         }
         default: {
-            ui.rectangleSettings->deselect();
-            ui.rectangleSettings->setVisible(false);
-            ui.polylineSettings->setVisible(true);
+           /// ui.rectangleSettings->deselect();
+            ///ui.rectangleSettings->setVisible(false);
+            ///ui.polylineSettings->setVisible(true);
             break;
         }
         }
         checkActionStates();
-        ui.toolsWidget->setEnabled(true);
+///        ui.toolsWidget->setEnabled(true);
         break;
     default:
-        ui.rectangleSettings->deselect();
-        ui.polylineSettings->deselect();
-        ui.toolsWidget->setEnabled(false);
+       /// ui.rectangleSettings->deselect();
+       /// ui.polylineSettings->deselect();
+       /// ui.toolsWidget->setEnabled(false);
         break;
     }
 #endif
 }
 void DialLib::checkActionStates()
 {
-#if 1
+#if 0
     ui.graphicsView->setDragMode(QGraphicsView::NoDrag);
   ///  ui.rectangleSettings->setVisible(false);
 ////    ui.polylineSettings->setVisible(false);
@@ -354,13 +368,13 @@ void DialLib::selectItem(QGraphicsItem* item)
 {
     switch (item->type()) {
     case QGraphicsRectItem::Type: {
-        VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
-        ui.rectangleSettings->loadRectangle(rect);
+ ///       VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+ ///       ui.rectangleSettings->loadRectangle(rect);
         break;
     }
     case QGraphicsPathItem::Type: {
-        VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
-        ui.polylineSettings->loadPolyline(polyline);
+  ///      VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+ ///       ui.polylineSettings->loadPolyline(polyline);
         break;
     }
     default:
@@ -372,13 +386,13 @@ void DialLib::selectNewItem(QGraphicsItem* item)
 {
     switch (item->type()) {
     case QGraphicsRectItem::Type: {
-        VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
-        ui.rectangleSettings->newRectangle(rect);
+  ///      VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+  ///      ui.rectangleSettings->newRectangle(rect);
         break;
     }
     case QGraphicsPathItem::Type: {
-        VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
-        ui.polylineSettings->newPolyline(polyline);
+  ///      VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+  ///      ui.polylineSettings->newPolyline(polyline);
         break;
     }
     default:
@@ -441,6 +455,8 @@ void DialLib::on_butOpen_clicked()
             break;
         }
     }
+    scene->update();
+
 }
 ///====================================================================
 void DialLib::setBGColor(const QColor& color)

@@ -329,101 +329,6 @@
     </font>
    </property>
   </widget>
-  <widget class="QWidget" name="toolsWidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>590</y>
-     <width>231</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(150, 150, 150);</string>
-   </property>
-   <widget class="VEPolyLineSettings" name="polylineSettings" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>75</y>
-      <width>231</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(10, 80, 8);</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="butDefault">
-    <property name="geometry">
-     <rect>
-      <x>26</x>
-      <y>42</y>
-      <width>31</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>...</string>
-    </property>
-    <property name="icon">
-     <iconset resource="../win_snail.qrc">
-      <normaloff>:/icons/arrow-top-left.png</normaloff>:/icons/arrow-top-left.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>24</width>
-      <height>20</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="butLine">
-    <property name="geometry">
-     <rect>
-      <x>67</x>
-      <y>40</y>
-      <width>31</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>...</string>
-    </property>
-    <property name="icon">
-     <iconset resource="../win_snail.qrc">
-      <normaloff>:/icons/vector-polyline.png</normaloff>:/icons/vector-polyline.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>24</width>
-      <height>24</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="butRectangle">
-    <property name="geometry">
-     <rect>
-      <x>108</x>
-      <y>40</y>
-      <width>31</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>...</string>
-    </property>
-    <property name="icon">
-     <iconset resource="../win_snail.qrc">
-      <normaloff>:/icons/vector-rectangle.png</normaloff>:/icons/vector-rectangle.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>24</width>
-      <height>24</height>
-     </size>
-    </property>
-   </widget>
-  </widget>
   <widget class="QToolButton" name="butOpen">
    <property name="geometry">
     <rect>
@@ -438,7 +343,7 @@
    </property>
    <property name="icon">
     <iconset resource="../win_snail.qrc">
-     <normaloff>:/icons/folder-upload.png</normaloff>:/icons/folder-upload.png</iconset>
+     <normaloff>:/icons/load.png</normaloff>:/icons/load.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -461,26 +366,13 @@
    </property>
    <property name="icon">
     <iconset resource="../win_snail.qrc">
-     <normaloff>:/icons/content-save.png</normaloff>:/icons/content-save.png</iconset>
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
    </property>
    <property name="iconSize">
     <size>
      <width>24</width>
      <height>24</height>
     </size>
-   </property>
-  </widget>
-  <widget class="VERectangleSettings" name="rectangleSettings" native="true">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>610</y>
-     <width>211</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(150, 128, 128);</string>
    </property>
   </widget>
   <widget class="ColorLabel" name="BorderColor">
@@ -646,18 +538,6 @@
    <class>WorkplaceView</class>
    <extends>QGraphicsView</extends>
    <header location="global">workplaceview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>VERectangleSettings</class>
-   <extends>QWidget</extends>
-   <header location="global">verectanglesettings.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>VEPolyLineSettings</class>
-   <extends>QWidget</extends>
-   <header location="global">vepolylinesettings.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>ColorLabel</class>

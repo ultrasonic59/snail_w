@@ -106,10 +106,10 @@
     <ClCompile Include="dial_lib\dial_lib.cpp" />
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
+    <ClCompile Include="items\cust_circle.cpp" />
+    <ClCompile Include="items\cust_point.cpp" />
     <ClCompile Include="items\vepolyline.cpp" />
-    <ClCompile Include="items\vepolylinesettings.cpp" />
     <ClCompile Include="items\verectangle.cpp" />
-    <ClCompile Include="items\verectanglesettings.cpp" />
     <ClCompile Include="items\veselectionrect.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
@@ -127,8 +127,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </QtUic>
     <QtUic Include="dial_lib\dial_lib.ui" />
-    <QtUic Include="items\vepolylinesettings.ui" />
-    <QtUic Include="items\verectanglesettings.ui" />
     <QtUic Include="port_prop_dialog.ui" />
     <QtUic Include="ViewProperies.ui" />
     <QtUic Include="win_snail.ui" />
@@ -165,10 +163,10 @@
     <ClInclude Include="hidapi\hidapi.h" />
     <QtMoc Include="plotters\camplotter.h" />
     <QtMoc Include="items\vepolyline.h" />
-    <QtMoc Include="items\vepolylinesettings.h" />
     <QtMoc Include="items\verectangle.h" />
-    <QtMoc Include="items\verectanglesettings.h" />
     <QtMoc Include="items\veselectionrect.h" />
+    <QtMoc Include="items\cust_circle.h" />
+    <QtMoc Include="items\cust_point.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_consts.h" />
@@ -186,10 +184,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icons\arrow-top-left.png" />
-    <Image Include="icons\arrow-up-down.png" />
     <Image Include="icons\content-save.png" />
-    <Image Include="icons\folder-upload.png" />
+    <Image Include="icons\load.png" />
     <Image Include="icons\rotate-right.png" />
+    <Image Include="icons\save.png" />
     <Image Include="icons\vector-polyline.png" />
     <Image Include="icons\vector-rectangle.png" />
   </ItemGroup>

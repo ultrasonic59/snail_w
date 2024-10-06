@@ -17,22 +17,28 @@
 
 
 LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
-    , en_item_type* item_type , en_rej* _rej ) : QGraphicsScene(parent), pPlot_Prop(Plot_Prop) ,p_item_type(item_type),p_rej(_rej)
-    ,cur_rect(0,0,40,40), rect_color(Qt::darkCyan),cur_frect(0, 0, 40, 40),frect_color(Qt::cyan),cur_line(0, 0, 40, 40)
-    ,line_color(Qt::darkCyan), line_thick(2),circle_rad(20),circle_thick(4),circle_color(Qt::darkMagenta), sel_item(nullptr)
+    , en_item_type* item_type , en_rej* _rej ) : QGraphicsScene(parent)
+    , pPlot_Prop(Plot_Prop) ,p_item_type(item_type),p_rej(_rej)
+    ,cur_rect(0,0,40,40), rect_color(Qt::darkCyan),cur_frect(0, 0, 40, 40)
+    ,frect_color(Qt::cyan),cur_line(0, 0, 40, 40)
+    ,line_color(Qt::darkCyan), line_thick(2),circle_rad(20),circle_thick(4)
+    ,circle_color(Qt::darkMagenta), sel_item(nullptr)
     ,currentItem(nullptr)
     ,m_currentAction(0)
     ,m_previousAction(0)
     ,m_leftMouseButtonPressed(false)
-
-
 {
+ rc = new VERectangle();
+ frc = new VERectangle();
+
  ///   QBrush(Qt::yellow)
  ////   setBackgroundBrush(QBrush(Qt::yellow));
 }
 
 LibPaintScene::~LibPaintScene()
 {
+    delete rc;
+    delete frc;
 
 }
 ///===================================================================
@@ -46,40 +52,60 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     cur_x = pPlot_Prop->lib_grid_delt_x * num_x;
     cur_y = pPlot_Prop->lib_grid_delt_y * num_y;
 
-          VERectangle* rectangle = new VERectangle();
+  ///        VERectangle* rectangle = new VERectangle();
+   /// VERectangle* rect = new VERectangle();
+  ///  VERectangle* frect = new VERectangle();
 
     if (event->button() == Qt::LeftButton)
     {
+        m_leftMouseButtonPressed = true;
+        setPreviousPosition(event->scenePos());
         mousePressedLeft = true;
     if (*p_rej == REJ_PLACE)
     {
         switch (*p_item_type)
         {
-        case RECT_TYPE:
-////            VERectangle* rectangle = new VERectangle(0, 0, cur_rect.width(), cur_rect.height(), QPen(rect_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-      ////      VERectangle* rectangle = new VERectangle();
-            currentItem = rectangle;
+        case RECT_TYPE: {
+            VERectangle* rect = new VERectangle();
+            currentItem = rect;
             addItem(currentItem);
-            connect(rectangle, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(rectangle, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
-            rectangle->setRect(0, 0, cur_rect.width(), cur_rect.height());
-            rectangle-> setPos(cur_x, cur_y);
-            emit signalNewSelectItem(rectangle);
+            connect(rect, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(rect, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
+            rect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            rect->setPos(cur_x, cur_y);
+            rect->setBrush(QBrush(Qt::NoBrush));
+            rect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            ///     emit signalNewSelectItem(rc);
+        }
+            break;
+        case FRECT_TYPE: {
+            VERectangle* frect = new VERectangle();
+            currentItem = frect;
+            addItem(currentItem);
+            connect(frect, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(frect, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
+            frect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            frect->setPos(cur_x, cur_y);
+            frect->setBrush(QBrush(QColor(pPlot_Prop->LibItemBGColor)));
+            frect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            ///     emit signalNewSelectItem(rc);
+        }
+            break;
+        case VLINE_TYPE: {
+            VEPolyline* polyline = new VEPolyline();
+            currentItem = polyline;
+            addItem(currentItem);
+            connect(polyline, &VEPolyline::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(polyline, &VEPolyline::signalMove, this, &LibPaintScene::slotMove);
+          ///  polyline->setPos(cur_x, cur_y);
 
-            ////    addRect(event->scenePos().x(), event->scenePos().y(), 100, 100, QPen(Qt::NoPen), QBrush(rect_color));
-            ///rc_item = addRect(0, 0, cur_rect.width(), cur_rect.height(), QPen(rect_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-            ///rc_item->setPos(cur_x, cur_y);
-            break;
-        case FRECT_TYPE:
-            rc_item = addRect(0, 0, cur_rect.width(), cur_rect.height(), QPen(Qt::black, line_thick, Qt::SolidLine, Qt::RoundCap), QBrush(rect_color));
-            rc_item->setPos(cur_x, cur_y);
-            break;
-        case VLINE_TYPE:
-            addLine(event->scenePos().x(),
-                event->scenePos().y(),
-                event->scenePos().x(),
-                cur_line.y2(),
-                QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
+            QPainterPath path;
+            path.moveTo(m_previousPosition);
+            polyline->setPath(path);
+            polyline->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
+                , Qt::SolidLine, Qt::RoundCap));
+           ///  emit signalNewSelectItem(polyline);
+            }
             break;
         case HLINE_TYPE:
             /*
@@ -97,13 +123,40 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             line_item->setPos(cur_x, cur_y);
 
             break;
-        case CIRCLE_TYPE:
+        case CIRCLE_TYPE: {
+            cust_circle* circle = new cust_circle();
+            currentItem = circle;
+            addItem(currentItem);
+            connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
+///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
+            circle->setPos(cur_x- pPlot_Prop->LibItemWidth/2, cur_y- pPlot_Prop->LibItemWidth/2);
+            circle->setBrush(QBrush(Qt::NoBrush));
+            circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            ///     emit signalNewSelectItem(rc);
+
+/*
             addEllipse(event->scenePos().x(),
                 event->scenePos().y(),
                 circle_rad,
                 circle_rad,
                 QPen(Qt::NoPen),
                 QBrush(rect_color));
+*/
+        }
+            break;
+        case POINT_TYPE: {
+            cust_point* point = new cust_point();
+            currentItem = point;
+            addItem(currentItem);
+            connect(point, &cust_point::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(point, &cust_point::signalMove, this, &LibPaintScene::slotMove);
+            point->setCircle(0, 0, pPlot_Prop->LibItemWidth);
+            point->setPos(cur_x - pPlot_Prop->LibItemWidth / 2, cur_y - pPlot_Prop->LibItemWidth / 2);
+            point->setBrush(QBrush(Qt::NoBrush));
+            point->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemWidth ));
+        }
             break;
         }
     }
@@ -112,63 +165,44 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
  ///   }
 
-#if 0
-    if (event->button() & Qt::LeftButton) {
-        m_leftMouseButtonPressed = true;
-        setPreviousPosition(event->scenePos());
-        if (QApplication::keyboardModifiers() & Qt::ShiftModifier) {
-            m_previousAction = m_currentAction;
-            setCurrentAction(SelectionType);
-        }
-    }
-    switch (m_currentAction) {
-    case HLineType: {
-        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
-            deselectItems();
-            VEPolyline* polyline = new VEPolyline();
-            currentItem = polyline;
-            addItem(currentItem);
-            connect(polyline, &VEPolyline::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(polyline, &VEPolyline::signalMove, this, &LibPaintScene::slotMove);
-            QPainterPath path;
-            path.moveTo(m_previousPosition);
-            polyline->setPath(path);
-            emit signalNewSelectItem(polyline);
-        }
-        break;
-    }
-    case RectangleType: {
-        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
-            deselectItems();
-            VERectangle* rectangle = new VERectangle();
-            currentItem = rectangle;
-            addItem(currentItem);
-            connect(rectangle, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(rectangle, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
-            emit signalNewSelectItem(rectangle);
-        }
-        break;
-    }
-    case SelectionType: {
-        if (m_leftMouseButtonPressed && !(event->button() & Qt::RightButton) && !(event->button() & Qt::MiddleButton)) {
-            deselectItems();
-            VESelectionRect* selection = new VESelectionRect();
-            currentItem = selection;
-            addItem(currentItem);
-        }
-        break;
-    }
-    default: {
-        QGraphicsScene::mousePressEvent(event);
-        break;
-    }
-    }
-#endif
 }
 
 void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-#if 1
+    if (*p_rej == REJ_PLACE)
+    {
+        switch (*p_item_type)
+        {
+        case FRECT_TYPE:
+        case RECT_TYPE: {
+            if (m_leftMouseButtonPressed) {
+                auto dx = event->scenePos().x() - m_previousPosition.x();
+                auto dy = event->scenePos().y() - m_previousPosition.y();
+                VERectangle* rectangle = qgraphicsitem_cast<VERectangle*>(currentItem);
+                rectangle->setRect((dx > 0) ? m_previousPosition.x() : event->scenePos().x(),
+                    (dy > 0) ? m_previousPosition.y() : event->scenePos().y(),
+                    qAbs(dx), qAbs(dy));
+            }
+            break;
+        case VLINE_TYPE: {
+            if (m_leftMouseButtonPressed) {
+                VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(currentItem);
+                QPainterPath path;
+                path.moveTo(m_previousPosition);
+                path.lineTo(event->scenePos());
+                polyline->setPath(path);
+
+             }
+             break;
+        }
+        }
+    }
+}
+    else
+       {
+        QGraphicsScene::mouseMoveEvent(event);
+       }
+#if 0
     switch (m_currentAction) {
     case HLineType: {
         if (m_leftMouseButtonPressed) {
@@ -251,168 +285,6 @@ void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 #endif
 }
 ///===================================================================
-#if 0
-
-void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
-{
-    switch (m_currentAction) {
-    case LineType:
-    case RectangleType:
-    case SelectionType:
-        break;
-    default:
-        QGraphicsScene::mouseDoubleClickEvent(event);
-        break;
-    }
-}
-void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    ////   plotterwidget::mouseReleaseEvent(event);
-    mousePressedLeft = false;
-    sel_item = nullptr;
-}
-
-void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsScene::mousePressEvent(event);
-    qreal cur_x= event->scenePos().x();
-    qreal cur_y= event->scenePos().y();
-    quint32 num_x= cur_x/ pPlot_Prop->lib_grid_delt_x;
-    quint32 num_y = cur_y / pPlot_Prop->lib_grid_delt_y;
-    cur_x = pPlot_Prop->lib_grid_delt_x* num_x;
-    cur_y = pPlot_Prop->lib_grid_delt_y * num_y;
-
-    sel_item = this->itemAt(event->scenePos(), QTransform());
-
-    if (event->button() == Qt::LeftButton)
-    {
-        mousePressedLeft = true;
-
-        if (*p_rej == REJ_SELECT)
-           {
-  ///         QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
-          ////  sel_item = this->itemAt(event->scenePos(), QTransform());
-        ////    this->setCursor(QCursor(Qt::ClosedHandCursor));
-        ///    this->setCursor(QCursor(Qt::ArrowCursor));
-
-           /// qDebug() << "item" << item;
-           }
-        else if (*p_rej == REJ_PLACE)
-        {
-            switch (*p_item_tipe)
-            {
-            case RECT_TYPE:
-            ////    addRect(event->scenePos().x(), event->scenePos().y(), 100, 100, QPen(Qt::NoPen), QBrush(rect_color));
-                rc_item = addRect(0, 0, cur_rect.width(), cur_rect.height(), QPen(rect_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-                rc_item->setPos(cur_x, cur_y);
-                break;
-            case FRECT_TYPE:
-                rc_item = addRect(0, 0, cur_rect.width(), cur_rect.height(), QPen(Qt::black, line_thick, Qt::SolidLine, Qt::RoundCap), QBrush(rect_color));
-                rc_item->setPos(cur_x, cur_y);
-                break;
-            case VLINE_TYPE:
-                addLine(event->scenePos().x(),
-                    event->scenePos().y(),
-                    event->scenePos().x(),
-                    cur_line.y2(),
-                    QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-                break;
-            case HLINE_TYPE:
-                /*
-                addLine(event->scenePos().x(),
-                    event->scenePos().y(),
-                    cur_line.x2(),
-                    event->scenePos().y(),
-                    QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-                */
-                line_item = addLine(0,
-                    0,
-                    cur_line.x2(),
-                    0,
-                    QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-                line_item->setPos(cur_x, cur_y);
-
-                break;
-            case CIRCLE_TYPE:
-                addEllipse(event->scenePos().x(),
-                    event->scenePos().y(),
-                    circle_rad,
-                    circle_rad,
-                    QPen(Qt::NoPen),
-                    QBrush(rect_color));
-                break;
-            }
-        }
-      update();
-    }
-   if (event->button() == Qt::RightButton)
-    {
-        currPoint = event->screenPos();
-        qDebug() << "currPoint:" << currPoint;
-
- ///       QPoint t_QPoint = event->screenPos().toPoint();
-  ///      qDebug() << "t_QPoint" << pos;/// t_QPoint;
-  ///      qDebug() << "sel_rc" << sel_rect;
-
-        QMenu menu;
-        QAction* pact;
-        QAction* prop = menu.addAction(QString("Property"));
-    ////    menu.addSection("Add");
-        menu.addSeparator();
-        QAction* remove = menu.addAction(QString("Remove"));
-        QAction* copy = menu.addAction(QString("Copy"));
-        QAction* paste = menu.addAction(QString("Paste"));
-        ////       QPointF t_QPointF = event->screenPos();
-
-         ////      const QPoint t_QPoint = t_QPointF.toPoint();
-        pact = menu.exec(event->screenPos());
-#if 1
- ///       if (a2 == menu.exec(event->screenPos())) {
-        if (prop == pact) {
-            property(sel_item);
-           //// test1();
-            //// _selected = true;
-            update();
-        }
-        else if (remove == pact) {
-            if (sel_item) {
-                removeItem(sel_item);
-                update();
-            }
-        }
-
-#endif
-    }
-
-///===============================================
-
-  }
-
-void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsScene::mouseMoveEvent(event);
-    qreal cur_x = event->scenePos().x();
-    qreal cur_y = event->scenePos().y();
-    quint32 num_x = cur_x / pPlot_Prop->lib_grid_delt_x;
-    quint32 num_y = cur_y / pPlot_Prop->lib_grid_delt_y;
-    cur_x = pPlot_Prop->lib_grid_delt_x * num_x;
-    cur_y = pPlot_Prop->lib_grid_delt_y * num_y;
-
-    if (*p_rej == REJ_SELECT)
-    {
-
-        if (mousePressedLeft)
-        {
-            if (sel_item)
-            {
-                sel_item->setPos(cur_x, cur_y);
-                update();
-
-            }
-        }
-    }
-}
-#endif
 
 void LibPaintScene::property(QGraphicsItem* _item) {
     ///   _item->sceneBoundingRect();

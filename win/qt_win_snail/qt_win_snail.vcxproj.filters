@@ -169,13 +169,7 @@
     <ClCompile Include="items\vepolyline.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
-    <ClCompile Include="items\vepolylinesettings.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="items\verectangle.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
-    <ClCompile Include="items\verectanglesettings.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
     <ClCompile Include="items\veselectionrect.cpp">
@@ -189,6 +183,12 @@
     </ClCompile>
     <ClCompile Include="utils\svgreader.cpp">
       <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="items\cust_circle.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="items\cust_point.cpp">
+      <Filter>Source Files\items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,12 +242,6 @@
     <QtUic Include="dial_lib\dial_lib.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="items\vepolylinesettings.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="items\verectanglesettings.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dial_debug\dial_debug.h">
@@ -295,13 +289,7 @@
     <QtMoc Include="items\vepolyline.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
-    <QtMoc Include="items\vepolylinesettings.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
     <QtMoc Include="items\verectangle.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
-    <QtMoc Include="items\verectanglesettings.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
     <QtMoc Include="items\veselectionrect.h">
@@ -316,18 +304,18 @@
     <QtMoc Include="utils\svgreader.h">
       <Filter>Header Files\utils</Filter>
     </QtMoc>
+    <QtMoc Include="items\cust_circle.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\cust_point.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icons\arrow-top-left.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="icons\arrow-up-down.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="icons\content-save.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="icons\folder-upload.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="icons\rotate-right.png">
@@ -337,6 +325,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="icons\vector-rectangle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\load.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\save.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

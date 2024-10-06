@@ -9,11 +9,7 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
-    ////, CsvDlg(this)
-    ///, setka_delt_x(DEF_DELT_X)
-    ///, setka_delt_y(DEF_DELT_Y)
-    ////, dial_dbg(this)
- {
+  {
     ui->setupUi(this);
 ///====================================
     qRegisterMetaType<cv::Mat>("cv::Mat");
@@ -83,17 +79,19 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  pCamThread= new QThread(this);
  p_cam_plotter=new CamPlotter(&PlotProp,&cnf_flags, &snail_data);
  p_cam_plotter->ConnectToWidget(ui->CamWidget);
-#if 0
+
+#if 1
    connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
 #else
    connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
    connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
-   
+#endif
+
    connect(p_CamView, SIGNAL(sSetPoint(QPoint*)), p_cam_plotter, SLOT(slSetPoint(QPoint*)));
    connect(p_CamView, SIGNAL(sMovePoint(QPoint*)), p_cam_plotter, SLOT(slMovePoint(QPoint*)));
    connect(p_CamView, SIGNAL(sClrPoint(QPoint*)), p_cam_plotter, SLOT(slClrPoint(QPoint*)));
 
-#endif
+
    connect(p_CamView, SIGNAL(sel_rect_changet(QRect)), p_cam_plotter, SLOT(sl_set_sel_rect(QRect)), Qt::QueuedConnection);
    connect(p_cam_plotter, SIGNAL(s_show_rule_coord(QRect&)), this, SLOT(sl_show_rule_coord(QRect&)));
 

@@ -9,6 +9,9 @@
 #include <QPainter>
 #include "PlotProperties.h"
 #include "snail_types.h"
+#include "verectangle.h"
+#include "cust_circle.h"
+#include "cust_point.h"
 
 class LibPaintScene : public QGraphicsScene
 {
@@ -85,6 +88,8 @@ private:
     int m_previousAction;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
+    VERectangle* rc;
+    VERectangle* frc;
 
 };
 
