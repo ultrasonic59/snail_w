@@ -10,7 +10,7 @@ class QGraphicsSceneMouseEvent;
 class DotSignal : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
-    Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
+ ////   Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
     explicit DotSignal(QGraphicsItem *parentItem = 0, QObject *parent = 0);

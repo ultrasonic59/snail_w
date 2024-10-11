@@ -107,6 +107,7 @@
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
     <ClCompile Include="items\cust_circle.cpp" />
+    <ClCompile Include="items\cust_line.cpp" />
     <ClCompile Include="items\cust_point.cpp" />
     <ClCompile Include="items\vepolyline.cpp" />
     <ClCompile Include="items\verectangle.cpp" />
@@ -167,6 +168,7 @@
     <QtMoc Include="items\veselectionrect.h" />
     <QtMoc Include="items\cust_circle.h" />
     <QtMoc Include="items\cust_point.h" />
+    <QtMoc Include="items\cust_line.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_consts.h" />

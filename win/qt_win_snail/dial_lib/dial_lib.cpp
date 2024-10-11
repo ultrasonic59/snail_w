@@ -49,10 +49,13 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
 
     scene = new LibPaintScene(this,pPlot_Prop,&cur_item, &cur_rej);       // 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
-
+ 
     ui.graphicsView->setScene(scene);  // 
     ui.graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     ui.graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+   /// GraphicsView->setStyleSheet("background: transparent;border:0px");
+    ui.graphicsView->setStyleSheet("background: transparent;border:0px");
+
     ////ui.graphicsView->setCursor(QCursor());
 
     scene->setSceneRect(0, 0, 2000, 2000); //

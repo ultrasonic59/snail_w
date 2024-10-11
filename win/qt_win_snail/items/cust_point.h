@@ -15,12 +15,12 @@ class cust_point : public QObject, public QGraphicsEllipseItem
 public:
     explicit cust_point(QObject * parent = 0);
     ~cust_point();
-
+/*
     enum ActionStates {
         ResizeState = 0x01,
         RotationState = 0x02
     };
-
+*/
     enum CornerFlags {
         Top = 0x01,
         Bottom = 0x02,
@@ -78,7 +78,7 @@ private:
     void resizeBottom(const QPointF &pt);
     void resizeTop(const QPointF &pt);
 
-    void rotateItem(const QPointF &pt);
+  ///  void rotateItem(const QPointF &pt);
     void setPositionGrabbers();
     void setVisibilityGrabbers();
     void hideGrabbers();

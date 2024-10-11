@@ -190,6 +190,9 @@
     <ClCompile Include="items\cust_point.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
+    <ClCompile Include="items\cust_line.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -308,6 +311,9 @@
       <Filter>Header Files\items</Filter>
     </QtMoc>
     <QtMoc Include="items\cust_point.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\cust_line.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
   </ItemGroup>

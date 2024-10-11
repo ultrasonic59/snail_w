@@ -8,9 +8,9 @@
 #include <math.h>
 #include "dotsignal.h"
 
-static const double Pi = 3.14159265358979323846264338327950288419717;
-static double TwoPi = 2.0 * Pi;
-
+///static const double Pi = 3.14159265358979323846264338327950288419717;
+///static double TwoPi = 2.0 * Pi;
+/*
 static qreal normalizeAngle(qreal angle)
 {
     while (angle < 0)
@@ -19,11 +19,11 @@ static qreal normalizeAngle(qreal angle)
         angle -= TwoPi;
     return angle;
 }
-
+*/
 cust_point::cust_point(QObject *parent) :
     QObject(parent),
-    m_cornerFlags(0),
-    m_actionFlags(ResizeState)
+    m_cornerFlags(0)///,
+///    m_actionFlags(ResizeState)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -67,24 +67,12 @@ void cust_point::setRect(const QRectF &rect)
 {
 #if 1
     QGraphicsEllipseItem::setRect(rect);
-    if(brush().gradient() != 0){
-        const QGradient * grad = brush().gradient();
-        if(grad->type() == QGradient::LinearGradient){
-            auto tmpRect = this->rect();
-            const QLinearGradient *lGradient = static_cast<const QLinearGradient *>(grad);
-            QLinearGradient g = *const_cast<QLinearGradient*>(lGradient);
-            g.setStart(tmpRect.left() + tmpRect.width()/2,tmpRect.top());
-            g.setFinalStop(tmpRect.left() + tmpRect.width()/2,tmpRect.bottom());
-            setBrush(g);
-        }
-    }
 #endif
 }
 
 void cust_point::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pt = event->pos();
-    if(m_actionFlags == ResizeState){
         switch (m_cornerFlags) {
         case Top:
             resizeTop(pt);
@@ -125,28 +113,7 @@ void cust_point::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             }
             break;
         }
-    } else {
-        switch (m_cornerFlags) {
-        case TopLeft:
-        case TopRight:
-        case BottomLeft:
-        case BottomRight: {
-            rotateItem(pt);
-            break;
-        }
-        default:
-            if (m_leftMouseButtonPressed) {
-                setCursor(Qt::ClosedHandCursor);
-                auto dx = event->scenePos().x() - m_previousPosition.x();
-                auto dy = event->scenePos().y() - m_previousPosition.y();
-                moveBy(dx,dy);
-                setPreviousPosition(event->scenePos());
-                emit signalMove(this, dx, dy);
-            }
-            break;
-        }
-    }
-    QGraphicsItem::mouseMoveEvent(event);
+  QGraphicsItem::mouseMoveEvent(event);
 }
 
 void cust_point::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -169,7 +136,7 @@ void cust_point::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_point::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    m_actionFlags = (m_actionFlags == ResizeState)?RotationState:ResizeState;
+  ///  m_actionFlags = (m_actionFlags == ResizeState)?RotationState:ResizeState;
     setVisibilityGrabbers();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
@@ -208,7 +175,8 @@ void cust_point::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     if( drx < 7 && drx > -7 ) m_cornerFlags |= Right;     // Right side
     if( dlx < 7 && dlx > -7 ) m_cornerFlags |= Left;      // Left side
 
-    if(m_actionFlags == ResizeState){
+  ////  if(m_actionFlags == ResizeState)
+    {
         QPixmap p(":/icons/arrow-up-down.png");
         QPixmap pResult;
         QTransform trans = transform();
@@ -224,6 +192,7 @@ void cust_point::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             pResult = p.transformed(trans);
             setCursor(pResult.scaled(24,24,Qt::KeepAspectRatio));
             break;
+#if 0
         case TopRight:
         case BottomLeft:
             trans.rotate(45);
@@ -236,11 +205,14 @@ void cust_point::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             pResult = p.transformed(trans);
             setCursor(pResult.scaled(24,24,Qt::KeepAspectRatio));
             break;
+#endif
         default:
             setCursor(Qt::CrossCursor);
             break;
         }
-    } else {
+    } 
+#if 0  
+    else {
         switch (m_cornerFlags) {
         case TopLeft:
         case TopRight:
@@ -255,6 +227,7 @@ void cust_point::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             break;
         }
     }
+#endif
     QGraphicsItem::hoverMoveEvent( event );
 }
 
@@ -262,7 +235,7 @@ QVariant cust_point::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 {
     switch (change) {
     case QGraphicsItem::ItemSelectedChange:
-        m_actionFlags = ResizeState;
+     ///   m_actionFlags = ResizeState;
         break;
     default:
         break;
@@ -356,7 +329,7 @@ void cust_point::resizeTop(const QPointF &pt)
     update();
     setPositionGrabbers();
 }
-
+#if 0
 void cust_point::rotateItem(const QPointF &pt)
 {
     QRectF tmpRect = rect();
@@ -402,6 +375,7 @@ void cust_point::rotateItem(const QPointF &pt)
     trans.translate( -center.x(),  -center.y());
     setTransform(trans);
 }
+#endif
 
 void cust_point::setPositionGrabbers()
 {
@@ -410,30 +384,34 @@ void cust_point::setPositionGrabbers()
     cornerGrabber[GrabberBottom]->setPos(tmpRect.left() + tmpRect.width()/2, tmpRect.bottom());
     cornerGrabber[GrabberLeft]->setPos(tmpRect.left(), tmpRect.top() + tmpRect.height()/2);
     cornerGrabber[GrabberRight]->setPos(tmpRect.right(), tmpRect.top() + tmpRect.height()/2);
-    cornerGrabber[GrabberTopLeft]->setPos(tmpRect.topLeft().x(), tmpRect.topLeft().y());
-    cornerGrabber[GrabberTopRight]->setPos(tmpRect.topRight().x(), tmpRect.topRight().y());
-    cornerGrabber[GrabberBottomLeft]->setPos(tmpRect.bottomLeft().x(), tmpRect.bottomLeft().y());
-    cornerGrabber[GrabberBottomRight]->setPos(tmpRect.bottomRight().x(), tmpRect.bottomRight().y());
+ ////   cornerGrabber[GrabberTopLeft]->setPos(tmpRect.topLeft().x(), tmpRect.topLeft().y());
+ ////   cornerGrabber[GrabberTopRight]->setPos(tmpRect.topRight().x(), tmpRect.topRight().y());
+ ///   cornerGrabber[GrabberBottomLeft]->setPos(tmpRect.bottomLeft().x(), tmpRect.bottomLeft().y());
+ ///   cornerGrabber[GrabberBottomRight]->setPos(tmpRect.bottomRight().x(), tmpRect.bottomRight().y());
 }
 
 void cust_point::setVisibilityGrabbers()
 {
-    cornerGrabber[GrabberTopLeft]->setVisible(true);
-    cornerGrabber[GrabberTopRight]->setVisible(true);
-    cornerGrabber[GrabberBottomLeft]->setVisible(true);
-    cornerGrabber[GrabberBottomRight]->setVisible(true);
+///    cornerGrabber[GrabberTopLeft]->setVisible(true);
+ ///   cornerGrabber[GrabberTopRight]->setVisible(true);
+ ///   cornerGrabber[GrabberBottomLeft]->setVisible(true);
+ ///   cornerGrabber[GrabberBottomRight]->setVisible(true);
 
-    if(m_actionFlags == ResizeState){
+ ////   if(m_actionFlags == ResizeState)
+    {
         cornerGrabber[GrabberTop]->setVisible(true);
         cornerGrabber[GrabberBottom]->setVisible(true);
         cornerGrabber[GrabberLeft]->setVisible(true);
         cornerGrabber[GrabberRight]->setVisible(true);
-    } else {
+    } 
+    /*
+    else {
         cornerGrabber[GrabberTop]->setVisible(false);
         cornerGrabber[GrabberBottom]->setVisible(false);
         cornerGrabber[GrabberLeft]->setVisible(false);
         cornerGrabber[GrabberRight]->setVisible(false);
     }
+    */
 }
 
 void cust_point::hideGrabbers()
