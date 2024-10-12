@@ -121,6 +121,9 @@ void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
+  ///  setPositionGrabbers();
+  ///  setVisibilityGrabbers();
+
     /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
@@ -206,6 +209,52 @@ void cust_line::updateDots()
         connect(dot, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
         dot->setDotFlags(DotSignal::Movable);
         listDotes.append(dot);
+    }
+    */
+}
+void cust_line::setPositionGrabbers()
+{
+    /*
+    QRectF tmpRect = rect();
+    cornerGrabber[GrabberTop]->setPos(tmpRect.left() + tmpRect.width() / 2, tmpRect.top());
+    cornerGrabber[GrabberBottom]->setPos(tmpRect.left() + tmpRect.width() / 2, tmpRect.bottom());
+    cornerGrabber[GrabberLeft]->setPos(tmpRect.left(), tmpRect.top() + tmpRect.height() / 2);
+    cornerGrabber[GrabberRight]->setPos(tmpRect.right(), tmpRect.top() + tmpRect.height() / 2);
+    cornerGrabber[GrabberTopLeft]->setPos(tmpRect.topLeft().x(), tmpRect.topLeft().y());
+    cornerGrabber[GrabberTopRight]->setPos(tmpRect.topRight().x(), tmpRect.topRight().y());
+    cornerGrabber[GrabberBottomLeft]->setPos(tmpRect.bottomLeft().x(), tmpRect.bottomLeft().y());
+    cornerGrabber[GrabberBottomRight]->setPos(tmpRect.bottomRight().x(), tmpRect.bottomRight().y());
+    */
+}
+
+void cust_line::setVisibilityGrabbers()
+{
+    /*
+    cornerGrabber[GrabberTopLeft]->setVisible(true);
+    cornerGrabber[GrabberTopRight]->setVisible(true);
+    cornerGrabber[GrabberBottomLeft]->setVisible(true);
+    cornerGrabber[GrabberBottomRight]->setVisible(true);
+
+    if (m_actionFlags == ResizeState) {
+        cornerGrabber[GrabberTop]->setVisible(true);
+        cornerGrabber[GrabberBottom]->setVisible(true);
+        cornerGrabber[GrabberLeft]->setVisible(true);
+        cornerGrabber[GrabberRight]->setVisible(true);
+    }
+    else {
+        cornerGrabber[GrabberTop]->setVisible(false);
+        cornerGrabber[GrabberBottom]->setVisible(false);
+        cornerGrabber[GrabberLeft]->setVisible(false);
+        cornerGrabber[GrabberRight]->setVisible(false);
+    }
+    */
+}
+
+void cust_line::hideGrabbers()
+{
+    /*
+    for (int i = 0; i < 8; i++) {
+        cornerGrabber[i]->setVisible(false);
     }
     */
 }

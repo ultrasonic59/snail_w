@@ -42,6 +42,12 @@ private slots:
     void checkForDeletePoints();
 
 private:
+ ////   void rotateItem(const QPointF& pt);
+    void setPositionGrabbers();
+    void setVisibilityGrabbers();
+    void hideGrabbers();
+
+private:
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     QList<DotSignal *> listDotes;

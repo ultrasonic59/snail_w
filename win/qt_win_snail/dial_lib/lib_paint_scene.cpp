@@ -114,9 +114,9 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+            line->setLine(0, 0, pPlot_Prop->LibItemWidth, 0);
             line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
                 , Qt::SolidLine, Qt::RoundCap));
-
             line->setPos(cur_x, cur_y);
 
             /*
