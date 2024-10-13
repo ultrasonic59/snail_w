@@ -22,8 +22,8 @@ public:
 	quint8 rad_circle;
 	quint8 thick_circle;
 	quint8 thick_crs;
-	quint8 lib_grid_delt_x;
-	quint8 lib_grid_delt_y;
+///	quint8 lib_grid_delt_x;
+///	quint8 lib_grid_delt_y;
 ///======== lib items ========================================
 	QColor LibItemBGColor;
 	QColor LibItemBrdColor;

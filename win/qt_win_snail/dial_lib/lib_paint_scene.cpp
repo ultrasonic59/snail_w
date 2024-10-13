@@ -9,12 +9,13 @@
 #include <QKeyEvent>
 #include <QDebug>
 
-#include "verectangle.h"
+#include "cust_rect.h"
 #include "veselectionrect.h"
 #include "vepolyline.h"
 #include "cust_line.h"
 
 #include "lib_paint_scene.h"
+#include "params.h"
 
 
 LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
@@ -29,8 +30,8 @@ LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
     ,m_previousAction(0)
     ,m_leftMouseButtonPressed(false)
 {
- rc = new VERectangle();
- frc = new VERectangle();
+ ///rc = new VERectangle();
+ ////frc = new VERectangle();
 
  ///   QBrush(Qt::yellow)
  ////   setBackgroundBrush(QBrush(Qt::yellow));
@@ -38,24 +39,19 @@ LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
 
 LibPaintScene::~LibPaintScene()
 {
-    delete rc;
-    delete frc;
+  ///  delete rc;
+  ///  delete frc;
 
 }
 ///===================================================================
 void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mousePressEvent(event);
-    qreal cur_x = event->scenePos().x();
-    qreal cur_y = event->scenePos().y();
-    quint32 num_x = cur_x / pPlot_Prop->lib_grid_delt_x;
-    quint32 num_y = cur_y / pPlot_Prop->lib_grid_delt_y;
-    cur_x = pPlot_Prop->lib_grid_delt_x * num_x;
-    cur_y = pPlot_Prop->lib_grid_delt_y * num_y;
+     QPoint gr_point;
+    QPointF ev_point= event->scenePos();
 
-  ///        VERectangle* rectangle = new VERectangle();
-   /// VERectangle* rect = new VERectangle();
-  ///  VERectangle* frect = new VERectangle();
+////???    gr_point = closest_to_grid(ev_point, QPoint(pPlot_Prop->lib_grid_delt_x, pPlot_Prop->lib_grid_delt_y));
+    gr_point = params::closest_to_grid(ev_point);
 
     if (event->button() == Qt::LeftButton)
     {
@@ -67,26 +63,26 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         switch (*p_item_type)
         {
         case RECT_TYPE: {
-            VERectangle* rect = new VERectangle();
+            cust_rect* rect = new cust_rect();
             currentItem = rect;
             addItem(currentItem);
-            connect(rect, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(rect, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
+            connect(rect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
             rect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
-            rect->setPos(cur_x, cur_y);
+            rect->setPos(gr_point);
             rect->setBrush(QBrush(Qt::NoBrush));
             rect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
             ///     emit signalNewSelectItem(rc);
         }
             break;
         case FRECT_TYPE: {
-            VERectangle* frect = new VERectangle();
+            cust_rect* frect = new cust_rect();
             currentItem = frect;
             addItem(currentItem);
-            connect(frect, &VERectangle::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(frect, &VERectangle::signalMove, this, &LibPaintScene::slotMove);
+            connect(frect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(frect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
             frect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
-            frect->setPos(cur_x, cur_y);
+            frect->setPos(gr_point);
             frect->setBrush(QBrush(QColor(pPlot_Prop->LibItemBGColor)));
             frect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
             ///     emit signalNewSelectItem(rc);
@@ -109,7 +105,8 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
             break;
         case HLINE_TYPE: {
-            cust_line* line = new cust_line();
+ ///           cust_line* line = new cust_line(this, &pPlot_Prop->lib_grid_delt_x , &pPlot_Prop->lib_grid_delt_y);
+            cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
@@ -117,23 +114,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             line->setLine(0, 0, pPlot_Prop->LibItemWidth, 0);
             line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
                 , Qt::SolidLine, Qt::RoundCap));
-            line->setPos(cur_x, cur_y);
-
-            /*
-            addLine(event->scenePos().x(),
-                event->scenePos().y(),
-                cur_line.x2(),
-                event->scenePos().y(),
-                QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-            */
-            /*
-            line_item = addLine(0,
-                0,
-                cur_line.x2(),
-                0,
-                QPen(line_color, line_thick, Qt::SolidLine, Qt::RoundCap));
-            line_item->setPos(cur_x, cur_y);
-            */
+            line->setPos(gr_point);
         }
             break;
         case CIRCLE_TYPE: {
@@ -144,20 +125,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
 ///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
             circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
-            circle->setPos(cur_x- pPlot_Prop->LibItemWidth/2, cur_y- pPlot_Prop->LibItemWidth/2);
+            circle->setPos(gr_point.x()- pPlot_Prop->LibItemWidth/2, gr_point.y()- pPlot_Prop->LibItemWidth/2);
             circle->setBrush(QBrush(Qt::NoBrush));
             circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
-            ///     emit signalNewSelectItem(rc);
-
-/*
-            addEllipse(event->scenePos().x(),
-                event->scenePos().y(),
-                circle_rad,
-                circle_rad,
-                QPen(Qt::NoPen),
-                QBrush(rect_color));
-*/
-        }
+         }
             break;
         case POINT_TYPE: {
             ////QColor color(pPlot_Prop->LibItemBrdColor);
@@ -168,7 +139,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             connect(point, &cust_point::clicked, this, &LibPaintScene::signalSelectItem);
             connect(point, &cust_point::signalMove, this, &LibPaintScene::slotMove);
             point->setCircle(0, 0, pPlot_Prop->LibItemWidth);
-            point->setPos(cur_x - pPlot_Prop->LibItemWidth / 2, cur_y - pPlot_Prop->LibItemWidth / 2);
+            point->setPos(gr_point.x() - pPlot_Prop->LibItemWidth / 2, gr_point.y() - pPlot_Prop->LibItemWidth / 2);
             point->setBrush(QBrush(pPlot_Prop->LibItemBrdColor));
             point->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
         }
@@ -193,7 +164,7 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (m_leftMouseButtonPressed) {
                 auto dx = event->scenePos().x() - m_previousPosition.x();
                 auto dy = event->scenePos().y() - m_previousPosition.y();
-                VERectangle* rectangle = qgraphicsitem_cast<VERectangle*>(currentItem);
+                cust_rect* rectangle = qgraphicsitem_cast<cust_rect*>(currentItem);
                 rectangle->setRect((dx > 0) ? m_previousPosition.x() : event->scenePos().x(),
                     (dy > 0) ? m_previousPosition.y() : event->scenePos().y(),
                     qAbs(dx), qAbs(dy));
@@ -336,12 +307,14 @@ void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
   ///  painter->fillRect(rect, Qt::darkGray);
     painter->fillRect(rect, pPlot_Prop->LibBGColor);
 
-    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_x)
-    {
+ ///   for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_x)
+   for (int i = left; i < right; i += params::lib_grid_delt_x)
+        {
         painter->drawLine(left, i, right, i);
     }
-    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_y)
-    {
+///    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_y)
+    for (int i = left; i < right; i += params::lib_grid_delt_y)
+        {
         painter->drawLine(i, left, i, right);
     }
 /*

@@ -5,9 +5,12 @@
 ///#include <QGraphicsPathItem>
 #include <QDebug>
 #include "dotsignal.h"
+#include "params.h"
 
-cust_line::cust_line(QObject *parent, quint8* _grid_x , quint8* _grid_y) :
-    QObject(parent), p_grid_x(_grid_x), p_grid_y(_grid_y)
+///extern QPoint closest_to_grid(QPointF curr_pos, QPoint grid);
+
+cust_line::cust_line(QObject *parent) :
+    QObject(parent)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -40,10 +43,15 @@ void cust_line::setPath(const QPainterPath &path)
 void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (m_leftMouseButtonPressed) {
-        auto dx = event->scenePos().x() - m_previousPosition.x();
-        auto dy = event->scenePos().y() - m_previousPosition.y();
+       QPoint gr_pos = params::closest_to_grid(event->scenePos());
+  ///      QPoint gr_pos = closest_to_grid(event->scenePos(), QPoint(*p_grid_x, *p_grid_y));
+
+        auto dx = gr_pos.x() - m_previousPosition.x();
+        auto dy = gr_pos.y() - m_previousPosition.y();
+
         moveBy(dx,dy);
-        setPreviousPosition(event->scenePos());
+  ////      setPreviousPosition(event->scenePos());
+        setPreviousPosition(gr_pos);
         emit signalMove(this, dx, dy);
     }
     QGraphicsItem::mouseMoveEvent(event);
@@ -51,9 +59,12 @@ void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() & Qt::LeftButton) {
+///QPoint gr_pos=closest_to_grid(event->scenePos(), QPoint(*p_grid_x, *p_grid_y));
+QPoint gr_pos = params::closest_to_grid(event->scenePos());
+if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
-        setPreviousPosition(event->scenePos());
+
+        setPreviousPosition(gr_pos);
         emit clicked(this);
     }
     QGraphicsItem::mousePressEvent(event);
@@ -119,11 +130,33 @@ void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsItem::hoverMoveEvent(event);
 }
 
-void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-  ///  setPositionGrabbers();
-  ///  setVisibilityGrabbers();
-
+    ///  setPositionGrabbers();
+    ///  setVisibilityGrabbers();
+   ////   QLineF line() const;
+   ///   Q_DECL_CONSTEXPR inline QPointF p1() const;
+   ///   Q_DECL_CONSTEXPR inline QPointF p2() const;
+    QPointF n_point[2];
+    n_point[0] = line().p1();
+    n_point[1] = line().p2();
+    for (int ii = 0; ii < 2; ii++)
+    {
+        QPointF point = n_point[ii];
+        DotSignal* dot = new DotSignal(point, this);
+        connect(dot, &DotSignal::signalMove, this, &cust_line::slotMove);
+        connect(dot, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+        dot->setDotFlags(DotSignal::Movable);
+        listDotes.append(dot);
+    }
+/*
+    QPointF point2 = line().p2();
+    DotSignal* dot1 = new DotSignal(point2, this);
+    connect(dot1, &DotSignal::signalMove, this, &cust_line::slotMove);
+    connect(dot1, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+    dot1->setDotFlags(DotSignal::Movable);
+    listDotes.append(dot1);
+*/
     /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
@@ -140,6 +173,30 @@ void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
+    QPointF n_point[2];
+    n_point[0] = line().p1();
+    n_point[1] = line().p2();
+    if (listDotes.at(0) == signalOwner)
+        {
+        setLine(line().p1().x() + dx, line().p1().y() + dy, line().p2().x() , line().p2().y() );
+    ///    m_pointForCheck = 0;
+        }
+    else
+        {
+        setLine(line().p1().x() , line().p1().y() , line().p2().x() + dx, line().p2().y() + dy);
+    ///    m_pointForCheck = 1;
+        }
+
+#if 0
+    for (int ii = 0; ii < 2; ii++){
+        if (listDotes.at(ii) == signalOwner) {
+            QPointF pathPoint = n_point[ii];
+            setLine(n_point[ii].x() , n_point[ii].y(), n_point[ii].x()+dx, n_point[ii].y() + dy);
+   ///         linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
+            m_pointForCheck = ii;
+        }
+    }
+#endif
 /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
@@ -212,6 +269,7 @@ void cust_line::updateDots()
     }
     */
 }
+#if 0
 void cust_line::setPositionGrabbers()
 {
     /*
@@ -229,6 +287,7 @@ void cust_line::setPositionGrabbers()
 
 void cust_line::setVisibilityGrabbers()
 {
+   /// cornerGrabber
     /*
     cornerGrabber[GrabberTopLeft]->setVisible(true);
     cornerGrabber[GrabberTopRight]->setVisible(true);
@@ -258,3 +317,4 @@ void cust_line::hideGrabbers()
     }
     */
 }
+#endif

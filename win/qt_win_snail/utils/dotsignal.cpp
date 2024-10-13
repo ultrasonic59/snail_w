@@ -3,6 +3,7 @@
 #include <QColor>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
+#include "params.h"
 
 DotSignal::DotSignal(QGraphicsItem *parentItem, QObject *parent) :
     QObject(parent)
@@ -53,10 +54,12 @@ void DotSignal::setDotFlags(unsigned int flags)
 void DotSignal::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if(m_flags & Movable){
-        auto dx = event->scenePos().x() - m_previousPosition.x();
-        auto dy = event->scenePos().y() - m_previousPosition.y();
+        QPoint gr_pos = params::closest_to_grid(event->scenePos());
+
+        auto dx = gr_pos.x() - m_previousPosition.x();
+        auto dy = gr_pos.y() - m_previousPosition.y();
         moveBy(dx,dy);
-        setPreviousPosition(event->scenePos());
+        setPreviousPosition(gr_pos);
         emit signalMove(this, dx, dy);
     } else {
         QGraphicsItem::mouseMoveEvent(event);
@@ -66,7 +69,8 @@ void DotSignal::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void DotSignal::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(m_flags & Movable){
-        setPreviousPosition(event->scenePos());
+        QPoint gr_pos = params::closest_to_grid(event->scenePos());
+        setPreviousPosition(gr_pos);
     } else {
         QGraphicsItem::mousePressEvent(event);
     }

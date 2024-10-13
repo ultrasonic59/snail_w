@@ -7,7 +7,7 @@
 #include "svgreader.h"
 ///#include "veworkplace.h"
 #include "vepolyline.h"
-#include "verectangle.h"
+#include "cust_rect.h"
 
 DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     QDialog(parent, Qt::Window),pParent(parent), pPlot_Prop(Plot_Prop)
@@ -448,10 +448,10 @@ void DialLib::on_butOpen_clicked()
             break;
         }
         case QGraphicsRectItem::Type: {
-            VERectangle* rect = qgraphicsitem_cast<VERectangle*>(item);
+            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
             scene->addItem(rect);
-            connect(rect, &VERectangle::clicked, scene, &LibPaintScene::signalSelectItem);
-            connect(rect, &VERectangle::signalMove, scene, &LibPaintScene::slotMove);
+            connect(rect, &cust_rect::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(rect, &cust_rect::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
         default:

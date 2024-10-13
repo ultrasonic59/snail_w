@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QTransform>
 #include <QDebug>
-#include "verectangle.h"
+#include "cust_rect.h"
 #include "vepolyline.h"
 
 SvgReader::SvgReader(QObject *parent) : QObject(parent)
@@ -209,7 +209,7 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
 
         QDomElement rectangle = gNode.firstChildElement("rect");
         if (!rectangle.isNull()){
-            VERectangle *rect = new VERectangle();
+            cust_rect*rect = new cust_rect();
             auto gElement = gNode.toElement();
             rect->setRect(rectangle.attribute("x").toInt(),
                           rectangle.attribute("y").toInt(),

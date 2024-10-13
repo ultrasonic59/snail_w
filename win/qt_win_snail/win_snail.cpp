@@ -4,6 +4,7 @@
 #include <QColorDialog>
 
 #include "dial_lib.h"
+#include "params.h"
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
@@ -653,8 +654,10 @@ void win_snail::saveSettings(void)
     ///================ Grid =======================================================
     settings.setValue("Grid X", PlotProp.setka_delt_x);
     settings.setValue("Grid Y", PlotProp.setka_delt_y);
-    settings.setValue("Lib Grid X", PlotProp.lib_grid_delt_x);
-    settings.setValue("Lib Grid Y", PlotProp.lib_grid_delt_y);
+ ///   settings.setValue("Lib Grid X", PlotProp.lib_grid_delt_x);
+    settings.setValue("Lib Grid X", params::lib_grid_delt_x);
+///    settings.setValue("Lib Grid Y", PlotProp.lib_grid_delt_y);
+    settings.setValue("Lib Grid Y", params::lib_grid_delt_y);
     ///======== lib items ========================================
     settings.setValue("LibItemBGColor", PlotProp.LibItemBGColor.rgb());
     settings.setValue("LibItemBrdColor", PlotProp.LibItemBrdColor.rgb());
@@ -688,8 +691,10 @@ void win_snail::loadSettings(void)
     PlotProp.setka_delt_x= settings.value("Grid X", DEF_DELT_X).toInt();
     PlotProp.setka_delt_y = settings.value("Grid Y", DEF_DELT_Y).toInt();
 
-    PlotProp.lib_grid_delt_x = settings.value("Lib Grid X", DEF_DELT_X).toInt();
-    PlotProp.lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
+  /////  PlotProp.lib_grid_delt_x = settings.value("Lib Grid X", DEF_DELT_X).toInt();
+    params::lib_grid_delt_x = settings.value("Lib Grid X", DEF_DELT_X).toInt();
+  ///  PlotProp.lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
+    params::lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
     ///======== lib items ========================================
     PlotProp.LibItemBGColor.setRgb(settings.value("LibItemBGColor", PlotProp.LibItemBGColor).toInt());
     PlotProp.LibItemBrdColor.setRgb(settings.value("LibItemBrdColor", PlotProp.LibItemBrdColor).toInt());

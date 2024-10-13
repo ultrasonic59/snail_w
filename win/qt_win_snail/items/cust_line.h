@@ -14,7 +14,7 @@ class cust_line : public QObject, public QGraphicsLineItem
   ///  Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit cust_line(QObject *parent = 0,quint8* grid_x=0, quint8* grid_y = 0);
+    explicit cust_line(QObject *parent = 0);
     ~cust_line();
 
     QPointF previousPosition() const;
@@ -43,15 +43,15 @@ private slots:
 
 private:
  ////   void rotateItem(const QPointF& pt);
-    void setPositionGrabbers();
-    void setVisibilityGrabbers();
-    void hideGrabbers();
+ ///   void setPositionGrabbers();
+  ///  void setVisibilityGrabbers();
+ ///   void hideGrabbers();
 
 private:
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     QList<DotSignal *> listDotes;
-    int m_pointForCheck;
+  ///  int m_pointForCheck;
 
     void updateDots();
     quint8* p_grid_x;

@@ -1,46 +1,59 @@
-#ifndef __CUST_CIRCLE_H__
-#define __CUST_CIRCLE_H__
+#ifndef __CUST_RECT_H__
+#define __CUST_RECT_H__
 
 #include <QObject>
-#include <QGraphicsEllipseItem>
+#include <QGraphicsRectItem>
 
 class DotSignal;
 class QGraphicsSceneMouseEvent;
 
-class cust_circle : public QObject, public QGraphicsEllipseItem
+class cust_rect : public QObject, public QGraphicsRectItem
+///class VERectangle : public QObject, public QGraphicsItem
 {
     Q_OBJECT
- ////   Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
+  ///  Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit cust_circle(QObject * parent = 0);
-    ~cust_circle();
+    explicit cust_rect(QObject * parent = 0);
+    ~cust_rect();
+
+    enum ActionStates {
+        ResizeState = 0x01,
+        RotationState = 0x02
+    };
 
     enum CornerFlags {
         Top = 0x01,
         Bottom = 0x02,
         Left = 0x04,
-        Right = 0x08///,
+        Right = 0x08,
+        TopLeft = Top|Left,
+        TopRight = Top|Right,
+        BottomLeft = Bottom|Left,
+        BottomRight = Bottom|Right
     };
 
     enum CornerGrabbers {
         GrabberTop = 0,
         GrabberBottom,
         GrabberLeft,
-        GrabberRight///,
-     };
+        GrabberRight,
+        GrabberTopLeft,
+        GrabberTopRight,
+        GrabberBottomLeft,
+        GrabberBottomRight
+    };
 
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
 
     void setRect(qreal x, qreal y, qreal w, qreal h);
     void setRect(const QRectF &rect);
-    void setCircle(qreal x, qreal y, qreal diam);
 
 signals:
-    void cyrcleChanged(cust_circle*rect);
+    void rectChanged(cust_rect*rect);
     void previousPositionChanged();
-    void clicked(cust_circle*rect);
+    void clicked(cust_rect*rect);
     void signalMove(QGraphicsItem *item, qreal dx, qreal dy);
 
 protected:
@@ -51,10 +64,11 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
- ///   QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     unsigned int m_cornerFlags;
+    unsigned int m_actionFlags;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     DotSignal *cornerGrabber[8];
@@ -64,9 +78,10 @@ private:
     void resizeBottom(const QPointF &pt);
     void resizeTop(const QPointF &pt);
 
-     void setPositionGrabbers();
+    void rotateItem(const QPointF &pt);
+    void setPositionGrabbers();
     void setVisibilityGrabbers();
     void hideGrabbers();
 };
 
-#endif // __CUST_CYRCLE_H__
+#endif // RECTANGLE_H

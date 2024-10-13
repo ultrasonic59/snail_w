@@ -169,9 +169,6 @@
     <ClCompile Include="items\vepolyline.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
-    <ClCompile Include="items\verectangle.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="items\veselectionrect.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
@@ -191,6 +188,12 @@
       <Filter>Source Files\items</Filter>
     </ClCompile>
     <ClCompile Include="items\cust_line.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
+    <ClCompile Include="params.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="items\cust_rect.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
   </ItemGroup>
@@ -226,6 +229,9 @@
       <Filter>Header Files\widgets</Filter>
     </ClInclude>
     <ClInclude Include="snail_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="params.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -292,9 +298,6 @@
     <QtMoc Include="items\vepolyline.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
-    <QtMoc Include="items\verectangle.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
     <QtMoc Include="items\veselectionrect.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
@@ -314,6 +317,9 @@
       <Filter>Header Files\items</Filter>
     </QtMoc>
     <QtMoc Include="items\cust_line.h">
+      <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="items\cust_rect.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
   </ItemGroup>

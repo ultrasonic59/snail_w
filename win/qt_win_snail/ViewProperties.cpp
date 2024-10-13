@@ -2,7 +2,7 @@
 #include <QColorDialog>
 #include <QtGui/QPainter>
 #include <QDebug>
-////#include "colors.h"
+#include "params.h"
 ////#include "qwin_otter.h"
 
 
@@ -68,13 +68,15 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	PropInterface.ed_cross_thick->show_par();
 
 	PropInterface.ed_lib_gr_x->set_num_dig(3);
-	PropInterface.ed_lib_gr_x->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_x));
+///	PropInterface.ed_lib_gr_x->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_x));
+	PropInterface.ed_lib_gr_x->set_data(reinterpret_cast<unsigned char*>(&params::lib_grid_delt_x));
 	PropInterface.ed_lib_gr_x->set_min_max(1, 100);
 	PropInterface.ed_lib_gr_x->show_par();
 	///connect(PropInterface.lineCellX, SIGNAL(param_changed()), this, SLOT(sl_change_delt_x()));
 
 	PropInterface.ed_lib_gr_y->set_num_dig(3);
-	PropInterface.ed_lib_gr_y->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_y));
+///	PropInterface.ed_lib_gr_y->set_data(reinterpret_cast<unsigned char*>(&PlotProp->lib_grid_delt_y));
+	PropInterface.ed_lib_gr_y->set_data(reinterpret_cast<unsigned char*>(&params::lib_grid_delt_y));
 	PropInterface.ed_lib_gr_y->set_min_max(1, 100);
 	PropInterface.ed_lib_gr_y->show_par();
 

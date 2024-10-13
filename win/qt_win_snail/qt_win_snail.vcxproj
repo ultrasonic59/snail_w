@@ -109,9 +109,10 @@
     <ClCompile Include="items\cust_circle.cpp" />
     <ClCompile Include="items\cust_line.cpp" />
     <ClCompile Include="items\cust_point.cpp" />
+    <ClCompile Include="items\cust_rect.cpp" />
     <ClCompile Include="items\vepolyline.cpp" />
-    <ClCompile Include="items\verectangle.cpp" />
     <ClCompile Include="items\veselectionrect.cpp" />
+    <ClCompile Include="params.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
     <ClCompile Include="utils\colorlabel.cpp" />
@@ -164,11 +165,12 @@
     <ClInclude Include="hidapi\hidapi.h" />
     <QtMoc Include="plotters\camplotter.h" />
     <QtMoc Include="items\vepolyline.h" />
-    <QtMoc Include="items\verectangle.h" />
     <QtMoc Include="items\veselectionrect.h" />
     <QtMoc Include="items\cust_circle.h" />
     <QtMoc Include="items\cust_point.h" />
     <QtMoc Include="items\cust_line.h" />
+    <QtMoc Include="items\cust_rect.h" />
+    <ClInclude Include="params.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />
     <ClInclude Include="snail_consts.h" />
