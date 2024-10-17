@@ -49,6 +49,10 @@ void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         auto dx = gr_pos.x() - m_previousPosition.x();
         auto dy = gr_pos.y() - m_previousPosition.y();
 
+        qDebug() << "dx="<< dx<<"dy="<<dy ;
+        qDebug() << "curx=" << gr_pos.x() << "cury=" << gr_pos.y();
+        qDebug() << "prevx=" << m_previousPosition.x() << "prevy=" << m_previousPosition.y();
+
         moveBy(dx,dy);
   ////      setPreviousPosition(event->scenePos());
         setPreviousPosition(gr_pos);

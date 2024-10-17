@@ -103,8 +103,7 @@ void cust_circle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             resizeRight(pt);
             break;
         default:
-            /*
-            if (m_leftMouseButtonPressed) {
+           if (m_leftMouseButtonPressed) {
                 setCursor(Qt::ClosedHandCursor);
                 auto dx = event->scenePos().x() - m_previousPosition.x();
                 auto dy = event->scenePos().y() - m_previousPosition.y();
@@ -112,8 +111,7 @@ void cust_circle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 setPreviousPosition(event->scenePos());
                 emit signalMove(this, dx, dy);
             }
-            */
-            break;
+        break;
         }
     } 
     QGraphicsItem::mouseMoveEvent(event);

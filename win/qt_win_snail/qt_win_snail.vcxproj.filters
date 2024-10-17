@@ -184,9 +184,6 @@
     <ClCompile Include="items\cust_circle.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
-    <ClCompile Include="items\cust_point.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="items\cust_line.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
@@ -311,9 +308,6 @@
       <Filter>Header Files\utils</Filter>
     </QtMoc>
     <QtMoc Include="items\cust_circle.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
-    <QtMoc Include="items\cust_point.h">
       <Filter>Header Files\items</Filter>
     </QtMoc>
     <QtMoc Include="items\cust_line.h">

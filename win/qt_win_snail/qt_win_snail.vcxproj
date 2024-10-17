@@ -108,7 +108,6 @@
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
     <ClCompile Include="items\cust_circle.cpp" />
     <ClCompile Include="items\cust_line.cpp" />
-    <ClCompile Include="items\cust_point.cpp" />
     <ClCompile Include="items\cust_rect.cpp" />
     <ClCompile Include="items\vepolyline.cpp" />
     <ClCompile Include="items\veselectionrect.cpp" />
@@ -167,7 +166,6 @@
     <QtMoc Include="items\vepolyline.h" />
     <QtMoc Include="items\veselectionrect.h" />
     <QtMoc Include="items\cust_circle.h" />
-    <QtMoc Include="items\cust_point.h" />
     <QtMoc Include="items\cust_line.h" />
     <QtMoc Include="items\cust_rect.h" />
     <ClInclude Include="params.h" />

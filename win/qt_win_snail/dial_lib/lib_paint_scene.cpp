@@ -89,23 +89,32 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         }
             break;
         case VLINE_TYPE: {
+            cust_line* line = new cust_line(this);
+            currentItem = line;
+            addItem(currentItem);
+            connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+            line->setLine(0, 0, 0,pPlot_Prop->LibItemWidth);
+            line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
+                , Qt::SolidLine, Qt::RoundCap));
+            line->setPos(gr_point);
+
+            /*
             VEPolyline* polyline = new VEPolyline();
             currentItem = polyline;
             addItem(currentItem);
             connect(polyline, &VEPolyline::clicked, this, &LibPaintScene::signalSelectItem);
             connect(polyline, &VEPolyline::signalMove, this, &LibPaintScene::slotMove);
-          ///  polyline->setPos(cur_x, cur_y);
-
+ 
             QPainterPath path;
             path.moveTo(m_previousPosition);
             polyline->setPath(path);
             polyline->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
                 , Qt::SolidLine, Qt::RoundCap));
-           ///  emit signalNewSelectItem(polyline);
-            }
+                */
+             }
             break;
         case HLINE_TYPE: {
- ///           cust_line* line = new cust_line(this, &pPlot_Prop->lib_grid_delt_x , &pPlot_Prop->lib_grid_delt_y);
             cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
@@ -132,7 +141,20 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             break;
         case POINT_TYPE: {
             ////QColor color(pPlot_Prop->LibItemBrdColor);
+            cust_circle* circle = new cust_circle();
+            currentItem = circle;
+            addItem(currentItem);
+            connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
+            ///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
+            circle->setPos(gr_point.x() - pPlot_Prop->LibItemWidth / 2, gr_point.y() - pPlot_Prop->LibItemWidth / 2);
+            circle->setBrush(QBrush(Qt::NoBrush));
+            circle->setBrush(QBrush(pPlot_Prop->LibItemBrdColor));
 
+            circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+
+/*
             cust_point* point = new cust_point();
             currentItem = point;
             addItem(currentItem);
@@ -142,6 +164,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             point->setPos(gr_point.x() - pPlot_Prop->LibItemWidth / 2, gr_point.y() - pPlot_Prop->LibItemWidth / 2);
             point->setBrush(QBrush(pPlot_Prop->LibItemBrdColor));
             point->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            */
         }
             break;
         }
