@@ -8,6 +8,8 @@
 ///#include "veworkplace.h"
 #include "vepolyline.h"
 #include "cust_rect.h"
+#include "cust_line.h"
+#include "cust_circle.h"
 
 DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     QDialog(parent, Qt::Window),pParent(parent), pPlot_Prop(Plot_Prop)
@@ -439,7 +441,11 @@ void DialLib::on_butOpen_clicked()
     scene->setSceneRect(SvgReader::getSizes(path));
 
     foreach(QGraphicsItem * item, SvgReader::getElements(path)) {
+        qDebug() << "item->type=" << item->type();
+
         switch (item->type()) {
+  
+/*
         case QGraphicsPathItem::Type: {
             VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
             scene->addItem(polyline);
@@ -447,6 +453,22 @@ void DialLib::on_butOpen_clicked()
             connect(polyline, &VEPolyline::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
+*/
+        case QGraphicsLineItem::Type: {
+            cust_line* line = qgraphicsitem_cast<cust_line*>(item);
+            scene->addItem(line);
+            connect(line, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+        case QGraphicsEllipseItem::Type: {
+            cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
+            scene->addItem(circle);
+            connect(circle, &cust_circle::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(circle, &cust_circle::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+
         case QGraphicsRectItem::Type: {
             cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
             scene->addItem(rect);

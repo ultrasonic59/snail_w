@@ -10,7 +10,8 @@ DotSignal::DotSignal(QGraphicsItem *parentItem, QObject *parent) :
 {
     setParentItem(parentItem);
     setAcceptHoverEvents(true);
-    setBrush(QBrush(Qt::black));
+ ///   setBrush(QBrush(Qt::black));
+    setBrush(QBrush(Qt::yellow));
     setRect(-2,-2,4,4);
     setDotFlags(0);
 }
@@ -20,7 +21,8 @@ DotSignal::DotSignal(QPointF pos, QGraphicsItem *parentItem, QObject *parent) :
 {
     setParentItem(parentItem);
     setAcceptHoverEvents(true);
-    setBrush(QBrush(Qt::black));
+ ///   setBrush(QBrush(Qt::black));
+    setBrush(QBrush(Qt::yellow));
     setRect(-2,-2,4,4);
     setPos(pos);
     setPreviousPosition(pos);

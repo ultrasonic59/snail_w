@@ -6,7 +6,9 @@
 #include <QStringList>
 #include <QTransform>
 #include <QDebug>
+#include "cust_circle.h"
 #include "cust_rect.h"
+
 #include "vepolyline.h"
 
 SvgReader::SvgReader(QObject *parent) : QObject(parent)
@@ -180,7 +182,35 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
 
     for (int i = 0; i < gList.size(); i++) {
         QDomNode gNode = gList.item(i);
+        QDomElement circleElement = gNode.firstChildElement("circle");
+        if (!circleElement.isNull()) {
+            cust_circle* cyrcle = new cust_circle();
+            auto pElement = gNode.toElement();
 
+ ////           polyline->setBrush(QBrush(Qt::transparent));
+
+            QColor strokeColor(pElement.attribute("stroke", "#000000"));
+            strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
+            cyrcle->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+/*
+            QPainterPath path;
+            QStringList listDotes = pathElement.attribute("d").split(" ");
+            QString first = listDotes.at(0);
+            QStringList firstElement = first.replace(QString("M"), QString("")).split(",");
+            path.moveTo(firstElement.at(0).toInt(), firstElement.at(1).toInt());
+            for (int i = 1; i < listDotes.length(); i++) {
+                QString other = listDotes.at(i);
+                QStringList dot = other.replace(QString("L"), QString("")).split(",");
+                path.lineTo(dot.at(0).toInt(), dot.at(1).toInt());
+            }
+            polyline->setPath(path);
+            graphicsList.append(polyline);
+*/
+            continue;
+        }
+
+
+/*
         QDomElement pathElement = gNode.firstChildElement("path");
         if (!pathElement.isNull()){
             VEPolyline *polyline = new VEPolyline();
@@ -206,7 +236,7 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
             graphicsList.append(polyline);
             continue;
         }
-
+*/
         QDomElement rectangle = gNode.firstChildElement("rect");
         if (!rectangle.isNull()){
             cust_rect*rect = new cust_rect();
