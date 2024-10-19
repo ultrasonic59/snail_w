@@ -9,7 +9,7 @@
 #include "cust_circle.h"
 #include "cust_rect.h"
 
-#include "vepolyline.h"
+///#include "vepolyline.h"
 
 SvgReader::SvgReader(QObject *parent) : QObject(parent)
 {

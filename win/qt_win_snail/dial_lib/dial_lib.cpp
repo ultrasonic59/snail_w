@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include "svgreader.h"
 ///#include "veworkplace.h"
-#include "vepolyline.h"
+///#include "vepolyline.h"
 #include "cust_rect.h"
 #include "cust_line.h"
 #include "cust_circle.h"

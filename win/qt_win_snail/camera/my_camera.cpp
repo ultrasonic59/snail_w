@@ -13,11 +13,11 @@
 #include <opencv2/imgproc.hpp> // drawing shapes
 
 MyCamera::MyCamera(QObject* parent, c_snail_data* _snail_data) : QObject(parent),
-    pt_qcam(nullptr),  p_snail_data(_snail_data), m_flags(FLG_ON_RULE), ////m_flags(FLG_ON_KRS),
+     m_camera(nullptr),  p_snail_data(_snail_data), m_flags(FLG_ON_RULE), ////m_flags(FLG_ON_KRS),
     m_transform(MyCamera::FlipVertically)
 {
  ////   connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat, QImage::Format)), this, SLOT(__transformFrame(cv::Mat, QImage::Format)));
-    connect(&m_qvideosurface, SIGNAL(frame_available(QImage , QImage::Format)), this, SLOT(__translateFrame(QImage , QImage::Format)));
+   connect(&m_qvideosurface, SIGNAL(frame_available(QImage , QImage::Format)), this, SLOT(__translateFrame(QImage , QImage::Format)));
 }
 
 void MyCamera::selectDevice()
@@ -49,19 +49,19 @@ void MyCamera::selectDevice()
     dialog.setLayout(&dialogL);
 
     if (dialog.exec() == QDialog::Accepted) {
-        delete pt_qcam;
-        pt_qcam = nullptr;
-        pt_qcam = new QCamera(devlist.at(devicesCB.currentIndex()));
+        delete m_camera;
+        m_camera = nullptr;
+        m_camera = new QCamera(devlist.at(devicesCB.currentIndex()));
     }
 
 }
 ///================================================================
 bool MyCamera::open()
 {
-    if (pt_qcam != nullptr) {
-        connect(pt_qcam, SIGNAL(error(QCamera::Error)), this, SLOT(__onError(QCamera::Error)));
-        pt_qcam->setViewfinder(&m_qvideosurface);
-        pt_qcam->start();
+    if (m_camera != nullptr) {
+        connect(m_camera, SIGNAL(error(QCamera::Error)), this, SLOT(__onError(QCamera::Error)));
+        m_camera->setViewfinder(&m_qvideosurface);
+        m_camera->start();
         return true;
     }
     else {
@@ -93,22 +93,22 @@ void MyCamera::__onError(QCamera::Error _error)
 
 void MyCamera::close()
 {
-    if (pt_qcam != nullptr) {
-        pt_qcam->stop();
+    if (m_camera != nullptr) {
+        m_camera->stop();
     }
 }
 
 void MyCamera::pause()
 {
-    if (pt_qcam != nullptr) {
-        pt_qcam->stop();
+    if (m_camera != nullptr) {
+        m_camera->stop();
     }
 }
 
 void MyCamera::resume()
 {
-    if (pt_qcam != nullptr) {
-        pt_qcam->start();
+    if (m_camera != nullptr) {
+        m_camera->start();
     }
 }
 #if 0
@@ -186,7 +186,7 @@ void MyCamera::setTransform(FrameTransform _transform)
 #endif
 void MyCamera::setViewfinderSettings()
 {
-    if (pt_qcam) {
+    if (m_camera) {
 
         QDialog dialog;
         int pS = dialog.font().pointSize();
@@ -195,7 +195,7 @@ void MyCamera::setViewfinderSettings()
         QVBoxLayout dialogL;
 
         QComboBox settingsCB;
-        QList<QCameraViewfinderSettings> settingsList = pt_qcam->supportedViewfinderSettings();
+        QList<QCameraViewfinderSettings> settingsList = m_camera->supportedViewfinderSettings();
         for (int i = 0; i < settingsList.length(); i++) {
             QString description = QString("%1x%2 - %3 fps").arg(QString::number(settingsList[i].resolution().width()),
                 QString::number(settingsList[i].resolution().height()),
@@ -217,6 +217,6 @@ void MyCamera::setViewfinderSettings()
         dialog.setLayout(&dialogL);
 
         if (dialog.exec() == QDialog::Accepted)
-            pt_qcam->setViewfinderSettings(settingsList[settingsCB.currentIndex()]);
+            m_camera->setViewfinderSettings(settingsList[settingsCB.currentIndex()]);
     }
 }

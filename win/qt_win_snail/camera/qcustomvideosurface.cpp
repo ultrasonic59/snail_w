@@ -252,12 +252,15 @@ bool QCustomVideoSurface::present(const QVideoFrame& frame)
         QImage::Format format = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
 
       ///  int cvtype = CV_8UC1;
-        QImage img = QVideoFrameToQImage(cloneFrame);
-         cv::Mat mat = QImageToCvMat(img);
+     ////???   QImage img = QVideoFrameToQImage(cloneFrame);
+ ////       QImage img = frame.image();
+        QImage img = cloneFrame.image();
+        cv::Mat mat = QImageToCvMat(img);
 
   /////      cv::flip(mat, mat, 0);
 ////        emit frameAvailable(mat, format);
-        emit frame_available(img, format);
+        ////emit frame_available(img, format);
+        emit frame_available1(img, format);
 
         cloneFrame.unmap();
         return true;

@@ -16,8 +16,9 @@ public:
 
 signals:
     void frameAvailable(const cv::Mat &frame, QImage::Format format);
-    void frame_available(const QImage& img, QImage::Format format);
- 
+    void frame_available1(QImage& img, QImage::Format format);
+    void frame_available(const QImage img, QImage::Format format);
+
 };
 
 #endif // QCUSTOMVIDEOSURFACE_H

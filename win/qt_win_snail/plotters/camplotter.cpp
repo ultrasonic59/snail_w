@@ -18,7 +18,7 @@ QColor scalar2qcolor(Scalar color)
 }
 ///=================================================
 CamPlotter::CamPlotter(PlotProperties *Plot_Prop, quint32* flags,c_snail_data* _snail_data) :
-								image(1000, 1000, QImage::Format_ARGB32),
+								image(5000, 5000, QImage::Format_ARGB32),
 								pPlot_Prop(Plot_Prop), p_snail_data(_snail_data)
 	                           /// , setka_delt_x(DEF_DELT_X)
 	                           /// , setka_delt_y(DEF_DELT_Y)
@@ -44,6 +44,8 @@ extern cv::Mat QImage2Mat(QImage const& src);
 void CamPlotter::sl_update_image(QImage& img, QImage::Format _format)
 {
 QImage _qimg = img.copy();
+emit s_update_image(_qimg, _format);
+return;
 
 mat_img = QImageToCvMat(_qimg);
 
@@ -73,10 +75,10 @@ if (*p_flags & FLG_ON_PNT)
 	drawPoints(mat_img);
    }
 ////   m_cvmat = _cvmat.clone();
-QImage  t_qimg = QImage(mat_img.data, mat_img.cols, mat_img.rows, mat_img.channels()*mat_img.cols, QImage::Format_RGB32);
+////???  QImage  t_qimg = QImage(mat_img.data, mat_img.cols, mat_img.rows, mat_img.channels()*mat_img.cols, QImage::Format_RGB32);
 
-emit s_update_image(t_qimg, _format);
-///emit s_update_image(img, _format);
+////???emit s_update_image(t_qimg, _format);
+emit s_update_image(img, _format);
 }
 ///
 void CamPlotter::drawSelRect(const Mat& _mat)

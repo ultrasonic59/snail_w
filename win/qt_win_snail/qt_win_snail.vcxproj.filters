@@ -166,9 +166,6 @@
     <ClCompile Include="widgets\workplaceview.cpp">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="items\vepolyline.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="items\veselectionrect.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
@@ -291,9 +288,6 @@
     </QtMoc>
     <QtMoc Include="widgets\workplaceview.h">
       <Filter>Header Files\widgets</Filter>
-    </QtMoc>
-    <QtMoc Include="items\vepolyline.h">
-      <Filter>Header Files\items</Filter>
     </QtMoc>
     <QtMoc Include="items\veselectionrect.h">
       <Filter>Header Files\items</Filter>

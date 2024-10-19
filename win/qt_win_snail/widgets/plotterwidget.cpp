@@ -59,13 +59,18 @@ void plotterwidget::_update_image(const QImage& img)
     update();
 }
 #else
-void plotterwidget::update_image(QImage& img, QImage::Format _format)
+void plotterwidget::update_image1(QImage& img, QImage::Format _format)
 {
     m_qimg = img.copy();
     __updateFPS();
     update();
 }
-
+void plotterwidget::update_image(QImage img, QImage::Format _format)
+{
+    m_qimg = img.copy();
+    __updateFPS();
+    update();
+}
 #endif
 #if 0
 void plotterwidget::updateImage(cv::Mat& _cvmat, QImage::Format _format)

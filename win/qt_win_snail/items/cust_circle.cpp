@@ -7,6 +7,8 @@
 /// #include <QGraphicsRectItem>
 #include <math.h>
 #include "dotsignal.h"
+#include "params.h"
+
 
 #define NUM_CORNERS 4
 
@@ -68,20 +70,7 @@ void cust_circle::setCircle(qreal x, qreal y, qreal d)
 
 void cust_circle::setRect(const QRectF &rect)
 {
-#if 1
-    QGraphicsEllipseItem::setRect(rect);
-    if(brush().gradient() != 0){
-        const QGradient * grad = brush().gradient();
-        if(grad->type() == QGradient::LinearGradient){
-            auto tmpRect = this->rect();
-            const QLinearGradient *lGradient = static_cast<const QLinearGradient *>(grad);
-            QLinearGradient g = *const_cast<QLinearGradient*>(lGradient);
-            g.setStart(tmpRect.left() + tmpRect.width()/2,tmpRect.top());
-            g.setFinalStop(tmpRect.left() + tmpRect.width()/2,tmpRect.bottom());
-            setBrush(g);
-        }
-    }
-#endif
+ QGraphicsEllipseItem::setRect(rect);
 }
 
 void cust_circle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -105,10 +94,15 @@ void cust_circle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         default:
            if (m_leftMouseButtonPressed) {
                 setCursor(Qt::ClosedHandCursor);
-                auto dx = event->scenePos().x() - m_previousPosition.x();
-                auto dy = event->scenePos().y() - m_previousPosition.y();
+                QPoint gr_pos = params::closest_to_grid(event->scenePos());
+     ///          QPointF gr_pos = event->scenePos();
+
+  ///              auto dx = event->scenePos().x() - m_previousPosition.x();
+  ///              auto dy = event->scenePos().y() - m_previousPosition.y();
+                auto dx = gr_pos.x() - m_previousPosition.x();
+                auto dy = gr_pos.y() - m_previousPosition.y();
                 moveBy(dx,dy);
-                setPreviousPosition(event->scenePos());
+                setPreviousPosition(gr_pos);
                 emit signalMove(this, dx, dy);
             }
         break;
@@ -217,10 +211,14 @@ QVariant cust_circle::itemChange(QGraphicsItem::GraphicsItemChange change, const
 void cust_circle::resizeLeft(const QPointF &pt)
 {
     QRectF tmpRect = rect();
+    QPointF last_pos = pos();
     // if the mouse is on the right side we return
     if( pt.x() > tmpRect.right() )
         return;
     qreal widthOffset =  ( pt.x() - tmpRect.right() );
+    qDebug() << "widthOffset=" << widthOffset;
+    qDebug() << "pos=" << last_pos;
+
     // limit the minimum width
     if( widthOffset > -10 )
         return;
@@ -237,10 +235,12 @@ void cust_circle::resizeLeft(const QPointF &pt)
     }
     // Since it's a left side , the rectange will increase in size
     // but keeps the topLeft as it was
-    tmpRect.translate( rect().width() - tmpRect.width() , 0 );
-    prepareGeometryChange();
+  ///??  tmpRect.translate( rect().width() - tmpRect.width() , 0 );
+  ///??  prepareGeometryChange();
     // Set the ne geometry
     setRect( tmpRect );
+    setPos(last_pos.x() + widthOffset / 2, last_pos.y() + widthOffset / 2);
+
     // Update to see the result
     update();
     setPositionGrabbers();

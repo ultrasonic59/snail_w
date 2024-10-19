@@ -37,7 +37,8 @@ public slots:
 ////	void _setImage(QImage);
 
 public slots:
-    void update_image(QImage& img, QImage::Format _format);
+    void update_image1(QImage& img, QImage::Format _format);
+    void update_image(QImage img, QImage::Format _format);
 
 
 protected:

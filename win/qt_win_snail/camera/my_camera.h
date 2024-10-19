@@ -19,6 +19,7 @@ public:
     explicit MyCamera(QObject* parent = 0, c_snail_data* _snail_data=0);
 public:
     c_snail_data *p_snail_data;
+    QCustomVideoSurface m_qvideosurface;
 
 public slots:
     void selectDevice();
@@ -37,8 +38,11 @@ private slots:
     void __onError(QCamera::Error  _error);
 
 private:
-    QCamera* pt_qcam;
-    QCustomVideoSurface m_qvideosurface;
+ ///   QCamera* pt_qcam;
+  ////  QScopedPointer<QCamera> m_camera;
+     QCamera* m_camera;
+
+  ///  QCustomVideoSurface m_qvideosurface;
     FrameTransform m_transform;
     ////void drawPoints(const Mat& _mat);
 

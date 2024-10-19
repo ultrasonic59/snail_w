@@ -11,7 +11,7 @@
 
 #include "cust_rect.h"
 #include "veselectionrect.h"
-#include "vepolyline.h"
+///#include "vepolyline.h"
 #include "cust_line.h"
 
 #include "lib_paint_scene.h"
@@ -194,6 +194,7 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
             break;
         case VLINE_TYPE: {
+            /*
             if (m_leftMouseButtonPressed) {
                 VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(currentItem);
                 QPainterPath path;
@@ -202,6 +203,7 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 polyline->setPath(path);
 
              }
+             */
              break;
         }
         }
