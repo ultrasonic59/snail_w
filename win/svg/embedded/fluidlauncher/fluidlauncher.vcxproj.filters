@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="demoapplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fluidlauncher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pictureflow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="slideshow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="demoapplication.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="fluidlauncher.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="pictureflow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="slideshow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\proj\velograph\snail_w\win\svg\embedded\fluidlauncher\fluidlauncher_plugin_import.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="screenshots\anomaly_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\concentriccircles.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="config.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\context2d_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\deform.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_3.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_4.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_5.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slides\demo_6.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\desktopservices_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\digiflip.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\elasticnodes.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\embeddedsvgviewer.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\embeddedsvgviewer_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\flickable.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\flightinfo_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="fluidlauncher.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="screenshots\fridgemagnets_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\ftp_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\lightmaps.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\mediaplayer.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\pathstroke.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmlcalculator.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmlclocks.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmldialcontrol.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmleasing.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmlflickr.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmlphotoviewer.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\qmltwitter.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\raycasting.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\saxbookmarks_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\softkeys_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\spectrum.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\styledemo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\styledemo_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\weatherinfo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\wiggly.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenshots\wiggly_s60.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="D:\proj\velograph\snail_w\win\svg\embedded\fluidlauncher\fluidlauncher_resource.rc" />
+  </ItemGroup>
+</Project>

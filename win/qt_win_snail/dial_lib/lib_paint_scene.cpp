@@ -50,7 +50,6 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
      QPoint gr_point;
     QPointF ev_point= event->scenePos();
 
-////???    gr_point = closest_to_grid(ev_point, QPoint(pPlot_Prop->lib_grid_delt_x, pPlot_Prop->lib_grid_delt_y));
     gr_point = params::closest_to_grid(ev_point);
 
     if (event->button() == Qt::LeftButton)
@@ -132,7 +131,6 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
             connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
-///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
             circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
             circle->setPos(gr_point.x()- pPlot_Prop->LibItemWidth/2, gr_point.y()- pPlot_Prop->LibItemWidth/2);
             circle->setBrush(QBrush(Qt::NoBrush));
@@ -140,7 +138,6 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
          }
             break;
         case POINT_TYPE: {
-            ////QColor color(pPlot_Prop->LibItemBrdColor);
             cust_circle* circle = new cust_circle();
             currentItem = circle;
             addItem(currentItem);
@@ -154,17 +151,6 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
             circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
 
-/*
-            cust_point* point = new cust_point();
-            currentItem = point;
-            addItem(currentItem);
-            connect(point, &cust_point::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(point, &cust_point::signalMove, this, &LibPaintScene::slotMove);
-            point->setCircle(0, 0, pPlot_Prop->LibItemWidth);
-            point->setPos(gr_point.x() - pPlot_Prop->LibItemWidth / 2, gr_point.y() - pPlot_Prop->LibItemWidth / 2);
-            point->setBrush(QBrush(pPlot_Prop->LibItemBrdColor));
-            point->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
-            */
         }
             break;
         }
@@ -315,6 +301,7 @@ void LibPaintScene::test2() {
 
 void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
+#if 0
 ////    Q_UNUSED(rect);
     QVector <qreal> dashes;
     dashes << 2 << 2 << 2 << 2;
@@ -352,6 +339,7 @@ void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
         painter->drawLine(i, left, i, 2068);
     }
     */
+#endif
 }
 
 ///======================================================================

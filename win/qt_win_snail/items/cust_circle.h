@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QGraphicsEllipseItem>
 
+#define NUM_CORNERS 4
+
 class DotSignal;
 class QGraphicsSceneMouseEvent;
 
@@ -57,7 +59,7 @@ private:
     unsigned int m_cornerFlags;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-    DotSignal *cornerGrabber[8];
+    DotSignal *cornerGrabber[NUM_CORNERS];
 
     void resizeLeft( const QPointF &pt);
     void resizeRight( const QPointF &pt);

@@ -4,7 +4,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include "params.h"
-
+#define RECT_SZ 8
 DotSignal::DotSignal(QGraphicsItem *parentItem, QObject *parent) :
     QObject(parent)
 {
@@ -12,7 +12,11 @@ DotSignal::DotSignal(QGraphicsItem *parentItem, QObject *parent) :
     setAcceptHoverEvents(true);
  ///   setBrush(QBrush(Qt::black));
     setBrush(QBrush(Qt::yellow));
-    setRect(-2,-2,4,4);
+    setRect(-RECT_SZ,-RECT_SZ, RECT_SZ*2, RECT_SZ*2);
+    setPos(QPoint(0,0));
+    parentItem = 0;
+    setPreviousPosition(QPoint(0, 0));
+
     setDotFlags(0);
 }
 
@@ -23,7 +27,7 @@ DotSignal::DotSignal(QPointF pos, QGraphicsItem *parentItem, QObject *parent) :
     setAcceptHoverEvents(true);
  ///   setBrush(QBrush(Qt::black));
     setBrush(QBrush(Qt::yellow));
-    setRect(-2,-2,4,4);
+    setRect(-RECT_SZ, -RECT_SZ, RECT_SZ * 2, RECT_SZ * 2);
     setPos(pos);
     setPreviousPosition(pos);
     setDotFlags(0);
@@ -55,6 +59,7 @@ void DotSignal::setDotFlags(unsigned int flags)
 
 void DotSignal::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+   
     if(m_flags & Movable){
         QPoint gr_pos = params::closest_to_grid(event->scenePos());
 
@@ -66,16 +71,19 @@ void DotSignal::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     } else {
         QGraphicsItem::mouseMoveEvent(event);
     }
+    
 }
 
 void DotSignal::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+
     if(m_flags & Movable){
         QPoint gr_pos = params::closest_to_grid(event->scenePos());
         setPreviousPosition(gr_pos);
     } else {
         QGraphicsItem::mousePressEvent(event);
     }
+   
 }
 
 void DotSignal::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

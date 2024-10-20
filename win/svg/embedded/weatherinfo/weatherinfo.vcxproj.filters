@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="weatherinfo.cpp">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="debug\weatherinfo.moc.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\weatherinfo.moc.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <ClCompile Include="D:\proj\velograph\snail_w\win\svg\embedded\weatherinfo\weatherinfo_plugin_import.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons\weather-few-clouds.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-fog.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-haze.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-icy.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-overcast.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-showers.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-sleet.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-snow.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-storm.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-sunny-very-few-clouds.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-sunny.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\weather-thundershower.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="weatherinfo.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,72 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34902.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "embeddedsvgviewer", "embeddedsvgviewer\embeddedsvgviewer.vcxproj", "{D991B01F-0A13-3264-BEF2-7091629B7AF4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "svggenerator", "svggenerator\svggenerator.vcxproj", "{D0405BF5-A396-37B7-9FB0-7E3F5F8CA3D7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "svgviewer", "svgviewer\svgviewer.vcxproj", "{95F3E2C1-0946-3C51-A8CA-2735F56D9185}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "desktopservices", "embedded\desktopservices\desktopservices.vcxproj", "{BABC9541-1612-3115-879C-22CCAE00DE5D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fluidlauncher", "embedded\fluidlauncher\fluidlauncher.vcxproj", "{07546EE3-A348-391D-A9F9-CEEF63E3A3E2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "weatherinfo", "embedded\weatherinfo\weatherinfo.vcxproj", "{727773B0-F92D-3CC8-BE6F-DA347FC3D1DC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "textobject", "richtext\textobject\textobject.vcxproj", "{D53B0694-6752-35BD-B1A3-3E1F421927CE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "delayedencoding", "draganddrop\delayedencoding\delayedencoding.vcxproj", "{D17FAD2C-D7D5-30B4-A06A-1FD61BE57AE9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "framebufferobject", "opengl\framebufferobject\framebufferobject.vcxproj", "{7F586EA3-5B98-34BF-BA76-2A5BF0E5B429}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D991B01F-0A13-3264-BEF2-7091629B7AF4}.Debug|x64.ActiveCfg = Debug|x64
+		{D991B01F-0A13-3264-BEF2-7091629B7AF4}.Debug|x64.Build.0 = Debug|x64
+		{D991B01F-0A13-3264-BEF2-7091629B7AF4}.Release|x64.ActiveCfg = Release|x64
+		{D991B01F-0A13-3264-BEF2-7091629B7AF4}.Release|x64.Build.0 = Release|x64
+		{D0405BF5-A396-37B7-9FB0-7E3F5F8CA3D7}.Debug|x64.ActiveCfg = Debug|x64
+		{D0405BF5-A396-37B7-9FB0-7E3F5F8CA3D7}.Debug|x64.Build.0 = Debug|x64
+		{D0405BF5-A396-37B7-9FB0-7E3F5F8CA3D7}.Release|x64.ActiveCfg = Release|x64
+		{D0405BF5-A396-37B7-9FB0-7E3F5F8CA3D7}.Release|x64.Build.0 = Release|x64
+		{95F3E2C1-0946-3C51-A8CA-2735F56D9185}.Debug|x64.ActiveCfg = Debug|x64
+		{95F3E2C1-0946-3C51-A8CA-2735F56D9185}.Debug|x64.Build.0 = Debug|x64
+		{95F3E2C1-0946-3C51-A8CA-2735F56D9185}.Release|x64.ActiveCfg = Release|x64
+		{95F3E2C1-0946-3C51-A8CA-2735F56D9185}.Release|x64.Build.0 = Release|x64
+		{BABC9541-1612-3115-879C-22CCAE00DE5D}.Debug|x64.ActiveCfg = Debug|x64
+		{BABC9541-1612-3115-879C-22CCAE00DE5D}.Debug|x64.Build.0 = Debug|x64
+		{BABC9541-1612-3115-879C-22CCAE00DE5D}.Release|x64.ActiveCfg = Release|x64
+		{BABC9541-1612-3115-879C-22CCAE00DE5D}.Release|x64.Build.0 = Release|x64
+		{07546EE3-A348-391D-A9F9-CEEF63E3A3E2}.Debug|x64.ActiveCfg = Debug|x64
+		{07546EE3-A348-391D-A9F9-CEEF63E3A3E2}.Debug|x64.Build.0 = Debug|x64
+		{07546EE3-A348-391D-A9F9-CEEF63E3A3E2}.Release|x64.ActiveCfg = Release|x64
+		{07546EE3-A348-391D-A9F9-CEEF63E3A3E2}.Release|x64.Build.0 = Release|x64
+		{727773B0-F92D-3CC8-BE6F-DA347FC3D1DC}.Debug|x64.ActiveCfg = Debug|x64
+		{727773B0-F92D-3CC8-BE6F-DA347FC3D1DC}.Debug|x64.Build.0 = Debug|x64
+		{727773B0-F92D-3CC8-BE6F-DA347FC3D1DC}.Release|x64.ActiveCfg = Release|x64
+		{727773B0-F92D-3CC8-BE6F-DA347FC3D1DC}.Release|x64.Build.0 = Release|x64
+		{D53B0694-6752-35BD-B1A3-3E1F421927CE}.Debug|x64.ActiveCfg = Debug|x64
+		{D53B0694-6752-35BD-B1A3-3E1F421927CE}.Debug|x64.Build.0 = Debug|x64
+		{D53B0694-6752-35BD-B1A3-3E1F421927CE}.Release|x64.ActiveCfg = Release|x64
+		{D53B0694-6752-35BD-B1A3-3E1F421927CE}.Release|x64.Build.0 = Release|x64
+		{D17FAD2C-D7D5-30B4-A06A-1FD61BE57AE9}.Debug|x64.ActiveCfg = Debug|x64
+		{D17FAD2C-D7D5-30B4-A06A-1FD61BE57AE9}.Debug|x64.Build.0 = Debug|x64
+		{D17FAD2C-D7D5-30B4-A06A-1FD61BE57AE9}.Release|x64.ActiveCfg = Release|x64
+		{D17FAD2C-D7D5-30B4-A06A-1FD61BE57AE9}.Release|x64.Build.0 = Release|x64
+		{7F586EA3-5B98-34BF-BA76-2A5BF0E5B429}.Debug|x64.ActiveCfg = Debug|x64
+		{7F586EA3-5B98-34BF-BA76-2A5BF0E5B429}.Debug|x64.Build.0 = Debug|x64
+		{7F586EA3-5B98-34BF-BA76-2A5BF0E5B429}.Release|x64.ActiveCfg = Release|x64
+		{7F586EA3-5B98-34BF-BA76-2A5BF0E5B429}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {932A8FCD-EBF1-4064-AB46-028A1450752B}
+	EndGlobalSection
+EndGlobal

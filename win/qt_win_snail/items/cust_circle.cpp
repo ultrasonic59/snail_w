@@ -10,30 +10,18 @@
 #include "params.h"
 
 
-#define NUM_CORNERS 4
+///#define NUM_CORNERS 4
 
-///static const double Pi = 3.14159265358979323846264338327950288419717;
-///static double TwoPi = 2.0 * Pi;
-/*
-static qreal normalizeAngle(qreal angle)
-{
-    while (angle < 0)
-        angle += TwoPi;
-    while (angle > TwoPi)
-        angle -= TwoPi;
-    return angle;
-}
-*/
 
 cust_circle::cust_circle(QObject *parent) :
     QObject(parent),
-    m_cornerFlags(0)///,
-///    m_actionFlags(ResizeState)
+    m_cornerFlags(0)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
     for(int i = 0; i < NUM_CORNERS; i++){
-        cornerGrabber[i] = new DotSignal(this);
+        cornerGrabber[i] = new DotSignal(0,this);
+  ///     cornerGrabber[i] = new DotSignal(QPointF(0, 0), 0, this);
     }
     setPositionGrabbers();
 }
@@ -97,13 +85,20 @@ void cust_circle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 QPoint gr_pos = params::closest_to_grid(event->scenePos());
      ///          QPointF gr_pos = event->scenePos();
 
-  ///              auto dx = event->scenePos().x() - m_previousPosition.x();
-  ///              auto dy = event->scenePos().y() - m_previousPosition.y();
                 auto dx = gr_pos.x() - m_previousPosition.x();
                 auto dy = gr_pos.y() - m_previousPosition.y();
-                moveBy(dx,dy);
+                QPoint delta = params::closest_to_grid(QPoint(dx,dy));
+  ///              qDebug() << "dx="<< dx;
+  ///              qDebug() << "dy=" << dy;
+   ///             qDebug() << "gr_pos.x=" << gr_pos.x();
+    ///            qDebug() << "gr_pos.y=" << gr_pos.y();
+ ///               moveBy(dx, dy);
+                moveBy(delta.x(), delta.y());
                 setPreviousPosition(gr_pos);
-                emit signalMove(this, dx, dy);
+ ///               emit signalMove(this, dx, dy);
+                emit signalMove(this, delta.x(), delta.y());
+
+
             }
         break;
         }
@@ -195,29 +190,12 @@ void cust_circle::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
   QGraphicsItem::hoverMoveEvent( event );
 }
 
-/*
-QVariant cust_circle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    switch (change) {
-    case QGraphicsItem::ItemSelectedChange:
-      ///  m_actionFlags = ResizeState;
-        break;
-    default:
-        break;
-    }
-    return QGraphicsItem::itemChange(change, value);
-}
-*/
 void cust_circle::resizeLeft(const QPointF &pt)
 {
     QRectF tmpRect = rect();
-    QPointF last_pos = pos();
-    // if the mouse is on the right side we return
     if( pt.x() > tmpRect.right() )
         return;
     qreal widthOffset =  ( pt.x() - tmpRect.right() );
-    qDebug() << "widthOffset=" << widthOffset;
-    qDebug() << "pos=" << last_pos;
 
     // limit the minimum width
     if( widthOffset > -10 )
@@ -233,15 +211,11 @@ void cust_circle::resizeLeft(const QPointF &pt)
         tmpRect.setWidth(widthOffset);
         tmpRect.setHeight(widthOffset);
     }
-    // Since it's a left side , the rectange will increase in size
-    // but keeps the topLeft as it was
-  ///??  tmpRect.translate( rect().width() - tmpRect.width() , 0 );
-  ///??  prepareGeometryChange();
+     tmpRect.translate( (rect().width() - tmpRect.width())/2 , (rect().width() - tmpRect.width()) / 2);
+    prepareGeometryChange();
     // Set the ne geometry
     setRect( tmpRect );
-    setPos(last_pos.x() + widthOffset / 2, last_pos.y() + widthOffset / 2);
-
-    // Update to see the result
+     // Update to see the result
     update();
     setPositionGrabbers();
 }
@@ -264,6 +238,7 @@ void cust_circle::resizeRight(const QPointF &pt)
         tmpRect.setWidth(widthOffset);
         tmpRect.setHeight(widthOffset);
         }
+    tmpRect.translate((rect().width() - tmpRect.width()) / 2, (rect().width() - tmpRect.width()) / 2);
     prepareGeometryChange();
     setRect( tmpRect );
     update();
@@ -288,6 +263,7 @@ void cust_circle::resizeBottom(const QPointF &pt)
         tmpRect.setHeight(heightOffset);
         tmpRect.setWidth(heightOffset);
     }
+    tmpRect.translate((rect().width() - tmpRect.width()) / 2, (rect().width() - tmpRect.width()) / 2);
     prepareGeometryChange();
     setRect( tmpRect );
     update();
@@ -312,7 +288,8 @@ void cust_circle::resizeTop(const QPointF &pt)
         tmpRect.setHeight(heightOffset);
         tmpRect.setWidth(heightOffset);
     }
-    tmpRect.translate( 0 , rect().height() - tmpRect.height() );
+     tmpRect.translate((rect().width() - tmpRect.width()) / 2, (rect().width() - tmpRect.width()) / 2);
+
     prepareGeometryChange();
     setRect( tmpRect );
     update();
@@ -330,11 +307,13 @@ void cust_circle::setPositionGrabbers()
 
 void cust_circle::setVisibilityGrabbers()
 {
+
 cornerGrabber[GrabberTop]->setVisible(true);
 cornerGrabber[GrabberBottom]->setVisible(true);
 cornerGrabber[GrabberLeft]->setVisible(true);
  cornerGrabber[GrabberRight]->setVisible(true);
- }
+ 
+}
 
 void cust_circle::hideGrabbers()
 {
