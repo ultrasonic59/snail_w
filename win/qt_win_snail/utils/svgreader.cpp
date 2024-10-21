@@ -10,6 +10,7 @@
 
 #include "cust_circle.h"
 #include "cust_rect.h"
+#include "cust_line.h"
 
 ///#include "vepolyline.h"
 
@@ -32,20 +33,7 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file))
         return graphicsList;
 
-    QDomNodeList linearList = doc.elementsByTagName("linearGradient");
-    for(int i = 0; i < linearList.size(); i++) {
-        QDomNode linearNode = linearList.item(i);
-        QDomNodeList stopList = linearNode.childNodes();
-        QLinearGradient gradient;
-        for(int j = 0; j < stopList.size(); j++){
-            QDomElement stopElement = stopList.item(j).toElement();
-            QColor color(stopElement.attribute("stop-color"));
-            gradient.setColorAt(stopElement.attribute("offset").toFloat(),color);
-        }
-        gradientList.append(gradient);
-    }
-
-    QDomNodeList gList = doc.elementsByTagName("g");
+     QDomNodeList gList = doc.elementsByTagName("g");
 
     for (int i = 0; i < gList.size(); i++) {
         QDomNode gNode = gList.item(i);
@@ -75,20 +63,49 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
 */
             continue;
         }
-
-
-/*
-        QDomElement pathElement = gNode.firstChildElement("path");
+        QDomElement pathElement = gNode.firstChildElement("polyline");
         if (!pathElement.isNull()){
-            VEPolyline *polyline = new VEPolyline();
+            cust_line *line = new cust_line();
             auto pElement = gNode.toElement();
 
-            polyline->setBrush(QBrush(Qt::transparent));
+ ///           line->setBrush(QBrush(Qt::transparent));
 
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
-            polyline->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+            int line_thick = pElement.attribute("stroke-width", "0").toInt();
+            line->setPen(QPen(strokeColor, line_thick));
+ ///           line->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+            QString transString = pElement.attribute("transform");
+            transString.replace(QString("matrix("), QString(""));
+            transString.replace(QString(")"), QString(""));
+            QStringList transList = transString.split(",");
 
+            QTransform trans(line->transform());
+            qreal m11 = trans.m11();    // Horizontal scaling
+            qreal m12 = trans.m12();    // Vertical shearing
+            qreal m13 = trans.m13();    // Horizontal Projection
+            qreal m21 = trans.m21();    // Horizontal shearing
+            qreal m22 = trans.m22();    // vertical scaling
+            qreal m23 = trans.m23();    // Vertical Projection
+            qreal m31 = trans.m31();    // Horizontal Position (DX)
+            qreal m32 = trans.m32();    // Vertical Position (DY)
+            qreal m33 = trans.m33();    // Addtional Projection Factor
+
+            m11 = transList.at(0).toFloat();
+            m12 = transList.at(1).toFloat();
+            m21 = transList.at(2).toFloat();
+            m22 = transList.at(3).toFloat();
+            m31 = transList.at(4).toFloat();
+            m32 = transList.at(5).toFloat();
+
+            trans.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            line->setTransform(trans);
+            ////rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
+            line->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+
+
+
+#if 0
             QPainterPath path;
             QStringList listDotes = pathElement.attribute("d").split(" ");
             QString first = listDotes.at(0);
@@ -99,11 +116,12 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
                 QStringList dot = other.replace(QString("L"),QString("")).split(",");
                 path.lineTo(dot.at(0).toInt(),dot.at(1).toInt());
             }
-            polyline->setPath(path);
-            graphicsList.append(polyline);
+#endif
+        ///    polyline->setPath(path);
+            graphicsList.append(line);
             continue;
         }
-*/
+
         QDomElement rectangle = gNode.firstChildElement("rect");
         if (!rectangle.isNull()){
             cust_rect*rect = new cust_rect();
