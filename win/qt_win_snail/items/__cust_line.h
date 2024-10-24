@@ -1,13 +1,14 @@
-#ifndef __CUST_LINE_H_
-#define __CUST_LINE_H_
+#ifndef __CUST_LINE_H__
+#define __CUST_LINE_H__
 
 #include <QObject>
-#include <QGraphicsPathItem>
+//// #include <QGraphicsPathItem>
+#include <QGraphicsLineItem>
 
 class DotSignal;
 class QGraphicsSceneMouseEvent;
 
-class cust_line : public QObject, public QGraphicsPathItem
+class cust_line : public QObject, public QGraphicsLineItem
 {
     Q_OBJECT
   ///  Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
@@ -41,12 +42,20 @@ private slots:
     void checkForDeletePoints();
 
 private:
+ ////   void rotateItem(const QPointF& pt);
+ ///   void setPositionGrabbers();
+  ///  void setVisibilityGrabbers();
+ ///   void hideGrabbers();
+
+private:
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     QList<DotSignal *> listDotes;
-    int m_pointForCheck;
+  ///  int m_pointForCheck;
 
     void updateDots();
+    quint8* p_grid_x;
+    quint8* p_grid_y;
 };
 
-#endif // VEPOLYLINE_H
+#endif // __CUST_LINE_H__

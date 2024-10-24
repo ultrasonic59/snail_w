@@ -93,7 +93,13 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-            line->setLine(0, 0, 0,pPlot_Prop->LibItemWidth);
+        ///    line->setLine(0, 0, 0,pPlot_Prop->LibItemWidth);
+///=========================================================
+            QPainterPath path;
+            path.moveTo(m_previousPosition);
+            line->setPath(path);
+
+///========================================================= 
             line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
                 , Qt::SolidLine, Qt::RoundCap));
             line->setPos(gr_point);
@@ -119,7 +125,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-            line->setLine(0, 0, pPlot_Prop->LibItemWidth, 0);
+         ///   line->setLine(0, 0, pPlot_Prop->LibItemWidth, 0);
             line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
                 , Qt::SolidLine, Qt::RoundCap));
             line->setPos(gr_point);

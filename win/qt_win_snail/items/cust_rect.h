@@ -8,7 +8,6 @@ class DotSignal;
 class QGraphicsSceneMouseEvent;
 
 class cust_rect : public QObject, public QGraphicsRectItem
-///class VERectangle : public QObject, public QGraphicsItem
 {
     Q_OBJECT
   ///  Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
@@ -71,7 +70,8 @@ private:
     unsigned int m_actionFlags;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-    DotSignal *cornerGrabber[8];
+
+    ////DotSignal *cornerGrabber[8];
 
     void resizeLeft( const QPointF &pt);
     void resizeRight( const QPointF &pt);

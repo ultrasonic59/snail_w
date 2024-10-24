@@ -40,10 +40,8 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
         QDomElement circleElement = gNode.firstChildElement("circle");
         if (!circleElement.isNull()) {
             cust_circle* cyrcle = new cust_circle();
-            auto pElement = gNode.toElement();
-
- ////           polyline->setBrush(QBrush(Qt::transparent));
-
+             QDomElement pElement = gNode.toElement();
+ 
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
             cyrcle->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
@@ -69,11 +67,21 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
             auto pElement = gNode.toElement();
 
  ///           line->setBrush(QBrush(Qt::transparent));
-
-            QColor strokeColor(pElement.attribute("stroke", "#000000"));
+            QString tstr = pElement.attribute("stroke", "#000000");
+ ///           tstr.remove(0, 1);
+ ///           int tmp = tstr.toUInt(nullptr, 16);
+           QColor strokeColor(tstr);
+    ///        QColor strokeColor(tmp);
+            ///QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
             int line_thick = pElement.attribute("stroke-width", "0").toInt();
+          ///  points = "0,0 123,0 "
+
+ ///           QString tline = pElement.attribute("points", "0,0 0,0");
+            QString tline = pElement.attribute("points");
+
             line->setPen(QPen(strokeColor, line_thick));
+
  ///           line->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
             QString transString = pElement.attribute("transform");
             transString.replace(QString("matrix("), QString(""));

@@ -28,17 +28,21 @@ cust_rect::cust_rect(QObject *parent) :
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
+/*
     for(int i = 0; i < 8; i++){
         cornerGrabber[i] = new DotSignal(this);
     }
+    */
     setPositionGrabbers();
 }
 
 cust_rect::~cust_rect()
-{
+{/*
+
     for(int i = 0; i < 8; i++){
         delete cornerGrabber[i];
     }
+    */
 }
 
 QPointF cust_rect::previousPosition() const
@@ -392,6 +396,7 @@ void cust_rect::rotateItem(const QPointF &pt)
 void cust_rect::setPositionGrabbers()
 {
     QRectF tmpRect = rect();
+    /*
     cornerGrabber[GrabberTop]->setPos(tmpRect.left() + tmpRect.width()/2, tmpRect.top());
     cornerGrabber[GrabberBottom]->setPos(tmpRect.left() + tmpRect.width()/2, tmpRect.bottom());
     cornerGrabber[GrabberLeft]->setPos(tmpRect.left(), tmpRect.top() + tmpRect.height()/2);
@@ -400,10 +405,12 @@ void cust_rect::setPositionGrabbers()
     cornerGrabber[GrabberTopRight]->setPos(tmpRect.topRight().x(), tmpRect.topRight().y());
     cornerGrabber[GrabberBottomLeft]->setPos(tmpRect.bottomLeft().x(), tmpRect.bottomLeft().y());
     cornerGrabber[GrabberBottomRight]->setPos(tmpRect.bottomRight().x(), tmpRect.bottomRight().y());
+    */
 }
 
 void cust_rect::setVisibilityGrabbers()
 {
+/*
     cornerGrabber[GrabberTopLeft]->setVisible(true);
     cornerGrabber[GrabberTopRight]->setVisible(true);
     cornerGrabber[GrabberBottomLeft]->setVisible(true);
@@ -420,11 +427,14 @@ void cust_rect::setVisibilityGrabbers()
         cornerGrabber[GrabberLeft]->setVisible(false);
         cornerGrabber[GrabberRight]->setVisible(false);
     }
+    */
 }
 
 void cust_rect::hideGrabbers()
 {
+    /*
     for(int i = 0; i < 8; i++){
         cornerGrabber[i]->setVisible(false);
     }
+    */
 }
