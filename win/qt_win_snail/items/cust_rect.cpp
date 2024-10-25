@@ -199,10 +199,14 @@ void cust_rect::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     // we set the Flag in the Corner Flags Register
 
     m_cornerFlags = 0;
-    if( dby < 7 && dby > -7 ) m_cornerFlags |= Top;       // Top side
-    if( dty < 7 && dty > -7 ) m_cornerFlags |= Bottom;    // Bottom side
-    if( drx < 7 && drx > -7 ) m_cornerFlags |= Right;     // Right side
-    if( dlx < 7 && dlx > -7 ) m_cornerFlags |= Left;      // Left side
+    if( dby < 7 && dby > -7 ) 
+        m_cornerFlags |= Top;       // Top side
+    if( dty < 7 && dty > -7 ) 
+        m_cornerFlags |= Bottom;    // Bottom side
+    if( drx < 7 && drx > -7 ) 
+        m_cornerFlags |= Right;     // Right side
+    if( dlx < 7 && dlx > -7 ) 
+        m_cornerFlags |= Left;      // Left side
 
     if(m_actionFlags == ResizeState){
         QPixmap p(":/icons/arrow-up-down.png");
