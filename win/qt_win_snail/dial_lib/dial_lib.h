@@ -23,12 +23,13 @@ protected:
 	Ui::Dial_lib ui;
 
 public:
-	DialLib(QWidget *parent= 0, PlotProperties* Plot_Prop = 0);
+	DialLib(QWidget *parent= 0);
 	virtual ~DialLib();
 	QWidget* pParent;
-	PlotProperties* pPlot_Prop;
+///	PlotProperties* pPlot_Prop;
 	en_rej cur_rej;
 	en_item_type cur_item;
+///	LibGraphicView* libView;
 signals:
 	void SignalTest();
 
@@ -40,6 +41,8 @@ private slots:
 	void setBorderColor(const QColor& color);
 
 ///	void  slot_send_can_msg();
+	void on_zoom_changed(int value);
+	void sl_zoom_changed(double value);
 
 	void  SlotTest();
 public slots:

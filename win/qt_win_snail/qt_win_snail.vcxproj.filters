@@ -163,9 +163,6 @@
     <ClCompile Include="dial_lib\lib_paint_scene.cpp">
       <Filter>Source Files\dial_lib</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\workplaceview.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="items\veselectionrect.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
@@ -285,9 +282,6 @@
     </QtMoc>
     <QtMoc Include="dial_lib\lib_paint_scene.h">
       <Filter>Header Files\dial_lib</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\workplaceview.h">
-      <Filter>Header Files\widgets</Filter>
     </QtMoc>
     <QtMoc Include="items\veselectionrect.h">
       <Filter>Header Files\items</Filter>

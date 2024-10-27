@@ -15,15 +15,15 @@ PlotProperties::PlotProperties(void) :
 	            setka_delt_x(DEF_DELT_X),
 	            setka_delt_y(DEF_DELT_Y),
 	            rad_circle(DEF_RAD_CIRCLE),
-                thick_circle(DEF_THICK_CIRCLE),
+                thick_circle(DEF_THICK_CIRCLE)///,
 	            ///lib_grid_delt_x(DEF_DELT_X),
                 ///lib_grid_delt_y(DEF_DELT_Y),
 	///  Qt::darkGray
-	            LibItemBGColor(Qt::darkGray),
-                LibItemBrdColor(Qt::gray),
-                LibItemBrdThick(1),
-                LibItemWidth(100),
-                LibItemHeight(50)
+	           /// LibItemBGColor(Qt::darkGray),
+              ///  LibItemBrdColor(Qt::gray),
+  ///              LibItemBrdThick(1),
+  ///              LibItemWidth(100),
+  ///              LibItemHeight(50)
 
 {
 

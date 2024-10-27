@@ -373,7 +373,7 @@ void win_snail::on_butt_test()
 {
     qDebug() << "start test";
  ///   DialDebug _dial_dbg(this);
-    DialLib _dial_dbg(this, &PlotProp);
+    DialLib _dial_dbg(this);
     if (_dial_dbg.exec())
     {
         qDebug() << "OK";
@@ -662,11 +662,11 @@ void win_snail::saveSettings(void)
 ///    settings.setValue("Lib Grid Y", PlotProp.lib_grid_delt_y);
     settings.setValue("Lib Grid Y", params::lib_grid_delt_y);
     ///======== lib items ========================================
-    settings.setValue("LibItemBGColor", PlotProp.LibItemBGColor.rgb());
-    settings.setValue("LibItemBrdColor", PlotProp.LibItemBrdColor.rgb());
-    settings.setValue("LibItemBrdThick", PlotProp.LibItemBrdThick);
-    settings.setValue("LibItemWidth", PlotProp.LibItemWidth);
-    settings.setValue("LibItemHeight", PlotProp.LibItemHeight);
+    settings.setValue("LibItemBGColor", params::LibItemBGColor.rgb());
+    settings.setValue("LibItemBrdColor", params::LibItemBrdColor.rgb());
+    settings.setValue("LibItemBrdThick", params::LibItemBrdThick);
+    settings.setValue("LibItemWidth", params::LibItemWidth);
+    settings.setValue("LibItemHeight", params::LibItemHeight);
 
 }
 void win_snail::loadSettings(void)
@@ -699,11 +699,11 @@ void win_snail::loadSettings(void)
   ///  PlotProp.lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
     params::lib_grid_delt_y = settings.value("Lib Grid Y", DEF_DELT_Y).toInt();
     ///======== lib items ========================================
-    PlotProp.LibItemBGColor.setRgb(settings.value("LibItemBGColor", PlotProp.LibItemBGColor).toInt());
-    PlotProp.LibItemBrdColor.setRgb(settings.value("LibItemBrdColor", PlotProp.LibItemBrdColor).toInt());
-    PlotProp.LibItemBrdThick = settings.value("LibItemBrdThick", 1).toInt();
-    PlotProp.LibItemWidth = settings.value("LibItemWidth", 100).toInt();
-    PlotProp.LibItemHeight = settings.value("LibItemHeight", 50).toInt();
+    params::LibItemBGColor.setRgb(settings.value("LibItemBGColor", params::LibItemBGColor).toInt());
+    params::LibItemBrdColor.setRgb(settings.value("LibItemBrdColor", params::LibItemBrdColor).toInt());
+    params::LibItemBrdThick = settings.value("LibItemBrdThick", 1).toInt();
+    params::LibItemWidth = settings.value("LibItemWidth", 100).toInt();
+    params::LibItemHeight = settings.value("LibItemHeight", 50).toInt();
 
 
 }    

@@ -39,56 +39,24 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
         QDomNode gNode = gList.item(i);
         QDomElement circleElement = gNode.firstChildElement("circle");
         if (!circleElement.isNull()) {
-            cust_circle* cyrcle = new cust_circle();
+            cust_circle* circle = new cust_circle();
              QDomElement pElement = gNode.toElement();
- 
+             int cx = circleElement.attribute("cx").toInt();
+             int cy = circleElement.attribute("cy").toInt();
+             int r = circleElement.attribute("r").toInt();
+
+             circle->setCircle(cx, cy, r);
+
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
-            cyrcle->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
-/*
-            QPainterPath path;
-            QStringList listDotes = pathElement.attribute("d").split(" ");
-            QString first = listDotes.at(0);
-            QStringList firstElement = first.replace(QString("M"), QString("")).split(",");
-            path.moveTo(firstElement.at(0).toInt(), firstElement.at(1).toInt());
-            for (int i = 1; i < listDotes.length(); i++) {
-                QString other = listDotes.at(i);
-                QStringList dot = other.replace(QString("L"), QString("")).split(",");
-                path.lineTo(dot.at(0).toInt(), dot.at(1).toInt());
-            }
-            polyline->setPath(path);
-            graphicsList.append(polyline);
-*/
-            continue;
-        }
-        QDomElement pathElement = gNode.firstChildElement("polyline");
-        if (!pathElement.isNull()){
-            cust_line *line = new cust_line();
-            auto pElement = gNode.toElement();
-
- ///           line->setBrush(QBrush(Qt::transparent));
-            QString tstr = pElement.attribute("stroke", "#000000");
- ///           tstr.remove(0, 1);
- ///           int tmp = tstr.toUInt(nullptr, 16);
-           QColor strokeColor(tstr);
-    ///        QColor strokeColor(tmp);
-            ///QColor strokeColor(pElement.attribute("stroke", "#000000"));
-            strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
-            int line_thick = pElement.attribute("stroke-width", "0").toInt();
-          ///  points = "0,0 123,0 "
-
- ///           QString tline = pElement.attribute("points", "0,0 0,0");
-            QString tline = pElement.attribute("points");
-
-            line->setPen(QPen(strokeColor, line_thick));
-
- ///           line->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+ ///===========================================================
             QString transString = pElement.attribute("transform");
             transString.replace(QString("matrix("), QString(""));
             transString.replace(QString(")"), QString(""));
             QStringList transList = transString.split(",");
 
-            QTransform trans(line->transform());
+            QTransform trans(circle->transform());
+
             qreal m11 = trans.m11();    // Horizontal scaling
             qreal m12 = trans.m12();    // Vertical shearing
             qreal m13 = trans.m13();    // Horizontal Projection
@@ -107,32 +75,47 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
             m32 = transList.at(5).toFloat();
 
             trans.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
-            line->setTransform(trans);
-            ////rect->setPen(QPen(strokeColor, gElement.attribute("stroke-width", "0").toInt()));
-            line->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
-
-
-
-#if 0
+            circle->setTransform(trans);
+ ///===========================================================           
+            circle->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+            graphicsList.append(circle);
+            continue;
+        }
+///======================================================================
+#if 1
+        QDomElement pathElement = gNode.firstChildElement("path");
+        if (!pathElement.isNull()){
+            cust_line *line = new cust_line();
+            auto pElement = gNode.toElement();
+            line->setBrush(QBrush(Qt::transparent));
+            QColor strokeColor(pElement.attribute("stroke", "#000000"));
+            strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
+            int thick = pElement.attribute("stroke-width", "0").toInt();
+            line->setPen(QPen(strokeColor, thick));
             QPainterPath path;
             QStringList listDotes = pathElement.attribute("d").split(" ");
             QString first = listDotes.at(0);
             QStringList firstElement = first.replace(QString("M"),QString("")).split(",");
             path.moveTo(firstElement.at(0).toInt(),firstElement.at(1).toInt());
-            for(int i = 1; i < listDotes.length(); i++){
+            line->setPen(QPen(strokeColor, thick));
+#if 1
+  ////          int num= listDotes.length();
+           for (int i = 1; i < listDotes.length(); i++) {
+  ///          for(int i = 1; i < num; i++){
                 QString other = listDotes.at(i);
                 QStringList dot = other.replace(QString("L"),QString("")).split(",");
                 path.lineTo(dot.at(0).toInt(),dot.at(1).toInt());
             }
 #endif
-        ///    polyline->setPath(path);
-            graphicsList.append(line);
-            continue;
+        line->setPath(path);
+        graphicsList.append(line);
+        continue;
         }
-
+#endif
+///===========================================================================
         QDomElement rectangle = gNode.firstChildElement("rect");
         if (!rectangle.isNull()){
-            cust_rect*rect = new cust_rect();
+            cust_rect* rect = new cust_rect();
             auto gElement = gNode.toElement();
             rect->setRect(rectangle.attribute("x").toInt(),
                           rectangle.attribute("y").toInt(),

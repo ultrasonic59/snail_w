@@ -4,39 +4,37 @@ LibGraphicView::LibGraphicView(QWidget* parent)
     : QGraphicsView(parent)
 {
 
-    /* Немного поднастроим отображение виджета и его содержимого */
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Отключим скроллбар по горизонтали
-    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);   // Отключим скроллбар по вертикали
-    this->setAlignment(Qt::AlignCenter);                        // Делаем привязку содержимого к центру
-    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);    // Растягиваем содержимое по виджету
+#if 0
+  ///  this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 
+ ///   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);   // 
+    this->setAlignment(Qt::AlignCenter);                        // 
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);    // 
 
-    /* Также зададим минимальные размеры виджета
-     * */
-    this->setMinimumHeight(100);
+     this->setMinimumHeight(100);
     this->setMinimumWidth(100);
 
-    scene = new QGraphicsScene();   // Инициализируем сцену для отрисовки
-    this->setScene(scene);          // Устанавливаем сцену в виджет
+    scene = new QGraphicsScene();   // 
+    this->setScene(scene);          // 
 
-    group_1 = new QGraphicsItemGroup(); // Инициализируем первую группу элементов
-    group_2 = new QGraphicsItemGroup(); // Инициализируем вторую группу элементов
+    group_1 = new QGraphicsItemGroup(); // 
+    group_2 = new QGraphicsItemGroup(); // 
 
-    scene->addItem(group_1);            // Добавляем первую группу в сцену
-    scene->addItem(group_2);            // Добавляем вторую группу в сцену
+    scene->addItem(group_1);            // 
+    scene->addItem(group_2);            // 
 
-    timer = new QTimer();               // Инициализируем Таймер
+    timer = new QTimer();               //
     timer->setSingleShot(true);
-    // Подключаем СЛОТ для отрисовки к таймеру
+    //=========================================
     connect(timer, SIGNAL(timeout()), this, SLOT(slotAlarmTimer()));
-    timer->start(50);                   // Стартуем таймер на 50 миллисекунд
-
+    timer->start(50);                   // 
+#endif
 }
 
 LibGraphicView::~LibGraphicView()
 {
 
 }
-
+#if 0
 void LibGraphicView::slotAlarmTimer()
 {
     /* Удаляем все элементы со сцены,
@@ -96,16 +94,14 @@ void LibGraphicView::slotAlarmTimer()
         centerOfWidget_Y - (sideOfSquare / 2),
         penRed));
 }
-
-/* Этим методом перехватываем событие изменения размера виджет
- * */
+#endif
 void LibGraphicView::resizeEvent(QResizeEvent* event)
 {
-    timer->start(50);   // Как только событие произошло стартуем таймер для отрисовки
+ ////   timer->start(50);   // Как только событие произошло стартуем таймер для отрисовки
     QGraphicsView::resizeEvent(event);  // Запускаем событие родителького класса
 }
 
-
+#if 0
 /* Метод для удаления всех элементов из группы
  * */
 void LibGraphicView::deleteItemsFromGroup(QGraphicsItemGroup* group)
@@ -118,4 +114,29 @@ void LibGraphicView::deleteItemsFromGroup(QGraphicsItemGroup* group)
             delete item;
         }
     }
+}
+#endif
+void LibGraphicView::wheelEvent(QWheelEvent* event) {
+    if (event->modifiers() == Qt::ShiftModifier) {
+        int cur_angle = event->angleDelta().y();
+        qreal scaleFactor = (cur_angle > 0) ? 1.2 : 1.0 / 1.2;
+    ///   qreal scaleFactorY = (event->angleDelta().y() > 0) ? 1.2 : 1.0 / 1.2;
+       scale(scaleFactor, scaleFactor);
+       double currentScale = transform().m11();
+       emit zoom_chnged(currentScale);
+     }
+    else
+      QGraphicsView::wheelEvent(event);
+}
+
+void LibGraphicView::enterEvent(QEvent* event)
+{
+    QGraphicsView::enterEvent(event);
+    viewport()->setCursor(Qt::CrossCursor);
+}
+
+void LibGraphicView::mouseReleaseEvent(QMouseEvent* event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+    viewport()->setCursor(Qt::CrossCursor);
 }

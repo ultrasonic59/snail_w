@@ -5,6 +5,8 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
+#include <QWheelEvent>
+
 #include <QTimer>
 
 class LibGraphicView : public QGraphicsView
@@ -14,18 +16,24 @@ public:
     explicit LibGraphicView(QWidget* parent = 0);
     ~LibGraphicView();
 
-////signals:
+signals:
+    void zoom_chnged(double);
+protected:
+    void enterEvent(QEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+
+    void wheelEvent(QWheelEvent* event) override;
 
 private slots:
-    void slotAlarmTimer();  
+ ///   void slotAlarmTimer();  
  private:
     QGraphicsScene* scene;     // 
-    QGraphicsItemGroup* group_1;   //
-    QGraphicsItemGroup* group_2;   // 
+ ///   QGraphicsItemGroup* group_1;   //
+ ///   QGraphicsItemGroup* group_2;   // 
 
      QTimer* timer;
 
 private:
      void resizeEvent(QResizeEvent* event);
-    void deleteItemsFromGroup(QGraphicsItemGroup* group_1);
+///    void deleteItemsFromGroup(QGraphicsItemGroup* group_1);
 };

@@ -18,9 +18,9 @@
 #include "params.h"
 
 
-LibPaintScene::LibPaintScene(QObject* parent, PlotProperties* Plot_Prop
+LibPaintScene::LibPaintScene(QObject* parent
     , en_item_type* item_type , en_rej* _rej ) : QGraphicsScene(parent)
-    , pPlot_Prop(Plot_Prop) ,p_item_type(item_type),p_rej(_rej)
+    , p_item_type(item_type),p_rej(_rej)
     ,cur_rect(0,0,40,40), rect_color(Qt::darkCyan),cur_frect(0, 0, 40, 40)
     ,frect_color(Qt::cyan),cur_line(0, 0, 40, 40)
     ,line_color(Qt::darkCyan), line_thick(2),circle_rad(20),circle_thick(4)
@@ -67,10 +67,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(rect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
             connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
-            rect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            rect->setRect(0, 0, params::LibItemWidth, params::LibItemHeight);
             rect->setPos(gr_point);
             rect->setBrush(QBrush(Qt::NoBrush));
-            rect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            rect->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
             ///     emit signalNewSelectItem(rc);
         }
             break;
@@ -80,10 +80,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(frect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
             connect(frect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
-            frect->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
+            frect->setRect(0, 0, params::LibItemWidth, params::LibItemHeight);
             frect->setPos(gr_point);
-            frect->setBrush(QBrush(QColor(pPlot_Prop->LibItemBGColor)));
-            frect->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            frect->setBrush(QBrush(QColor(params::LibItemBGColor)));
+            frect->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
             ///     emit signalNewSelectItem(rc);
         }
             break;
@@ -93,31 +93,15 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-        ///    line->setLine(0, 0, 0,pPlot_Prop->LibItemWidth);
-///=========================================================
+            line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
+                , Qt::SolidLine, Qt::FlatCap));
+ ///           , Qt::SolidLine, Qt::RoundCap));
+
             QPainterPath path;
-            path.moveTo(m_previousPosition);
+             path.moveTo(gr_point);
+            path.lineTo(gr_point.x(), gr_point.y()+ params::LibItemWidth);
             line->setPath(path);
-
-///========================================================= 
-            line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
-                , Qt::SolidLine, Qt::RoundCap));
-            line->setPos(gr_point);
-
-            /*
-            VEPolyline* polyline = new VEPolyline();
-            currentItem = polyline;
-            addItem(currentItem);
-            connect(polyline, &VEPolyline::clicked, this, &LibPaintScene::signalSelectItem);
-            connect(polyline, &VEPolyline::signalMove, this, &LibPaintScene::slotMove);
- 
-            QPainterPath path;
-            path.moveTo(m_previousPosition);
-            polyline->setPath(path);
-            polyline->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
-                , Qt::SolidLine, Qt::RoundCap));
-                */
-             }
+           }
             break;
         case HLINE_TYPE: {
             cust_line* line = new cust_line(this);
@@ -125,11 +109,15 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-         ///   line->setLine(0, 0, pPlot_Prop->LibItemWidth, 0);
-            line->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick
-                , Qt::SolidLine, Qt::RoundCap));
-            line->setPos(gr_point);
-        }
+             line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
+                , Qt::SolidLine, Qt::SquareCap));
+ ////            , Qt::SolidLine, Qt::RoundCap));
+             QPainterPath path;
+             path.moveTo(gr_point);
+             path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
+             line->setPath(path);
+
+         }
             break;
         case CIRCLE_TYPE: {
             cust_circle* circle = new cust_circle();
@@ -137,10 +125,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             addItem(currentItem);
             connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
             connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
-            circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
-            circle->setPos(gr_point.x()- pPlot_Prop->LibItemWidth/2, gr_point.y()- pPlot_Prop->LibItemWidth/2);
+            circle->setCircle(0, 0, params::LibItemWidth);
+            circle->setPos(gr_point.x()- params::LibItemWidth/2, gr_point.y()- params::LibItemWidth/2);
             circle->setBrush(QBrush(Qt::NoBrush));
-            circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
+            circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
          }
             break;
         case POINT_TYPE: {
@@ -150,22 +138,18 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
             connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
             ///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
-            circle->setCircle(0, 0, pPlot_Prop->LibItemWidth);
-            circle->setPos(gr_point.x() - pPlot_Prop->LibItemWidth / 2, gr_point.y() - pPlot_Prop->LibItemWidth / 2);
+            circle->setCircle(0, 0, params::LibItemWidth);
+            circle->setPos(gr_point.x() - params::LibItemWidth / 2, gr_point.y() - params::LibItemWidth / 2);
             circle->setBrush(QBrush(Qt::NoBrush));
-            circle->setBrush(QBrush(pPlot_Prop->LibItemBrdColor));
+            circle->setBrush(QBrush(params::LibItemBrdColor));
 
-            circle->setPen(QPen(pPlot_Prop->LibItemBrdColor, pPlot_Prop->LibItemBrdThick));
-
+            circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
         }
-            break;
+        break;
         }
     }
     update();
     }
-
- ///   }
-
 }
 
 void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
@@ -186,6 +170,8 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
             break;
         case VLINE_TYPE: {
+            qDebug() << "LibPaintScene mouseMoveEvent " ;
+
             /*
             if (m_leftMouseButtonPressed) {
                 VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(currentItem);

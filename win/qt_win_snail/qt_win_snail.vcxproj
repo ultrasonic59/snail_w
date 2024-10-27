@@ -119,7 +119,6 @@
     <ClCompile Include="ViewProperties.cpp" />
     <ClCompile Include="widgets\param_ed.cpp" />
     <ClCompile Include="widgets\QPushButtonColored.cpp" />
-    <ClCompile Include="widgets\workplaceview.cpp" />
     <ClCompile Include="wrk_wrk.cpp" />
     <QtRcc Include="win_snail.qrc" />
     <QtUic Include="csv\csv_dlg.ui" />
@@ -148,7 +147,6 @@
     <ResourceCompile Include="qt_win_snail.rc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\workplaceview.h" />
     <QtMoc Include="wrk_wrk.h" />
     <QtMoc Include="dial_debug\dial_debug.h" />
     <QtMoc Include="camera\my_camera.h" />

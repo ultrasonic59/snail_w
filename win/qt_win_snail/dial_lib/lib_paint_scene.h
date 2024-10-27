@@ -22,7 +22,7 @@ Q_OBJECT
 ///Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit LibPaintScene(QObject* parent = 0, PlotProperties* Plot_Prop = 0, en_item_type* item_tipe=0, en_rej* _rej=0);
+    explicit LibPaintScene(QObject* parent = 0, en_item_type* item_tipe=0, en_rej* _rej=0);
     ~LibPaintScene();
 ///=======================================================
 public:
@@ -40,7 +40,7 @@ signals:
 ///=======================================================
 public:
     en_item_type* p_item_type;
-    en_rej* p_rej;
+    en_rej*       p_rej;
 private:
     QPointF     previousPoint;      //
     QPointF     currPoint;      //
@@ -88,9 +88,6 @@ private:
     int m_previousAction;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-///    VERectangle* rc;
- //   VERectangle* frc;
-
 };
 
 #endif // LIBPAINTSCENE_H

@@ -10,14 +10,15 @@
 #include "cust_rect.h"
 #include "cust_line.h"
 #include "cust_circle.h"
+#include "params.h"
 
-DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
-    QDialog(parent, Qt::Window),pParent(parent), pPlot_Prop(Plot_Prop)
+DialLib::DialLib(QWidget *parent):
+    QDialog(parent, Qt::Window),pParent(parent)
    , ui(), cur_rej(REJ_SELECT), cur_item(FRECT_TYPE)
 {
 	ui.setupUi(this);
-    ui.BorderColor->setColor(pPlot_Prop->LibItemBrdColor);
-    ui.BGcolor->setColor(pPlot_Prop->LibItemBGColor);
+    ui.BorderColor->setColor(params::LibItemBrdColor);
+    ui.BGcolor->setColor(params::LibItemBGColor);
     connect(ui.BorderColor, &ColorLabel::clicked,
         [=]() {
             QColorDialog dialog;
@@ -32,24 +33,25 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
         });
 
 ///===========================================================
+ ///   libView =(LibGraphicView*)ui.graphicsView;
     ui.item_border_thick->set_num_dig(2);
-    ui.item_border_thick->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemBrdThick));
+    ui.item_border_thick->set_data(reinterpret_cast<quint8*>(&params::LibItemBrdThick));
     ui.item_border_thick->set_min_max(1, 10);
     ui.item_border_thick->show_par();
 
     ui.item_width->set_num_dig(3);
-    ui.item_width->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemWidth ));
+    ui.item_width->set_data(reinterpret_cast<quint8*>(&params::LibItemWidth ));
     ui.item_width->set_min_max(1, 999);
     ui.item_width->show_par();
 
     ui.item_height->set_num_dig(3);
-    ui.item_height->set_data(reinterpret_cast<quint8*>(&pPlot_Prop->LibItemHeight ));
+    ui.item_height->set_data(reinterpret_cast<quint8*>(&params::LibItemHeight ));
     ui.item_height->set_min_max(1, 999);
     ui.item_height->show_par();
 
 ///===========================================================
 
-    scene = new LibPaintScene(this,pPlot_Prop,&cur_item, &cur_rej);       // 
+    scene = new LibPaintScene(this,&cur_item, &cur_rej);       // 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
  
     ui.graphicsView->setScene(scene);  // 
@@ -91,6 +93,11 @@ DialLib::DialLib(QWidget *parent, PlotProperties* Plot_Prop):
     connect(scene, &LibPaintScene::currentActionChanged, this, &DialLib::checkActionStates);
     connect(scene, &LibPaintScene::signalSelectItem, this, &DialLib::selectItem);
     connect(scene, &LibPaintScene::signalNewSelectItem, this, &DialLib::selectNewItem);
+    connect(ui.zoomSlider, SIGNAL(valueChanged(int)), this, SLOT(on_zoom_changed(int)));
+    connect(ui.graphicsView, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
+
+    
+
 }
 
 DialLib::~DialLib()
@@ -142,6 +149,9 @@ if (cur_rej == REJ_SELECT)
     ui.item_border_thick->setVisible(false);
     ui.item_height->setVisible(false);
     ui.item_width->setVisible(false);
+    ui.label_with->setVisible(false);
+    ui.label_hight->setVisible(false);
+
     }
  else
     {
@@ -158,7 +168,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
-        ///     ui->item_width->show();
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
 
         break;
     case FRECT_TYPE:
@@ -172,7 +183,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
-        ///     ui->item_width->show();
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
 
         break;
     case VLINE_TYPE:
@@ -186,6 +198,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
 
         break;
     case HLINE_TYPE:
@@ -199,6 +213,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
         break;
     case CIRCLE_TYPE:
         ui.labelBGColor->setVisible(false);
@@ -211,6 +227,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
         break;
     case POINT_TYPE:
         ui.labelBGColor->setVisible(false);
@@ -223,6 +241,8 @@ if (cur_rej == REJ_SELECT)
         ui.item_border_thick->setVisible(true);
         ui.item_height->setVisible(true);
         ui.item_width->setVisible(true);
+        ui.label_with->setVisible(true);
+        ui.label_hight->setVisible(true);
         break;
 
     }
@@ -277,6 +297,30 @@ void DialLib::resizeEvent(QResizeEvent* event)
     timer->start(100);
     QWidget::resizeEvent(event);
 }
+void DialLib::sl_zoom_changed(double value)
+{
+///double currentScale = uitransform().m11();
+///    qDebug() << "zoom changed:" << value;
+ui.lineEdit_zoom->setText(QString::number(value));
+}
+
+void DialLib::on_zoom_changed(int value)
+{
+#if 0
+    hid_cmd_t t_cmd;
+    t_cmd.cmd = CMD_SET_LED0;
+    t_cmd.num_bytes = 2;
+    t_cmd.dat[0] = value & 0xff;
+    t_cmd.dat[1] = (value >> 8) & 0xff;
+
+    ///   int value = ui->lightSlider->value();
+    qDebug() << "on_value_led0_changed" << value << t_cmd.dat[0] << t_cmd.dat[1];
+
+    put_hid_cmd(&t_cmd);
+#endif
+}
+
+
 void DialLib::indexChanged(int index)
 {
  cur_item = (en_item_type)ui.comboBox_item->currentIndex();
@@ -419,8 +463,8 @@ void DialLib::on_butSave_clicked()
     generator.setFileName(path);
     generator.setSize(QSize(scene->width(), scene->height()));
     generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
-    generator.setTitle(tr("Vector Editor"));
-    generator.setDescription(tr("File created by Vector Editor."));
+    generator.setTitle(tr("Lib Editor"));
+    generator.setDescription(tr("File created by Snail lib Editor."));
 
     QPainter painter;
     painter.begin(&generator);
@@ -442,18 +486,15 @@ void DialLib::on_butOpen_clicked()
 
     foreach(QGraphicsItem * item, SvgReader::getElements(path)) {
         qDebug() << "item->type=" << item->type();
-
         switch (item->type()) {
-  
-/*
-        case QGraphicsPathItem::Type: {
-            VEPolyline* polyline = qgraphicsitem_cast<VEPolyline*>(item);
+          case QGraphicsPathItem::Type: {
+            cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
             scene->addItem(polyline);
-            connect(polyline, &VEPolyline::clicked, scene, &LibPaintScene::signalSelectItem);
-            connect(polyline, &VEPolyline::signalMove, scene, &LibPaintScene::slotMove);
+            connect(polyline, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
-*/
+/*
         case QGraphicsLineItem::Type: {
             cust_line* line = qgraphicsitem_cast<cust_line*>(item);
             scene->addItem(line);
@@ -461,6 +502,7 @@ void DialLib::on_butOpen_clicked()
             connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
+*/
         case QGraphicsEllipseItem::Type: {
             cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
             scene->addItem(circle);
@@ -468,7 +510,6 @@ void DialLib::on_butOpen_clicked()
             connect(circle, &cust_circle::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
-
         case QGraphicsRectItem::Type: {
             cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
             scene->addItem(rect);
@@ -481,7 +522,6 @@ void DialLib::on_butOpen_clicked()
         }
     }
     scene->update();
-
 }
 ///====================================================================
 void DialLib::setBGColor(const QColor& color)
@@ -489,13 +529,13 @@ void DialLib::setBGColor(const QColor& color)
 
  ///   m_BGcolor = color;
  ui.BGcolor->setColor(color);
- pPlot_Prop->LibItemBGColor = color;
+ params::LibItemBGColor = color;
  ////   emit BGcolorChanged(m_BGcolor);
 }
 void DialLib::setBorderColor(const QColor& color)
 {
 ///    m_borderColor = color;
  ui.BorderColor->setColor(color);
- pPlot_Prop->LibItemBrdColor = color;
+ params::LibItemBrdColor = color;
  ///emit borderColorChanged(m_borderColor);
 }

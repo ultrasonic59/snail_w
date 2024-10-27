@@ -25,11 +25,11 @@ public:
 ///	quint8 lib_grid_delt_x;
 ///	quint8 lib_grid_delt_y;
 ///======== lib items ========================================
-	QColor LibItemBGColor;
-	QColor LibItemBrdColor;
-	quint8 LibItemBrdThick;
-	quint16 LibItemWidth;
-	quint16 LibItemHeight;
+///	QColor LibItemBGColor;
+///	QColor LibItemBrdColor;
+///	quint8 LibItemBrdThick;
+///	quint16 LibItemWidth;
+///	quint16 LibItemHeight;
 
 
 	PlotProperties(void);

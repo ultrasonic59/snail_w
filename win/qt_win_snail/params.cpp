@@ -39,7 +39,17 @@ QPoint params::closest_to_grid(QPointF curr_pos)
     }
     return QPoint(rez_x, rez_y);
 }
+/// LibItemBGColor(Qt::darkGray),
+///  LibItemBrdColor(Qt::gray),
+///              LibItemBrdThick(1),
+///              LibItemWidth(100),
+///              LibItemHeight(50)
 
 
 quint8 params::lib_grid_delt_x = DEF_DELT_X;
 quint8 params::lib_grid_delt_y = DEF_DELT_Y;
+QColor params::LibItemBGColor= Qt::darkGray;
+QColor params::LibItemBrdColor= Qt::gray;
+quint8 params::LibItemBrdThick=1;
+quint16 params::LibItemWidth=100;
+quint16 params::LibItemHeight=50;
