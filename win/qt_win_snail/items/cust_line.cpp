@@ -4,7 +4,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsPathItem>
 #include <QDebug>
-#include "dotsignal.h"
+///#include "dotsignal.h"
+#include "params.h"
+
 
 cust_line::cust_line(QObject *parent) :
     QObject(parent)
@@ -39,11 +41,17 @@ void cust_line::setPath(const QPainterPath &path)
 
 void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    QPoint pt = params::closest_to_grid(event->pos());
+
     if (m_leftMouseButtonPressed) {
+ ///       auto dx = pt.x() - m_previousPosition.x();
+ ///       auto dy = pt.y() - m_previousPosition.y();
         auto dx = event->scenePos().x() - m_previousPosition.x();
         auto dy = event->scenePos().y() - m_previousPosition.y();
+
         moveBy(dx,dy);
-        setPreviousPosition(event->scenePos());
+ ///       setPreviousPosition(event->scenePos());
+        setPreviousPosition(pt);
         emit signalMove(this, dx, dy);
     }
     QGraphicsItem::mouseMoveEvent(event);
@@ -51,9 +59,12 @@ void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+ QPoint pt = params::closest_to_grid(event->pos());
+
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
-        setPreviousPosition(event->scenePos());
+///        setPreviousPosition(event->scenePos());
+        setPreviousPosition(pt);
         emit clicked(this);
     }
     QGraphicsItem::mousePressEvent(event);
@@ -105,12 +116,15 @@ void cust_line::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_line::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
+/*
     if(!listDotes.isEmpty()){
         foreach (DotSignal *dot, listDotes) {
             dot->deleteLater();
         }
         listDotes.clear();
     }
+    */
+
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
@@ -121,6 +135,7 @@ void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
+    /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         QPointF point = linePath.elementAt(i);
@@ -130,6 +145,7 @@ void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
         dot->setDotFlags(DotSignal::Movable);
         listDotes.append(dot);
     }
+*/
     QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -137,7 +153,8 @@ void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
-        if(listDotes.at(i) == signalOwner){
+  ///      if(listDotes.at(i) == signalOwner)
+        {
             QPointF pathPoint = linePath.elementAt(i);
             linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
             m_pointForCheck = i;
@@ -178,11 +195,11 @@ void cust_line::checkForDeletePoints()
                 setPath(newPath);
             }
         }
-        updateDots();
+ ///       updateDots();
         m_pointForCheck = -1;
     }
 }
-
+/*
 void cust_line::updateDots()
 {
     if(!listDotes.isEmpty()){
@@ -201,3 +218,4 @@ void cust_line::updateDots()
         listDotes.append(dot);
     }
 }
+*/

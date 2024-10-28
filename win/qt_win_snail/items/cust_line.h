@@ -43,10 +43,10 @@ private slots:
 private:
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-    QList<DotSignal *> listDotes;
+  ///  QList<DotSignal *> listDotes;
     int m_pointForCheck;
 
-    void updateDots();
+ ////   void updateDots();
 };
 
 #endif // VEPOLYLINE_H

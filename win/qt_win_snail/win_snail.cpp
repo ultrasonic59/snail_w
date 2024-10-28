@@ -14,6 +14,9 @@ win_snail::win_snail(QWidget *parent)
     ui->setupUi(this);
 ///====================================
     qRegisterMetaType<cv::Mat>("cv::Mat");
+
+ ///    VideoCapture cap(0);
+
     p_CamView = ui->CamWidget;
     pt_camera = new MyCamera(0, &snail_data);
    //// connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
