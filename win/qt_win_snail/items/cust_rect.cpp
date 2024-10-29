@@ -240,7 +240,9 @@ void cust_rect::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             setCursor(Qt::CrossCursor);
             break;
         }
-    } else {
+    } 
+/*
+    else {
         switch (m_cornerFlags) {
         case TopLeft:
         case TopRight:
@@ -255,6 +257,7 @@ void cust_rect::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             break;
         }
     }
+    */
     QGraphicsItem::hoverMoveEvent( event );
 }
 

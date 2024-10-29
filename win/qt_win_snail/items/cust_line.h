@@ -19,6 +19,12 @@ public:
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
     void setPath(const QPainterPath &path);
+    enum CornerFlags {
+        Top = 0x01,
+        Bottom = 0x02,
+        Left = 0x04,
+        Right = 0x08
+     };
 
 signals:
     void previousPositionChanged();
@@ -34,7 +40,7 @@ protected:
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
-public slots:
+///public slots:
 
 private slots:
     void slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy);
@@ -45,6 +51,7 @@ private:
     bool m_leftMouseButtonPressed;
   ///  QList<DotSignal *> listDotes;
     int m_pointForCheck;
+    unsigned int m_cornerFlags;
 
  ////   void updateDots();
 };

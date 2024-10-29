@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsPathItem>
 #include <QDebug>
+#include <QCursor>
 ///#include "dotsignal.h"
 #include "params.h"
 
@@ -44,10 +45,10 @@ void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QPoint pt = params::closest_to_grid(event->pos());
 
     if (m_leftMouseButtonPressed) {
- ///       auto dx = pt.x() - m_previousPosition.x();
- ///       auto dy = pt.y() - m_previousPosition.y();
-        auto dx = event->scenePos().x() - m_previousPosition.x();
-        auto dy = event->scenePos().y() - m_previousPosition.y();
+        auto dx = pt.x() - m_previousPosition.x();
+        auto dy = pt.y() - m_previousPosition.y();
+  ///      auto dx = event->scenePos().x() - m_previousPosition.x();
+   ///     auto dy = event->scenePos().y() - m_previousPosition.y();
 
         moveBy(dx,dy);
  ///       setPreviousPosition(event->scenePos());
@@ -130,6 +131,143 @@ void cust_line::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
+///====================================================
+#if 0
+    QPainterPath t_path = path();
+///================================================
+    QPainterPath linePath = path();
+    for (int i = 0; i < linePath.elementCount(); i++) {
+        ///      if(listDotes.at(i) == signalOwner)
+        {
+            QPointF pathPoint = linePath.elementAt(i);
+            linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
+            m_pointForCheck = i;
+        }
+    }
+#endif
+QPainterPath linePath = path();
+int num_points= linePath.elementCount();
+qDebug() << "num_points=" << num_points;
+qreal left_p;
+qreal right_p;
+qreal top_p;
+qreal bot_p;
+
+if (num_points == 2)
+{
+if (linePath.elementAt(0).x < linePath.elementAt(1).x)
+    {
+    left_p = linePath.elementAt(0).x;
+    right_p = linePath.elementAt(1).x;
+    }
+else
+    {
+    left_p = linePath.elementAt(1).x;
+    right_p = linePath.elementAt(0).x;
+    }
+if (linePath.elementAt(0).y < linePath.elementAt(1).y)
+{
+    top_p = linePath.elementAt(0).y;
+    bot_p = linePath.elementAt(1).y;
+}
+else
+{
+    top_p = linePath.elementAt(1).y;
+    bot_p = linePath.elementAt(0).y;
+}
+QPointF pt = event->pos();              // The current position of the mouse
+qreal drx = pt.x() - right_p;    // Distance between the mouse and the right
+qreal dlx = pt.x() - left_p;     // Distance between the mouse and the left
+
+qreal dby = pt.y() - top_p;      // Distance between the mouse and the top
+qreal dty = pt.y() - bot_p;   // Distance between the mouse and the bottom
+
+m_cornerFlags = 0;
+if (dby < 7 && dby > -7)
+m_cornerFlags |= Top;       // Top side
+if (dty < 7 && dty > -7)
+m_cornerFlags |= Bottom;    // Bottom side
+if (drx < 7 && drx > -7)
+m_cornerFlags |= Right;     // Right side
+if (dlx < 7 && dlx > -7)
+m_cornerFlags |= Left;      // Left side
+
+QPixmap p(":/icons/arrow-up-down.png");
+QPixmap pResult;
+QTransform trans = transform();
+if ((m_cornerFlags & Left) | (m_cornerFlags & Right))
+   {
+    trans.rotate(90);
+    pResult = p.transformed(trans);
+    setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+   }
+else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
+   {
+    pResult = p.transformed(trans);
+    setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+   }
+else
+   setCursor(Qt::CrossCursor);
+}
+///================================================
+
+#if 0
+     QPointF pt = event->pos();              // The current position of the mouse
+    qreal drx = pt.x() - rect().right();    // Distance between the mouse and the right
+    qreal dlx = pt.x() - rect().left();     // Distance between the mouse and the left
+
+    qreal dby = pt.y() - rect().top();      // Distance between the mouse and the top
+    qreal dty = pt.y() - rect().bottom();   // Distance between the mouse and the bottom
+
+    // If the mouse position is within a radius of 7
+    // to a certain side( top, left, bottom or right)
+    // we set the Flag in the Corner Flags Register
+
+    m_cornerFlags = 0;
+    if (dby < 7 && dby > -7)
+        m_cornerFlags |= Top;       // Top side
+    if (dty < 7 && dty > -7)
+        m_cornerFlags |= Bottom;    // Bottom side
+    if (drx < 7 && drx > -7)
+        m_cornerFlags |= Right;     // Right side
+    if (dlx < 7 && dlx > -7)
+        m_cornerFlags |= Left;      // Left side
+
+    if (m_actionFlags == ResizeState) {
+        QPixmap p(":/icons/arrow-up-down.png");
+        QPixmap pResult;
+        QTransform trans = transform();
+        switch (m_cornerFlags) {
+        case Top:
+        case Bottom:
+            pResult = p.transformed(trans);
+            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+            break;
+        case Left:
+        case Right:
+            trans.rotate(90);
+            pResult = p.transformed(trans);
+            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+            break;
+        case TopRight:
+        case BottomLeft:
+            trans.rotate(45);
+            pResult = p.transformed(trans);
+            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+            break;
+        case TopLeft:
+        case BottomRight:
+            trans.rotate(135);
+            pResult = p.transformed(trans);
+            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+            break;
+        default:
+            setCursor(Qt::CrossCursor);
+            break;
+        }
+    }
+#endif
+    ///================================================
     QGraphicsItem::hoverMoveEvent(event);
 }
 
