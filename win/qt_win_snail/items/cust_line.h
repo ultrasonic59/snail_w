@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QGraphicsPathItem>
+#include "dot_signal.h"
 
-class DotSignal;
+class Dot_Signal;
 class QGraphicsSceneMouseEvent;
 
 class cust_line : public QObject, public QGraphicsPathItem
@@ -49,11 +50,11 @@ private slots:
 private:
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-  ///  QList<DotSignal *> listDotes;
+    QList<Dot_Signal *> listDotes;
     int m_pointForCheck;
     unsigned int m_cornerFlags;
 
- ////   void updateDots();
+    void updateDots();
 };
 
 #endif // VEPOLYLINE_H

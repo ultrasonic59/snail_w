@@ -115,6 +115,7 @@
     <ClCompile Include="plotters\PlotProperties.cpp" />
     <ClCompile Include="utils\colorlabel.cpp" />
     <ClCompile Include="utils\dotsignal.cpp" />
+    <ClCompile Include="utils\dot_signal.cpp" />
     <ClCompile Include="utils\svgreader.cpp" />
     <ClCompile Include="ViewProperties.cpp" />
     <ClCompile Include="widgets\param_ed.cpp" />
@@ -174,6 +175,7 @@
     <QtMoc Include="utils\colorlabel.h" />
     <QtMoc Include="utils\dotsignal.h" />
     <QtMoc Include="utils\svgreader.h" />
+    <QtMoc Include="utils\dot_signal.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />

@@ -187,6 +187,9 @@
     <ClCompile Include="items\cust_rect.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
+    <ClCompile Include="utils\dot_signal.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -303,6 +306,9 @@
     </QtMoc>
     <QtMoc Include="items\cust_rect.h">
       <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="utils\dot_signal.h">
+      <Filter>Header Files\utils</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

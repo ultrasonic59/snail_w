@@ -382,7 +382,8 @@ void LibPaintScene::deselectItems()
 void LibPaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
 {
     foreach(QGraphicsItem * item, selectedItems()) {
-        if (item != signalOwner) item->moveBy(dx, dy);
+        if (item != signalOwner) 
+            item->moveBy(dx, dy);
     }
 }
 void LibPaintScene::keyPressEvent(QKeyEvent* event)
