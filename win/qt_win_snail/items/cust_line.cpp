@@ -32,41 +32,76 @@ void cust_line::setPreviousPosition(const QPointF previousPosition)
         return;
 
     m_previousPosition = previousPosition;
-    emit previousPositionChanged();
+ ///   emit previousPositionChanged();
 }
 
 void cust_line::setPath(const QPainterPath &path)
 {
     QGraphicsPathItem::setPath(path);
 }
+#define DELT_NEAR 5
 
+bool nearPoints(QPointF pt1, QPointF pt2)
+{
+if ((pt1.x() >= pt2.x() - DELT_NEAR) && (pt1.x() < pt2.x() + DELT_NEAR))
+    {
+    if ((pt1.y() >= pt2.y() - DELT_NEAR) && (pt1.y() < pt2.y() + DELT_NEAR))
+       {
+        return true;
+       }
+    }
+return false;
+}
 void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPoint pt = params::closest_to_grid(event->pos());
+QPainterPath linePath = path();
+
+ ///   QPoint pt = params::closest_to_grid(event->pos());
+ QPointF pt = event->pos();
 
     if (m_leftMouseButtonPressed) {
-        auto dx = pt.x() - m_previousPosition.x();
-        auto dy = pt.y() - m_previousPosition.y();
-  ///      auto dx = event->scenePos().x() - m_previousPosition.x();
-   ///     auto dy = event->scenePos().y() - m_previousPosition.y();
+ ///       if (linePath.elementAt(0) == m_previousPosition)
+        if (nearPoints(linePath.elementAt(0),m_previousPosition))
+            {
+            linePath.setElementPositionAt(0, pt.x(), pt.y());
+            setPreviousPosition(pt);
+            qDebug() << "elementAt(0)"<< pt;
 
-        moveBy(dx,dy);
- ///       setPreviousPosition(event->scenePos());
-        setPreviousPosition(pt);
-        emit signalMove(this, dx, dy);
+          }
+ ///       else if (linePath.elementAt(1) == m_previousPosition)
+        else if (nearPoints(linePath.elementAt(1),m_previousPosition))
+           {
+            setPreviousPosition(pt);
+            qDebug() << "elementAt(1)";
+
+          }
+        else
+        {
+ ///           qDebug() << "======";
+            auto dx = pt.x() - m_previousPosition.x();
+            auto dy = pt.y() - m_previousPosition.y();
+            ///      auto dx = event->scenePos().x() - m_previousPosition.x();
+             ///     auto dy = event->scenePos().y() - m_previousPosition.y();
+
+            moveBy(dx, dy);
+            ///       setPreviousPosition(event->scenePos());
+            setPreviousPosition(pt);
+            /// emit signalMove(this, dx, dy);
+        }
     }
     QGraphicsItem::mouseMoveEvent(event);
 }
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
- QPoint pt = params::closest_to_grid(event->pos());
+ ///QPoint pt = params::closest_to_grid(event->pos());
+ QPointF pt = event->pos();
 
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
 ///        setPreviousPosition(event->scenePos());
         setPreviousPosition(pt);
-        emit clicked(this);
+        emit signalPress(this);
     }
     QGraphicsItem::mousePressEvent(event);
 }
@@ -136,14 +171,14 @@ void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 ///================================================
     QPainterPath linePath = path();
     for (int i = 0; i < linePath.elementCount(); i++) {
-        ///      if(listDotes.at(i) == signalOwner)
+              if(listDotes.at(i) == signalOwner)
         {
             QPointF pathPoint = linePath.elementAt(i);
             linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
             m_pointForCheck = i;
         }
     }
-#endif
+#else
 int num_points= linePath.elementCount();
 ///qDebug() << "num_points=" << num_points;
 qreal left_p;
@@ -198,6 +233,8 @@ if ((m_cornerFlags & Left) | (m_cornerFlags & Right))
     trans.rotate(90);
     pResult = p.transformed(trans);
     setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+    qDebug() << "Left-Right";
+
    }
 else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
    {
@@ -206,6 +243,7 @@ else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
    }
 else
    setCursor(Qt::CrossCursor);
+#endif
 }
 ///================================================
 

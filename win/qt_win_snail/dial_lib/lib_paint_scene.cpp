@@ -91,7 +91,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
-            connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
             line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                 , Qt::SolidLine, Qt::FlatCap));
@@ -107,7 +107,7 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
-            connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
+            connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
             connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
              line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                 , Qt::SolidLine, Qt::SquareCap));

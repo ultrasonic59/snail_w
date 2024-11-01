@@ -490,7 +490,7 @@ void DialLib::on_butOpen_clicked()
           case QGraphicsPathItem::Type: {
             cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
             scene->addItem(polyline);
-            connect(polyline, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
+            connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
             connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }

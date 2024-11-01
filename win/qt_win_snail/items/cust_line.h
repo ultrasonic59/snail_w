@@ -29,7 +29,7 @@ public:
 
 signals:
     void previousPositionChanged();
-    void clicked(cust_line *rect);
+    void signalPress(cust_line *rect);
     void signalMove(QGraphicsItem *item, qreal dx, qreal dy);
 
 protected:
