@@ -56,8 +56,13 @@ win_snail::win_snail(QWidget *parent)
 
   
 #endif
-    
-///=======================================================
+/*
+    int tsize = sizeof(float);
+    qDebug() << "float="<< tsize;
+    tsize = sizeof(int);
+    qDebug() << "int=" << tsize;
+    */
+    ///=======================================================
 connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
 
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
