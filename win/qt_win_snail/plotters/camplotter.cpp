@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp> // drawing shapes
+#include "params.h"
 ///=================================================
 Scalar qcolor2scalar(QColor color)
 {
@@ -102,9 +103,9 @@ rectangle(_mat, p1, p2,
 void CamPlotter::drawRuleLine(const Mat& _mat)
 {
 	Scalar colorLine(255, 0, 255);
-	QColor tcolor = pPlot_Prop->RuleColor;
+	QColor tcolor = params::RuleColor;
 
-	int thickness = pPlot_Prop->thick_rule;
+	int thickness = params::thick_rule;
 ///	if(sel_rect.topLeft().x()>)
 	QPoint pnt_tl = getMouseInsideCoord(sel_rect.topLeft());
 	QPoint pnt_br = getMouseInsideCoord(sel_rect.bottomRight());

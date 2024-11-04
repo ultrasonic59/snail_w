@@ -648,16 +648,16 @@ void win_snail::saveSettings(void)
     ///================ Colors =======================================================
     settings.setValue("BackgroundColor", PlotProp.BGColor.rgb());
     settings.setValue("SelectColor", PlotProp.SelColor.rgb());
-    settings.setValue("RuleColor", PlotProp.RuleColor.rgb());
+    settings.setValue("RuleColor", params::RuleColor.rgb());
     settings.setValue("CircleColor", PlotProp.CircleColor.rgb());
     settings.setValue("CrossColor", PlotProp.CrossColor.rgb());
-    settings.setValue("LibBgColor", PlotProp.LibBGColor.rgb());
-    settings.setValue("LibGridColor", PlotProp.LibGridColor.rgb());
+    settings.setValue("LibBgColor", params::LibBGColor.rgb());
+    settings.setValue("LibGridColor", params::LibGridColor.rgb());
 
 
     ///================ thicknesses =======================================================
     settings.setValue("Thickness select", PlotProp.thick_sel);
-    settings.setValue("Thickness Rule", PlotProp.thick_rule);
+    settings.setValue("Thickness Rule", params::thick_rule);
     settings.setValue("Thickness circle", PlotProp.thick_circle);
     settings.setValue("Thickness cross", PlotProp.thick_crs);
     settings.setValue("Radius circle", PlotProp.rad_circle);
@@ -686,15 +686,15 @@ void win_snail::loadSettings(void)
     ///================ Colors =======================================================
     PlotProp.BGColor.setRgb(settings.value("BackgroundColor", PlotProp.BGColor.rgb()).toInt());
     PlotProp.SelColor.setRgb(settings.value("SelectColor", PlotProp.SelColor.rgb()).toInt());
-    PlotProp.RuleColor.setRgb(settings.value("RuleColor", PlotProp.RuleColor.rgb()).toInt());
+    params::RuleColor.setRgb(settings.value("RuleColor", params::RuleColor.rgb()).toInt());
     PlotProp.CircleColor.setRgb(settings.value("CircleColor", PlotProp.CircleColor.rgb()).toInt());
     PlotProp.CrossColor.setRgb(settings.value("CrossColor", PlotProp.CrossColor.rgb()).toInt());
-    PlotProp.CrossColor.setRgb(settings.value("LibBgColor", PlotProp.LibBGColor.rgb()).toInt());
-    PlotProp.CrossColor.setRgb(settings.value("LibGridColor", PlotProp.LibGridColor.rgb()).toInt());
+    PlotProp.CrossColor.setRgb(settings.value("LibBgColor", params::LibBGColor.rgb()).toInt());
+    PlotProp.CrossColor.setRgb(settings.value("LibGridColor", params::LibGridColor.rgb()).toInt());
 
     ///================ thicknesses =======================================================
     PlotProp.thick_sel= settings.value("Thickness select", 1).toInt();
-    PlotProp.thick_rule = settings.value("Thickness rule", 1).toInt();
+    params::thick_rule = settings.value("Thickness rule", 1).toInt();
     PlotProp.thick_circle = settings.value("Thickness circle", DEF_THICK_CIRCLE).toInt();
     PlotProp.thick_crs = settings.value("Thickness cross", 1).toInt();
     PlotProp.rad_circle = settings.value("Radius circle", DEF_RAD_CIRCLE).toInt();

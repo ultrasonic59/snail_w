@@ -109,13 +109,10 @@
     <ClCompile Include="items\cust_circle.cpp" />
     <ClCompile Include="items\cust_line.cpp" />
     <ClCompile Include="items\cust_rect.cpp" />
-    <ClCompile Include="items\veselectionrect.cpp" />
     <ClCompile Include="params.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
     <ClCompile Include="utils\colorlabel.cpp" />
-    <ClCompile Include="utils\dotsignal.cpp" />
-    <ClCompile Include="utils\dot_signal.cpp" />
     <ClCompile Include="utils\svgreader.cpp" />
     <ClCompile Include="ViewProperties.cpp" />
     <ClCompile Include="widgets\param_ed.cpp" />
@@ -161,7 +158,6 @@
     <QtMoc Include="dial_lib\lib_paint_scene.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <QtMoc Include="plotters\camplotter.h" />
-    <QtMoc Include="items\veselectionrect.h" />
     <QtMoc Include="items\cust_circle.h" />
     <QtMoc Include="items\cust_line.h" />
     <QtMoc Include="items\cust_rect.h" />

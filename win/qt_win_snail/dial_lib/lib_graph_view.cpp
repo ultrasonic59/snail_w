@@ -1,4 +1,5 @@
 #include "lib_graph_view.h"
+#include <QDebug>
 
 LibGraphicView::LibGraphicView(QWidget* parent)
     : QGraphicsView(parent)
@@ -134,9 +135,20 @@ void LibGraphicView::enterEvent(QEvent* event)
     QGraphicsView::enterEvent(event);
     viewport()->setCursor(Qt::CrossCursor);
 }
+///void mouseMoveEvent(QMouseEvent* event);
 
 void LibGraphicView::mouseReleaseEvent(QMouseEvent* event)
 {
     QGraphicsView::mouseReleaseEvent(event);
     viewport()->setCursor(Qt::CrossCursor);
+}
+void LibGraphicView::mouseMoveEvent(QMouseEvent* event)
+{
+ ///   QPointF ev_point = event->pos();
+    QGraphicsView::mouseMoveEvent(event);
+#if 0
+    viewport()->setCursor(Qt::CrossCursor);
+  ///  qDebug() << "LibGraphicView::mouseMoveEvent=" << ev_point << "alt=" << m_altPressed;
+    qDebug() << "LibGraphicView::mouseMoveEvent=" << ev_point ;
+#endif
 }

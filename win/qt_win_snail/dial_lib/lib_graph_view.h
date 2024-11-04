@@ -21,6 +21,7 @@ signals:
 protected:
     void enterEvent(QEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event);
 
     void wheelEvent(QWheelEvent* event) override;
 

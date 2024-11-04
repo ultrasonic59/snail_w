@@ -22,8 +22,7 @@ void ComboBoxKey::setEditable(bool editable)
             setCurrentIndex(count() - 1);
         }
     }
-
-    QComboBox::setEditable(editable);
+QComboBox::setEditable(editable);
 }
 
 void ComboBoxKey::setCurrentNext()
@@ -68,12 +67,14 @@ QStringList ComboBoxKey::items()
 
 void ComboBoxKey::keyPressEvent(QKeyEvent *e)
 {
-    if (this->isEditable() || !isBlockedKey(e->key())) QComboBox::keyPressEvent(e);
+    if (this->isEditable() || !isBlockedKey(e->key())) 
+        QComboBox::keyPressEvent(e);
 }
 
 void ComboBoxKey::keyReleaseEvent(QKeyEvent *e)
 {
-    if (this->isEditable() || !isBlockedKey(e->key())) QComboBox::keyReleaseEvent(e);
+    if (this->isEditable() || !isBlockedKey(e->key())) 
+        QComboBox::keyReleaseEvent(e);
 }
 
 bool ComboBoxKey::isBlockedKey(int key)

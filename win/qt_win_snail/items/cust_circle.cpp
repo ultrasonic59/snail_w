@@ -6,7 +6,7 @@
 #include <QGraphicsSceneMouseEvent>
 /// #include <QGraphicsRectItem>
 #include <math.h>
-#include "dotsignal.h"
+///#include "dotsignal.h"
 #include "params.h"
 
 
@@ -19,18 +19,18 @@ cust_circle::cust_circle(QObject *parent) :
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
-    for(int i = 0; i < NUM_CORNERS; i++){
-        cornerGrabber[i] = new DotSignal(0,this);
+   /// for(int i = 0; i < NUM_CORNERS; i++){
+   ///    cornerGrabber[i] = new DotSignal(0,this);
   ///     cornerGrabber[i] = new DotSignal(QPointF(0, 0), 0, this);
-    }
-    setPositionGrabbers();
+ ///   }
+ ////   setPositionGrabbers();
 }
 
 cust_circle::~cust_circle()
 {
-    for(int i = 0; i < NUM_CORNERS; i++){
-        delete cornerGrabber[i];
-    }
+  ///  for(int i = 0; i < NUM_CORNERS; i++){
+  ///      delete cornerGrabber[i];
+  ///  }
 }
 
 QPointF cust_circle::previousPosition() const
@@ -126,21 +126,21 @@ void cust_circle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_circle::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-     setVisibilityGrabbers();
+  //   setVisibilityGrabbers();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
 
 void cust_circle::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    setPositionGrabbers();
-    setVisibilityGrabbers();
+  ///  setPositionGrabbers();
+ ///   setVisibilityGrabbers();
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void cust_circle::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_cornerFlags = 0;
-    hideGrabbers();
+ ///   hideGrabbers();
     setCursor(Qt::CrossCursor);
     QGraphicsItem::hoverLeaveEvent( event );
 }
@@ -217,7 +217,7 @@ void cust_circle::resizeLeft(const QPointF &pt)
     setRect( tmpRect );
      // Update to see the result
     update();
-    setPositionGrabbers();
+  ///  setPositionGrabbers();
 }
 
 void cust_circle::resizeRight(const QPointF &pt)
@@ -242,7 +242,7 @@ void cust_circle::resizeRight(const QPointF &pt)
     prepareGeometryChange();
     setRect( tmpRect );
     update();
-    setPositionGrabbers();
+ ///   setPositionGrabbers();
 }
 
 void cust_circle::resizeBottom(const QPointF &pt)
@@ -267,7 +267,7 @@ void cust_circle::resizeBottom(const QPointF &pt)
     prepareGeometryChange();
     setRect( tmpRect );
     update();
-    setPositionGrabbers();
+ ///   setPositionGrabbers();
 }
 
 void cust_circle::resizeTop(const QPointF &pt)
@@ -293,8 +293,9 @@ void cust_circle::resizeTop(const QPointF &pt)
     prepareGeometryChange();
     setRect( tmpRect );
     update();
-    setPositionGrabbers();
+ ///   setPositionGrabbers();
 }
+#if 0
 void cust_circle::setPositionGrabbers()
 {
     QRectF tmpRect = rect();
@@ -321,3 +322,4 @@ void cust_circle::hideGrabbers()
         cornerGrabber[i]->setVisible(false);
     }
 }
+#endif

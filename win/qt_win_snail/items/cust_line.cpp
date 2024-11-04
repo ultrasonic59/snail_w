@@ -55,41 +55,39 @@ return false;
 void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 QPainterPath linePath = path();
-
- ///   QPoint pt = params::closest_to_grid(event->pos());
- QPointF pt = event->pos();
-
-    if (m_leftMouseButtonPressed) {
- ///       if (linePath.elementAt(0) == m_previousPosition)
-        if (nearPoints(linePath.elementAt(0),m_previousPosition))
-            {
-            linePath.setElementPositionAt(0, pt.x(), pt.y());
-            setPreviousPosition(pt);
-            qDebug() << "elementAt(0)"<< pt;
-
-          }
- ///       else if (linePath.elementAt(1) == m_previousPosition)
-        else if (nearPoints(linePath.elementAt(1),m_previousPosition))
-           {
-            setPreviousPosition(pt);
-            qDebug() << "elementAt(1)";
-
-          }
-        else
-        {
- ///           qDebug() << "======";
-            auto dx = pt.x() - m_previousPosition.x();
-            auto dy = pt.y() - m_previousPosition.y();
-            ///      auto dx = event->scenePos().x() - m_previousPosition.x();
-             ///     auto dy = event->scenePos().y() - m_previousPosition.y();
+QPoint pt = params::closest_to_grid(event->pos());
+if (m_leftMouseButtonPressed) {
+if (nearPoints(linePath.elementAt(0),m_previousPosition))
+    {
+    linePath.setElementPositionAt(0, pt.x(), pt.y());
+    setPreviousPosition(pt);
+ ///           qDebug() << "elementAt(0)"<< pt<< linePath.elementAt(1);
+    }
+else if (nearPoints(linePath.elementAt(1),m_previousPosition))
+    {
+    linePath.setElementPositionAt(1, pt.x(), pt.y());
+    setPreviousPosition(pt);
+    ///qDebug() << "elementAt(1)";
+    }
+#if 1
+else
+   {
+   auto dx = pt.x() - m_previousPosition.x();
+   auto dy = pt.y() - m_previousPosition.y();
+ ///           setPreviousPosition(pt);
+           qDebug() << "dx="<< dx << "dy=" << dy;
+           qDebug() << "pt=" << pt;
+           qDebug() << "m_previousPosition=" << m_previousPosition;
 
             moveBy(dx, dy);
             ///       setPreviousPosition(event->scenePos());
             setPreviousPosition(pt);
-            /// emit signalMove(this, dx, dy);
-        }
+            emit signalMove(this, dx, dy);
     }
-    QGraphicsItem::mouseMoveEvent(event);
+#endif
+    setPath(linePath);
+    }
+ QGraphicsItem::mouseMoveEvent(event);
 }
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -152,12 +150,14 @@ void cust_line::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_line::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
+    /*
     if(!listDotes.isEmpty()){
         foreach (Dot_Signal *dot, listDotes) {
             dot->deleteLater();
         }
         listDotes.clear();
     }
+*/
  QGraphicsItem::hoverLeaveEvent(event);
 }
 
@@ -233,7 +233,7 @@ if ((m_cornerFlags & Left) | (m_cornerFlags & Right))
     trans.rotate(90);
     pResult = p.transformed(trans);
     setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-    qDebug() << "Left-Right";
+ ///   qDebug() << "Left-Right";
 
    }
 else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
@@ -309,7 +309,7 @@ else
 
 void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-  
+ /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         QPointF point = linePath.elementAt(i);
@@ -319,12 +319,13 @@ void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
         dot->setDotFlags(Dot_Signal::Movable);
         listDotes.append(dot);
     }
-
+*/
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
+/*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         if(listDotes.at(i) == signalOwner)
@@ -335,6 +336,7 @@ void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
         }
     }
     setPath(linePath);
+    */
 }
 
 void cust_line::checkForDeletePoints()
@@ -369,26 +371,7 @@ void cust_line::checkForDeletePoints()
                 setPath(newPath);
             }
         }
-        updateDots();
+ ///       updateDots();
         m_pointForCheck = -1;
-    }
-}
-
-void cust_line::updateDots()
-{
-    if(!listDotes.isEmpty()){
-        foreach (Dot_Signal *dot, listDotes) {
-            dot->deleteLater();
-        }
-        listDotes.clear();
-    }
-    QPainterPath linePath = path();
-    for(int i = 0; i < linePath.elementCount(); i++){
-        QPointF point = linePath.elementAt(i);
-        Dot_Signal *dot = new Dot_Signal(point, this);
-        connect(dot, &Dot_Signal::signalMove, this, &cust_line::slotMove);
-        connect(dot, &Dot_Signal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
-        dot->setDotFlags(Dot_Signal::Movable);
-        listDotes.append(dot);
     }
 }

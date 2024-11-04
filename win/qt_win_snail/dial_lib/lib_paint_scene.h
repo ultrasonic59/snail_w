@@ -26,6 +26,7 @@ public:
     ~LibPaintScene();
 ///=======================================================
 public:
+    bool on_background;
    int currentAction() const;
    QPointF previousPosition() const;
    void setCurrentAction(const int type);
@@ -36,33 +37,22 @@ signals:
    void currentActionChanged(int);
    void signalSelectItem(QGraphicsItem* item);
    void signalNewSelectItem(QGraphicsItem* item);
-
-///=======================================================
+   void signalPress(QPointF pnt);
+   void signalMove(QPointF pnt);
+   ///=======================================================
 public:
     en_item_type* p_item_type;
     en_rej*       p_rej;
+    QPointF      rule_beg;
+    QPointF      rule_end;
+
 private:
-    QPointF     previousPoint;      //
-    QPointF     currPoint;      //
-    bool mousePressedLeft;
-    bool mousePressedRight;
+    bool _mousePressedLeft;
+    bool _mousePressedRight;
     void drawBackground(QPainter* painter, const QRectF& rect);
     PlotProperties* pPlot_Prop;
 private:
-    QGraphicsItem* sel_item;
-    QGraphicsRectItem* rc_item;
-    QRect cur_rect;
-    QColor rect_color;
-    QRect cur_frect;
-    QColor frect_color;
-    QGraphicsLineItem* line_item;
-    QLine cur_line;
-    QColor line_color;
-    quint16 line_thick;
-
-    quint16 circle_rad;
-    quint16 circle_thick;
-    QColor circle_color;
+ ///   QGraphicsItem* sel_item;
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -88,6 +78,8 @@ private:
     int m_previousAction;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
+    bool m_altPressed;
+
 };
 
 #endif // LIBPAINTSCENE_H

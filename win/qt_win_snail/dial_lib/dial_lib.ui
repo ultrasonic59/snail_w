@@ -95,7 +95,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_clear">
+  <widget class="QPushButton" name="pushButton_grid">
    <property name="geometry">
     <rect>
      <x>850</x>
@@ -105,7 +105,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Очистить</string>
+    <string>Grid</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_test">
@@ -441,6 +441,71 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="lab_bx">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>240</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>bx</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_by">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>260</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>by</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_dx">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>280</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>dx</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_dy">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>300</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>dy</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="butt_clr">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>41</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -496,7 +561,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_clear</sender>
+   <sender>pushButton_grid</sender>
    <signal>clicked()</signal>
    <receiver>Dial_lib</receiver>
    <slot>clear_textEdit()</slot>

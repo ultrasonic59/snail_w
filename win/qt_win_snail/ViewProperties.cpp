@@ -15,13 +15,13 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 /////qwin_otter *twin=(qwin_otter *)reseiver;
 	PropInterface.Button_col_background->SetColor(plotProp->BGColor);
 	PropInterface.Button_col_sel->SetColor(plotProp->SelColor);
-	PropInterface.Button_col_rule->SetColor(plotProp->RuleColor);
+	PropInterface.Button_col_rule->SetColor(params::RuleColor);
     PropInterface.Button_col_crs->SetColor(plotProp->CrossColor);
 	PropInterface.Button_col_circle->SetColor(plotProp->CircleColor);
 
 	PropInterface.Button_col_grid->SetColor(plotProp->GridColor);
-	PropInterface.Button_col_lib_bg->SetColor(plotProp->LibBGColor);
-	PropInterface.Button_col_lib_grid->SetColor(plotProp->LibGridColor);
+	PropInterface.Button_col_lib_bg->SetColor(params::LibBGColor);
+	PropInterface.Button_col_lib_grid->SetColor(params::LibGridColor);
 
 	setWindowFlags(Qt::Drawer);
 
@@ -45,7 +45,7 @@ ViewProperties::ViewProperties(QWidget *parent, QObject *reseiver, PlotPropertie
 	////connect(PropInterface.ed_thick_sel, SIGNAL(param_changed()), this, SLOT(SetOscillogramWidth()));////???
 
 	PropInterface.ed_thick_rule->set_num_dig(2);
-	PropInterface.ed_thick_rule->set_data(reinterpret_cast<unsigned char*>(&PlotProp->thick_rule));
+	PropInterface.ed_thick_rule->set_data(reinterpret_cast<unsigned char*>(&params::thick_rule));
 	PropInterface.ed_thick_rule->set_min_max(1,10);
 	PropInterface.ed_thick_rule->show_par();
 
@@ -157,6 +157,7 @@ void ViewProperties::SetSelColor()
 		emit PlotColorsChanged();
 	}
 }
+#if 0
 void ViewProperties::SetLibGridColor()
 {
 	QColor tempColor = QColorDialog::getColor(PlotProp->LibGridColor);
@@ -177,7 +178,7 @@ void ViewProperties::SetLibBGColor()
 		emit PlotColorsChanged();
 	}
 }
-
+#endif
 void ViewProperties::SetGridColor()
 {
 QColor tempColor = QColorDialog::getColor(PlotProp->GridColor);
@@ -202,11 +203,11 @@ void ViewProperties::SetCrsColor()
 
 void ViewProperties::SetRuleColor()
 {
-	QColor tempColor = QColorDialog::getColor(PlotProp->RuleColor);
+	QColor tempColor = QColorDialog::getColor(params::RuleColor);
 
 	if(tempColor.isValid())
 	{
-		PlotProp->RuleColor = tempColor;
+		params::RuleColor = tempColor;
 		PropInterface.Button_col_rule->SetColor(tempColor);
 		emit PlotColorsChanged();
 	}

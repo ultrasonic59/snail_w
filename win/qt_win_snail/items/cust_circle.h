@@ -6,7 +6,7 @@
 
 #define NUM_CORNERS 4
 
-class DotSignal;
+///class DotSignal;
 class QGraphicsSceneMouseEvent;
 
 class cust_circle : public QObject, public QGraphicsEllipseItem
@@ -59,16 +59,16 @@ private:
     unsigned int m_cornerFlags;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-    DotSignal *cornerGrabber[NUM_CORNERS];
+    ///DotSignal *cornerGrabber[NUM_CORNERS];
 
     void resizeLeft( const QPointF &pt);
     void resizeRight( const QPointF &pt);
     void resizeBottom(const QPointF &pt);
     void resizeTop(const QPointF &pt);
 
-     void setPositionGrabbers();
-    void setVisibilityGrabbers();
-    void hideGrabbers();
+ ///    void setPositionGrabbers();
+  ///  void setVisibilityGrabbers();
+  ///  void hideGrabbers();
 };
 
 #endif // __CUST_CYRCLE_H__

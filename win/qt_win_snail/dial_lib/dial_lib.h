@@ -26,10 +26,8 @@ public:
 	DialLib(QWidget *parent= 0);
 	virtual ~DialLib();
 	QWidget* pParent;
-///	PlotProperties* pPlot_Prop;
 	en_rej cur_rej;
 	en_item_type cur_item;
-///	LibGraphicView* libView;
 signals:
 	void SignalTest();
 
@@ -45,8 +43,10 @@ private slots:
 	void sl_zoom_changed(double value);
 
 	void  SlotTest();
+	void  on_grid();
+
 public slots:
-    void clear_textEdit();
+    void on_clr();
 
 private: 
 ///	en_rej cur_rej;
@@ -68,7 +68,8 @@ private slots:
 	void checkActionStates();
 	void selectItem(QGraphicsItem* item);
 	void selectNewItem(QGraphicsItem* item);
-///	void slotHelp();
+	void slShowBeg(QPointF pnt);
+	void slShowEnd(QPointF pnt);
 };
 
 #endif // DIAL_ED_PAR_H

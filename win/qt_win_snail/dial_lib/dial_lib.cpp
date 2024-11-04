@@ -95,8 +95,14 @@ DialLib::DialLib(QWidget *parent):
     connect(scene, &LibPaintScene::signalNewSelectItem, this, &DialLib::selectNewItem);
     connect(ui.zoomSlider, SIGNAL(valueChanged(int)), this, SLOT(on_zoom_changed(int)));
     connect(ui.graphicsView, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
-
+///=======================================
     
+    connect(ui.pushButton_grid, SIGNAL(clicked()), this, SLOT(on_grid()));
+ 
+    connect(scene, &LibPaintScene::signalPress, this, &DialLib::slShowBeg);
+    connect(scene, &LibPaintScene::signalMove, this, &DialLib::slShowEnd);
+    connect(ui.butt_clr, SIGNAL(clicked()), this, SLOT(on_clr()));
+
 
 }
 
@@ -124,6 +130,15 @@ void  DialLib::show_rej()
     }
 
 }
+void  DialLib::on_grid()
+{
+    if (scene->on_background)
+        scene->on_background = false;
+    else
+        scene->on_background = true;
+
+ scene->update();
+ }
 void  DialLib::on_butt_select()
 {
     scene->setCurrentAction(_DefaultType);
@@ -276,8 +291,10 @@ void  DialLib::on_butt_place()
 }
 
 
-void DialLib::clear_textEdit()
+void DialLib::on_clr()
 {
+scene->clear();
+scene->update();
   ////  ui.textEdit_rd_dat->clear();
 }
 void DialLib::SlotTest()
@@ -526,7 +543,6 @@ void DialLib::on_butOpen_clicked()
 ///====================================================================
 void DialLib::setBGColor(const QColor& color)
 {
-
  ///   m_BGcolor = color;
  ui.BGcolor->setColor(color);
  params::LibItemBGColor = color;
@@ -538,4 +554,14 @@ void DialLib::setBorderColor(const QColor& color)
  ui.BorderColor->setColor(color);
  params::LibItemBrdColor = color;
  ///emit borderColorChanged(m_borderColor);
+}
+void DialLib::slShowBeg(QPointF pnt)
+{
+ui.lab_bx->setText(QString("bx=%1").arg(pnt.x()));
+ui.lab_by->setText(QString("by=%1").arg(pnt.y()));
+}
+void DialLib::slShowEnd(QPointF pnt)
+{
+ui.lab_dx->setText(QString("dx=%1").arg(pnt.x()));
+ui.lab_dy->setText(QString("dy=%1").arg(pnt.y()));
 }

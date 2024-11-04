@@ -45,7 +45,7 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
              int cy = circleElement.attribute("cy").toInt();
              int r = circleElement.attribute("r").toInt();
 
-             circle->setCircle(cx, cy, r);
+             circle->setCircle(cx-r, cy-r, r*2);
 
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
@@ -78,6 +78,9 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
             circle->setTransform(trans);
  ///===========================================================           
             circle->setPen(QPen(strokeColor, pElement.attribute("stroke-width", "0").toInt()));
+            QColor fillColor(pElement.attribute("fill", "#ffffff"));
+            fillColor.setAlphaF(pElement.attribute("fill-opacity", "0").toFloat());
+            circle->setBrush(QBrush(fillColor));
             graphicsList.append(circle);
             continue;
         }
