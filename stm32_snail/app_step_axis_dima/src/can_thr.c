@@ -16,7 +16,8 @@ xQueueHandle queu_to_send;
 
 int stop_mot_cmd(void)
 {
-cur_stat=STATE_IDLE;  
+cur_state &= ~STATE_MASK;
+cur_state|=STATE_IDLE;  
 printk("\n\rSTATE_IDLE ");
 
 put_mot_nstep(0);
@@ -25,7 +26,8 @@ return 0;
 
 int go_cmd(go_cmd_t *p_go_cmd)
 {
-cur_stat=STATE_MOVE;  
+cur_state &= ~STATE_MASK;
+cur_state|=STATE_MOVE;  
 printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
 
 set_dir_mot(p_go_cmd->dirs);
@@ -34,6 +36,18 @@ set_mot_per(p_go_cmd->step_per);
 put_mot_nstep(p_go_cmd->steps);
 ////msleep(1000);
 ////cur_stat=STATE_READY;  
+return 0;
+}
+int go_cmd_conc(go_cmd_t *p_go_cmd)
+{
+cur_state &= ~STATE_MASK;
+cur_state|=STATE_MOVE;  
+printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+
+set_dir_mot(p_go_cmd->dirs);
+////set_step_per(p_go_cmd->step_per);
+set_mot_per(p_go_cmd->step_per);
+put_mot_nstep(p_go_cmd->steps);
 return 0;
 }
 

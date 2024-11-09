@@ -51,11 +51,11 @@ if(check_push_key_dbg())
   switch(key)
     {
     case 'a':
-      nstep += 20;
+      nstep += 100;
       break;
     case 's':
       if(nstep)
-        nstep-= 20;
+        nstep-= 100;
         break;
     case 'd':
       dir ++;
@@ -68,14 +68,20 @@ if(check_push_key_dbg())
  ////     mot_rej&=0x7;
       break;
     case 'p':
+      ena_check_conc=0;
      psk=1;
       break;
-    case 'z':
+    case 'P':
+          ena_check_conc=1;
+ 
+     psk=1;
+      break;
+   case 'z':
      print_mot_reg();
       break;
     
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x]",nstep,dir,mot_rej,ena_check_conc); 
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -305,7 +311,8 @@ TIM_Cmd(MOT_STEP_TIM, DISABLE);
 volatile uint32_t num_step=0;
 void  set_dir_mot(uint8_t idat)
 {
-uint8_t tdat=0;
+uint8_t tdat=idat&0x1;
+#if 0
 #if STEP_X
   tdat=idat&DIR_X;
 #elif STEP_Y
@@ -313,6 +320,8 @@ uint8_t tdat=0;
 #elif STEP_Z
   tdat=idat&DIR_Z;
 #endif
+#endif
+  
 if(tdat)
   {
   GPIO_SetBits(MOT_DIR_PIN_GPIO, MOT_DIR_PIN);
@@ -345,10 +354,7 @@ else
    GPIO_ResetBits(MOT_SLEEP_PIN_GPIO, MOT_SLEEP_PIN);
   }
 }
-////==================================================
-
-
-
+///==================================================
 void mot_step_tim_init(void)
 {
 NVIC_InitTypeDef NVIC_InitStructure; 
@@ -404,13 +410,21 @@ TIM_Cmd(MOT_STEP_TIM, ENABLE);
 
 void MOT_STEP_TIM_IRQHandler(void)
 { 
+  uint8_t tconc;
+if(ena_check_conc)
+{
+tconc=  get_conc_n();
+if(tconc!=0x3)
+  num_step=0;
+}
 if(num_step)
   {
   num_step--;  
   if(num_step==0)
     {
     stop_mot_step_tim(); 
-    cur_stat=STATE_READY;  
+    cur_state &= ~STATE_MASK;
+    cur_state|=STATE_READY;  
 
     ena_mot(0) ;
     }

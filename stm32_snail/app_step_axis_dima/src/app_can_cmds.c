@@ -80,8 +80,6 @@ if(step_z)
 }
 ////================================================
 #ifndef _MASTER_
-extern uint32_t cur_coord;
-extern uint8_t cur_stat;
 
 int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord)
@@ -275,8 +273,12 @@ switch(data[0]) {
         break;
       case GET_STAT_CMD:
         {
-        put_can_cmd_stat(cur_stat,cur_coord);
-         printk("[stat=%x] ",cur_stat);
+        uint8_t tmp=get_conc_n();  
+        tmp<<=4;
+        cur_state&= ~CONC_MASK;
+        cur_state |= tmp;
+        put_can_cmd_stat(cur_state,cur_coord);
+         printk("[stat=%x] ",cur_state);
          }
         break;
       case GO_TO_BOOTER:

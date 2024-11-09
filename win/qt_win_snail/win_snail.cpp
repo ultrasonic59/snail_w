@@ -2,6 +2,7 @@
 #include <QCameraInfo>
 #include "ViewProperties.h"
 #include <QColorDialog>
+#include <QtScript/QScriptValue>
 
 #include "dial_lib.h"
 #include "params.h"
@@ -268,8 +269,8 @@ void win_snail::sl_newPrj()
     {
         QByteArray data;
         data = QString("first string").toUtf8();
-        data.append(QString("second string"));
-        data.append(QString("%1").arg(100));
+       ///?? data.append(QString("second string"));
+      ///???  data.append(QString("%1").arg(100));
         file.write(data); /*Записываем данные*/
         file.close(); /*Закрываем файл*/
     }

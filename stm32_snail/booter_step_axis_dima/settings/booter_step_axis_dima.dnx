@@ -32,7 +32,7 @@
     </Simulator>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.2\arm\config\debugger\ST\STM32F205RB.ddf</MemConfigValue>
+        <MemConfigValue>C:\iar\ewarm-9.60.2\arm\config\debugger\ST\STM32F205RB.ddf</MemConfigValue>
     </PlDriver>
     <StLinkDriver>
         <stlinkserialNo>48FF72065067545623571287</stlinkserialNo>
@@ -47,7 +47,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>1129337882</Checksum>
+        <Checksum>1040167123</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
