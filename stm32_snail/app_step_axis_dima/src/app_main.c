@@ -38,9 +38,9 @@ hw_board_init();
 #if STEP_X
   printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #elif STEP_Y
-  printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
+  printk("\r\n[app_step_y_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #elif STEP_Z
-  printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
+  printk("\r\n[app_step_z_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #else 
   #error "\n\r=== app STEP_... nodefined ==="; 
 #endif
