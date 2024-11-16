@@ -53,7 +53,8 @@
 #define GET_STAT_CMD          0x2
 #define PUT_STAT_CMD          0x3
 #define PUT_ACK               0x4
-#define PRG_PARAM             0x5
+#define SET_PARAM             0x5
+
 #define CHECK_CONN            0x6
 #define ACK_CONN              0x7
 
@@ -65,8 +66,12 @@
 #define RD_FLASH_ANS          0xD
 
 #define CMD_STOP              0xF
+#define PRG_PARAM             0x10
 
 #define ON_DOZA               0x11
+///========== SET_PARAM ====================
+#define SET_COORD             0x1
+#define MOTOR_REJ             0x2
 
 ///===== booter cmd =============
 #define CHECK_ERASE_SECTORS   0xF3
@@ -91,6 +96,8 @@
 #define STATE_MOVE           2
 #define STATE_ERROR          3
 #define STATE_BOOT           4
+#define STATE_MASK           0xF
+#define CONC_MASK            0x30
 
 #define LEN_ACK_QU           8
 
@@ -98,7 +105,7 @@
 
 typedef struct  go_cmd_s_{
   uint8_t  cmd;                       /// 
-  uint8_t  dirs;                     /// Dirs X,Y,Z ....
+  uint8_t  dirs;                     /// .7 -check conc Dirs X,Y,Z ....
   uint16_t  step_per;                 /// period step
   uint32_t  steps;                 /// steps X,Y , Z 
 }go_cmd_t;
@@ -108,7 +115,7 @@ typedef struct  put_stat_cmd_s_{
   uint8_t  axis;                        /// X,Y , Z 
   uint8_t  state;                     /// ready,move,error
   uint8_t  rsv;
-  uint32_t  coord;                      /// 
+  int32_t  coord;                      /// 
 }put_stat_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
@@ -127,12 +134,12 @@ typedef struct  put_ack_s_{
   ack_t   ack;                         /// 
 }put_ack_t;
 
-typedef struct  prg_param_cmd_s_{
+typedef struct  set_param_cmd_s_{
   uint8_t   cmd;                         /// 
   uint16_t  num_par;                        /// 
   uint8_t   len_par;                     ///bytes 
   uint32_t  par_val;                      /// 
-}prg_param_cmd_t;
+}set_param_cmd_t;
 
 #define MAX_CAN_NUM_BYTES  8
 typedef struct can_cmd_s{
@@ -194,6 +201,7 @@ extern int put_can_boot_ans(uint8_t cmd,uint8_t state);
 extern uint8_t check_erase_sectors(uint8_t *data);
 extern int go_cmd(go_cmd_t *p_go_cmd);
 extern int stop_mot_cmd(void);
+extern int set_param(set_param_cmd_t *i_data);
 
 ///=====================================
 #define ERROR_OK            0

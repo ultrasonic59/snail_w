@@ -1,31 +1,91 @@
 # ninja log v5
-296	303	7528769186051657	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
-110	332	7528769186241680	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	c9a4c78f466898d1
-280	422	7528769187174989	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	aae704225726a8d6
-10	240	7528769185330728	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	c6b74901c5e63c85
-175	220	7528769185170721	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	7ee199dd14f8f4af
-257	361	7528769186581668	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	6775cea1e7f0c020
-1	144	7528769184381753	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	d9626df64ac14675
-172	275	7528769185720783	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	b5429a541530b7b8
-8	129	7528769184256369	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	4e66fa4ff5f6413e
-6	189	7528769184723292	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	4c1405616d46895e
-7	174	7528769184651748	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	2e441b1a1ce7348a
-3	109	7528769184036348	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	a636cf3dc7a4c327
-2	170	7528769184641745	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	29ed9d99e43d1940
-12	236	7528769185310723	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	6c455035febdfee4
-5	216	7528769185110717	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	d0d08b08f9d017d2
-15	255	7528769185470718	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	1fd6ec134941ce9b
-146	294	7528769185891667	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	779cf2aeb2003ee3
-131	278	7528769185720783	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	6c77b85940544f97
-9	259	7528769185510735	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	411d37c572a2bc79
-237	369	7528769186661679	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	92c3aa826ccb2b45
-305	324	7528769186231681	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
-16	409	7528769187036791	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	144cb2d6eafa7eb8
-190	323	7528769186191677	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	ecef9f042e822a92
-242	407	7528769187016791	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	60aa8e2ef22cebe0
-218	372	7528769186661679	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	3bbbae8dae5eabaf
-261	393	7528769186906795	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	33ec844519c11cfb
-277	410	7528769187036791	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	552a6c583b3c9dd0
-222	483	7528769187765027	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	481e8ea411faed00
-484	537	7528769188378722	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	bf073fe931d0a032
-539	545	7528769188478721	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+348	356	7534817864484165	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+12	280	7534817863584021	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	c9a4c78f466898d1
+305	469	7534817865527565	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	aae704225726a8d6
+128	320	7534817864024834	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	c6b74901c5e63c85
+5	127	7534817862139143	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	7ee199dd14f8f4af
+278	396	7534817864815233	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	6775cea1e7f0c020
+22	153	7534817862234326	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	4e66fa4ff5f6413e
+9	186	7534817862575302	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	b5429a541530b7b8
+155	334	7534817864097052	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	d9626df64ac14675
+29	260	7534817863341974	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	4c1405616d46895e
+18	132	7534817862139143	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	2e441b1a1ce7348a
+26	148	7534817862264398	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	a636cf3dc7a4c327
+167	350	7534817864305651	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	29ed9d99e43d1940
+37	229	7534817863126509	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	6c455035febdfee4
+14	246	7534817863231633	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	d0d08b08f9d017d2
+150	276	7534817863584021	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	1fd6ec134941ce9b
+7	165	7534817862371017	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	779cf2aeb2003ee3
+2	170	7534817862436148	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	6c77b85940544f97
+32	301	7534817863783799	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	411d37c572a2bc79
+172	346	7534817864244713	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	92c3aa826ccb2b45
+335	354	7534817864424151	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+134	435	7534817865194274	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	144cb2d6eafa7eb8
+230	419	7534817865050387	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	ecef9f042e822a92
+261	458	7534817865389691	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	60aa8e2ef22cebe0
+248	421	7534817865060397	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	3bbbae8dae5eabaf
+282	446	7534817865329705	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	33ec844519c11cfb
+322	457	7534817865414772	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	552a6c583b3c9dd0
+188	477	7534817865597487	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	481e8ea411faed00
+479	533	7534817866238410	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	bf073fe931d0a032
+534	542	7534817866353454	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+7	172	7534826725184567	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	7ee199dd14f8f4af
+4	176	7534826725154560	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	b5429a541530b7b8
+13	209	7534826725523226	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	779cf2aeb2003ee3
+19	213	7534826725565344	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	4e66fa4ff5f6413e
+16	246	7534826725901105	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	4c1405616d46895e
+1	258	7534826725954032	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	c9a4c78f466898d1
+26	276	7534826726210496	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	2e441b1a1ce7348a
+10	315	7534826726567199	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	6c77b85940544f97
+178	322	7534826726597190	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	6c455035febdfee4
+30	338	7534826726662417	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	a636cf3dc7a4c327
+22	363	7534826727048815	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	d0d08b08f9d017d2
+173	387	7534826727274462	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	411d37c572a2bc79
+37	392	7534826727329604	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	1fd6ec134941ce9b
+248	398	7534826727339615	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	d9626df64ac14675
+34	417	7534826727588542	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	c6b74901c5e63c85
+214	422	7534826727619570	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	29ed9d99e43d1940
+419	429	7534826727807489	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+424	443	7534826727902652	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+260	456	7534826727938896	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	60aa8e2ef22cebe0
+318	478	7534826728221330	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	92c3aa826ccb2b45
+210	492	7534826728386539	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	144cb2d6eafa7eb8
+339	506	7534826728519766	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	ecef9f042e822a92
+394	513	7534826728570392	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	6775cea1e7f0c020
+325	515	7534826728580473	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	3bbbae8dae5eabaf
+366	539	7534826728840848	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	33ec844519c11cfb
+400	552	7534826728975960	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	552a6c583b3c9dd0
+389	559	7534826729031089	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	aae704225726a8d6
+278	562	7534826729071133	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	481e8ea411faed00
+563	617	7534826729681724	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	bf073fe931d0a032
+619	626	7534826729791923	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+13	116	7534828729613805	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	7ee199dd14f8f4af
+20	130	7534828729730061	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	a636cf3dc7a4c327
+4	147	7534828729883972	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	b5429a541530b7b8
+24	152	7534828729863963	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	2e441b1a1ce7348a
+27	157	7534828729939125	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	4e66fa4ff5f6413e
+10	175	7534828730080294	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	779cf2aeb2003ee3
+2	193	7534828730284169	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	6c77b85940544f97
+15	208	7534828730472881	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	4c1405616d46895e
+32	214	7534828730560744	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	6c455035febdfee4
+7	233	7534828730709877	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	c9a4c78f466898d1
+118	276	7534828731192043	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	1fd6ec134941ce9b
+17	280	7534828731222051	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	d0d08b08f9d017d2
+154	322	7534828731645818	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	d9626df64ac14675
+210	348	7534828731903391	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	92c3aa826ccb2b45
+132	355	7534828731930591	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	411d37c572a2bc79
+149	361	7534828731930591	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	c6b74901c5e63c85
+29	377	7534828732130156	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	144cb2d6eafa7eb8
+363	379	7534828732278690	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+159	381	7534828732045039	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	29ed9d99e43d1940
+358	382	7534828732308700	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+195	396	7534828732318732	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	3bbbae8dae5eabaf
+235	397	7534828732412220	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	ecef9f042e822a92
+217	419	7534828732637855	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	60aa8e2ef22cebe0
+324	449	7534828732943292	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	6775cea1e7f0c020
+277	450	7534828732943292	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	aae704225726a8d6
+282	464	7534828733098413	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	33ec844519c11cfb
+177	466	7534828733088430	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	481e8ea411faed00
+351	493	7534828733373928	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	552a6c583b3c9dd0
+495	554	7534828734024914	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	bf073fe931d0a032
+556	564	7534828734180130	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e

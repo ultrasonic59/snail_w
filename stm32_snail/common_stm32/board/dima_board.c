@@ -10,9 +10,9 @@
 extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
 
-uint32_t cur_coord=0;
-uint8_t cur_stat=0;
-
+int32_t cur_coord=0;
+uint8_t cur_state=0;  /// .5-.4 conc, .3 - .0 status
+uint8_t ena_check_conc=0;
 void CAN_Config(void);
 
 ///=============================
@@ -222,6 +222,15 @@ return GPIO_ReadInputDataBit(CONC0_PIN_GPIO, CONC0_PIN);
 uint8_t get_conc1(void)
 {
 return GPIO_ReadInputDataBit(CONC1_PIN_GPIO, CONC1_PIN);
+}
+uint8_t get_conc_n(void)
+{
+uint8_t rez=0;
+if(get_conc0())
+  rez|=(0x1<<0);
+if(get_conc1())
+  rez|=(0x1<<1);
+return rez;
 }
 ////=============================================
 void hw_board_init(void)

@@ -50,7 +50,23 @@ set_mot_per(p_go_cmd->step_per);
 put_mot_nstep(p_go_cmd->steps);
 return 0;
 }
-
+extern uint8_t cur_mot_rej;
+///========================================
+int set_param(set_param_cmd_t *i_data)
+{
+switch(i_data->num_par)
+   {
+   case MOTOR_REJ:
+     cur_mot_rej=i_data->par_val;
+      set_mot_rej(cur_mot_rej);
+     break;
+   case SET_COORD:
+     cur_coord=(int32_t)i_data->par_val;
+     break;
+   }
+return 0;
+}
+///===========================================
 void can_rsv_task( void *pvParameters )
 {
   uint8_t ii=0;

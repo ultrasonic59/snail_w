@@ -275,7 +275,8 @@
 #define ADDR_MOT_STALL  5
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
-#define DEF_MOT_REJ   0
+
+#define DEF_MOT_REJ   1
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register
@@ -368,7 +369,7 @@ extern cmd_t cur_cmd;
 
 
 #ifndef SEGMENT_BUFFER_SIZE
-#define SEGMENT_BUFFER_SIZE 10
+ #define SEGMENT_BUFFER_SIZE 10
 #endif
 #define N_AXIS 3 // Number of axes
 
@@ -468,7 +469,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define CAN_SEND_STACK_SIZE                 1024////
+#define CAN_SEND_STACK_SIZE                     1024////
 #define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define APP_PRIORITY	                       (6)	
@@ -483,9 +484,15 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #define ADDR_EEPROM_SIZEH_APP  0x3
 
 ////============================================
+#if STEP_Z
+  #define MASK_CON 0x1
+#else
+  #define MASK_CON 0x3
+#endif
+
 ////============================================
 ////=================================================================
-extern uint32_t cur_coord;
+extern int32_t cur_coord;
 extern uint8_t cur_stat;
 
 extern void mot_spi_init(void);

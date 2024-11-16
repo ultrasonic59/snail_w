@@ -281,6 +281,12 @@ switch(data[0]) {
          printk("[stat=%x] ",cur_state);
          }
         break;
+      case SET_PARAM:
+         put_can_ack(SET_PARAM);
+         set_param((set_param_cmd_t *)data);
+        break;
+          
+  
       case GO_TO_BOOTER:
         goto_booter();
         break;

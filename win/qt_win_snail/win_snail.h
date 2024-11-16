@@ -35,6 +35,10 @@
 ////#define DEF_DELT_X 10
 ///#define DEF_DELT_Y 10
 
+#define LONG_PUSH_TIME	500
+#define MOTOR_OFF false
+#define MOTOR_ON true
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
 QT_END_NAMESPACE
@@ -173,6 +177,22 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
+protected:
+    bool    xminusPushed;
+    bool    xminusLongPush ;
+    bool    yminusPushed;
+    bool    yminusLongPush;
+    bool    zminusPushed;
+    bool    zminusLongPush;
+protected slots:
+    void cl_stop();
+    void cl_xminus();
+    void cl_xminus_rel();
+    void cl_yminus();
+    void cl_yminus_rel();
+    void cl_zminus();
+    void cl_zminus_rel();
+    void SlotLongPush_xminus();
 
 
 signals:

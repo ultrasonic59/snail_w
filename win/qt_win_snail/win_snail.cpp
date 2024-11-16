@@ -11,6 +11,13 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
+    ,xminusPushed(false)
+    ,xminusLongPush(false)
+    ,yminusPushed(false)
+    ,yminusLongPush(false)
+    ,zminusPushed(false)
+    ,zminusLongPush(false)
+
   {
     ui->setupUi(this);
 ///====================================
@@ -121,10 +128,59 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(on_butt_pnt()));
 
  connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
-
+ ///======================= upr motor ========================================
+ connect(ui->butt_Stop, SIGNAL(clicked()), this, SLOT(cl_stop()));
+ connect(ui->butt_XMinus, SIGNAL(clicked()), this, SLOT(cl_xminus()));
+ connect(ui->butt_XMinus, SIGNAL(released()), this, SLOT(cl_xminus_rel()));
+ connect(ui->butt_XPlus, SIGNAL(clicked()), this, SLOT(cl_xplus()));
+ connect(ui->butt_XPlus, SIGNAL(released()), this, SLOT(cl_xplus_rel()));
+ ///==========================================================================
  pCamThread->start();
 
 
+}
+void win_snail::SlotLongPush_xminus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+
+void win_snail::cl_xminus()
+{
+    qDebug() << "cl_xminus ";
+    ///	if (OnMotor)
+    ///		return;
+  ///  quint16 t_speed = MAX_SPEED / 2;
+    xminusPushed = true;
+    xminusLongPush = false;
+    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
+    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
+    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
+  ///  emit s_put_motor(DIR_UP, t_speed);
+ ///   OnMotor = true;
+}
+void win_snail::cl_xminus_rel()
+{
+    qDebug() << "SlotLeft_rel ";
+    xminusPushed = false;
+    if (xminusLongPush)
+    {
+ ///       emit s_put_motor(DIR_UP, 0);
+
+        ///		udp_put_motor_cmd_stop();
+ ///       OnMotor = false;
+        ////	qDebug() << "Fwd stop" ;
+    }
 }
 
 win_snail::~win_snail()

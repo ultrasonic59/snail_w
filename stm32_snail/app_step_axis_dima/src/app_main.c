@@ -15,7 +15,7 @@
 #include "misc.h"
 #include "printk.h"
 #include "emul_eeprom.h"
-#define VERS          "snail_axis_v1.0"
+#define VERS          "snail_axis_v1.1"
 
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );

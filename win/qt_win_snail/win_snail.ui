@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1160</width>
+    <width>1182</width>
     <height>772</height>
    </rect>
   </property>
@@ -183,546 +183,638 @@
         <height>16777215</height>
        </size>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="spacing">
-          <number>1</number>
-         </property>
-         <property name="sizeConstraint">
-          <enum>QLayout::SetFixedSize</enum>
-         </property>
-         <item>
-          <widget class="QPushButton" name="ButtonTest">
-           <property name="text">
-            <string>Test</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttDebug">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Debug</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttConCAN">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>ConCAN</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttConHid">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>ConHid</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QLabel" name="labRuleX">
+      <widget class="QLabel" name="labRuleX">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>195</y>
+         <width>27</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>RuleX</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="lightSlider1">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>320</y>
+         <width>191</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widgetJog" native="true">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>480</y>
+         <width>191</width>
+         <height>271</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>250</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(128, 255, 128);</string>
+       </property>
+       <widget class="StyledToolButton" name="butt_YPlus">
+        <property name="geometry">
+         <rect>
+          <x>71</x>
+          <y>9</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Y+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/chevron-up.png</normaloff>
+          <normalon>resource/chevron-up.png</normalon>resource/chevron-up.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="StyledToolButton" name="butt_ZMinus">
+        <property name="geometry">
+         <rect>
+          <x>121</x>
+          <y>109</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Z-</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/icon-arrow-down-b.png</normaloff>resource/icon-arrow-down-b.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>28</width>
+          <height>28</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="StyledToolButton" name="butt_XPlus">
+        <property name="geometry">
+         <rect>
+          <x>121</x>
+          <y>59</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>X+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/chevron-right.png</normaloff>resource/chevron-right.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="StyledToolButton" name="butt_ZPlus">
+        <property name="geometry">
+         <rect>
+          <x>121</x>
+          <y>9</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Z+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/icon-arrow-up-b.png</normaloff>resource/icon-arrow-up-b.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>28</width>
+          <height>28</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_20">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>170</y>
+          <width>29</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Step:</string>
+        </property>
+       </widget>
+       <widget class="ComboBoxKey" name="cboJogStep">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>150</y>
+          <width>92</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+        <item>
          <property name="text">
-          <string>RuleX</string>
+          <string>Continuously</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        </item>
+        <item>
+         <property name="text">
+          <string>0.01</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+        </item>
+        <item>
+         <property name="text">
+          <string>0.1</string>
          </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QSlider" name="lightSlider0">
-         <property name="maximum">
-          <number>999</number>
+        </item>
+        <item>
+         <property name="text">
+          <string>1</string>
          </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+        </item>
+        <item>
+         <property name="text">
+          <string>2</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSlider" name="lightSlider1">
-         <property name="maximum">
-          <number>999</number>
+        </item>
+        <item>
+         <property name="text">
+          <string>5</string>
          </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+        </item>
+        <item>
+         <property name="text">
+          <string>10</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QWidget" name="widgetJog" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>250</height>
-          </size>
+        </item>
+        <item>
+         <property name="text">
+          <string>20</string>
          </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(128, 255, 128);</string>
+        </item>
+        <item>
+         <property name="text">
+          <string>50</string>
          </property>
-         <widget class="StyledToolButton" name="cmdYPlus">
-          <property name="geometry">
-           <rect>
-            <x>71</x>
-            <y>9</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Y+</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/chevron-up.png</normaloff>
-            <normalon>resource/chevron-up.png</normalon>resource/chevron-up.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="StyledToolButton" name="cmdZMinus">
-          <property name="geometry">
-           <rect>
-            <x>121</x>
-            <y>109</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Z-</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/icon-arrow-down-b.png</normaloff>resource/icon-arrow-down-b.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>28</width>
-            <height>28</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="StyledToolButton" name="cmdXPlus">
-          <property name="geometry">
-           <rect>
-            <x>121</x>
-            <y>59</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>X+</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/chevron-right.png</normaloff>resource/chevron-right.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="StyledToolButton" name="cmdZPlus">
-          <property name="geometry">
-           <rect>
-            <x>121</x>
-            <y>9</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Z+</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/icon-arrow-up-b.png</normaloff>resource/icon-arrow-up-b.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>28</width>
-            <height>28</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_20">
-          <property name="geometry">
-           <rect>
-            <x>9</x>
-            <y>159</y>
-            <width>29</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Step:</string>
-          </property>
-         </widget>
-         <widget class="ComboBoxKey" name="cboJogStep">
-          <property name="geometry">
-           <rect>
-            <x>59</x>
-            <y>159</y>
-            <width>92</width>
-            <height>18</height>
-           </rect>
-          </property>
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::NoInsert</enum>
-          </property>
-          <item>
-           <property name="text">
-            <string>Continuously</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>0.01</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>0.1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>5</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>20</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>50</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>100</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>200</string>
-           </property>
-          </item>
-         </widget>
-         <widget class="QCheckBox" name="chkKeyboardControl">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="geometry">
-           <rect>
-            <x>9</x>
-            <y>207</y>
-            <width>105</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Keyboard control</string>
-          </property>
-         </widget>
-         <widget class="StyledToolButton" name="cmdStop">
-          <property name="geometry">
-           <rect>
-            <x>71</x>
-            <y>61</y>
-            <width>40</width>
-            <height>39</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>36</width>
-            <height>36</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Stop</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/brake.png</normaloff>resource/brake.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="StyledToolButton" name="cmdYMinus">
-          <property name="geometry">
-           <rect>
-            <x>71</x>
-            <y>109</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Y-</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/chevron-down.png</normaloff>resource/chevron-down.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-         <widget class="ComboBoxKey" name="cboJogFeed">
-          <property name="geometry">
-           <rect>
-            <x>59</x>
-            <y>183</y>
-            <width>54</width>
-            <height>18</height>
-           </rect>
-          </property>
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::NoInsert</enum>
-          </property>
-          <item>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>20</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>50</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>100</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>200</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>500</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>1000</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2000</string>
-           </property>
-          </item>
-         </widget>
-         <widget class="StyledToolButton" name="cmdXMinus">
-          <property name="geometry">
-           <rect>
-            <x>9</x>
-            <y>59</y>
-            <width>44</width>
-            <height>44</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>44</width>
-            <height>44</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>X-</string>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>resource/chevron-left.png</normaloff>resource/chevron-left.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-        </widget>
-       </item>
-      </layout>
+        </item>
+        <item>
+         <property name="text">
+          <string>100</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>200</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QCheckBox" name="chkKeyboardControl">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>105</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Kbd</string>
+        </property>
+       </widget>
+       <widget class="StyledToolButton" name="butt_Stop">
+        <property name="geometry">
+         <rect>
+          <x>71</x>
+          <y>61</y>
+          <width>40</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Stop</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/brake.png</normaloff>resource/brake.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="StyledToolButton" name="but_YMinus">
+        <property name="geometry">
+         <rect>
+          <x>71</x>
+          <y>109</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Y-</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/chevron-down.png</normaloff>resource/chevron-down.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="ComboBoxKey" name="cboJogFeed">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>170</y>
+          <width>54</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>50</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>100</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>500</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2000</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="StyledToolButton" name="butt_XMinus">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>59</y>
+          <width>44</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>44</width>
+          <height>44</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>X-</string>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>resource/chevron-left.png</normaloff>resource/chevron-left.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Butt_go_x">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>200</y>
+          <width>51</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Go X</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Butt_go_y">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>220</y>
+          <width>51</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Go Y</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Butt_go_z">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>240</y>
+          <width>51</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Go Z</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="le_x">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>200</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="le_y">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>220</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="le_z">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>240</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QSlider" name="lightSlider0">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>350</y>
+         <width>191</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="ButtonTest">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Test</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="buttDebug">
+       <property name="geometry">
+        <rect>
+         <x>86</x>
+         <y>10</y>
+         <width>50</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>50</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Debug</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="buttConCAN">
+       <property name="geometry">
+        <rect>
+         <x>137</x>
+         <y>10</y>
+         <width>50</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>50</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>ConCAN</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="buttConHid">
+       <property name="geometry">
+        <rect>
+         <x>188</x>
+         <y>10</y>
+         <width>50</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>50</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>ConHid</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -753,11 +845,11 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>cmdXPlus</tabstop>
-  <tabstop>cmdYPlus</tabstop>
-  <tabstop>cmdYMinus</tabstop>
-  <tabstop>cmdZPlus</tabstop>
-  <tabstop>cmdZMinus</tabstop>
+  <tabstop>butt_XPlus</tabstop>
+  <tabstop>butt_YPlus</tabstop>
+  <tabstop>but_YMinus</tabstop>
+  <tabstop>butt_ZPlus</tabstop>
+  <tabstop>butt_ZMinus</tabstop>
   <tabstop>chkKeyboardControl</tabstop>
  </tabstops>
  <resources/>

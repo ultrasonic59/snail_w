@@ -18,5 +18,10 @@
 ////extern void tst_task( void *pvParameters );
 
 #define msleep vTaskDelay
-
+#ifndef _MASTER_
+extern int32_t cur_coord;
+extern uint8_t cur_state;
+#endif
+extern uint8_t get_conc_n(void);
+extern uint8_t ena_check_conc;
 #endif

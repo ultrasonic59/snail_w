@@ -11,6 +11,9 @@
 #include "can.h"
 #include "can_cmds.h"
 
+uint8_t cur_mot_rej=DEF_MOT_REJ;
+uint8_t cur_mot_dir=0;
+
 cmd_t cur_cmd={0};
 void mot_spi_wr(uint8_t addr,uint16_t idata);
 uint16_t mot_spi_rd(uint8_t addr);
@@ -18,7 +21,7 @@ void mot_spi_init(void);
 
 void motor_task( void *pvParameters )
 {
-///uint8_t btst=0; 
+uint8_t btst=0; 
 uint8_t psk=0; 
 ///uint16_t tst;
 char key=0;
@@ -81,7 +84,9 @@ if(check_push_key_dbg())
       break;
     
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x]",nstep,dir,mot_rej,ena_check_conc); 
+  btst = get_conc_n();
+
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]",nstep,dir,mot_rej,ena_check_conc,btst); 
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -410,16 +415,22 @@ TIM_Cmd(MOT_STEP_TIM, ENABLE);
 
 void MOT_STEP_TIM_IRQHandler(void)
 { 
-  uint8_t tconc;
+uint8_t tconc;
 if(ena_check_conc)
 {
 tconc=  get_conc_n();
-if(tconc!=0x3)
+if(tconc & MASK_CON !=0x0)
   num_step=0;
 }
 if(num_step)
   {
-  num_step--;  
+  num_step--;
+  
+  if(cur_mot_dir)
+    cur_coord++;
+  else
+    cur_coord--;
+   
   if(num_step==0)
     {
     stop_mot_step_tim(); 

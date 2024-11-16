@@ -70,7 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.50.1.69462</state>
+                    <state>9.60.2.5384</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -2252,6 +2252,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\board\dima_board.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\board\dima_board.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\motor_tsk.c</name>
