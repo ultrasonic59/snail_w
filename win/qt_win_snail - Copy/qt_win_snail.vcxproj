@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C2BE77C-4D08-43CF-AE99-933CA133CA14}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>Qt_qt-5.15.15-static</QtInstall>
+    <QtModules>core;xml;sql;network;gui;svg;widgets;qml;serialport</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+    <QtPlugin>true</QtPlugin>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>5.15.0_static_x64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Qt\qt-5.15.15-static\lib;C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Setupapi.lib;aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <IgnoreSpecificDefaultLibraries>wmfengined.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level1</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="dial_lib\dial_lib.cpp" />
+    <ClCompile Include="dial_lib\lib_graph_view.cpp" />
+    <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
+    <ClCompile Include="items\cust_circle.cpp" />
+    <ClCompile Include="items\cust_line.cpp" />
+    <ClCompile Include="items\cust_rect.cpp" />
+    <ClCompile Include="params.cpp" />
+    <ClCompile Include="plotters\camplotter.cpp" />
+    <ClCompile Include="plotters\PlotProperties.cpp" />
+    <ClCompile Include="utils\colorlabel.cpp" />
+    <ClCompile Include="utils\svgreader.cpp" />
+    <ClCompile Include="ViewProperties.cpp" />
+    <ClCompile Include="widgets\param_ed.cpp" />
+    <ClCompile Include="widgets\QPushButtonColored.cpp" />
+    <ClCompile Include="wrk_wrk.cpp" />
+    <QtRcc Include="win_snail.qrc" />
+    <QtUic Include="csv\csv_dlg.ui" />
+    <QtUic Include="dial_debug\dial_debug.ui">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </QtUic>
+    <QtUic Include="dial_lib\dial_lib.ui" />
+    <QtUic Include="port_prop_dialog.ui" />
+    <QtUic Include="ViewProperies.ui" />
+    <QtUic Include="win_snail.ui" />
+    <QtMoc Include="win_snail.h" />
+    <ClCompile Include="camera\my_camera.cpp" />
+    <ClCompile Include="camera\qcustomvideosurface.cpp" />
+    <ClCompile Include="can\cmd_sender.cpp" />
+    <ClCompile Include="csv\csv_dlg.cpp" />
+    <ClCompile Include="dial_debug\dial_debug.cpp" />
+    <ClCompile Include="hidapi\hid.c" />
+    <ClCompile Include="port_prop_dialog.cpp" />
+    <ClCompile Include="snail_data.cpp" />
+    <ClCompile Include="widgets\comboboxkey.cpp" />
+    <ClCompile Include="widgets\plotterwidget.cpp" />
+    <ClCompile Include="widgets\styledtoolbutton.cpp" />
+    <ClCompile Include="win_snail.cpp" />
+    <ClCompile Include="main.cpp" />
+    <None Include="qt_win_snail.ico" />
+    <ResourceCompile Include="qt_win_snail.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="wrk_wrk.h" />
+    <QtMoc Include="dial_debug\dial_debug.h" />
+    <QtMoc Include="camera\my_camera.h" />
+    <QtMoc Include="camera\qcustomvideosurface.h" />
+    <QtMoc Include="can\cmd_sender.h" />
+    <ClInclude Include="can\can_message.h" />
+    <QtMoc Include="csv\csv_dlg.h" />
+    <ClInclude Include="dev_interf.h" />
+    <QtMoc Include="dial_lib\dial_lib.h" />
+    <QtMoc Include="dial_lib\lib_graph_view.h" />
+    <QtMoc Include="dial_lib\lib_paint_scene.h" />
+    <ClInclude Include="hidapi\hidapi.h" />
+    <QtMoc Include="plotters\camplotter.h" />
+    <QtMoc Include="items\cust_circle.h" />
+    <QtMoc Include="items\cust_line.h" />
+    <QtMoc Include="items\cust_rect.h" />
+    <ClInclude Include="params.h" />
+    <ClInclude Include="plotters\PlotProperties.h" />
+    <ClInclude Include="port_prop_dialog.h" />
+    <ClInclude Include="snail_consts.h" />
+    <ClInclude Include="snail_data.h" />
+    <QtMoc Include="ViewProperties.h" />
+    <ClInclude Include="snail_types.h" />
+    <QtMoc Include="utils\colorlabel.h" />
+    <QtMoc Include="utils\dotsignal.h" />
+    <QtMoc Include="utils\svgreader.h" />
+    <QtMoc Include="utils\dot_signal.h" />
+    <ClInclude Include="widgets\comboboxkey.h" />
+    <QtMoc Include="widgets\plotterwidget.h" />
+    <QtMoc Include="widgets\param_ed.h" />
+    <ClInclude Include="widgets\QPushButtonColored.h" />
+    <ClInclude Include="widgets\styledtoolbutton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icons\arrow-top-left.png" />
+    <Image Include="icons\content-save.png" />
+    <Image Include="icons\load.png" />
+    <Image Include="icons\rotate-right.png" />
+    <Image Include="icons\save.png" />
+    <Image Include="icons\vector-polyline.png" />
+    <Image Include="icons\vector-rectangle.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

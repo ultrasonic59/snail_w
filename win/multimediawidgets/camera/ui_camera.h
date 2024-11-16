@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'camera.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.0
+** Created by: Qt User Interface Compiler version 5.15.15
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -38,13 +38,6 @@ public:
     QAction *actionSettings;
     QWidget *centralwidget;
     QGridLayout *gridLayout_3;
-    QStackedWidget *stackedWidget;
-    QWidget *viewfinderPage;
-    QGridLayout *gridLayout_5;
-    QCameraViewfinder *viewfinder;
-    QWidget *previewPage;
-    QGridLayout *gridLayout_4;
-    QLabel *lastImagePreviewLabel;
     QPushButton *lockButton;
     QTabWidget *captureWidget;
     QWidget *tab_2;
@@ -60,6 +53,13 @@ public:
     QPushButton *stopButton;
     QSpacerItem *verticalSpacer;
     QPushButton *muteButton;
+    QStackedWidget *stackedWidget;
+    QWidget *viewfinderPage;
+    QGridLayout *gridLayout_5;
+    QCameraViewfinder *viewfinder;
+    QWidget *previewPage;
+    QGridLayout *gridLayout_4;
+    QLabel *lastImagePreviewLabel;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuDevices;
@@ -69,7 +69,7 @@ public:
     {
         if (Camera->objectName().isEmpty())
             Camera->setObjectName(QString::fromUtf8("Camera"));
-        Camera->resize(668, 422);
+        Camera->resize(837, 598);
         actionExit = new QAction(Camera);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         actionStartCamera = new QAction(Camera);
@@ -82,54 +82,6 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout_3 = new QGridLayout(centralwidget);
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
-        stackedWidget = new QStackedWidget(centralwidget);
-        stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(1);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(stackedWidget->sizePolicy().hasHeightForWidth());
-        stackedWidget->setSizePolicy(sizePolicy);
-        QPalette palette;
-        QBrush brush(QColor(255, 255, 255, 255));
-        brush.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Base, brush);
-        QBrush brush1(QColor(145, 145, 145, 255));
-        brush1.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Window, brush1);
-        palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Window, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
-        stackedWidget->setPalette(palette);
-        viewfinderPage = new QWidget();
-        viewfinderPage->setObjectName(QString::fromUtf8("viewfinderPage"));
-        gridLayout_5 = new QGridLayout(viewfinderPage);
-        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        viewfinder = new QCameraViewfinder(viewfinderPage);
-        viewfinder->setObjectName(QString::fromUtf8("viewfinder"));
-
-        gridLayout_5->addWidget(viewfinder, 0, 0, 1, 1);
-
-        stackedWidget->addWidget(viewfinderPage);
-        previewPage = new QWidget();
-        previewPage->setObjectName(QString::fromUtf8("previewPage"));
-        gridLayout_4 = new QGridLayout(previewPage);
-        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
-        lastImagePreviewLabel = new QLabel(previewPage);
-        lastImagePreviewLabel->setObjectName(QString::fromUtf8("lastImagePreviewLabel"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(lastImagePreviewLabel->sizePolicy().hasHeightForWidth());
-        lastImagePreviewLabel->setSizePolicy(sizePolicy1);
-        lastImagePreviewLabel->setFrameShape(QFrame::Box);
-
-        gridLayout_4->addWidget(lastImagePreviewLabel, 0, 0, 1, 1);
-
-        stackedWidget->addWidget(previewPage);
-
-        gridLayout_3->addWidget(stackedWidget, 0, 0, 3, 1);
-
         lockButton = new QPushButton(centralwidget);
         lockButton->setObjectName(QString::fromUtf8("lockButton"));
 
@@ -203,10 +155,58 @@ public:
 
         gridLayout_3->addWidget(captureWidget, 2, 1, 1, 2);
 
+        stackedWidget = new QStackedWidget(centralwidget);
+        stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(1);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(stackedWidget->sizePolicy().hasHeightForWidth());
+        stackedWidget->setSizePolicy(sizePolicy);
+        QPalette palette;
+        QBrush brush(QColor(255, 255, 255, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Base, brush);
+        QBrush brush1(QColor(145, 145, 145, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Window, brush1);
+        palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Window, brush1);
+        palette.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
+        stackedWidget->setPalette(palette);
+        viewfinderPage = new QWidget();
+        viewfinderPage->setObjectName(QString::fromUtf8("viewfinderPage"));
+        gridLayout_5 = new QGridLayout(viewfinderPage);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        viewfinder = new QCameraViewfinder(viewfinderPage);
+        viewfinder->setObjectName(QString::fromUtf8("viewfinder"));
+
+        gridLayout_5->addWidget(viewfinder, 0, 0, 1, 1);
+
+        stackedWidget->addWidget(viewfinderPage);
+        previewPage = new QWidget();
+        previewPage->setObjectName(QString::fromUtf8("previewPage"));
+        gridLayout_4 = new QGridLayout(previewPage);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        lastImagePreviewLabel = new QLabel(previewPage);
+        lastImagePreviewLabel->setObjectName(QString::fromUtf8("lastImagePreviewLabel"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(lastImagePreviewLabel->sizePolicy().hasHeightForWidth());
+        lastImagePreviewLabel->setSizePolicy(sizePolicy1);
+        lastImagePreviewLabel->setFrameShape(QFrame::Box);
+
+        gridLayout_4->addWidget(lastImagePreviewLabel, 0, 0, 1, 1);
+
+        stackedWidget->addWidget(previewPage);
+
+        gridLayout_3->addWidget(stackedWidget, 1, 0, 2, 1);
+
         Camera->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Camera);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 668, 21));
+        menubar->setGeometry(QRect(0, 0, 837, 21));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuDevices = new QMenu(menubar);
@@ -238,8 +238,8 @@ public:
         QObject::connect(actionStartCamera, SIGNAL(triggered()), Camera, SLOT(startCamera()));
         QObject::connect(actionStopCamera, SIGNAL(triggered()), Camera, SLOT(stopCamera()));
 
-        stackedWidget->setCurrentIndex(0);
         captureWidget->setCurrentIndex(0);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(Camera);
@@ -252,7 +252,6 @@ public:
         actionStartCamera->setText(QCoreApplication::translate("Camera", "Start Camera", nullptr));
         actionStopCamera->setText(QCoreApplication::translate("Camera", "Stop Camera", nullptr));
         actionSettings->setText(QCoreApplication::translate("Camera", "Settings", nullptr));
-        lastImagePreviewLabel->setText(QString());
         lockButton->setText(QCoreApplication::translate("Camera", "Focus", nullptr));
         takeImageButton->setText(QCoreApplication::translate("Camera", "Capture Photo", nullptr));
         label->setText(QCoreApplication::translate("Camera", "Exposure Compensation:", nullptr));
@@ -262,6 +261,7 @@ public:
         stopButton->setText(QCoreApplication::translate("Camera", "Stop", nullptr));
         muteButton->setText(QCoreApplication::translate("Camera", "Mute", nullptr));
         captureWidget->setTabText(captureWidget->indexOf(tab), QCoreApplication::translate("Camera", "Video", nullptr));
+        lastImagePreviewLabel->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("Camera", "File", nullptr));
         menuDevices->setTitle(QCoreApplication::translate("Camera", "Devices", nullptr));
     } // retranslateUi

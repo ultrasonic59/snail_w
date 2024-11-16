@@ -37,7 +37,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>Qt_qt-5.15.15-static</QtInstall>
-    <QtModules>core;xml;network;gui;svg;multimedia;widgets;serialport</QtModules>
+    <QtModules>core;xml;sql;network;gui;svg;widgets;qml;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>
@@ -73,7 +73,11 @@
       <AdditionalLibraryDirectories>C:\Qt\qt-5.15.15-static\lib;C:\opencv\x64\vc16\staticlib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Setupapi.lib;aded.lib;IlmImfd.lib;ippicvmt.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;quircd.lib;zlibd.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <IgnoreSpecificDefaultLibraries>wmfengined.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -104,6 +108,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera\cameradevice.cpp" />
+    <ClCompile Include="camera\DeviceEnumerator.cpp" />
     <ClCompile Include="dial_lib\dial_lib.cpp" />
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
@@ -129,8 +135,6 @@
     <QtUic Include="ViewProperies.ui" />
     <QtUic Include="win_snail.ui" />
     <QtMoc Include="win_snail.h" />
-    <ClCompile Include="camera\my_camera.cpp" />
-    <ClCompile Include="camera\qcustomvideosurface.cpp" />
     <ClCompile Include="can\cmd_sender.cpp" />
     <ClCompile Include="csv\csv_dlg.cpp" />
     <ClCompile Include="dial_debug\dial_debug.cpp" />
@@ -148,9 +152,9 @@
   <ItemGroup>
     <QtMoc Include="wrk_wrk.h" />
     <QtMoc Include="dial_debug\dial_debug.h" />
-    <QtMoc Include="camera\my_camera.h" />
-    <QtMoc Include="camera\qcustomvideosurface.h" />
     <QtMoc Include="can\cmd_sender.h" />
+    <QtMoc Include="camera\cameradevice.h" />
+    <ClInclude Include="camera\DeviceEnumerator.h" />
     <ClInclude Include="can\can_message.h" />
     <QtMoc Include="csv\csv_dlg.h" />
     <ClInclude Include="dev_interf.h" />

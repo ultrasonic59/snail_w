@@ -4,7 +4,7 @@
 #include <QPen>
 #include "PlotProperties.h"
 #include "PlotterWidget.h"
-#include <qcustomvideosurface.h>
+///#include <qcustomvideosurface.h>
 #include <opencv2/core.hpp>
 #include "snail_consts.h"
 

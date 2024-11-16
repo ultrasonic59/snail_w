@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 ////#include <QCamera>
+///#include <QCameraInfo>
 
 #include "PlotterWidget.h"
 #include "ui_win_snail.h"
@@ -10,7 +11,7 @@
 #include "hidapi.h"
 #include "dial_debug.h"
 
-#include "my_camera.h"
+///#include "my_camera.h"
 #include "hid_cmd.h"
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
@@ -18,7 +19,7 @@
 #include "snail_data.h"
 #include "wrk_wrk.h"
 #include "CamPlotter.h"
-
+#include "cameradevice.h"
 ///======================================================================
 
 #define MAX_HID_BUG                     64
@@ -97,8 +98,10 @@ protected:
 private:
     Ui::win_snail *ui;
 private:
+    CameraDevice* p_camera;
   ////  QCamera* pt_qcam;
-    MyCamera *pt_camera;
+///    MyCamera *pt_camera;
+
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
@@ -148,7 +151,7 @@ public slots:
     void on_butt_test();
 
 private slots:
-    void __selectVideoSource();
+    void selectVideoSource();
 private slots:
     void on_cmdXPlus_pressed();
     void on_cmdXPlus_released();

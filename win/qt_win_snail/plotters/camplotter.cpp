@@ -44,6 +44,7 @@ extern cv::Mat QImage2Mat(QImage const& src);
 
 void CamPlotter::sl_update_image(QImage& img, QImage::Format _format)
 {
+#if 0
 QImage _qimg = img.copy();
 emit s_update_image(_qimg, _format);
 return;
@@ -80,6 +81,7 @@ if (*p_flags & FLG_ON_PNT)
 
 ////???emit s_update_image(t_qimg, _format);
 emit s_update_image(img, _format);
+#endif
 }
 ///
 void CamPlotter::drawSelRect(const Mat& _mat)

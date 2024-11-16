@@ -160,7 +160,7 @@
           <string notr="true">background-color: rgb(150, 128, 128);</string>
          </property>
         </widget>
-        <widget class="QWidget" name="widget" native="true">
+        <widget class="LibGraphicView" name="sh_widget" native="true">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(120, 158, 128);</string>
          </property>
@@ -745,6 +745,11 @@
    <extends>QWidget</extends>
    <header location="global">plotterwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LibGraphicView</class>
+   <extends>QWidget</extends>
+   <header location="global">lib_graph_view.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

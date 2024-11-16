@@ -1,5 +1,5 @@
 #include "win_snail.h"
-#include <QCameraInfo>
+///#include <QCameraInfo>
 #include "ViewProperties.h"
 #include <QColorDialog>
 #include <QtScript/QScriptValue>
@@ -14,12 +14,11 @@ win_snail::win_snail(QWidget *parent)
   {
     ui->setupUi(this);
 ///====================================
-    qRegisterMetaType<cv::Mat>("cv::Mat");
-
- ///    VideoCapture cap(0);
-
-    p_CamView = ui->CamWidget;
-    pt_camera = new MyCamera(0, &snail_data);
+  ///  qRegisterMetaType<cv::Mat>("cv::Mat");
+ 
+   //  p_camera = new CameraDevice(this);
+     p_CamView = ui->CamWidget;
+///    pt_camera = new MyCamera(0, &snail_data);
    //// connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
  ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
  ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
@@ -31,7 +30,7 @@ win_snail::win_snail(QWidget *parent)
     setupActions();
     loadSettings();
      /// ====================================
-    qDebug() << QCameraInfo::availableCameras().count(); 
+ ////   qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
  ////   p_CamView = ui->CamWidget;
 
@@ -95,7 +94,7 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
   connect(&pt_camera->m_qvideosurface, SIGNAL(frame_available(QImage, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage, QImage::Format)));
 
 #else
-   connect(&pt_camera->m_qvideosurface, SIGNAL(frame_available1(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)), Qt::DirectConnection);
+ ///  connect(&pt_camera->m_qvideosurface, SIGNAL(frame_available1(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)), Qt::DirectConnection);
  ///  connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)), Qt::DirectConnection);
    connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image1(QImage&, QImage::Format)), Qt::DirectConnection);
 #endif
@@ -178,7 +177,7 @@ void win_snail::setupActions()
 {
   ////  connect(actionSet_colors, &QAction::triggered, this, SLOT(sl_setDrawProp()));
   connect(actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
-  connect(actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
+  connect(actionSelect, SIGNAL(triggered()), this, SLOT(selectVideoSource()));
   connect(actionFile_Csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
   connect(actionNew_prj, SIGNAL(triggered()), this, SLOT(sl_newPrj()));
   connect(actionNew_file, SIGNAL(triggered()), this, SLOT(sl_newFile()));
@@ -212,10 +211,46 @@ void win_snail::contextMenuEvent(QContextMenuEvent* event)
  ///   menu.addSection
  ///  menu.addSeparator
 }
-void win_snail::__selectVideoSource()
+void win_snail::selectVideoSource()
 {
-    pt_camera->selectDevice();
-    pt_camera->open();
+ QDialog dialog;
+int pS = dialog.font().pointSize();
+dialog.resize(40 * pS, 10 * pS);
+
+QVBoxLayout dialogL;
+
+QComboBox devicesCB;
+QList<camera_info> devlist=p_camera->enumerator();
+    
+///QList<QCameraInfo> devlist = QCameraInfo::availableCameras();
+#if 1
+for (int i = 0; i < devlist.length(); i++)
+    devicesCB.addItem(devlist.at(i).deviceName);
+
+QHBoxLayout buttonsL;
+QPushButton cancelB(tr("Cancel"));
+
+connect(&cancelB, SIGNAL(clicked()), &dialog, SLOT(reject()));
+QPushButton acceptB(tr("Accept"));
+connect(&acceptB, SIGNAL(clicked()), &dialog, SLOT(accept()));
+buttonsL.addWidget(&cancelB);
+buttonsL.addWidget(&acceptB);
+
+dialogL.addWidget(&devicesCB);
+dialogL.addLayout(&buttonsL);
+
+dialog.setLayout(&dialogL);
+dialog.setLayout(&dialogL);
+
+if (dialog.exec() == QDialog::Accepted) {
+    p_camera->start(devicesCB.currentIndex());
+ ///   delete m_camera;
+ ///   m_camera = nullptr;
+ ///   m_camera = new QCamera(devlist.at(devicesCB.currentIndex()));
+}
+#endif
+ ///   pt_camera->selectDevice();
+ ///   pt_camera->open();
 }
 void win_snail::sl_setDrawProp()
 {
