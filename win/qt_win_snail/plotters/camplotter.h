@@ -9,7 +9,6 @@
 #include "snail_consts.h"
 
 
-
 using namespace cv;
 
 class CamPlotter : public QObject
@@ -47,13 +46,9 @@ protected:
 private:
 	quint32 *p_flags;
 
-
 public slots:
-////		void slot_resize(int,int);
-///	void sl_set_vscroll_val(int);
-///	void set_zoom_rect(QRect t_rect);
-	////	void sl_set_sel_rect(QRect rc);
 	void sl_update_image(QImage& img, QImage::Format _format);
+	void sl_update_image(const QImage&);
 	void slSetPoint(QPoint* pn);
 	void slMovePoint(QPoint* pn);
 	void slClrPoint(QPoint* pn);
@@ -61,7 +56,7 @@ public slots:
 
 signals:
 ////	void updateCamImage(QImage);
-	void s_update_image(QImage& img, QImage::Format _format);
+	void s_update_image(const QImage& img);
 	void s_show_rule_coord(QRect& rc);
 
 	///	void s_rect_changet(QRect rc);

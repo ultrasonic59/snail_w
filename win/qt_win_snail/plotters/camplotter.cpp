@@ -39,9 +39,19 @@ void CamPlotter::ConnectToWidget(QWidget* _PlotWidgetNew)
 	pPlotWidget = _PlotWidgetNew;
 }
 
-extern cv::Mat QImageToCvMat(QImage inImage, bool inCloneImageData=true);
-extern cv::Mat QImage2Mat(QImage const& src);
+////extern cv::Mat QImageToCvMat(QImage inImage, bool inCloneImageData=true);
+////extern cv::Mat QImage2Mat(QImage const& src);
+///====================================================================
 
+cv::Mat QImage2Mat(QImage const& src)
+{
+	cv::Mat tmp(src.height(), src.width(), CV_8UC3, (uchar*)src.bits(), src.bytesPerLine());
+	cv::Mat result; // deep copy just in case (my lack of knowledge with open cv)
+   cvtColor(tmp, result, cv::COLOR_BGR2RGB);
+	return result;
+}
+
+///====================================================================
 void CamPlotter::sl_update_image(QImage& img, QImage::Format _format)
 {
 #if 0
@@ -83,6 +93,49 @@ if (*p_flags & FLG_ON_PNT)
 emit s_update_image(img, _format);
 #endif
 }
+void CamPlotter::sl_update_image(const QImage& img)
+{
+QImage _qimg = img.copy();
+#if 1
+	mat_img = QImage2Mat(_qimg);
+	///cv::flip(mat_img, mat_img, 0);
+	///cv::flip(mat, mat, 0);
+	if (*p_flags & FLG_ON_CRS)
+	{
+		drawCrs(mat_img);
+	}
+	if (*p_flags & FLG_ON_SEL)
+	{
+		///if (redraw_sel_rc)
+		{
+			drawSelRect(mat_img);
+			////redraw_sel_rc = false;
+		}
+	}
+	////else 
+	if (*p_flags & FLG_ON_RULE)
+	   {
+		drawRuleLine(mat_img);
+	   }
+	if (*p_flags & FLG_ON_PNT)
+	   {
+		drawPoints(mat_img);
+	   }
+	cv::Mat RGBframe;
+	QImage  t_qimg;
+	if (mat_img.channels() == 3) {
+		cv::cvtColor(mat_img, RGBframe, COLOR_BGR2RGB);
+		t_qimg = QImage((const unsigned char*)(RGBframe.data),
+			RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
+	}
+	else {
+		t_qimg = QImage((const unsigned char*)(mat_img.data),
+			mat_img.cols, mat_img.rows, QImage::Format_Indexed8);
+	}
+   emit s_update_image(t_qimg);
+#endif
+}
+
 ///
 void CamPlotter::drawSelRect(const Mat& _mat)
 {

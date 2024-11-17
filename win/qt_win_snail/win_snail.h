@@ -157,10 +157,6 @@ public slots:
 private slots:
     void selectVideoSource();
 private slots:
-    void on_cmdXPlus_pressed();
-    void on_cmdXPlus_released();
-    void on_cmdXMinus_pressed();
-    void on_cmdXMinus_released();
     void sl_show_rule_coord(QRect& rc);
     void sl_setDrawProp();
     void sl_openCsvFile();
@@ -188,15 +184,26 @@ protected slots:
     void cl_stop();
     void cl_xminus();
     void cl_xminus_rel();
+    void cl_xplus();
+    void cl_xplus_rel();
     void cl_yminus();
     void cl_yminus_rel();
+    void cl_yplus();
+    void cl_yplus_rel();
     void cl_zminus();
     void cl_zminus_rel();
+    void cl_zplus();
+    void cl_zplus_rel();
     void SlotLongPush_xminus();
-
+    void SlotLongPush_xplus();
+    void SlotLongPush_yminus();
+    void SlotLongPush_yplus();
+    void SlotLongPush_zminus();
+    void SlotLongPush_zplus();
 
 signals:
     void updateCamView(QImage);
     void sSendCmd(can_message_t* msg);
+    void s_start(int);
 
 };

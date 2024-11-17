@@ -527,7 +527,7 @@
          </size>
         </property>
        </widget>
-       <widget class="StyledToolButton" name="but_YMinus">
+       <widget class="StyledToolButton" name="butt_YMinus">
         <property name="geometry">
          <rect>
           <x>71</x>
@@ -847,7 +847,7 @@
  <tabstops>
   <tabstop>butt_XPlus</tabstop>
   <tabstop>butt_YPlus</tabstop>
-  <tabstop>but_YMinus</tabstop>
+  <tabstop>butt_YMinus</tabstop>
   <tabstop>butt_ZPlus</tabstop>
   <tabstop>butt_ZMinus</tabstop>
   <tabstop>chkKeyboardControl</tabstop>

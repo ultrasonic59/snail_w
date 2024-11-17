@@ -21,17 +21,22 @@ win_snail::win_snail(QWidget *parent)
   {
     ui->setupUi(this);
 ///====================================
-  ///  qRegisterMetaType<cv::Mat>("cv::Mat");
+  qRegisterMetaType<cv::Mat>("cv::Mat");
  
-   //  p_camera = new CameraDevice(this);
-     p_CamView = ui->CamWidget;
-///    pt_camera = new MyCamera(0, &snail_data);
-   //// connect(pt_camera, SIGNAL(frameUpdated(cv::Mat&, QImage::Format)), ui->CamWidget, SLOT(updateImage(cv::Mat&, QImage::Format)));
- ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+   p_camera = new CameraDevice(this);
+   p_CamView = ui->CamWidget;
  ///   connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
  ///   connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image(QImage&, QImage::Format)));
+ ///==================================================================================  
+ /// connect(this, SIGNAL(s_start(int)), p_camera, SLOT(sl_start(int)));
+ /// connect(p_camera, SIGNAL(imageReady(const QImage&)), p_CamView, SLOT(update_image(const QImage&)));
 
-    ///===================================================
+ /// connect(p_camera, SIGNAL(imageReady(const QImage&)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)));
+  
+ /// connect(p_cam_plotter, SIGNAL(s_update_image(const QImage&)), p_CamView, SLOT(update_image(const QImage&)));
+ ///==================================================================================  
+
+///===================================================
    createMenus();
  ////   createThreads();
     setupActions();
@@ -103,8 +108,16 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
 #else
  ///  connect(&pt_camera->m_qvideosurface, SIGNAL(frame_available1(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)), Qt::DirectConnection);
  ///  connect(pt_camera, SIGNAL(frame_updated(QImage&, QImage::Format)), p_cam_plotter, SLOT(sl_update_image(QImage&, QImage::Format)), Qt::DirectConnection);
-   connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image1(QImage&, QImage::Format)), Qt::DirectConnection);
+////   connect(p_cam_plotter, SIGNAL(s_update_image(QImage&, QImage::Format)), ui->CamWidget, SLOT(update_image1(QImage&, QImage::Format)), Qt::DirectConnection);
 #endif
+ ///==================================================================================  
+ connect(this, SIGNAL(s_start(int)), p_camera, SLOT(sl_start(int)));
+ /// connect(p_camera, SIGNAL(imageReady(const QImage&)), p_CamView, SLOT(update_image(const QImage&)));
+
+ connect(p_camera, SIGNAL(imageReady(const QImage&)), p_cam_plotter, SLOT(sl_update_image(const QImage&)));
+ /// 
+ connect(p_cam_plotter, SIGNAL(s_update_image(const QImage&)), p_CamView, SLOT(update_image(const QImage&)));
+ ///==================================================================================  
 
    connect(p_CamView, SIGNAL(sSetPoint(QPoint*)), p_cam_plotter, SLOT(slSetPoint(QPoint*)));
    connect(p_CamView, SIGNAL(sMovePoint(QPoint*)), p_cam_plotter, SLOT(slMovePoint(QPoint*)));
@@ -117,11 +130,6 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
  ///connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
 
- ///pushButtonCross
- ///pushButtonRule
- /// pushButtonGrid
- /// pushButtonSel
- /// 
  connect(ui->pushButtonCross, SIGNAL(clicked()), this, SLOT(on_butt_cross()));
  connect(ui->pushButtonSel, SIGNAL(clicked()), this, SLOT(on_butt_sel()));
  connect(ui->pushButtonRule, SIGNAL(clicked()), this, SLOT(on_butt_rule()));
@@ -130,57 +138,25 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
  ///======================= upr motor ========================================
  connect(ui->butt_Stop, SIGNAL(clicked()), this, SLOT(cl_stop()));
+
  connect(ui->butt_XMinus, SIGNAL(clicked()), this, SLOT(cl_xminus()));
  connect(ui->butt_XMinus, SIGNAL(released()), this, SLOT(cl_xminus_rel()));
  connect(ui->butt_XPlus, SIGNAL(clicked()), this, SLOT(cl_xplus()));
  connect(ui->butt_XPlus, SIGNAL(released()), this, SLOT(cl_xplus_rel()));
+
+ connect(ui->butt_YMinus, SIGNAL(clicked()), this, SLOT(cl_yminus()));
+ connect(ui->butt_YMinus, SIGNAL(released()), this, SLOT(cl_yminus_rel()));
+ connect(ui->butt_YPlus, SIGNAL(clicked()), this, SLOT(cl_yplus()));
+ connect(ui->butt_YPlus, SIGNAL(released()), this, SLOT(cl_yplus_rel()));
+
+ connect(ui->butt_ZMinus, SIGNAL(clicked()), this, SLOT(cl_zminus()));
+ connect(ui->butt_ZMinus, SIGNAL(released()), this, SLOT(cl_zminus_rel()));
+ connect(ui->butt_ZPlus, SIGNAL(clicked()), this, SLOT(cl_zplus()));
+ connect(ui->butt_ZPlus, SIGNAL(released()), this, SLOT(cl_zplus_rel()));
  ///==========================================================================
  pCamThread->start();
 
 
-}
-void win_snail::SlotLongPush_xminus()
-{
-#if 0
-    quint16 t_speed = MAX_SPEED / 2;
-    if (LeftButPushed)
-    {
-        LeftLongPush = true;
-        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
-           ////	qDebug() << "Fwd slow speed" <<t_freq;
-        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
-        emit s_put_motor(DIR_UP, t_speed);
-
-    }
-#endif
-}
-
-void win_snail::cl_xminus()
-{
-    qDebug() << "cl_xminus ";
-    ///	if (OnMotor)
-    ///		return;
-  ///  quint16 t_speed = MAX_SPEED / 2;
-    xminusPushed = true;
-    xminusLongPush = false;
-    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
-    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
-    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
-  ///  emit s_put_motor(DIR_UP, t_speed);
- ///   OnMotor = true;
-}
-void win_snail::cl_xminus_rel()
-{
-    qDebug() << "SlotLeft_rel ";
-    xminusPushed = false;
-    if (xminusLongPush)
-    {
- ///       emit s_put_motor(DIR_UP, 0);
-
-        ///		udp_put_motor_cmd_stop();
- ///       OnMotor = false;
-        ////	qDebug() << "Fwd stop" ;
-    }
 }
 
 win_snail::~win_snail()
@@ -299,7 +275,9 @@ dialog.setLayout(&dialogL);
 dialog.setLayout(&dialogL);
 
 if (dialog.exec() == QDialog::Accepted) {
-    p_camera->start(devicesCB.currentIndex());
+  ///  p_camera->start(devicesCB.currentIndex());
+ ////   p_camera->m_camera = new cv::VideoCapture(devlist.at(devicesCB.currentIndex()));
+    emit s_start(devicesCB.currentIndex());
  ///   delete m_camera;
  ///   m_camera = nullptr;
  ///   m_camera = new QCamera(devlist.at(devicesCB.currentIndex()));
@@ -808,12 +786,46 @@ void win_snail::loadSettings(void)
 
 }    
 
-
 /// /==============================================================
- ///=================== X ===========================
-void win_snail::on_cmdXPlus_pressed()
+void win_snail::cl_stop()
 {
-    qDebug() << "on_cmdXPlus_pressed";
+
+}
+///=================== X ===========================
+void win_snail::SlotLongPush_xminus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+void win_snail::SlotLongPush_xplus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+
+void win_snail::cl_xplus()
+{
+    qDebug() << "cl_xplus";
     can_message_t t_can_message;
     t_can_message.id = 0x20;
     t_can_message.dlc = 8;
@@ -825,7 +837,7 @@ sSendCmd(&t_can_message);
   ///  jogStep();
 }
 
-void win_snail::on_cmdXPlus_released()
+void win_snail::cl_xplus_rel()
 {
     qDebug() << "on_cmdXPlus_released";
 
@@ -833,19 +845,198 @@ void win_snail::on_cmdXPlus_released()
  ////   jogStep();
 }
 
-void win_snail::on_cmdXMinus_pressed()
+void win_snail::cl_xminus()
 {
-    qDebug() << "on_cmdXMinus_pressed";
- ////   m_jogVector += QVector3D(-1, 0, 0);
-  ////  jogStep();
+    qDebug() << "cl_xminus ";
+    ///	if (OnMotor)
+    ///		return;
+  ///  quint16 t_speed = MAX_SPEED / 2;
+    xminusPushed = true;
+    xminusLongPush = false;
+    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
+    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
+    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
+  ///  emit s_put_motor(DIR_UP, t_speed);
+ ///   OnMotor = true;
+}
+void win_snail::cl_xminus_rel()
+{
+    qDebug() << "SlotLeft_rel ";
+    xminusPushed = false;
+    if (xminusLongPush)
+    {
+        ///       emit s_put_motor(DIR_UP, 0);
+
+               ///		udp_put_motor_cmd_stop();
+        ///       OnMotor = false;
+               ////	qDebug() << "Fwd stop" ;
+    }
 }
 
-void win_snail::on_cmdXMinus_released()
+///=================== Y ===========================
+void win_snail::SlotLongPush_yminus()
 {
-    qDebug() << "on_cmdXMinus_released";
-    ///   m_jogVector -= QVector3D(-1, 0, 0);
-    ///   jogStep();
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
 }
+void win_snail::SlotLongPush_yplus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+
+void win_snail::cl_yplus()
+{
+    qDebug() << "cl_xplus";
+    can_message_t t_can_message;
+    t_can_message.id = 0x20;
+    t_can_message.dlc = 8;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+
+    sSendCmd(&t_can_message);
+    ////  m_jogVector += QVector3D(1, 0, 0);
+    ///  jogStep();
+}
+
+void win_snail::cl_yplus_rel()
+{
+    qDebug() << "on_cmdXPlus_released";
+
+    ////  m_jogVector -= QVector3D(1, 0, 0);
+   ////   jogStep();
+}
+
+void win_snail::cl_yminus()
+{
+    qDebug() << "cl_xminus ";
+    ///	if (OnMotor)
+    ///		return;
+  ///  quint16 t_speed = MAX_SPEED / 2;
+    xminusPushed = true;
+    xminusLongPush = false;
+    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_yminus()));
+    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
+    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
+  ///  emit s_put_motor(DIR_UP, t_speed);
+ ///   OnMotor = true;
+}
+void win_snail::cl_yminus_rel()
+{
+    qDebug() << "SlotLeft_rel ";
+    xminusPushed = false;
+    if (xminusLongPush)
+    {
+        ///       emit s_put_motor(DIR_UP, 0);
+
+               ///		udp_put_motor_cmd_stop();
+        ///       OnMotor = false;
+               ////	qDebug() << "Fwd stop" ;
+    }
+}
+
+///=================== Z ===========================
+void win_snail::SlotLongPush_zminus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+void win_snail::SlotLongPush_zplus()
+{
+#if 0
+    quint16 t_speed = MAX_SPEED / 2;
+    if (LeftButPushed)
+    {
+        LeftLongPush = true;
+        ///		t_speed = Params::calc_speed_mot((p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed * Params::debug_speed) / 100);	///%
+           ////	qDebug() << "Fwd slow speed" <<t_freq;
+        ////		udp_put_motor_cmd_go(DIR_UP, t_speed);
+        emit s_put_motor(DIR_UP, t_speed);
+
+    }
+#endif
+}
+void win_snail::cl_zplus()
+{
+    qDebug() << "cl_xplus";
+    can_message_t t_can_message;
+    t_can_message.id = 0x20;
+    t_can_message.dlc = 8;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+
+    sSendCmd(&t_can_message);
+    ////  m_jogVector += QVector3D(1, 0, 0);
+    ///  jogStep();
+}
+
+void win_snail::cl_zplus_rel()
+{
+    qDebug() << "on_cmdXPlus_released";
+
+    ////  m_jogVector -= QVector3D(1, 0, 0);
+   ////   jogStep();
+}
+
+void win_snail::cl_zminus()
+{
+    qDebug() << "cl_xminus ";
+    ///	if (OnMotor)
+    ///		return;
+  ///  quint16 t_speed = MAX_SPEED / 2;
+    xminusPushed = true;
+    xminusLongPush = false;
+    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_zminus()));
+    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
+    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
+  ///  emit s_put_motor(DIR_UP, t_speed);
+ ///   OnMotor = true;
+}
+void win_snail::cl_zminus_rel()
+{
+    qDebug() << "SlotLeft_rel ";
+    xminusPushed = false;
+    if (xminusLongPush)
+    {
+        ///       emit s_put_motor(DIR_UP, 0);
+
+               ///		udp_put_motor_cmd_stop();
+        ///       OnMotor = false;
+               ////	qDebug() << "Fwd stop" ;
+    }
+}
+
+///==========================================================
 bool win_snail::eventFilter(QObject* obj, QEvent* event)
 {
     qDebug() << "eventFilter";

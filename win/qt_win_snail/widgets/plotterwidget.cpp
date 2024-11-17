@@ -125,6 +125,12 @@ QRect plotterwidget::getViewR(void)
 {
     return viewR;
 }
+void plotterwidget::update_image(const QImage& img)
+{
+    m_qimg = img.copy();
+    __updateFPS();
+    update();
+}
 
 
 void plotterwidget::paintEvent(QPaintEvent* event)

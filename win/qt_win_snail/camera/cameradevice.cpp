@@ -12,7 +12,7 @@
 using namespace cv;
 
 CameraDevice::CameraDevice(QObject *parent) :
-    QObject(parent)
+    QObject(parent), is_open(false), stop(false)
 {
  ////   m_capture = new VideoCapture;
     m_timer = new QTimer(this);
@@ -26,35 +26,64 @@ CameraDevice::~CameraDevice()
     m_capture = NULL;
 }
 
-bool CameraDevice::start(int id)
+void CameraDevice::sl_start(int id)
 {
+m_capture = new VideoCapture(id);
 if (m_capture->isOpened())
-    return true;
-
-m_capture->open(id);
-if (m_capture->isOpened())
-     m_timer->start(40);
-return m_capture->isOpened();
+   {
+    frameRate = (int)m_capture->get(CAP_PROP_FPS);
+    m_timer->start(CAMERA_TICK);
+    is_open = true;
+   }
+else
+   is_open = false;
+emit s_is_open(is_open);
+////return m_capture->isOpened();
 }
 
-bool CameraDevice::stop()
+void CameraDevice::sl_stop()
 {
-    if (m_capture->isOpened())
-        m_capture->release();
+if (m_capture->isOpened())
+    m_capture->release();
+m_timer->stop();
 
-    return true;
+ ////   return true;
 }
+void CameraDevice::sl_is_open()
+{
+emit s_is_open(is_open);
+}
+
 
 void CameraDevice::onTimeout()
 {
-    if (!m_capture->isOpened())
+if (!m_capture->isOpened())
         return;
-
-    static cv::Mat frame;
-    *m_capture >> frame;
+///=========================================
+if (!m_capture->read(frame))
+   {
+    stop = true;
+   }
+else {
+    if (frame.channels() == 3) {
+        cv::cvtColor(frame, RGBframe, COLOR_BGR2RGB);
+        img = QImage((const unsigned char*)(RGBframe.data),
+            RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
+    }
+    else {
+        img = QImage((const unsigned char*)(frame.data),
+            frame.cols, frame.rows, QImage::Format_Indexed8);
+    }
+    emit imageReady(img);
+}
+///=========================================
+ ////static cv::Mat frame;
+///*m_capture >> frame;
  ///   if (frame.cols)
  ///       emit imageReady(QtOcv::mat2Image(frame));
+///emit imageReady(img);
 }
+
 QList<camera_info> CameraDevice::enumerator()
 {
 DeviceEnumerator de;
