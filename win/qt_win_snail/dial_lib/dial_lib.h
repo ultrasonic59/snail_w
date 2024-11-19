@@ -9,13 +9,12 @@
 #include "can_message.h"
 #include "lib_paint_scene.h"
 #include "snail_types.h"
-///#include <QtScript/QScriptEngine>
+#include <QtScript/QScriptEngine>
 ////#include <QJSEngine>
 
 namespace Ui {
     class Dial_lib;
 }
-
 
 class DialLib : public QDialog
 {
@@ -60,6 +59,7 @@ private:
 	QTimer* timer;
 	void resizeEvent(QResizeEvent* event);
 	QString path;
+	QString path_script;
 
 private slots:
 	void slotTimer();
@@ -77,7 +77,7 @@ private slots:
 	void runScript();
 
 private:
-///	QScriptEngine m_engine;
+	QScriptEngine m_engine;
 };
 
 #endif // DIAL_ED_PAR_H

@@ -37,7 +37,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>Qt_qt-5.15.15-static</QtInstall>
-    <QtModules>core;xml;sql;network;gui;svg;widgets;qml;serialport</QtModules>
+    <QtModules>core;xml;sql;network;gui;svg;script;widgets;qml;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>

@@ -102,6 +102,16 @@ DialLib::DialLib(QWidget *parent):
     connect(scene, &LibPaintScene::signalPress, this, &DialLib::slShowBeg);
     connect(scene, &LibPaintScene::signalMove, this, &DialLib::slShowEnd);
     connect(ui.butt_clr, SIGNAL(clicked()), this, SLOT(on_clr()));
+///===================================================================
+    
+    QScriptValue inputVal = m_engine.newQObject(ui.edInput);
+    m_engine.globalObject().setProperty("input", inputVal);
+
+    QScriptValue outputVal = m_engine.newQObject(ui.edOutput);
+    m_engine.globalObject().setProperty("output", outputVal);
+
+    connect(ui.ButtLoad, SIGNAL(clicked()), this, SLOT(loadScript()));
+    connect(ui.ButtRun, SIGNAL(clicked()), this, SLOT(runScript()));
 
 
 }
@@ -259,11 +269,9 @@ if (cur_rej == REJ_SELECT)
         ui.label_with->setVisible(true);
         ui.label_hight->setVisible(true);
         break;
-
     }
 }
 }
-
 void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
@@ -318,7 +326,7 @@ void DialLib::sl_zoom_changed(double value)
 {
 ///double currentScale = uitransform().m11();
 ///    qDebug() << "zoom changed:" << value;
-ui.lineEdit_zoom->setText(QString::number(value));
+///ui.lineEdit_zoom->setText(QString::number(value));
 }
 
 void DialLib::on_zoom_changed(int value)
@@ -566,7 +574,28 @@ ui.lab_dx->setText(QString("dx=%1").arg(pnt.x()));
 ui.lab_dy->setText(QString("dy=%1").arg(pnt.y()));
 }
 ///=============================================================
+#if 0
+void DialLib::on_butOpen_clicked()
+{
+    QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
+        path, tr("SVG files (*.svg)"));
+    if (newPath.isEmpty())
+        return;
+
+    path = newPath;
+#endif
 void DialLib::loadScript() {
+QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
+                   path_script, tr("Script files (*.js)"));
+    if (newPath.isEmpty())
+        return;
+
+    path_script = newPath;
+    QFile f(path_script);
+    if (f.open(QIODevice::ReadOnly)) {
+        ui.txtScript->setText(f.readAll());
+    }
+
 /*
     QString fileName = "";
     if (ui->rbUpperDemo->isChecked()) {
@@ -587,14 +616,14 @@ void DialLib::loadScript() {
 }
 
 void DialLib::runScript() {
-    /*
-    ui->edInput->disconnect();
-    ui->edOutput->disconnect();
-    ui->edOutput->clear();
 
-    QScriptValue result = m_engine.evaluate(ui->txtScript->toPlainText());
+    ui.edInput->disconnect();
+    ui.edOutput->disconnect();
+    ui.edOutput->clear();
+
+    QScriptValue result = m_engine.evaluate(ui.txtScript->toPlainText());
     if (result.isError()) {
-        ui->edOutput->setText(result.toString());
+        ui.edOutput->setText(result.toString());
     }
-    */
+ 
 }
