@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QMessageBox>
+#include <QJSEngine>
+
 #include "svgreader.h"
 ///#include "veworkplace.h"
 ///#include "vepolyline.h"
@@ -616,6 +618,14 @@ QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
 }
 
 void DialLib::runScript() {
+    QLineEdit* qldl= ui.edInput;
+    QJSValue scriptLÜl =
+        scriptEngine.newQObject(qldl);
+    scriptEngine.globalObject().setProperty("lbl", scriptLÜl);
+    scriptEngine.evaluate("lbl.text = 'Hello, JavaScript! '");
+////    scriptEngine.evaluate("lÛ.show()");
+
+    /*
 
     ui.edInput->disconnect();
     ui.edOutput->disconnect();
@@ -625,5 +635,6 @@ void DialLib::runScript() {
     if (result.isError()) {
         ui.edOutput->setText(result.toString());
     }
+    */
  
 }

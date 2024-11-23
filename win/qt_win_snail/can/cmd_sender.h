@@ -29,7 +29,7 @@
 #define X_AXIS_CAN_ID   ((0x1 << 0) << 5)   ///0x20
 #define Y_AXIS_CAN_ID   ((0x1 << 1) << 5)   ///0x40
 #define Z_AXIS_CAN_ID    ((0x1 << 2) << 5)  /// 0x80
-
+#define DOZA_ID          ((0x1 << 3) << 5)   ///0x100
 typedef struct  go_cmd_s_ {
 	uint8_t  cmd;                       /// 
 	uint8_t  dirs;                     /// Dirs X,Y,Z ....
@@ -70,9 +70,13 @@ private:
 public:
 	bool canSendMsg(can_message_t* msg);
 	bool canSendCmdGo(quint32 id, go_cmd_t cmd);
+public slots:
+	void sl_set_com_name(QString);
+	void sl_connect(bool);
 
-///signals:
-///	void sig_set_pb_val(quint32 val);
+
+signals:
+	void s_connected(bool);
 };
 
 

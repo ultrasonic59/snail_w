@@ -122,6 +122,8 @@ protected:
 private :
     bool eventFilter(QObject* obj, QEvent* event);
     void createMenus();
+    bool m_can_isConnected;
+
 private:
     QAction* actionProj;
     QAction* actionFile;
@@ -145,6 +147,7 @@ private:
 public slots:
     void on_butt_con_hid();
     void on_butt_con_can();
+    void sl_can_connected(bool iflag);
     ///===== for debug =======
     void on_value_led0_changed(int value);
     void on_value_led1_changed(int value);
@@ -205,5 +208,7 @@ signals:
     void updateCamView(QImage);
     void sSendCmd(can_message_t* msg);
     void s_start(int);
+    void s_can_connect(bool);
+    void s_set_can_com_name(QString);
 
 };

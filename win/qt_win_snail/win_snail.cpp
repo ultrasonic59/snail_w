@@ -17,6 +17,7 @@ win_snail::win_snail(QWidget *parent)
     ,yminusLongPush(false)
     ,zminusPushed(false)
     ,zminusLongPush(false)
+    , m_can_isConnected(false)
 
   {
     ui->setupUi(this);
@@ -79,6 +80,7 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
 
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
  connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
+ ///==================CAN =============================================
  connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
 
   connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(on_value_led0_changed(int)));
@@ -154,6 +156,10 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(ui->butt_ZPlus, SIGNAL(clicked()), this, SLOT(cl_zplus()));
  connect(ui->butt_ZPlus, SIGNAL(released()), this, SLOT(cl_zplus_rel()));
  ///==========================================================================
+ connect(this, SIGNAL(s_can_connect(bool)), m_cmd_sender, SLOT(sl_connect(bool)));
+ connect(m_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
+ connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
+
  pCamThread->start();
 
 
@@ -507,16 +513,29 @@ void win_snail::on_butt_con_hid()
         }
     }
 }
+void win_snail::sl_can_connected(bool iflag)
+{
+  m_can_isConnected = iflag;
+  if (m_can_isConnected)
+    {
+    ui->buttConCAN->setStyleSheet("background-color: green;");
+    qDebug() << "connected " << ComPortName;
+    ui->buttConCAN->setText(tr("Disconnect"));
+    }
+ else
+    {
+      ui->buttConCAN->setText(tr("Connect"));
+      ui->buttConCAN->setStyleSheet("");
+    }
+}
 void win_snail::on_butt_con_can()
 {
     qDebug() << "start can";
-    if (m_cmd_sender->isConnected())
+ if (m_can_isConnected)
     {
-        m_cmd_sender->disconnectToDev();
-        ui->buttConCAN->setText(tr("Connect"));
-        ui->buttConCAN->setStyleSheet("");
+        emit s_can_connect(false);
     }
-    else
+else
     {
         PortPropDialog* port_dialog;
         port_dialog = new PortPropDialog();
@@ -528,15 +547,8 @@ void win_snail::on_butt_con_can()
         {
             port_dialog->GetProperties(ComPortName);
             saveSettings();
-            m_cmd_sender->COM_port_name = ComPortName;		// 
-
-            m_cmd_sender->connectToDev();
-            if (m_cmd_sender->isConnected())
-            {
-                ui->buttConCAN->setStyleSheet("background-color: green;");
-                qDebug() << "connected " << ComPortName;
-                ui->buttConCAN->setText(tr("Disconnect"));
-            }
+            emit s_set_can_com_name(ComPortName);
+            emit s_can_connect(true);
         }
         delete port_dialog;
     }
@@ -827,7 +839,7 @@ void win_snail::cl_xplus()
 {
     qDebug() << "cl_xplus";
     can_message_t t_can_message;
-    t_can_message.id = 0x20;
+    t_can_message.id = X_AXIS_CAN_ID;
     t_can_message.dlc = 8;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
@@ -839,7 +851,7 @@ sSendCmd(&t_can_message);
 
 void win_snail::cl_xplus_rel()
 {
-    qDebug() << "on_cmdXPlus_released";
+    qDebug() << "cl_xplus_rel";
 
   ////  m_jogVector -= QVector3D(1, 0, 0);
  ////   jogStep();
@@ -861,7 +873,7 @@ void win_snail::cl_xminus()
 }
 void win_snail::cl_xminus_rel()
 {
-    qDebug() << "SlotLeft_rel ";
+    qDebug() << "cl_xminus_rel ";
     xminusPushed = false;
     if (xminusLongPush)
     {
@@ -907,7 +919,7 @@ void win_snail::SlotLongPush_yplus()
 
 void win_snail::cl_yplus()
 {
-    qDebug() << "cl_xplus";
+    qDebug() << "cl_yplus";
     can_message_t t_can_message;
     t_can_message.id = 0x20;
     t_can_message.dlc = 8;
@@ -921,7 +933,7 @@ void win_snail::cl_yplus()
 
 void win_snail::cl_yplus_rel()
 {
-    qDebug() << "on_cmdXPlus_released";
+    qDebug() << "cl_yplus_rel";
 
     ////  m_jogVector -= QVector3D(1, 0, 0);
    ////   jogStep();
@@ -929,7 +941,7 @@ void win_snail::cl_yplus_rel()
 
 void win_snail::cl_yminus()
 {
-    qDebug() << "cl_xminus ";
+    qDebug() << "cl_yminu ";
     ///	if (OnMotor)
     ///		return;
   ///  quint16 t_speed = MAX_SPEED / 2;
@@ -943,7 +955,7 @@ void win_snail::cl_yminus()
 }
 void win_snail::cl_yminus_rel()
 {
-    qDebug() << "SlotLeft_rel ";
+    qDebug() << "cl_yminus_rel ";
     xminusPushed = false;
     if (xminusLongPush)
     {
@@ -988,7 +1000,7 @@ void win_snail::SlotLongPush_zplus()
 }
 void win_snail::cl_zplus()
 {
-    qDebug() << "cl_xplus";
+    qDebug() << "cl_zplus";
     can_message_t t_can_message;
     t_can_message.id = 0x20;
     t_can_message.dlc = 8;
@@ -1002,7 +1014,7 @@ void win_snail::cl_zplus()
 
 void win_snail::cl_zplus_rel()
 {
-    qDebug() << "on_cmdXPlus_released";
+    qDebug() << "cl_zplus_rel";
 
     ////  m_jogVector -= QVector3D(1, 0, 0);
    ////   jogStep();
@@ -1010,7 +1022,7 @@ void win_snail::cl_zplus_rel()
 
 void win_snail::cl_zminus()
 {
-    qDebug() << "cl_xminus ";
+    qDebug() << "cl_zminus ";
     ///	if (OnMotor)
     ///		return;
   ///  quint16 t_speed = MAX_SPEED / 2;
@@ -1024,7 +1036,7 @@ void win_snail::cl_zminus()
 }
 void win_snail::cl_zminus_rel()
 {
-    qDebug() << "SlotLeft_rel ";
+    qDebug() << "cl_zminus_rel ";
     xminusPushed = false;
     if (xminusLongPush)
     {

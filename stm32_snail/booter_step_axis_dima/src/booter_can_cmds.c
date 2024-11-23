@@ -80,7 +80,7 @@ if(step_z)
 }
 ////================================================
 #ifndef _MASTER_
-extern uint32_t cur_coord;
+extern int32_t cur_coord;
 extern uint8_t cur_stat;
 
 int put_can_cmd_stat(uint8_t state

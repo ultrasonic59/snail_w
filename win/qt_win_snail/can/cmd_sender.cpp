@@ -193,4 +193,15 @@ return canSendMsg(&t_can_message);
 }
 
 ///====================================================
-
+void CcmdSender::sl_connect(bool on_off)
+{
+	if (on_off)
+		connectToDev();
+	else
+		disconnectToDev();
+	emit s_connected(m_isConnected);
+}
+void CcmdSender::sl_set_com_name(QString name)
+{
+	COM_port_name = name;
+}

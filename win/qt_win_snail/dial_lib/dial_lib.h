@@ -10,7 +10,7 @@
 #include "lib_paint_scene.h"
 #include "snail_types.h"
 #include <QtScript/QScriptEngine>
-////#include <QJSEngine>
+#include <QJSEngine>
 
 namespace Ui {
     class Dial_lib;
@@ -78,6 +78,7 @@ private slots:
 
 private:
 	QScriptEngine m_engine;
+	QJSEngine scriptEngine;
 };
 
 #endif // DIAL_ED_PAR_H
