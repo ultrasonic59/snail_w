@@ -514,6 +514,68 @@
    <widget class="LibGraphicView" name="graphicsView"/>
    <widget class="QTextEdit" name="txtScript"/>
   </widget>
+  <widget class="QPushButton" name="pushButton_test1">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>720</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_test2">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>740</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_test3">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>760</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test3</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_test4">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>780</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Teest4</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_test">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>700</y>
+     <width>71</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

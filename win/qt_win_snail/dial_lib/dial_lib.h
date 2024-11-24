@@ -31,6 +31,7 @@ public:
 	en_item_type cur_item;
 signals:
 	void SignalTest();
+///	void s_place_rect();
 
 private slots:
 	void  on_butt_select();
@@ -45,10 +46,15 @@ private slots:
 
 	void  SlotTest();
 	void  on_grid();
+	void  SlotTest1();
+	void  SlotTest2();
+	void  SlotTest3();
+	void  SlotTest4();
+
+
 
 public slots:
     void on_clr();
-
 private: 
 ///	en_rej cur_rej;
 	void  show_rej();

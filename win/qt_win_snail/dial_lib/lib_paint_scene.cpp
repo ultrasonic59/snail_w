@@ -484,3 +484,16 @@ void LibPaintScene::keyPressEvent(QKeyEvent* event)
     }
     QGraphicsScene::keyPressEvent(event);
 }
+///============================================================
+void LibPaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)
+{
+cust_rect* rect = new cust_rect();
+currentItem = rect;
+addItem(currentItem);
+rect->setRect(0, 0, width, height);
+rect->setPos(point);
+///rect->setBrush(QBrush(Qt::NoBrush));
+rect->setBrush( br);
+rect->setPen(QPen(color, thick));
+
+}

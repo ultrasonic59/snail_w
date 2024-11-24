@@ -114,7 +114,20 @@ DialLib::DialLib(QWidget *parent):
 
     connect(ui.ButtLoad, SIGNAL(clicked()), this, SLOT(loadScript()));
     connect(ui.ButtRun, SIGNAL(clicked()), this, SLOT(runScript()));
+///============================================================
+    ui.comboBox_test->addItem("Rect", RECT_TYPE);
+    ui.comboBox_test->addItem("FRect", FRECT_TYPE);
+    ui.comboBox_test->addItem("VLine", VLINE_TYPE);
+    ui.comboBox_test->addItem("HLine", HLINE_TYPE);
+    ui.comboBox_test->addItem("Circle", CIRCLE_TYPE);
+    ui.comboBox_test->addItem("Point", POINT_TYPE);
 
+    connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
+    connect(ui.pushButton_test1, SIGNAL(clicked()), this, SLOT(SlotTest1()));
+    connect(ui.pushButton_test2, SIGNAL(clicked()), this, SLOT(SlotTest2()));
+    connect(ui.pushButton_test3, SIGNAL(clicked()), this, SLOT(SlotTest3()));
+    connect(ui.pushButton_test4, SIGNAL(clicked()), this, SLOT(SlotTest4()));
+///================================================================
 
 }
 
@@ -307,10 +320,7 @@ scene->clear();
 scene->update();
   ////  ui.textEdit_rd_dat->clear();
 }
-void DialLib::SlotTest()
-{
- emit SignalTest();
-}
+
 ///============================================
 ///===========================================
 void DialLib::slotTimer()
@@ -636,5 +646,36 @@ void DialLib::runScript() {
         ui.edOutput->setText(result.toString());
     }
     */
- 
+ }
+///=========================================================================================
+void DialLib::SlotTest()
+{
+    emit SignalTest();
 }
+/*
+rect->setRect(0, 0, params::LibItemWidth, params::LibItemHeight);
+rect->setPos(gr_point);
+rect->setBrush(QBrush(Qt::NoBrush));
+rect->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
+*/
+void DialLib::SlotTest1()
+{
+///    emit SignalTest();
+    scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+}
+void DialLib::SlotTest2()
+{
+ ///   emit SignalTest();
+    scene->sl_place_rect(100, 200, QPoint(120, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+
+}
+void DialLib::SlotTest3()
+{
+  ///  emit SignalTest();
+}
+void DialLib::SlotTest4()
+{
+ ///   emit SignalTest();
+}
+
+///=========================================================================================
