@@ -628,12 +628,18 @@ QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
 }
 
 void DialLib::runScript() {
+#if 0
     QLineEdit* qldl= ui.edInput;
-    QJSValue scriptLÜl =
+    QJSValue scriptVal =
         scriptEngine.newQObject(qldl);
-    scriptEngine.globalObject().setProperty("lbl", scriptLÜl);
+    scriptEngine.globalObject().setProperty("lbl", scriptVal);
     scriptEngine.evaluate("lbl.text = 'Hello, JavaScript! '");
 ////    scriptEngine.evaluate("lÛ.show()");
+#endif
+    QJSValue scriptVal =
+        scriptEngine.newQObject(scene);
+    scriptEngine.globalObject().setProperty("scene", scriptVal);
+    scriptEngine.evaluate(ui.txtScript->toPlainText());
 
     /*
 
@@ -666,7 +672,7 @@ void DialLib::SlotTest1()
 void DialLib::SlotTest2()
 {
  ///   emit SignalTest();
-    scene->sl_place_rect(100, 200, QPoint(120, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+    scene->sl_place_rect(QPoint(120, 20));
 
 }
 void DialLib::SlotTest3()

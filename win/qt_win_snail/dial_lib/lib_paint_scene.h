@@ -72,6 +72,8 @@ private slots:
 public slots:
     void slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy);
     void sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick);
+    void sl_place_rect(QPoint point);
+    void sl_place_item(QString i_str);
 
 private:
     QGraphicsItem* currentItem;

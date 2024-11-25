@@ -497,3 +497,14 @@ rect->setBrush( br);
 rect->setPen(QPen(color, thick));
 
 }
+void LibPaintScene::sl_place_rect(QPoint point)
+{
+sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
+ 
+}
+void LibPaintScene::sl_place_item(QString i_str)
+{
+ ////   sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
+    qDebug() << "sl_place_item " << i_str;
+
+}
