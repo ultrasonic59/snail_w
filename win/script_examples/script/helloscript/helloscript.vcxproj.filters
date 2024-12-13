@@ -32,11 +32,11 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="D:\proj\velograph\snail_w\win\script_examples\script\helloscript\helloscript_plugin_import.cpp">
+    <ClCompile Include=".\helloscript_plugin_import.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>

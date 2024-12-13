@@ -43,6 +43,9 @@
     <ClCompile Include="tetrixboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include=".\qstetrix_plugin_import.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="tetrixboard.h">
@@ -56,9 +59,6 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    <ClCompile Include="D:\proj\velograph\snail_w\win\script_examples\script\qstetrix\qstetrix_plugin_import.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="tetrix.qrc">
