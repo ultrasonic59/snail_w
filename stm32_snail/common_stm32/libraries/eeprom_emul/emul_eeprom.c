@@ -619,6 +619,16 @@ rez= EE_Init();
 FLASH_Lock();
 return rez;
 }
+uint8_t eeprom_format(void)
+{
+ uint8_t rez;
+FLASH_Unlock();
+rez= (uint8_t)EE_Format();
+FLASH_Lock();
+
+return rez;
+}
+
 /**
   * @}
   */ 

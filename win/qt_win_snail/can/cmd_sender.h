@@ -24,7 +24,15 @@
 #define CMD_OPEN  				'O'
 #define CMD_CLOSE  				'C'
 #define CMD_SEND  				't'
+///===========================================================
+#define GO_CMD                0x1
+#define GET_STAT_CMD          0x2
+#define PUT_STAT_CMD          0x3
+#define PUT_ACK               0x4
+#define SET_PARAM             0x5
 
+#define DIR_PLUS            0
+#define DIR_MINUS           1
 ///============================================
 #define X_AXIS_CAN_ID   ((0x1 << 0) << 5)   ///0x20
 #define Y_AXIS_CAN_ID   ((0x1 << 1) << 5)   ///0x40
@@ -73,10 +81,13 @@ public:
 public slots:
 	void sl_set_com_name(QString);
 	void sl_connect(bool);
+	void SlSendCmd(can_message_t* msg);
 
 
 signals:
 	void s_connected(bool);
+	void s_rsv_can_dat(char*);
+
 };
 
 

@@ -28,6 +28,7 @@ TaskHandle_t  can_send_thread_handle;
 uint8_t boot_state;
 
 extern uint8_t check_ks_app(void);
+extern uint8_t eeprom_format(void);
 ////============================================
 int main( void )
 {
@@ -63,8 +64,22 @@ if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
        goto_app();
       }
   }
+else
+   {
+    printk("\n\r=== [eeprom_format!!!] ==="); 
+    eeprom_format();
+    }
 #endif
-////CAN1_Init();
+#if STEP_X
+  printk("\n\r=== [wait boot_step_x_axis!!!] ==="); 
+#elif STEP_Y
+  printk("\n\r=== [wait boot_step_y_axis!!!] ==="); 
+#elif STEP_Z
+  printk("\n\r=== [wait boot_step_z_axis!!!] ==="); 
+#else 
+  #error "\n\r=== boot STEP_... nodefined ==="; 
+#endif
+
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 ////xTaskCreate( motor_task, "tst_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );

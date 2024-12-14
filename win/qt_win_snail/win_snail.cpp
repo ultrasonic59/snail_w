@@ -91,13 +91,17 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
   m_cmd_sender->moveToThread(m_pThread);
   connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
   m_pThread->start();
+  connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+  connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
+
   ///============================================
  wrk_Thread = new QThread(this);
  p_wrk=new Cwrk_wrk(m_cmd_sender);
  p_wrk->moveToThread(wrk_Thread);
  connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
  wrk_Thread->start();
- connect(this, SIGNAL(sSendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+ ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+
 ///=======================================================
  pCamThread= new QThread(this);
  p_cam_plotter=new CamPlotter(&PlotProp,&cnf_flags, &snail_data);
@@ -146,9 +150,9 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(ui->butt_XPlus, SIGNAL(clicked()), this, SLOT(cl_xplus()));
  connect(ui->butt_XPlus, SIGNAL(released()), this, SLOT(cl_xplus_rel()));
 
- connect(ui->butt_YMinus, SIGNAL(clicked()), this, SLOT(cl_yminus()));
+ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(cl_yminus()));
  connect(ui->butt_YMinus, SIGNAL(released()), this, SLOT(cl_yminus_rel()));
- connect(ui->butt_YPlus, SIGNAL(clicked()), this, SLOT(cl_yplus()));
+ connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(cl_yplus()));
  connect(ui->butt_YPlus, SIGNAL(released()), this, SLOT(cl_yplus_rel()));
 
  connect(ui->butt_ZMinus, SIGNAL(clicked()), this, SLOT(cl_zminus()));
@@ -714,12 +718,14 @@ void win_snail::slot_send_can_dbg(can_message_t* idat)
 {
     bool rez;
     qDebug() << "slot_send_can_dbg :";
-    rez=  m_cmd_sender->canSendMsg(idat);
+    emit s_SendCmd(idat);
+ ///   rez=  m_cmd_sender->canSendMsg(idat);
+/*
 if(rez)
     qDebug() << "OK ";
 else
    qDebug() << "BAD ";
-
+*/
 }
 
 void win_snail::saveSettings(void)
@@ -844,7 +850,7 @@ void win_snail::cl_xplus()
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
 
-sSendCmd(&t_can_message);
+    emit s_SendCmd(&t_can_message);
   ////  m_jogVector += QVector3D(1, 0, 0);
   ///  jogStep();
 }
@@ -884,7 +890,6 @@ void win_snail::cl_xminus_rel()
                ////	qDebug() << "Fwd stop" ;
     }
 }
-
 ///=================== Y ===========================
 void win_snail::SlotLongPush_yminus()
 {
@@ -919,14 +924,24 @@ void win_snail::SlotLongPush_yplus()
 
 void win_snail::cl_yplus()
 {
+    quint16 len_step = 40;
+    quint32 num_step = 400;
+
     qDebug() << "cl_yplus";
     can_message_t t_can_message;
-    t_can_message.id = 0x20;
+    t_can_message.id = Y_AXIS_CAN_ID;
     t_can_message.dlc = 8;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
-
-    sSendCmd(&t_can_message);
+    t_can_message.data[0] = GO_CMD;
+    t_can_message.data[1] = DIR_PLUS;
+    t_can_message.data[2] = len_step&0xff;
+    t_can_message.data[3] = (len_step>>8) & 0xff;
+    t_can_message.data[4] = num_step  & 0xff;
+    t_can_message.data[5] = (num_step >> 8) & 0xff;
+    t_can_message.data[6] = (num_step >> 16) & 0xff;
+    t_can_message.data[7] = (num_step >> 24) & 0xff;
+    emit s_SendCmd(&t_can_message);
     ////  m_jogVector += QVector3D(1, 0, 0);
     ///  jogStep();
 }
@@ -941,17 +956,29 @@ void win_snail::cl_yplus_rel()
 
 void win_snail::cl_yminus()
 {
-    qDebug() << "cl_yminu ";
-    ///	if (OnMotor)
-    ///		return;
-  ///  quint16 t_speed = MAX_SPEED / 2;
+quint16 len_step = 40;
+quint32 num_step = 400;
+
+  qDebug() << "cl_yminu ";
+ can_message_t t_can_message;
+ t_can_message.id = Y_AXIS_CAN_ID;
+ t_can_message.dlc = 8;
+ t_can_message.IDE = 0;
+ t_can_message.RTR = 0;
+ t_can_message.data[0] = GO_CMD;
+ t_can_message.data[1] = DIR_MINUS;
+ t_can_message.data[2] = len_step & 0xff;
+ t_can_message.data[3] = (len_step >> 8) & 0xff;
+ t_can_message.data[4] = num_step & 0xff;
+ t_can_message.data[5] = (num_step >> 8) & 0xff;
+ t_can_message.data[6] = (num_step >> 16) & 0xff;
+ t_can_message.data[7] = (num_step >> 24) & 0xff;
+ emit s_SendCmd(&t_can_message);
+
     xminusPushed = true;
     xminusLongPush = false;
     QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_yminus()));
-    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
-    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
-  ///  emit s_put_motor(DIR_UP, t_speed);
- ///   OnMotor = true;
+
 }
 void win_snail::cl_yminus_rel()
 {
@@ -1007,7 +1034,7 @@ void win_snail::cl_zplus()
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
 
-    sSendCmd(&t_can_message);
+    emit s_SendCmd(&t_can_message);
     ////  m_jogVector += QVector3D(1, 0, 0);
     ///  jogStep();
 }
@@ -1205,3 +1232,9 @@ if (fileName.isEmpty())
 return saveFile(fileName);
 }
 
+void win_snail::sl_rsv_can_dat(char* idat)
+{
+ ///   qDebug() << "sl_rsv_dat=" <<idat;
+emit put_str_dial(idat);
+
+}

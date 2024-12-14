@@ -156,6 +156,8 @@ public slots:
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
     void on_butt_test();
+    void sl_rsv_can_dat(char*);
+
 
 private slots:
     void selectVideoSource();
@@ -206,9 +208,11 @@ protected slots:
 
 signals:
     void updateCamView(QImage);
-    void sSendCmd(can_message_t* msg);
+    void s_SendCmd(can_message_t* msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
+    void put_str_dial(char*);
+
 
 };

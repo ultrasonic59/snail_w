@@ -27,7 +27,7 @@ if(!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
 	return false;
 if(!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
 	return false;
-quint64 len = m_pSerialPort->read(res_data, 256);
+quint64 len = m_pSerialPort->read(res_data, MAX_BUFF_SIZE);
 if (len == 0)
 	return false;
 return true;
@@ -70,7 +70,7 @@ m_isConnected = true;
 bool CcmdSender::getVers(char *vers) 
 {
 	char snd_dat[16];
-	char rsv_dat[64] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_VERS;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -88,7 +88,7 @@ return false;  ///
 bool CcmdSender::canOpen(void)
 {
 	char snd_dat[6];
-	char rsv_dat[8] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_OPEN;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -101,7 +101,7 @@ return false;  ///
 bool CcmdSender::canClose(void)
 {
 	char snd_dat[6];
-	char rsv_dat[8] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_CLOSE;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -135,7 +135,7 @@ static char* put_hex_byte(char* str, quint8 val) {
 bool CcmdSender::canSendMsg(can_message_t* msg) {
 	char snd_dat[64];
 	char* t_str = snd_dat;
-	char rsv_dat[64] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	*t_str++ = CMD_SEND;
 	t_str = put_hex_digit(t_str, msg->id >> 8);
 	t_str = put_hex_byte(t_str, msg->id & 0xff);
@@ -147,6 +147,7 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 *t_str++ = 0;
 if (SendRes(snd_dat, rsv_dat))
 	{
+	emit s_rsv_can_dat(rsv_dat);
 		return true;  ///
 	}
 	return false;  ///
@@ -171,7 +172,7 @@ const char* slcan_get_baud_string(quint32 bps) {
 bool CcmdSender::setBaudRate(quint32 bps)
 {
 	char snd_dat[16];
-	char rsv_dat[16] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	strcpy(snd_dat, slcan_get_baud_string(bps));
 	
 	if (SendRes(snd_dat, rsv_dat))
@@ -204,4 +205,8 @@ void CcmdSender::sl_connect(bool on_off)
 void CcmdSender::sl_set_com_name(QString name)
 {
 	COM_port_name = name;
+}
+void CcmdSender::SlSendCmd(can_message_t* msg)
+{
+canSendMsg(msg);
 }

@@ -13,7 +13,8 @@ DialDebug::DialDebug(QWidget *parent):
 
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
     connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
-  
+
+    connect(parent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
     connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
 }
 
@@ -22,6 +23,8 @@ DialDebug::~DialDebug()
     disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
+    disconnect(pParent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 
 }
@@ -103,9 +106,9 @@ void  DialDebug::req_xil_data_rdy(xil_dat_req_t* p_xil_dat)
 
 void  DialDebug::req_str_rdy(char* istr)
 {
-#if 0
- QString tstr;
- tstr.sprintf("\n%s",istr);
+#if 1
+ QString tstr(istr);
+ ////tstr.sprintf("\n%s",istr);
  ui.textEdit_rd_dat->append(tstr);
  QTextCursor c = ui.textEdit_rd_dat->textCursor();
  c.movePosition(QTextCursor::End);
