@@ -334,12 +334,17 @@ void LibPaintScene::property(QGraphicsItem* _item) {
     ///    QMessageBox::information(nullptr, "test1", "test1");
 }
 
-void LibPaintScene::test1() {
+void LibPaintScene::sl_test1() {
+   sl_place_rect(300, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+
     QMessageBox::information(nullptr, "test1", "test1");
 }
 
-void LibPaintScene::test2() {
-    QMessageBox::information(nullptr, "test2", "test2");
+void LibPaintScene::sl_test2(QString t_str) {
+    QMessageBox::information(nullptr, t_str, "test2");
+}
+void LibPaintScene::sl_test3(char* t_str) {
+    QMessageBox::information(nullptr, t_str, "test2");
 }
 
 ///===========================================================
@@ -497,6 +502,32 @@ rect->setBrush( br);
 rect->setPen(QPen(color, thick));
 
 }
+void LibPaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
+{
+    cust_line* line = new cust_line(this);
+    currentItem = line;
+    addItem(currentItem);
+    connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+    connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+    line->setPen(QPen(color, thick, Qt::SolidLine, Qt::FlatCap));
+     QPainterPath path;
+    path.moveTo(point);
+    path.lineTo(point.x(), point.y() + width);
+    line->setPath(path);
+}
+void LibPaintScene::sl_place_circle(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
+{
+    cust_circle* circle = new cust_circle();
+    currentItem = circle;
+    addItem(currentItem);
+    connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
+    connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
+    circle->setCircle(0, 0, width);
+    circle->setPos(point.x() - width/2, point.y() - width/2);
+    circle->setBrush(br);
+    circle->setPen(QPen(color,thick));
+}
+
 void LibPaintScene::sl_place_rect(QPoint point)
 {
 sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
@@ -507,4 +538,35 @@ void LibPaintScene::sl_place_item(QString i_str)
  ////   sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
     qDebug() << "sl_place_item " << i_str;
 
+}
+void LibPaintScene::sl_obr_cmd(QString i_cmd)
+{
+QJsonDocument doc = QJsonDocument::fromJson(i_cmd.toUtf8());
+QJsonObject json = doc.object();
+QString type_cmd = json["cmd"].toString();
+quint16 width= json["width"].toInt();
+quint16 height = json["height"].toInt();
+QJsonValue point = json.value("point");
+int x;
+int y;
+if (point.isObject())
+   {
+    x = point["x"].toInt();
+    y = point["y"].toInt();
+   }
+int br= json["brush"].toInt();
+int t_col= json["color"].toInt();
+int thick= json["thick"].toInt();
+if (type_cmd == "Rect")
+   {
+    sl_place_rect(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
+   }
+else if(type_cmd == "Circle")
+   {
+    sl_place_circle(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
+   }
+else if (type_cmd == "Line")
+  {
+    sl_place_line(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
+  }
 }

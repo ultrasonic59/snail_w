@@ -46,6 +46,8 @@ private slots:
 
 	void  SlotTest();
 	void  on_grid();
+
+////	Q_INVOKABLE void  SlotTest1();
 	void  SlotTest1();
 	void  SlotTest2();
 	void  SlotTest3();
@@ -55,6 +57,7 @@ private slots:
 
 public slots:
     void on_clr();
+///	Q_INVOKABLE void visibleMethod();
 private: 
 ///	en_rej cur_rej;
 	void  show_rej();
@@ -83,8 +86,8 @@ private slots:
 	void runScript();
 
 private:
-	QScriptEngine m_engine;
-	QJSEngine scriptEngine;
+///	QScriptEngine m_engine;
+	QJSEngine *jsEngine;
 };
 
 #endif // DIAL_ED_PAR_H

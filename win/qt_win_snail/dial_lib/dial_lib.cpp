@@ -106,11 +106,11 @@ DialLib::DialLib(QWidget *parent):
     connect(ui.butt_clr, SIGNAL(clicked()), this, SLOT(on_clr()));
 ///===================================================================
     
-    QScriptValue inputVal = m_engine.newQObject(ui.edInput);
-    m_engine.globalObject().setProperty("input", inputVal);
+ ///   QScriptValue inputVal = m_engine.newQObject(ui.edInput);
+///    m_engine.globalObject().setProperty("input", inputVal);
 
-    QScriptValue outputVal = m_engine.newQObject(ui.edOutput);
-    m_engine.globalObject().setProperty("output", outputVal);
+ ///   QScriptValue outputVal = m_engine.newQObject(ui.edOutput);
+ ///   m_engine.globalObject().setProperty("output", outputVal);
 
     connect(ui.ButtLoad, SIGNAL(clicked()), this, SLOT(loadScript()));
     connect(ui.ButtRun, SIGNAL(clicked()), this, SLOT(runScript()));
@@ -128,7 +128,7 @@ DialLib::DialLib(QWidget *parent):
     connect(ui.pushButton_test3, SIGNAL(clicked()), this, SLOT(SlotTest3()));
     connect(ui.pushButton_test4, SIGNAL(clicked()), this, SLOT(SlotTest4()));
 ///================================================================
-
+    jsEngine = new QJSEngine(this);
 }
 
 DialLib::~DialLib()
@@ -296,7 +296,6 @@ void  DialLib::on_butt_place()
 
  ///   ui.itemSettings->setitemType(cur_item);
  ///   ui.itemSettings->setVisible(true);
-
     switch (cur_item)
     {
     case RECT_TYPE:
@@ -308,19 +307,14 @@ void  DialLib::on_butt_place()
     case HLINE_TYPE:
         scene->setCurrentAction(HLineType);
         break;
-
     }
-
 }
-
-
 void DialLib::on_clr()
 {
 scene->clear();
 scene->update();
   ////  ui.textEdit_rd_dat->clear();
 }
-
 ///============================================
 ///===========================================
 void DialLib::slotTimer()
@@ -356,8 +350,6 @@ void DialLib::on_zoom_changed(int value)
     put_hid_cmd(&t_cmd);
 #endif
 }
-
-
 void DialLib::indexChanged(int index)
 {
  cur_item = (en_item_type)ui.comboBox_item->currentIndex();
@@ -636,11 +628,24 @@ void DialLib::runScript() {
     scriptEngine.evaluate("lbl.text = 'Hello, JavaScript! '");
 ////    scriptEngine.evaluate("lÛ.show()");
 #endif
-    QJSValue scriptVal =
-        scriptEngine.newQObject(scene);
-    scriptEngine.globalObject().setProperty("scene", scriptVal);
-    scriptEngine.evaluate(ui.txtScript->toPlainText());
-
+    QJSValue scriptVal = jsEngine->newQObject(scene);
+    jsEngine->globalObject().setProperty("scene", scriptVal);
+    QJSValue errorValue = jsEngine->evaluate(ui.txtScript->toPlainText());
+#if 0
+    QString t_str("JS");
+    QJSValue errorValue = jsEngine->evaluate(
+        "scene.sl_test3('xaxaxa'); "
+ ///       "scene.sl_test1();"
+    );
+#endif
+///   QJSValue errorValue = jsEngine->evaluate("...");
+    if (errorValue.isError())
+    {
+        qDebug() << "Error!";
+        qDebug() << errorValue.property("name").toString() << ", " \
+            << errorValue.property("message").toString();
+        qDebug() << errorValue.property("lineNumber").toInt();
+    }
     /*
 
     ui.edInput->disconnect();
@@ -664,11 +669,42 @@ rect->setPos(gr_point);
 rect->setBrush(QBrush(Qt::NoBrush));
 rect->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
 */
+#if 0
 void DialLib::SlotTest1()
 {
+ ////   sl_obr_cmd(QString i_cmd)
+
 ///    emit SignalTest();
-    scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+ ///  scene->sl_place_circle(20, 20, QPoint(100, 20), QBrush(Qt::NoBrush), Qt::blue, 2);
+
+ ///   scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+///    scene->sl_test1();
+ ///   scene->sl_test3((char*)"xaxa");
+ ///   scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
+
 }
+#endif
+void DialLib::SlotTest1()
+{
+    QJsonObject recordObject;
+    QJsonObject objObject;
+
+    objObject.insert("cmd", "Rect");
+    objObject.insert("width", 120);
+    objObject.insert("height", 40);
+    objObject.insert("thick", 2);
+    objObject.insert("brush", 2345678);
+    objObject.insert("color", 12378);
+    QJsonObject obj2Object;
+    obj2Object.insert("x", 45);
+    obj2Object.insert("y", 73);
+    objObject.insert("point", obj2Object);
+    QJsonDocument doc(recordObject);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+    scene->sl_obr_cmd(jsonString);
+}
+
+
 void DialLib::SlotTest2()
 {
  ///   emit SignalTest();

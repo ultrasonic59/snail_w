@@ -1,0 +1,152 @@
+
+
+
+
+{
+"cmd": "Rect",
+"width": 100,
+"height": 10,
+"point":{
+"x":20,
+"y":10
+}
+"brush": 12345678,
+"color": 12378,
+"thick": 1
+}
+
+quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick
+
+
+
+void LibPaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)
+
+void LibPaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
+
+{
+    cust_line* line = new cust_line(this);
+    currentItem = line;
+    addItem(currentItem);
+    connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+    connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+    line->setPen(QPen(color, thick, Qt::SolidLine, Qt::FlatCap));
+
+    rect->setRect(0, 0, width, height);
+    rect->setPos(point);
+    ///rect->setBrush(QBrush(Qt::NoBrush));
+    rect->setBrush(br);
+    rect->setPen(QPen(color, thick));
+
+}
+
+           case CIRCLE_TYPE: {
+                cust_circle* circle = new cust_circle();
+                currentItem = circle;
+                addItem(currentItem);
+                connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
+                connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
+                circle->setCircle(0, 0, params::LibItemWidth);
+                circle->setPos(gr_point.x() - params::LibItemWidth / 2, gr_point.y() - params::LibItemWidth / 2);
+                circle->setBrush(QBrush(Qt::NoBrush));
+                circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
+            }
+           case VLINE_TYPE: {
+                cust_line* line = new cust_line(this);
+                currentItem = line;
+                addItem(currentItem);
+                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+                connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+                line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
+                    , Qt::SolidLine, Qt::FlatCap));
+                ///           , Qt::SolidLine, Qt::RoundCap));
+                QPainterPath path;
+                path.moveTo(gr_point);
+                path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
+                line->setPath(path);
+                  }
+                  break;
+
+
+QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
+QJsonObject json = doc.object();
+QString str = json["hello"].toString();
+bool t = json["t"].toBool();
+bool f = json["f"].toBool();
+bool n = json["n"].toBool();
+int  i = json["i"].toInt();
+double pi = json["pi"].toDouble();
+QJsonArray ar = json["a"].toArray();
+QList <QVariant> at = ar.toVariantList();
+
+
+
+       QJsonValue test2 = json.value("test2");
+        if (test2.isObject())
+        {
+            
+            QJsonObject obj2 = test2.toObject();
+            QJsonArray ar = obj2["a"].toArray();
+            bool t = obj2["t"].toBool();
+            
+            
+            QJsonValue test3 = obj2.value("test3");
+            if (test3.isObject())
+            {
+                QJsonObject obj3 = test3.toObject();
+                int i = obj3["i"].toInt();
+                double pi = obj3["pi"].toDouble();
+            }
+            
+        }
+    }
+
+
+    {
+ "test": {
+ "key1":"message1",
+ "key2": "message2"
+ },
+"hello": "world",
+ "test2":  {
+ "a": [1,2,3],
+ "t": true,
+ "test3": {
+ "i": 123,
+ "pi": 3.14
+ }
+ }
+}
+
+
+    QJsonObject recordObject;
+
+    QJsonObject objObject;
+    objObject.insert("Test1", "1");
+    objObject.insert("Test2", "2");
+    objObject.insert("Test3", "3");
+
+    QJsonObject obj2Object;
+    obj2Object.insert("Test4", "4");
+    obj2Object.insert("Test5", "5");
+    obj2Object.insert("Test6", "6");
+    obj2Object.insert("Test7", QJsonValue::fromVariant("1"));
+    obj2Object.insert("Test8", QJsonValue::fromVariant(123.4));
+    obj2Object.insert("Test9", QJsonValue::fromVariant(43));
+    obj2Object.insert("Test10", QJsonValue::fromVariant(true));
+
+
+    objObject.insert("Test11", obj2Object);
+    recordObject.insert("Test12",objObject);
+
+
+
+    QJsonDocument doc(recordObject);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+
+    QFile file;
+    file.setFileName("test2.json");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream stream( &file );
+    stream << jsonString;
+        file.close();
