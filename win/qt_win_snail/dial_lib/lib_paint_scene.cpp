@@ -541,6 +541,8 @@ void LibPaintScene::sl_place_item(QString i_str)
 }
 void LibPaintScene::sl_obr_cmd(QString i_cmd)
 {
+       qDebug() << "i_cmd=" << i_cmd;
+
 QJsonDocument doc = QJsonDocument::fromJson(i_cmd.toUtf8());
 QJsonObject json = doc.object();
 QString type_cmd = json["cmd"].toString();

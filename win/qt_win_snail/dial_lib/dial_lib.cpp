@@ -691,17 +691,24 @@ void DialLib::SlotTest1()
 
     objObject.insert("cmd", "Rect");
     objObject.insert("width", 120);
-    objObject.insert("height", 40);
-    objObject.insert("thick", 2);
+    objObject.insert("height",
+           QJsonValue::fromVariant(40));
+
+ ///   objObject.insert("height", 40);
+  objObject.insert("thick", 2);
     objObject.insert("brush", 2345678);
-    objObject.insert("color", 12378);
+   objObject.insert("color", 12378);
+
     QJsonObject obj2Object;
     obj2Object.insert("x", 45);
     obj2Object.insert("y", 73);
     objObject.insert("point", obj2Object);
-    QJsonDocument doc(recordObject);
+
+  ///  QJsonDocument doc(recordObject);
+    QJsonDocument doc(objObject);
     QString jsonString = doc.toJson(QJsonDocument::Indented);
     scene->sl_obr_cmd(jsonString);
+ ///   qDebug() << "json=" << jsonString;
 }
 
 
