@@ -6,6 +6,12 @@
 
 #include "dial_lib.h"
 #include "params.h"
+#include "svgreader.h"
+#include "cust_rect.h"
+#include "cust_line.h"
+#include "cust_circle.h"
+#include "cust_group.h"
+
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
@@ -76,7 +82,10 @@ win_snail::win_snail(QWidget *parent)
     qDebug() << "int=" << tsize;
     */
     ///=======================================================
-connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
+connect(ui->Butt_test, SIGNAL(clicked()), this, SLOT(on_butt_test()));
+connect(ui->Butt_test1, SIGNAL(clicked()), this, SLOT(on_butt_test1()));
+connect(ui->Butt_test2, SIGNAL(clicked()), this, SLOT(on_butt_test2()));
+connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
  connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
@@ -165,8 +174,20 @@ connect(ui->ButtonTest, SIGNAL(clicked()), this, SLOT(on_butt_test()));
  connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
 
  pCamThread->start();
+ ///======================================================
+ scene = new LibPaintScene(this);       // 
+ scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
+ 
+ ui->sh_widget->setScene(scene);  // 
+ ui->sh_widget->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+ ui->sh_widget->setDragMode(QGraphicsView::ScrollHandDrag);
+ /// GraphicsView->setStyleSheet("background: transparent;border:0px");
+ ui->sh_widget->setStyleSheet("background: transparent;border:0px");
 
+ ////ui.graphicsView->setCursor(QCursor());
 
+ scene->setSceneRect(0, 0, 2000, 2000); //
+ ///==================================================
 }
 
 win_snail::~win_snail()
@@ -1236,5 +1257,94 @@ void win_snail::sl_rsv_can_dat(char* idat)
 {
  ///   qDebug() << "sl_rsv_dat=" <<idat;
 emit put_str_dial(idat);
+
+}
+void win_snail::on_butt_test1()
+{
+    qDebug() << "start test1";
+ ///   cust_rect* rect = new cust_rect();
+    MyItem* rect = new MyItem();
+
+    currentItem = rect;
+    scene->addItem(currentItem);
+    ///connect(rect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
+    ///connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
+ ////   rect->setRect(0, 0, 35, 23);
+    rect->setPos(QPoint(20,40));
+ ///   rect->setBrush(QBrush(Qt::NoBrush));
+ ///   rect->setPen(QPen(Qt::red, 2));
+}
+void win_snail::on_butt_test2()
+{
+    qDebug() << "start test2";
+}
+
+void win_snail::on_butt_load()
+{
+    qDebug() << "start load";
+    cust_group* pGroup = new cust_group();
+
+ ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
+ ///   pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
+        svg_path, tr("SVG files (*.svg)"));
+    if (newPath.isEmpty())
+        return;
+    svg_path = newPath;
+    QRectF svg_rec = SvgReader::getSizes(svg_path);
+
+#if 1
+///    scene->clear();
+
+ ///   scene->setSceneRect(SvgReader::getSizes(svg_path));
+
+    foreach(QGraphicsItem * item, SvgReader::getElements(svg_path)) {
+        qDebug() << "item->type=" << item->type();
+        switch (item->type()) {
+        case QGraphicsPathItem::Type: {
+            cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
+            pGroup->addToGroup(polyline);
+ ///           scene->addItem(polyline);
+ ///           connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
+ ///           connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+                                    /*
+                                            case QGraphicsLineItem::Type: {
+                                                cust_line* line = qgraphicsitem_cast<cust_line*>(item);
+                                                scene->addItem(line);
+                                                connect(line, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
+                                                connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
+                                                break;
+                                            }
+                                    */
+        case QGraphicsEllipseItem::Type: {
+            cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
+            pGroup->addToGroup(circle);
+  ///          scene->addItem(circle);
+  ///          connect(circle, &cust_circle::clicked, scene, &LibPaintScene::signalSelectItem);
+  ///          connect(circle, &cust_circle::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+        case QGraphicsRectItem::Type: {
+            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
+            pGroup->addToGroup(rect);
+ ///           scene->addItem(rect);
+///            connect(rect, &cust_rect::clicked, scene, &LibPaintScene::signalSelectItem);
+///            connect(rect, &cust_rect::signalMove, scene, &LibPaintScene::slotMove);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+ ////   scene->update();
+    scene->addItem(pGroup);
+ ///   connect(pGroup, &QGraphicsItemGroup::clicked, scene, &LibPaintScene::signalSelectItem);
+ ///   connect(pGroup, &QGraphicsItemGroup::signalMove, scene, &LibPaintScene::slotMove);
+
+ ///   pGroup->setPos(280, 280);
+#endif
 
 }

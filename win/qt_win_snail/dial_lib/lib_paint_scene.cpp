@@ -42,6 +42,8 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     QPointF ev_point= event->scenePos();
 
     gr_point = params::closest_to_grid(ev_point);
+    if (p_rej == nullptr)
+        return;
 
     if (event->button() == Qt::LeftButton)
     {
@@ -163,6 +165,8 @@ void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 QPointF ev_point = event->scenePos();
 QPointF ev_delt = QPointF(ev_point.x()- rule_beg.x(), ev_point.y() - rule_beg.y());
+if (p_rej == nullptr)
+    return;
 
 /// qDebug() << "LibPaintScene::mouseMoveEvent=" << ev_point<<"alt="<< m_altPressed;
 /*

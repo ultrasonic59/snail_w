@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1182</width>
-    <height>772</height>
+    <height>865</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -783,7 +783,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-      <widget class="QPushButton" name="ButtonTest">
+      <widget class="QPushButton" name="Butt_test">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -851,6 +851,45 @@
        </property>
        <property name="text">
         <string>ConHid</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Butt_test1">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>810</y>
+         <width>51</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>test1</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Butt_test2">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>810</y>
+         <width>41</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>test2</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Butt_load">
+       <property name="geometry">
+        <rect>
+         <x>204</x>
+         <y>810</y>
+         <width>41</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
        </property>
       </widget>
      </widget>

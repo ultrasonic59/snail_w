@@ -115,8 +115,10 @@
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
     <ClCompile Include="items\cust_circle.cpp" />
+    <ClCompile Include="items\cust_group.cpp" />
     <ClCompile Include="items\cust_line.cpp" />
     <ClCompile Include="items\cust_rect.cpp" />
+    <ClCompile Include="items\myitem.cpp" />
     <ClCompile Include="params.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
@@ -167,6 +169,8 @@
     <QtMoc Include="items\cust_circle.h" />
     <QtMoc Include="items\cust_line.h" />
     <QtMoc Include="items\cust_rect.h" />
+    <QtMoc Include="items\cust_group.h" />
+    <ClInclude Include="items\myitem.h" />
     <ClInclude Include="params.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
     <ClInclude Include="port_prop_dialog.h" />

@@ -6,7 +6,7 @@
 
 #include "ui_dial_lib.h"
  #include "dev_interf.h"
-#include "can_message.h"
+///#include "can_message.h"
 #include "lib_paint_scene.h"
 #include "snail_types.h"
 #include <QtScript/QScriptEngine>

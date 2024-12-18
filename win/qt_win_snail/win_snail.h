@@ -1,6 +1,11 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QSvgGenerator>
+#include <QFileDialog>
+#include <QGraphicsItem>
+#include <QMessageBox>
+
 ////#include <QCamera>
 ///#include <QCameraInfo>
 
@@ -20,6 +25,8 @@
 #include "wrk_wrk.h"
 #include "CamPlotter.h"
 #include "cameradevice.h"
+#include "lib_paint_scene.h"
+#include "myitem.h"
 ///======================================================================
 
 #define MAX_HID_BUG                     64
@@ -156,6 +163,10 @@ public slots:
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
     void on_butt_test();
+    void on_butt_test1();
+    void on_butt_test2();
+    void on_butt_load();
+
     void sl_rsv_can_dat(char*);
 
 
@@ -213,6 +224,11 @@ signals:
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
+private:
+    QGraphicsItem* currentItem;
+    LibPaintScene* scene;
+    QString svg_path;
+
 
 
 };
