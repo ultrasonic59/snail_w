@@ -17,21 +17,7 @@ class cust_group : public QObject, public QGraphicsItemGroup
 public:
     explicit cust_group(QObject * parent = 0);
     ~cust_group();
-
-    enum CornerFlags {
-        Top = 0x01,
-        Bottom = 0x02,
-        Left = 0x04,
-        Right = 0x08///,
-    };
-
-    enum CornerGrabbers {
-        GrabberTop = 0,
-        GrabberBottom,
-        GrabberLeft,
-        GrabberRight///,
-     };
-
+ 
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
 
@@ -50,14 +36,13 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+ ///   void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+ ///   void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+  ////  void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
  ///   QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
-    unsigned int m_cornerFlags;
-    QPointF m_previousPosition;
+     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     ///DotSignal *cornerGrabber[NUM_CORNERS];
 

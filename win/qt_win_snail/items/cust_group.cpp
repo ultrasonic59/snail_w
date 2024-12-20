@@ -11,12 +11,12 @@
 
 
 cust_group::cust_group(QObject *parent) :
-    QObject(parent),
-    m_cornerFlags(0)
-{
-    setAcceptHoverEvents(true);
-    setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
- }
+    QObject(parent)
+ {
+  ///  setAcceptHoverEvents(true);
+ ///   setFlags(ItemIsSelectable|ItemSendsGeometryChanges| ItemIsMovable);
+    setFlags(ItemIsSelectable | ItemIsMovable);
+}
 
 cust_group::~cust_group()
 {
@@ -40,8 +40,27 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
 }
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+QPointF pt = event->pos();
+if (m_leftMouseButtonPressed) {
+    setCursor(Qt::ClosedHandCursor);
+    QPoint gr_pos = params::closest_to_grid(event->scenePos());
+    ///          QPointF gr_pos = event->scenePos();
+    auto dx = gr_pos.x() - m_previousPosition.x();
+    auto dy = gr_pos.y() - m_previousPosition.y();
+    QPoint delta = params::closest_to_grid(QPoint(dx, dy));
+    ///              qDebug() << "dx="<< dx;
+    ///              qDebug() << "dy=" << dy;
+     ///             qDebug() << "gr_pos.x=" << gr_pos.x();
+      ///            qDebug() << "gr_pos.y=" << gr_pos.y();
+   ///               moveBy(dx, dy);
+    moveBy(delta.x(), delta.y());
+    setPreviousPosition(gr_pos);
+    ///               emit signalMove(this, dx, dy);
+    emit signalMove(this, delta.x(), delta.y());
+}
+QGraphicsItem::mouseMoveEvent(event);
+
 #if 0
-    QPointF pt = event->pos();
   ///  if(m_actionFlags == ResizeState)
     {
         switch (m_cornerFlags) {
@@ -108,7 +127,7 @@ void cust_group::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
   //   setVisibilityGrabbers();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
-
+#if 0
 void cust_group::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
   ///  setPositionGrabbers();
@@ -118,7 +137,6 @@ void cust_group::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_group::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    m_cornerFlags = 0;
  ///   hideGrabbers();
     setCursor(Qt::CrossCursor);
     QGraphicsItem::hoverLeaveEvent( event );
@@ -126,6 +144,9 @@ void cust_group::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
+    QPointF pt = event->pos();              // The current position of the mouse
+    qDebug() << "hoverMoveEvent="<< pt;
+
 #if 0
     QPointF pt = event->pos();              // The current position of the mouse
     qreal drx = pt.x() - rect().right();    // Distance between the mouse and the right
@@ -170,3 +191,4 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
   QGraphicsItem::hoverMoveEvent( event );
 #endif
 }
+#endif

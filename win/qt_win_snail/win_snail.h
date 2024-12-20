@@ -27,6 +27,8 @@
 #include "cameradevice.h"
 #include "lib_paint_scene.h"
 #include "myitem.h"
+#include "cust_group.h"
+
 ///======================================================================
 
 #define MAX_HID_BUG                     64
@@ -228,7 +230,7 @@ private:
     QGraphicsItem* currentItem;
     LibPaintScene* scene;
     QString svg_path;
-
+    cust_group* pGroup;
 
 
 };
