@@ -38,7 +38,10 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
     m_previousPosition = previousPosition;
     emit previousPositionChanged();
 }
+////QGraphicsSceneEvent
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+///void cust_group::mouseMoveEvent(QGraphicsSceneEvent* event)
+
 {
 QPointF pt = event->pos();
 if (m_leftMouseButtonPressed) {
@@ -127,7 +130,7 @@ void cust_group::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
   //   setVisibilityGrabbers();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
-#if 0
+#if 1
 void cust_group::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
   ///  setPositionGrabbers();
@@ -146,6 +149,24 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     QPointF pt = event->pos();              // The current position of the mouse
     qDebug() << "hoverMoveEvent="<< pt;
+////    QPointF pt = event->pos();
+    if (m_leftMouseButtonPressed) {
+        setCursor(Qt::ClosedHandCursor);
+        QPoint gr_pos = params::closest_to_grid(event->scenePos());
+        ///          QPointF gr_pos = event->scenePos();
+        auto dx = gr_pos.x() - m_previousPosition.x();
+        auto dy = gr_pos.y() - m_previousPosition.y();
+        QPoint delta = params::closest_to_grid(QPoint(dx, dy));
+        ///              qDebug() << "dx="<< dx;
+        ///              qDebug() << "dy=" << dy;
+         ///             qDebug() << "gr_pos.x=" << gr_pos.x();
+          ///            qDebug() << "gr_pos.y=" << gr_pos.y();
+       ///               moveBy(dx, dy);
+        moveBy(delta.x(), delta.y());
+        setPreviousPosition(gr_pos);
+        ///               emit signalMove(this, dx, dy);
+        emit signalMove(this, delta.x(), delta.y());
+    }
 
 #if 0
     QPointF pt = event->pos();              // The current position of the mouse

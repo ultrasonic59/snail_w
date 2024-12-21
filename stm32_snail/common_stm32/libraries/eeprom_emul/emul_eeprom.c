@@ -64,8 +64,9 @@ uint16_t EE_Init(void)
       if (PageStatus1 == VALID_PAGE) /* Page0 erased, Page1 valid */
       {
         /* Erase Page0 */
-        FlashStatus = FLASH_EraseSector(PAGE0_BASE_ADDRESS,VoltageRange_3);
-        /* If erase operation was failed, a Flash error code is returned */
+   ///     FlashStatus = FLASH_EraseSector(PAGE0_BASE_ADDRESS,VoltageRange_3);
+         FlashStatus = FLASH_EraseSector(PAGE0_SECTOR,VoltageRange_3);
+       /* If erase operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
           return FlashStatus;
@@ -74,7 +75,7 @@ uint16_t EE_Init(void)
       else if (PageStatus1 == RECEIVE_DATA) /* Page0 erased, Page1 receive */
       {
         /* Erase Page0 */
-        FlashStatus = FLASH_EraseSector(PAGE0_BASE_ADDRESS,VoltageRange_3);
+        FlashStatus = FLASH_EraseSector(PAGE0_SECTOR,VoltageRange_3);
         /* If erase operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
@@ -135,7 +136,7 @@ uint16_t EE_Init(void)
           return FlashStatus;
         }
         /* Erase Page1 */
-        FlashStatus = FLASH_EraseSector(PAGE1_BASE_ADDRESS,VoltageRange_3);
+        FlashStatus = FLASH_EraseSector(PAGE1_SECTOR,VoltageRange_3);
         /* If erase operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
@@ -152,7 +153,7 @@ uint16_t EE_Init(void)
           return FlashStatus;
         }
         /* Mark Page0 as valid */
-        FlashStatus = FLASH_ProgramHalfWord(PAGE0_BASE_ADDRESS, VALID_PAGE);
+        FlashStatus = FLASH_ProgramHalfWord(PAGE1_SECTOR, VALID_PAGE);
         /* If program operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
@@ -226,7 +227,7 @@ uint16_t EE_Init(void)
           return FlashStatus;
         }
         /* Erase Page0 */
-        FlashStatus = FLASH_EraseSector(PAGE0_BASE_ADDRESS,VoltageRange_3);
+        FlashStatus = FLASH_EraseSector(PAGE0_SECTOR,VoltageRange_3);
         /* If erase operation was failed, a Flash error code is returned */
         if (FlashStatus != FLASH_COMPLETE)
         {
@@ -526,9 +527,15 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress, uint16_t Da
 static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
 {
   FLASH_Status FlashStatus = FLASH_COMPLETE;
-  uint32_t NewPageAddress = 0x080103FF, OldPageAddress = 0x08010000;
-  uint16_t ValidPage = PAGE0, VarIdx = 0;
-  uint16_t EepromStatus = 0, ReadStatus = 0;
+  uint32_t NewPageAddress = PAGE1_BASE_ADDRESS;
+ ////uint32_t OldPageAddress = PAGE0_BASE_ADDRESS;
+  ///uint16_t NewPageSector = PAGE1_SECTOR;
+  uint16_t OldPageSector = PAGE0_SECTOR;
+ 
+  uint16_t ValidPage = PAGE0;
+  uint16_t VarIdx = 0;
+  uint16_t EepromStatus = 0;
+  uint16_t ReadStatus = 0;
 
   /* Get active Page for read operation */
   ValidPage = EE_FindValidPage(READ_FROM_VALID_PAGE);
@@ -537,17 +544,19 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
   {
     /* New page address where variable will be moved to */
     NewPageAddress = PAGE0_BASE_ADDRESS;
-
+    ////NewPageSector = PAGE0_SECTOR;
     /* Old page address where variable will be taken from */
-    OldPageAddress = PAGE1_BASE_ADDRESS;
+   //// OldPageAddress = PAGE1_BASE_ADDRESS;
+    OldPageSector = PAGE1_SECTOR;
   }
   else if (ValidPage == PAGE0)  /* Page0 valid */
   {
     /* New page address where variable will be moved to */
     NewPageAddress = PAGE1_BASE_ADDRESS;
-
+  ////  NewPageSector = PAGE1_SECTOR;
     /* Old page address where variable will be taken from */
-    OldPageAddress = PAGE0_BASE_ADDRESS;
+ ////   OldPageAddress = PAGE0_BASE_ADDRESS;
+    OldPageSector = PAGE0_SECTOR;
   }
   else
   {
@@ -592,7 +601,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
   }
 
   /* Erase the old Page: Set old Page status to ERASED status */
-  FlashStatus = FLASH_EraseSector(OldPageAddress,VoltageRange_3);
+  FlashStatus = FLASH_EraseSector(OldPageSector,VoltageRange_3);
   /* If erase operation was failed, a Flash error code is returned */
   if (FlashStatus != FLASH_COMPLETE)
   {

@@ -1289,7 +1289,7 @@ void win_snail::on_butt_load()
 pGroup = new cust_group();
 
  ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
- ///   pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+    pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 
     QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
         svg_path, tr("SVG files (*.svg)"));

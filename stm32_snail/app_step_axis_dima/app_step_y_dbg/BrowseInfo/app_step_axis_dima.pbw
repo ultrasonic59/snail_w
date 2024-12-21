@@ -168776,7 +168776,7 @@
     "display": "uint8_t EE_Read(uint16_t, uint16_t *)",
     "location": {
       "column": "9",
-      "line": "262",
+      "line": "263",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_Read",
@@ -168784,13 +168784,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@9589@F@EE_Read@ValidPage",
+    "ID": "c:emul_eeprom.c@9639@F@EE_Read@ValidPage",
     "What": "Variable",
     "defdec": "Def",
     "display": "ValidPage",
     "location": {
       "column": "10",
-      "line": "264",
+      "line": "265",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "ValidPage",
@@ -168798,13 +168798,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@9618@F@EE_Read@ReadStatus",
+    "ID": "c:emul_eeprom.c@9668@F@EE_Read@ReadStatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "ReadStatus",
     "location": {
       "column": "10",
-      "line": "265",
+      "line": "266",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "ReadStatus",
@@ -168812,13 +168812,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@9644@F@EE_Read@PageStartAddress",
+    "ID": "c:emul_eeprom.c@9694@F@EE_Read@PageStartAddress",
     "What": "Variable",
     "defdec": "Def",
     "display": "PageStartAddress",
     "location": {
       "column": "11",
-      "line": "266",
+      "line": "267",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "PageStartAddress",
@@ -168826,13 +168826,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@9673@F@EE_Read@Address",
+    "ID": "c:emul_eeprom.c@9723@F@EE_Read@Address",
     "What": "Variable",
     "defdec": "Def",
     "display": "Address",
     "location": {
       "column": "11",
-      "line": "267",
+      "line": "268",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "Address",
@@ -168840,13 +168840,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@9693@F@EE_Read@AddressValue",
+    "ID": "c:emul_eeprom.c@9743@F@EE_Read@AddressValue",
     "What": "Variable",
     "defdec": "Def",
     "display": "AddressValue",
     "location": {
       "column": "11",
-      "line": "268",
+      "line": "269",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "AddressValue",
@@ -168860,7 +168860,7 @@
     "display": "uint8_t EE_Write(uint16_t, uint16_t)",
     "location": {
       "column": "9",
-      "line": "326",
+      "line": "327",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_Write",
@@ -168868,13 +168868,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@11589@F@EE_Write@Status",
+    "ID": "c:emul_eeprom.c@11639@F@EE_Write@Status",
     "What": "Variable",
     "defdec": "Def",
     "display": "Status",
     "location": {
       "column": "11",
-      "line": "328",
+      "line": "329",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "Status",
@@ -168888,7 +168888,7 @@
     "display": "FLASH_Status EE_Format(void)",
     "location": {
       "column": "21",
-      "line": "353",
+      "line": "354",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_Format",
@@ -168896,13 +168896,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@12371@F@EE_Format@FlashStatus",
+    "ID": "c:emul_eeprom.c@12421@F@EE_Format@FlashStatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "FlashStatus",
     "location": {
       "column": "16",
-      "line": "355",
+      "line": "356",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "FlashStatus",
@@ -168916,7 +168916,7 @@
     "display": "uint16_t EE_FindValidPage(uint8_t)",
     "location": {
       "column": "17",
-      "line": "391",
+      "line": "392",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_FindValidPage",
@@ -168924,13 +168924,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@13596@F@EE_FindValidPage@PageStatus0",
+    "ID": "c:emul_eeprom.c@13646@F@EE_FindValidPage@PageStatus0",
     "What": "Variable",
     "defdec": "Def",
     "display": "PageStatus0",
     "location": {
       "column": "12",
-      "line": "393",
+      "line": "394",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "PageStatus0",
@@ -168938,13 +168938,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@13596@F@EE_FindValidPage@PageStatus1",
+    "ID": "c:emul_eeprom.c@13646@F@EE_FindValidPage@PageStatus1",
     "What": "Variable",
     "defdec": "Dec",
     "display": "PageStatus1",
     "location": {
       "column": "29",
-      "line": "393",
+      "line": "394",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "PageStatus1",
@@ -168958,7 +168958,7 @@
     "display": "uint16_t EE_VerifyPageFullWriteVariable(uint16_t, uint16_t)",
     "location": {
       "column": "17",
-      "line": "463",
+      "line": "464",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_VerifyPageFullWriteVariable",
@@ -168966,13 +168966,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@15620@F@EE_VerifyPageFullWriteVariable@FlashStatus",
+    "ID": "c:emul_eeprom.c@15670@F@EE_VerifyPageFullWriteVariable@FlashStatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "FlashStatus",
     "location": {
       "column": "16",
-      "line": "465",
+      "line": "466",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "FlashStatus",
@@ -168980,13 +168980,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@15666@F@EE_VerifyPageFullWriteVariable@ValidPage",
+    "ID": "c:emul_eeprom.c@15716@F@EE_VerifyPageFullWriteVariable@ValidPage",
     "What": "Variable",
     "defdec": "Def",
     "display": "ValidPage",
     "location": {
       "column": "12",
-      "line": "466",
+      "line": "467",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "ValidPage",
@@ -168994,13 +168994,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@15764@F@EE_VerifyPageFullWriteVariable@Address",
+    "ID": "c:emul_eeprom.c@15814@F@EE_VerifyPageFullWriteVariable@Address",
     "What": "Variable",
     "defdec": "Def",
     "display": "Address",
     "location": {
       "column": "12",
-      "line": "468",
+      "line": "469",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "Address",
@@ -169008,13 +169008,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@15786@F@EE_VerifyPageFullWriteVariable@PageEndAddress",
+    "ID": "c:emul_eeprom.c@15836@F@EE_VerifyPageFullWriteVariable@PageEndAddress",
     "What": "Variable",
     "defdec": "Def",
     "display": "PageEndAddress",
     "location": {
       "column": "12",
-      "line": "469",
+      "line": "470",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "PageEndAddress",
@@ -169028,7 +169028,7 @@
     "display": "uint16_t EE_PageTransfer(uint16_t, uint16_t)",
     "location": {
       "column": "17",
-      "line": "526",
+      "line": "527",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EE_PageTransfer",
@@ -169036,13 +169036,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17726@F@EE_PageTransfer@FlashStatus",
+    "ID": "c:emul_eeprom.c@17776@F@EE_PageTransfer@FlashStatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "FlashStatus",
     "location": {
       "column": "16",
-      "line": "528",
+      "line": "529",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "FlashStatus",
@@ -169050,13 +169050,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17772@F@EE_PageTransfer@NewPageAddress",
+    "ID": "c:emul_eeprom.c@17822@F@EE_PageTransfer@NewPageAddress",
     "What": "Variable",
     "defdec": "Def",
     "display": "NewPageAddress",
     "location": {
       "column": "12",
-      "line": "529",
+      "line": "530",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "NewPageAddress",
@@ -169064,27 +169064,27 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17772@F@EE_PageTransfer@OldPageAddress",
+    "ID": "c:emul_eeprom.c@17968@F@EE_PageTransfer@OldPageSector",
     "What": "Variable",
-    "defdec": "Dec",
-    "display": "OldPageAddress",
+    "defdec": "Def",
+    "display": "OldPageSector",
     "location": {
-      "column": "41",
-      "line": "529",
+      "column": "12",
+      "line": "533",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
-    "name": "OldPageAddress",
+    "name": "OldPageSector",
     "origin": "project_file",
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17842@F@EE_PageTransfer@ValidPage",
+    "ID": "c:emul_eeprom.c@18013@F@EE_PageTransfer@ValidPage",
     "What": "Variable",
     "defdec": "Def",
     "display": "ValidPage",
     "location": {
       "column": "12",
-      "line": "530",
+      "line": "535",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "ValidPage",
@@ -169092,13 +169092,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17842@F@EE_PageTransfer@VarIdx",
+    "ID": "c:emul_eeprom.c@18044@F@EE_PageTransfer@VarIdx",
     "What": "Variable",
-    "defdec": "Dec",
+    "defdec": "Def",
     "display": "VarIdx",
     "location": {
-      "column": "31",
-      "line": "530",
+      "column": "12",
+      "line": "536",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "VarIdx",
@@ -169106,13 +169106,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17885@F@EE_PageTransfer@EepromStatus",
+    "ID": "c:emul_eeprom.c@18068@F@EE_PageTransfer@EepromStatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "EepromStatus",
     "location": {
       "column": "12",
-      "line": "531",
+      "line": "537",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "EepromStatus",
@@ -169120,13 +169120,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@17885@F@EE_PageTransfer@ReadStatus",
+    "ID": "c:emul_eeprom.c@18098@F@EE_PageTransfer@ReadStatus",
     "What": "Variable",
-    "defdec": "Dec",
+    "defdec": "Def",
     "display": "ReadStatus",
     "location": {
-      "column": "30",
-      "line": "531",
+      "column": "12",
+      "line": "538",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "ReadStatus",
@@ -169140,7 +169140,7 @@
     "display": "uint16_t eeprom_init(void)",
     "location": {
       "column": "10",
-      "line": "613",
+      "line": "622",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "eeprom_init",
@@ -169148,13 +169148,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@20645@F@eeprom_init@rez",
+    "ID": "c:emul_eeprom.c@20991@F@eeprom_init@rez",
     "What": "Variable",
     "defdec": "Def",
     "display": "rez",
     "location": {
       "column": "12",
-      "line": "615",
+      "line": "624",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "rez",
@@ -169168,7 +169168,7 @@
     "display": "uint8_t eeprom_format(void)",
     "location": {
       "column": "9",
-      "line": "622",
+      "line": "631",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "eeprom_format",
@@ -169176,13 +169176,13 @@
     "scope": null
   },
   {
-    "ID": "c:emul_eeprom.c@20777@F@eeprom_format@rez",
+    "ID": "c:emul_eeprom.c@21123@F@eeprom_format@rez",
     "What": "Variable",
     "defdec": "Def",
     "display": "rez",
     "location": {
       "column": "10",
-      "line": "624",
+      "line": "633",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\eeprom_emul\\emul_eeprom.c"
     },
     "name": "rez",
