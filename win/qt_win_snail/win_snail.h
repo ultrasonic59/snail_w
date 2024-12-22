@@ -10,7 +10,7 @@
 ///#include <QCameraInfo>
 
 #include "PlotterWidget.h"
-#include "ui_win_snail.h"
+#include "ui_qt_win_snail.h"
 ///======================================================================
 #include <opencv2/opencv.hpp>
 #include "hidapi.h"
@@ -25,7 +25,7 @@
 #include "wrk_wrk.h"
 #include "CamPlotter.h"
 #include "cameradevice.h"
-#include "lib_paint_scene.h"
+#include "paint_scene.h"
 #include "myitem.h"
 #include "cust_group.h"
 
@@ -228,9 +228,11 @@ signals:
     void put_str_dial(char*);
 private:
     QGraphicsItem* currentItem;
-    LibPaintScene* scene;
+    PaintScene* scene;
     QString svg_path;
     cust_group* pGroup;
+protected:
+    void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
 
 
 };

@@ -149,6 +149,7 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     QPointF pt = event->pos();              // The current position of the mouse
     qDebug() << "hoverMoveEvent="<< pt;
+#if 0
 ////    QPointF pt = event->pos();
     if (m_leftMouseButtonPressed) {
         setCursor(Qt::ClosedHandCursor);
@@ -167,7 +168,7 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
         ///               emit signalMove(this, dx, dy);
         emit signalMove(this, delta.x(), delta.y());
     }
-
+#endif
 #if 0
     QPointF pt = event->pos();              // The current position of the mouse
     qreal drx = pt.x() - rect().right();    // Distance between the mouse and the right

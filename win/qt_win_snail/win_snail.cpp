@@ -175,7 +175,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  pCamThread->start();
  ///======================================================
- scene = new LibPaintScene(this);       // 
+ scene = new PaintScene(this);       // 
  scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
  
  ui->sh_widget->setScene(scene);  // 
@@ -861,19 +861,12 @@ void win_snail::SlotLongPush_xplus()
     }
 #endif
 }
-
 void win_snail::cl_xplus()
 {
     qDebug() << "cl_xplus";
-    can_message_t t_can_message;
-    t_can_message.id = X_AXIS_CAN_ID;
-    t_can_message.dlc = 8;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-
-    emit s_SendCmd(&t_can_message);
-  ////  m_jogVector += QVector3D(1, 0, 0);
-  ///  jogStep();
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 }
 
 void win_snail::cl_xplus_rel()
@@ -886,17 +879,15 @@ void win_snail::cl_xplus_rel()
 
 void win_snail::cl_xminus()
 {
-    qDebug() << "cl_xminus ";
-    ///	if (OnMotor)
-    ///		return;
-  ///  quint16 t_speed = MAX_SPEED / 2;
+qDebug() << "cl_xminus ";
+quint16 len_step = ui->combo_steps->currentText().toInt();
+quint32 num_step = ui->combo_num_steps->currentText().toInt();
+
+send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+
     xminusPushed = true;
     xminusLongPush = false;
     QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
-    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
-    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
-  ///  emit s_put_motor(DIR_UP, t_speed);
- ///   OnMotor = true;
 }
 void win_snail::cl_xminus_rel()
 {
@@ -942,29 +933,30 @@ void win_snail::SlotLongPush_yplus()
     }
 #endif
 }
-
-void win_snail::cl_yplus()
+void win_snail::send_cmd_go(quint32 id,quint8 dir, quint16 len_step, quint32 num_step)
 {
-    quint16 len_step = 40;
-    quint32 num_step = 400;
-
-    qDebug() << "cl_yplus";
     can_message_t t_can_message;
-    t_can_message.id = Y_AXIS_CAN_ID;
+    t_can_message.id = id;
     t_can_message.dlc = 8;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     t_can_message.data[0] = GO_CMD;
-    t_can_message.data[1] = DIR_PLUS;
-    t_can_message.data[2] = len_step&0xff;
-    t_can_message.data[3] = (len_step>>8) & 0xff;
-    t_can_message.data[4] = num_step  & 0xff;
+    t_can_message.data[1] = dir;
+    t_can_message.data[2] = len_step & 0xff;
+    t_can_message.data[3] = (len_step >> 8) & 0xff;
+    t_can_message.data[4] = num_step & 0xff;
     t_can_message.data[5] = (num_step >> 8) & 0xff;
     t_can_message.data[6] = (num_step >> 16) & 0xff;
     t_can_message.data[7] = (num_step >> 24) & 0xff;
     emit s_SendCmd(&t_can_message);
-    ////  m_jogVector += QVector3D(1, 0, 0);
-    ///  jogStep();
+}
+
+void win_snail::cl_yplus()
+{
+    qDebug() << "cl_yplus";
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 }
 
 void win_snail::cl_yplus_rel()
@@ -977,28 +969,16 @@ void win_snail::cl_yplus_rel()
 
 void win_snail::cl_yminus()
 {
-quint16 len_step = 40;
-quint32 num_step = 400;
+    qDebug() << "cl_yminus ";
 
-  qDebug() << "cl_yminu ";
- can_message_t t_can_message;
- t_can_message.id = Y_AXIS_CAN_ID;
- t_can_message.dlc = 8;
- t_can_message.IDE = 0;
- t_can_message.RTR = 0;
- t_can_message.data[0] = GO_CMD;
- t_can_message.data[1] = DIR_MINUS;
- t_can_message.data[2] = len_step & 0xff;
- t_can_message.data[3] = (len_step >> 8) & 0xff;
- t_can_message.data[4] = num_step & 0xff;
- t_can_message.data[5] = (num_step >> 8) & 0xff;
- t_can_message.data[6] = (num_step >> 16) & 0xff;
- t_can_message.data[7] = (num_step >> 24) & 0xff;
- emit s_SendCmd(&t_can_message);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
 
-    xminusPushed = true;
-    xminusLongPush = false;
-    QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_yminus()));
+   send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+
+  xminusPushed = true;
+  xminusLongPush = false;
+  QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_yminus()));
 
 }
 void win_snail::cl_yminus_rel()
@@ -1049,38 +1029,26 @@ void win_snail::SlotLongPush_zplus()
 void win_snail::cl_zplus()
 {
     qDebug() << "cl_zplus";
-    can_message_t t_can_message;
-    t_can_message.id = 0x20;
-    t_can_message.dlc = 8;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-
-    emit s_SendCmd(&t_can_message);
-    ////  m_jogVector += QVector3D(1, 0, 0);
-    ///  jogStep();
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 }
 
 void win_snail::cl_zplus_rel()
 {
     qDebug() << "cl_zplus_rel";
 
-    ////  m_jogVector -= QVector3D(1, 0, 0);
-   ////   jogStep();
 }
 
 void win_snail::cl_zminus()
 {
     qDebug() << "cl_zminus ";
-    ///	if (OnMotor)
-    ///		return;
-  ///  quint16 t_speed = MAX_SPEED / 2;
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
     xminusPushed = true;
     xminusLongPush = false;
     QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_zminus()));
-    ///	t_speed = Params::calc_speed_mot(p_dev_data->curr_par_session.par_dev.controller_par.wrk_speed);	///100%
-    ///	udp_put_motor_cmd_go(DIR_UP, t_speed);
-  ///  emit s_put_motor(DIR_UP, t_speed);
- ///   OnMotor = true;
 }
 void win_snail::cl_zminus_rel()
 {
@@ -1088,11 +1056,7 @@ void win_snail::cl_zminus_rel()
     xminusPushed = false;
     if (xminusLongPush)
     {
-        ///       emit s_put_motor(DIR_UP, 0);
-
-               ///		udp_put_motor_cmd_stop();
-        ///       OnMotor = false;
-               ////	qDebug() << "Fwd stop" ;
+        ;
     }
 }
 

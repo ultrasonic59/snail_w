@@ -217,7 +217,7 @@
         <rect>
          <x>60</x>
          <y>480</y>
-         <width>191</width>
+         <width>181</width>
          <height>271</height>
         </rect>
        </property>
@@ -383,10 +383,10 @@
          </size>
         </property>
        </widget>
-       <widget class="QLabel" name="label_20">
+       <widget class="QLabel" name="label_step">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>0</x>
           <y>170</y>
           <width>29</width>
           <height>16</height>
@@ -402,12 +402,12 @@
          <string>Step:</string>
         </property>
        </widget>
-       <widget class="ComboBoxKey" name="cboJogStep">
+       <widget class="ComboBoxKey" name="typeStep">
         <property name="geometry">
          <rect>
           <x>70</x>
           <y>150</y>
-          <width>92</width>
+          <width>91</width>
           <height>18</height>
          </rect>
         </property>
@@ -565,13 +565,13 @@
          </size>
         </property>
        </widget>
-       <widget class="ComboBoxKey" name="cboJogFeed">
+       <widget class="ComboBoxKey" name="combo_steps">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>30</x>
           <y>170</y>
-          <width>54</width>
-          <height>18</height>
+          <width>51</width>
+          <height>21</height>
          </rect>
         </property>
         <property name="editable">
@@ -764,6 +764,84 @@
         </property>
         <property name="text">
          <string>Y</string>
+        </property>
+       </widget>
+       <widget class="ComboBoxKey" name="combo_num_steps">
+        <property name="geometry">
+         <rect>
+          <x>93</x>
+          <y>170</y>
+          <width>71</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="currentText">
+         <string>10</string>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>50</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>100</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>500</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2000</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLabel" name="label_nstep">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>170</y>
+          <width>16</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>N:</string>
         </property>
        </widget>
       </widget>

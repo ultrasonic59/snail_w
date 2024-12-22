@@ -83,18 +83,12 @@
     <QtRcc Include="win_snail.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="win_snail.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtMoc Include="win_snail.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClCompile Include="win_snail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <None Include="qt_win_snail.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <ResourceCompile Include="qt_win_snail.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
@@ -187,6 +181,9 @@
     <ClCompile Include="items\cust_group.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
+    <ClCompile Include="plotters\paint_scene.cpp">
+      <Filter>Source Files\plotters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -246,6 +243,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dial_lib\dial_lib.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="qt_win_snail.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -309,6 +309,9 @@
     </QtMoc>
     <QtMoc Include="items\cust_group.h">
       <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="plotters\paint_scene.h">
+      <Filter>Header Files\plotters</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
