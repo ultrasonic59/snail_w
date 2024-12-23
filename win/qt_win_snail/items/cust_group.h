@@ -21,6 +21,7 @@ public:
  
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
+    QString Name;
 
  ///   void setRect(qreal x, qreal y, qreal w, qreal h);
  ///   void setRect(const QRectF &rect);

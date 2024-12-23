@@ -1243,13 +1243,13 @@ void win_snail::on_butt_test2()
 {
     qDebug() << "start test2";
  ///   pGroup->setRotation(45);
-    pGroup->setScale(2);
+ ///   pGroup->setScale(2);
 }
 
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
-  ////  cust_group* pGroup = new cust_group();
+   cust_group* pGroup = new cust_group();
 pGroup = new cust_group();
 
  ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();

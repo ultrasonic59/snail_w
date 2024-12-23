@@ -230,7 +230,7 @@ private:
     QGraphicsItem* currentItem;
     PaintScene* scene;
     QString svg_path;
-    cust_group* pGroup;
+///    cust_group* pGroup;
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
 
