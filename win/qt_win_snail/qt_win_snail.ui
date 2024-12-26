@@ -970,6 +970,19 @@
         <string>Load</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="Butt_save">
+       <property name="geometry">
+        <rect>
+         <x>164</x>
+         <y>810</y>
+         <width>41</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

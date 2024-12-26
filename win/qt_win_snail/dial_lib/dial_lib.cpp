@@ -490,8 +490,13 @@ void DialLib::on_butSave_clicked()
 
     QSvgGenerator generator;
     generator.setFileName(path);
-    generator.setSize(QSize(scene->width(), scene->height()));
-    generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
+    QRectF tst_rec;
+    tst_rec = scene->itemsBoundingRect();
+     generator.setSize(QSize(tst_rec.width(), tst_rec.height()));
+     generator.setViewBox(QRect(0, 0, tst_rec.width(), tst_rec.height()));
+
+ ///   generator.setSize(QSize(scene->width(), scene->height()));
+ ///   generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
     generator.setTitle(tr("Lib Editor"));
     generator.setDescription(tr("File created by Snail lib Editor."));
 
@@ -684,8 +689,20 @@ void DialLib::SlotTest1()
 
 }
 #endif
+///QRectF itemsBoundingRect() const;
+
+////QList<QGraphicsItem*> items(Qt::SortOrder order = Qt::DescendingOrder) const;
+
 void DialLib::SlotTest1()
 {
+    QRectF tst_rec;
+    tst_rec= scene->itemsBoundingRect();
+    qDebug() << "rect=" << tst_rec;
+
+  ////  scene->sl_obr_cmd(jsonString);
+
+
+#if 0
     QJsonObject recordObject;
     QJsonObject objObject;
 
@@ -709,6 +726,8 @@ void DialLib::SlotTest1()
     QString jsonString = doc.toJson(QJsonDocument::Indented);
     scene->sl_obr_cmd(jsonString);
  ///   qDebug() << "json=" << jsonString;
+
+#endif
 }
 
 

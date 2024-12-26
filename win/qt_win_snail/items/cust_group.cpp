@@ -39,12 +39,18 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
     emit previousPositionChanged();
 }
 ////QGraphicsSceneEvent
+
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    this->setPos(mapToScene(event->pos()));
 ///    scenePos();
 ///QPointF pt = event->pos();
+     /*
 QPointF pt = event->scenePos();
 if (m_leftMouseButtonPressed) {
+    this->setPos(mapToScene(event->pos()));
+*/
+#if 0
     setCursor(Qt::ClosedHandCursor);
     QPoint gr_pos = params::closest_to_grid(event->scenePos());
     ///          QPointF gr_pos = event->scenePos();
@@ -58,10 +64,11 @@ if (m_leftMouseButtonPressed) {
                  moveBy(dx, dy);
   ////  moveBy(delta.x(), delta.y());
     setPreviousPosition(gr_pos);
+#endif
     ///               emit signalMove(this, dx, dy);
-    emit signalMove(this, delta.x(), delta.y());
-}
-QGraphicsItem::mouseMoveEvent(event);
+ ///   emit signalMove(this, delta.x(), delta.y());
+///}
+////QGraphicsItem::mouseMoveEvent(event);
 
 #if 0
   ///  if(m_actionFlags == ResizeState)
