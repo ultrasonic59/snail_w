@@ -480,6 +480,14 @@ void DialLib::selectNewItem(QGraphicsItem* item)
 
 void DialLib::on_butSave_clicked()
 {
+///===================================================
+    QString newPath = QFileDialog::getSaveFileName(this, tr("Save JSON"),
+        path, tr("JSON files (*.json)"));
+    if (newPath.isEmpty())
+        return;
+
+///===================================================
+#if 0
     QString newPath = QFileDialog::getSaveFileName(this, tr("Save SVG"),
         path, tr("SVG files (*.svg)"));
 
@@ -504,6 +512,7 @@ void DialLib::on_butSave_clicked()
     painter.begin(&generator);
     scene->render(&painter);
     painter.end();
+#endif
 }
 
 void DialLib::on_butOpen_clicked()

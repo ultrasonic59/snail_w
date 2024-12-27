@@ -175,9 +175,6 @@
     <ClCompile Include="camera\DeviceEnumerator.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
-    <ClCompile Include="items\myitem.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="items\cust_group.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="camera\DeviceEnumerator.h">
       <Filter>Header Files\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="items\myitem.h">
-      <Filter>Header Files\items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

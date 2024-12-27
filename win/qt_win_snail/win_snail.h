@@ -26,7 +26,7 @@
 #include "CamPlotter.h"
 #include "cameradevice.h"
 #include "paint_scene.h"
-#include "myitem.h"
+///#include "myitem.h"
 #include "cust_group.h"
 
 ///======================================================================

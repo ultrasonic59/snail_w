@@ -1225,6 +1225,7 @@ emit put_str_dial(idat);
 }
 void win_snail::on_butt_test1()
 {
+#if 0
     qDebug() << "start test1";
  ///   cust_rect* rect = new cust_rect();
     MyItem* rect = new MyItem();
@@ -1235,7 +1236,7 @@ void win_snail::on_butt_test1()
     ///connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
  ////   rect->setRect(0, 0, 35, 23);
     rect->setPos(QPoint(20,40));
-
+#endif
  ///   rect->setBrush(QBrush(Qt::NoBrush));
  ///   rect->setPen(QPen(Qt::red, 2));
 }

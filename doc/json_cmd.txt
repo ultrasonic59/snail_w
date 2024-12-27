@@ -15,57 +15,6 @@
 "thick": 1
 }
 
-quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick
-
-
-
-void LibPaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)
-
-void LibPaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
-
-{
-    cust_line* line = new cust_line(this);
-    currentItem = line;
-    addItem(currentItem);
-    connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
-    connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-    line->setPen(QPen(color, thick, Qt::SolidLine, Qt::FlatCap));
-
-    rect->setRect(0, 0, width, height);
-    rect->setPos(point);
-    ///rect->setBrush(QBrush(Qt::NoBrush));
-    rect->setBrush(br);
-    rect->setPen(QPen(color, thick));
-
-}
-
-           case CIRCLE_TYPE: {
-                cust_circle* circle = new cust_circle();
-                currentItem = circle;
-                addItem(currentItem);
-                connect(circle, &cust_circle::clicked, this, &LibPaintScene::signalSelectItem);
-                connect(circle, &cust_circle::signalMove, this, &LibPaintScene::slotMove);
-                circle->setCircle(0, 0, params::LibItemWidth);
-                circle->setPos(gr_point.x() - params::LibItemWidth / 2, gr_point.y() - params::LibItemWidth / 2);
-                circle->setBrush(QBrush(Qt::NoBrush));
-                circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
-            }
-           case VLINE_TYPE: {
-                cust_line* line = new cust_line(this);
-                currentItem = line;
-                addItem(currentItem);
-                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
-                connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-                line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
-                    , Qt::SolidLine, Qt::FlatCap));
-                ///           , Qt::SolidLine, Qt::RoundCap));
-                QPainterPath path;
-                path.moveTo(gr_point);
-                path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
-                line->setPath(path);
-                  }
-                  break;
-
 
 QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
 QJsonObject json = doc.object();
