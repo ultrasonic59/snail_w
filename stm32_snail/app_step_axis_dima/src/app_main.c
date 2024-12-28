@@ -25,6 +25,9 @@ extern void can_send_thread(void* pp);
 
 ////extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
+uint16_t VirtAddVarTab[NB_OF_VAR]={0,1,2,3,4,5,6,7,8,9,0xA,0xB,0xC,0xD,0xE,0xf,
+                                   0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,
+                                   0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1f }; 
 
 ////============================================
 int main( void )
@@ -45,17 +48,17 @@ hw_board_init();
   #error "\n\r=== app STEP_... nodefined ==="; 
 #endif
 ////=================================================
-eeprom_init();
-if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+///eeprom_init();
+if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
     if(tmp!=VAL_EEPROM_WORK) ///
       {
-       EE_Write(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
       }
   }
 else
   {
-  EE_Write(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
+  EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
   }
 ////=================================================
 ////CAN1_Init();

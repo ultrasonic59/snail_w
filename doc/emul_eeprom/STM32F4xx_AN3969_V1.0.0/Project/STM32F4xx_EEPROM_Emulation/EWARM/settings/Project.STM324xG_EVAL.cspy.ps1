@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --backend -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
+& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --backend -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
+& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\doc\emul_eeprom\STM32F4xx_AN3969_V1.0.0\Project\STM32F4xx_EEPROM_Emulation\EWARM\settings\Project.STM324xG_EVAL.driver.xcl" 
 }

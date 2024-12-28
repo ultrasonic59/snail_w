@@ -60,3 +60,7 @@ quint8 params::LibItemBrdThick=1;
 quint16 params::LibItemWidth=100;
 quint16 params::LibItemHeight=50;
 quint8 params::thick_rule = 1;
+
+quint8 params::dbg_last_can_id=0x20;
+quint8 params::dbg_last_can_dlc=8;
+quint8 params::dbg_last_can_dat[8] = { 0 };

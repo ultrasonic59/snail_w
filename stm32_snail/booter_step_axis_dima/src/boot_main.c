@@ -28,7 +28,11 @@ TaskHandle_t  can_send_thread_handle;
 uint8_t boot_state;
 
 extern uint8_t check_ks_app(void);
-extern uint8_t eeprom_format(void);
+////extern uint8_t eeprom_format(void);
+uint16_t VirtAddVarTab[NB_OF_VAR]={0,1,2,3,4,5,6,7,8,9,0xA,0xB,0xC,0xD,0xE,0xf,
+                                   0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,
+                                   0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1f }; 
+
 ////============================================
 int main( void )
 {
@@ -53,11 +57,14 @@ hw_board_init();
 #endif
 ////=================================================
 boot_state=BOOTER_STATE_IDLE;
-eeprom_init();
+////eeprom_init();
+  FLASH_Unlock();
+  EE_Init();
+  FLASH_Lock();
   
 #if 1
 ////eeprom_init();
-if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
     if((tmp==VAL_EEPROM_WORK)&&(check_ks_app())) 
       {
@@ -66,8 +73,8 @@ if(EE_Read(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   }
 else
    {
-    printk("\n\r=== [eeprom_format!!!] ==="); 
-    eeprom_format();
+    printk("\n\r=== [eeprom error!!!] ==="); 
+ ////   eeprom_format();
     }
 #endif
 #if STEP_X

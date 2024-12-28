@@ -21,7 +21,10 @@ public:
     static	quint16 LibItemWidth;
     static	quint16 LibItemHeight;
     static	quint8 thick_rule;
-
+///========= for dbg ==========================
+    static	quint8 dbg_last_can_id;
+    static	quint8 dbg_last_can_dlc;
+    static	quint8 dbg_last_can_dat[8];
 
     static	QPoint closest_to_grid(QPointF curr_pos);
 };

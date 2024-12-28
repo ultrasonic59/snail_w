@@ -215,7 +215,7 @@ void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
 
 if(t_rd_eeprom_ans->num_dates==0)
   return;
-if(EE_Read(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
+if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   {
 
   t_rd_eeprom_ans->num_dates=0;
@@ -224,7 +224,7 @@ if(EE_Read(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
 ////  printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
 if(t_rd_eeprom_ans->num_dates==2)
   {
-  if(EE_Read(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
+  if(EE_ReadVariable(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
     {
     t_rd_eeprom_ans->num_dates=1;
     return;
@@ -240,14 +240,14 @@ void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 
 if(t_wr_eeprom_req->num_dates==0)
   return;
-if(EE_Write(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
+if(EE_WriteVariable(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
   {
   t_wr_eeprom_req->num_dates=0;
   return;
   }
 if(t_wr_eeprom_req->num_dates==2)
   {
-  if(EE_Write(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
+  if(EE_WriteVariable(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
     {
     t_wr_eeprom_req->num_dates=1;
     return;

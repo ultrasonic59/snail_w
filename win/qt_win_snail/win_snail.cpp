@@ -453,12 +453,33 @@ void win_snail::on_butt_pnt()
 void win_snail::on_butt_debug()
 {
     qDebug() << "start debug" ;
-    DialDebug _dial_dbg(this);
+    DialDebug Dial_dbg(this);
  ///   DialLib _dial_dbg(this, &PlotProp);
-if(_dial_dbg.exec())
-{ 
-    qDebug() << "OK";
+    Dial_dbg.ui.lineEdit_ID->setText(QString::number (params::dbg_last_can_id, 16));
+    Dial_dbg.ui.lineEdit_DLC->setText(QString::number(params::dbg_last_can_dlc,16));
+    Dial_dbg.ui.lineEdit_dat0->setText(QString::number(params::dbg_last_can_dat[0], 16));
+    Dial_dbg.ui.lineEdit_dat1->setText(QString::number(params::dbg_last_can_dat[1], 16));
+    Dial_dbg.ui.lineEdit_dat2->setText(QString::number(params::dbg_last_can_dat[2], 16));
+    Dial_dbg.ui.lineEdit_dat3->setText(QString::number(params::dbg_last_can_dat[3], 16));
+    Dial_dbg.ui.lineEdit_dat4->setText(QString::number(params::dbg_last_can_dat[4], 16));
+    Dial_dbg.ui.lineEdit_dat5->setText(QString::number(params::dbg_last_can_dat[5], 16));
+    Dial_dbg.ui.lineEdit_dat6->setText(QString::number(params::dbg_last_can_dat[6], 16));
+    Dial_dbg.ui.lineEdit_dat7->setText(QString::number(params::dbg_last_can_dat[7], 16));
 
+if(Dial_dbg.exec())
+{ 
+ ///   qDebug() << "OK";
+    params::dbg_last_can_id= Dial_dbg.ui.lineEdit_ID->text().toInt(0, 16);
+    params::dbg_last_can_dlc = Dial_dbg.ui.lineEdit_DLC->text().toInt(0, 16);
+    params::dbg_last_can_dat[0] = Dial_dbg.ui.lineEdit_dat0->text().toInt(0, 16);
+    params::dbg_last_can_dat[1] = Dial_dbg.ui.lineEdit_dat1->text().toInt(0, 16);
+    params::dbg_last_can_dat[2] = Dial_dbg.ui.lineEdit_dat2->text().toInt(0, 16);
+    params::dbg_last_can_dat[3] = Dial_dbg.ui.lineEdit_dat3->text().toInt(0, 16);
+    params::dbg_last_can_dat[4] = Dial_dbg.ui.lineEdit_dat4->text().toInt(0, 16);
+    params::dbg_last_can_dat[5] = Dial_dbg.ui.lineEdit_dat5->text().toInt(0, 16);
+    params::dbg_last_can_dat[6] = Dial_dbg.ui.lineEdit_dat6->text().toInt(0, 16);
+    params::dbg_last_can_dat[7] = Dial_dbg.ui.lineEdit_dat7->text().toInt(0, 16);
+    saveSettings();
 }
 else
 {
@@ -784,6 +805,18 @@ void win_snail::saveSettings(void)
     settings.setValue("LibItemBrdThick", params::LibItemBrdThick);
     settings.setValue("LibItemWidth", params::LibItemWidth);
     settings.setValue("LibItemHeight", params::LibItemHeight);
+    ///======== dbg val ========================================
+    settings.setValue("last_can_id", params::dbg_last_can_id);
+    settings.setValue("last_can_dlc", params::dbg_last_can_dlc);
+    settings.setValue("last_can_d0", params::dbg_last_can_dat[0]);
+    settings.setValue("last_can_d1", params::dbg_last_can_dat[1]);
+    settings.setValue("last_can_d2", params::dbg_last_can_dat[2]);
+    settings.setValue("last_can_d3", params::dbg_last_can_dat[3]);
+    settings.setValue("last_can_d4", params::dbg_last_can_dat[4]);
+    settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
+    settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
+    settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
+
 
 }
 void win_snail::loadSettings(void)
@@ -821,6 +854,17 @@ void win_snail::loadSettings(void)
     params::LibItemBrdThick = settings.value("LibItemBrdThick", 1).toInt();
     params::LibItemWidth = settings.value("LibItemWidth", 100).toInt();
     params::LibItemHeight = settings.value("LibItemHeight", 50).toInt();
+    ///======== dbg val ========================================
+   params::dbg_last_can_id = settings.value("last_can_id", 20).toInt();
+  params::dbg_last_can_dlc = settings.value("last_can_dlc", 8).toInt();
+  params::dbg_last_can_dat[0] = settings.value("last_can_d0", 0).toInt();
+  params::dbg_last_can_dat[1] = settings.value("last_can_d1", 0).toInt();
+  params::dbg_last_can_dat[2] = settings.value("last_can_d2", 0).toInt();
+  params::dbg_last_can_dat[3] = settings.value("last_can_d3", 0).toInt();
+  params::dbg_last_can_dat[4] = settings.value("last_can_d4", 0).toInt();
+  params::dbg_last_can_dat[5] = settings.value("last_can_d5", 0).toInt();
+  params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
+  params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
 
 
 }    
@@ -1031,7 +1075,7 @@ void win_snail::cl_zplus()
     qDebug() << "cl_zplus";
     quint16 len_step = ui->combo_steps->currentText().toInt();
     quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 }
 
 void win_snail::cl_zplus_rel()
@@ -1045,7 +1089,7 @@ void win_snail::cl_zminus()
     qDebug() << "cl_zminus ";
     quint16 len_step = ui->combo_steps->currentText().toInt();
     quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
     xminusPushed = true;
     xminusLongPush = false;
     QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_zminus()));

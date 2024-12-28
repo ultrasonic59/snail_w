@@ -582,21 +582,6 @@
         </property>
         <item>
          <property name="text">
-          <string>10</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>20</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>50</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>100</string>
          </property>
         </item>
@@ -618,6 +603,21 @@
         <item>
          <property name="text">
           <string>2000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20000</string>
          </property>
         </item>
        </widget>
@@ -981,6 +981,16 @@
        </property>
        <property name="text">
         <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="textEdit_ans">
+       <property name="geometry">
+        <rect>
+         <x>43</x>
+         <y>380</y>
+         <width>201</width>
+         <height>101</height>
+        </rect>
        </property>
       </widget>
      </widget>
