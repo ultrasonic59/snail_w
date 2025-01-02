@@ -6,7 +6,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsRectItem>
 #include <math.h>
-#include "dotsignal.h"
+///#include "dotsignal.h"
 #include "params.h"
 
 static const double Pi = 3.14159265358979323846264338327950288419717;
@@ -402,7 +402,7 @@ void cust_rect::rotateItem(const QPointF &pt)
 
 void cust_rect::setPositionGrabbers()
 {
-    QRectF tmpRect = rect();
+ ///   QRectF tmpRect = rect();
     /*
     cornerGrabber[GrabberTop]->setPos(tmpRect.left() + tmpRect.width()/2, tmpRect.top());
     cornerGrabber[GrabberBottom]->setPos(tmpRect.left() + tmpRect.width()/2, tmpRect.bottom());

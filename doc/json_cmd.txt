@@ -100,26 +100,25 @@ QList <QVariant> at = ar.toVariantList();
     stream << jsonString;
         file.close();
 
-            settings.setValue("last_can_id", params::dbg_last_can_id);
-    settings.setValue("last_can_dlc", params::dbg_last_can_dlc);
-    settings.setValue("last_can_d0", params::dbg_last_can_dat[0]);
-    settings.setValue("last_can_d1", params::dbg_last_can_dat[1]);
-    settings.setValue("last_can_d2", params::dbg_last_can_dat[2]);
-    settings.setValue("last_can_d3", params::dbg_last_can_dat[3]);
-    settings.setValue("last_can_d4", params::dbg_last_can_dat[4]);
-    settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
-    settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
-    settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
-    
-   can_data.id= ui.lineEdit_ID->text().toInt(0, 16);
-    can_data.dlc= ui.lineEdit_DLC->text().toInt(0, 16);
-    can_data.IDE = 0;
-    can_data.RTR = 0;
-    can_data.data[0]= ui.lineEdit_dat0->text().toInt(0, 16);
-    can_data.data[1] = ui.lineEdit_dat1->text().toInt(0, 16);
-    can_data.data[2] = ui.lineEdit_dat2->text().toInt(0, 16);
-    can_data.data[3] = ui.lineEdit_dat3->text().toInt(0, 16);
-    can_data.data[4] = ui.lineEdit_dat4->text().toInt(0, 16);
-    can_data.data[5] = ui.lineEdit_dat5->text().toInt(0, 16);
-    can_data.data[6] = ui.lineEdit_dat6->text().toInt(0, 16);
-    can_data.data[7] = ui.lineEdit_dat7->text().toInt(0, 16);
+ 
+
+
+
+        switch (item->type()) {
+          case QGraphicsPathItem::Type: {
+
+
+          
+
+                 case QGraphicsEllipseItem::Type: {
+
+
+        case QGraphicsRectItem::Type: {
+
+
+        else if(type_cmd == "Circle")
+   {
+    sl_place_circle(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
+   }
+else if (type_cmd == "Line")
+

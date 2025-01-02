@@ -188,13 +188,12 @@
     <ClInclude Include="widgets\styledtoolbutton.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="icons\arrow-left-down.png" />
     <Image Include="icons\arrow-top-left.png" />
     <Image Include="icons\content-save.png" />
     <Image Include="icons\load.png" />
     <Image Include="icons\rotate-right.png" />
     <Image Include="icons\save.png" />
-    <Image Include="icons\vector-polyline.png" />
-    <Image Include="icons\vector-rectangle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

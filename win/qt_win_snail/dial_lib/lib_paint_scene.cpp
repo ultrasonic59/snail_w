@@ -33,7 +33,12 @@ LibPaintScene::~LibPaintScene()
 
 }
 ///if (event->modifiers() == Qt::AltModifier)
-
+/*
+lineItem->setLine(QLineF(0, 0, 100, 100));
+pen.setColor(QColor(0, 50, 230));
+lineItem->setPen(pen);
+lineItem->setFlag(QGraphicsItem::ItemIsMovable);
+*/
 ///===================================================================
 void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -57,8 +62,8 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
-            connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
-            connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+ ///           connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+ ///           connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
             line->setPen(QPen(params::RuleColor, params::thick_rule
                 , Qt::DashLine, Qt::FlatCap));
              QPainterPath path;
@@ -102,30 +107,43 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 cust_line* line = new cust_line(this);
                 currentItem = line;
                 addItem(currentItem);
-                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+                connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
                 connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::FlatCap));
                 ///           , Qt::SolidLine, Qt::RoundCap));
-                QPainterPath path;
-                path.moveTo(gr_point);
-                path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
-                line->setPath(path);
+/*
+lineItem->setLine(QLineF(0, 0, 100, 100));
+pen.setColor(QColor(0, 50, 230));
+lineItem->setPen(pen);
+lineItem->setFlag(QGraphicsItem::ItemIsMovable);
+*/
+                line->setFlag(QGraphicsItem::ItemIsMovable);
+                line->setLine(gr_point.x(), gr_point.y(), gr_point.x(), gr_point.y() + params::LibItemWidth);
+
+ ///               QPainterPath path;
+ ///               path.moveTo(gr_point);
+ ///               path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
+  ///              line->setPath(path);
                   }
                   break;
             case HLINE_TYPE: {
                 cust_line* line = new cust_line(this);
                 currentItem = line;
                 addItem(currentItem);
-                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+                connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
                 connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::SquareCap));
+
                 ////            , Qt::SolidLine, Qt::RoundCap));
-                QPainterPath path;
-                path.moveTo(gr_point);
-                path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
-                line->setPath(path);
+ ///               QPainterPath path;
+ ///               path.moveTo(gr_point);
+ ///               path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
+ ///               line->setPath(path);
+                line->setLine(gr_point.x(), gr_point.y(), gr_point.x() + params::LibItemWidth, gr_point.y());
+
                  }
                  break;
             case CIRCLE_TYPE: {
@@ -511,8 +529,8 @@ void LibPaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, Q
     cust_line* line = new cust_line(this);
     currentItem = line;
     addItem(currentItem);
-    connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
-    connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+ ////   connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+ ////   connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
     line->setPen(QPen(color, thick, Qt::SolidLine, Qt::FlatCap));
      QPainterPath path;
     path.moveTo(point);

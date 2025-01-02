@@ -90,7 +90,7 @@ QList<QGraphicsItem *> SvgReader::getElements(const QString filename)
         if (!pathElement.isNull()){
             cust_line *line = new cust_line();
             auto pElement = gNode.toElement();
-            line->setBrush(QBrush(Qt::transparent));
+           /// line->setBrush(QBrush(Qt::transparent));
             QColor strokeColor(pElement.attribute("stroke", "#000000"));
             strokeColor.setAlphaF(pElement.attribute("stroke-opacity").toFloat());
             int thick = pElement.attribute("stroke-width", "0").toInt();

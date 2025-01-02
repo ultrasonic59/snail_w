@@ -128,6 +128,15 @@ DialLib::DialLib(QWidget *parent):
     connect(ui.pushButton_test3, SIGNAL(clicked()), this, SLOT(SlotTest3()));
     connect(ui.pushButton_test4, SIGNAL(clicked()), this, SLOT(SlotTest4()));
 ///================================================================
+    connect(ui.buttOpen, SIGNAL(clicked()), this, SLOT(on_butOpen_clicked()));
+    connect(ui.buttSave, SIGNAL(clicked()), this, SLOT(on_butSave_clicked()));
+
+///================================================================
+
+    connect(ui.ButtSaveJ, SIGNAL(clicked()), this, SLOT(SaveJ()));
+    connect(ui.ButtLoadJ, SIGNAL(clicked()), this, SLOT(LoadJ()));
+
+///================================================================
     jsEngine = new QJSEngine(this);
 }
 
@@ -481,13 +490,7 @@ void DialLib::selectNewItem(QGraphicsItem* item)
 void DialLib::on_butSave_clicked()
 {
 ///===================================================
-    QString newPath = QFileDialog::getSaveFileName(this, tr("Save JSON"),
-        path, tr("JSON files (*.json)"));
-    if (newPath.isEmpty())
-        return;
-
-///===================================================
-#if 0
+#if 1
     QString newPath = QFileDialog::getSaveFileName(this, tr("Save SVG"),
         path, tr("SVG files (*.svg)"));
 
@@ -533,8 +536,8 @@ void DialLib::on_butOpen_clicked()
           case QGraphicsPathItem::Type: {
             cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
             scene->addItem(polyline);
-            connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
-            connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
+////            connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
+ ///           connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
 /*
@@ -592,16 +595,6 @@ ui.lab_dx->setText(QString("dx=%1").arg(pnt.x()));
 ui.lab_dy->setText(QString("dy=%1").arg(pnt.y()));
 }
 ///=============================================================
-#if 0
-void DialLib::on_butOpen_clicked()
-{
-    QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
-        path, tr("SVG files (*.svg)"));
-    if (newPath.isEmpty())
-        return;
-
-    path = newPath;
-#endif
 void DialLib::loadScript() {
 QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
                    path_script, tr("Script files (*.js)"));
@@ -701,16 +694,253 @@ void DialLib::SlotTest1()
 ///QRectF itemsBoundingRect() const;
 
 ////QList<QGraphicsItem*> items(Qt::SortOrder order = Qt::DescendingOrder) const;
+void DialLib::getItem(QJsonObject& itemObj,QGraphicsItem* item)
+{
+///    QGraphicsItem* item;
+///    QJsonObject objObject;
+QString t_type = ObjectValue.value("type").toString();
+
+    qDebug() << "type=" << t_type;
+
+/// 
+}
+void DialLib::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
+{
+QJsonObject objObject;
+
+switch (item->type()) {
+        case QGraphicsRectItem::Type: {
+            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
+            QRectF t_rect = rect->rect();
+            qDebug() << "rect=" << t_rect;
+            objObject.insert("type", "Rect");
+            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
+            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            QBrush t_br = rect->brush();
+
+ ///           int br_color = t_br.color().rgb();
+            quint32 br_color = t_br.color().rgb();
+            int br_style = t_br.style();
+            QJsonObject obj2Object;
+            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
+            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
+            objObject.insert("brush", obj2Object);
+            QPen t_pen = rect->pen();
+            QJsonObject obj3Object;
+            obj3Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
+            objObject.insert("pen", obj3Object);
+            QJsonObject obj4Object;
+            obj4Object.insert("x", QJsonValue::fromVariant(rect->pos().x()));
+            obj4Object.insert("y", QJsonValue::fromVariant(rect->pos().y()));
+            objObject.insert("pos", obj4Object);
+         ///   itemObj.insert("rect", objObject);
+        }
+            break;
+        case QGraphicsLineItem::Type: {
+            cust_line* line = new cust_line(this);
+             objObject.insert("type", "Line");
+
+            QJsonObject obj2Object;
+            QPen t_pen = line->pen();
+            obj2Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj2Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
+            objObject.insert("pen", obj2Object);
+            QJsonObject obj3Object;
+            obj3Object.insert("x", QJsonValue::fromVariant(line->line().p1().x()));
+            obj3Object.insert("y", QJsonValue::fromVariant(line->line().p1().y()));
+            objObject.insert("p1", obj3Object);
+            QJsonObject obj4Object;
+            obj3Object.insert("x", QJsonValue::fromVariant(line->line().p2().x()));
+            obj3Object.insert("y", QJsonValue::fromVariant(line->line().p2().y()));
+            objObject.insert("p2", obj4Object);
+          ///  itemObj.insert("line", objObject);
+        }
+            break;
+        case QGraphicsEllipseItem::Type: {
+            cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
+            QRectF t_rect = circle->rect();
+ 
+            objObject.insert("type", "Circle");
+            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
+            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            QBrush t_br = circle->brush();
+
+        ///    int br_color = t_br.color().rgb();
+            quint32 br_color = t_br.color().rgb();
+            int br_style = t_br.style();
+            QJsonObject obj2Object;
+            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
+ ///           obj2Object.insert("color", br_color);
+            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
+            objObject.insert("brush", obj2Object);
+            QJsonObject obj3Object;
+
+            QPen t_pen = circle->pen();
+            obj3Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
+            objObject.insert("pen", obj3Object);
+            QJsonObject obj4Object;
+            obj4Object.insert("x", QJsonValue::fromVariant(circle->pos().x()));
+            obj4Object.insert("y", QJsonValue::fromVariant(circle->pos().y()));
+            objObject.insert("pos", obj4Object);
+            itemObj.insert("obj", objObject);
+           }
+           break;
+        }
+itemObj.insert("obj", objObject);
+
+ }
+
+void DialLib::SaveJ()
+{
+QJsonObject obj1Object;
+QJsonObject objObject;
+QJsonArray arrayObj;
+///===================================================
+QString saveFileName = QFileDialog::getSaveFileName(this, tr("Save JSON"),
+    path, tr("JSON files (*.json)"));
+QFileInfo fileInfo(saveFileName);
+QDir::setCurrent(fileInfo.path());
+///if (saveFileName.isEmpty())
+///    return;
+QFile jsonFile(saveFileName);
+if (!jsonFile.open(QIODevice::WriteOnly))
+   {
+    return;
+   }
+///===========================================================
+foreach(QGraphicsItem * item, scene->items())
+{
+    qDebug() << "item=" << item->type();
+    insertItem(item, objObject);
+    arrayObj.append(objObject);
+}
+QJsonDocument doc(arrayObj);
+///QJsonDocument doc(objObject);
+///QString jsonString = doc.toJson(QJsonDocument::Indented);
+ ////       qDebug() << "json=" << jsonString;
+jsonFile.write(doc.toJson(QJsonDocument::Indented));
+///jsonFile.write(jsonString);
+jsonFile.close();   //
+}
+void DialLib::LoadJ()
+{
+    QString loadFileName = QFileDialog::getOpenFileName(this, tr("Open JSON"),
+        path, tr("JSON files (*.json)"));
+    if (loadFileName.isEmpty())
+        return;
+    QFile jsonFile(loadFileName);
+    if (!jsonFile.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+    QGraphicsItem item;
+    QByteArray byteArr = jsonFile.readAll();
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull())
+    {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QString t_type = ObjectValue.value("type").toString();
+                qDebug() << "type=" << t_type;
+
+            }
+        }
+ ///       QJsonObject rootobj = doc.object();
+    }
+}
+
 
 void DialLib::SlotTest1()
 {
     QRectF tst_rec;
-    tst_rec= scene->itemsBoundingRect();
-    qDebug() << "rect=" << tst_rec;
+QJsonObject objObject;
+///QRectF rect()
+ ////   tst_rec= scene->itemsBoundingRect();
+ ///   qDebug() << "rect=" << tst_rec;
 
   ////  scene->sl_obr_cmd(jsonString);
+///==================================================
+    foreach(QGraphicsItem * item, scene->items())
+    {
+        qDebug() << "item=" << item->type();
+
+        switch (item->type()) {
+        case QGraphicsRectItem::Type: {
+            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
+            QRectF t_rect = rect->rect();
+
+            qDebug() << "rect=" << t_rect;
+
+            objObject.insert("type", "Rect");
+            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
+            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            QBrush t_br=rect->brush();
+///            QColor t_col = t_br.color();
+///            qDebug() << "color=" << t_col;
+     ////       BGColor.rgb()).toInt()
+  ///          int br_color=(t_br.color().rgb()).toInt();
+ ///           RGB trgb= br_color = t_col..rgb();
+
+            int br_color = t_br.color().rgb();
+            int br_style = t_br.style();
+            QJsonObject obj2Object;
+            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
+            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
+            objObject.insert("brush", obj2Object);
+            obj2Object.empty();
+            QPen t_pen = rect->pen();
+            obj2Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj2Object.insert("width", QJsonValue::fromVariant(t_pen.width() ));
+            objObject.insert("pen", obj2Object);
+            obj2Object.empty();
+            obj2Object.insert("x", QJsonValue::fromVariant(rect->pos().x()) );
+            obj2Object.insert("y", QJsonValue::fromVariant(rect->pos().y()));
+            objObject.insert("pos", obj2Object);
+            QJsonDocument doc(objObject);
+            QString jsonString = doc.toJson(QJsonDocument::Indented);
+            qDebug() << "json=" << jsonString;
 
 
+  ///          rect->brush();
+ ///           objObject.insert("thick", 2);
+ ///           rect->setPos(point);
+            ///rect->setBrush(QBrush(Qt::NoBrush));
+ ///           rect->setBrush(br);
+ ///           rect->setPen(QPen(color, thick));
+
+            }
+           break;
+        case QGraphicsPathItem::Type: {
+            objObject.insert("type", "Line");
+
+            }
+           break;
+        case QGraphicsEllipseItem::Type: {
+            objObject.insert("type", "Circle");
+           }
+           break;
+        }
+
+        if (item->type() == QGraphicsItem::Type)
+        {
+
+            qDebug() << "item=" << item->type();
+
+    ///        graph* myItem = dynamic_cast<graph*>(item);
+    ///        xmlWriter.writeStartElement("MyGraphicsItem");
+    ///        xmlWriter.writeAttribute("xCoord", QString::number(myItem->x()));
+    ///        xmlWriter.writeAttribute("yCoord", QString::number(myItem->y()));
+     ///       xmlWriter.writeEndElement();  //end of MyGraphicsItem
+        }
+    }
+
+///====================================================
 #if 0
     QJsonObject recordObject;
     QJsonObject objObject;

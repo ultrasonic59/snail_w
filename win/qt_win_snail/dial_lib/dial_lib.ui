@@ -157,7 +157,7 @@
     </font>
    </property>
   </widget>
-  <widget class="QToolButton" name="butOpen">
+  <widget class="QToolButton" name="buttOpen">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -180,7 +180,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QToolButton" name="butSave">
+  <widget class="QToolButton" name="buttSave">
    <property name="geometry">
     <rect>
      <x>820</x>
@@ -574,6 +574,32 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ButtSaveJ">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>660</y>
+     <width>51</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>SaveJ</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ButtLoadJ">
+   <property name="geometry">
+    <rect>
+     <x>904</x>
+     <y>660</y>
+     <width>51</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>LoadJ</string>
    </property>
   </widget>
  </widget>

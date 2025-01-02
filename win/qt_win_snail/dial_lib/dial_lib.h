@@ -69,7 +69,8 @@ private:
 	void resizeEvent(QResizeEvent* event);
 	QString path;
 	QString path_script;
-
+	void insertItem(QGraphicsItem* item, QJsonObject& RectObj);
+	void getItem(QJsonObject& itemObj, QGraphicsItem* item);
 private slots:
 	void slotTimer();
 private slots:
@@ -84,6 +85,9 @@ private slots:
 private slots:
 	void loadScript();
 	void runScript();
+	void SaveJ();
+	void LoadJ();
+
 
 private:
 ///	QScriptEngine m_engine;
