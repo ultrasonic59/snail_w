@@ -216,6 +216,7 @@ printk("\n\rflash [%x:%x] ===",t_rd_flash_ans->addr,t_rd_flash_ans->data);
 
 void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
 {
+  printk("\n\r===rd_eeprom_dat[%x:%x]===",t_rd_eeprom_ans->num_dates,t_rd_eeprom_ans->addr); 
 
 if(t_rd_eeprom_ans->num_dates==0)
   return;
@@ -233,8 +234,8 @@ if(t_rd_eeprom_ans->num_dates==2)
     t_rd_eeprom_ans->num_dates=1;
     return;
     }
-  }
   printk(" dat1[%x] ===",t_rd_eeprom_ans->data[1]); 
+  }
  
 }
 

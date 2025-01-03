@@ -285,7 +285,11 @@ switch(data[0]) {
          put_can_ack(SET_PARAM);
          set_param((set_param_cmd_t *)data);
         break;
-          
+     case GET_BOOT_STAT:
+        put_can_boot_cmd_stat(boot_state);
+////    printk("[stat=%x] ",boot_state);
+        break;
+        
   
       case GO_TO_BOOTER:
         goto_booter();

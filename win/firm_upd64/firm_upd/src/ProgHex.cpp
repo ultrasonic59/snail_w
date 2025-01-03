@@ -4,13 +4,17 @@
 #include "progHex.h"
 
 
-CprogHex::CprogHex(QObject *parent) : 
-			QObject(parent),
+CprogHex::CprogHex(bool* data_ok, can_cmd_t* odat ,quint8 *stat, qint32* cur_pb_val) :
+			QObject(0),
 	        linAddr(0),
 			can_id(0),
 			m_isConnected(false),
 			m_isOpened(false),
-			state_dev(0),
+	        p_data_ok(data_ok),
+	        p_odat(odat),
+			p_stat(stat),
+	        p_cur_pb_val(cur_pb_val),
+///			state_dev(0),
 			t_ks(0),
 			size_app(0),
 			COM_port_name("COM8")
@@ -37,12 +41,12 @@ quint8 stat;
 btmp=getDevStat(stat);
 if(btmp)
 	{
-	state_dev=stat;
+	*p_stat =stat;
 	return true;
 	}
 else
 	{
-	state_dev=0;
+	*p_stat =0;
 	return false;
 	}
 
@@ -53,7 +57,7 @@ bool CprogHex::isConnected() const
     return m_isConnected;
 
 }
-void CprogHex::slSetBootMode()
+void CprogHex::sl_SetBootMode()
 {
 quint8 tdat=0;
 can_cmd_t s_cmd;
@@ -78,15 +82,16 @@ if(!m_isConnected)
 
 	}
 }
-
-
 QByteArray CprogHex::SendRes(QByteArray sentData)
 {
 m_pSerialPort->write(sentData);
 m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY);
 ////    this->thread()->msleep(50);
 m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY);
-return m_pSerialPort->readAll();
+if(m_pSerialPort->size() )
+ return m_pSerialPort->readAll();
+else
+ return QByteArray();
 }
 
 void CprogHex::config_port()
@@ -123,10 +128,12 @@ if (m_pSerialPort->open(QSerialPort::ReadWrite))
         m_isConnected = false;
     }
 }
+/*
 quint8 CprogHex::get_curr_state()
 {
 return state_dev;
 }
+*/
 
 void CprogHex::sl_set_can_id(QString id)
 {
@@ -139,14 +146,17 @@ if(id=="AxisZ")
 }
 void CprogHex::sl_connect(bool conn)
 {
-
+if(conn)
+	connectToDev();
+else
+     SetConnected(false);
 }
 void CprogHex::sl_set_com_name(QString name)
 {
-
+	COM_port_name = name;
 }
 
-quint8 CprogHex::getLineType(QString line)
+quint8 CprogHex::getHexLineType(QString line)
 {
 return	line.mid(6, 2).toULong(0, 16);
 }
@@ -223,6 +233,18 @@ if(tdat)
 	stat= tstat->state;
 	}
 return tdat; 
+}
+void CprogHex::sl_req_curr_state()
+{
+quint8 t_stat = 0;
+quint8 btmp = 0;
+btmp = getDevStat(t_stat);
+if (btmp)
+	{
+	*p_stat = t_stat;
+	*p_data_ok = true;
+///	emit	s_set_curr_state(t_stat);
+	}
 }
 
 quint8 CprogHex::progFlashChunc(quint8 *data, quint8 len)
@@ -403,25 +425,36 @@ while(!in.atEnd())
 		break;
 	cur_pos += tstr.length();
 ////	qDebug() << "cur_pos: " << cur_pos;
-	emit sig_set_pb_val(cur_pos);
+////	emit sig_set_pb_val(cur_pos);
+	*p_cur_pb_val = cur_pos;
 	}
 if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
-return;//// false;
+{
+	*p_stat = BOOTER_STATE_ERROR;
+	*p_data_ok = true;
+	return;//// false;
+}
 else
 	{
-	if (!wr_eeprom(ADDR_KS_APP, t_ks))
-		return;/// false;
-	if (!wr_eeprom(ADDR_EEPROM_SIZEL_APP, size_app & 0xffff))
-		return;/// false;
-	if (!wr_eeprom(ADDR_EEPROM_SIZEH_APP, (size_app >> 16) & 0xffff))
-		return;/// false;
-	if (!wr_eeprom(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK))
-		return;/// false;
-	return;/// true;
+	if (wr_eeprom(ADDR_KS_APP, t_ks)) {
+		if (wr_eeprom(ADDR_EEPROM_SIZEL_APP, size_app & 0xffff)) {
+			if (wr_eeprom(ADDR_EEPROM_SIZEH_APP, (size_app >> 16) & 0xffff)) {
+				if (wr_eeprom(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK)) {
+					*p_stat = BOOTER_STATE_OK;
+					*p_data_ok = true;
+					return;
+				}
+			}
+		}
+	}
+	*p_stat = BOOTER_STATE_ERROR;
+	*p_data_ok = true;
+	return;/// 
 	}
 }
+#define MIN_DATA_LEN 3
 
-void CprogHex::rd_eeprom(dat_req_t* data )
+void CprogHex::sl_rd_eeprom(dat_req_t* data )
 {
 can_cmd_t s_cmd;
 can_cmd_t r_cmd;
@@ -440,14 +473,14 @@ s_cmd.data[1]=data->nbytes;
 s_cmd.data[2]=data->addr ;
 ////memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
 tdat=SendResCanCmd(&s_cmd,&r_cmd);
-if((tdat)&&(r_cmd.data[0]==RD_EEPROM_ANS))
+if((tdat)&&(r_cmd.data[0]==RD_EEPROM_ANS)&& (r_cmd.data[1] > MIN_DATA_LEN))
 	{
 	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)*data->nbytes);
 	}
 else
 	data->nbytes=0;
 }
-void CprogHex::wr_eeprom(dat_req_t* data )
+void CprogHex::sl_wr_eeprom(dat_req_t* data )
 {
 can_cmd_t s_cmd;
 can_cmd_t r_cmd;
@@ -474,8 +507,6 @@ if((tdat)&&(r_cmd.data[0]==WR_EEPROM_ANS))
 	}
 else
 	data->nbytes=0;
-
-
 }
 bool CprogHex::wr_eeprom(quint16 addr, quint16 data  )
 {

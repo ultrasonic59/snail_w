@@ -34,7 +34,7 @@ void Cfirm_upd::loadSettings()
 ///==========================================================
 Cfirm_upd::Cfirm_upd(QWidget *parent) : 
 		QMainWindow(parent), connected(false),
-////		COMpr(),
+	    answ(0), data_ok(false),
 		CurAxis(AxisX), 
 		ui(new Ui::firm_upd)
 {
@@ -51,7 +51,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
    curFile = new QFile();
 ///===================================================
    m_pThread = new QThread(this);
-   m_pProgHex = new CprogHex;
+   m_pProgHex = new CprogHex(&data_ok, &odat, &curr_dev_state,&cur_pb_val);
    m_pProgHex->moveToThread(m_pThread);
    connect(m_pThread, SIGNAL(finished()), m_pProgHex, SLOT(deleteLater()));
    m_pThread->start();
@@ -73,7 +73,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 
 
 ////	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
-	connect(m_pProgHex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
+///	connect(m_pProgHex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
 
  ////  QObject::connect(port, SIGNAL(readyRead()), this, SLOT(serialDataReceived()));
  ////  QObject::connect(port, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(serialError()));
@@ -86,6 +86,11 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 	connect(this, SIGNAL(s_set_can_id(QString)), m_pProgHex, SLOT(sl_set_can_id(QString)));
 	connect(this, SIGNAL(s_SetBootMode()), m_pProgHex, SLOT(sl_SetBootMode()));
 	connect(this, SIGNAL(s_progr(QFile*)), m_pProgHex, SLOT(sl_progr(QFile*)));
+	connect(this, SIGNAL(s_req_curr_state()), m_pProgHex, SLOT(sl_req_curr_state()));
+	connect(this, SIGNAL(s_rd_eeprom(dat_req_t*)), m_pProgHex, SLOT(sl_rd_eeprom(dat_req_t*)));
+	connect(this, SIGNAL(s_wr_eeprom(dat_req_t*)), m_pProgHex, SLOT(sl_wr_eeprom(dat_req_t*)));
+
+////	connect(m_pProgHex, SIGNAL(s_set_curr_state(quint8)), this, SLOT(sl_set_curr_state(quint8)));
 
 /* 
    if(m_pProg_hex->isConnected())
@@ -112,7 +117,12 @@ return connected;
 void Cfirm_upd::set_connected(bool conn) {
 	connected = conn;
 }
-
+/*
+void Cfirm_upd::sl_set_curr_state(quint8 new_state) {
+	state_ok = true;
+	curr_dev_state = new_state;
+}
+*/
 
 void Cfirm_upd::refresh_used_ports()
 {
@@ -131,6 +141,22 @@ void Cfirm_upd::refresh_used_ports()
 ////	ui.pushButton_start_stop->setEnabled(ui.comboBox_ports->count() > 0);
 #endif
 }
+void Cfirm_upd::show_connect(bool conn)
+{
+if(conn)
+	{
+	ui->ind_conn->setStyleSheet("background-color: rgb(0, 128, 0); color: rgb(0, 128, 0)");
+	ui->statusBar->showMessage("Connected to dev");
+	ui->pushButton_Conn->setText(tr("Disconnect"));
+	}
+else
+	{
+	ui->statusBar->showMessage("No connected to dev");
+	ui->pushButton_Conn->setText(tr("Connect"));
+	ui->ind_conn->setStyleSheet("color: rgb(0, 128, 0)");
+	}
+}
+
 void Cfirm_upd::connection()
 {
 if(is_connected())
@@ -152,31 +178,47 @@ else
 ///	m_pProg_hex->connectToDev();
 	emit s_connect(true);
 
-	quint8 cur_dev_state=0;
-///???	cur_dev_state=m_pProg_hex->get_curr_state();
-	if(cur_dev_state&BOOTER_STATE_MASK!=BOOTER_STATE_MASK)
-		{
-		ui->statusBar->showMessage("Set boot mode");
-	///	m_pProg_hex->SetBootMode();
-		emit sSetBootMode();
-		}
+///	quint8 t_dev_state=0;
+ ///   t_dev_state= get_curr_state();
+	if (get_curr_state()) {
+		if ((curr_dev_state & BOOTER_STATE_MASK) != BOOTER_STATE_MASK)
+	     {
+			ui->statusBar->showMessage("Set boot mode");
+			emit s_SetBootMode();
+			if (get_curr_state()) {
+				if ((curr_dev_state & BOOTER_STATE_MASK) != BOOTER_STATE_MASK)
+				    {
+					ui->statusBar->showMessage("Error mode");
+					show_connect(false);
+				    }
+				else
+				   {
+					ui->statusBar->showMessage("Connected");
+					show_connect(true);
+				   }
+			}
+			else
+			{
+				ui->statusBar->showMessage("Error rd mode2");
+				show_connect(false);
 
+			}
+		 }
+		else
+		   {
+			ui->statusBar->showMessage("Connected");
+			set_connected(true);
+			show_connect(true);
+		   }
 	}
+	else {
+		ui->statusBar->showMessage("Error rd mode");
+		set_connected(false);
+		show_connect(false);
+	   }
+}
 
 ////if(m_pProg_hex->isConnected())
-if (is_connected())
-
-	{
-	ui->ind_conn->setStyleSheet("background-color: rgb(0, 128, 0); color: rgb(0, 128, 0)");
-	ui->statusBar->showMessage("Connected to dev");
-	ui->pushButton_Conn->setText(tr("Disconnect"));
-	}
-else
-	{
-	ui->statusBar->showMessage("No connected to dev");
-	ui->pushButton_Conn->setText(tr("Connect"));
-	ui->ind_conn->setStyleSheet("color: rgb(0, 128, 0)");
-	}
 
  
 }
@@ -210,9 +252,25 @@ void Cfirm_upd::set_pb_val(quint32 val)
 ui->progressBar->setValue(val);
 }
 
+#define NUM_WAIT 5
+bool Cfirm_upd::get_curr_state()
+{
+///answ = 0;
+data_ok = false;
+emit s_req_curr_state();
+for (int ii = 0; ii < NUM_WAIT; ii++) {
+if (data_ok)
+	{
+	return true;
+	}
+QThread::msleep(100);
+}
+return false;
+}
 void Cfirm_upd::progr_flash()
 {
 quint64 file_size;
+qint32 prev_pb_val = -1;
 ////ui->progressBar->show();
 curFile->setFileName(CurFilePath);
 if(!curFile->open(QFile::ReadOnly))
@@ -231,16 +289,25 @@ ui->progressBar->show();
 
 //// prog_hex.progr(curFile);
 ////m_pProg_hex->progr(curFile);
+data_ok = false;
 emit s_progr(curFile);
-
-QApplication::restoreOverrideCursor();
-
-ui->progressBar->hide();
-ui->statusBar->showMessage("");
+while (!data_ok)
+{
+	if (prev_pb_val != cur_pb_val)
+	{
+		prev_pb_val = cur_pb_val;
+		set_pb_val(cur_pb_val);
+   }
+}
 
 curFile->close();
 
-
+QApplication::restoreOverrideCursor();
+ui->progressBar->hide();
+if(curr_dev_state== BOOTER_STATE_OK)
+    ui->statusBar->showMessage("Prog OK");
+else
+   ui->statusBar->showMessage("Prog Error");
 }
 ///=========================================================================
 void  Cfirm_upd::on_butt_debug()
@@ -252,7 +319,7 @@ void Cfirm_upd::slot_rd_eeprom_dat(dat_req_t* odat)
 if(!is_connected())
 	return;
 ///odat->data[0]=0x4567;
-////???m_pProg_hex->rd_eeprom(odat);
+emit s_rd_eeprom(odat);
 dial_dbg.req_data_rdy(odat);	
 return;
 }
@@ -260,7 +327,7 @@ void Cfirm_upd::slot_wr_eeprom_dat(dat_req_t* idat)
 {
 if(!is_connected())
 	return;
-////???m_pProg_hex->wr_eeprom(idat);
+emit s_wr_eeprom(idat);
 }
 void Cfirm_upd::slot_rd_flash_dat(dat_req_t* odat)
 {

@@ -26,6 +26,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "board.h"
 #include "emul_eeprom.h"
+#include "printk.h"
+#include "my_misc.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -270,7 +272,8 @@ uint16_t EE_Init(void)
 uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data)
 {
   uint16_t ValidPage = PAGE0;
-  uint16_t AddressValue = 0x5555, ReadStatus = 1;
+  uint16_t AddressValue = 0x0;
+  uint16_t ReadStatus = 1;
   uint32_t Address = EEPROM_START_ADDRESS, PageStartAddress = EEPROM_START_ADDRESS;
 
   /* Get active Page for read operation */
@@ -491,13 +494,18 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress, uint16_t Da
     {
       /* Set variable data */
       FlashStatus = FLASH_ProgramHalfWord(Address, Data);
+      printk("\n\r ee_write_data[%x:%x:%x] =>",Address, Data,FlashStatus); 
       /* If program operation was failed, a Flash error code is returned */
       if (FlashStatus != FLASH_COMPLETE)
       {
+      printk("Error \n\r==="); 
+      
         return FlashStatus;
       }
       /* Set variable virtual address */
       FlashStatus = FLASH_ProgramHalfWord(Address + 2, VirtAddress);
+      printk("\n\r ee_write_addr[%x:%x:%x] =>",Address+2, VirtAddress,FlashStatus); 
+      
       /* Return program operation status */
       return FlashStatus;
     }
