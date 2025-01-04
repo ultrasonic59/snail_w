@@ -691,18 +691,55 @@ void DialLib::SlotTest1()
 
 }
 #endif
-///QRectF itemsBoundingRect() const;
 
-////QList<QGraphicsItem*> items(Qt::SortOrder order = Qt::DescendingOrder) const;
-void DialLib::getItem(QJsonObject& itemObj,QGraphicsItem* item)
+QGraphicsItem* DialLib::getItem(QJsonObject& itemObj)
 {
-///    QGraphicsItem* item;
-///    QJsonObject objObject;
-QString t_type = ObjectValue.value("type").toString();
+QString t_type = itemObj.value("type").toString();
+qDebug() << "type=" << t_type;
 
-    qDebug() << "type=" << t_type;
+if(t_type== "Rect")
+{
+cust_rect* rect = new cust_rect();
+bool err = false;
 
-/// 
+int Width = itemObj.value("width").toInt();
+int Height = itemObj.value("height").toInt();
+rect->setRect(0, 0, Width, Height);
+QJsonObject pointObj = itemObj.value("pos").toObject();
+int xx = pointObj.value("x").toInt();
+int yy = pointObj.value("y").toInt();
+rect->setPos(QPoint(xx,yy));
+QJsonObject brushObj = itemObj.value("brush").toObject();
+QString   str_col = brushObj.value("color").toString();
+
+quint32 br_color = str_col.toUInt(&err, 16); ////brushObj.value("color").toInt();
+Qt::BrushStyle br_style = (Qt::BrushStyle)brushObj.value("style").toInt();
+rect->setBrush(QBrush(QColor(br_color), br_style));
+QJsonObject penObj = itemObj.value("pen").toObject();
+str_col= penObj.value("color").toString();
+///bool err = false;
+quint32 pen_color = str_col.toUInt( &err,16);
+
+int penWidth = penObj.value("width").toInt();
+rect->setPen(QPen(QColor(pen_color), penWidth));
+return qgraphicsitem_cast<cust_rect*>(rect);
+}
+else if(t_type == "Line")
+{
+cust_line* rect = new cust_line();
+bool err = false;
+
+}
+else if (t_type == "Circle")
+{
+
+}
+else
+{
+    return nullptr;
+///    rez = false;
+}
+///return rez;
 }
 void DialLib::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
 {
@@ -715,19 +752,19 @@ switch (item->type()) {
             qDebug() << "rect=" << t_rect;
             objObject.insert("type", "Rect");
             objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
-            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            objObject.insert("height", QJsonValue::fromVariant(t_rect.height()));
             QBrush t_br = rect->brush();
 
- ///           int br_color = t_br.color().rgb();
             quint32 br_color = t_br.color().rgb();
             int br_style = t_br.style();
             QJsonObject obj2Object;
-            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
+            obj2Object.insert("color", QString::number(br_color,16));
             obj2Object.insert("style", QJsonValue::fromVariant(br_style));
             objObject.insert("brush", obj2Object);
             QPen t_pen = rect->pen();
             QJsonObject obj3Object;
-            obj3Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            quint32 pen_color = t_pen.color().rgb();
+            obj3Object.insert( "color", QString::number(pen_color, 16));
             obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
             objObject.insert("pen", obj3Object);
             QJsonObject obj4Object;
@@ -743,7 +780,8 @@ switch (item->type()) {
 
             QJsonObject obj2Object;
             QPen t_pen = line->pen();
-            obj2Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj2Object.insert("color", QString::number(t_pen.color().rgb(),16));
+
             obj2Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
             objObject.insert("pen", obj2Object);
             QJsonObject obj3Object;
@@ -754,7 +792,7 @@ switch (item->type()) {
             obj3Object.insert("x", QJsonValue::fromVariant(line->line().p2().x()));
             obj3Object.insert("y", QJsonValue::fromVariant(line->line().p2().y()));
             objObject.insert("p2", obj4Object);
-          ///  itemObj.insert("line", objObject);
+ ///           itemObj.insert("obj", objObject);
         }
             break;
         case QGraphicsEllipseItem::Type: {
@@ -763,21 +801,19 @@ switch (item->type()) {
  
             objObject.insert("type", "Circle");
             objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
-            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            objObject.insert("height", QJsonValue::fromVariant(t_rect.height()));
             QBrush t_br = circle->brush();
 
-        ///    int br_color = t_br.color().rgb();
             quint32 br_color = t_br.color().rgb();
             int br_style = t_br.style();
             QJsonObject obj2Object;
-            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
- ///           obj2Object.insert("color", br_color);
+            obj2Object.insert("color", QString::number(br_color,16));
             obj2Object.insert("style", QJsonValue::fromVariant(br_style));
             objObject.insert("brush", obj2Object);
             QJsonObject obj3Object;
 
             QPen t_pen = circle->pen();
-            obj3Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj3Object.insert("color", QString::number(t_pen.color().rgb(),16));
             obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
             objObject.insert("pen", obj3Object);
             QJsonObject obj4Object;
@@ -789,7 +825,6 @@ switch (item->type()) {
            break;
         }
 itemObj.insert("obj", objObject);
-
  }
 
 void DialLib::SaveJ()
@@ -817,11 +852,7 @@ foreach(QGraphicsItem * item, scene->items())
     arrayObj.append(objObject);
 }
 QJsonDocument doc(arrayObj);
-///QJsonDocument doc(objObject);
-///QString jsonString = doc.toJson(QJsonDocument::Indented);
- ////       qDebug() << "json=" << jsonString;
 jsonFile.write(doc.toJson(QJsonDocument::Indented));
-///jsonFile.write(jsonString);
 jsonFile.close();   //
 }
 void DialLib::LoadJ()
@@ -835,7 +866,6 @@ void DialLib::LoadJ()
     {
         return;
     }
-    QGraphicsItem item;
     QByteArray byteArr = jsonFile.readAll();
     QString jsonStr = QString(byteArr);
     QJsonParseError err;
@@ -846,10 +876,13 @@ void DialLib::LoadJ()
             QJsonArray array = doc.array();
             for (int index = 0; index < array.size(); index++) {
                 QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
-                QString t_type = ObjectValue.value("type").toString();
-                qDebug() << "type=" << t_type;
-
-            }
+                QGraphicsItem* t_item= getItem(ObjectValue);
+                if (t_item!=nullptr)
+                   {
+                    ;
+                    scene->addItem(t_item);
+                   }
+             }
         }
  ///       QJsonObject rootobj = doc.object();
     }

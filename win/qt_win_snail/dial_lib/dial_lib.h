@@ -70,7 +70,8 @@ private:
 	QString path;
 	QString path_script;
 	void insertItem(QGraphicsItem* item, QJsonObject& RectObj);
-	void getItem(QJsonObject& itemObj, QGraphicsItem* item);
+	bool getItem(QJsonObject& itemObj, QGraphicsItem* item);
+	QGraphicsItem* getItem(QJsonObject& itemObj);
 private slots:
 	void slotTimer();
 private slots:
