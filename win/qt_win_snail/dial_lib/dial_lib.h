@@ -7,10 +7,12 @@
 #include "ui_dial_lib.h"
  #include "dev_interf.h"
 ///#include "can_message.h"
+
 #include "lib_paint_scene.h"
 #include "snail_types.h"
 #include <QtScript/QScriptEngine>
 #include <QJSEngine>
+#include "lib_util.h"
 
 namespace Ui {
     class Dial_lib;
@@ -69,18 +71,17 @@ private:
 	void resizeEvent(QResizeEvent* event);
 	QString path;
 	QString path_script;
-	void insertItem(QGraphicsItem* item, QJsonObject& RectObj);
-	bool getItem(QJsonObject& itemObj, QGraphicsItem* item);
-	QGraphicsItem* getItem(QJsonObject& itemObj);
+///	void insertItem(QGraphicsItem* item, QJsonObject& RectObj);
+///	QGraphicsItem* getItem(QJsonObject& itemObj);
 private slots:
 	void slotTimer();
 private slots:
 	void on_butSave_clicked();
 	void on_butOpen_clicked();
-	void checkSelection();
-	void checkActionStates();
-	void selectItem(QGraphicsItem* item);
-	void selectNewItem(QGraphicsItem* item);
+	///void checkSelection();
+	///void checkActionStates();
+	///void selectItem(QGraphicsItem* item);
+	///void selectNewItem(QGraphicsItem* item);
 	void slShowBeg(QPointF pnt);
 	void slShowEnd(QPointF pnt);
 private slots:
@@ -93,6 +94,7 @@ private slots:
 private:
 ///	QScriptEngine m_engine;
 	QJSEngine *jsEngine;
+	LibUtil lib_util;
 };
 
 #endif // DIAL_ED_PAR_H

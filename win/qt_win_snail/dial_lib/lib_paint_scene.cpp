@@ -167,7 +167,7 @@ lineItem->setFlag(QGraphicsItem::ItemIsMovable);
                 ///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
                 circle->setCircle(0, 0, params::LibItemWidth);
                 circle->setPos(gr_point.x() - params::LibItemWidth / 2, gr_point.y() - params::LibItemWidth / 2);
-                circle->setBrush(QBrush(Qt::NoBrush));
+                ///circle->setBrush(QBrush(Qt::NoBrush));
                 circle->setBrush(QBrush(params::LibItemBrdColor));
                 circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
                  }

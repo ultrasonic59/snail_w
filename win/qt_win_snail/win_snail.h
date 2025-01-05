@@ -28,6 +28,7 @@
 #include "paint_scene.h"
 ///#include "myitem.h"
 #include "cust_group.h"
+#include "lib_util.h"
 
 ///======================================================================
 
@@ -71,8 +72,6 @@ protected:
 
 public:
     plotterwidget* p_CamView;
-    ///quint16 setka_delt_x;
-    ///quint16 setka_delt_y;
     CamPlotter* p_cam_plotter;
     PlotProperties PlotProp;
     quint32 cnf_flags;
@@ -229,8 +228,10 @@ signals:
 private:
     QGraphicsItem* currentItem;
     PaintScene* scene;
-    QString svg_path;
-///    cust_group* pGroup;
+    QString lib_path;
+    LibUtil lib_util;
+
+    cust_group* pGroup;
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
 

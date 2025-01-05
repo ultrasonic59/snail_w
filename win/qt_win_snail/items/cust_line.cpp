@@ -8,10 +8,8 @@
 
 #define DELT_NEAR 5
 
-
 cust_line::cust_line(QObject *parent) :
     QObject(parent), m_actionFlags(ResizeState)
-
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -46,7 +44,6 @@ void cust_line::setPreviousPosition(const QPointF previousPosition)
     m_previousPosition = previousPosition;
     emit previousPositionChanged();
 }
-
 void cust_line::setPath(const QPainterPath &path)
 {
   ///  QGraphicsPathItem::setPath(path);
@@ -77,9 +74,7 @@ void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             emit signalMove(this, dx, dy);
         }
     }
-
-
-    QGraphicsItem::mouseMoveEvent(event);
+QGraphicsItem::mouseMoveEvent(event);
 }
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)

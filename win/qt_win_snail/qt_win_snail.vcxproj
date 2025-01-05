@@ -66,7 +66,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\Qt\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtMultimedia;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -79,6 +79,14 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <CustomBuildStep>
+      <Command>-bl</Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>-verbosity:diag -bl %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -123,6 +131,7 @@
     <ClCompile Include="plotters\paint_scene.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
     <ClCompile Include="utils\colorlabel.cpp" />
+    <ClCompile Include="utils\lib_util.cpp" />
     <ClCompile Include="utils\svgreader.cpp" />
     <ClCompile Include="ViewProperties.cpp" />
     <ClCompile Include="widgets\param_ed.cpp" />
@@ -178,9 +187,8 @@
     <QtMoc Include="ViewProperties.h" />
     <ClInclude Include="snail_types.h" />
     <QtMoc Include="utils\colorlabel.h" />
-    <QtMoc Include="utils\dotsignal.h" />
     <QtMoc Include="utils\svgreader.h" />
-    <QtMoc Include="utils\dot_signal.h" />
+    <QtMoc Include="utils\lib_util.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />

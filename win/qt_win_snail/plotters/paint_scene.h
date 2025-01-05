@@ -16,7 +16,6 @@
 #include "snail_types.h"
 #include "cust_rect.h"
 #include "cust_circle.h"
-///#include "cust_point.h"
 
 class PaintScene : public QGraphicsScene
 {

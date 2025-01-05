@@ -464,12 +464,11 @@ void PaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 }
 void PaintScene::deselectItems()
 {
-    /*
-    foreach(QGraphicsItem * item, selectedItems()) {
+
+foreach(QGraphicsItem * item, selectedItems()) {
         item->setSelected(false);
-    }
-    selectedItems().clear();
-    */
+   }
+ selectedItems().clear();
 }
 void PaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
 {
@@ -482,7 +481,7 @@ void PaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
 }
 void PaintScene::keyPressEvent(QKeyEvent* event)
 {
-    /*
+#if 0
     switch (event->key()) {
     case Qt::Key_Delete: {
         foreach(QGraphicsItem * item, selectedItems()) {
@@ -492,6 +491,8 @@ void PaintScene::keyPressEvent(QKeyEvent* event)
         deselectItems();
         break;
     }
+
+#if 0
     case Qt::Key_A: {
         if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
             foreach(QGraphicsItem * item, items()) {
@@ -501,11 +502,13 @@ void PaintScene::keyPressEvent(QKeyEvent* event)
         }
         break;
     }
+#endif
     default:
         break;
     }
+#endif
     QGraphicsScene::keyPressEvent(event);
-    */
+
 }
 ///============================================================
 void PaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)

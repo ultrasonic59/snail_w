@@ -104,11 +104,13 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
 
   ///============================================
+/*
  wrk_Thread = new QThread(this);
  p_wrk=new Cwrk_wrk(m_cmd_sender);
  p_wrk->moveToThread(wrk_Thread);
  connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
  wrk_Thread->start();
+ */
  ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
 
 ///=======================================================
@@ -1287,10 +1289,50 @@ void win_snail::on_butt_test1()
 void win_snail::on_butt_test2()
 {
     qDebug() << "start test2";
- ///   pGroup->setRotation(45);
+    pGroup->setRotation(45);
  ///   pGroup->setScale(2);
 }
+void win_snail::on_butt_load()
+{
+    qDebug() << "start load";
+////cust_group* pGroup = new cust_group();
+pGroup = new cust_group();
 
+    ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
+pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+QString newPath = QFileDialog::getOpenFileName(this, tr("Open JSON"),
+        lib_path, tr("JSON files (*.json)"));
+if (newPath.isEmpty())
+     return;
+lib_path = newPath;
+QFile jsonFile(lib_path);
+if (!jsonFile.open(QIODevice::ReadOnly))
+    {
+    return;
+    }
+QByteArray byteArr = jsonFile.readAll();
+jsonFile.close();   //
+QString jsonStr = QString(byteArr);
+QJsonParseError err;
+QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+    if (doc.isArray()) {
+        QJsonArray array = doc.array();
+        for (int index = 0; index < array.size(); index++) {
+            QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+            QGraphicsItem* t_item = lib_util.getItem(ObjectValue);
+            if (t_item != nullptr) {
+                pGroup->addToGroup(t_item);
+            ///    scene->addItem(t_item);
+            }
+        }
+    }
+}
+scene->addItem(pGroup);
+}
+
+#if 0
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
@@ -1361,3 +1403,4 @@ pGroup = new cust_group();
 #endif
 
 }
+#endif

@@ -50,9 +50,7 @@ DialLib::DialLib(QWidget *parent):
     ui.item_height->set_data(reinterpret_cast<quint8*>(&params::LibItemHeight ));
     ui.item_height->set_min_max(1, 999);
     ui.item_height->show_par();
-
 ///===========================================================
-
     scene = new LibPaintScene(this,&cur_item, &cur_rej);       // 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
  
@@ -84,34 +82,14 @@ DialLib::DialLib(QWidget *parent):
     show_rej();
     show_params();
 
- ///    ui.rectangleSettings->setVisible(false);
- ///   ui.polylineSettings->setVisible(false);
-
- ///   connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
-  ///  connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
- ///   connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
-
-    connect(scene, &LibPaintScene::selectionChanged, this, &DialLib::checkSelection);
-    connect(scene, &LibPaintScene::currentActionChanged, this, &DialLib::checkActionStates);
-    connect(scene, &LibPaintScene::signalSelectItem, this, &DialLib::selectItem);
-    connect(scene, &LibPaintScene::signalNewSelectItem, this, &DialLib::selectNewItem);
     connect(ui.zoomSlider, SIGNAL(valueChanged(int)), this, SLOT(on_zoom_changed(int)));
     connect(ui.graphicsView, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
 ///=======================================
-    
     connect(ui.pushButton_grid, SIGNAL(clicked()), this, SLOT(on_grid()));
- 
     connect(scene, &LibPaintScene::signalPress, this, &DialLib::slShowBeg);
     connect(scene, &LibPaintScene::signalMove, this, &DialLib::slShowEnd);
     connect(ui.butt_clr, SIGNAL(clicked()), this, SLOT(on_clr()));
 ///===================================================================
-    
- ///   QScriptValue inputVal = m_engine.newQObject(ui.edInput);
-///    m_engine.globalObject().setProperty("input", inputVal);
-
- ///   QScriptValue outputVal = m_engine.newQObject(ui.edOutput);
- ///   m_engine.globalObject().setProperty("output", outputVal);
-
     connect(ui.ButtLoad, SIGNAL(clicked()), this, SLOT(loadScript()));
     connect(ui.ButtRun, SIGNAL(clicked()), this, SLOT(runScript()));
 ///============================================================
@@ -130,26 +108,17 @@ DialLib::DialLib(QWidget *parent):
 ///================================================================
     connect(ui.buttOpen, SIGNAL(clicked()), this, SLOT(on_butOpen_clicked()));
     connect(ui.buttSave, SIGNAL(clicked()), this, SLOT(on_butSave_clicked()));
-
 ///================================================================
-
     connect(ui.ButtSaveJ, SIGNAL(clicked()), this, SLOT(SaveJ()));
     connect(ui.ButtLoadJ, SIGNAL(clicked()), this, SLOT(LoadJ()));
-
 ///================================================================
     jsEngine = new QJSEngine(this);
 }
 
 DialLib::~DialLib()
 {
-  ////  disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
- ////   disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
- ///   disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
- ///   disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
-
+ 
 }
-///connect(ui.butt_select, SIGNAL(clicked()), this, SLOT(on_butt_select()));
-////connect(ui.butt_place, SIGNAL(clicked()), this, SLOT(on_butt_place()));
 void  DialLib::show_rej()
 {
     if (cur_rej == REJ_SELECT)
@@ -380,13 +349,9 @@ void DialLib::indexChanged(int index)
      break;
 
  }
-
-    // Do something here on ComboBox index change
 }
-///void DialLib::mousePressEvent(QGraphicsSceneMouseEvent* event)
-///{
-  ///  QGraphicsScene::mousePressEvent(event);
 ///================================================================
+#if 0
 void DialLib::checkSelection()
 {
     checkActionStates();
@@ -451,6 +416,8 @@ void DialLib::checkActionStates()
     }
 #endif
 }
+#endif
+#if 0
 void DialLib::selectItem(QGraphicsItem* item)
 {
     switch (item->type()) {
@@ -486,7 +453,7 @@ void DialLib::selectNewItem(QGraphicsItem* item)
         break;
     }
 }
-
+#endif
 void DialLib::on_butSave_clicked()
 {
 ///===================================================
@@ -540,15 +507,6 @@ void DialLib::on_butOpen_clicked()
  ///           connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
-/*
-        case QGraphicsLineItem::Type: {
-            cust_line* line = qgraphicsitem_cast<cust_line*>(item);
-            scene->addItem(line);
-            connect(line, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
-            connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
-            break;
-        }
-*/
         case QGraphicsEllipseItem::Type: {
             cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
             scene->addItem(circle);
@@ -607,45 +565,12 @@ QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
         ui.txtScript->setText(f.readAll());
     }
 
-/*
-    QString fileName = "";
-    if (ui->rbUpperDemo->isChecked()) {
-        fileName = "upper_demo.js";
-    }
-    else if (ui->rbConnectDemo->isChecked()) {
-        fileName = "connect_demo.js";
-    }
-    else if (ui->rbConnectFuncDemo->isChecked()) {
-        fileName = "connect_func_demo.js";
-    }
-
-    QFile f(":/" + fileName);
-    if (f.open(QIODevice::ReadOnly)) {
-        ui->txtScript->setText(f.readAll());
-    }
-    */
 }
 
 void DialLib::runScript() {
-#if 0
-    QLineEdit* qldl= ui.edInput;
-    QJSValue scriptVal =
-        scriptEngine.newQObject(qldl);
-    scriptEngine.globalObject().setProperty("lbl", scriptVal);
-    scriptEngine.evaluate("lbl.text = 'Hello, JavaScript! '");
-////    scriptEngine.evaluate("lÛ.show()");
-#endif
     QJSValue scriptVal = jsEngine->newQObject(scene);
     jsEngine->globalObject().setProperty("scene", scriptVal);
     QJSValue errorValue = jsEngine->evaluate(ui.txtScript->toPlainText());
-#if 0
-    QString t_str("JS");
-    QJSValue errorValue = jsEngine->evaluate(
-        "scene.sl_test3('xaxaxa'); "
- ///       "scene.sl_test1();"
-    );
-#endif
-///   QJSValue errorValue = jsEngine->evaluate("...");
     if (errorValue.isError())
     {
         qDebug() << "Error!";
@@ -653,180 +578,12 @@ void DialLib::runScript() {
             << errorValue.property("message").toString();
         qDebug() << errorValue.property("lineNumber").toInt();
     }
-    /*
-
-    ui.edInput->disconnect();
-    ui.edOutput->disconnect();
-    ui.edOutput->clear();
-
-    QScriptValue result = m_engine.evaluate(ui.txtScript->toPlainText());
-    if (result.isError()) {
-        ui.edOutput->setText(result.toString());
-    }
-    */
  }
 ///=========================================================================================
 void DialLib::SlotTest()
 {
     emit SignalTest();
 }
-/*
-rect->setRect(0, 0, params::LibItemWidth, params::LibItemHeight);
-rect->setPos(gr_point);
-rect->setBrush(QBrush(Qt::NoBrush));
-rect->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
-*/
-#if 0
-void DialLib::SlotTest1()
-{
- ////   sl_obr_cmd(QString i_cmd)
-
-///    emit SignalTest();
- ///  scene->sl_place_circle(20, 20, QPoint(100, 20), QBrush(Qt::NoBrush), Qt::blue, 2);
-
- ///   scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
-///    scene->sl_test1();
- ///   scene->sl_test3((char*)"xaxa");
- ///   scene->sl_place_rect(100, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
-
-}
-#endif
-
-QGraphicsItem* DialLib::getItem(QJsonObject& itemObj)
-{
-QString t_type = itemObj.value("type").toString();
-qDebug() << "type=" << t_type;
-
-if(t_type== "Rect")
-{
-cust_rect* rect = new cust_rect();
-bool err = false;
-
-int Width = itemObj.value("width").toInt();
-int Height = itemObj.value("height").toInt();
-rect->setRect(0, 0, Width, Height);
-QJsonObject pointObj = itemObj.value("pos").toObject();
-int xx = pointObj.value("x").toInt();
-int yy = pointObj.value("y").toInt();
-rect->setPos(QPoint(xx,yy));
-QJsonObject brushObj = itemObj.value("brush").toObject();
-QString   str_col = brushObj.value("color").toString();
-
-quint32 br_color = str_col.toUInt(&err, 16); ////brushObj.value("color").toInt();
-Qt::BrushStyle br_style = (Qt::BrushStyle)brushObj.value("style").toInt();
-rect->setBrush(QBrush(QColor(br_color), br_style));
-QJsonObject penObj = itemObj.value("pen").toObject();
-str_col= penObj.value("color").toString();
-///bool err = false;
-quint32 pen_color = str_col.toUInt( &err,16);
-
-int penWidth = penObj.value("width").toInt();
-rect->setPen(QPen(QColor(pen_color), penWidth));
-return qgraphicsitem_cast<cust_rect*>(rect);
-}
-else if(t_type == "Line")
-{
-cust_line* rect = new cust_line();
-bool err = false;
-
-}
-else if (t_type == "Circle")
-{
-
-}
-else
-{
-    return nullptr;
-///    rez = false;
-}
-///return rez;
-}
-void DialLib::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
-{
-QJsonObject objObject;
-
-switch (item->type()) {
-        case QGraphicsRectItem::Type: {
-            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
-            QRectF t_rect = rect->rect();
-            qDebug() << "rect=" << t_rect;
-            objObject.insert("type", "Rect");
-            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
-            objObject.insert("height", QJsonValue::fromVariant(t_rect.height()));
-            QBrush t_br = rect->brush();
-
-            quint32 br_color = t_br.color().rgb();
-            int br_style = t_br.style();
-            QJsonObject obj2Object;
-            obj2Object.insert("color", QString::number(br_color,16));
-            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
-            objObject.insert("brush", obj2Object);
-            QPen t_pen = rect->pen();
-            QJsonObject obj3Object;
-            quint32 pen_color = t_pen.color().rgb();
-            obj3Object.insert( "color", QString::number(pen_color, 16));
-            obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
-            objObject.insert("pen", obj3Object);
-            QJsonObject obj4Object;
-            obj4Object.insert("x", QJsonValue::fromVariant(rect->pos().x()));
-            obj4Object.insert("y", QJsonValue::fromVariant(rect->pos().y()));
-            objObject.insert("pos", obj4Object);
-         ///   itemObj.insert("rect", objObject);
-        }
-            break;
-        case QGraphicsLineItem::Type: {
-            cust_line* line = new cust_line(this);
-             objObject.insert("type", "Line");
-
-            QJsonObject obj2Object;
-            QPen t_pen = line->pen();
-            obj2Object.insert("color", QString::number(t_pen.color().rgb(),16));
-
-            obj2Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
-            objObject.insert("pen", obj2Object);
-            QJsonObject obj3Object;
-            obj3Object.insert("x", QJsonValue::fromVariant(line->line().p1().x()));
-            obj3Object.insert("y", QJsonValue::fromVariant(line->line().p1().y()));
-            objObject.insert("p1", obj3Object);
-            QJsonObject obj4Object;
-            obj3Object.insert("x", QJsonValue::fromVariant(line->line().p2().x()));
-            obj3Object.insert("y", QJsonValue::fromVariant(line->line().p2().y()));
-            objObject.insert("p2", obj4Object);
- ///           itemObj.insert("obj", objObject);
-        }
-            break;
-        case QGraphicsEllipseItem::Type: {
-            cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
-            QRectF t_rect = circle->rect();
- 
-            objObject.insert("type", "Circle");
-            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
-            objObject.insert("height", QJsonValue::fromVariant(t_rect.height()));
-            QBrush t_br = circle->brush();
-
-            quint32 br_color = t_br.color().rgb();
-            int br_style = t_br.style();
-            QJsonObject obj2Object;
-            obj2Object.insert("color", QString::number(br_color,16));
-            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
-            objObject.insert("brush", obj2Object);
-            QJsonObject obj3Object;
-
-            QPen t_pen = circle->pen();
-            obj3Object.insert("color", QString::number(t_pen.color().rgb(),16));
-            obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
-            objObject.insert("pen", obj3Object);
-            QJsonObject obj4Object;
-            obj4Object.insert("x", QJsonValue::fromVariant(circle->pos().x()));
-            obj4Object.insert("y", QJsonValue::fromVariant(circle->pos().y()));
-            objObject.insert("pos", obj4Object);
-            itemObj.insert("obj", objObject);
-           }
-           break;
-        }
-itemObj.insert("obj", objObject);
- }
-
 void DialLib::SaveJ()
 {
 QJsonObject obj1Object;
@@ -848,7 +605,7 @@ if (!jsonFile.open(QIODevice::WriteOnly))
 foreach(QGraphicsItem * item, scene->items())
 {
     qDebug() << "item=" << item->type();
-    insertItem(item, objObject);
+    lib_util.insertItem(item, objObject);
     arrayObj.append(objObject);
 }
 QJsonDocument doc(arrayObj);
@@ -867,20 +624,19 @@ void DialLib::LoadJ()
         return;
     }
     QByteArray byteArr = jsonFile.readAll();
+    jsonFile.close();   //
+
     QString jsonStr = QString(byteArr);
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
-    if (err.error == QJsonParseError::NoError && !doc.isNull())
-    {
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
         if (doc.isArray()) {
             QJsonArray array = doc.array();
             for (int index = 0; index < array.size(); index++) {
                 QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
-                QGraphicsItem* t_item= getItem(ObjectValue);
-                if (t_item!=nullptr)
-                   {
-                    ;
-                    scene->addItem(t_item);
+                QGraphicsItem* t_item= lib_util.getItem(ObjectValue);
+                if (t_item!=nullptr) {
+                     scene->addItem(t_item);
                    }
              }
         }
@@ -893,11 +649,6 @@ void DialLib::SlotTest1()
 {
     QRectF tst_rec;
 QJsonObject objObject;
-///QRectF rect()
- ////   tst_rec= scene->itemsBoundingRect();
- ///   qDebug() << "rect=" << tst_rec;
-
-  ////  scene->sl_obr_cmd(jsonString);
 ///==================================================
     foreach(QGraphicsItem * item, scene->items())
     {
@@ -914,11 +665,6 @@ QJsonObject objObject;
             objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
             objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
             QBrush t_br=rect->brush();
-///            QColor t_col = t_br.color();
-///            qDebug() << "color=" << t_col;
-     ////       BGColor.rgb()).toInt()
-  ///          int br_color=(t_br.color().rgb()).toInt();
- ///           RGB trgb= br_color = t_col..rgb();
 
             int br_color = t_br.color().rgb();
             int br_style = t_br.style();
@@ -938,15 +684,6 @@ QJsonObject objObject;
             QJsonDocument doc(objObject);
             QString jsonString = doc.toJson(QJsonDocument::Indented);
             qDebug() << "json=" << jsonString;
-
-
-  ///          rect->brush();
- ///           objObject.insert("thick", 2);
- ///           rect->setPos(point);
-            ///rect->setBrush(QBrush(Qt::NoBrush));
- ///           rect->setBrush(br);
- ///           rect->setPen(QPen(color, thick));
-
             }
            break;
         case QGraphicsPathItem::Type: {
@@ -974,32 +711,6 @@ QJsonObject objObject;
     }
 
 ///====================================================
-#if 0
-    QJsonObject recordObject;
-    QJsonObject objObject;
-
-    objObject.insert("cmd", "Rect");
-    objObject.insert("width", 120);
-    objObject.insert("height",
-           QJsonValue::fromVariant(40));
-
- ///   objObject.insert("height", 40);
-  objObject.insert("thick", 2);
-    objObject.insert("brush", 2345678);
-   objObject.insert("color", 12378);
-
-    QJsonObject obj2Object;
-    obj2Object.insert("x", 45);
-    obj2Object.insert("y", 73);
-    objObject.insert("point", obj2Object);
-
-  ///  QJsonDocument doc(recordObject);
-    QJsonDocument doc(objObject);
-    QString jsonString = doc.toJson(QJsonDocument::Indented);
-    scene->sl_obr_cmd(jsonString);
- ///   qDebug() << "json=" << jsonString;
-
-#endif
 }
 
 
