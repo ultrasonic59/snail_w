@@ -1288,8 +1288,12 @@ void win_snail::on_butt_test1()
 }
 void win_snail::on_butt_test2()
 {
-    qDebug() << "start test2";
-    pGroup->setRotation(45);
+    qDebug() << "start test2"<< pGroup->boundingRect();
+    qDebug() << "pos=" << pGroup->pos();
+
+ ///   QRectF boundingRect()
+ ///   pGroup->setTransformOriginPoint(0, 0);
+ ////   pGroup->setRotation(45);
  ///   pGroup->setScale(2);
 }
 void win_snail::on_butt_load()
