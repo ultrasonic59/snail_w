@@ -58,7 +58,9 @@
 #define NO_VALID_PAGE         ((uint16_t)0x00AB)
 
 /* Page status definitions */
-#define ERASED                ((uint16_t)0xFFFF)     /* Page is empty */
+#define _ERASED                ((uint16_t)0xFFFF)     /* Page is empty */
+#define ERASING                ((uint16_t)0xFFEE)     /* Page errasing */
+
 #define RECEIVE_DATA          ((uint16_t)0xEEEE)     /* Page is marked to receive data */
 #define VALID_PAGE            ((uint16_t)0x0000)     /* Page containing valid data */
 

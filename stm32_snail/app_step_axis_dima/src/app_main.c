@@ -15,6 +15,8 @@
 #include "misc.h"
 #include "printk.h"
 #include "emul_eeprom.h"
+#include "can_cmds.h"
+
 #define VERS          "snail_axis_v1.1"
 
 ///=======================================================================
@@ -22,7 +24,7 @@
 extern void tst_task( void *pvParameters );
 extern void can_rsv_task( void *pvParameters );
 extern void can_send_thread(void* pp);
-uint8_t boot_state=0;
+uint8_t boot_state=BOOTER_NO_BOOT;
 
 ////extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
@@ -39,7 +41,7 @@ int main( void )
 #endif
 __disable_irq();
 hw_board_init();
-boot_state=0;
+boot_state=BOOTER_NO_BOOT;
 #if STEP_X
   printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
 #elif STEP_Y

@@ -337,7 +337,7 @@ void FLASH_Lock(void)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange)
+FLASH_Status _FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange)
 {
   uint32_t tmp_psize = 0x0;
   FLASH_Status status = FLASH_COMPLETE;
@@ -402,7 +402,7 @@ FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange)
+FLASH_Status _FLASH_EraseAllSectors(uint8_t VoltageRange)
 {
   uint32_t tmp_psize = 0x0;
   FLASH_Status status = FLASH_COMPLETE;
@@ -455,7 +455,7 @@ FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data)
+FLASH_Status _FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data)
 {
   FLASH_Status status = FLASH_COMPLETE;
 
@@ -493,7 +493,7 @@ FLASH_Status FLASH_ProgramDoubleWord(uint32_t Address, uint64_t Data)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data)
+FLASH_Status _FLASH_ProgramWord(uint32_t Address, uint32_t Data)
 {
   FLASH_Status status = FLASH_COMPLETE;
 
@@ -531,7 +531,7 @@ FLASH_Status FLASH_ProgramWord(uint32_t Address, uint32_t Data)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data)
+FLASH_Status _FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data)
 {
   FLASH_Status status = FLASH_COMPLETE;
 
@@ -569,7 +569,7 @@ FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data)
   * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
   *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
   */
-FLASH_Status FLASH_ProgramByte(uint32_t Address, uint8_t Data)
+FLASH_Status _FLASH_ProgramByte(uint32_t Address, uint8_t Data)
 {
   FLASH_Status status = FLASH_COMPLETE;
 

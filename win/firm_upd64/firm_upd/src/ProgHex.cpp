@@ -473,9 +473,15 @@ s_cmd.data[1]=data->nbytes;
 s_cmd.data[2]=data->addr ;
 ////memcpy(&s_cmd.data[3],&data->data,sizeof(quint16)*data->nbytes);
 tdat=SendResCanCmd(&s_cmd,&r_cmd);
-if((tdat)&&(r_cmd.data[0]==RD_EEPROM_ANS)&& (r_cmd.data[1] > MIN_DATA_LEN))
+if((tdat)&&(r_cmd.data[0]==RD_EEPROM_ANS)&& (r_cmd.num_bytes > MIN_DATA_LEN))
 	{
-	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)*data->nbytes);
+	memcpy(data->data,&r_cmd.data[3],sizeof(quint16)* r_cmd.data[1]);
+#if 0
+	int nValue = 125;
+	QString t_str = QString::number(nValue, 16);
+///	qDebug() << "data" ;
+	qDebug() << "Error crc " << t_str;
+#endif
 	}
 else
 	data->nbytes=0;

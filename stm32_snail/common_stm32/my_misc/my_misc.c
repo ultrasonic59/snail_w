@@ -61,6 +61,7 @@ Jump_To_Application();
   
 }
 ////=================================================
+#if 1
 void FLASH_If_Init(void)
 { 
 FLASH_Unlock(); 
@@ -74,10 +75,11 @@ uint32_t FLASH_If_Erase(uint32_t StartSector)
 {
 uint32_t rez;  
 FLASH_Unlock(); 
+///printk("\n\r FLASH_If_Erase[%x] =>",StartSector); 
 
 uint32_t UserStartSector = GetSector(APP_BASE_ADDRESS);
 
-if (FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
+if (_FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
     {
     rez= ERROR_ERRASE;
     }
@@ -90,12 +92,13 @@ return rez;
 uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t DataLength)
 {
   uint32_t i = 0;
+////  printk("\n\r FLASH_If_Write[%x:%x] =>",FlashAddress,DataLength); 
 
   for (i = 0; (i < DataLength) && (*FlashAddress <= (APP_END_ADDRESS-4)); i++)
   {
     /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
        be done by word */ 
-    if (FLASH_ProgramWord(*FlashAddress, *(uint32_t*)(Data+i)) == FLASH_COMPLETE)
+    if (_FLASH_ProgramWord(*FlashAddress, *(uint32_t*)(Data+i)) == FLASH_COMPLETE)
     {
      /* Check the written value */
       if (*(uint32_t*)*FlashAddress != *(uint32_t*)(Data+i))
@@ -177,13 +180,14 @@ uint8_t num_words;
 ////uint32_t addr_prg;
 prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
 num_words=p_prg_flash_cmd->num_bytes/2;
+////  printk("\n\r prg_dat[%x] =>",num_words); 
 
 if((num_words>MAX_NUM_WORDS_PRG)||(num_words==0))
   return ERROR_NUM_BYTES_PRG;
 FLASH_Unlock();
 for(ii=0;ii<num_words;ii++)
   {
-  t_fl_stat=FLASH_ProgramHalfWord(curr_addr_prg, p_prg_flash_cmd->data[ii]); 
+  t_fl_stat=_FLASH_ProgramHalfWord(curr_addr_prg, p_prg_flash_cmd->data[ii]); 
   if(t_fl_stat!=FLASH_COMPLETE ) 
     break;
   curr_addr_prg+=2;
@@ -196,6 +200,7 @@ else
   return ERROR_FLAH_PRG;
 
 }
+#endif
 uint8_t check_ks_app(void)
 {
 uint16_t rd_ks=0;

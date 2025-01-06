@@ -76,6 +76,8 @@ public slots:
 	void on_file_path();
 	void progr_flash();
 	void set_pb_val(quint32 val);
+	void setBootMode();
+
 ///	void sl_set_curr_state(quint8);
 
 ////public slots:

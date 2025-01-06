@@ -88,7 +88,7 @@
 #define BOOTER_STATE_IDLE     0xF0
 #define BOOTER_STATE_ERASE    0xF1
 #define BOOTER_STATE_PROG     0xF2
-#define BOOTER_NO_BOOT        0xF3
+#define BOOTER_NO_BOOT        0x13
 
 
 #define STATE_IDLE           0

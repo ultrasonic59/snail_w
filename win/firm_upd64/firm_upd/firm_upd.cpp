@@ -66,6 +66,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
     connect(ui->pushButt_file, SIGNAL(clicked()), this, SLOT(on_file_path()));
     connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
 	connect(ui->pushButt_debug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+	connect(ui->butt_set_boot, SIGNAL(clicked()), this, SLOT(setBootMode()));
 
 	connect(&dial_dbg, SIGNAL(req_rd_eeprom(dat_req_t*)), this, SLOT(slot_rd_eeprom_dat(dat_req_t*)));
 	connect(&dial_dbg, SIGNAL(req_wr_eeprom(dat_req_t*)), this, SLOT(slot_wr_eeprom_dat(dat_req_t*)));
@@ -145,7 +146,8 @@ void Cfirm_upd::show_connect(bool conn)
 {
 if(conn)
 	{
-	ui->ind_conn->setStyleSheet("background-color: rgb(0, 128, 0); color: rgb(0, 128, 0)");
+////	ui->pushButton_Conn->setStyleSheet("background-color: rgb(0, 128, 0); color: rgb(0, 128, 0)");
+	ui->pushButton_Conn->setStyleSheet("background-color: rgb(0, 128, 0)");
 	ui->statusBar->showMessage("Connected to dev");
 	ui->pushButton_Conn->setText(tr("Disconnect"));
 	}
@@ -153,16 +155,19 @@ else
 	{
 	ui->statusBar->showMessage("No connected to dev");
 	ui->pushButton_Conn->setText(tr("Connect"));
-	ui->ind_conn->setStyleSheet("color: rgb(0, 128, 0)");
+	ui->pushButton_Conn->setStyleSheet("");
 	}
 }
-
+#if 0
 void Cfirm_upd::connection()
 {
 if(is_connected())
 	{
 	emit s_connect(false);
+	set_connected(false);
 ///	m_pProg_hex->SetConnected(false);
+	show_connect(false);
+
 	ui->statusBar->showMessage("No connected to dev");
 	}
 else
@@ -181,6 +186,7 @@ else
 ///	quint8 t_dev_state=0;
  ///   t_dev_state= get_curr_state();
 	if (get_curr_state()) {
+
 		if ((curr_dev_state & BOOTER_STATE_MASK) != BOOTER_STATE_MASK)
 	     {
 			ui->statusBar->showMessage("Set boot mode");
@@ -217,11 +223,67 @@ else
 		show_connect(false);
 	   }
 }
-
-////if(m_pProg_hex->isConnected())
-
- 
 }
+#endif
+void Cfirm_upd::setBootMode()
+{
+ui->statusBar->showMessage("Set boot mode");
+emit s_SetBootMode();
+QThread::msleep(100);
+if (get_curr_state()) {
+	if ((curr_dev_state & BOOTER_STATE_MASK) != BOOTER_STATE_MASK)
+	{
+		ui->label_rej->setText(tr("No Boot"));
+	}
+	else
+	{
+		ui->label_rej->setText(tr("Boot"));
+	}
+}
+else
+  ui->label_rej->setText(tr("--------"));
+}
+
+void Cfirm_upd::connection()
+{
+	if (is_connected())
+	{
+		emit s_connect(false);
+		set_connected(false);
+///		show_connect(false);
+	     ui->statusBar->showMessage("No connected to dev");
+	}
+	else
+	{
+		ui->statusBar->showMessage("Connecting to dev");
+		_COM_port_name = ui->comboBox_ports->currentText();
+		emit s_set_com_name(_COM_port_name);
+		emit s_set_can_id(ui->comboBox_axis->currentText());
+		saveSettings();
+		emit s_connect(true);
+		if (get_curr_state()) {
+			ui->statusBar->showMessage("Connected");
+			set_connected(true);
+			if ((curr_dev_state & BOOTER_STATE_MASK) != BOOTER_STATE_MASK)
+			{
+				ui->label_rej->setText(tr("No Boot"));
+			}
+			else
+			{
+				ui->label_rej->setText(tr("Boot"));
+			}
+		}
+		else
+		{
+			set_connected(false);
+			ui->label_rej->setText(tr("--------"));
+
+		}
+
+	}
+	show_connect(is_connected());
+}
+
 void Cfirm_upd::on_file_path()
 {
 QFileDialog dial_file_sel(this);
@@ -319,6 +381,12 @@ void Cfirm_upd::slot_rd_eeprom_dat(dat_req_t* odat)
 if(!is_connected())
 	return;
 ///odat->data[0]=0x4567;
+#if 0
+int nValue = 125;
+QString t_str = QString::number(nValue, 16);
+///	qDebug() << "data" ;
+qDebug() << "Error crc " << t_str;
+#endif
 emit s_rd_eeprom(odat);
 dial_dbg.req_data_rdy(odat);	
 return;

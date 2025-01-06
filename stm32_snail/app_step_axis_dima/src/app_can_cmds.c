@@ -221,7 +221,7 @@ if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   t_rd_eeprom_ans->num_dates=0;
   return;
   }
-////  printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
+  printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
 if(t_rd_eeprom_ans->num_dates==2)
   {
   if(EE_ReadVariable(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
@@ -287,11 +287,10 @@ switch(data[0]) {
         break;
      case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);
-////    printk("[stat=%x] ",boot_state);
+        printk("[stat=%x] ",boot_state);
         break;
-        
-  
-      case GO_TO_BOOTER:
+       case GO_TO_BOOTER:
+ ////       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK,0);  ///???
         goto_booter();
         break;
       case CHECK_CONN:
