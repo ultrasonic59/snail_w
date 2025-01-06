@@ -65,16 +65,11 @@ private:
 	bool setBaudRate(quint32 br);
 	bool canOpen(void);
 	bool canClose(void);
-///	bool canSendMsg(can_message_t *msg);
 
-	////bool getAllData(sensors_data_t *data ) ;
-///	QByteArray SendRes(sent_dat_t *sent_data);
 	bool SendRes(char *sent_data,char *res_data);
-///	bool CheckSetResvData(QByteArray in_data,sent_dat_t *out_data);
 	char *out_buffer;
 	char vers[256];
-///	QByteArray SetSendData(sent_dat_t *sentData);
-
+	bool wait_ans;
 public:
 	bool canSendMsg(can_message_t* msg);
 	bool canSendCmdGo(quint32 id, go_cmd_t cmd);
@@ -83,6 +78,9 @@ public slots:
 	void sl_connect(bool);
 	void SlSendCmd(can_message_t* msg);
 
+private slots:
+	void handleRead();
+	void handleError(QSerialPort::SerialPortError serialPortError);
 
 signals:
 	void s_connected(bool);

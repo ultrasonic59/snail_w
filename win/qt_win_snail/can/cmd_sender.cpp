@@ -8,15 +8,35 @@
 CcmdSender::CcmdSender(QObject *parent) : 
 			QObject(parent),
 			m_isConnected(false),
+	        wait_ans(false),
 			COM_port_name("COM16")
 {
 m_pSerialPort = new QSerialPort(this);
 out_buffer=new char[MAX_BUFF_SIZE];
+connect(m_pSerialPort, SIGNAL(readyRead()), this, SLOT(handleRead()));
+connect(m_pSerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
+
 }
+///========================================= <summary>
+void CcmdSender::handleRead()
+{
+	if (!wait_ans)
+	   {
+		QByteArray d = m_pSerialPort->readAll();
+		QString ds = d;
+		qDebug() << d << ds.simplified();
+	    }
+}
+void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
+{
+if (serialPortError == QSerialPort::ReadError) {
+	qDebug() << "I/O error on port" << m_pSerialPort->portName() << m_pSerialPort->errorString();
+   }
+}
+///=====================================
 bool CcmdSender::isConnected() const
 {
     return m_isConnected;
-
 }
 bool CcmdSender::SendRes(char *sent_data,char *res_data)
 {
@@ -25,13 +45,17 @@ if ((sent_data == 0) || (res_data == 0))
 m_pSerialPort->write(sent_data);
 if(!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
 	return false;
-if(!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
+wait_ans = true;
+if (!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
+    {
+	wait_ans = false;
 	return false;
+   }
 quint64 len = m_pSerialPort->read(res_data, MAX_BUFF_SIZE);
+wait_ans = false;
 if (len == 0)
 	return false;
 return true;
-
 }
 
 void CcmdSender::config_port()
@@ -82,7 +106,6 @@ bool CcmdSender::getVers(char *vers)
 		strcpy(vers, rsv_dat);
 	return true;  ///
 	}
-
 return false;  ///
 }
 bool CcmdSender::canOpen(void)
@@ -151,7 +174,6 @@ if (SendRes(snd_dat, rsv_dat))
 		return true;  ///
 	}
 	return false;  ///
-
 }
 
 const char* slcan_get_baud_string(quint32 bps) {

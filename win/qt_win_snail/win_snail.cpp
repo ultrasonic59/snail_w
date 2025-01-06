@@ -199,8 +199,8 @@ win_snail::~win_snail()
  m_pThread->wait(200);
  pCamThread->quit();
  pCamThread->wait(200);
- wrk_Thread->quit();
- wrk_Thread->wait(200);
+ ///wrk_Thread->quit();
+ ///wrk_Thread->wait(200);
  delete ui;
 }
 #if 0
@@ -1269,33 +1269,6 @@ void win_snail::sl_rsv_can_dat(char* idat)
 emit put_str_dial(idat);
 
 }
-void win_snail::on_butt_test1()
-{
-#if 0
-    qDebug() << "start test1";
- ///   cust_rect* rect = new cust_rect();
-    MyItem* rect = new MyItem();
-
-    currentItem = rect;
-    scene->addItem(currentItem);
-    ///connect(rect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
-    ///connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
- ////   rect->setRect(0, 0, 35, 23);
-    rect->setPos(QPoint(20,40));
-#endif
- ///   rect->setBrush(QBrush(Qt::NoBrush));
- ///   rect->setPen(QPen(Qt::red, 2));
-}
-void win_snail::on_butt_test2()
-{
-    qDebug() << "start test2"<< pGroup->boundingRect();
-    qDebug() << "pos=" << pGroup->pos();
-
- ///   QRectF boundingRect()
- ///   pGroup->setTransformOriginPoint(0, 0);
- ////   pGroup->setRotation(45);
- ///   pGroup->setScale(2);
-}
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
@@ -1335,76 +1308,92 @@ if (err.error == QJsonParseError::NoError && !doc.isNull()) {
 }
 scene->addItem(pGroup);
 }
+///=============================================
+void win_snail::keyPressEvent(QKeyEvent* event)
+{
+    switch (event->key()) {
+    case Qt::Key_A: {
+ ///       qDebug() << "Key_A";
+        pGroup->moveBy(-20, 0);
+
+       }
+     break;
+    case Qt::Key_S: {
+ ///       qDebug() << "Key_S";
+        pGroup->moveBy(0, 20);
+
+    }
+                  break;
+    case Qt::Key_W: {
+ ///       qDebug() << "Key_W";
+        pGroup->moveBy(0, -20);
+
+    }
+                  break;
+    case Qt::Key_D: {
+  ///      qDebug() << "Key_D";
+        pGroup->moveBy(20, 0);
+
+    }
+                  break;
+    }
+#if 0
+    switch (event->key()) {
+    case Qt::Key_Delete: {
+        foreach(QGraphicsItem * item, selectedItems()) {
+            removeItem(item);
+            delete item;
+        }
+        deselectItems();
+        break;
+    }
 
 #if 0
-void win_snail::on_butt_load()
-{
-    qDebug() << "start load";
-   cust_group* pGroup = new cust_group();
-pGroup = new cust_group();
-
- ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
-    pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-
-    QString newPath = QFileDialog::getOpenFileName(this, tr("Open SVG"),
-        svg_path, tr("SVG files (*.svg)"));
-    if (newPath.isEmpty())
-        return;
-    svg_path = newPath;
-    QRectF svg_rec = SvgReader::getSizes(svg_path);
-
-#if 1
-///    scene->clear();
-
- ///   scene->setSceneRect(SvgReader::getSizes(svg_path));
-
-    foreach(QGraphicsItem * item, SvgReader::getElements(svg_path)) {
-        qDebug() << "item->type=" << item->type();
-        switch (item->type()) {
-        case QGraphicsPathItem::Type: {
-            cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
-            pGroup->addToGroup(polyline);
- ///           scene->addItem(polyline);
- ///           connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
- ///           connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
-            break;
+    case Qt::Key_A: {
+        if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+            foreach(QGraphicsItem * item, items()) {
+                item->setSelected(true);
+            }
+            if (selectedItems().length() == 1) signalSelectItem(selectedItems().at(0));
         }
-                                    /*
-                                            case QGraphicsLineItem::Type: {
-                                                cust_line* line = qgraphicsitem_cast<cust_line*>(item);
-                                                scene->addItem(line);
-                                                connect(line, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
-                                                connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
-                                                break;
-                                            }
-                                    */
-        case QGraphicsEllipseItem::Type: {
-            cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
-            pGroup->addToGroup(circle);
-  ///          scene->addItem(circle);
-  ///          connect(circle, &cust_circle::clicked, scene, &LibPaintScene::signalSelectItem);
-  ///          connect(circle, &cust_circle::signalMove, scene, &LibPaintScene::slotMove);
-            break;
-        }
-        case QGraphicsRectItem::Type: {
-            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
-            pGroup->addToGroup(rect);
- ///           scene->addItem(rect);
-///            connect(rect, &cust_rect::clicked, scene, &LibPaintScene::signalSelectItem);
-///            connect(rect, &cust_rect::signalMove, scene, &LibPaintScene::slotMove);
-            break;
-        }
-        default:
-            break;
-        }
+        break;
     }
- ////   scene->update();
-    scene->addItem(pGroup);
- ///   connect(pGroup, &QGraphicsItemGroup::clicked, scene, &LibPaintScene::signalSelectItem);
- ///   connect(pGroup, &QGraphicsItemGroup::signalMove, scene, &LibPaintScene::slotMove);
-
- ///   pGroup->setPos(280, 280);
 #endif
-
+    default:
+        break;
 }
 #endif
+///    QGraphicsScene::keyPressEvent(event);
+
+}
+
+///==============================================
+void win_snail::on_butt_test1()
+{
+#if 0
+    qDebug() << "start test1";
+    ///   cust_rect* rect = new cust_rect();
+    MyItem* rect = new MyItem();
+
+    currentItem = rect;
+    scene->addItem(currentItem);
+    ///connect(rect, &cust_rect::clicked, this, &LibPaintScene::signalSelectItem);
+    ///connect(rect, &cust_rect::signalMove, this, &LibPaintScene::slotMove);
+ ////   rect->setRect(0, 0, 35, 23);
+    rect->setPos(QPoint(20, 40));
+#endif
+    ///   rect->setBrush(QBrush(Qt::NoBrush));
+    ///   rect->setPen(QPen(Qt::red, 2));
+}
+void win_snail::on_butt_test2()
+{
+    qDebug() << "start test2" << pGroup->boundingRect();
+    qDebug() << "pos=" << pGroup->pos();
+    pGroup->moveBy(20, 0);
+
+    ///   QRectF boundingRect()
+    ///   pGroup->setTransformOriginPoint(0, 0);
+    ////   pGroup->setRotation(45);
+    ///   pGroup->setScale(2);
+}
+

@@ -96,7 +96,7 @@ private:
  ///  hid_device* hid_handle;
 private:
     QThread* m_pThread;
-    QThread* wrk_Thread;
+   /// QThread* wrk_Thread;
     CcmdSender* m_cmd_sender;
     Cwrk_wrk* p_wrk;
     ////QPoint getMouseInsideCoord(QPoint inPos);
@@ -105,6 +105,8 @@ private:
  
 protected:
     void timerEvent(QTimerEvent* e);
+    virtual void keyPressEvent(QKeyEvent*);
+
     QPoint last_pn;
     QRect sel_rc;
 private:
