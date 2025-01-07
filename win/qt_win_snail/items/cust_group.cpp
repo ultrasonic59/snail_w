@@ -11,7 +11,7 @@
 
 
 cust_group::cust_group(QObject *parent) :
-    QObject(parent),Name(QString())
+    QObject(parent),Name(QString()), green_point(QPointF())
  {
   ///  setAcceptHoverEvents(true);
  ///   setFlags(ItemIsSelectable|ItemSendsGeometryChanges| ItemIsMovable);
@@ -41,7 +41,7 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 /// this->setPos(mapToScene(event->pos()));
- this->setPos(event->scenePos());
+ ///this->setPos(event->scenePos());
 }
 
 #if 0
@@ -177,6 +177,9 @@ void cust_group::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_group::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    bool sel = isSelected();
+    setSelected(!sel);
+
   //   setVisibilityGrabbers();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
@@ -264,3 +267,13 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 #endif
 }
 #endif
+
+void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+    if (isSelected()) {
+        QPen pen(Qt::red, 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+        painter->setPen(pen);
+
+        painter->drawRect(boundingRect());
+    }
+}

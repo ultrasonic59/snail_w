@@ -48,6 +48,13 @@ protected:
 private:
      QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
+  ///  virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
+public:
+    QList<QPointF> red_points;
+    QPointF  green_point;
+
     ///DotSignal *cornerGrabber[NUM_CORNERS];
 
  ///   void resizeLeft( const QPointF &pt);

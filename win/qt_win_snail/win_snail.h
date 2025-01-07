@@ -233,7 +233,7 @@ private:
     QString lib_path;
     LibUtil lib_util;
 
-    cust_group* pGroup;
+    cust_group* p_curGroup;
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
 

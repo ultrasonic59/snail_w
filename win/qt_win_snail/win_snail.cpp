@@ -17,6 +17,7 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
+    , p_curGroup(nullptr)
     ,xminusPushed(false)
     ,xminusLongPush(false)
     ,yminusPushed(false)
@@ -1336,6 +1337,14 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 
     }
                   break;
+    case Qt::Key_R: {
+        ///      qDebug() << "Key_D";
+    ///   pGroup->setTransformOriginPoint(0, 0);
+       pGroup->setRotation(45);
+
+    }
+                  break;
+
     }
 #if 0
     switch (event->key()) {
@@ -1370,6 +1379,15 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///==============================================
 void win_snail::on_butt_test1()
 {
+QPointF _center;
+if (p_curGroup != nullptr) {
+
+    double radius = p_curGroup->boundingRect().width() / 2.0;
+    _center = QPointF(p_curGroup->boundingRect().topLeft().x() + pos().x() + radius, p_curGroup->boundingRect().topLeft().y() + pos().y() + radius);
+    ///   QPointF pos = event->scenePos();
+   ///qDebug() << pGroup->boundingRect() << radius << this->pos() << pos << event->pos();
+    p_curGroup->setTransformOriginPoint(_center);
+}
 #if 0
     qDebug() << "start test1";
     ///   cust_rect* rect = new cust_rect();
@@ -1387,10 +1405,11 @@ void win_snail::on_butt_test1()
 }
 void win_snail::on_butt_test2()
 {
-    qDebug() << "start test2" << pGroup->boundingRect();
-    qDebug() << "pos=" << pGroup->pos();
-    pGroup->moveBy(20, 0);
-
+    if (p_curGroup != nullptr) {
+        qDebug() << "start test2" << p_curGroup->boundingRect();
+        qDebug() << "pos=" << p_curGroup->pos();
+///        p_curGroup->moveBy(20, 0);
+    }
     ///   QRectF boundingRect()
     ///   pGroup->setTransformOriginPoint(0, 0);
     ////   pGroup->setRotation(45);
