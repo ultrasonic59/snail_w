@@ -260,8 +260,8 @@ int obr_can_cmd(uint8_t *data)
 {
 ////uint8_t tmp;  
 switch(data[0]) {
-      case CMD_STOP:
-        put_can_ack(CMD_STOP);
+      case STOP_CMD:
+        put_can_ack(STOP_CMD);
         stop_mot_cmd();
         break;
       case GO_CMD:
@@ -283,7 +283,7 @@ switch(data[0]) {
         break;
       case SET_PARAM:
          put_can_ack(SET_PARAM);
-         set_param((set_param_cmd_t *)data);
+         set_param((set_param_cmd_t *)(data));
         break;
      case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);

@@ -65,7 +65,7 @@
 #define RD_FLASH_REQ          0xC
 #define RD_FLASH_ANS          0xD
 
-#define CMD_STOP              0xF
+#define STOP_CMD              0xF
 #define PRG_PARAM             0x10
 
 #define ON_DOZA               0x11
@@ -134,7 +134,7 @@ typedef struct  put_ack_s_{
   ack_t   ack;                         /// 
 }put_ack_t;
 
-typedef struct  set_param_cmd_s_{
+typedef __packed struct  set_param_cmd_s_{
   uint8_t   cmd;                         /// 
   uint16_t  num_par;                        /// 
   uint8_t   len_par;                     ///bytes 

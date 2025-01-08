@@ -267,6 +267,8 @@ tmp=mot_spi_rd(ADDR_MOT_CTRL);
 t_ctrl_reg->MODE=rej;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 
+printk("\n\r set_mot_rej[%x]",rej);
+
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
 }
 
@@ -306,6 +308,8 @@ else if(per<MIN_PER)
   per=MIN_PER;
 MOT_STEP_TIM ->ARR = per*2;////
 MOT_STEP_TIM ->CCR1 = per;////
+printk("\n\r set_mot_per[%x]",per);
+
 }
 
 ////=======================================================

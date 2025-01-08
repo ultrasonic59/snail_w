@@ -124,9 +124,6 @@
     <ClCompile Include="snail_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wrk_wrk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="plotters\camplotter.cpp">
       <Filter>Source Files\plotters</Filter>
     </ClCompile>
@@ -258,9 +255,6 @@
     </QtMoc>
     <QtMoc Include="csv\csv_dlg.h">
       <Filter>Header Files\csv</Filter>
-    </QtMoc>
-    <QtMoc Include="wrk_wrk.h">
-      <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="plotters\camplotter.h">
       <Filter>Header Files\plotters</Filter>

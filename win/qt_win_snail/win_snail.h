@@ -22,7 +22,7 @@
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
-#include "wrk_wrk.h"
+///#include "wrk_wrk.h"
 #include "CamPlotter.h"
 #include "cameradevice.h"
 #include "paint_scene.h"
@@ -48,6 +48,7 @@
 #define LONG_PUSH_TIME	500
 #define MOTOR_OFF false
 #define MOTOR_ON true
+#define MAX_NUM_STEP 10000000
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -98,7 +99,7 @@ private:
     QThread* m_pThread;
    /// QThread* wrk_Thread;
     CcmdSender* m_cmd_sender;
-    Cwrk_wrk* p_wrk;
+    ///Cwrk_wrk* p_wrk;
     ////QPoint getMouseInsideCoord(QPoint inPos);
 ////public slots:
 ////    void setCamImage(QImage ipm);
@@ -171,6 +172,7 @@ public slots:
     void on_butt_load();
 
     void sl_rsv_can_dat(char*);
+    void sl_state_changed();
 
 
 private slots:
@@ -213,13 +215,7 @@ protected slots:
     void cl_zminus_rel();
     void cl_zplus();
     void cl_zplus_rel();
-    void SlotLongPush_xminus();
-    void SlotLongPush_xplus();
-    void SlotLongPush_yminus();
-    void SlotLongPush_yplus();
-    void SlotLongPush_zminus();
-    void SlotLongPush_zplus();
-
+ 
 signals:
     void updateCamView(QImage);
     void s_SendCmd(can_message_t* msg);
@@ -234,8 +230,14 @@ private:
     LibUtil lib_util;
 
     cust_group* p_curGroup;
+public:
+    bool data_ready;
+    can_message_t rsv_msg;
+    dev_state_t dev_state;
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
+    void send_cmd_stop(quint32 id);
+    void send_cmd_mot_rej(quint32 id,quint8 rej);
 
 
 };

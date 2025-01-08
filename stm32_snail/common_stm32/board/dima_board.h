@@ -54,7 +54,7 @@
 #define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
-#define MIN_PER         500        
+#define MIN_PER         10        
 
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
@@ -287,7 +287,7 @@
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
 
-#define DEF_MOT_REJ   8
+#define DEF_MOT_REJ   2
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register

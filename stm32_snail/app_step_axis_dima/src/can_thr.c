@@ -66,10 +66,22 @@ switch(i_data->num_par)
    }
 return 0;
 }
+void    test_print(can_msg_t  *p_msg)
+ {
+uint8_t ii;
+    printk("\n\r ExtId[%x]",p_msg->id);
+    printk("\n\r DLC[%x]\n\r ",p_msg->len);
+    for(ii=0;ii<p_msg->len;ii++)
+      {
+      printk("[%x] ",p_msg->data[ii]);
+      }
+
+ }
+     
 ///===========================================
 void can_rsv_task( void *pvParameters )
 {
-  uint8_t ii=0;
+///  uint8_t ii=0;
 printk("\n\r can_rsv_task"); 
  for(;;)
   {
@@ -77,11 +89,13 @@ printk("\n\r can_rsv_task");
     {
     CAN_RxRdy=0;
     obr_can_cmd(CAN_RxMsg.data);
-#if 1   
+  
     printk("\n\r can_rx"); 
+    test_print(&CAN_RxMsg);
+#if 0
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
     printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
-    for(ii=0;ii<8;ii++)
+    for(ii=0;ii<CAN_RxMsg.len;ii++)
       {
       printk("[%x] ",CAN_RxMsg.data[ii]);
       }
@@ -109,8 +123,8 @@ for(;;)
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
 ////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
   CAN_wrMsg (&snd_msg);
-  
- //// test_print(&snd_msg);
+    printk("\n\r can_tx"); 
+    test_print(&snd_msg);
   
  ////  tst_print();
 ///  set_curr_dir(st.dir_outbits);

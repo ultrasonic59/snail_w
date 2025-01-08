@@ -270,6 +270,29 @@ CAN_FilterConfig(0,id,mask);
 }
 
 extern can_msg_t CAN_RxMsg;
+void state_task( void *pvParameters )
+{
+  uint8_t tmp; 
+int32_t prev_coord=0xffffffff;  
+uint8_t prev_state=0xff; 
+printk("\n\r state_task"); 
+for(;;)
+  {
+  tmp=get_conc_n();  
+  tmp<<=4;
+  cur_state&= ~CONC_MASK;
+  cur_state |= tmp;
+    if((prev_state!=cur_state)||(prev_coord!=cur_coord))
+    {
+      prev_state=cur_state;
+      prev_coord=cur_coord;
+      put_can_cmd_stat(cur_state,cur_coord);
+     }
+   else
+      msleep(50);
+  }
+
+}
 ////========================================================  
 void tst1_task( void *pvParameters )
 {

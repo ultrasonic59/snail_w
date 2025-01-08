@@ -5,11 +5,14 @@
 ////extern void addfcs16( unsigned char *cp, int len );
 /////extern int checkfcs16(unsigned char *cp, const int len );
 
-CcmdSender::CcmdSender(QObject *parent) : 
-			QObject(parent),
-			m_isConnected(false),
-	        wait_ans(false),
-			COM_port_name("COM16")
+CcmdSender::CcmdSender(bool* data_ready, can_message_t* rsv_msg, dev_state_t* dev_state) :
+           QObject(0),
+	       p_data_ready(data_ready),
+	       p_rsv_msg(rsv_msg),
+	       p_dev_state(dev_state),
+		   m_isConnected(false),
+	       wait_ans(false),
+		   COM_port_name("COM16")
 {
 m_pSerialPort = new QSerialPort(this);
 out_buffer=new char[MAX_BUFF_SIZE];
@@ -17,14 +20,38 @@ connect(m_pSerialPort, SIGNAL(readyRead()), this, SLOT(handleRead()));
 connect(m_pSerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
 
 }
-///========================================= <summary>
+///========================================= 
+bool parse_str(QString istr, can_message_t& can_message)
+{
+	bool rez = true;
+	if (istr.mid(0, 1) != 't')
+		return false;
+	istr.remove('t');
+	can_message.id= istr.mid(0, 3).toShort(0, 16);
+	can_message.dlc= istr.mid(3, 1).toShort(0, 16);
+	for (int ii = 0; ii < can_message.dlc; ii++)
+	{
+		can_message.data[ii]= istr.mid(ii*2+4,2).toShort(0, 16);
+    }
+return rez;
+}
+
+qint32 tst_coord = 0;
 void CcmdSender::handleRead()
 {
+	can_message_t t_can_message;
 	if (!wait_ans)
 	   {
 		QByteArray d = m_pSerialPort->readAll();
 		QString ds = d;
 		qDebug() << d << ds.simplified();
+		tst_coord++;
+		p_dev_state->coord[0] = tst_coord;
+		p_dev_state->coord[1] = tst_coord+4;
+		p_dev_state->coord[2] = tst_coord+5;
+		parse_str(ds, t_can_message);
+
+		emit s_state_changed();
 	    }
 }
 void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
@@ -40,6 +67,8 @@ bool CcmdSender::isConnected() const
 }
 bool CcmdSender::SendRes(char *sent_data,char *res_data)
 {
+if (m_pSerialPort->isOpen() == false)
+		return false;
 if ((sent_data == 0) || (res_data == 0))
 	return false;
 m_pSerialPort->write(sent_data);
@@ -153,7 +182,6 @@ static char* put_hex_byte(char* str, quint8 val) {
 	str = put_hex_digit(str, val);
 	return str;
 }
-
 ///==================================================
 bool CcmdSender::canSendMsg(can_message_t* msg) {
 	char snd_dat[64];
@@ -170,6 +198,8 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 *t_str++ = 0;
 if (SendRes(snd_dat, rsv_dat))
 	{
+	*p_data_ready = true;
+////	memcpy(p_rsv_msg,)
 	emit s_rsv_can_dat(rsv_dat);
 		return true;  ///
 	}
