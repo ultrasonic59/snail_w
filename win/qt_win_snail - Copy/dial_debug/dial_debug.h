@@ -19,7 +19,8 @@ class DialDebug : public QDialog
 {
 Q_OBJECT
 
-protected:
+///protected:
+public:
 	Ui::Dial_debug ui;
 
 public:

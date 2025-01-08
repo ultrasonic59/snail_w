@@ -5,33 +5,86 @@
 ////extern void addfcs16( unsigned char *cp, int len );
 /////extern int checkfcs16(unsigned char *cp, const int len );
 
-CcmdSender::CcmdSender(QObject *parent) : 
-			QObject(parent),
-			m_isConnected(false),
-			COM_port_name("COM16")
+CcmdSender::CcmdSender(bool* data_ready, can_message_t* rsv_msg, dev_state_t* dev_state) :
+           QObject(0),
+	       p_data_ready(data_ready),
+	       p_rsv_msg(rsv_msg),
+	       p_dev_state(dev_state),
+		   m_isConnected(false),
+	       wait_ans(false),
+		   COM_port_name("COM16")
 {
 m_pSerialPort = new QSerialPort(this);
 out_buffer=new char[MAX_BUFF_SIZE];
+connect(m_pSerialPort, SIGNAL(readyRead()), this, SLOT(handleRead()));
+connect(m_pSerialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
+
 }
+///========================================= 
+bool parse_str(QString istr, can_message_t& can_message)
+{
+	bool rez = true;
+	if (istr.mid(0, 1) != 't')
+		return false;
+	istr.remove('t');
+	can_message.id= istr.mid(0, 3).toShort(0, 16);
+	can_message.dlc= istr.mid(3, 1).toShort(0, 16);
+	for (int ii = 0; ii < can_message.dlc; ii++)
+	{
+		can_message.data[ii]= istr.mid(ii*2+4,2).toShort(0, 16);
+    }
+return rez;
+}
+
+qint32 tst_coord = 0;
+void CcmdSender::handleRead()
+{
+	can_message_t t_can_message;
+	if (!wait_ans)
+	   {
+		QByteArray d = m_pSerialPort->readAll();
+		QString ds = d;
+		qDebug() << d << ds.simplified();
+		tst_coord++;
+		p_dev_state->coord[0] = tst_coord;
+		p_dev_state->coord[1] = tst_coord+4;
+		p_dev_state->coord[2] = tst_coord+5;
+		parse_str(ds, t_can_message);
+
+		emit s_state_changed();
+	    }
+}
+void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
+{
+if (serialPortError == QSerialPort::ReadError) {
+	qDebug() << "I/O error on port" << m_pSerialPort->portName() << m_pSerialPort->errorString();
+   }
+}
+///=====================================
 bool CcmdSender::isConnected() const
 {
     return m_isConnected;
-
 }
 bool CcmdSender::SendRes(char *sent_data,char *res_data)
 {
+if (m_pSerialPort->isOpen() == false)
+		return false;
 if ((sent_data == 0) || (res_data == 0))
 	return false;
 m_pSerialPort->write(sent_data);
 if(!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
 	return false;
-if(!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
+wait_ans = true;
+if (!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
+    {
+	wait_ans = false;
 	return false;
-quint64 len = m_pSerialPort->read(res_data, 256);
+   }
+quint64 len = m_pSerialPort->read(res_data, MAX_BUFF_SIZE);
+wait_ans = false;
 if (len == 0)
 	return false;
 return true;
-
 }
 
 void CcmdSender::config_port()
@@ -70,7 +123,7 @@ m_isConnected = true;
 bool CcmdSender::getVers(char *vers) 
 {
 	char snd_dat[16];
-	char rsv_dat[64] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_VERS;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -82,13 +135,12 @@ bool CcmdSender::getVers(char *vers)
 		strcpy(vers, rsv_dat);
 	return true;  ///
 	}
-
 return false;  ///
 }
 bool CcmdSender::canOpen(void)
 {
 	char snd_dat[6];
-	char rsv_dat[8] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_OPEN;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -101,7 +153,7 @@ return false;  ///
 bool CcmdSender::canClose(void)
 {
 	char snd_dat[6];
-	char rsv_dat[8] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	snd_dat[0] = CMD_CLOSE;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
@@ -130,12 +182,11 @@ static char* put_hex_byte(char* str, quint8 val) {
 	str = put_hex_digit(str, val);
 	return str;
 }
-
 ///==================================================
 bool CcmdSender::canSendMsg(can_message_t* msg) {
 	char snd_dat[64];
 	char* t_str = snd_dat;
-	char rsv_dat[64] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	*t_str++ = CMD_SEND;
 	t_str = put_hex_digit(t_str, msg->id >> 8);
 	t_str = put_hex_byte(t_str, msg->id & 0xff);
@@ -147,10 +198,12 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 *t_str++ = 0;
 if (SendRes(snd_dat, rsv_dat))
 	{
+	*p_data_ready = true;
+////	memcpy(p_rsv_msg,)
+	emit s_rsv_can_dat(rsv_dat);
 		return true;  ///
 	}
 	return false;  ///
-
 }
 
 const char* slcan_get_baud_string(quint32 bps) {
@@ -171,7 +224,7 @@ const char* slcan_get_baud_string(quint32 bps) {
 bool CcmdSender::setBaudRate(quint32 bps)
 {
 	char snd_dat[16];
-	char rsv_dat[16] = { 0 };
+	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	strcpy(snd_dat, slcan_get_baud_string(bps));
 	
 	if (SendRes(snd_dat, rsv_dat))
@@ -193,4 +246,19 @@ return canSendMsg(&t_can_message);
 }
 
 ///====================================================
-
+void CcmdSender::sl_connect(bool on_off)
+{
+	if (on_off)
+		connectToDev();
+	else
+		disconnectToDev();
+	emit s_connected(m_isConnected);
+}
+void CcmdSender::sl_set_com_name(QString name)
+{
+	COM_port_name = name;
+}
+void CcmdSender::SlSendCmd(can_message_t* msg)
+{
+canSendMsg(msg);
+}

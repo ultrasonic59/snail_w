@@ -16,13 +16,13 @@
 #define FLG_ON_GRID     (0x1<<4)
 #endif
 
-#ifndef DEF_DELT_X
-#define DEF_DELT_X         10
-#endif
+///#ifndef DEF_DELT_X
+#define DEF_DELT_X         100
+///#endif
 
-#ifndef DEF_DELT_Y
-#define DEF_DELT_Y         10
-#endif
+///#ifndef DEF_DELT_Y
+#define DEF_DELT_Y         100
+///#endif
 
 #define DEF_RAD_CIRCLE     4
 #define DEF_THICK_CIRCLE   2

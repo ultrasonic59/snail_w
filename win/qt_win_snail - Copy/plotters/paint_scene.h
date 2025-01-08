@@ -1,5 +1,6 @@
-#ifndef LIBPAINTSCENE_H
-#define LIBPAINTSCENE_H
+#ifndef __PAINTSCENE_H__
+#define __PAINTSCENE_H__
+
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
@@ -15,9 +16,8 @@
 #include "snail_types.h"
 #include "cust_rect.h"
 #include "cust_circle.h"
-///#include "cust_point.h"
 
-class LibPaintScene : public QGraphicsScene
+class PaintScene : public QGraphicsScene
 {
 
 Q_OBJECT
@@ -26,8 +26,8 @@ Q_OBJECT
 ///Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit LibPaintScene(QObject* parent = 0, en_item_type* item_tipe=0, en_rej* _rej=0);
-    ~LibPaintScene();
+    explicit PaintScene(QObject* parent = 0, en_item_type* item_tipe=0, en_rej* _rej=0);
+    ~PaintScene();
 ///=======================================================
 public:
     bool on_background;
@@ -99,4 +99,4 @@ private:
 
 };
 
-#endif // LIBPAINTSCENE_H
+#endif // __PAINTSCENE_H__

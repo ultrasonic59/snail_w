@@ -87,6 +87,8 @@ win_snail::win_snail(QWidget *parent)
 connect(ui->Butt_test, SIGNAL(clicked()), this, SLOT(on_butt_test()));
 connect(ui->Butt_test1, SIGNAL(clicked()), this, SLOT(on_butt_test1()));
 connect(ui->Butt_test2, SIGNAL(clicked()), this, SLOT(on_butt_test2()));
+connect(ui->Butt_test3, SIGNAL(clicked()), this, SLOT(on_butt_test3()));
+
 connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
@@ -1354,6 +1356,28 @@ if (p_curGroup != nullptr) {
 #endif
     ///   rect->setBrush(QBrush(Qt::NoBrush));
     ///   rect->setPen(QPen(Qt::red, 2));
+}
+quint8 tmp_tst = 0;
+void win_snail::on_butt_test3()
+{
+    tmp_tst++;
+ 
+if (tmp_tst & 0x1)
+        {
+            ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+            ui->toolButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+            ui->pushButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+            ui->Butt_test3->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+        else
+        {
+            ui->butt_XMinus->setStyleSheet("background-color: red;");
+            ui->toolButton_tst->setStyleSheet("background-color: red;");
+            ui->pushButton_tst->setStyleSheet("background-color: red;");
+            ui->Butt_test3->setStyleSheet("background-color: red;");
+
+        }
+ 
 }
 void win_snail::on_butt_test2()
 {

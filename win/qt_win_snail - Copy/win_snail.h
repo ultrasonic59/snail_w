@@ -1,23 +1,34 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QSvgGenerator>
+#include <QFileDialog>
+#include <QGraphicsItem>
+#include <QMessageBox>
+
 ////#include <QCamera>
+///#include <QCameraInfo>
 
 #include "PlotterWidget.h"
-#include "ui_win_snail.h"
+#include "ui_qt_win_snail.h"
 ///======================================================================
 #include <opencv2/opencv.hpp>
 #include "hidapi.h"
 #include "dial_debug.h"
 
-#include "my_camera.h"
+///#include "my_camera.h"
 #include "hid_cmd.h"
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
-#include "wrk_wrk.h"
+///#include "wrk_wrk.h"
 #include "CamPlotter.h"
+#include "cameradevice.h"
+#include "paint_scene.h"
+///#include "myitem.h"
+#include "cust_group.h"
+#include "lib_util.h"
 
 ///======================================================================
 
@@ -33,6 +44,11 @@
 
 ////#define DEF_DELT_X 10
 ///#define DEF_DELT_Y 10
+
+#define LONG_PUSH_TIME	500
+#define MOTOR_OFF false
+#define MOTOR_ON true
+#define MAX_NUM_STEP 10000000
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -57,8 +73,6 @@ protected:
 
 public:
     plotterwidget* p_CamView;
-    ///quint16 setka_delt_x;
-    ///quint16 setka_delt_y;
     CamPlotter* p_cam_plotter;
     PlotProperties PlotProp;
     quint32 cnf_flags;
@@ -83,22 +97,26 @@ private:
  ///  hid_device* hid_handle;
 private:
     QThread* m_pThread;
-    QThread* wrk_Thread;
+   /// QThread* wrk_Thread;
     CcmdSender* m_cmd_sender;
-    Cwrk_wrk* p_wrk;
+    ///Cwrk_wrk* p_wrk;
     ////QPoint getMouseInsideCoord(QPoint inPos);
 ////public slots:
 ////    void setCamImage(QImage ipm);
  
 protected:
     void timerEvent(QTimerEvent* e);
+    virtual void keyPressEvent(QKeyEvent*);
+
     QPoint last_pn;
     QRect sel_rc;
 private:
     Ui::win_snail *ui;
 private:
+    CameraDevice* p_camera;
   ////  QCamera* pt_qcam;
-    MyCamera *pt_camera;
+///    MyCamera *pt_camera;
+
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
@@ -115,6 +133,8 @@ protected:
 private :
     bool eventFilter(QObject* obj, QEvent* event);
     void createMenus();
+    bool m_can_isConnected;
+
 private:
     QAction* actionProj;
     QAction* actionFile;
@@ -138,6 +158,7 @@ private:
 public slots:
     void on_butt_con_hid();
     void on_butt_con_can();
+    void sl_can_connected(bool iflag);
     ///===== for debug =======
     void on_value_led0_changed(int value);
     void on_value_led1_changed(int value);
@@ -146,14 +167,17 @@ public slots:
     void slot_wr_dbg(int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
     void on_butt_test();
+    void on_butt_test1();
+    void on_butt_test2();
+    void on_butt_load();
+
+    void sl_rsv_can_dat(char*);
+    void sl_state_changed();
+
 
 private slots:
-    void __selectVideoSource();
+    void selectVideoSource();
 private slots:
-    void on_cmdXPlus_pressed();
-    void on_cmdXPlus_released();
-    void on_cmdXMinus_pressed();
-    void on_cmdXMinus_released();
     void sl_show_rule_coord(QRect& rc);
     void sl_setDrawProp();
     void sl_openCsvFile();
@@ -170,10 +194,50 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
-
-
+protected:
+    bool    xminusPushed;
+    bool    xminusLongPush ;
+    bool    yminusPushed;
+    bool    yminusLongPush;
+    bool    zminusPushed;
+    bool    zminusLongPush;
+protected slots:
+    void cl_stop();
+    void cl_xminus();
+    void cl_xminus_rel();
+    void cl_xplus();
+    void cl_xplus_rel();
+    void cl_yminus();
+    void cl_yminus_rel();
+    void cl_yplus();
+    void cl_yplus_rel();
+    void cl_zminus();
+    void cl_zminus_rel();
+    void cl_zplus();
+    void cl_zplus_rel();
+ 
 signals:
     void updateCamView(QImage);
-    void sSendCmd(can_message_t* msg);
+    void s_SendCmd(can_message_t* msg);
+    void s_start(int);
+    void s_can_connect(bool);
+    void s_set_can_com_name(QString);
+    void put_str_dial(char*);
+private:
+    QGraphicsItem* currentItem;
+    PaintScene* scene;
+    QString lib_path;
+    LibUtil lib_util;
+
+    cust_group* p_curGroup;
+public:
+    bool data_ready;
+    can_message_t rsv_msg;
+    dev_state_t dev_state;
+protected:
+    void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
+    void send_cmd_stop(quint32 id);
+    void send_cmd_mot_rej(quint32 id,quint8 rej);
+
 
 };

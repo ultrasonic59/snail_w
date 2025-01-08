@@ -6,16 +6,17 @@
 
 #include "ui_dial_lib.h"
  #include "dev_interf.h"
-#include "can_message.h"
+///#include "can_message.h"
+
 #include "lib_paint_scene.h"
 #include "snail_types.h"
-///#include <QtScript/QScriptEngine>
-////#include <QJSEngine>
+#include <QtScript/QScriptEngine>
+#include <QJSEngine>
+#include "lib_util.h"
 
 namespace Ui {
     class Dial_lib;
 }
-
 
 class DialLib : public QDialog
 {
@@ -32,6 +33,7 @@ public:
 	en_item_type cur_item;
 signals:
 	void SignalTest();
+///	void s_place_rect();
 
 private slots:
 	void  on_butt_select();
@@ -47,9 +49,17 @@ private slots:
 	void  SlotTest();
 	void  on_grid();
 
+////	Q_INVOKABLE void  SlotTest1();
+	void  SlotTest1();
+	void  SlotTest2();
+	void  SlotTest3();
+	void  SlotTest4();
+
+
+
 public slots:
     void on_clr();
-
+///	Q_INVOKABLE void visibleMethod();
 private: 
 ///	en_rej cur_rej;
 	void  show_rej();
@@ -60,24 +70,31 @@ private:
 	QTimer* timer;
 	void resizeEvent(QResizeEvent* event);
 	QString path;
-
+	QString path_script;
+///	void insertItem(QGraphicsItem* item, QJsonObject& RectObj);
+///	QGraphicsItem* getItem(QJsonObject& itemObj);
 private slots:
 	void slotTimer();
 private slots:
 	void on_butSave_clicked();
 	void on_butOpen_clicked();
-	void checkSelection();
-	void checkActionStates();
-	void selectItem(QGraphicsItem* item);
-	void selectNewItem(QGraphicsItem* item);
+	///void checkSelection();
+	///void checkActionStates();
+	///void selectItem(QGraphicsItem* item);
+	///void selectNewItem(QGraphicsItem* item);
 	void slShowBeg(QPointF pnt);
 	void slShowEnd(QPointF pnt);
 private slots:
 	void loadScript();
 	void runScript();
+	void SaveJ();
+	void LoadJ();
+
 
 private:
 ///	QScriptEngine m_engine;
+	QJSEngine *jsEngine;
+	LibUtil lib_util;
 };
 
 #endif // DIAL_ED_PAR_H

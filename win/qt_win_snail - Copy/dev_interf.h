@@ -10,10 +10,10 @@
 ////#define	LEN_OSC					256
 ////#define NUM_PORTS_CON  			2
 
-#define MAX_AMPL_BUFF_LEN		32  ////16
+///#define MAX_AMPL_BUFF_LEN		32  ////16
 
-#define BASE_REPOST_SIZE            3
-#define TIME_UNIT		0.025f
+////#define BASE_REPOST_SIZE            3
+///#define TIME_UNIT		0.025f
 ///=================================================
 struct xil_dat_req_t
 {

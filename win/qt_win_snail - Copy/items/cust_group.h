@@ -1,0 +1,70 @@
+#ifndef __CUST_GROUP_H__
+#define __CUST_GROUP_H__
+
+#include <QObject>
+#include <QGraphicsItemGroup>
+
+#define NUM_CORNERS 4
+
+///class DotSignal;
+class QGraphicsSceneMouseEvent;
+class QGraphicsSceneEvent;
+
+class cust_group : public QObject, public QGraphicsItemGroup
+{
+    Q_OBJECT
+    Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
+
+public:
+    explicit cust_group(QObject * parent = 0);
+    ~cust_group();
+ 
+    QPointF previousPosition() const;
+    void setPreviousPosition(const QPointF previousPosition);
+    QString Name;
+
+ ///   void setRect(qreal x, qreal y, qreal w, qreal h);
+ ///   void setRect(const QRectF &rect);
+ ///   void setCircle(qreal x, qreal y, qreal diam);
+
+signals:
+    void groupChanged(cust_group* rect);
+    void previousPositionChanged();
+    void clicked(cust_group* rect);
+    void signalMove(QGraphicsItem *item, qreal dx, qreal dy);
+
+protected:
+   void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+  ///  QGraphicsSceneEvent
+ ///       void mouseMoveEvent(QGraphicsSceneEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+ ///   QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
+private:
+     QPointF m_previousPosition;
+    bool m_leftMouseButtonPressed;
+  ///  virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
+public:
+    QList<QPointF> red_points;
+    QPointF  green_point;
+
+    ///DotSignal *cornerGrabber[NUM_CORNERS];
+
+ ///   void resizeLeft( const QPointF &pt);
+  ///  void resizeRight( const QPointF &pt);
+ ///   void resizeBottom(const QPointF &pt);
+  ///  void resizeTop(const QPointF &pt);
+
+ ///    void setPositionGrabbers();
+  ///  void setVisibilityGrabbers();
+  ///  void hideGrabbers();
+};
+
+#endif // __CUST_GROUP_H__

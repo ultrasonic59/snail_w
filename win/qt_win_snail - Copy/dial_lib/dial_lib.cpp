@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QMessageBox>
+#include <QJSEngine>
+
 #include "svgreader.h"
 ///#include "veworkplace.h"
 ///#include "vepolyline.h"
@@ -48,9 +50,7 @@ DialLib::DialLib(QWidget *parent):
     ui.item_height->set_data(reinterpret_cast<quint8*>(&params::LibItemHeight ));
     ui.item_height->set_min_max(1, 999);
     ui.item_height->show_par();
-
 ///===========================================================
-
     scene = new LibPaintScene(this,&cur_item, &cur_rej);       // 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
  
@@ -82,40 +82,43 @@ DialLib::DialLib(QWidget *parent):
     show_rej();
     show_params();
 
- ///    ui.rectangleSettings->setVisible(false);
- ///   ui.polylineSettings->setVisible(false);
-
- ///   connect(ui.butLine, &QToolButton::clicked, [=]() {scene->setCurrentAction(HLineType); });
-  ///  connect(ui.butRectangle, &QToolButton::clicked, [=]() {scene->setCurrentAction(RectangleType); });
- ///   connect(ui.butDefault, &QToolButton::clicked, [=]() {scene->setCurrentAction(DefaultType); });
-
-    connect(scene, &LibPaintScene::selectionChanged, this, &DialLib::checkSelection);
-    connect(scene, &LibPaintScene::currentActionChanged, this, &DialLib::checkActionStates);
-    connect(scene, &LibPaintScene::signalSelectItem, this, &DialLib::selectItem);
-    connect(scene, &LibPaintScene::signalNewSelectItem, this, &DialLib::selectNewItem);
     connect(ui.zoomSlider, SIGNAL(valueChanged(int)), this, SLOT(on_zoom_changed(int)));
     connect(ui.graphicsView, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
 ///=======================================
-    
     connect(ui.pushButton_grid, SIGNAL(clicked()), this, SLOT(on_grid()));
- 
     connect(scene, &LibPaintScene::signalPress, this, &DialLib::slShowBeg);
     connect(scene, &LibPaintScene::signalMove, this, &DialLib::slShowEnd);
     connect(ui.butt_clr, SIGNAL(clicked()), this, SLOT(on_clr()));
+///===================================================================
+    connect(ui.ButtLoad, SIGNAL(clicked()), this, SLOT(loadScript()));
+    connect(ui.ButtRun, SIGNAL(clicked()), this, SLOT(runScript()));
+///============================================================
+    ui.comboBox_test->addItem("Rect", RECT_TYPE);
+    ui.comboBox_test->addItem("FRect", FRECT_TYPE);
+    ui.comboBox_test->addItem("VLine", VLINE_TYPE);
+    ui.comboBox_test->addItem("HLine", HLINE_TYPE);
+    ui.comboBox_test->addItem("Circle", CIRCLE_TYPE);
+    ui.comboBox_test->addItem("Point", POINT_TYPE);
 
-
+    connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
+    connect(ui.pushButton_test1, SIGNAL(clicked()), this, SLOT(SlotTest1()));
+    connect(ui.pushButton_test2, SIGNAL(clicked()), this, SLOT(SlotTest2()));
+    connect(ui.pushButton_test3, SIGNAL(clicked()), this, SLOT(SlotTest3()));
+    connect(ui.pushButton_test4, SIGNAL(clicked()), this, SLOT(SlotTest4()));
+///================================================================
+    connect(ui.buttOpen, SIGNAL(clicked()), this, SLOT(on_butOpen_clicked()));
+    connect(ui.buttSave, SIGNAL(clicked()), this, SLOT(on_butSave_clicked()));
+///================================================================
+    connect(ui.ButtSaveJ, SIGNAL(clicked()), this, SLOT(SaveJ()));
+    connect(ui.ButtLoadJ, SIGNAL(clicked()), this, SLOT(LoadJ()));
+///================================================================
+    jsEngine = new QJSEngine(this);
 }
 
 DialLib::~DialLib()
 {
-  ////  disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
- ////   disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
- ///   disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
- ///   disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
-
+ 
 }
-///connect(ui.butt_select, SIGNAL(clicked()), this, SLOT(on_butt_select()));
-////connect(ui.butt_place, SIGNAL(clicked()), this, SLOT(on_butt_place()));
 void  DialLib::show_rej()
 {
     if (cur_rej == REJ_SELECT)
@@ -259,11 +262,9 @@ if (cur_rej == REJ_SELECT)
         ui.label_with->setVisible(true);
         ui.label_hight->setVisible(true);
         break;
-
     }
 }
 }
-
 void  DialLib::on_butt_place()
 {
     cur_rej = REJ_PLACE;
@@ -273,7 +274,6 @@ void  DialLib::on_butt_place()
 
  ///   ui.itemSettings->setitemType(cur_item);
  ///   ui.itemSettings->setVisible(true);
-
     switch (cur_item)
     {
     case RECT_TYPE:
@@ -285,21 +285,13 @@ void  DialLib::on_butt_place()
     case HLINE_TYPE:
         scene->setCurrentAction(HLineType);
         break;
-
     }
-
 }
-
-
 void DialLib::on_clr()
 {
 scene->clear();
 scene->update();
   ////  ui.textEdit_rd_dat->clear();
-}
-void DialLib::SlotTest()
-{
- emit SignalTest();
 }
 ///============================================
 ///===========================================
@@ -318,7 +310,7 @@ void DialLib::sl_zoom_changed(double value)
 {
 ///double currentScale = uitransform().m11();
 ///    qDebug() << "zoom changed:" << value;
-ui.lineEdit_zoom->setText(QString::number(value));
+///ui.lineEdit_zoom->setText(QString::number(value));
 }
 
 void DialLib::on_zoom_changed(int value)
@@ -336,8 +328,6 @@ void DialLib::on_zoom_changed(int value)
     put_hid_cmd(&t_cmd);
 #endif
 }
-
-
 void DialLib::indexChanged(int index)
 {
  cur_item = (en_item_type)ui.comboBox_item->currentIndex();
@@ -359,13 +349,9 @@ void DialLib::indexChanged(int index)
      break;
 
  }
-
-    // Do something here on ComboBox index change
 }
-///void DialLib::mousePressEvent(QGraphicsSceneMouseEvent* event)
-///{
-  ///  QGraphicsScene::mousePressEvent(event);
 ///================================================================
+#if 0
 void DialLib::checkSelection()
 {
     checkActionStates();
@@ -430,6 +416,8 @@ void DialLib::checkActionStates()
     }
 #endif
 }
+#endif
+#if 0
 void DialLib::selectItem(QGraphicsItem* item)
 {
     switch (item->type()) {
@@ -465,9 +453,11 @@ void DialLib::selectNewItem(QGraphicsItem* item)
         break;
     }
 }
-
+#endif
 void DialLib::on_butSave_clicked()
 {
+///===================================================
+#if 1
     QString newPath = QFileDialog::getSaveFileName(this, tr("Save SVG"),
         path, tr("SVG files (*.svg)"));
 
@@ -478,8 +468,13 @@ void DialLib::on_butSave_clicked()
 
     QSvgGenerator generator;
     generator.setFileName(path);
-    generator.setSize(QSize(scene->width(), scene->height()));
-    generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
+    QRectF tst_rec;
+    tst_rec = scene->itemsBoundingRect();
+     generator.setSize(QSize(tst_rec.width(), tst_rec.height()));
+     generator.setViewBox(QRect(0, 0, tst_rec.width(), tst_rec.height()));
+
+ ///   generator.setSize(QSize(scene->width(), scene->height()));
+ ///   generator.setViewBox(QRect(0, 0, scene->width(), scene->height()));
     generator.setTitle(tr("Lib Editor"));
     generator.setDescription(tr("File created by Snail lib Editor."));
 
@@ -487,6 +482,7 @@ void DialLib::on_butSave_clicked()
     painter.begin(&generator);
     scene->render(&painter);
     painter.end();
+#endif
 }
 
 void DialLib::on_butOpen_clicked()
@@ -507,19 +503,10 @@ void DialLib::on_butOpen_clicked()
           case QGraphicsPathItem::Type: {
             cust_line* polyline = qgraphicsitem_cast<cust_line*>(item);
             scene->addItem(polyline);
-            connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
-            connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
+////            connect(polyline, &cust_line::signalPress, scene, &LibPaintScene::signalSelectItem);
+ ///           connect(polyline, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
             break;
         }
-/*
-        case QGraphicsLineItem::Type: {
-            cust_line* line = qgraphicsitem_cast<cust_line*>(item);
-            scene->addItem(line);
-            connect(line, &cust_line::clicked, scene, &LibPaintScene::signalSelectItem);
-            connect(line, &cust_line::signalMove, scene, &LibPaintScene::slotMove);
-            break;
-        }
-*/
         case QGraphicsEllipseItem::Type: {
             cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
             scene->addItem(circle);
@@ -567,34 +554,179 @@ ui.lab_dy->setText(QString("dy=%1").arg(pnt.y()));
 }
 ///=============================================================
 void DialLib::loadScript() {
-/*
-    QString fileName = "";
-    if (ui->rbUpperDemo->isChecked()) {
-        fileName = "upper_demo.js";
-    }
-    else if (ui->rbConnectDemo->isChecked()) {
-        fileName = "connect_demo.js";
-    }
-    else if (ui->rbConnectFuncDemo->isChecked()) {
-        fileName = "connect_func_demo.js";
+QString newPath = QFileDialog::getOpenFileName(this, tr("Open Script"),
+                   path_script, tr("Script files (*.js)"));
+    if (newPath.isEmpty())
+        return;
+
+    path_script = newPath;
+    QFile f(path_script);
+    if (f.open(QIODevice::ReadOnly)) {
+        ui.txtScript->setText(f.readAll());
     }
 
-    QFile f(":/" + fileName);
-    if (f.open(QIODevice::ReadOnly)) {
-        ui->txtScript->setText(f.readAll());
-    }
-    */
 }
 
 void DialLib::runScript() {
-    /*
-    ui->edInput->disconnect();
-    ui->edOutput->disconnect();
-    ui->edOutput->clear();
-
-    QScriptValue result = m_engine.evaluate(ui->txtScript->toPlainText());
-    if (result.isError()) {
-        ui->edOutput->setText(result.toString());
+    QJSValue scriptVal = jsEngine->newQObject(scene);
+    jsEngine->globalObject().setProperty("scene", scriptVal);
+    QJSValue errorValue = jsEngine->evaluate(ui.txtScript->toPlainText());
+    if (errorValue.isError())
+    {
+        qDebug() << "Error!";
+        qDebug() << errorValue.property("name").toString() << ", " \
+            << errorValue.property("message").toString();
+        qDebug() << errorValue.property("lineNumber").toInt();
     }
-    */
+ }
+///=========================================================================================
+void DialLib::SlotTest()
+{
+    emit SignalTest();
 }
+void DialLib::SaveJ()
+{
+QJsonObject obj1Object;
+QJsonObject objObject;
+QJsonArray arrayObj;
+///===================================================
+QString saveFileName = QFileDialog::getSaveFileName(this, tr("Save JSON"),
+    path, tr("JSON files (*.json)"));
+QFileInfo fileInfo(saveFileName);
+QDir::setCurrent(fileInfo.path());
+///if (saveFileName.isEmpty())
+///    return;
+QFile jsonFile(saveFileName);
+if (!jsonFile.open(QIODevice::WriteOnly))
+   {
+    return;
+   }
+///===========================================================
+foreach(QGraphicsItem * item, scene->items())
+{
+    qDebug() << "item=" << item->type();
+    lib_util.insertItem(item, objObject);
+    arrayObj.append(objObject);
+}
+QJsonDocument doc(arrayObj);
+jsonFile.write(doc.toJson(QJsonDocument::Indented));
+jsonFile.close();   //
+}
+void DialLib::LoadJ()
+{
+    QString loadFileName = QFileDialog::getOpenFileName(this, tr("Open JSON"),
+        path, tr("JSON files (*.json)"));
+    if (loadFileName.isEmpty())
+        return;
+    QFile jsonFile(loadFileName);
+    if (!jsonFile.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+    QByteArray byteArr = jsonFile.readAll();
+    jsonFile.close();   //
+
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QGraphicsItem* t_item= lib_util.getItem(ObjectValue);
+                if (t_item!=nullptr) {
+                     scene->addItem(t_item);
+                   }
+             }
+        }
+ ///       QJsonObject rootobj = doc.object();
+    }
+}
+
+
+void DialLib::SlotTest1()
+{
+    QRectF tst_rec;
+QJsonObject objObject;
+///==================================================
+    foreach(QGraphicsItem * item, scene->items())
+    {
+        qDebug() << "item=" << item->type();
+
+        switch (item->type()) {
+        case QGraphicsRectItem::Type: {
+            cust_rect* rect = qgraphicsitem_cast<cust_rect*>(item);
+            QRectF t_rect = rect->rect();
+
+            qDebug() << "rect=" << t_rect;
+
+            objObject.insert("type", "Rect");
+            objObject.insert("width", QJsonValue::fromVariant(t_rect.width()));
+            objObject.insert("hight", QJsonValue::fromVariant(t_rect.height()));
+            QBrush t_br=rect->brush();
+
+            int br_color = t_br.color().rgb();
+            int br_style = t_br.style();
+            QJsonObject obj2Object;
+            obj2Object.insert("color", QJsonValue::fromVariant(br_color));
+            obj2Object.insert("style", QJsonValue::fromVariant(br_style));
+            objObject.insert("brush", obj2Object);
+            obj2Object.empty();
+            QPen t_pen = rect->pen();
+            obj2Object.insert("color", QJsonValue::fromVariant(t_pen.color().rgb()));
+            obj2Object.insert("width", QJsonValue::fromVariant(t_pen.width() ));
+            objObject.insert("pen", obj2Object);
+            obj2Object.empty();
+            obj2Object.insert("x", QJsonValue::fromVariant(rect->pos().x()) );
+            obj2Object.insert("y", QJsonValue::fromVariant(rect->pos().y()));
+            objObject.insert("pos", obj2Object);
+            QJsonDocument doc(objObject);
+            QString jsonString = doc.toJson(QJsonDocument::Indented);
+            qDebug() << "json=" << jsonString;
+            }
+           break;
+        case QGraphicsPathItem::Type: {
+            objObject.insert("type", "Line");
+
+            }
+           break;
+        case QGraphicsEllipseItem::Type: {
+            objObject.insert("type", "Circle");
+           }
+           break;
+        }
+
+        if (item->type() == QGraphicsItem::Type)
+        {
+
+            qDebug() << "item=" << item->type();
+
+    ///        graph* myItem = dynamic_cast<graph*>(item);
+    ///        xmlWriter.writeStartElement("MyGraphicsItem");
+    ///        xmlWriter.writeAttribute("xCoord", QString::number(myItem->x()));
+    ///        xmlWriter.writeAttribute("yCoord", QString::number(myItem->y()));
+     ///       xmlWriter.writeEndElement();  //end of MyGraphicsItem
+        }
+    }
+
+///====================================================
+}
+
+
+void DialLib::SlotTest2()
+{
+ ///   emit SignalTest();
+    scene->sl_place_rect(QPoint(120, 20));
+
+}
+void DialLib::SlotTest3()
+{
+  ///  emit SignalTest();
+}
+void DialLib::SlotTest4()
+{
+ ///   emit SignalTest();
+}
+
+///=========================================================================================

@@ -20,5 +20,5 @@ void ColorLabel::mousePressEvent(QMouseEvent *event)
 
 void ColorLabel::setColor(const QColor &color)
 {
-    setStyleSheet("QLabel { background-color: " + color.name() + ";}");
+ setStyleSheet("QLabel { background-color: " + color.name() + ";}");
 }

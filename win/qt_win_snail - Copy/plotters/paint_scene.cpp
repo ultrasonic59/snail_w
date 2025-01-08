@@ -12,11 +12,11 @@
 #include "cust_rect.h"
 #include "cust_line.h"
 
-#include "lib_paint_scene.h"
+#include "paint_scene.h"
 #include "params.h"
 
 
-LibPaintScene::LibPaintScene(QObject* parent
+PaintScene::PaintScene(QObject* parent
     , en_item_type* item_type , en_rej* _rej ) : QGraphicsScene(parent)
     , p_item_type(item_type),p_rej(_rej)
      ,currentItem(nullptr)
@@ -28,20 +28,18 @@ LibPaintScene::LibPaintScene(QObject* parent
 {
 }
 
-LibPaintScene::~LibPaintScene()
+PaintScene::~PaintScene()
 {
 
 }
 ///if (event->modifiers() == Qt::AltModifier)
-/*
-lineItem->setLine(QLineF(0, 0, 100, 100));
-pen.setColor(QColor(0, 50, 230));
-lineItem->setPen(pen);
-lineItem->setFlag(QGraphicsItem::ItemIsMovable);
-*/
+
 ///===================================================================
-void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    QGraphicsScene::mousePressEvent(event);
+
+#if 0
     QGraphicsScene::mousePressEvent(event);
      QPoint gr_point;
     QPointF ev_point= event->scenePos();
@@ -62,8 +60,8 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             cust_line* line = new cust_line(this);
             currentItem = line;
             addItem(currentItem);
- ///           connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
- ///           connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+            connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+            connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
             line->setPen(QPen(params::RuleColor, params::thick_rule
                 , Qt::DashLine, Qt::FlatCap));
              QPainterPath path;
@@ -107,43 +105,30 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 cust_line* line = new cust_line(this);
                 currentItem = line;
                 addItem(currentItem);
-                connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
+                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
                 connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::FlatCap));
                 ///           , Qt::SolidLine, Qt::RoundCap));
-/*
-lineItem->setLine(QLineF(0, 0, 100, 100));
-pen.setColor(QColor(0, 50, 230));
-lineItem->setPen(pen);
-lineItem->setFlag(QGraphicsItem::ItemIsMovable);
-*/
-                line->setFlag(QGraphicsItem::ItemIsMovable);
-                line->setLine(gr_point.x(), gr_point.y(), gr_point.x(), gr_point.y() + params::LibItemWidth);
-
- ///               QPainterPath path;
- ///               path.moveTo(gr_point);
- ///               path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
-  ///              line->setPath(path);
+                QPainterPath path;
+                path.moveTo(gr_point);
+                path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
+                line->setPath(path);
                   }
                   break;
             case HLINE_TYPE: {
                 cust_line* line = new cust_line(this);
                 currentItem = line;
                 addItem(currentItem);
-                connect(line, &cust_line::clicked, this, &LibPaintScene::signalSelectItem);
+                connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
                 connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
-
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::SquareCap));
-
                 ////            , Qt::SolidLine, Qt::RoundCap));
- ///               QPainterPath path;
- ///               path.moveTo(gr_point);
- ///               path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
- ///               line->setPath(path);
-                line->setLine(gr_point.x(), gr_point.y(), gr_point.x() + params::LibItemWidth, gr_point.y());
-
+                QPainterPath path;
+                path.moveTo(gr_point);
+                path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
+                line->setPath(path);
                  }
                  break;
             case CIRCLE_TYPE: {
@@ -167,7 +152,7 @@ lineItem->setFlag(QGraphicsItem::ItemIsMovable);
                 ///            cyrcle->setRect(0, 0, pPlot_Prop->LibItemWidth, pPlot_Prop->LibItemHeight);
                 circle->setCircle(0, 0, params::LibItemWidth);
                 circle->setPos(gr_point.x() - params::LibItemWidth / 2, gr_point.y() - params::LibItemWidth / 2);
-                ///circle->setBrush(QBrush(Qt::NoBrush));
+                circle->setBrush(QBrush(Qt::NoBrush));
                 circle->setBrush(QBrush(params::LibItemBrdColor));
                 circle->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick));
                  }
@@ -177,10 +162,14 @@ lineItem->setFlag(QGraphicsItem::ItemIsMovable);
     }
     update();
     }
+#endif
 }
 
-void LibPaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+QGraphicsScene::mouseMoveEvent(event);
+
+#if 0
 QPointF ev_point = event->scenePos();
 QPointF ev_delt = QPointF(ev_point.x()- rule_beg.x(), ev_point.y() - rule_beg.y());
 if (p_rej == nullptr)
@@ -301,11 +290,12 @@ if (p_rej == nullptr)
     }
     }
 #endif
+#endif
 }
 
-void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-#if 1
+#if 0
     if (event->button() & Qt::LeftButton) 
         m_leftMouseButtonPressed = false;
     m_altPressed = false;
@@ -350,31 +340,30 @@ void LibPaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 }
 ///===================================================================
 
-void LibPaintScene::property(QGraphicsItem* _item) {
+void PaintScene::property(QGraphicsItem* _item) {
     ///   _item->sceneBoundingRect();
     qDebug() << "sceneBoundingRect" << _item->sceneBoundingRect();
     ///    QMessageBox::information(nullptr, "test1", "test1");
 }
 
-void LibPaintScene::sl_test1() {
+void PaintScene::sl_test1() {
    sl_place_rect(300, 200, QPoint(10, 20), QBrush(Qt::NoBrush), Qt::red, 2);
 
     QMessageBox::information(nullptr, "test1", "test1");
 }
 
-void LibPaintScene::sl_test2(QString t_str) {
+void PaintScene::sl_test2(QString t_str) {
     QMessageBox::information(nullptr, t_str, "test2");
 }
-void LibPaintScene::sl_test3(char* t_str) {
+void PaintScene::sl_test3(char* t_str) {
     QMessageBox::information(nullptr, t_str, "test2");
 }
 
 ///===========================================================
 
-void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
+void PaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    drawMainAxis(painter);
-#if 1
+#if 0
     if (on_background)
     {
         painter->save();
@@ -436,22 +425,22 @@ void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 }
 
 ///======================================================================
-int LibPaintScene::currentAction() const
+int PaintScene::currentAction() const
 {
     return m_currentAction;
 }
 
-QPointF LibPaintScene::previousPosition() const
+QPointF PaintScene::previousPosition() const
 {
     return m_previousPosition;
 }
 
-void LibPaintScene::setCurrentAction(const int type)
+void PaintScene::setCurrentAction(const int type)
 {
     m_currentAction = type;
    emit currentActionChanged(m_currentAction);
 }
-void LibPaintScene::setPreviousPosition(const QPointF previousPosition)
+void PaintScene::setPreviousPosition(const QPointF previousPosition)
 {
     if (m_previousPosition == previousPosition)
         return;
@@ -459,9 +448,9 @@ void LibPaintScene::setPreviousPosition(const QPointF previousPosition)
     m_previousPosition = previousPosition;
     emit previousPositionChanged();
 }
-void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+void PaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-#if 1
+#if 0
     switch (m_currentAction) {
     case HLineType:
     case RectangleType:
@@ -473,22 +462,26 @@ void LibPaintScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     }
 #endif
 }
-void LibPaintScene::deselectItems()
+void PaintScene::deselectItems()
 {
-    foreach(QGraphicsItem * item, selectedItems()) {
+
+foreach(QGraphicsItem * item, selectedItems()) {
         item->setSelected(false);
-    }
-    selectedItems().clear();
+   }
+ selectedItems().clear();
 }
-void LibPaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
+void PaintScene::slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy)
 {
+    /*
     foreach(QGraphicsItem * item, selectedItems()) {
         if (item != signalOwner) 
             item->moveBy(dx, dy);
     }
+    */
 }
-void LibPaintScene::keyPressEvent(QKeyEvent* event)
+void PaintScene::keyPressEvent(QKeyEvent* event)
 {
+#if 0
     switch (event->key()) {
     case Qt::Key_Delete: {
         foreach(QGraphicsItem * item, selectedItems()) {
@@ -498,6 +491,8 @@ void LibPaintScene::keyPressEvent(QKeyEvent* event)
         deselectItems();
         break;
     }
+
+#if 0
     case Qt::Key_A: {
         if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
             foreach(QGraphicsItem * item, items()) {
@@ -507,14 +502,18 @@ void LibPaintScene::keyPressEvent(QKeyEvent* event)
         }
         break;
     }
+#endif
     default:
         break;
     }
+#endif
     QGraphicsScene::keyPressEvent(event);
+
 }
 ///============================================================
-void LibPaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)
+void PaintScene::sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color,quint8 thick)
 {
+    /*
 cust_rect* rect = new cust_rect();
 currentItem = rect;
 addItem(currentItem);
@@ -523,23 +522,26 @@ rect->setPos(point);
 ///rect->setBrush(QBrush(Qt::NoBrush));
 rect->setBrush( br);
 rect->setPen(QPen(color, thick));
-
+*/
 }
-void LibPaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
+void PaintScene::sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
 {
+    /*
     cust_line* line = new cust_line(this);
     currentItem = line;
     addItem(currentItem);
- ////   connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
- ////   connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
+    connect(line, &cust_line::signalPress, this, &LibPaintScene::signalSelectItem);
+    connect(line, &cust_line::signalMove, this, &LibPaintScene::slotMove);
     line->setPen(QPen(color, thick, Qt::SolidLine, Qt::FlatCap));
      QPainterPath path;
     path.moveTo(point);
     path.lineTo(point.x(), point.y() + width);
     line->setPath(path);
+    */
 }
-void LibPaintScene::sl_place_circle(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
+void PaintScene::sl_place_circle(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick)
 {
+    /*
     cust_circle* circle = new cust_circle();
     currentItem = circle;
     addItem(currentItem);
@@ -549,23 +551,24 @@ void LibPaintScene::sl_place_circle(quint16 width, quint16 height, QPoint point,
     circle->setPos(point.x() - width/2, point.y() - width/2);
     circle->setBrush(br);
     circle->setPen(QPen(color,thick));
+    */
 }
 
-void LibPaintScene::sl_place_rect(QPoint point)
+void PaintScene::sl_place_rect(QPoint point)
 {
-sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
+///sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
  
 }
-void LibPaintScene::sl_place_item(QString i_str)
+void PaintScene::sl_place_item(QString i_str)
 {
  ////   sl_place_rect(100, 200, point, QBrush(Qt::NoBrush), Qt::red, 3);
     qDebug() << "sl_place_item " << i_str;
 
 }
-void LibPaintScene::sl_obr_cmd(QString i_cmd)
+void PaintScene::sl_obr_cmd(QString i_cmd)
 {
        qDebug() << "i_cmd=" << i_cmd;
-
+#if 0
 QJsonDocument doc = QJsonDocument::fromJson(i_cmd.toUtf8());
 QJsonObject json = doc.object();
 QString type_cmd = json["cmd"].toString();
@@ -594,19 +597,5 @@ else if (type_cmd == "Line")
   {
     sl_place_line(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
   }
-}
-#if 1
-void LibPaintScene::drawMainAxis(QPainter* painter)
-{
-    QColor coordLineColor(255, 0, 0, 255);
-    QColor outlineColor(0, 255, 0, 255);
-    QPen apen = QPen(coordLineColor);
-    apen.setWidth(5);
-    painter->setPen(apen);
-    painter->drawLine(QLine(0, 0, 300, 0));
-    painter->drawLine(QLine(0, 0, 0, 300));
-    painter->drawText(QPoint(5, 13), "0,0");
-    painter->drawText(QPoint(280, 13), "300");
-    painter->drawText(QPoint(5, 295), "300");
-}
 #endif
+}

@@ -1,16 +1,15 @@
-#include "cust_line.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QPainterPath>
 #include <QGraphicsScene>
-#include <QGraphicsPathItem>
 #include <QDebug>
 #include <QCursor>
-#include "dot_signal.h"
 #include "params.h"
+#include "cust_line.h"
 
+#define DELT_NEAR 5
 
 cust_line::cust_line(QObject *parent) :
-    QObject(parent)
+    QObject(parent), m_actionFlags(ResizeState)
 {
     setAcceptHoverEvents(true);
     setFlags(ItemIsSelectable|ItemSendsGeometryChanges);
@@ -19,6 +18,17 @@ cust_line::cust_line(QObject *parent) :
 cust_line::~cust_line()
 {
 
+}
+bool nearPoints(QPointF pt1, QPointF pt2)
+{
+    if ((pt1.x() >= pt2.x() - DELT_NEAR) && (pt1.x() < pt2.x() + DELT_NEAR))
+    {
+        if ((pt1.y() >= pt2.y() - DELT_NEAR) && (pt1.y() < pt2.y() + DELT_NEAR))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 QPointF cust_line::previousPosition() const
@@ -32,74 +42,50 @@ void cust_line::setPreviousPosition(const QPointF previousPosition)
         return;
 
     m_previousPosition = previousPosition;
- ///   emit previousPositionChanged();
+    emit previousPositionChanged();
 }
-
 void cust_line::setPath(const QPainterPath &path)
 {
-    QGraphicsPathItem::setPath(path);
+  ///  QGraphicsPathItem::setPath(path);
 }
-#define DELT_NEAR 5
 
-bool nearPoints(QPointF pt1, QPointF pt2)
-{
-if ((pt1.x() >= pt2.x() - DELT_NEAR) && (pt1.x() < pt2.x() + DELT_NEAR))
-    {
-    if ((pt1.y() >= pt2.y() - DELT_NEAR) && (pt1.y() < pt2.y() + DELT_NEAR))
-       {
-        return true;
-       }
-    }
-return false;
-}
 void cust_line::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-QPainterPath linePath = path();
-QPoint pt = params::closest_to_grid(event->pos());
-if (m_leftMouseButtonPressed) {
-if (nearPoints(linePath.elementAt(0),m_previousPosition))
-    {
-    linePath.setElementPositionAt(0, pt.x(), pt.y());
-    setPreviousPosition(pt);
- ///           qDebug() << "elementAt(0)"<< pt<< linePath.elementAt(1);
-    }
-else if (nearPoints(linePath.elementAt(1),m_previousPosition))
-    {
-    linePath.setElementPositionAt(1, pt.x(), pt.y());
-    setPreviousPosition(pt);
-    ///qDebug() << "elementAt(1)";
-    }
-#if 1
-else
-   {
-   auto dx = pt.x() - m_previousPosition.x();
-   auto dy = pt.y() - m_previousPosition.y();
- ///           setPreviousPosition(pt);
-           qDebug() << "dx="<< dx << "dy=" << dy;
-           qDebug() << "pt=" << pt;
-           qDebug() << "m_previousPosition=" << m_previousPosition;
+ QPoint gr_pos = params::closest_to_grid(event->scenePos());
+ ///QPointF gr_pos = event->scenePos();
 
-            moveBy(dx, dy);
-            ///       setPreviousPosition(event->scenePos());
-            setPreviousPosition(pt);
+    if (m_leftMouseButtonPressed) {
+          if(m_cornerFlags & Left)
+            {
+           setLine( gr_pos.x(), gr_pos.y(), line().p2().x(), line().p2().y());
+           setPreviousPosition(gr_pos);
+        }
+     else if (m_cornerFlags & Right)
+          {
+          setLine(line().p1().x(), line().p1().y(),gr_pos.x(), gr_pos.y());
+          setPreviousPosition(gr_pos);
+        }
+        else
+        {
+            auto dx = gr_pos.x() - m_previousPosition.x();
+            auto dy = gr_pos.y() - m_previousPosition.y();
+            setLine(line().p1().x()+dx, line().p1().y()+dy, line().p2().x() + dx, line().p2().y()+dy);
+            setPreviousPosition(gr_pos);
             emit signalMove(this, dx, dy);
+        }
     }
-#endif
-    setPath(linePath);
-    }
- QGraphicsItem::mouseMoveEvent(event);
+QGraphicsItem::mouseMoveEvent(event);
 }
 
 void cust_line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
- ///QPoint pt = params::closest_to_grid(event->pos());
- QPointF pt = event->pos();
-
-    if (event->button() & Qt::LeftButton) {
+///QPoint gr_pos=closest_to_grid(event->scenePos(), QPoint(*p_grid_x, *p_grid_y));
+QPoint gr_pos = params::closest_to_grid(event->scenePos());
+if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
-///        setPreviousPosition(event->scenePos());
-        setPreviousPosition(pt);
-        emit signalPress(this);
+
+        setPreviousPosition(gr_pos);
+        emit clicked(this);
     }
     QGraphicsItem::mousePressEvent(event);
 }
@@ -150,186 +136,159 @@ void cust_line::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void cust_line::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    /*
+/*
     if(!listDotes.isEmpty()){
-        foreach (Dot_Signal *dot, listDotes) {
+        foreach (DotSignal *dot, listDotes) {
             dot->deleteLater();
         }
         listDotes.clear();
     }
-*/
- QGraphicsItem::hoverLeaveEvent(event);
+    QGraphicsItem::hoverLeaveEvent(event);
+    */
 }
 
 void cust_line::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-///====================================================
-    QPainterPath linePath = path();
-
-#if 0
-    QPainterPath t_path = path();
-///================================================
-    QPainterPath linePath = path();
-    for (int i = 0; i < linePath.elementCount(); i++) {
-              if(listDotes.at(i) == signalOwner)
+#if  1
+    QPointF pt = event->pos();              // The current position of the mouse
+    qreal left_p;
+    qreal right_p;
+    qreal top_p;
+    qreal bot_p;
+    QLineF t_line = line();
+    
+    if (t_line.x1() < t_line.x2())
         {
-            QPointF pathPoint = linePath.elementAt(i);
-            linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
-            m_pointForCheck = i;
+            left_p = t_line.x1();
+            right_p = t_line.x2();
         }
-    }
-#else
-int num_points= linePath.elementCount();
-///qDebug() << "num_points=" << num_points;
-qreal left_p;
-qreal right_p;
-qreal top_p;
-qreal bot_p;
-
-if (num_points == 2)
-{
-if (linePath.elementAt(0).x < linePath.elementAt(1).x)
+        else
+        {
+            left_p = t_line.x2();
+            right_p = t_line.x1();
+        }
+    if (t_line.y1() < t_line.y2())
     {
-    left_p = linePath.elementAt(0).x;
-    right_p = linePath.elementAt(1).x;
+        top_p = t_line.y1();
+        bot_p = t_line.y2();
     }
-else
+    else
     {
-    left_p = linePath.elementAt(1).x;
-    right_p = linePath.elementAt(0).x;
+        top_p = t_line.y2();
+        bot_p = t_line.y1();
     }
-if (linePath.elementAt(0).y < linePath.elementAt(1).y)
-{
-    top_p = linePath.elementAt(0).y;
-    bot_p = linePath.elementAt(1).y;
-}
-else
-{
-    top_p = linePath.elementAt(1).y;
-    bot_p = linePath.elementAt(0).y;
-}
-QPointF pt = event->pos();              // The current position of the mouse
-qreal drx = pt.x() - right_p;    // Distance between the mouse and the right
-qreal dlx = pt.x() - left_p;     // Distance between the mouse and the left
+    qreal drx = pt.x() - right_p;    // Distance between the mouse and the right
+    qreal dlx = pt.x() - left_p;     // Distance between the mouse and the left
 
-qreal dby = pt.y() - top_p;      // Distance between the mouse and the top
-qreal dty = pt.y() - bot_p;   // Distance between the mouse and the bottom
-
-m_cornerFlags = 0;
-if (dby < 7 && dby > -7)
-m_cornerFlags |= Top;       // Top side
-if (dty < 7 && dty > -7)
-m_cornerFlags |= Bottom;    // Bottom side
-if (drx < 7 && drx > -7)
-m_cornerFlags |= Right;     // Right side
-if (dlx < 7 && dlx > -7)
-m_cornerFlags |= Left;      // Left side
-
-QPixmap p(":/icons/arrow-up-down.png");
-QPixmap pResult;
-QTransform trans = transform();
-if ((m_cornerFlags & Left) | (m_cornerFlags & Right))
-   {
-    trans.rotate(90);
-    pResult = p.transformed(trans);
-    setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
- ///   qDebug() << "Left-Right";
-
-   }
-else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
-   {
-    pResult = p.transformed(trans);
-    setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-   }
-else
-   setCursor(Qt::CrossCursor);
-#endif
-}
-///================================================
-
-#if 0
-     QPointF pt = event->pos();              // The current position of the mouse
-    qreal drx = pt.x() - rect().right();    // Distance between the mouse and the right
-    qreal dlx = pt.x() - rect().left();     // Distance between the mouse and the left
-
-    qreal dby = pt.y() - rect().top();      // Distance between the mouse and the top
-    qreal dty = pt.y() - rect().bottom();   // Distance between the mouse and the bottom
-
-    // If the mouse position is within a radius of 7
-    // to a certain side( top, left, bottom or right)
-    // we set the Flag in the Corner Flags Register
+    qreal dby = pt.y() - top_p;      // Distance between the mouse and the top
+    qreal dty = pt.y() - bot_p;   // Distance between the mouse and the bottom
 
     m_cornerFlags = 0;
-    if (dby < 7 && dby > -7)
+    if (dby < DELT_NEAR && dby > -DELT_NEAR)
         m_cornerFlags |= Top;       // Top side
-    if (dty < 7 && dty > -7)
+    if (dty < DELT_NEAR && dty > -DELT_NEAR)
         m_cornerFlags |= Bottom;    // Bottom side
-    if (drx < 7 && drx > -7)
+    if (drx < DELT_NEAR && drx > -DELT_NEAR)
         m_cornerFlags |= Right;     // Right side
-    if (dlx < 7 && dlx > -7)
+    if (dlx < DELT_NEAR && dlx > -DELT_NEAR)
         m_cornerFlags |= Left;      // Left side
 
-    if (m_actionFlags == ResizeState) {
-        QPixmap p(":/icons/arrow-up-down.png");
-        QPixmap pResult;
-        QTransform trans = transform();
-        switch (m_cornerFlags) {
-        case Top:
-        case Bottom:
-            pResult = p.transformed(trans);
-            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-            break;
-        case Left:
-        case Right:
-            trans.rotate(90);
-            pResult = p.transformed(trans);
-            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-            break;
-        case TopRight:
-        case BottomLeft:
-            trans.rotate(45);
-            pResult = p.transformed(trans);
-            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-            break;
-        case TopLeft:
-        case BottomRight:
-            trans.rotate(135);
-            pResult = p.transformed(trans);
-            setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
-            break;
-        default:
-            setCursor(Qt::CrossCursor);
-            break;
-        }
+    QPixmap p(":/icons/arrow-up-down.png");
+    QPixmap p1(":/icons/arrow-left-down.png");
+    QPixmap pResult;
+    QTransform trans = transform();
+    if ((m_cornerFlags & Left) | (m_cornerFlags & Right))
+    {
+        trans.rotate(90);
+        pResult = p1.transformed(trans);
+        setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
+     }
+    else if ((m_cornerFlags & Top) | (m_cornerFlags & Bottom))
+    {
+        pResult = p.transformed(trans);
+        setCursor(pResult.scaled(24, 24, Qt::KeepAspectRatio));
     }
+    else
+        setCursor(Qt::CrossCursor);
+
 #endif
-    ///================================================
-    QGraphicsItem::hoverMoveEvent(event);
+ QGraphicsItem::hoverMoveEvent(event);
 }
 
-void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void cust_line::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
- /*
+#if 0
+    ///  setPositionGrabbers();
+    ///  setVisibilityGrabbers();
+   ////   QLineF line() const;
+   ///   Q_DECL_CONSTEXPR inline QPointF p1() const;
+   ///   Q_DECL_CONSTEXPR inline QPointF p2() const;
+    QPointF n_point[2];
+    n_point[0] = line().p1();
+    n_point[1] = line().p2();
+    for (int ii = 0; ii < 2; ii++)
+    {
+        QPointF point = n_point[ii];
+        DotSignal* dot = new DotSignal(point, this);
+        connect(dot, &DotSignal::signalMove, this, &cust_line::slotMove);
+        connect(dot, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+        dot->setDotFlags(DotSignal::Movable);
+        listDotes.append(dot);
+    }
+/*
+    QPointF point2 = line().p2();
+    DotSignal* dot1 = new DotSignal(point2, this);
+    connect(dot1, &DotSignal::signalMove, this, &cust_line::slotMove);
+    connect(dot1, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+    dot1->setDotFlags(DotSignal::Movable);
+    listDotes.append(dot1);
+*/
+    /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
         QPointF point = linePath.elementAt(i);
-        Dot_Signal *dot = new Dot_Signal(point, this);
-        connect(dot, &Dot_Signal::signalMove, this, &cust_line::slotMove);
-        connect(dot, &Dot_Signal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
-        dot->setDotFlags(Dot_Signal::Movable);
+        DotSignal *dot = new DotSignal(point, this);
+        connect(dot, &DotSignal::signalMove, this, &cust_line::slotMove);
+        connect(dot, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+        dot->setDotFlags(DotSignal::Movable);
         listDotes.append(dot);
     }
 */
+#endif
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 {
+#if 0
+    QPointF n_point[2];
+    n_point[0] = line().p1();
+    n_point[1] = line().p2();
+    if (listDotes.at(0) == signalOwner)
+        {
+        setLine(line().p1().x() + dx, line().p1().y() + dy, line().p2().x() , line().p2().y() );
+    ///    m_pointForCheck = 0;
+        }
+    else
+        {
+        setLine(line().p1().x() , line().p1().y() , line().p2().x() + dx, line().p2().y() + dy);
+    ///    m_pointForCheck = 1;
+        }
+#endif
+#if 0
+    for (int ii = 0; ii < 2; ii++){
+        if (listDotes.at(ii) == signalOwner) {
+            QPointF pathPoint = n_point[ii];
+            setLine(n_point[ii].x() , n_point[ii].y(), n_point[ii].x()+dx, n_point[ii].y() + dy);
+   ///         linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
+            m_pointForCheck = ii;
+        }
+    }
+#endif
 /*
     QPainterPath linePath = path();
     for(int i = 0; i < linePath.elementCount(); i++){
-        if(listDotes.at(i) == signalOwner)
-        {
+        if(listDotes.at(i) == signalOwner){
             QPointF pathPoint = linePath.elementAt(i);
             linePath.setElementPositionAt(i, pathPoint.x() + dx, pathPoint.y() + dy);
             m_pointForCheck = i;
@@ -341,6 +300,7 @@ void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
 
 void cust_line::checkForDeletePoints()
 {
+/*
     if(m_pointForCheck != -1){
         QPainterPath linePath = path();
 
@@ -371,7 +331,81 @@ void cust_line::checkForDeletePoints()
                 setPath(newPath);
             }
         }
- ///       updateDots();
+        updateDots();
         m_pointForCheck = -1;
     }
+    */
 }
+#if 0
+void cust_line::updateDots()
+{
+    /*
+    if(!listDotes.isEmpty()){
+        foreach (DotSignal *dot, listDotes) {
+            dot->deleteLater();
+        }
+        listDotes.clear();
+    }
+    */
+/*
+    QPainterPath linePath = path();
+    for(int i = 0; i < linePath.elementCount(); i++){
+        QPointF point = linePath.elementAt(i);
+        DotSignal *dot = new DotSignal(point, this);
+        connect(dot, &DotSignal::signalMove, this, &cust_line::slotMove);
+        connect(dot, &DotSignal::signalMouseRelease, this, &cust_line::checkForDeletePoints);
+        dot->setDotFlags(DotSignal::Movable);
+        listDotes.append(dot);
+    }
+    */
+}
+#endif
+#if 0
+void cust_line::setPositionGrabbers()
+{
+    /*
+    QRectF tmpRect = rect();
+    cornerGrabber[GrabberTop]->setPos(tmpRect.left() + tmpRect.width() / 2, tmpRect.top());
+    cornerGrabber[GrabberBottom]->setPos(tmpRect.left() + tmpRect.width() / 2, tmpRect.bottom());
+    cornerGrabber[GrabberLeft]->setPos(tmpRect.left(), tmpRect.top() + tmpRect.height() / 2);
+    cornerGrabber[GrabberRight]->setPos(tmpRect.right(), tmpRect.top() + tmpRect.height() / 2);
+    cornerGrabber[GrabberTopLeft]->setPos(tmpRect.topLeft().x(), tmpRect.topLeft().y());
+    cornerGrabber[GrabberTopRight]->setPos(tmpRect.topRight().x(), tmpRect.topRight().y());
+    cornerGrabber[GrabberBottomLeft]->setPos(tmpRect.bottomLeft().x(), tmpRect.bottomLeft().y());
+    cornerGrabber[GrabberBottomRight]->setPos(tmpRect.bottomRight().x(), tmpRect.bottomRight().y());
+    */
+}
+
+void cust_line::setVisibilityGrabbers()
+{
+   /// cornerGrabber
+    /*
+    cornerGrabber[GrabberTopLeft]->setVisible(true);
+    cornerGrabber[GrabberTopRight]->setVisible(true);
+    cornerGrabber[GrabberBottomLeft]->setVisible(true);
+    cornerGrabber[GrabberBottomRight]->setVisible(true);
+
+    if (m_actionFlags == ResizeState) {
+        cornerGrabber[GrabberTop]->setVisible(true);
+        cornerGrabber[GrabberBottom]->setVisible(true);
+        cornerGrabber[GrabberLeft]->setVisible(true);
+        cornerGrabber[GrabberRight]->setVisible(true);
+    }
+    else {
+        cornerGrabber[GrabberTop]->setVisible(false);
+        cornerGrabber[GrabberBottom]->setVisible(false);
+        cornerGrabber[GrabberLeft]->setVisible(false);
+        cornerGrabber[GrabberRight]->setVisible(false);
+    }
+    */
+}
+
+void cust_line::hideGrabbers()
+{
+    /*
+    for (int i = 0; i < 8; i++) {
+        cornerGrabber[i]->setVisible(false);
+    }
+    */
+}
+#endif

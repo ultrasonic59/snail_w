@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 
-class DotSignal;
+///class DotSignal;
 class QGraphicsSceneMouseEvent;
 
 class cust_rect : public QObject, public QGraphicsRectItem
