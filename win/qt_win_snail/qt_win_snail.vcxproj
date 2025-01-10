@@ -154,7 +154,6 @@
     <ClCompile Include="snail_data.cpp" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
-    <ClCompile Include="widgets\styledtoolbutton.cpp" />
     <ClCompile Include="win_snail.cpp" />
     <ClCompile Include="main.cpp" />
     <ResourceCompile Include="qt_win_snail.rc" />
@@ -191,7 +190,6 @@
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />
     <ClInclude Include="widgets\QPushButtonColored.h" />
-    <ClInclude Include="widgets\styledtoolbutton.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icons\arrow-left-down.png" />

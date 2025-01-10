@@ -103,9 +103,6 @@
     <ClCompile Include="widgets\comboboxkey.cpp">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\styledtoolbutton.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="dial_debug\dial_debug.cpp">
       <Filter>Source Files\dial_debug</Filter>
     </ClCompile>
@@ -184,9 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
-      <Filter>Header Files\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="widgets\styledtoolbutton.h">
       <Filter>Header Files\widgets</Filter>
     </ClInclude>
     <ClInclude Include="dev_interf.h">

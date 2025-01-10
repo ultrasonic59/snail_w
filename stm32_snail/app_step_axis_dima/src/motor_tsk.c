@@ -13,7 +13,7 @@
 #include "emul_eeprom.h"
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
-uint8_t cur_mot_dir=0;
+static uint8_t cur_mot_dir=0;
 
 cmd_t cur_cmd={0};
 void mot_spi_wr(uint8_t addr,uint16_t idata);
@@ -319,9 +319,11 @@ TIM_Cmd(MOT_STEP_TIM, DISABLE);
 
 }
 volatile uint32_t num_step=0;
+
 void  set_dir_mot(uint8_t idat)
 {
 uint8_t tdat=idat&0x1;
+cur_mot_dir= tdat;
 #if 0
 #if STEP_X
   tdat=idat&DIR_X;
@@ -421,17 +423,30 @@ TIM_Cmd(MOT_STEP_TIM, ENABLE);
 void MOT_STEP_TIM_IRQHandler(void)
 { 
 uint8_t tconc;
+tconc=  get_conc_n();
+#if 0
 if(ena_check_conc)
 {
-tconc=  get_conc_n();
+///tconc=  get_conc_n();
 if(tconc & MASK_CON !=0x0)
   num_step=0;
 }
+#endif
+  if((cur_mot_dir&0x1)==0)
+    {
+      if(tconc & MASK_CON1 !=0x0)
+           num_step=0;
+    }
+  else
+     {
+     if(tconc & MASK_CON0 !=0x0)
+           num_step=0;
+     }
 if(num_step)
   {
   num_step--;
   
-  if(cur_mot_dir)
+  if((cur_mot_dir&0x1)==0)
     cur_coord++;
   else
     cur_coord--;

@@ -107,6 +107,9 @@ Cfirm_upd::~Cfirm_upd()
 {
 ///if(m_pProg_hex->isConnected())
 ////	m_pProg_hex->SetConnected(false);
+	m_pThread->quit();
+	m_pThread->wait(200);
+
 saveSettings();
 }
 

@@ -49,11 +49,25 @@
 #define DIR_PLUS            0
 #define DIR_MINUS           1
 ///============================================
-#define X_AXIS_CAN_ID   ((0x1 << 0) << 5)   ///0x20
-#define Y_AXIS_CAN_ID   ((0x1 << 1) << 5)   ///0x40
-#define Z_AXIS_CAN_ID    ((0x1 << 2) << 5)  /// 0x80
+#define XX          0
+#define YY          1
+#define ZZ          2
+#define NOT_AXIS          10
+
+#define AXIS_X           (0x1<<XX)
+#define AXIS_Y           (0x1<<YY)
+#define AXIS_Z           (0x1<<ZZ)
+#define DOZA_ID          (0x1<<3)
+
+///#define X_AXIS          0
+///#define Y_AXIS          1
+///#define Z_AXIS          2
+
+#define X_AXIS_CAN_ID     ((0x1 << XX) << 5)   ///0x20
+#define Y_AXIS_CAN_ID     ((0x1 << YY) << 5)   ///0x40
+#define Z_AXIS_CAN_ID     ((0x1 << ZZ) << 5)  /// 0x80
 #define DOZA_CAN_ID          ((0x1 << 3) << 5)   ///0x100
-#define NUM_AXIS   (3+1)    ///x,y,z +doza
+#define NUM_AXIS          (3)    ///x,y,z 
 
 struct  go_cmd_t {
 	quint8  cmd;                       /// 
@@ -61,10 +75,21 @@ struct  go_cmd_t {
 	quint16  step_per;                 /// period step
 	quint32  steps;                 /// steps X,Y , Z 
 };
+#define STATE_IDLE           0
+#define STATE_READY          1
+#define STATE_MOVE           2
+#define STATE_ERROR          3
+#define STATE_BOOT           4
+#define STATE_MASK           0xF
+#define CONC_MASK            0x30
+
+#define CONC0_FLG            (0x1<<4)
+#define CONC1_FLG            (0x1<<5)
+
 
 struct  dev_state_t {
-quint8  states[NUM_AXIS];                       /// 
-qint32  coord[NUM_AXIS];                 /// steps X,Y , Z 
+quint8  states[NUM_AXIS+1];                       /// 
+qint32  coord[NUM_AXIS+1];                 /// steps X,Y , Z 
 };
 
 class CcmdSender : public QObject

@@ -180,6 +180,10 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
  connect(m_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
 
+ connect(ui->butt_clr_x, SIGNAL(pressed()), this, SLOT(cl_clr_x()));
+ connect(ui->butt_clr_y, SIGNAL(pressed()), this, SLOT(cl_clr_y()));
+ connect(ui->butt_clr_z, SIGNAL(pressed()), this, SLOT(cl_clr_z()));
+
  pCamThread->start();
  ///======================================================
  scene = new PaintScene(this);       // 
@@ -208,22 +212,78 @@ win_snail::~win_snail()
  ///wrk_Thread->wait(200);
  delete ui;
 }
+void win_snail::cl_clr_x()
+{
+  send_cmd_set_coord(X_AXIS_CAN_ID, 0);
+}
+void win_snail::cl_clr_y()
+{
+    send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
+}
+void win_snail::cl_clr_z()
+   {
+    send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
+   }
+
+
 void win_snail::sl_state_changed()
 {
-    ui->le_x->setText(QString::number(dev_state.coord[0]));
-    ui->le_y->setText(QString::number(dev_state.coord[1]));
-    ui->le_z->setText(QString::number(dev_state.coord[2]));
-/*
-    if (dev_state.coord[0] & 0x1)
-    {
+    ui->le_x->setText(QString::number(dev_state.coord[XX]));
+    ui->le_y->setText(QString::number(dev_state.coord[YY]));
+    ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
+///================== x =====================================
+    if (dev_state.states[XX] & CONC0_FLG)
+       {
+        ui->butt_XMinus->setStyleSheet("background-color: red;");
+       }
+    else
+        {
         ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-
+    }
+    if (dev_state.states[XX] & CONC1_FLG)
+        {
+        ui->butt_XPlus->setStyleSheet("background-color: red;");
+        }   
+    else
+       {
+        ui->butt_XPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+       }
+    ///================== y =====================================
+    if (dev_state.states[YY] & CONC0_FLG)
+    {
+        ui->butt_YMinus->setStyleSheet("background-color: red;");
     }
     else
     {
-        ui->butt_XMinus->setStyleSheet("background-color: red;");
+        ui->butt_YMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
     }
- */
+    if (dev_state.states[YY] & CONC1_FLG)
+    {
+        ui->butt_YPlus->setStyleSheet("background-color: red;");
+    }
+    else
+    {
+        ui->butt_YPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    }
+    ///================== z =====================================
+    if (dev_state.states[ZZ] & CONC0_FLG)
+    {
+        ui->butt_ZMinus->setStyleSheet("background-color: red;");
+    }
+    else
+    {
+        ui->butt_ZMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    }
+    if (dev_state.states[ZZ] & CONC1_FLG)
+    {
+        ui->butt_ZPlus->setStyleSheet("background-color: red;");
+    }
+    else
+    {
+        ui->butt_ZPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    }
+
+
 }
 void win_snail::timerEvent(QTimerEvent* e)
 {
@@ -894,6 +954,9 @@ void win_snail::cl_stop()
 send_cmd_stop(X_AXIS_CAN_ID );
 
 }
+#define MAX_WAIT_ANS 100
+#define MSLEEP_TIME 10
+
 void win_snail::send_cmd_go(quint32 id,quint8 dir, quint16 len_step, quint32 num_step)
 {
     can_message_t t_can_message;
@@ -911,7 +974,14 @@ void win_snail::send_cmd_go(quint32 id,quint8 dir, quint16 len_step, quint32 num
     t_can_message.data[7] = (num_step >> 24) & 0xff;
     data_ready = false;
     emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if(wait_rdy_cnt > MAX_WAIT_ANS)
+          break;
+    };
 }
 void win_snail::send_cmd_stop(quint32 id)
 {
@@ -923,7 +993,14 @@ void win_snail::send_cmd_stop(quint32 id)
     t_can_message.data[0] = STOP_CMD;
     data_ready = false;
     emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
 
 }
 void win_snail::send_cmd_mot_rej(quint32 id, quint8 rej) {
@@ -942,9 +1019,43 @@ void win_snail::send_cmd_mot_rej(quint32 id, quint8 rej) {
     t_can_message.data[7] = 0;
     data_ready = false;
     emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
 
 }
+void win_snail::send_cmd_set_coord(quint32 id, quint32 coord) {
+    can_message_t t_can_message;
+    t_can_message.id = id;
+    t_can_message.dlc = 8;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+    t_can_message.data[0] = SET_PARAM;
+    t_can_message.data[1] = SET_COORD;
+    t_can_message.data[2] = 0;
+    t_can_message.data[3] = 4;
+    t_can_message.data[4] = coord&0xff;
+    t_can_message.data[5] = (coord>>8) & 0xff;
+    t_can_message.data[6] = (coord >> 16) & 0xff;;
+    t_can_message.data[7] = (coord >> 24) & 0xff;;
+    data_ready = false;
+    emit s_SendCmd(&t_can_message);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
+
+}
+
 ///=================== X ===========================
 void win_snail::cl_xplus()
 {
@@ -1364,17 +1475,19 @@ void win_snail::on_butt_test3()
  
 if (tmp_tst & 0x1)
         {
-            ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-            ui->toolButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-            ui->pushButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-            ui->Butt_test3->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+  ///  ui->butt_XMinus_2->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+  ///          ui->toolButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+   ////         ui->pushButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    ///        ui->Butt_test3->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
         }
         else
         {
+  ////          ui->butt_XMinus_2->setStyleSheet("background-color: red;");
             ui->butt_XMinus->setStyleSheet("background-color: red;");
-            ui->toolButton_tst->setStyleSheet("background-color: red;");
-            ui->pushButton_tst->setStyleSheet("background-color: red;");
-            ui->Butt_test3->setStyleSheet("background-color: red;");
+  ///          ui->toolButton_tst->setStyleSheet("background-color: red;");
+   ///         ui->pushButton_tst->setStyleSheet("background-color: red;");
+  ////         ui->Butt_test3->setStyleSheet("background-color: red;");
 
         }
  

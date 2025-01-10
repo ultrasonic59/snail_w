@@ -195,6 +195,10 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
+    void cl_clr_x();
+    void cl_clr_y();
+    void cl_clr_z();
+
 protected:
     bool    xminusPushed;
     bool    xminusLongPush ;
@@ -239,6 +243,7 @@ protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
     void send_cmd_stop(quint32 id);
     void send_cmd_mot_rej(quint32 id,quint8 rej);
+    void send_cmd_set_coord(quint32 id, quint32 coord);
 
 
 };
