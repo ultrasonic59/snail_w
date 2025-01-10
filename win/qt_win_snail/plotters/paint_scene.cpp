@@ -38,6 +38,8 @@ PaintScene::~PaintScene()
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mousePressEvent(event);
+    ///QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
+    QGraphicsItem* item = itemAt(event->pos(), QTransform());
 
 #if 0
     QGraphicsScene::mousePressEvent(event);
@@ -360,9 +362,46 @@ void PaintScene::sl_test3(char* t_str) {
 }
 
 ///===========================================================
+#if 1
+void PaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
+{
+    painter->save();
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(2);
+    painter->setPen(apen);
+  ///  qreal left = rect.left();
+  ///  qreal right = rect.right();
+    painter->drawLine(rect.left(), rect.top(), rect.right(), rect.top());
+    painter->drawLine(rect.left(), rect.top(), rect.left(), rect.bottom());
+
+/*
+    for (int x = rect.left(); x < rect.right(); x += params::lib_grid_delt_x) {
+        painter->drawLine(x, rect.top(), x, rect.bottom());
+    }
+*/
+    painter->restore();
+
+#if 0
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(5);
+    painter->setPen(apen);
+    painter->drawLine(QLine(0, 0, 300, 0));
+    painter->drawLine(QLine(0, 0, 0, 300));
+    painter->drawText(QPoint(5, 13), "0,0");
+    painter->drawText(QPoint(280, 13), "300");
+    painter->drawText(QPoint(5, 295), "300");
+#endif
+}
+#endif
 
 void PaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
+  drawMainAxis(painter,rect);
+
 #if 0
     if (on_background)
     {

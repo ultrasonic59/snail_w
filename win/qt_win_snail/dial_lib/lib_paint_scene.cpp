@@ -373,7 +373,7 @@ void LibPaintScene::sl_test3(char* t_str) {
 
 void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    drawMainAxis(painter);
+  ///  drawMainAxis(painter,rect);
 #if 1
     if (on_background)
     {
@@ -595,9 +595,24 @@ else if (type_cmd == "Line")
     sl_place_line(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
   }
 }
-#if 1
-void LibPaintScene::drawMainAxis(QPainter* painter)
+#if 0
+void LibPaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
 {
+    painter->save();
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(5);
+    painter->setPen(apen);
+    qreal left = rect.left();
+    qreal right = rect.right();
+    for (int x = rect.left(); x < rect.right(); x += params::lib_grid_delt_x) {
+        painter->drawLine(x, rect.top(), x, rect.bottom());
+    }
+
+    painter->restore();
+
+#if 0
     QColor coordLineColor(255, 0, 0, 255);
     QColor outlineColor(0, 255, 0, 255);
     QPen apen = QPen(coordLineColor);
@@ -608,5 +623,71 @@ void LibPaintScene::drawMainAxis(QPainter* painter)
     painter->drawText(QPoint(5, 13), "0,0");
     painter->drawText(QPoint(280, 13), "300");
     painter->drawText(QPoint(5, 295), "300");
+#endif
+}
+#endif
+#if 0
+void LibPaintScene::drawBackground(QPainter* painter, const QRectF& rect)
+{
+    drawMainAxis(painter, rect);
+#if 1
+    if (on_background)
+    {
+        painter->save();
+
+        painter->fillRect(rect, QColor(200, 220, 255));
+
+        // Draw a grid
+        QPen pen(params::LibGridColor);
+        pen.setStyle(Qt::DashLine);
+        painter->setPen(pen);
+        for (int x = rect.left(); x < rect.right(); x += params::lib_grid_delt_x) {
+            painter->drawLine(x, rect.top(), x, rect.bottom());
+        }
+        for (int y = rect.top(); y < rect.bottom(); y += params::lib_grid_delt_y) {
+            painter->drawLine(rect.left(), y, rect.right(), y);
+        }
+        painter->restore();
+    }
+#endif
+#if 0
+    ////    Q_UNUSED(rect);
+    QVector <qreal> dashes;
+    dashes << 2 << 2 << 2 << 2;
+    ////dashes << 4 << 4 << 4 << 4;
+
+    QPen pen;
+    ////   pen.setColor(QColor(60, 60, 60));
+    pen.setColor(pPlot_Prop->LibGridColor);
+    pen.setWidth(1);
+    pen.setDashPattern(dashes);
+
+    painter->setPen(pen);
+    qreal left = rect.left();
+    qreal right = rect.right();
+    ///  painter->fillRect(rect, Qt::darkGray);
+    painter->fillRect(rect, pPlot_Prop->LibBGColor);
+
+    ///   for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_x)
+    for (int i = left; i < right; i += params::lib_grid_delt_x)
+    {
+        painter->drawLine(left, i, right, i);
+    }
+    ///    for (int i = left; i < right; i += pPlot_Prop->lib_grid_delt_y)
+    for (int i = left; i < right; i += params::lib_grid_delt_y)
+    {
+        painter->drawLine(i, left, i, right);
+    }
+    /*
+        for (int i = left; i < 2068; i += 20)
+        {
+            painter->drawLine(left, i, 2068, i);
+        }
+        for (int i = left; i < 2068; i += 20)
+        {
+            painter->drawLine(i, left, i, 2068);
+        }
+        */
+#endif
 }
 #endif
