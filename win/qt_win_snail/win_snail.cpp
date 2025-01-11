@@ -25,6 +25,7 @@ win_snail::win_snail(QWidget *parent)
     ,zminusPushed(false)
     ,zminusLongPush(false)
     , m_can_isConnected(false)
+    , on_esc_key(false)
     , data_ready(false)
 
   {
@@ -184,6 +185,11 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_clr_y, SIGNAL(pressed()), this, SLOT(cl_clr_y()));
  connect(ui->butt_clr_z, SIGNAL(pressed()), this, SLOT(cl_clr_z()));
 
+ connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(cl_go_x()));
+ connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(cl_go_y()));
+ connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(cl_go_z()));
+ connect(ui->butt_home, SIGNAL(pressed()), this, SLOT(cl_go_home()));
+
  pCamThread->start();
  ///======================================================
  scene = new PaintScene(this);       // 
@@ -212,18 +218,6 @@ win_snail::~win_snail()
  ///wrk_Thread->wait(200);
  delete ui;
 }
-void win_snail::cl_clr_x()
-{
-  send_cmd_set_coord(X_AXIS_CAN_ID, 0);
-}
-void win_snail::cl_clr_y()
-{
-    send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
-}
-void win_snail::cl_clr_z()
-   {
-    send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
-   }
 
 
 void win_snail::sl_state_changed()
@@ -954,6 +948,7 @@ void win_snail::cl_stop()
 send_cmd_stop(X_AXIS_CAN_ID );
 
 }
+#define MAX_WAIT_HOME 10000
 #define MAX_WAIT_ANS 100
 #define MSLEEP_TIME 10
 
@@ -1055,10 +1050,100 @@ void win_snail::send_cmd_set_coord(quint32 id, quint32 coord) {
     };
 
 }
+///=================== X ===========================
+void win_snail::cl_go_x()
+{
+int cur_coord = dev_state.coord[XX];
+quint8 t_dir= DIR_PLUS;
+quint32 num_step;
+ quint16 len_step = ui->combo_steps->currentText().toInt();
+ int need_coord= ui->le_xx->text().toInt();
+ int t_num_step = need_coord - cur_coord;
+ if (t_num_step > 0)
+     {
+     num_step = t_num_step;
+     t_dir = DIR_PLUS;
+     }
+ else
+    {
+     num_step = -t_num_step;
+     t_dir = DIR_MINUS;
+     }
+ if (num_step != 0)
+    send_cmd_go(X_AXIS_CAN_ID, t_dir, len_step, num_step);
+}
+///=================== y ===========================
+void win_snail::cl_go_y()
+{
+    int cur_coord = dev_state.coord[XX];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_yy->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+        send_cmd_go(Y_AXIS_CAN_ID, t_dir, len_step, num_step);
+}
+///=================== z ===========================
+void win_snail::cl_go_z()
+{
+    int cur_coord = dev_state.coord[XX];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_zz->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+        send_cmd_go(Z_AXIS_CAN_ID, t_dir, len_step, num_step);
+
+}
+void win_snail::cl_go_home()
+{
+quint16 len_step = ui->combo_steps->currentText().toInt();
+send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
+send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
+int wait_end_cnt = 0;
+while (!((dev_state.states[XX] & CONC0_FLG)&&(dev_state.states[YY] & CONC0_FLG)))
+{
+wait_end_cnt++;
+QThread::msleep(MSLEEP_TIME);
+if (wait_end_cnt > MAX_WAIT_HOME)
+   break;
+};
+if (wait_end_cnt < MAX_WAIT_HOME)
+   {
+    cl_clr_x();
+    cl_clr_y();
+   }
+else
+   QMessageBox::information(nullptr, "Error!", "go home");
+
+}
 
 ///=================== X ===========================
 void win_snail::cl_xplus()
 {
+
     qDebug() << "cl_xplus";
     quint8 mot_rej = ui->combo_rej->currentText().toInt();
     send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
@@ -1378,6 +1463,12 @@ scene->addItem(pGroup);
 void win_snail::keyPressEvent(QKeyEvent* event)
 {
     switch (event->key()) {
+    case Qt::Key_Escape: {
+        qDebug() << "Key_Escape";
+        on_esc_key = true;
+    }
+     break;
+
     case Qt::Key_A: {
  ///       qDebug() << "Key_A";
         p_curGroup->moveBy(-20, 0);
@@ -1509,3 +1600,15 @@ void win_snail::on_butt_test2()
     ///   pGroup->setScale(2);
 }
 
+void win_snail::cl_clr_x()
+{
+    send_cmd_set_coord(X_AXIS_CAN_ID, 0);
+}
+void win_snail::cl_clr_y()
+{
+    send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
+}
+void win_snail::cl_clr_z()
+{
+    send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
+}

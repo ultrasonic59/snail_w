@@ -560,7 +560,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QPushButton" name="Butt_go_x">
+       <widget class="QPushButton" name="butt_go_x">
         <property name="geometry">
          <rect>
           <x>70</x>
@@ -573,7 +573,7 @@
          <string>Go X</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="Butt_go_y">
+       <widget class="QPushButton" name="butt_go_y">
         <property name="geometry">
          <rect>
           <x>70</x>
@@ -586,7 +586,7 @@
          <string>Go Y</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="Butt_go_z">
+       <widget class="QPushButton" name="butt_go_z">
         <property name="geometry">
          <rect>
           <x>70</x>
@@ -1034,7 +1034,7 @@
       <widget class="QPushButton" name="butt_clr_y">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>140</x>
          <y>480</y>
          <width>41</width>
          <height>23</height>
@@ -1060,7 +1060,7 @@
       <widget class="QPushButton" name="butt_clr_x">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>100</x>
          <y>480</y>
          <width>41</width>
          <height>23</height>
@@ -1081,6 +1081,19 @@
        </property>
        <property name="text">
         <string>Clr Z</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="butt_home">
+       <property name="geometry">
+        <rect>
+         <x>64</x>
+         <y>480</y>
+         <width>41</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Home</string>
        </property>
       </widget>
      </widget>

@@ -500,7 +500,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////============================================
 #if STEP_Z
   #define MASK_CON0 0x1
-  #define MASK_CON1 0x1
+  #define MASK_CON1 0x2
 #else
 ///  #define MASK_CON 0x3
   #define MASK_CON0  0x1

@@ -134,7 +134,7 @@ private :
     bool eventFilter(QObject* obj, QEvent* event);
     void createMenus();
     bool m_can_isConnected;
-
+    bool on_esc_key;
 private:
     QAction* actionProj;
     QAction* actionFile;
@@ -220,7 +220,11 @@ protected slots:
     void cl_zminus_rel();
     void cl_zplus();
     void cl_zplus_rel();
- 
+    void cl_go_x();
+    void cl_go_y();
+    void cl_go_z();
+    void cl_go_home();
+
 signals:
     void updateCamView(QImage);
     void s_SendCmd(can_message_t* msg);

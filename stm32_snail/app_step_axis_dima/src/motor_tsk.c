@@ -354,6 +354,17 @@ else
    GPIO_ResetBits(MOT_RESET_PIN_GPIO, MOT_RESET_PIN);
   }
 }
+void  set_step_mot(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_STEP_PIN_GPIO, MOT_STEP_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_STEP_PIN_GPIO, MOT_STEP_PIN);
+  }
+}
 
 void  set_sleep_mot(uint8_t idat)
 {
@@ -419,7 +430,7 @@ num_step=nstep;
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
-
+static uint8_t cur_step_out=0;
 void MOT_STEP_TIM_IRQHandler(void)
 { 
 uint8_t tconc;
@@ -432,20 +443,28 @@ if(tconc & MASK_CON !=0x0)
   num_step=0;
 }
 #endif
+if(cur_step_out)
+  {
+   cur_step_out=0;
+   set_step_mot(cur_step_out);
+  }
+else
+{
   if((cur_mot_dir&0x1)==0)
     {
-      if(tconc & MASK_CON1 !=0x0)
+      if((tconc & MASK_CON1) !=0x0)
            num_step=0;
     }
   else
      {
-     if(tconc & MASK_CON0 !=0x0)
+     if((tconc & MASK_CON0) !=0x0)
            num_step=0;
      }
 if(num_step)
   {
+   cur_step_out=1;
+   set_step_mot(cur_step_out);
   num_step--;
-  
   if((cur_mot_dir&0x1)==0)
     cur_coord++;
   else
@@ -465,6 +484,7 @@ else
    stop_mot_step_tim(); 
    ena_mot(0) ;
    }
+}
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 }

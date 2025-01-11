@@ -43,11 +43,11 @@
         <stlinkResetStrategy>0</stlinkResetStrategy>
     </StLinkDriver>
     <ArmDriver>
-        <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
         <EnableCache>0</EnableCache>
+        <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>1547454109</Checksum>
+        <Checksum>2570810723</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -155,8 +155,7 @@
         <Bp0>_ 0 "EMUL_CODE" "0x800'2d10" 0 0 1 "" 0 "" 0</Bp0>
         <Bp1>_ 0 "EMUL_CODE" "0x800'2c18" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "0x800'2bc2" 0 0 1 "" 0 "" 0</Bp2>
-        <Bp3>_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\motor_tsk.c}.435.3" 0 0 1 "" 0 "" 0</Bp3>
-        <Count>4</Count>
+        <Count>3</Count>
     </Breakpoints2>
     <Aliases>
         <Count>0</Count>

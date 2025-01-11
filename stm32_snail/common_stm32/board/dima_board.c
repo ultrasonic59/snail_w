@@ -135,6 +135,7 @@ GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( MOT_SLEEP_PIN_GPIO, &GPIO_InitStructure );
 ////#define MOT_STEP_TIM  	        TIM12
 ////=============== MOT_STEP ============================
+#if 0
 RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -145,6 +146,19 @@ GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(MOT_STEP_PIN_GPIO, MOT_STEP_PIN_NPIN, GPIO_AF_TIM1);
+#else
+RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+///GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
+////GPIO_PinAFConfig(MOT_STEP_PIN_GPIO, MOT_STEP_PIN_NPIN, GPIO_AF_TIM1);
+
+#endif
 ////===================================================================
 
 ////=============== MOT_DIR ============================
