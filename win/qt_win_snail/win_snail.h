@@ -22,7 +22,7 @@
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
-///#include "wrk_wrk.h"
+#include "motor_wrk.h"
 #include "CamPlotter.h"
 #include "cameradevice.h"
 #include "paint_scene.h"
@@ -48,7 +48,7 @@
 #define LONG_PUSH_TIME	500
 #define MOTOR_OFF false
 #define MOTOR_ON true
-#define MAX_NUM_STEP 10000000
+/// #define MAX_NUM_STEP 10000000
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -96,10 +96,8 @@ private:
     QImage    _image;
  ///  hid_device* hid_handle;
 private:
-    QThread* m_pThread;
-   /// QThread* wrk_Thread;
+    QThread* pSenderThread;
     CcmdSender* m_cmd_sender;
-    ///Cwrk_wrk* p_wrk;
     ////QPoint getMouseInsideCoord(QPoint inPos);
 ////public slots:
 ////    void setCamImage(QImage ipm);
@@ -174,8 +172,6 @@ public slots:
 
     void sl_rsv_can_dat(char*);
     void sl_state_changed();
-
-
 private slots:
     void selectVideoSource();
 private slots:
@@ -195,10 +191,10 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
-    void cl_clr_x();
-    void cl_clr_y();
-    void cl_clr_z();
-
+    ///void cl_clr_x();
+    ///void cl_clr_y();
+    ///void cl_clr_z();
+/*
 protected:
     bool    xminusPushed;
     bool    xminusLongPush ;
@@ -206,6 +202,8 @@ protected:
     bool    yminusLongPush;
     bool    zminusPushed;
     bool    zminusLongPush;
+    */
+/*
 protected slots:
     void cl_stop();
     void cl_xminus();
@@ -224,30 +222,36 @@ protected slots:
     void cl_go_y();
     void cl_go_z();
     void cl_go_home();
-
+*/
 signals:
     void updateCamView(QImage);
-    void s_SendCmd(can_message_t* msg);
+ ///   void s_SendCmd(can_message_t* msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
 private:
-    QGraphicsItem* currentItem;
+ ///   QGraphicsItem* currentItem;
     PaintScene* scene;
     QString lib_path;
     LibUtil lib_util;
+///    cust_group* p_curGroup;
+    void showConState();
+    quint8  prev_states[NUM_AXIS];                       /// 
 
-    cust_group* p_curGroup;
 public:
     bool data_ready;
     can_message_t rsv_msg;
     dev_state_t dev_state;
 protected:
+    /*
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
     void send_cmd_stop(quint32 id);
     void send_cmd_mot_rej(quint32 id,quint8 rej);
-    void send_cmd_set_coord(quint32 id, quint32 coord);
+    void send_cmd_set_coord(quint32 id, quint32 coord); */
+    void mousePressEvent(QMouseEvent* event);
+    QThread* pMotorThread;
+    Cmotor_wrk* p_motor_wrk;
 
 
 };

@@ -37,10 +37,13 @@ PaintScene::~PaintScene()
 ///===================================================================
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+ ///   event->scenePos()
     QGraphicsScene::mousePressEvent(event);
     ///QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
-    QGraphicsItem* item = itemAt(event->pos(), QTransform());
-
+    QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+ ///   QGraphicsItem* item = itemAt(event->pos(), QTransform());
+    if(item)
+        currentItem = item;
 #if 0
     QGraphicsScene::mousePressEvent(event);
      QPoint gr_point;
@@ -362,6 +365,9 @@ void PaintScene::sl_test3(char* t_str) {
 }
 
 ///===========================================================
+#define TEXT_WIDTH  25
+#define TEXT_HIGHT  10
+
 #if 1
 void PaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
 {
@@ -373,8 +379,10 @@ void PaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
     painter->setPen(apen);
   ///  qreal left = rect.left();
   ///  qreal right = rect.right();
-    painter->drawLine(rect.left(), rect.top(), rect.right(), rect.top());
-    painter->drawLine(rect.left(), rect.top(), rect.left(), rect.bottom());
+    painter->drawLine(rect.left(), rect.top(), rect.right()- TEXT_WIDTH, rect.top());
+    painter->drawLine(rect.left(), rect.top(), rect.left(), rect.bottom()- TEXT_HIGHT);
+    painter->drawText(QPoint(rect.right() - TEXT_WIDTH, rect.top()+ TEXT_HIGHT), QString::number(rect.right()- TEXT_WIDTH));
+    painter->drawText(QPoint(rect.left(), rect.bottom()), QString::number(rect.bottom()- TEXT_HIGHT));
 
 /*
     for (int x = rect.left(); x < rect.right(); x += params::lib_grid_delt_x) {

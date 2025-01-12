@@ -91,12 +91,14 @@ public slots:
     void sl_test3(char* t_str);
 
 private:
-    QGraphicsItem* currentItem;
+ ///   QGraphicsItem* currentItem;
     int m_currentAction;
     int m_previousAction;
     QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
     bool m_altPressed;
+public:
+    QGraphicsItem* currentItem;
 
 };
 

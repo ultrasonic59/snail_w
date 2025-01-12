@@ -86,6 +86,8 @@ struct  go_cmd_t {
 #define CONC0_FLG            (0x1<<4)
 #define CONC1_FLG            (0x1<<5)
 
+#define MAX_NUM_STEP 10000000
+
 
 struct  dev_state_t {
 quint8  states[NUM_AXIS+1];                       /// 

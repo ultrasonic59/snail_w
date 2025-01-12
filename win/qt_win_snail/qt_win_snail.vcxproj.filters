@@ -178,6 +178,9 @@
     <ClCompile Include="utils\lib_util.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
+    <ClCompile Include="motor_wrk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -294,6 +297,9 @@
     </QtMoc>
     <QtMoc Include="utils\lib_util.h">
       <Filter>Header Files\utils</Filter>
+    </QtMoc>
+    <QtMoc Include="motor_wrk.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

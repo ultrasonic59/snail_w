@@ -17,19 +17,24 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
-    , p_curGroup(nullptr)
-    ,xminusPushed(false)
-    ,xminusLongPush(false)
-    ,yminusPushed(false)
-    ,yminusLongPush(false)
-    ,zminusPushed(false)
-    ,zminusLongPush(false)
+   /// , p_curGroup(nullptr)
+   /// ,xminusPushed(false)
+   /// ,xminusLongPush(false)
+  ///  ,yminusPushed(false)
+   /// ,yminusLongPush(false)
+   /// ,zminusPushed(false)
+  ///  ,zminusLongPush(false)
     , m_can_isConnected(false)
+  ///  , prev_states({0xff, 0xff, 0xff })
     , on_esc_key(false)
     , data_ready(false)
 
   {
     ui->setupUi(this);
+    prev_states[XX] = 0xff;
+    prev_states[YY] = 0xff;
+    prev_states[ZZ] = 0xff;
+
 ///====================================
   qRegisterMetaType<cv::Mat>("cv::Mat");
  
@@ -100,24 +105,15 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(on_value_led0_changed(int)));
   connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(on_value_led1_changed(int)));
   ///===================================================
-  m_pThread = new QThread(this);
+  pSenderThread = new QThread(this);
   m_cmd_sender = new CcmdSender(&data_ready, &rsv_msg,  &dev_state);
-  m_cmd_sender->moveToThread(m_pThread);
-  connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
-  m_pThread->start();
+  m_cmd_sender->moveToThread(pSenderThread);
+  connect(pSenderThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
+  pSenderThread->start();
   connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
   connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
 
   ///============================================
-/*
- wrk_Thread = new QThread(this);
- p_wrk=new Cwrk_wrk(m_cmd_sender);
- p_wrk->moveToThread(wrk_Thread);
- connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
- wrk_Thread->start();
- */
- ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
-
 ///=======================================================
  pCamThread= new QThread(this);
  p_cam_plotter=new CamPlotter(&PlotProp,&cnf_flags, &snail_data);
@@ -158,37 +154,12 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(on_butt_pnt()));
 
  connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
- ///======================= upr motor ========================================
- connect(ui->butt_Stop, SIGNAL(clicked()), this, SLOT(cl_stop()));
-
- connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(cl_xminus()));
- connect(ui->butt_XMinus, SIGNAL(released()), this, SLOT(cl_xminus_rel()));
- connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(cl_xplus()));
- connect(ui->butt_XPlus, SIGNAL(released()), this, SLOT(cl_xplus_rel()));
-
- connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(cl_yminus()));
- connect(ui->butt_YMinus, SIGNAL(released()), this, SLOT(cl_yminus_rel()));
- connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(cl_yplus()));
- connect(ui->butt_YPlus, SIGNAL(released()), this, SLOT(cl_yplus_rel()));
-
- connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(cl_zminus()));
- connect(ui->butt_ZMinus, SIGNAL(released()), this, SLOT(cl_zminus_rel()));
- connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(cl_zplus()));
- connect(ui->butt_ZPlus, SIGNAL(released()), this, SLOT(cl_zplus_rel()));
  ///==========================================================================
  connect(this, SIGNAL(s_can_connect(bool)), m_cmd_sender, SLOT(sl_connect(bool)));
  connect(m_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
  connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
  connect(m_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
 
- connect(ui->butt_clr_x, SIGNAL(pressed()), this, SLOT(cl_clr_x()));
- connect(ui->butt_clr_y, SIGNAL(pressed()), this, SLOT(cl_clr_y()));
- connect(ui->butt_clr_z, SIGNAL(pressed()), this, SLOT(cl_clr_z()));
-
- connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(cl_go_x()));
- connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(cl_go_y()));
- connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(cl_go_z()));
- connect(ui->butt_home, SIGNAL(pressed()), this, SLOT(cl_go_home()));
 
  pCamThread->start();
  ///======================================================
@@ -204,81 +175,141 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  ////ui.graphicsView->setCursor(QCursor());
 
  scene->setSceneRect(0, 0, 2000, 2000); //
- ///==================================================
+///==================================================
+ pMotorThread = new QThread(this);
+ p_motor_wrk =new Cmotor_wrk(m_cmd_sender, &dev_state);
+ p_motor_wrk->moveToThread(pMotorThread);
+ connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
+ pMotorThread->start();
+
+ ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+  ///======================= upr motor ========================================
+ connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(cl_stop()));
+
+ connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
+ connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_xminus_rel()));
+ connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
+ connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_xplus_rel()));
+
+ connect(ui->butt_YMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_yminus()));
+ connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_yminus_rel()));
+ connect(ui->butt_YPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_yplus()));
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_yplus_rel()));
+
+ connect(ui->butt_ZMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_zminus()));
+ connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_zminus_rel()));
+ connect(ui->butt_ZPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_zplus()));
+ connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_zplus_rel()));
+ connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_x()));
+ connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_y()));
+ connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_z()));
+
+ connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
+ connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
+ connect(ui->butt_go_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_z()));
+ connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
+
+
 }
 
 win_snail::~win_snail()
 {
  saveSettings();
- m_pThread->quit();
- m_pThread->wait(200);
+ pSenderThread->quit();
+ pSenderThread->wait(200);
  pCamThread->quit();
  pCamThread->wait(200);
- ///wrk_Thread->quit();
- ///wrk_Thread->wait(200);
+ pMotorThread->quit();
+ pMotorThread->wait(200);
  delete ui;
 }
-
+void win_snail::showConState()
+{
+///===============x ===========================
+ quint8 change_con = prev_states[XX] ^ dev_state.states[XX];
+ prev_states[XX] = dev_state.states[XX];
+ if (change_con & CONC0_FLG)
+    {
+     if (dev_state.states[XX] & CONC0_FLG)
+        {
+         ui->butt_XMinus->setStyleSheet("background-color: red;");
+       }
+     else
+        {
+         ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+ if (change_con & CONC1_FLG)
+     {
+     if (dev_state.states[XX] & CONC1_FLG)
+        {
+         ui->butt_XPlus->setStyleSheet("background-color: red;");
+        }
+     else
+        {
+         ui->butt_XPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+     }
+ ///================== y =====================================
+change_con = prev_states[YY] ^ dev_state.states[YY];
+ prev_states[YY] = dev_state.states[YY];
+ if (change_con & CONC0_FLG)
+    {
+     if (dev_state.states[YY] & CONC0_FLG)
+         {
+         ui->butt_YMinus->setStyleSheet("background-color: red;");
+         }
+     else
+        {
+         ui->butt_YMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+ if (change_con & CONC1_FLG)
+ {
+     if (dev_state.states[YY] & CONC1_FLG)
+     {
+         ui->butt_YPlus->setStyleSheet("background-color: red;");
+     }
+     else
+     {
+         ui->butt_YPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+     }
+ }
+ ///================== z =====================================
+ change_con = prev_states[ZZ] ^ dev_state.states[ZZ];
+ prev_states[ZZ] = dev_state.states[ZZ];
+ if (change_con & CONC0_FLG)
+ {
+     if (dev_state.states[ZZ] & CONC0_FLG)
+     {
+         ui->butt_ZMinus->setStyleSheet("background-color: red;");
+     }
+     else
+     {
+         ui->butt_ZMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+     }
+ }
+ if (change_con & CONC1_FLG)
+    {
+     if (dev_state.states[ZZ] & CONC1_FLG)
+        {
+         ui->butt_ZPlus->setStyleSheet("background-color: red;");
+        }
+     else
+        {
+         ui->butt_ZPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+}
 
 void win_snail::sl_state_changed()
 {
     ui->le_x->setText(QString::number(dev_state.coord[XX]));
     ui->le_y->setText(QString::number(dev_state.coord[YY]));
     ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
-///================== x =====================================
-    if (dev_state.states[XX] & CONC0_FLG)
-       {
-        ui->butt_XMinus->setStyleSheet("background-color: red;");
-       }
-    else
-        {
-        ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-    }
-    if (dev_state.states[XX] & CONC1_FLG)
-        {
-        ui->butt_XPlus->setStyleSheet("background-color: red;");
-        }   
-    else
-       {
-        ui->butt_XPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-       }
-    ///================== y =====================================
-    if (dev_state.states[YY] & CONC0_FLG)
-    {
-        ui->butt_YMinus->setStyleSheet("background-color: red;");
-    }
-    else
-    {
-        ui->butt_YMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-    }
-    if (dev_state.states[YY] & CONC1_FLG)
-    {
-        ui->butt_YPlus->setStyleSheet("background-color: red;");
-    }
-    else
-    {
-        ui->butt_YPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-    }
-    ///================== z =====================================
-    if (dev_state.states[ZZ] & CONC0_FLG)
-    {
-        ui->butt_ZMinus->setStyleSheet("background-color: red;");
-    }
-    else
-    {
-        ui->butt_ZMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-    }
-    if (dev_state.states[ZZ] & CONC1_FLG)
-    {
-        ui->butt_ZPlus->setStyleSheet("background-color: red;");
-    }
-    else
-    {
-        ui->butt_ZPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-    }
-
-
+    showConState();
 }
+
 void win_snail::timerEvent(QTimerEvent* e)
 {
  ////   bool rez;
@@ -328,7 +359,6 @@ void win_snail::setupActions()
 
     connect(ui->actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
 #endif
- ////  ui->
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
     connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));
@@ -454,8 +484,6 @@ void win_snail::sl_newFile()
     qDebug() << "sl_newFile";
 
 }
-
-
 
 #if 0
 void win_snail::createThreads()
@@ -832,7 +860,8 @@ void win_snail::slot_send_can_dbg(can_message_t* idat)
 {
     bool rez;
     qDebug() << "slot_send_can_dbg :";
-    emit s_SendCmd(idat);
+////???    emit s_SendCmd(idat);
+
  ///   rez=  m_cmd_sender->canSendMsg(idat);
 /*
 if(rez)
@@ -847,6 +876,8 @@ void win_snail::saveSettings(void)
     QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
         QSettings::IniFormat);
     settings.setValue("PortName", ComPortName);
+    settings.setValue("LibPath", lib_path);
+
     ///================ Colors =======================================================
     settings.setValue("BackgroundColor", PlotProp.BGColor.rgb());
     settings.setValue("SelectColor", PlotProp.SelColor.rgb());
@@ -855,15 +886,12 @@ void win_snail::saveSettings(void)
     settings.setValue("CrossColor", PlotProp.CrossColor.rgb());
     settings.setValue("LibBgColor", params::LibBGColor.rgb());
     settings.setValue("LibGridColor", params::LibGridColor.rgb());
-
-
     ///================ thicknesses =======================================================
     settings.setValue("Thickness select", PlotProp.thick_sel);
     settings.setValue("Thickness Rule", params::thick_rule);
     settings.setValue("Thickness circle", PlotProp.thick_circle);
     settings.setValue("Thickness cross", PlotProp.thick_crs);
     settings.setValue("Radius circle", PlotProp.rad_circle);
-
     ///================ Grid =======================================================
     settings.setValue("Grid X", PlotProp.setka_delt_x);
     settings.setValue("Grid Y", PlotProp.setka_delt_y);
@@ -888,15 +916,14 @@ void win_snail::saveSettings(void)
     settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
     settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
     settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
-
-
 }
 void win_snail::loadSettings(void)
 {
     QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
         QSettings::IniFormat);
-
     ComPortName = settings.value("PortName", "COM16").toString();
+    lib_path = settings.value("LibPath", "").toString();
+
     ///================ Colors =======================================================
     PlotProp.BGColor.setRgb(settings.value("BackgroundColor", PlotProp.BGColor.rgb()).toInt());
     PlotProp.SelColor.setRgb(settings.value("SelectColor", PlotProp.SelColor.rgb()).toInt());
@@ -937,325 +964,7 @@ void win_snail::loadSettings(void)
   params::dbg_last_can_dat[5] = settings.value("last_can_d5", 0).toInt();
   params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
   params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
-
-
 }    
-
-/// /==============================================================
-void win_snail::cl_stop()
-{
-///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
-send_cmd_stop(X_AXIS_CAN_ID );
-
-}
-#define MAX_WAIT_HOME 10000
-#define MAX_WAIT_ANS 100
-#define MSLEEP_TIME 10
-
-void win_snail::send_cmd_go(quint32 id,quint8 dir, quint16 len_step, quint32 num_step)
-{
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 8;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = GO_CMD;
-    t_can_message.data[1] = dir;
-    t_can_message.data[2] = len_step & 0xff;
-    t_can_message.data[3] = (len_step >> 8) & 0xff;
-    t_can_message.data[4] = num_step & 0xff;
-    t_can_message.data[5] = (num_step >> 8) & 0xff;
-    t_can_message.data[6] = (num_step >> 16) & 0xff;
-    t_can_message.data[7] = (num_step >> 24) & 0xff;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    int wait_rdy_cnt = 0;
-    while (data_ready == false)
-    {
-        wait_rdy_cnt++;
-        QThread::msleep(MSLEEP_TIME);
-        if(wait_rdy_cnt > MAX_WAIT_ANS)
-          break;
-    };
-}
-void win_snail::send_cmd_stop(quint32 id)
-{
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 1;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = STOP_CMD;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    int wait_rdy_cnt = 0;
-    while (data_ready == false)
-    {
-        wait_rdy_cnt++;
-        QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
-            break;
-    };
-
-}
-void win_snail::send_cmd_mot_rej(quint32 id, quint8 rej) {
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 5;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = SET_PARAM;
-    t_can_message.data[1] = MOTOR_REJ;
-    t_can_message.data[2] = 0;
-    t_can_message.data[3] = 1;
-    t_can_message.data[4] = rej;
-    t_can_message.data[5] = 0;
-    t_can_message.data[6] = 0;
-    t_can_message.data[7] = 0;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    int wait_rdy_cnt = 0;
-    while (data_ready == false)
-    {
-        wait_rdy_cnt++;
-        QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
-            break;
-    };
-
-}
-void win_snail::send_cmd_set_coord(quint32 id, quint32 coord) {
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 8;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = SET_PARAM;
-    t_can_message.data[1] = SET_COORD;
-    t_can_message.data[2] = 0;
-    t_can_message.data[3] = 4;
-    t_can_message.data[4] = coord&0xff;
-    t_can_message.data[5] = (coord>>8) & 0xff;
-    t_can_message.data[6] = (coord >> 16) & 0xff;;
-    t_can_message.data[7] = (coord >> 24) & 0xff;;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    int wait_rdy_cnt = 0;
-    while (data_ready == false)
-    {
-        wait_rdy_cnt++;
-        QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
-            break;
-    };
-
-}
-///=================== X ===========================
-void win_snail::cl_go_x()
-{
-int cur_coord = dev_state.coord[XX];
-quint8 t_dir= DIR_PLUS;
-quint32 num_step;
- quint16 len_step = ui->combo_steps->currentText().toInt();
- int need_coord= ui->le_xx->text().toInt();
- int t_num_step = need_coord - cur_coord;
- if (t_num_step > 0)
-     {
-     num_step = t_num_step;
-     t_dir = DIR_PLUS;
-     }
- else
-    {
-     num_step = -t_num_step;
-     t_dir = DIR_MINUS;
-     }
- if (num_step != 0)
-    send_cmd_go(X_AXIS_CAN_ID, t_dir, len_step, num_step);
-}
-///=================== y ===========================
-void win_snail::cl_go_y()
-{
-    int cur_coord = dev_state.coord[XX];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    int need_coord = ui->le_yy->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-        send_cmd_go(Y_AXIS_CAN_ID, t_dir, len_step, num_step);
-}
-///=================== z ===========================
-void win_snail::cl_go_z()
-{
-    int cur_coord = dev_state.coord[XX];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    int need_coord = ui->le_zz->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-        send_cmd_go(Z_AXIS_CAN_ID, t_dir, len_step, num_step);
-
-}
-void win_snail::cl_go_home()
-{
-quint16 len_step = ui->combo_steps->currentText().toInt();
-send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
-send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
-int wait_end_cnt = 0;
-while (!((dev_state.states[XX] & CONC0_FLG)&&(dev_state.states[YY] & CONC0_FLG)))
-{
-wait_end_cnt++;
-QThread::msleep(MSLEEP_TIME);
-if (wait_end_cnt > MAX_WAIT_HOME)
-   break;
-};
-if (wait_end_cnt < MAX_WAIT_HOME)
-   {
-    cl_clr_x();
-    cl_clr_y();
-   }
-else
-   QMessageBox::information(nullptr, "Error!", "go home");
-
-}
-
-///=================== X ===========================
-void win_snail::cl_xplus()
-{
-
-    qDebug() << "cl_xplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-
-void win_snail::cl_xplus_rel()
-{
-    qDebug() << "cl_xplus_rel";
-    send_cmd_stop(X_AXIS_CAN_ID);
-}
-
-void win_snail::cl_xminus()
-{
-    qDebug() << "cl_xminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-
-    ////   xminusPushed = true;
-    ////   xminusLongPush = false;
-    ////   QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
-}
-void win_snail::cl_xminus_rel()
-{
-    qDebug() << "cl_xminus_rel ";
-    send_cmd_stop(X_AXIS_CAN_ID);
-}
-///=================== Y ===========================
-
-void win_snail::cl_yplus()
-{
-    qDebug() << "cl_yplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-
-void win_snail::cl_yplus_rel()
-{
-    qDebug() << "cl_yplus_rel";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-
-void win_snail::cl_yminus()
-{
-    qDebug() << "cl_yminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-
-   send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-void win_snail::cl_yminus_rel()
-{
-    qDebug() << "cl_yminus_rel ";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-///=================== Z ===========================
-void win_snail::cl_zplus()
-{
-    qDebug() << "cl_zplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-
-void win_snail::cl_zplus_rel()
-{
-    qDebug() << "cl_zplus_rel";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-
-}
-
-void win_snail::cl_zminus()
-{
-    qDebug() << "cl_zminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-void win_snail::cl_zminus_rel()
-{
-    qDebug() << "cl_zminus_rel ";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-}
 
 ///==========================================================
 bool win_snail::eventFilter(QObject* obj, QEvent* event)
@@ -1413,7 +1122,11 @@ if (fileName.isEmpty())
     return false;
 return saveFile(fileName);
 }
+void win_snail::mousePressEvent(QMouseEvent* event)
+{
+    qDebug() << "mousePressEvent=" << event->pos();
 
+}
 void win_snail::sl_rsv_can_dat(char* idat)
 {
  ///   qDebug() << "sl_rsv_dat=" <<idat;
@@ -1425,7 +1138,8 @@ void win_snail::on_butt_load()
     qDebug() << "start load";
 cust_group* pGroup = new cust_group();
 ////pGroup = new cust_group();
-p_curGroup = pGroup;
+scene->currentItem= pGroup;
+///p_curGroup = pGroup;
     ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
 pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 
@@ -1471,37 +1185,45 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 
     case Qt::Key_A: {
  ///       qDebug() << "Key_A";
-        p_curGroup->moveBy(-20, 0);
+        scene->currentItem->moveBy(-20, 0);
 
        }
      break;
     case Qt::Key_S: {
  ///       qDebug() << "Key_S";
-        p_curGroup->moveBy(0, 20);
+        scene->currentItem->moveBy(0, 20);
 
     }
                   break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
-        p_curGroup->moveBy(0, -20);
+        scene->currentItem->moveBy(0, -20);
 
     }
                   break;
     case Qt::Key_D: {
   ///      qDebug() << "Key_D";
-        p_curGroup->moveBy(20, 0);
+        scene->currentItem->moveBy(20, 0);
 
     }
                   break;
     case Qt::Key_R: {
         ///      qDebug() << "Key_D";
-    ///   pGroup->setTransformOriginPoint(0, 0);
-        p_curGroup->setRotation(45);
+        scene->currentItem->setTransformOriginPoint(200, 0);
+        scene->currentItem->setRotation(-5);
+ ///       scene->currentItem->setRotation(-5);
 
     }
                   break;
-
+    case Qt::Key_T: {
+        ///      qDebug() << "Key_D";
+    ///   pGroup->setTransformOriginPoint(0, 0);
+        scene->currentItem->setRotation(0);
+  ///      scene->currentItem->rotate rotate(0);
     }
+     break;
+    }
+
 #if 0
     switch (event->key()) {
     case Qt::Key_Delete: {
@@ -1536,6 +1258,7 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 void win_snail::on_butt_test1()
 {
 QPointF _center;
+#if 0
 if (p_curGroup != nullptr) {
 
     double radius = p_curGroup->boundingRect().width() / 2.0;
@@ -1544,6 +1267,7 @@ if (p_curGroup != nullptr) {
    ///qDebug() << pGroup->boundingRect() << radius << this->pos() << pos << event->pos();
     p_curGroup->setTransformOriginPoint(_center);
 }
+#endif
 #if 0
     qDebug() << "start test1";
     ///   cust_rect* rect = new cust_rect();
@@ -1586,7 +1310,7 @@ if (tmp_tst & 0x1)
 void win_snail::on_butt_test2()
 {
     quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+///    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
 #if 0
     if (p_curGroup != nullptr) {
         qDebug() << "start test2" << p_curGroup->boundingRect();
@@ -1600,15 +1324,3 @@ void win_snail::on_butt_test2()
     ///   pGroup->setScale(2);
 }
 
-void win_snail::cl_clr_x()
-{
-    send_cmd_set_coord(X_AXIS_CAN_ID, 0);
-}
-void win_snail::cl_clr_y()
-{
-    send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
-}
-void win_snail::cl_clr_z()
-{
-    send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
-}
