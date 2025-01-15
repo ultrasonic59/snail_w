@@ -15,6 +15,8 @@ private:
 public:
     bool data_ready;
     dev_state_t* p_dev_state;
+    quint16 len_step[NUM_AXIS];
+    quint8 mot_rej[NUM_AXIS];
 
 public slots:
 	void SlSendCmd(can_message_t *msg);

@@ -10,6 +10,13 @@
 #include <QTimer>
 #include "can_message.h"
 
+#define DEF_LEN_STEP_X  100
+#define DEF_LEN_STEP_Y  100
+#define DEF_LEN_STEP_Z  100
+
+#define DEF_MOT_REJ_X  2
+#define DEF_MOT_REJ_Y  2
+#define DEF_MOT_REJ_Z  2
 
 #define DEFAULT_BAUD_RATE QSerialPort::Baud115200
 

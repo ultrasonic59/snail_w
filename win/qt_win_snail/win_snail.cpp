@@ -208,9 +208,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
  connect(ui->butt_go_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_z()));
  connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
-
-
-}
+ }
 
 win_snail::~win_snail()
 {
@@ -1253,6 +1251,7 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///    QGraphicsScene::keyPressEvent(event);
 
 }
+///==============================================
 
 ///==============================================
 void win_snail::on_butt_test1()

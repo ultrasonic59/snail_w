@@ -5,14 +5,14 @@
 Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state)
                       :p_cmd_sender(sender),p_dev_state(dev_state)
 {
-
+    len_step[XX] = DEF_LEN_STEP_X;
+    len_step[YY] = DEF_LEN_STEP_Y;
+    len_step[ZZ] = DEF_LEN_STEP_Z;
+    mot_rej[XX] = DEF_MOT_REJ_X;
+    mot_rej[YY] = DEF_MOT_REJ_Y;
+    mot_rej[ZZ] = DEF_MOT_REJ_Z;
 }
 ///==============================================================
-void Cmotor_wrk::cl_stop()
-{
-    ///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
-    send_cmd_stop(X_AXIS_CAN_ID);
-}
 
 #define MAX_WAIT_HOME 10000
 #define MAX_WAIT_ANS 100
@@ -119,7 +119,7 @@ void Cmotor_wrk::cl_go_x()
     int cur_coord = p_dev_state->coord[XX];
     quint8 t_dir = DIR_PLUS;
     quint32 num_step;
-    quint16 len_step = 0;//// = ui->combo_steps->currentText().toInt();
+ ///   quint16 len_step = len_step[XX];/// 0;//// = ui->combo_steps->currentText().toInt();
     int need_coord = 0;/// ui->le_xx->text().toInt();
     int t_num_step = need_coord - cur_coord;
     if (t_num_step > 0)
@@ -133,7 +133,7 @@ void Cmotor_wrk::cl_go_x()
         t_dir = DIR_MINUS;
     }
     if (num_step != 0)
-        send_cmd_go(X_AXIS_CAN_ID, t_dir, len_step, num_step);
+        send_cmd_go(X_AXIS_CAN_ID, t_dir, len_step[XX], num_step);
 }
 ///=================== y ===========================
 void Cmotor_wrk::cl_go_y()
@@ -141,7 +141,7 @@ void Cmotor_wrk::cl_go_y()
     int cur_coord = p_dev_state->coord[XX];
     quint8 t_dir = DIR_PLUS;
     quint32 num_step;
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
+  ///  quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
     int need_coord = 0;/// ui->le_yy->text().toInt();
     int t_num_step = need_coord - cur_coord;
     if (t_num_step > 0)
@@ -155,7 +155,7 @@ void Cmotor_wrk::cl_go_y()
         t_dir = DIR_MINUS;
     }
     if (num_step != 0)
-        send_cmd_go(Y_AXIS_CAN_ID, t_dir, len_step, num_step);
+        send_cmd_go(Y_AXIS_CAN_ID, t_dir, len_step[YY], num_step);
 }
 ///=================== z ===========================
 void Cmotor_wrk::cl_go_z()
@@ -163,7 +163,7 @@ void Cmotor_wrk::cl_go_z()
     int cur_coord = p_dev_state->coord[XX];
     quint8 t_dir = DIR_PLUS;
     quint32 num_step;
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
+ ///   quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
     int need_coord = 0;/// ui->le_zz->text().toInt();
     int t_num_step = need_coord - cur_coord;
     if (t_num_step > 0)
@@ -177,30 +177,28 @@ void Cmotor_wrk::cl_go_z()
         t_dir = DIR_MINUS;
     }
     if (num_step != 0)
-        send_cmd_go(Z_AXIS_CAN_ID, t_dir, len_step, num_step);
-
+        send_cmd_go(Z_AXIS_CAN_ID, t_dir, len_step[ZZ], num_step);
 }
 void Cmotor_wrk::cl_go_home()
 {
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, MAX_NUM_STEP);
+ ////   quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
+    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step[XX], MAX_NUM_STEP);
+    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step[YY], MAX_NUM_STEP);
     int wait_end_cnt = 0;
     while (!((p_dev_state->states[XX] & CONC0_FLG) && (p_dev_state->states[YY] & CONC0_FLG)))
-    {
+       {
         wait_end_cnt++;
         QThread::msleep(MSLEEP_TIME);
         if (wait_end_cnt > MAX_WAIT_HOME)
             break;
-    };
+       };
     if (wait_end_cnt < MAX_WAIT_HOME)
-    {
+       {
         cl_clr_x();
         cl_clr_y();
-    }
+       }
     else
         QMessageBox::information(nullptr, "Error!", "go home");
-
 }
 ///=================== X ===========================
 void Cmotor_wrk::cl_xplus()
@@ -322,6 +320,11 @@ void Cmotor_wrk::cl_clr_y()
 void Cmotor_wrk::cl_clr_z()
 {
     send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
+}
+void Cmotor_wrk::cl_stop()
+{
+    ///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
+    send_cmd_stop(X_AXIS_CAN_ID);
 }
 
 void Cmotor_wrk::SlSendCmd(can_message_t* msg)
