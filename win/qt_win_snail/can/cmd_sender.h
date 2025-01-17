@@ -95,6 +95,17 @@ struct  go_cmd_t {
 
 #define MAX_NUM_STEP 10000000
 
+struct  mot_cmd_t {
+	quint32 id;
+	quint8 dir;
+	quint16 len_step;
+	quint32 num_step;
+};
+struct  mot_param_t {
+	quint16 len_step[NUM_AXIS];
+	quint8 mot_rej[NUM_AXIS];
+};
+
 
 struct  dev_state_t {
 quint8  states[NUM_AXIS+1];                       /// 
@@ -106,7 +117,8 @@ class CcmdSender : public QObject
 	Q_OBJECT
 public:
 ////	explicit CcmdSender(QObject *parent = 0);
-	explicit CcmdSender(bool* p_data_ready = 0, can_message_t* p_rsv_msg=nullptr, dev_state_t* p_dev_state=nullptr);
+	explicit CcmdSender(bool* p_data_ready = 0, can_message_t* p_rsv_msg=nullptr
+		, dev_state_t* p_dev_state=nullptr);
 	bool isConnected() const;
 	QString COM_port_name;
 	void config_port();

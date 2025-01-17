@@ -2,15 +2,18 @@
 #include <Qdebug>
 #include <QMessageBox>
 
-Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state)
+Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* mot_par)
                       :p_cmd_sender(sender),p_dev_state(dev_state)
+                       ,p_mot_param(mot_par)
 {
+/*
     len_step[XX] = DEF_LEN_STEP_X;
     len_step[YY] = DEF_LEN_STEP_Y;
     len_step[ZZ] = DEF_LEN_STEP_Z;
     mot_rej[XX] = DEF_MOT_REJ_X;
     mot_rej[YY] = DEF_MOT_REJ_Y;
     mot_rej[ZZ] = DEF_MOT_REJ_Z;
+    */
 }
 ///==============================================================
 
@@ -113,77 +116,18 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
             break;
     };
 }
-///=================== X ===========================
-void Cmotor_wrk::cl_go_x()
+///=================================================
+void Cmotor_wrk::sl_mot_go(mot_cmd_t mot_cmd)
 {
-    int cur_coord = p_dev_state->coord[XX];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
- ///   quint16 len_step = len_step[XX];/// 0;//// = ui->combo_steps->currentText().toInt();
-    int need_coord = 0;/// ui->le_xx->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-        send_cmd_go(X_AXIS_CAN_ID, t_dir, len_step[XX], num_step);
+send_cmd_go(mot_cmd.id, mot_cmd.dir, mot_cmd.len_step, mot_cmd.num_step);
 }
-///=================== y ===========================
-void Cmotor_wrk::cl_go_y()
+///=================== ===========================
+void Cmotor_wrk::sl_go_home()
 {
-    int cur_coord = p_dev_state->coord[XX];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
-  ///  quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    int need_coord = 0;/// ui->le_yy->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-        send_cmd_go(Y_AXIS_CAN_ID, t_dir, len_step[YY], num_step);
-}
-///=================== z ===========================
-void Cmotor_wrk::cl_go_z()
-{
-    int cur_coord = p_dev_state->coord[XX];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
- ///   quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    int need_coord = 0;/// ui->le_zz->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-        send_cmd_go(Z_AXIS_CAN_ID, t_dir, len_step[ZZ], num_step);
-}
-void Cmotor_wrk::cl_go_home()
-{
+#if 1
  ////   quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step[XX], MAX_NUM_STEP);
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step[YY], MAX_NUM_STEP);
+    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, p_mot_param->len_step[XX], MAX_NUM_STEP);
+    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, p_mot_param->len_step[YY], MAX_NUM_STEP);
     int wait_end_cnt = 0;
     while (!((p_dev_state->states[XX] & CONC0_FLG) && (p_dev_state->states[YY] & CONC0_FLG)))
        {
@@ -194,134 +138,61 @@ void Cmotor_wrk::cl_go_home()
        };
     if (wait_end_cnt < MAX_WAIT_HOME)
        {
-        cl_clr_x();
-        cl_clr_y();
+        sl_clr_x();
+        sl_clr_y();
        }
     else
         QMessageBox::information(nullptr, "Error!", "go home");
+#endif
 }
 ///=================== X ===========================
-void Cmotor_wrk::cl_xplus()
+void Cmotor_wrk::sl_xplus_rel()
 {
-    qDebug() << "cl_xplus";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-void Cmotor_wrk::cl_xplus_rel()
-{
-    qDebug() << "cl_xplus_rel";
+    qDebug() << "sl_xplus_rel";
     send_cmd_stop(X_AXIS_CAN_ID);
 }
-void Cmotor_wrk::cl_xminus()
+void Cmotor_wrk::sl_xminus_rel()
 {
-    qDebug() << "cl_xminus ";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-
-    ////   xminusPushed = true;
-    ////   xminusLongPush = false;
-    ////   QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
-}
-void Cmotor_wrk::cl_xminus_rel()
-{
-    qDebug() << "cl_xminus_rel ";
+    qDebug() << "sl_xminus_rel ";
     send_cmd_stop(X_AXIS_CAN_ID);
 }
-///=================== Y ===========================
-void Cmotor_wrk::cl_yplus()
-{
-    qDebug() << "cl_yplus";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-void Cmotor_wrk::cl_yplus_rel()
-{
-    qDebug() << "cl_yplus_rel";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-void Cmotor_wrk::cl_yminus()
-{
-    qDebug() << "cl_yminus ";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-void Cmotor_wrk::cl_yminus_rel()
-{
-    qDebug() << "cl_yminus_rel ";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-///=================== Z ===========================
-void Cmotor_wrk::cl_zplus()
-{
-    qDebug() << "cl_zplus";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-void Cmotor_wrk::cl_zplus_rel()
-{
-    qDebug() << "cl_zplus_rel";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-
-}
-
-void Cmotor_wrk::cl_zminus()
-{
-    qDebug() << "cl_zminus ";
-    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
-    quint32 num_step = 0;/// ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-void Cmotor_wrk::cl_zminus_rel()
-{
-    qDebug() << "cl_zminus_rel ";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-}
-void Cmotor_wrk::cl_clr_x()
+void Cmotor_wrk::sl_clr_x()
 {
     send_cmd_set_coord(X_AXIS_CAN_ID, 0);
 }
-void Cmotor_wrk::cl_clr_y()
+///=================== Y ===========================
+void Cmotor_wrk::sl_yplus_rel()
+{
+    qDebug() << "sl_yplus_rel";
+    send_cmd_stop(Y_AXIS_CAN_ID);
+}
+void Cmotor_wrk::sl_yminus_rel()
+{
+    qDebug() << "sl_yminus_rel ";
+    send_cmd_stop(Y_AXIS_CAN_ID);
+}
+void Cmotor_wrk::sl_clr_y()
 {
     send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
 }
-void Cmotor_wrk::cl_clr_z()
+///=================== Z ===========================
+void Cmotor_wrk::sl_zplus_rel()
+{
+    qDebug() << "sl_zplus_rel";
+    send_cmd_stop(Z_AXIS_CAN_ID);
+}
+void Cmotor_wrk::sl_zminus_rel()
+{
+    qDebug() << "sl_zminus_rel ";
+    send_cmd_stop(Z_AXIS_CAN_ID);
+}
+
+void Cmotor_wrk::sl_clr_z()
 {
     send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
 }
-void Cmotor_wrk::cl_stop()
+///==================================================
+void Cmotor_wrk::sl_stop()
 {
     ///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
     send_cmd_stop(X_AXIS_CAN_ID);
@@ -332,3 +203,4 @@ void Cmotor_wrk::SlSendCmd(can_message_t* msg)
 	qDebug() << "SlSendCmd";
 
 }
+///==========================================================

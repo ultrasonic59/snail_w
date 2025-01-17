@@ -143,6 +143,7 @@ private:
     QAction* actionNew_file;
     QAction* separatorAction;
 public:
+    mot_param_t mot_param;
 
 private:
     QStringList recentFiles;
@@ -203,24 +204,26 @@ protected:
     bool    zminusPushed;
     bool    zminusLongPush;
     */
+protected slots:
+    void sl_go_x();
+    void sl_go_y();
+    void sl_go_z();
+    void sl_xminus();
+    void sl_xplus();
+    void sl_yplus();
+    void sl_yminus();
+    void sl_zplus();
+    void sl_zminus();
+
 /*
 protected slots:
     void cl_stop();
-    void cl_xminus();
     void cl_xminus_rel();
-    void cl_xplus();
-    void cl_xplus_rel();
-    void cl_yminus();
+     void cl_xplus_rel();
     void cl_yminus_rel();
-    void cl_yplus();
     void cl_yplus_rel();
-    void cl_zminus();
-    void cl_zminus_rel();
-    void cl_zplus();
+     void cl_zminus_rel();
     void cl_zplus_rel();
-    void cl_go_x();
-    void cl_go_y();
-    void cl_go_z();
     void cl_go_home();
 */
 signals:
@@ -230,6 +233,8 @@ signals:
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
+    void s_mot_go(mot_cmd_t mot_cmd);
+
 private:
  ///   QGraphicsItem* currentItem;
     PaintScene* scene;

@@ -8,39 +8,41 @@ class Cmotor_wrk : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Cmotor_wrk(CcmdSender* sender, dev_state_t* p_dev_state);
+	explicit Cmotor_wrk(CcmdSender* sender, dev_state_t* p_dev_state, mot_param_t* mot_par = nullptr);
 	////bool getAllData(sensors_data_t *data ) ;
 private:
 	CcmdSender* p_cmd_sender;
 public:
     bool data_ready;
     dev_state_t* p_dev_state;
-    quint16 len_step[NUM_AXIS];
-    quint8 mot_rej[NUM_AXIS];
+    mot_param_t* p_mot_param;
 
 public slots:
 	void SlSendCmd(can_message_t *msg);
 ///protected slots:
-    void cl_stop();
-    void cl_xminus();
-    void cl_xminus_rel();
-    void cl_xplus();
-    void cl_xplus_rel();
-    void cl_yminus();
-    void cl_yminus_rel();
-    void cl_yplus();
-    void cl_yplus_rel();
-    void cl_zminus();
-    void cl_zminus_rel();
-    void cl_zplus();
-    void cl_zplus_rel();
-    void cl_go_x();
-    void cl_go_y();
-    void cl_go_z();
-    void cl_go_home();
-    void cl_clr_x();
-    void cl_clr_y();
-    void cl_clr_z();
+    void sl_stop();
+    ///void cl_xminus();
+    void sl_xminus_rel();
+    ///void cl_xplus();
+    void sl_xplus_rel();
+    ///void cl_yminus();
+    void sl_yminus_rel();
+    ///void cl_yplus();
+    void sl_yplus_rel();
+    ///void cl_zminus();
+    void sl_zminus_rel();
+    //void cl_zplus();
+    void sl_zplus_rel();
+   /// void cl_go_xx();
+    ///void cl_go_yy();
+    ///void cl_go_zz();
+    void sl_go_home();
+
+    void sl_mot_go(mot_cmd_t mot_cmd);
+
+    void sl_clr_x();
+    void sl_clr_y();
+    void sl_clr_z();
 
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);

@@ -182,32 +182,49 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
  pMotorThread->start();
 
- ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+  ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+ ///
+ /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
+  
+ 
+ connect(this, SIGNAL(s_mot_go(mot_cmd_t mot_cmd)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t mot_cmd)));
+
+ connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
+ connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
+ connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(sl_go_z()));
+
+ ///connect(this, SIGNAL(pressed()), this, SLOT(cl_go_x()));
+
+ connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
+  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
+  connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
+  connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
+  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
+  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+
+ connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
+
   ///======================= upr motor ========================================
- connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(cl_stop()));
+ connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(sl_stop()));
 
- connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
- connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_xminus_rel()));
- connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
- connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_xplus_rel()));
+ ///connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
+ connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xminus_rel()));
+ ///connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
+ connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xplus_rel()));
 
- connect(ui->butt_YMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_yminus()));
- connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_yminus_rel()));
- connect(ui->butt_YPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_yplus()));
- connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_yplus_rel()));
+ connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yminus_rel()));
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yplus_rel()));
 
- connect(ui->butt_ZMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_zminus()));
- connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(cl_zminus_rel()));
- connect(ui->butt_ZPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_zplus()));
- connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(cl_zplus_rel()));
- connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_x()));
- connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_y()));
- connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_clr_z()));
+ connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()));
+ connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()));
+ connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_x()));
+ connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_y()));
+ connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_z()));
 
- connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
- connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
- connect(ui->butt_go_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_z()));
- connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
+ ////connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
+ ///connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
+ ///connect(ui->butt_go_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_z()));
+/// connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
  }
 
 win_snail::~win_snail()
@@ -914,6 +931,15 @@ void win_snail::saveSettings(void)
     settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
     settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
     settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
+    ///================== mot param =============================
+    settings.setValue("len_step_x", mot_param.len_step[XX]);
+    settings.setValue("mot_rej_x", mot_param.mot_rej[XX]);
+    settings.setValue("len_step_y", mot_param.len_step[YY]);
+    settings.setValue("mot_rej_y", mot_param.mot_rej[YY]);
+    settings.setValue("len_step_z", mot_param.len_step[ZZ]);
+    settings.setValue("mot_rej_z", mot_param.mot_rej[ZZ]);
+
+
 }
 void win_snail::loadSettings(void)
 {
@@ -962,6 +988,14 @@ void win_snail::loadSettings(void)
   params::dbg_last_can_dat[5] = settings.value("last_can_d5", 0).toInt();
   params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
   params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
+  ///================== mot param =============================
+  mot_param.len_step[XX] = settings.value("len_step_x", DEF_LEN_STEP_X).toInt();
+  mot_param.mot_rej[XX] = settings.value("mot_rej_x", DEF_MOT_REJ_X).toInt();
+  mot_param.len_step[YY] = settings.value("len_step_y", DEF_LEN_STEP_Y).toInt();
+  mot_param.mot_rej[YY] = settings.value("mot_rej_y", DEF_MOT_REJ_Y).toInt();
+  mot_param.len_step[ZZ] = settings.value("len_step_z", DEF_LEN_STEP_Z).toInt();
+  mot_param.mot_rej[ZZ] = settings.value("mot_rej_z", DEF_MOT_REJ_Z).toInt();
+
 }    
 
 ///==========================================================
@@ -1321,5 +1355,211 @@ void win_snail::on_butt_test2()
     ///   pGroup->setTransformOriginPoint(0, 0);
     ////   pGroup->setRotation(45);
     ///   pGroup->setScale(2);
+}
+///====================================================================
+void win_snail::sl_go_x()
+{
+ mot_cmd_t t_mot_cmd;
+int cur_coord = dev_state.coord[XX];
+quint8 t_dir = DIR_PLUS;
+quint32 num_step;
+quint16 len_step = mot_param.len_step[XX];/// 0;//// = ui->combo_steps->currentText().toInt();
+int need_coord = ui->le_xx->text().toInt();
+int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+if (num_step != 0)
+    {
+        t_mot_cmd.id = X_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+     }
+}
+
+void win_snail::sl_go_y()
+{
+    mot_cmd_t t_mot_cmd;
+    int cur_coord = dev_state.coord[YY];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = mot_param.len_step[YY];/// 0;//// = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_yy->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+    {
+        t_mot_cmd.id = Y_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+    }
+}
+void win_snail::sl_go_z()
+{
+    mot_cmd_t t_mot_cmd;
+    int cur_coord = dev_state.coord[ZZ];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = mot_param.len_step[ZZ];/// 0;//// = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_zz->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+    {
+        t_mot_cmd.id = Z_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+    }
+}
+///===================================================================
+///=================== X ===========================
+void win_snail::sl_xplus()
+{
+qDebug() << "sl_xplus";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+mot_cmd_t t_mot_cmd;
+t_mot_cmd.id = X_AXIS_CAN_ID;
+t_mot_cmd.dir = DIR_PLUS;
+t_mot_cmd.len_step = len_step;
+t_mot_cmd.num_step = num_step;
+emit s_mot_go(t_mot_cmd);
+
+ ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+
+}
+
+void win_snail::sl_xminus()
+{
+ qDebug() << "sl_xminus ";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = X_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+
+ ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+}
+///=================== Y ===========================
+void win_snail::sl_yplus()
+{
+    qDebug() << "cl_yplus";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+
+    quint16 len_step =  ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Y_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_PLUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+ ///   send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+
+}
+void win_snail::sl_yminus()
+{
+
+    qDebug() << "cl_yminus ";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+    quint16 len_step =  ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Y_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+///    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+}
+///=================== Z ===========================
+void win_snail::sl_zplus()
+{
+    qDebug() << "cl_zplus";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Z_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+
+ ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+
+}
+
+void win_snail::sl_zminus()
+{
+
+    qDebug() << "cl_zminus ";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Z_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_PLUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+
+ ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+
 }
 
