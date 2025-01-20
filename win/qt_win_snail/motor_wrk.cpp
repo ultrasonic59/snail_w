@@ -14,6 +14,8 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* 
     mot_rej[YY] = DEF_MOT_REJ_Y;
     mot_rej[ZZ] = DEF_MOT_REJ_Z;
     */
+    connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+
 }
 ///==============================================================
 
@@ -145,6 +147,20 @@ void Cmotor_wrk::sl_go_home()
         QMessageBox::information(nullptr, "Error!", "go home");
 #endif
 }
+///=================================================
+void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej)
+{
+    qDebug() << "sl_set_rej";
+   send_cmd_mot_rej(id, rej);
+   if(id== X_AXIS_CAN_ID)
+      p_mot_param->mot_rej[XX] = rej;
+   else if(id == Y_AXIS_CAN_ID)
+       p_mot_param->mot_rej[YY] = rej;
+   else if(id == Z_AXIS_CAN_ID)
+       p_mot_param->mot_rej[ZZ] = rej;
+
+}
+
 ///=================== X ===========================
 void Cmotor_wrk::sl_xplus_rel()
 {

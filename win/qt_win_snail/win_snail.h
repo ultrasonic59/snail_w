@@ -192,6 +192,10 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
+    void sl_set_mot_rej();
+  ///  void sl_set_rej_y();
+  ///  void sl_set_rej_z();
+
     ///void cl_clr_x();
     ///void cl_clr_y();
     ///void cl_clr_z();
@@ -233,7 +237,9 @@ signals:
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
-    void s_mot_go(mot_cmd_t mot_cmd);
+
+    void s_mot_go(mot_cmd_t);
+    void s_set_mot_rej(quint32, quint8);
 
 private:
  ///   QGraphicsItem* currentItem;

@@ -43,6 +43,7 @@ public slots:
     void sl_clr_x();
     void sl_clr_y();
     void sl_clr_z();
+    void sl_set_rej(quint32 id, quint8 rej);
 
 protected:
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);

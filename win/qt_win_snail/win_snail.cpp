@@ -37,6 +37,8 @@ win_snail::win_snail(QWidget *parent)
 
 ///====================================
   qRegisterMetaType<cv::Mat>("cv::Mat");
+  qRegisterMetaType<mot_cmd_t>("mot_cmd_t");
+
  
    p_camera = new CameraDevice(this);
    p_CamView = ui->CamWidget;
@@ -110,7 +112,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   m_cmd_sender->moveToThread(pSenderThread);
   connect(pSenderThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
   pSenderThread->start();
-  connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+ /// connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
   connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
 
   ///============================================
@@ -177,7 +179,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  scene->setSceneRect(0, 0, 2000, 2000); //
 ///==================================================
  pMotorThread = new QThread(this);
- p_motor_wrk =new Cmotor_wrk(m_cmd_sender, &dev_state);
+ p_motor_wrk =new Cmotor_wrk(m_cmd_sender, &dev_state,&mot_param);
  p_motor_wrk->moveToThread(pMotorThread);
  connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
  pMotorThread->start();
@@ -187,7 +189,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
   
  
- connect(this, SIGNAL(s_mot_go(mot_cmd_t mot_cmd)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t mot_cmd)));
+ connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
 
  connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
  connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
@@ -220,6 +222,11 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_x()));
  connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_y()));
  connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_z()));
+ ///============ set rej motor ==========================================
+ connect(ui->butt_set_x, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(ui->butt_set_y, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(ui->butt_set_z, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(this, SIGNAL(s_set_mot_rej(quint32, quint8)), p_motor_wrk, SLOT(sl_set_rej(quint32, quint8)));
 
  ////connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
  ///connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
@@ -1443,6 +1450,29 @@ void win_snail::sl_go_z()
     }
 }
 ///===================================================================
+ void win_snail::sl_set_mot_rej()
+{
+    quint8 mot_rej = ui->combo_rej->currentText().toInt();
+    if (sender() == ui->butt_set_x)
+       {
+        qDebug() << "butt_set_x ";
+        emit s_set_mot_rej(X_AXIS_CAN_ID, mot_rej);
+    }
+    else if (sender() == ui->butt_set_y)
+    {
+        qDebug() << "butt_set_y ";
+        emit s_set_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+    }
+    else if (sender() == ui->butt_set_z)
+    {
+        qDebug() << "butt_set_z ";
+        emit s_set_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    }
+       ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+
+}
+
+
 ///=================== X ===========================
 void win_snail::sl_xplus()
 {
@@ -1451,7 +1481,7 @@ qDebug() << "sl_xplus";
  ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
     quint16 len_step = ui->combo_steps->currentText().toInt();
     quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
+ if (num_step == 0)
         num_step = MAX_NUM_STEP;
 mot_cmd_t t_mot_cmd;
 t_mot_cmd.id = X_AXIS_CAN_ID;
@@ -1459,7 +1489,7 @@ t_mot_cmd.dir = DIR_PLUS;
 t_mot_cmd.len_step = len_step;
 t_mot_cmd.num_step = num_step;
 emit s_mot_go(t_mot_cmd);
-
+ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
  ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 
 }
@@ -1480,6 +1510,7 @@ void win_snail::sl_xminus()
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
 
  ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 }
@@ -1500,7 +1531,8 @@ void win_snail::sl_yplus()
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
- ///   send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
+    ///   send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 
 }
 void win_snail::sl_yminus()
@@ -1519,7 +1551,8 @@ void win_snail::sl_yminus()
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
-///    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
+    ///    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 }
 ///=================== Z ===========================
 void win_snail::sl_zplus()
@@ -1537,6 +1570,7 @@ void win_snail::sl_zplus()
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
 
  ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 
@@ -1558,6 +1592,7 @@ void win_snail::sl_zminus()
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
 
  ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 
