@@ -1248,9 +1248,17 @@ void win_snail::keyPressEvent(QKeyEvent* event)
                   break;
     case Qt::Key_R: {
         ///      qDebug() << "Key_D";
-        scene->currentItem->setTransformOriginPoint(200, 0);
+     ////   scene->currentItem->setTransformOriginPoint(200, 0);
         scene->currentItem->setRotation(-5);
  ///       scene->currentItem->setRotation(-5);
+
+    }
+                  break;
+    case Qt::Key_Q: {
+        ///      qDebug() << "Key_D";
+        scene->currentItem->setTransformOriginPoint(20, 0);
+        scene->currentItem->setRotation(-5);
+        ///       scene->currentItem->setRotation(-5);
 
     }
                   break;
@@ -1261,6 +1269,30 @@ void win_snail::keyPressEvent(QKeyEvent* event)
   ///      scene->currentItem->rotate rotate(0);
     }
      break;
+///==========================================================
+    case Qt::Key_V: {
+
+        QTransform transform;
+        ///   transform.translate(offset.x(), offset.y());
+        transform.rotate(-5);
+        ////     transform.translate(-offset.x(), -offset.y());
+        scene->currentItem->setTransform(transform);
+
+    }
+                  break;
+    case Qt::Key_B: {
+
+        QTransform transform;
+        ///   transform.translate(offset.x(), offset.y());
+        scene->currentItem->setTransformOriginPoint(20, 0);
+        transform.rotate(-5);
+        ////     transform.translate(-offset.x(), -offset.y());
+        scene->currentItem->setTransform(transform);
+
+    }
+                  break;
+
+///=========================================================
     }
 
 #if 0
@@ -1491,7 +1523,6 @@ t_mot_cmd.num_step = num_step;
 emit s_mot_go(t_mot_cmd);
 ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
  ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-
 }
 
 void win_snail::sl_xminus()
@@ -1578,7 +1609,6 @@ void win_snail::sl_zplus()
 
 void win_snail::sl_zminus()
 {
-
     qDebug() << "cl_zminus ";
  ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
  ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
