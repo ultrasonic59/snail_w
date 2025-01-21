@@ -41,6 +41,8 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mousePressEvent(event);
     ///QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
     QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+    qDebug() << "spos=" << event->scenePos() << "pos=" << event->pos();
+
  ///   QGraphicsItem* item = itemAt(event->pos(), QTransform());
     if(item)
         currentItem = item;

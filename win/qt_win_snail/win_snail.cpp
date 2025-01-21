@@ -1212,6 +1212,9 @@ if (err.error == QJsonParseError::NoError && !doc.isNull()) {
 }
 scene->addItem(pGroup);
 }
+static qreal t_angl = 0;
+static float x_offs = 0;
+static float y_offs = 0;
 ///=============================================
 void win_snail::keyPressEvent(QKeyEvent* event)
 {
@@ -1247,39 +1250,41 @@ void win_snail::keyPressEvent(QKeyEvent* event)
     }
                   break;
     case Qt::Key_R: {
-        ///      qDebug() << "Key_D";
+     ///   QTransform	transform();
+        t_angl -= 5.0;
+        QPointF pnt = scene->currentItem->transformOriginPoint();
+        QPointF pos = scene->currentItem->pos();
+        QPointF spos = scene->currentItem->scenePos();
+
+             qDebug() << "pnt=" << pnt<<"pos="<< pos << "spos=" << spos;
+
      ////   scene->currentItem->setTransformOriginPoint(200, 0);
-        scene->currentItem->setRotation(-5);
+        scene->currentItem->setRotation(t_angl);
  ///       scene->currentItem->setRotation(-5);
 
     }
                   break;
     case Qt::Key_Q: {
         ///      qDebug() << "Key_D";
-        scene->currentItem->setTransformOriginPoint(20, 0);
-        scene->currentItem->setRotation(-5);
+ ///       scene->currentItem->setTransformOriginPoint(20, 0);
+ ///       scene->currentItem->setRotation(-5);
         ///       scene->currentItem->setRotation(-5);
+        QPointF pnt = scene->currentItem->transformOriginPoint();
+        QPointF pos = scene->currentItem->pos();
+        QPointF spos = scene->currentItem->scenePos();
 
+        qDebug() << "pnt=" << pnt << "pos=" << pos << "spos=" << spos;
     }
-                  break;
+    break;
     case Qt::Key_T: {
         ///      qDebug() << "Key_D";
     ///   pGroup->setTransformOriginPoint(0, 0);
-        scene->currentItem->setRotation(0);
+        t_angl += 5.0;
+        scene->currentItem->setRotation(t_angl);
   ///      scene->currentItem->rotate rotate(0);
     }
      break;
 ///==========================================================
-    case Qt::Key_V: {
-
-        QTransform transform;
-        ///   transform.translate(offset.x(), offset.y());
-        transform.rotate(-5);
-        ////     transform.translate(-offset.x(), -offset.y());
-        scene->currentItem->setTransform(transform);
-
-    }
-                  break;
     case Qt::Key_B: {
 
         QTransform transform;
@@ -1289,6 +1294,40 @@ void win_snail::keyPressEvent(QKeyEvent* event)
         ////     transform.translate(-offset.x(), -offset.y());
         scene->currentItem->setTransform(transform);
 
+    }
+                  break;
+
+    case Qt::Key_Z: {
+        x_offs += 5.0;
+       scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+ 
+    }
+    break;
+    case Qt::Key_X: {
+        x_offs -= 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+    }
+    break;
+    case Qt::Key_C: {
+        y_offs += 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+
+        ///   QTransform transform;
+           ///   transform.translate(offset.x(), offset.y());
+        ////   transform.rotate(-5);
+           ////     transform.translate(-offset.x(), -offset.y());
+        ////   scene->currentItem->setTransform(transform);
+    }
+                  break;
+    case Qt::Key_V: {
+        y_offs -= 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+
+        ///   QTransform transform;
+           ///   transform.translate(offset.x(), offset.y());
+        ////   transform.rotate(-5);
+           ////     transform.translate(-offset.x(), -offset.y());
+        ////   scene->currentItem->setTransform(transform);
     }
                   break;
 
