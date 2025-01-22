@@ -1265,10 +1265,17 @@ void win_snail::keyPressEvent(QKeyEvent* event)
     }
                   break;
     case Qt::Key_Q: {
+
         ///      qDebug() << "Key_D";
  ///       scene->currentItem->setTransformOriginPoint(20, 0);
  ///       scene->currentItem->setRotation(-5);
         ///       scene->currentItem->setRotation(-5);
+        cust_line* line = (cust_line*)scene->currentItem;
+        QPointF t_center= line->GetCenter();
+        qDebug() << "line=" << line->line();
+        qDebug() << "center=" << t_center;
+        scene->currentItem->setTransformOriginPoint(t_center);
+
         QPointF pnt = scene->currentItem->transformOriginPoint();
         QPointF pos = scene->currentItem->pos();
         QPointF spos = scene->currentItem->scenePos();

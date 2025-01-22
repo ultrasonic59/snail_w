@@ -31,6 +31,8 @@ public:
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
     void setPath(const QPainterPath &path);
+    QPointF GetCenter();
+
 
 signals:
     void previousPositionChanged();
