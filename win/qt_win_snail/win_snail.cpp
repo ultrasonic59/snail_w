@@ -1215,6 +1215,50 @@ scene->addItem(pGroup);
 static qreal t_angl = 0;
 static float x_offs = 0;
 static float y_offs = 0;
+
+#if 0
+switch (scene->selectedItems().at(0)->type()) {
+case QGraphicsRectItem::Type: {
+    ///ui.rectangleSettings->setVisible(true);
+    ///ui.polylineSettings->deselect();
+    ///ui.polylineSettings->setVisible(false);
+    break;
+}
+                            cust_line* line = (cust_line*)scene->currentItem;
+                            QPointF t_center = line->GetCenter();
+                            QGraphicsLineItem
+
+#endif
+///=============================================
+void win_snail::rotateComp(qreal angle)
+{
+QPointF t_center = QPointF(0, 0);
+qDebug() << "currentItem->type:"<< scene->currentItem->type();
+
+switch(scene->currentItem->type())
+    {
+    case QGraphicsLineItem::Type: {
+        cust_line* line = (cust_line*)scene->currentItem;
+        t_center = line->GetCenter();
+      }
+    break;
+
+    case QGraphicsRectItem::Type: {
+        qDebug() << "QGraphicsRectItem";
+
+      }
+        break;
+    case QGraphicsItemGroup::Type: {
+        qDebug() << "QGraphicsItemGroup";
+
+    }
+    break;
+
+    }
+scene->currentItem->setTransformOriginPoint(t_center);
+scene->currentItem->setRotation(angle);
+}
+
 ///=============================================
 void win_snail::keyPressEvent(QKeyEvent* event)
 {
@@ -1252,14 +1296,19 @@ void win_snail::keyPressEvent(QKeyEvent* event)
     case Qt::Key_R: {
      ///   QTransform	transform();
         t_angl -= 5.0;
+        rotateComp(t_angl);
+
+/*
         QPointF pnt = scene->currentItem->transformOriginPoint();
         QPointF pos = scene->currentItem->pos();
         QPointF spos = scene->currentItem->scenePos();
 
              qDebug() << "pnt=" << pnt<<"pos="<< pos << "spos=" << spos;
-
+*/
      ////   scene->currentItem->setTransformOriginPoint(200, 0);
-        scene->currentItem->setRotation(t_angl);
+
+        ///scene->currentItem->setRotation(t_angl);
+
  ///       scene->currentItem->setRotation(-5);
 
     }

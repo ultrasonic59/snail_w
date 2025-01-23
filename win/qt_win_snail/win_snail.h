@@ -153,6 +153,7 @@ private:
     QString strippedName(const QString& fullFileName);
     void setCurrentFile(const QString& fileName);
     void updateRecentFileActions();
+    void rotateComp(qreal angle);
 
 public slots:
     void on_butt_con_hid();

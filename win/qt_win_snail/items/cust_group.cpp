@@ -277,3 +277,22 @@ void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
         painter->drawRect(boundingRect());
     }
 }
+
+QPointF cust_group::GetCenter()
+{
+    QPointF rez;
+#if 0
+    QLineF t_line = line();
+    qreal rtmp = t_line.p1().x() + (t_line.p2().x() - t_line.p1().x()) / 2;
+    rez.setX(rtmp);
+    rtmp = t_line.p1().y() + (t_line.p2().y() - t_line.p1().y()) / 2;
+    rez.setY(rtmp);
+
+    /*
+    for (int i = 0; i < 8; i++) {
+        cornerGrabber[i]->setVisible(false);
+    }
+    */
+#endif
+    return rez;
+}
