@@ -265,5 +265,8 @@ protected:
     QThread* pMotorThread;
     Cmotor_wrk* p_motor_wrk;
 
+protected slots:
+    void on_clr();
+
 
 };

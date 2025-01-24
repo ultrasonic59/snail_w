@@ -125,12 +125,15 @@ void LibUtil::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
         obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
         objObject.insert("pen", obj3Object);
         QJsonObject obj4Object;
+
+        qDebug() << "rect pos" << rect->pos()<< rect->rect();
+
         obj4Object.insert("x", QJsonValue::fromVariant(rect->pos().x()));
         obj4Object.insert("y", QJsonValue::fromVariant(rect->pos().y()));
         objObject.insert("pos", obj4Object);
         ///   itemObj.insert("rect", objObject);
     }
-                                break;
+       break;
     case QGraphicsLineItem::Type: {
         cust_line* line = qgraphicsitem_cast<cust_line*>(item);
 
@@ -162,7 +165,7 @@ void LibUtil::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
 
         ///           itemObj.insert("obj", objObject);
     }
-                                break;
+    break;
     case QGraphicsEllipseItem::Type: {
         cust_circle* circle = qgraphicsitem_cast<cust_circle*>(item);
         QRectF t_rect = circle->rect();
@@ -185,12 +188,14 @@ void LibUtil::insertItem(QGraphicsItem* item, QJsonObject& itemObj)
         obj3Object.insert("width", QJsonValue::fromVariant(t_pen.width()));
         objObject.insert("pen", obj3Object);
         QJsonObject obj4Object;
+        qDebug() << "circle pos" << circle->pos();
+
         obj4Object.insert("x", QJsonValue::fromVariant(circle->pos().x()));
         obj4Object.insert("y", QJsonValue::fromVariant(circle->pos().y()));
         objObject.insert("pos", obj4Object);
         itemObj.insert("obj", objObject);
     }
-                                   break;
+     break;
     }
     itemObj.insert("obj", objObject);
 }

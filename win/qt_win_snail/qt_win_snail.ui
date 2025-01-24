@@ -1205,6 +1205,19 @@
         <string>Set Z</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="butt_clear">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>830</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>clear</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
