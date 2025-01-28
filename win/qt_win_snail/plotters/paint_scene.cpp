@@ -1,4 +1,4 @@
-#include <Qdebug>
+﻿#include <Qdebug>
 #include <QFont>
 #include <QMenu>
 #include <QMessageBox>
@@ -26,6 +26,8 @@ PaintScene::PaintScene(QObject* parent
     , m_altPressed(false)
     ,on_background(false)
 {
+  ///  ui->setupUi(this);
+ ///   this->setMouseTracking(true); //включить слежение за мышью
 }
 
 PaintScene::~PaintScene()

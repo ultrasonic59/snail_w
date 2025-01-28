@@ -281,6 +281,12 @@ void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 QPointF cust_group::GetCenter()
 {
     QPointF rez;
+    QRectF t_rec = boundingRect();
+    qreal rtmp = t_rec.left() + (t_rec.right() - t_rec.left()) / 2;
+    rez.setX(rtmp);
+    rtmp = t_rec.top() + (t_rec.bottom() - t_rec.top()) / 2;
+    rez.setY(rtmp);
+
 #if 0
     QLineF t_line = line();
     qreal rtmp = t_line.p1().x() + (t_line.p2().x() - t_line.p1().x()) / 2;

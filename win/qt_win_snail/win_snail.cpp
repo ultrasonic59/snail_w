@@ -1251,6 +1251,9 @@ switch(scene->currentItem->type())
       }
         break;
     case QGraphicsItemGroup::Type: {
+        cust_group* group = (cust_group*)scene->currentItem;
+        t_center = group->GetCenter();
+
         qDebug() << "QGraphicsItemGroup";
 
     }
