@@ -27,7 +27,7 @@ PaintScene::PaintScene(QObject* parent
     ,on_background(false)
 {
   ///  ui->setupUi(this);
- ///   this->setMouseTracking(true); //включить слежение за мышью
+ ///   this->setMouseTracking(true); //
 }
 
 PaintScene::~PaintScene()
@@ -43,7 +43,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsScene::mousePressEvent(event);
     ///QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
     QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
-    qDebug() << "spos=" << event->scenePos() << "pos=" << event->pos();
+ ///   qDebug() << "spos=" << event->scenePos() << "pos=" << event->pos();
 
  ///   QGraphicsItem* item = itemAt(event->pos(), QTransform());
     if(item)
@@ -173,10 +173,13 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
 #endif
 }
-
+///lab_mouse_x
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 QGraphicsScene::mouseMoveEvent(event);
+////if (event->modifiers() == Qt::AltModifier)
+    qDebug() << "move spos=" << event->scenePos() << "move pos=" << event->pos();
+
 
 #if 0
 QPointF ev_point = event->scenePos();

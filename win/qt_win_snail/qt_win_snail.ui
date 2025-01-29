@@ -121,6 +121,20 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="lab_mouse_x">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lab_mouse_y">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="label_rule">
             <property name="minimumSize">
              <size>
