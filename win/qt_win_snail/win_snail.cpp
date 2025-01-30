@@ -234,6 +234,14 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 /// connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
  connect(ui->butt_clear, SIGNAL(clicked()), this, SLOT(on_clr()));
 
+ ///connect(scene, &PaintScene::signalPress, this, &DialLib::slShowBeg);
+ connect(scene, SIGNAL(s_mouse_pos(QPointF)), this, SLOT(sl_mouse_pos(QPointF)));
+
+ }
+ void win_snail::sl_mouse_pos(QPointF pnt)
+ {
+     ui->lab_mouse_x->setText(QString("X=%1").arg(pnt.x()));
+     ui->lab_mouse_y->setText(QString("Y=%1").arg(pnt.y()));
  }
 
 win_snail::~win_snail()

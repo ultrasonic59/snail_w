@@ -43,6 +43,8 @@ signals:
    void signalNewSelectItem(QGraphicsItem* item);
    void signalPress(QPointF pnt);
    void signalMove(QPointF pnt);
+   void s_mouse_pos(QPointF pnt);
+
    ///=======================================================
 public:
     en_item_type* p_item_type;
@@ -51,12 +53,14 @@ public:
     QPointF      rule_end;
 
 private:
-    bool _mousePressedLeft;
-    bool _mousePressedRight;
+ ///   bool _mousePressedLeft;
+ ///   bool _mousePressedRight;
     void drawBackground(QPainter* painter, const QRectF& rect);
     PlotProperties* pPlot_Prop;
 private:
  ///   QGraphicsItem* sel_item;
+ ///   QPointF beg_rule;
+ ///   QPointF end_rule;
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);

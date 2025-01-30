@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1182</width>
+    <width>1308</width>
     <height>865</height>
    </rect>
   </property>
@@ -122,15 +122,25 @@
           </item>
           <item>
            <widget class="QLabel" name="lab_mouse_x">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>TextLabel</string>
+             <string>xxxxxxx</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="lab_mouse_y">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>TextLabel</string>
+             <string>xxxxxxx</string>
             </property>
            </widget>
           </item>

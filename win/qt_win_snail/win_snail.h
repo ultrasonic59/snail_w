@@ -267,6 +267,7 @@ protected:
 
 protected slots:
     void on_clr();
+    void sl_mouse_pos(QPointF pnt);
 
 
 };

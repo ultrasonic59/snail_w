@@ -48,6 +48,18 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
  ///   QGraphicsItem* item = itemAt(event->pos(), QTransform());
     if(item)
         currentItem = item;
+    if (event->button() == Qt::LeftButton)
+    {
+        m_leftMouseButtonPressed = true;
+        if (event->modifiers() == Qt::AltModifier)
+        {
+            m_altPressed = true;
+            rule_beg = event->scenePos();
+        }
+
+///        beg_rule = event->scenePos();
+    }
+
 #if 0
     QGraphicsScene::mousePressEvent(event);
      QPoint gr_point;
@@ -177,9 +189,19 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 QGraphicsScene::mouseMoveEvent(event);
-////if (event->modifiers() == Qt::AltModifier)
-    qDebug() << "move spos=" << event->scenePos() << "move pos=" << event->pos();
 
+////if (event->modifiers() == Qt::AltModifier)
+QPointF cur_pos = event->scenePos();
+emit s_mouse_pos(cur_pos);
+
+////   qDebug() << "move spos=" << event->scenePos() << "move pos=" << event->pos();
+    if (event->modifiers() == Qt::AltModifier)
+    {
+        if (m_leftMouseButtonPressed)
+        {
+            qDebug() << "left move spos=";
+        }
+    }
 
 #if 0
 QPointF ev_point = event->scenePos();

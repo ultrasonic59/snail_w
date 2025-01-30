@@ -40,8 +40,20 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
 }
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-/// this->setPos(mapToScene(event->pos()));
- ///this->setPos(event->scenePos());
+  QPointF gr_pos = event->scenePos();
+  qreal dx = gr_pos.x() - previousPosition().x();
+  qreal dy = gr_pos.y() - previousPosition().y();
+
+ if (m_leftMouseButtonPressed) {
+ ///    qDebug() << "m_previousPosition_x=" << m_previousPosition.x();
+ ///    qDebug() << "m_previousPosition_y=" << m_previousPosition.y();
+  ///   qDebug() << "curx=" << gr_pos.x();
+  ///   qDebug() << "cury=" << gr_pos.y();
+  ///   qDebug() << "dx="<< dx;
+  ///   qDebug() << "dy=" << dy;
+      moveBy(dx, dy);
+      setPreviousPosition(gr_pos);
+    }
 }
 
 #if 0
@@ -159,7 +171,8 @@ void cust_group::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
-        QPoint gr_pos = params::closest_to_grid(event->scenePos());
+ ///       QPoint gr_pos = params::closest_to_grid(event->scenePos());
+        QPointF gr_pos = event->scenePos();
         setPreviousPosition(gr_pos);
  ///       setPreviousPosition(event->scenePos());
         emit clicked(this);
