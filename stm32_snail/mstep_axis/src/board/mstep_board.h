@@ -34,8 +34,8 @@ extern cmd_t cur_cmd;
 #define TST_TIM         TIM8
 #define TST_TIM_RCC  	RCC_APB2Periph_TIM8
 
-#define MOT_TIM_PERIOD     6000
-#define MOT_TIM_PRESC     8
+#define DEF_MOT_TIM_PERIOD     6000
+#define DEF_MOT_TIM_PRESC     8
 
 ////#define MOT_STEP_TIM_IRQHandler	 TIM1_TRG_COM_TIM11_IRQHandler
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler

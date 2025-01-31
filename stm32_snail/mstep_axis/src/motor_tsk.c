@@ -16,7 +16,7 @@ extern uint8_t ena_check_conc;
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 
-static uint8_t cur_mot_dir=0;
+////static uint8_t cur_mot_dir=0;
 
 cmd_t cur_cmd={0};
 void mot_spi_wr(uint8_t addr,uint16_t idata);
@@ -98,16 +98,11 @@ if(check_push_key_dbg())
     put_mot_nstep(nstep);
     psk=0;
     }
-  
   }  
 }
 }
 
 ///=============================================
-
-
-  
-
 ////void put_mot_nstep(uint32_t nstep)
 
 void set_mot_per(uint16_t per)
@@ -139,9 +134,10 @@ else
 }
 
 ///==================================================
+#if 0
 void mot_step_tim_init(void)
 {
-#if 0
+#if 1
 NVIC_InitTypeDef NVIC_InitStructure; 
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
@@ -167,7 +163,7 @@ NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 #endif
 }
-
+#endif
 ///===========================================================
 void ena_mot(uint8_t ena_dis)
 {
