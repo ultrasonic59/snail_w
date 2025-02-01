@@ -78,7 +78,7 @@ xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_P
 xTaskCreate( state_task, "state_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
-	vTaskStartScheduler();
+vTaskStartScheduler();
 
 	/* Will only get here if there was not enough heap space to create the
 	idle task. */

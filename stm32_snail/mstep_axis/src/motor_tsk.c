@@ -16,12 +16,9 @@ extern uint8_t ena_check_conc;
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 
-////static uint8_t cur_mot_dir=0;
+static uint8_t cur_mot_dir=0;
 
 cmd_t cur_cmd={0};
-void mot_spi_wr(uint8_t addr,uint16_t idata);
-uint16_t mot_spi_rd(uint8_t addr);
-void mot_spi_init(void);
 
 void motor_task( void *pvParameters )
 {
@@ -107,7 +104,7 @@ if(check_push_key_dbg())
 
 void set_mot_per(uint16_t per)
 {
-#if 0
+#if 1
 if(per>MAX_PER)
   per=MAX_PER;
 else if(per<MIN_PER)
@@ -165,37 +162,29 @@ NVIC_Init(&NVIC_InitStructure);
 }
 #endif
 ///===========================================================
-void ena_mot(uint8_t ena_dis)
-{
-#if 0
-uint16_t tmp;
-////return ; 
-tmp=mot_spi_rd(ADDR_MOT_CTRL);
-if(ena_dis&0x1)
-{
-tmp|=0x1;
+///static uint8_t cur_step_out=0;
+void MOT_STEP_TIM_IRQHandler(void)
+{ 
+if(num_step)
+  {
+  num_step--;  
+  if((cur_mot_dir&0x1)==0)
+    cur_coord++;
+  else
+    cur_coord--;
+  if(num_step==0)
+    {
+    stop_mot_step_tim(); 
+ ///   set_ena_mot(1);
+    }
+  }
+TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 }
-else
-{
-tmp&= ~0x1;
-}
-mot_spi_wr(ADDR_MOT_CTRL,tmp);
-#endif
-}
-#if 0
-void put_mot_nstep(uint32_t nstep)
-{
-ena_mot(1) ;
-num_step=nstep; 
-TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
-TIM_Cmd(MOT_STEP_TIM, ENABLE);
-}
-#endif
-static uint8_t cur_step_out=0;
 
+#if 0
 void __MOT_STEP_TIM_IRQHandler(void)
 { 
-#if 0
+
 uint8_t tconc;
 tconc=  get_conc_n();
 #if 0
@@ -248,14 +237,99 @@ else
    ena_mot(0) ;
    }
 }
-#endif
+
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
+}
+#endif
+void mot_tim_init(void)
+{
+NVIC_InitTypeDef NVIC_InitStructure; 
+
+RCC->APB2ENR |= MOT_STEP_TIM_RCC;
+MOT_STEP_TIM ->PSC = DEF_MOT_TIM_PRESC;
+////LED_PWM_TIM->ARR = 1000;
+MOT_STEP_TIM ->ARR = DEF_MOT_TIM_PERIOD;////
+MOT_STEP_TIM ->CCR2 = DEF_MOT_TIM_PERIOD/2;////30;
+MOT_STEP_TIM->CCER |= TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
+MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
+MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1; 
+MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
+MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
+MOT_STEP_TIM->CR1 |= TIM_CR1_CEN;
+MOT_STEP_TIM ->DIER = TIM_DIER_CC2IE|TIM_DIER_COMIE;
+TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_COM);
+	// Enable interrupt, motor commutation has high piority and has
+	// a higher subpriority then the hall sensor
+
+NVIC_InitStructure.NVIC_IRQChannel = MOT_TIM_IRQN;
+	// highest priority
+NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
+
+NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	// highest priority
+NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+NVIC_Init(&NVIC_InitStructure);
+TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC2, ENABLE);
+
+
+}
+void stop_mot_step_tim(void)
+{
+TIM_Cmd(MOT_STEP_TIM, DISABLE);
+}
+
+void put_mot_nstep(uint32_t nstep)
+{
+num_step=nstep; 
+set_ena_mot(0);
+TIM_Cmd(MOT_STEP_TIM, ENABLE);
+}
+volatile uint32_t gsr;
+////=======================================================
+
+void set_mot_rej(uint8_t rej)
+{
+if(rej&0x1)
+  {
+  GPIO_SetBits(MOT_M0_PIN_GPIO, MOT_M0_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_M0_PIN_GPIO, MOT_M0_PIN);
+  }
+if(rej&0x2)
+  {
+  GPIO_SetBits(MOT_M1_PIN_GPIO, MOT_M1_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_M1_PIN_GPIO, MOT_M1_PIN);
+  }
+if(rej&0x4)
+  {
+  GPIO_SetBits(MOT_M2_PIN_GPIO, MOT_M2_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_M2_PIN_GPIO, MOT_M2_PIN);
+  }
 }
 
 ///=============================================
 void motor_init(void)
 {
+mot_tim_init(); 
+
+set_mot_rej(DEF_MOT_REJ);
+stop_mot_step_tim();
+set_sleep_mot(1);
+set_reset_mot(0);
+uDelay(1000);
+set_reset_mot(1);
+uDelay(20000);
+///set_ena_mot(1);
+
 #if 0
 mot_step_tim_init();
 mot_spi_init();

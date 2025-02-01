@@ -210,8 +210,13 @@ void Cmotor_wrk::sl_clr_z()
 ///==================================================
 void Cmotor_wrk::sl_stop()
 {
-    ///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
-    send_cmd_stop(X_AXIS_CAN_ID);
+////send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
+ ////   send_cmd_stop(X_AXIS_CAN_ID);
+    qDebug() << "sl_stop0";
+
+   send_cmd_stop(Y_AXIS_CAN_ID);
+    qDebug() << "sl_stop";
+
 }
 
 void Cmotor_wrk::SlSendCmd(can_message_t* msg)

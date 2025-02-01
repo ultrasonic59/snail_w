@@ -368,93 +368,6 @@ LED_PWM_TIM->CR1 |= TIM_CR1_CEN;
 
 extern volatile uint32_t num_step;
 
-
-void mot_tim_init(void)
-{
-NVIC_InitTypeDef NVIC_InitStructure; 
-
-RCC->APB2ENR |= MOT_STEP_TIM_RCC;
-MOT_STEP_TIM ->PSC = DEF_MOT_TIM_PRESC;
-////LED_PWM_TIM->ARR = 1000;
-MOT_STEP_TIM ->ARR = DEF_MOT_TIM_PERIOD;////
-MOT_STEP_TIM ->CCR2 = DEF_MOT_TIM_PERIOD/2;////30;
-MOT_STEP_TIM->CCER |= TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
-MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
-MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1; 
-MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
-MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
-MOT_STEP_TIM->CR1 |= TIM_CR1_CEN;
-MOT_STEP_TIM ->DIER = TIM_DIER_CC2IE|TIM_DIER_COMIE;
-TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_COM);
-	// Enable interrupt, motor commutation has high piority and has
-	// a higher subpriority then the hall sensor
-
-NVIC_InitStructure.NVIC_IRQChannel = MOT_TIM_IRQN;
-	// highest priority
-NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
-
-NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	// highest priority
-NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-NVIC_Init(&NVIC_InitStructure);
-TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC2, ENABLE);
-
-
-}
-void stop_mot_step_tim(void)
-{
-TIM_Cmd(MOT_STEP_TIM, DISABLE);
-}
-
-void put_mot_nstep(uint32_t nstep)
-{
-num_step=nstep; 
-set_ena_mot(0);
-TIM_Cmd(MOT_STEP_TIM, ENABLE);
-}
-volatile uint32_t gsr;
-////=======================================================
-void MOT_STEP_TIM_IRQHandler(void)
-{ 
-if(num_step)
-  {
-  num_step--;  
-  if(num_step==0)
-    {
-    stop_mot_step_tim(); 
-    set_ena_mot(1);
-    }
-  }
-TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
-}
-
-void set_mot_rej(uint8_t rej)
-{
-if(rej&0x1)
-  {
-  GPIO_SetBits(MOT_M0_PIN_GPIO, MOT_M0_PIN);
-  }
-else
-  {
-   GPIO_ResetBits(MOT_M0_PIN_GPIO, MOT_M0_PIN);
-  }
-if(rej&0x2)
-  {
-  GPIO_SetBits(MOT_M1_PIN_GPIO, MOT_M1_PIN);
-  }
-else
-  {
-   GPIO_ResetBits(MOT_M1_PIN_GPIO, MOT_M1_PIN);
-  }
-if(rej&0x4)
-  {
-  GPIO_SetBits(MOT_M2_PIN_GPIO, MOT_M2_PIN);
-  }
-else
-  {
-   GPIO_ResetBits(MOT_M2_PIN_GPIO, MOT_M2_PIN);
-  }
-}
 uint8_t get_conc(void)
 {
 return GPIO_ReadInputDataBit(CONC_PIN_GPIO, CONC_PIN);
@@ -555,7 +468,7 @@ for(;;)
   }
 }
 
-void _tst_task( void *pvParameters )
+void __tst_task_( void *pvParameters )
 {
 ////uint8_t btst=0; 
 uint8_t psk=0; 
@@ -567,7 +480,7 @@ printk("\n\r tst_task");
 
 set_sleep_mot(1);
 set_ena_mot(1);
-set_reset_mot(0);
+///set_reset_mot(0);
 uDelay(1000);
 set_reset_mot(1);
 ////set_ena_mot(0);

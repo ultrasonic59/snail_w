@@ -37,6 +37,10 @@ extern cmd_t cur_cmd;
 #define DEF_MOT_TIM_PERIOD     6000
 #define DEF_MOT_TIM_PRESC     8
 
+#define MAX_PER         64000
+#define MIN_PER         10        
+
+
 ////#define MOT_STEP_TIM_IRQHandler	 TIM1_TRG_COM_TIM11_IRQHandler
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
@@ -258,6 +262,7 @@ extern void motor_init(void);
 extern int check_push_key_dbg(void);
 extern uint8_t ena_check_conc;
 extern uint8_t get_conc(void);
+extern void stop_mot_step_tim(void);
 
 #define dbg_sendchar  send_char_dbg 
 #define dbg_get_byte get_byte_dbg

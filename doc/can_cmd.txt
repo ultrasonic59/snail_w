@@ -61,3 +61,6 @@ void win_snail::cl_go_x()
 butt_home
 void win_snail::cl_go_home()
 Key_Escape
+
+All STEP inputs are ignored until 
+the  RESET input is set to high

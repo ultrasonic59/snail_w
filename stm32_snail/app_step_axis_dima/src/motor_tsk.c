@@ -430,6 +430,7 @@ num_step=nstep;
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
+
 static uint8_t cur_step_out=0;
 void MOT_STEP_TIM_IRQHandler(void)
 { 
