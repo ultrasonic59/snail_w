@@ -169,9 +169,6 @@
     <ClCompile Include="camera\DeviceEnumerator.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
-    <ClCompile Include="items\cust_group.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="plotters\paint_scene.cpp">
       <Filter>Source Files\plotters</Filter>
     </ClCompile>
@@ -180,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="motor_wrk.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="items\component.cpp">
+      <Filter>Source Files\items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,9 +289,6 @@
     <QtMoc Include="camera\cameradevice.h">
       <Filter>Header Files\camera</Filter>
     </QtMoc>
-    <QtMoc Include="items\cust_group.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
     <QtMoc Include="plotters\paint_scene.h">
       <Filter>Header Files\plotters</Filter>
     </QtMoc>
@@ -300,6 +297,9 @@
     </QtMoc>
     <QtMoc Include="motor_wrk.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="items\component.h">
+      <Filter>Header Files\items</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

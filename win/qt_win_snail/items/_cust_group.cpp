@@ -11,7 +11,7 @@
 
 
 cust_group::cust_group(QObject *parent) :
-    QObject(parent),Name(QString()), green_point(QPointF())
+    QObject(parent)
  {
   ///  setAcceptHoverEvents(true);
  ///   setFlags(ItemIsSelectable|ItemSendsGeometryChanges| ItemIsMovable);

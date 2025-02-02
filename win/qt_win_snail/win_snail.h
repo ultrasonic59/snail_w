@@ -27,7 +27,7 @@
 #include "cameradevice.h"
 #include "paint_scene.h"
 ///#include "myitem.h"
-#include "cust_group.h"
+#include "component.h"
 #include "lib_util.h"
 
 ///======================================================================

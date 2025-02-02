@@ -10,7 +10,7 @@
 #include "cust_rect.h"
 #include "cust_line.h"
 #include "cust_circle.h"
-#include "cust_group.h"
+#include "component.h"
 
 
 win_snail::win_snail(QWidget *parent)
