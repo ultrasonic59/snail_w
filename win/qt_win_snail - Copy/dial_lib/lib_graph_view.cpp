@@ -152,3 +152,27 @@ void LibGraphicView::mouseMoveEvent(QMouseEvent* event)
     qDebug() << "LibGraphicView::mouseMoveEvent=" << ev_point ;
 #endif
 }
+#if 0
+void LibGraphicView::paintEvent(QPaintEvent* ev)
+{
+    QPainter *painter = new QPainter(this);
+
+///    painter = new QPainter(this);
+    drawMainAxis(painter);
+
+    painter->end();
+}
+void LibGraphicView::drawMainAxis(QPainter *painter)
+{
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(5);
+    painter->setPen(apen);
+    painter->drawLine(QLine(0, 0, 300, 0));
+    painter->drawLine(QLine(0, 0, 0, 300));
+    painter->drawText(QPoint(5, 13), "0,0");
+    painter->drawText(QPoint(280, 13), "300");
+    painter->drawText(QPoint(5, 295), "300");
+}
+#endif

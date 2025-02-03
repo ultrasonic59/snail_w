@@ -297,6 +297,22 @@ void cust_line::slotMove(QGraphicsItem *signalOwner, qreal dx, qreal dy)
     setPath(linePath);
     */
 }
+QPointF cust_line::GetCenter()
+{
+    QPointF rez;
+    QLineF t_line = line();
+    qreal rtmp = t_line.p1().x()+(t_line.p2().x() - t_line.p1().x()) / 2;
+        rez.setX(rtmp);
+        rtmp = t_line.p1().y()+(t_line.p2().y() - t_line.p1().y()) / 2;
+        rez.setY(rtmp);
+
+    /*
+    for (int i = 0; i < 8; i++) {
+        cornerGrabber[i]->setVisible(false);
+    }
+    */
+    return rez;
+}
 
 void cust_line::checkForDeletePoints()
 {

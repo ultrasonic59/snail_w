@@ -22,12 +22,12 @@
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
 #include "snail_data.h"
-///#include "wrk_wrk.h"
+#include "motor_wrk.h"
 #include "CamPlotter.h"
 #include "cameradevice.h"
 #include "paint_scene.h"
 ///#include "myitem.h"
-#include "cust_group.h"
+#include "component.h"
 #include "lib_util.h"
 
 ///======================================================================
@@ -48,7 +48,7 @@
 #define LONG_PUSH_TIME	500
 #define MOTOR_OFF false
 #define MOTOR_ON true
-#define MAX_NUM_STEP 10000000
+/// #define MAX_NUM_STEP 10000000
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
@@ -96,10 +96,8 @@ private:
     QImage    _image;
  ///  hid_device* hid_handle;
 private:
-    QThread* m_pThread;
-   /// QThread* wrk_Thread;
+    QThread* pSenderThread;
     CcmdSender* m_cmd_sender;
-    ///Cwrk_wrk* p_wrk;
     ////QPoint getMouseInsideCoord(QPoint inPos);
 ////public slots:
 ////    void setCamImage(QImage ipm);
@@ -134,7 +132,7 @@ private :
     bool eventFilter(QObject* obj, QEvent* event);
     void createMenus();
     bool m_can_isConnected;
-
+    bool on_esc_key;
 private:
     QAction* actionProj;
     QAction* actionFile;
@@ -145,6 +143,7 @@ private:
     QAction* actionNew_file;
     QAction* separatorAction;
 public:
+    mot_param_t mot_param;
 
 private:
     QStringList recentFiles;
@@ -154,6 +153,7 @@ private:
     QString strippedName(const QString& fullFileName);
     void setCurrentFile(const QString& fileName);
     void updateRecentFileActions();
+    void rotateComp(qreal angle);
 
 public slots:
     void on_butt_con_hid();
@@ -169,12 +169,11 @@ public slots:
     void on_butt_test();
     void on_butt_test1();
     void on_butt_test2();
+    void on_butt_test3();
     void on_butt_load();
 
     void sl_rsv_can_dat(char*);
     void sl_state_changed();
-
-
 private slots:
     void selectVideoSource();
 private slots:
@@ -194,6 +193,14 @@ private slots:
     bool saveFile(const QString& fileName);
     bool okToContinue();
     bool saveAs();
+    void sl_set_mot_rej();
+  ///  void sl_set_rej_y();
+  ///  void sl_set_rej_z();
+
+    ///void cl_clr_x();
+    ///void cl_clr_y();
+    ///void cl_clr_z();
+/*
 protected:
     bool    xminusPushed;
     bool    xminusLongPush ;
@@ -201,43 +208,66 @@ protected:
     bool    yminusLongPush;
     bool    zminusPushed;
     bool    zminusLongPush;
+    */
+protected slots:
+    void sl_go_x();
+    void sl_go_y();
+    void sl_go_z();
+    void sl_xminus();
+    void sl_xplus();
+    void sl_yplus();
+    void sl_yminus();
+    void sl_zplus();
+    void sl_zminus();
+
+/*
 protected slots:
     void cl_stop();
-    void cl_xminus();
     void cl_xminus_rel();
-    void cl_xplus();
-    void cl_xplus_rel();
-    void cl_yminus();
+     void cl_xplus_rel();
     void cl_yminus_rel();
-    void cl_yplus();
     void cl_yplus_rel();
-    void cl_zminus();
-    void cl_zminus_rel();
-    void cl_zplus();
+     void cl_zminus_rel();
     void cl_zplus_rel();
- 
+    void cl_go_home();
+*/
 signals:
     void updateCamView(QImage);
-    void s_SendCmd(can_message_t* msg);
+ ///   void s_SendCmd(can_message_t* msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
+
+    void s_mot_go(mot_cmd_t);
+    void s_set_mot_rej(quint32, quint8);
+
 private:
-    QGraphicsItem* currentItem;
+ ///   QGraphicsItem* currentItem;
     PaintScene* scene;
     QString lib_path;
     LibUtil lib_util;
+///    cust_group* p_curGroup;
+    void showConState();
+    quint8  prev_states[NUM_AXIS];                       /// 
 
-    cust_group* p_curGroup;
 public:
     bool data_ready;
     can_message_t rsv_msg;
     dev_state_t dev_state;
 protected:
+    /*
     void send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step);
     void send_cmd_stop(quint32 id);
     void send_cmd_mot_rej(quint32 id,quint8 rej);
+    void send_cmd_set_coord(quint32 id, quint32 coord); */
+    void mousePressEvent(QMouseEvent* event);
+    QThread* pMotorThread;
+    Cmotor_wrk* p_motor_wrk;
+
+protected slots:
+    void on_clr();
+    void sl_mouse_pos(QPointF pnt);
 
 
 };

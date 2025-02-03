@@ -21,11 +21,8 @@ public:
  
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
-    QString Name;
-
- ///   void setRect(qreal x, qreal y, qreal w, qreal h);
- ///   void setRect(const QRectF &rect);
- ///   void setCircle(qreal x, qreal y, qreal diam);
+  ///  QString Name;
+    QPointF GetCenter();
 
 signals:
     void groupChanged(cust_group* rect);
@@ -46,25 +43,14 @@ protected:
  ///   QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
-     QPointF m_previousPosition;
+    QPointF m_previousPosition;
     bool m_leftMouseButtonPressed;
-  ///  virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 public:
-    QList<QPointF> red_points;
-    QPointF  green_point;
+  ///  QList<QPointF> red_points;
+  ///  QPointF  green_point;
 
-    ///DotSignal *cornerGrabber[NUM_CORNERS];
-
- ///   void resizeLeft( const QPointF &pt);
-  ///  void resizeRight( const QPointF &pt);
- ///   void resizeBottom(const QPointF &pt);
-  ///  void resizeTop(const QPointF &pt);
-
- ///    void setPositionGrabbers();
-  ///  void setVisibilityGrabbers();
-  ///  void hideGrabbers();
-};
+ };
 
 #endif // __CUST_GROUP_H__

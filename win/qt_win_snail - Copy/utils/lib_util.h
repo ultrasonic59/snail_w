@@ -16,7 +16,7 @@
 #include "cust_line.h"
 #include "cust_circle.h"
 #include "cust_rect.h"
-#include "cust_group.h"
+#include "component.h"
 
 class LibUtil : public QObject
 {

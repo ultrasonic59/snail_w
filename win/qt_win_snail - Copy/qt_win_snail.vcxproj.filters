@@ -103,9 +103,6 @@
     <ClCompile Include="widgets\comboboxkey.cpp">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\styledtoolbutton.cpp">
-      <Filter>Source Files\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="dial_debug\dial_debug.cpp">
       <Filter>Source Files\dial_debug</Filter>
     </ClCompile>
@@ -172,21 +169,21 @@
     <ClCompile Include="camera\DeviceEnumerator.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
-    <ClCompile Include="items\cust_group.cpp">
-      <Filter>Source Files\items</Filter>
-    </ClCompile>
     <ClCompile Include="plotters\paint_scene.cpp">
       <Filter>Source Files\plotters</Filter>
     </ClCompile>
     <ClCompile Include="utils\lib_util.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
+    <ClCompile Include="motor_wrk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="items\component.cpp">
+      <Filter>Source Files\items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
-      <Filter>Header Files\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="widgets\styledtoolbutton.h">
       <Filter>Header Files\widgets</Filter>
     </ClInclude>
     <ClInclude Include="dev_interf.h">
@@ -292,14 +289,17 @@
     <QtMoc Include="camera\cameradevice.h">
       <Filter>Header Files\camera</Filter>
     </QtMoc>
-    <QtMoc Include="items\cust_group.h">
-      <Filter>Header Files\items</Filter>
-    </QtMoc>
     <QtMoc Include="plotters\paint_scene.h">
       <Filter>Header Files\plotters</Filter>
     </QtMoc>
     <QtMoc Include="utils\lib_util.h">
       <Filter>Header Files\utils</Filter>
+    </QtMoc>
+    <QtMoc Include="motor_wrk.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="items\component.h">
+      <Filter>Header Files\items</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

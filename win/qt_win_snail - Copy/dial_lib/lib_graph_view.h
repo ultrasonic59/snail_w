@@ -14,6 +14,8 @@ class LibGraphicView : public QGraphicsView
     Q_OBJECT
 public:
     explicit LibGraphicView(QWidget* parent = 0);
+///    void paintEvent(QPaintEvent*);
+
     ~LibGraphicView();
 
 signals:
@@ -24,6 +26,8 @@ protected:
     void mouseMoveEvent(QMouseEvent* event);
 
     void wheelEvent(QWheelEvent* event) override;
+///    void drawMainAxis(QPainter* painter);
+
 
 private slots:
  ///   void slotAlarmTimer();  

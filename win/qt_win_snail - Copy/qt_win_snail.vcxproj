@@ -122,10 +122,11 @@
     <ClCompile Include="dial_lib\dial_lib.cpp" />
     <ClCompile Include="dial_lib\lib_graph_view.cpp" />
     <ClCompile Include="dial_lib\lib_paint_scene.cpp" />
+    <ClCompile Include="items\component.cpp" />
     <ClCompile Include="items\cust_circle.cpp" />
-    <ClCompile Include="items\cust_group.cpp" />
     <ClCompile Include="items\cust_line.cpp" />
     <ClCompile Include="items\cust_rect.cpp" />
+    <ClCompile Include="motor_wrk.cpp" />
     <ClCompile Include="params.cpp" />
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\paint_scene.cpp" />
@@ -154,7 +155,6 @@
     <ClCompile Include="snail_data.cpp" />
     <ClCompile Include="widgets\comboboxkey.cpp" />
     <ClCompile Include="widgets\plotterwidget.cpp" />
-    <ClCompile Include="widgets\styledtoolbutton.cpp" />
     <ClCompile Include="win_snail.cpp" />
     <ClCompile Include="main.cpp" />
     <ResourceCompile Include="qt_win_snail.rc" />
@@ -175,7 +175,8 @@
     <QtMoc Include="items\cust_circle.h" />
     <QtMoc Include="items\cust_line.h" />
     <QtMoc Include="items\cust_rect.h" />
-    <QtMoc Include="items\cust_group.h" />
+    <QtMoc Include="motor_wrk.h" />
+    <QtMoc Include="items\component.h" />
     <ClInclude Include="params.h" />
     <QtMoc Include="plotters\paint_scene.h" />
     <ClInclude Include="plotters\PlotProperties.h" />
@@ -191,7 +192,6 @@
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />
     <ClInclude Include="widgets\QPushButtonColored.h" />
-    <ClInclude Include="widgets\styledtoolbutton.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icons\arrow-left-down.png" />

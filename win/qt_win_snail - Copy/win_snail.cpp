@@ -10,27 +10,35 @@
 #include "cust_rect.h"
 #include "cust_line.h"
 #include "cust_circle.h"
-#include "cust_group.h"
+#include "component.h"
 
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
-    , p_curGroup(nullptr)
-    ,xminusPushed(false)
-    ,xminusLongPush(false)
-    ,yminusPushed(false)
-    ,yminusLongPush(false)
-    ,zminusPushed(false)
-    ,zminusLongPush(false)
+   /// , p_curGroup(nullptr)
+   /// ,xminusPushed(false)
+   /// ,xminusLongPush(false)
+  ///  ,yminusPushed(false)
+   /// ,yminusLongPush(false)
+   /// ,zminusPushed(false)
+  ///  ,zminusLongPush(false)
     , m_can_isConnected(false)
+  ///  , prev_states({0xff, 0xff, 0xff })
+    , on_esc_key(false)
     , data_ready(false)
 
   {
     ui->setupUi(this);
+    prev_states[XX] = 0xff;
+    prev_states[YY] = 0xff;
+    prev_states[ZZ] = 0xff;
+
 ///====================================
   qRegisterMetaType<cv::Mat>("cv::Mat");
+  qRegisterMetaType<mot_cmd_t>("mot_cmd_t");
+
  
    p_camera = new CameraDevice(this);
    p_CamView = ui->CamWidget;
@@ -87,6 +95,8 @@ win_snail::win_snail(QWidget *parent)
 connect(ui->Butt_test, SIGNAL(clicked()), this, SLOT(on_butt_test()));
 connect(ui->Butt_test1, SIGNAL(clicked()), this, SLOT(on_butt_test1()));
 connect(ui->Butt_test2, SIGNAL(clicked()), this, SLOT(on_butt_test2()));
+connect(ui->Butt_test3, SIGNAL(clicked()), this, SLOT(on_butt_test3()));
+
 connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
@@ -97,24 +107,15 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(on_value_led0_changed(int)));
   connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(on_value_led1_changed(int)));
   ///===================================================
-  m_pThread = new QThread(this);
+  pSenderThread = new QThread(this);
   m_cmd_sender = new CcmdSender(&data_ready, &rsv_msg,  &dev_state);
-  m_cmd_sender->moveToThread(m_pThread);
-  connect(m_pThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
-  m_pThread->start();
-  connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+  m_cmd_sender->moveToThread(pSenderThread);
+  connect(pSenderThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
+  pSenderThread->start();
+ /// connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
   connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
 
   ///============================================
-/*
- wrk_Thread = new QThread(this);
- p_wrk=new Cwrk_wrk(m_cmd_sender);
- p_wrk->moveToThread(wrk_Thread);
- connect(wrk_Thread, SIGNAL(finished()), p_wrk, SLOT(deleteLater()));
- wrk_Thread->start();
- */
- ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
-
 ///=======================================================
  pCamThread= new QThread(this);
  p_cam_plotter=new CamPlotter(&PlotProp,&cnf_flags, &snail_data);
@@ -155,28 +156,12 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(on_butt_pnt()));
 
  connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
- ///======================= upr motor ========================================
- connect(ui->butt_Stop, SIGNAL(clicked()), this, SLOT(cl_stop()));
-
- connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(cl_xminus()));
- connect(ui->butt_XMinus, SIGNAL(released()), this, SLOT(cl_xminus_rel()));
- connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(cl_xplus()));
- connect(ui->butt_XPlus, SIGNAL(released()), this, SLOT(cl_xplus_rel()));
-
- connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(cl_yminus()));
- connect(ui->butt_YMinus, SIGNAL(released()), this, SLOT(cl_yminus_rel()));
- connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(cl_yplus()));
- connect(ui->butt_YPlus, SIGNAL(released()), this, SLOT(cl_yplus_rel()));
-
- connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(cl_zminus()));
- connect(ui->butt_ZMinus, SIGNAL(released()), this, SLOT(cl_zminus_rel()));
- connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(cl_zplus()));
- connect(ui->butt_ZPlus, SIGNAL(released()), this, SLOT(cl_zplus_rel()));
  ///==========================================================================
  connect(this, SIGNAL(s_can_connect(bool)), m_cmd_sender, SLOT(sl_connect(bool)));
  connect(m_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
  connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
  connect(m_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
+
 
  pCamThread->start();
  ///======================================================
@@ -192,37 +177,171 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  ////ui.graphicsView->setCursor(QCursor());
 
  scene->setSceneRect(0, 0, 2000, 2000); //
- ///==================================================
-}
+///==================================================
+ pMotorThread = new QThread(this);
+ p_motor_wrk =new Cmotor_wrk(m_cmd_sender, &dev_state,&mot_param);
+ p_motor_wrk->moveToThread(pMotorThread);
+ connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
+ pMotorThread->start();
+
+  ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
+ ///
+ /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
+  
+ 
+ connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
+
+ connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
+ connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
+ connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(sl_go_z()));
+
+ ///connect(this, SIGNAL(pressed()), this, SLOT(cl_go_x()));
+
+ connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
+  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
+  connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
+  connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
+  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
+  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+
+ connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
+
+  ///======================= upr motor ========================================
+ connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(sl_stop()));
+
+ ///connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
+ connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xminus_rel()));
+ ///connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
+ connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xplus_rel()));
+
+ connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yminus_rel()));
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yplus_rel()));
+
+ connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()));
+ connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()));
+ connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_x()));
+ connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_y()));
+ connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_z()));
+ ///============ set rej motor ==========================================
+ connect(ui->butt_set_x, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(ui->butt_set_y, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(ui->butt_set_z, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
+ connect(this, SIGNAL(s_set_mot_rej(quint32, quint8)), p_motor_wrk, SLOT(sl_set_rej(quint32, quint8)));
+
+ ////connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
+ ///connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
+ ///connect(ui->butt_go_z, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_z()));
+/// connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_home()));
+ connect(ui->butt_clear, SIGNAL(clicked()), this, SLOT(on_clr()));
+
+ ///connect(scene, &PaintScene::signalPress, this, &DialLib::slShowBeg);
+ connect(scene, SIGNAL(s_mouse_pos(QPointF)), this, SLOT(sl_mouse_pos(QPointF)));
+
+ }
+ void win_snail::sl_mouse_pos(QPointF pnt)
+ {
+     ui->lab_mouse_x->setText(QString("X=%1").arg(pnt.x()));
+     ui->lab_mouse_y->setText(QString("Y=%1").arg(pnt.y()));
+ }
 
 win_snail::~win_snail()
 {
  saveSettings();
- m_pThread->quit();
- m_pThread->wait(200);
+ pSenderThread->quit();
+ pSenderThread->wait(200);
  pCamThread->quit();
  pCamThread->wait(200);
- ///wrk_Thread->quit();
- ///wrk_Thread->wait(200);
+ pMotorThread->quit();
+ pMotorThread->wait(200);
  delete ui;
 }
+void win_snail::showConState()
+{
+///===============x ===========================
+ quint8 change_con = prev_states[XX] ^ dev_state.states[XX];
+ prev_states[XX] = dev_state.states[XX];
+ if (change_con & CONC0_FLG)
+    {
+     if (dev_state.states[XX] & CONC0_FLG)
+        {
+         ui->butt_XMinus->setStyleSheet("background-color: red;");
+       }
+     else
+        {
+         ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+ if (change_con & CONC1_FLG)
+     {
+     if (dev_state.states[XX] & CONC1_FLG)
+        {
+         ui->butt_XPlus->setStyleSheet("background-color: red;");
+        }
+     else
+        {
+         ui->butt_XPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+     }
+ ///================== y =====================================
+change_con = prev_states[YY] ^ dev_state.states[YY];
+ prev_states[YY] = dev_state.states[YY];
+ if (change_con & CONC0_FLG)
+    {
+     if (dev_state.states[YY] & CONC0_FLG)
+         {
+         ui->butt_YMinus->setStyleSheet("background-color: red;");
+         }
+     else
+        {
+         ui->butt_YMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+ if (change_con & CONC1_FLG)
+ {
+     if (dev_state.states[YY] & CONC1_FLG)
+     {
+         ui->butt_YPlus->setStyleSheet("background-color: red;");
+     }
+     else
+     {
+         ui->butt_YPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+     }
+ }
+ ///================== z =====================================
+ change_con = prev_states[ZZ] ^ dev_state.states[ZZ];
+ prev_states[ZZ] = dev_state.states[ZZ];
+ if (change_con & CONC0_FLG)
+ {
+     if (dev_state.states[ZZ] & CONC0_FLG)
+     {
+         ui->butt_ZMinus->setStyleSheet("background-color: red;");
+     }
+     else
+     {
+         ui->butt_ZMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+     }
+ }
+ if (change_con & CONC1_FLG)
+    {
+     if (dev_state.states[ZZ] & CONC1_FLG)
+        {
+         ui->butt_ZPlus->setStyleSheet("background-color: red;");
+        }
+     else
+        {
+         ui->butt_ZPlus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+    }
+}
+
 void win_snail::sl_state_changed()
 {
-    ui->le_x->setText(QString::number(dev_state.coord[0]));
-    ui->le_y->setText(QString::number(dev_state.coord[1]));
-    ui->le_z->setText(QString::number(dev_state.coord[2]));
-/*
-    if (dev_state.coord[0] & 0x1)
-    {
-        ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
-
-    }
-    else
-    {
-        ui->butt_XMinus->setStyleSheet("background-color: red;");
-    }
- */
+    ui->le_x->setText(QString::number(dev_state.coord[XX]));
+    ui->le_y->setText(QString::number(dev_state.coord[YY]));
+    ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
+    showConState();
 }
+
 void win_snail::timerEvent(QTimerEvent* e)
 {
  ////   bool rez;
@@ -272,7 +391,6 @@ void win_snail::setupActions()
 
     connect(ui->actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
 #endif
- ////  ui->
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
     connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));
@@ -398,8 +516,6 @@ void win_snail::sl_newFile()
     qDebug() << "sl_newFile";
 
 }
-
-
 
 #if 0
 void win_snail::createThreads()
@@ -776,7 +892,8 @@ void win_snail::slot_send_can_dbg(can_message_t* idat)
 {
     bool rez;
     qDebug() << "slot_send_can_dbg :";
-    emit s_SendCmd(idat);
+////???    emit s_SendCmd(idat);
+
  ///   rez=  m_cmd_sender->canSendMsg(idat);
 /*
 if(rez)
@@ -791,6 +908,8 @@ void win_snail::saveSettings(void)
     QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
         QSettings::IniFormat);
     settings.setValue("PortName", ComPortName);
+    settings.setValue("LibPath", lib_path);
+
     ///================ Colors =======================================================
     settings.setValue("BackgroundColor", PlotProp.BGColor.rgb());
     settings.setValue("SelectColor", PlotProp.SelColor.rgb());
@@ -799,15 +918,12 @@ void win_snail::saveSettings(void)
     settings.setValue("CrossColor", PlotProp.CrossColor.rgb());
     settings.setValue("LibBgColor", params::LibBGColor.rgb());
     settings.setValue("LibGridColor", params::LibGridColor.rgb());
-
-
     ///================ thicknesses =======================================================
     settings.setValue("Thickness select", PlotProp.thick_sel);
     settings.setValue("Thickness Rule", params::thick_rule);
     settings.setValue("Thickness circle", PlotProp.thick_circle);
     settings.setValue("Thickness cross", PlotProp.thick_crs);
     settings.setValue("Radius circle", PlotProp.rad_circle);
-
     ///================ Grid =======================================================
     settings.setValue("Grid X", PlotProp.setka_delt_x);
     settings.setValue("Grid Y", PlotProp.setka_delt_y);
@@ -832,6 +948,13 @@ void win_snail::saveSettings(void)
     settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
     settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
     settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
+    ///================== mot param =============================
+    settings.setValue("len_step_x", mot_param.len_step[XX]);
+    settings.setValue("mot_rej_x", mot_param.mot_rej[XX]);
+    settings.setValue("len_step_y", mot_param.len_step[YY]);
+    settings.setValue("mot_rej_y", mot_param.mot_rej[YY]);
+    settings.setValue("len_step_z", mot_param.len_step[ZZ]);
+    settings.setValue("mot_rej_z", mot_param.mot_rej[ZZ]);
 
 
 }
@@ -839,8 +962,9 @@ void win_snail::loadSettings(void)
 {
     QSettings settings(QCoreApplication::applicationDirPath() + "//snail.ini",
         QSettings::IniFormat);
-
     ComPortName = settings.value("PortName", "COM16").toString();
+    lib_path = settings.value("LibPath", "").toString();
+
     ///================ Colors =======================================================
     PlotProp.BGColor.setRgb(settings.value("BackgroundColor", PlotProp.BGColor.rgb()).toInt());
     PlotProp.SelColor.setRgb(settings.value("SelectColor", PlotProp.SelColor.rgb()).toInt());
@@ -881,183 +1005,15 @@ void win_snail::loadSettings(void)
   params::dbg_last_can_dat[5] = settings.value("last_can_d5", 0).toInt();
   params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
   params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
-
+  ///================== mot param =============================
+  mot_param.len_step[XX] = settings.value("len_step_x", DEF_LEN_STEP_X).toInt();
+  mot_param.mot_rej[XX] = settings.value("mot_rej_x", DEF_MOT_REJ_X).toInt();
+  mot_param.len_step[YY] = settings.value("len_step_y", DEF_LEN_STEP_Y).toInt();
+  mot_param.mot_rej[YY] = settings.value("mot_rej_y", DEF_MOT_REJ_Y).toInt();
+  mot_param.len_step[ZZ] = settings.value("len_step_z", DEF_LEN_STEP_Z).toInt();
+  mot_param.mot_rej[ZZ] = settings.value("mot_rej_z", DEF_MOT_REJ_Z).toInt();
 
 }    
-
-/// /==============================================================
-void win_snail::cl_stop()
-{
-///send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
-send_cmd_stop(X_AXIS_CAN_ID );
-
-}
-void win_snail::send_cmd_go(quint32 id,quint8 dir, quint16 len_step, quint32 num_step)
-{
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 8;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = GO_CMD;
-    t_can_message.data[1] = dir;
-    t_can_message.data[2] = len_step & 0xff;
-    t_can_message.data[3] = (len_step >> 8) & 0xff;
-    t_can_message.data[4] = num_step & 0xff;
-    t_can_message.data[5] = (num_step >> 8) & 0xff;
-    t_can_message.data[6] = (num_step >> 16) & 0xff;
-    t_can_message.data[7] = (num_step >> 24) & 0xff;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
-}
-void win_snail::send_cmd_stop(quint32 id)
-{
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 1;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = STOP_CMD;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
-
-}
-void win_snail::send_cmd_mot_rej(quint32 id, quint8 rej) {
-    can_message_t t_can_message;
-    t_can_message.id = id;
-    t_can_message.dlc = 5;
-    t_can_message.IDE = 0;
-    t_can_message.RTR = 0;
-    t_can_message.data[0] = SET_PARAM;
-    t_can_message.data[1] = MOTOR_REJ;
-    t_can_message.data[2] = 0;
-    t_can_message.data[3] = 1;
-    t_can_message.data[4] = rej;
-    t_can_message.data[5] = 0;
-    t_can_message.data[6] = 0;
-    t_can_message.data[7] = 0;
-    data_ready = false;
-    emit s_SendCmd(&t_can_message);
-    while (data_ready == false);
-
-}
-///=================== X ===========================
-void win_snail::cl_xplus()
-{
-    qDebug() << "cl_xplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-
-void win_snail::cl_xplus_rel()
-{
-    qDebug() << "cl_xplus_rel";
-    send_cmd_stop(X_AXIS_CAN_ID);
-}
-
-void win_snail::cl_xminus()
-{
-    qDebug() << "cl_xminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-
-    ////   xminusPushed = true;
-    ////   xminusLongPush = false;
-    ////   QTimer::singleShot(LONG_PUSH_TIME, this, SLOT(SlotLongPush_xminus()));
-}
-void win_snail::cl_xminus_rel()
-{
-    qDebug() << "cl_xminus_rel ";
-    send_cmd_stop(X_AXIS_CAN_ID);
-}
-///=================== Y ===========================
-
-void win_snail::cl_yplus()
-{
-    qDebug() << "cl_yplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-
-void win_snail::cl_yplus_rel()
-{
-    qDebug() << "cl_yplus_rel";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-
-void win_snail::cl_yminus()
-{
-    qDebug() << "cl_yminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-
-   send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-void win_snail::cl_yminus_rel()
-{
-    qDebug() << "cl_yminus_rel ";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-///=================== Z ===========================
-void win_snail::cl_zplus()
-{
-    qDebug() << "cl_zplus";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-
-void win_snail::cl_zplus_rel()
-{
-    qDebug() << "cl_zplus_rel";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-
-}
-
-void win_snail::cl_zminus()
-{
-    qDebug() << "cl_zminus ";
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-void win_snail::cl_zminus_rel()
-{
-    qDebug() << "cl_zminus_rel ";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-}
 
 ///==========================================================
 bool win_snail::eventFilter(QObject* obj, QEvent* event)
@@ -1215,7 +1171,11 @@ if (fileName.isEmpty())
     return false;
 return saveFile(fileName);
 }
+void win_snail::mousePressEvent(QMouseEvent* event)
+{
+    qDebug() << "mousePressEvent=" << event->pos();
 
+}
 void win_snail::sl_rsv_can_dat(char* idat)
 {
  ///   qDebug() << "sl_rsv_dat=" <<idat;
@@ -1226,8 +1186,9 @@ void win_snail::on_butt_load()
 {
     qDebug() << "start load";
 cust_group* pGroup = new cust_group();
-////pGroup = new cust_group();
-p_curGroup = pGroup;
+
+scene->currentItem= pGroup;
+///p_curGroup = pGroup;
     ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
 pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 
@@ -1261,43 +1222,187 @@ if (err.error == QJsonParseError::NoError && !doc.isNull()) {
 }
 scene->addItem(pGroup);
 }
+static qreal t_angl = 0;
+static float x_offs = 0;
+static float y_offs = 0;
+
+#if 0
+switch (scene->selectedItems().at(0)->type()) {
+case QGraphicsRectItem::Type: {
+    ///ui.rectangleSettings->setVisible(true);
+    ///ui.polylineSettings->deselect();
+    ///ui.polylineSettings->setVisible(false);
+    break;
+}
+                            cust_line* line = (cust_line*)scene->currentItem;
+                            QPointF t_center = line->GetCenter();
+                            QGraphicsLineItem
+
+#endif
+///=============================================
+void win_snail::rotateComp(qreal angle)
+{
+QPointF t_center = QPointF(0, 0);
+qDebug() << "currentItem->type:"<< scene->currentItem->type();
+
+switch(scene->currentItem->type())
+    {
+    case QGraphicsLineItem::Type: {
+        cust_line* line = (cust_line*)scene->currentItem;
+        t_center = line->GetCenter();
+      }
+    break;
+
+    case QGraphicsRectItem::Type: {
+        qDebug() << "QGraphicsRectItem";
+
+      }
+        break;
+    case QGraphicsItemGroup::Type: {
+        cust_group* group = (cust_group*)scene->currentItem;
+        t_center = group->GetCenter();
+
+        qDebug() << "QGraphicsItemGroup";
+
+    }
+    break;
+
+    }
+scene->currentItem->setTransformOriginPoint(t_center);
+scene->currentItem->setRotation(angle);
+}
+
 ///=============================================
 void win_snail::keyPressEvent(QKeyEvent* event)
 {
     switch (event->key()) {
+    case Qt::Key_Escape: {
+        qDebug() << "Key_Escape";
+        on_esc_key = true;
+    }
+     break;
+
     case Qt::Key_A: {
  ///       qDebug() << "Key_A";
-        p_curGroup->moveBy(-20, 0);
+        scene->currentItem->moveBy(-20, 0);
 
        }
      break;
     case Qt::Key_S: {
  ///       qDebug() << "Key_S";
-        p_curGroup->moveBy(0, 20);
+        scene->currentItem->moveBy(0, 20);
 
     }
                   break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
-        p_curGroup->moveBy(0, -20);
+        scene->currentItem->moveBy(0, -20);
 
     }
                   break;
     case Qt::Key_D: {
   ///      qDebug() << "Key_D";
-        p_curGroup->moveBy(20, 0);
+        scene->currentItem->moveBy(20, 0);
 
     }
                   break;
     case Qt::Key_R: {
+     ///   QTransform	transform();
+        t_angl -= 5.0;
+        rotateComp(t_angl);
+
+/*
+        QPointF pnt = scene->currentItem->transformOriginPoint();
+        QPointF pos = scene->currentItem->pos();
+        QPointF spos = scene->currentItem->scenePos();
+
+             qDebug() << "pnt=" << pnt<<"pos="<< pos << "spos=" << spos;
+*/
+     ////   scene->currentItem->setTransformOriginPoint(200, 0);
+
+        ///scene->currentItem->setRotation(t_angl);
+
+ ///       scene->currentItem->setRotation(-5);
+
+    }
+                  break;
+    case Qt::Key_Q: {
+
+        ///      qDebug() << "Key_D";
+ ///       scene->currentItem->setTransformOriginPoint(20, 0);
+ ///       scene->currentItem->setRotation(-5);
+        ///       scene->currentItem->setRotation(-5);
+        cust_line* line = (cust_line*)scene->currentItem;
+        QPointF t_center= line->GetCenter();
+        qDebug() << "line=" << line->line();
+        qDebug() << "center=" << t_center;
+        scene->currentItem->setTransformOriginPoint(t_center);
+
+        QPointF pnt = scene->currentItem->transformOriginPoint();
+        QPointF pos = scene->currentItem->pos();
+        QPointF spos = scene->currentItem->scenePos();
+
+        qDebug() << "pnt=" << pnt << "pos=" << pos << "spos=" << spos;
+    }
+    break;
+    case Qt::Key_T: {
         ///      qDebug() << "Key_D";
     ///   pGroup->setTransformOriginPoint(0, 0);
-        p_curGroup->setRotation(45);
+        t_angl += 5.0;
+        scene->currentItem->setRotation(t_angl);
+  ///      scene->currentItem->rotate rotate(0);
+    }
+     break;
+///==========================================================
+    case Qt::Key_B: {
+
+        QTransform transform;
+        ///   transform.translate(offset.x(), offset.y());
+        scene->currentItem->setTransformOriginPoint(20, 0);
+        transform.rotate(-5);
+        ////     transform.translate(-offset.x(), -offset.y());
+        scene->currentItem->setTransform(transform);
 
     }
                   break;
 
+    case Qt::Key_Z: {
+        x_offs += 5.0;
+       scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+ 
     }
+    break;
+    case Qt::Key_X: {
+        x_offs -= 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+    }
+    break;
+    case Qt::Key_C: {
+        y_offs += 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+
+        ///   QTransform transform;
+           ///   transform.translate(offset.x(), offset.y());
+        ////   transform.rotate(-5);
+           ////     transform.translate(-offset.x(), -offset.y());
+        ////   scene->currentItem->setTransform(transform);
+    }
+                  break;
+    case Qt::Key_V: {
+        y_offs -= 5.0;
+        scene->currentItem->setTransformOriginPoint(x_offs, y_offs);
+
+        ///   QTransform transform;
+           ///   transform.translate(offset.x(), offset.y());
+        ////   transform.rotate(-5);
+           ////     transform.translate(-offset.x(), -offset.y());
+        ////   scene->currentItem->setTransform(transform);
+    }
+                  break;
+
+///=========================================================
+    }
+
 #if 0
     switch (event->key()) {
     case Qt::Key_Delete: {
@@ -1327,11 +1432,13 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///    QGraphicsScene::keyPressEvent(event);
 
 }
+///==============================================
 
 ///==============================================
 void win_snail::on_butt_test1()
 {
 QPointF _center;
+#if 0
 if (p_curGroup != nullptr) {
 
     double radius = p_curGroup->boundingRect().width() / 2.0;
@@ -1340,6 +1447,7 @@ if (p_curGroup != nullptr) {
    ///qDebug() << pGroup->boundingRect() << radius << this->pos() << pos << event->pos();
     p_curGroup->setTransformOriginPoint(_center);
 }
+#endif
 #if 0
     qDebug() << "start test1";
     ///   cust_rect* rect = new cust_rect();
@@ -1355,10 +1463,34 @@ if (p_curGroup != nullptr) {
     ///   rect->setBrush(QBrush(Qt::NoBrush));
     ///   rect->setPen(QPen(Qt::red, 2));
 }
+quint8 tmp_tst = 0;
+void win_snail::on_butt_test3()
+{
+    tmp_tst++;
+ 
+if (tmp_tst & 0x1)
+        {
+  ///  ui->butt_XMinus_2->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    ui->butt_XMinus->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+  ///          ui->toolButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+   ////         ui->pushButton_tst->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+    ///        ui->Butt_test3->setStyleSheet(QString::fromUtf8("background-color: rgb(100, 128, 108);"));
+        }
+        else
+        {
+  ////          ui->butt_XMinus_2->setStyleSheet("background-color: red;");
+            ui->butt_XMinus->setStyleSheet("background-color: red;");
+  ///          ui->toolButton_tst->setStyleSheet("background-color: red;");
+   ///         ui->pushButton_tst->setStyleSheet("background-color: red;");
+  ////         ui->Butt_test3->setStyleSheet("background-color: red;");
+
+        }
+ 
+}
 void win_snail::on_butt_test2()
 {
     quint8 mot_rej = ui->combo_rej->currentText().toInt();
-    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+///    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
 #if 0
     if (p_curGroup != nullptr) {
         qDebug() << "start test2" << p_curGroup->boundingRect();
@@ -1371,4 +1503,243 @@ void win_snail::on_butt_test2()
     ////   pGroup->setRotation(45);
     ///   pGroup->setScale(2);
 }
+///====================================================================
+void win_snail::sl_go_x()
+{
+ mot_cmd_t t_mot_cmd;
+int cur_coord = dev_state.coord[XX];
+quint8 t_dir = DIR_PLUS;
+quint32 num_step;
+quint16 len_step = mot_param.len_step[XX];/// 0;//// = ui->combo_steps->currentText().toInt();
+int need_coord = ui->le_xx->text().toInt();
+int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+if (num_step != 0)
+    {
+        t_mot_cmd.id = X_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+     }
+}
 
+void win_snail::sl_go_y()
+{
+    mot_cmd_t t_mot_cmd;
+    int cur_coord = dev_state.coord[YY];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = mot_param.len_step[YY];/// 0;//// = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_yy->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+    {
+        t_mot_cmd.id = Y_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+    }
+}
+void win_snail::sl_go_z()
+{
+    mot_cmd_t t_mot_cmd;
+    int cur_coord = dev_state.coord[ZZ];
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step = mot_param.len_step[ZZ];/// 0;//// = ui->combo_steps->currentText().toInt();
+    int need_coord = ui->le_zz->text().toInt();
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+    {
+        t_mot_cmd.id = Z_AXIS_CAN_ID;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+    }
+}
+///===================================================================
+ void win_snail::sl_set_mot_rej()
+{
+    quint8 mot_rej = ui->combo_rej->currentText().toInt();
+    if (sender() == ui->butt_set_x)
+       {
+        qDebug() << "butt_set_x ";
+        emit s_set_mot_rej(X_AXIS_CAN_ID, mot_rej);
+    }
+    else if (sender() == ui->butt_set_y)
+    {
+        qDebug() << "butt_set_y ";
+        emit s_set_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+    }
+    else if (sender() == ui->butt_set_z)
+    {
+        qDebug() << "butt_set_z ";
+        emit s_set_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    }
+       ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+
+}
+
+
+///=================== X ===========================
+void win_snail::sl_xplus()
+{
+qDebug() << "sl_xplus";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+ if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+mot_cmd_t t_mot_cmd;
+t_mot_cmd.id = X_AXIS_CAN_ID;
+t_mot_cmd.dir = DIR_PLUS;
+t_mot_cmd.len_step = len_step;
+t_mot_cmd.num_step = num_step;
+emit s_mot_go(t_mot_cmd);
+ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
+ ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+}
+
+void win_snail::sl_xminus()
+{
+ qDebug() << "sl_xminus ";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
+
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = X_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
+
+ ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+}
+///=================== Y ===========================
+void win_snail::sl_yplus()
+{
+    qDebug() << "cl_yplus";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+
+    quint16 len_step =  ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Y_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_PLUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
+    ///   send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+
+}
+void win_snail::sl_yminus()
+{
+
+    qDebug() << "cl_yminus ";
+///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+    quint16 len_step =  ui->combo_steps->currentText().toInt();
+    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Y_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
+    ///    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+}
+///=================== Z ===========================
+void win_snail::sl_zplus()
+{
+    qDebug() << "cl_zplus";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Z_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
+
+ ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+
+}
+
+void win_snail::sl_zminus()
+{
+    qDebug() << "cl_zminus ";
+ ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
+ ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+    quint16 len_step = ui->combo_steps->currentText().toInt();
+    quint32 num_step = ui->combo_num_steps->currentText().toInt();
+    if (num_step == 0)
+        num_step = MAX_NUM_STEP;
+    mot_cmd_t t_mot_cmd;
+    t_mot_cmd.id = Z_AXIS_CAN_ID;
+    t_mot_cmd.dir = DIR_PLUS;
+    t_mot_cmd.len_step = len_step;
+    t_mot_cmd.num_step = num_step;
+    emit s_mot_go(t_mot_cmd);
+    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
+
+ ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
+
+}
+
+///================================================================
+void win_snail::on_clr()
+{
+    scene->clear();
+    scene->update();
+    ////  ui.textEdit_rd_dat->clear();
+}

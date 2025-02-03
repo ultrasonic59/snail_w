@@ -11,7 +11,7 @@
 
 
 cust_group::cust_group(QObject *parent) :
-    QObject(parent),Name(QString()), green_point(QPointF())
+    QObject(parent)
  {
   ///  setAcceptHoverEvents(true);
  ///   setFlags(ItemIsSelectable|ItemSendsGeometryChanges| ItemIsMovable);
@@ -40,8 +40,20 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
 }
 void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-/// this->setPos(mapToScene(event->pos()));
- ///this->setPos(event->scenePos());
+  QPointF gr_pos = event->scenePos();
+  qreal dx = gr_pos.x() - previousPosition().x();
+  qreal dy = gr_pos.y() - previousPosition().y();
+
+ if (m_leftMouseButtonPressed) {
+ ///    qDebug() << "m_previousPosition_x=" << m_previousPosition.x();
+ ///    qDebug() << "m_previousPosition_y=" << m_previousPosition.y();
+  ///   qDebug() << "curx=" << gr_pos.x();
+  ///   qDebug() << "cury=" << gr_pos.y();
+  ///   qDebug() << "dx="<< dx;
+  ///   qDebug() << "dy=" << dy;
+      moveBy(dx, dy);
+      setPreviousPosition(gr_pos);
+    }
 }
 
 #if 0
@@ -159,7 +171,8 @@ void cust_group::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
-        QPoint gr_pos = params::closest_to_grid(event->scenePos());
+ ///       QPoint gr_pos = params::closest_to_grid(event->scenePos());
+        QPointF gr_pos = event->scenePos();
         setPreviousPosition(gr_pos);
  ///       setPreviousPosition(event->scenePos());
         emit clicked(this);
@@ -276,4 +289,29 @@ void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
         painter->drawRect(boundingRect());
     }
+}
+
+QPointF cust_group::GetCenter()
+{
+    QPointF rez;
+    QRectF t_rec = boundingRect();
+    qreal rtmp = t_rec.left() + (t_rec.right() - t_rec.left()) / 2;
+    rez.setX(rtmp);
+    rtmp = t_rec.top() + (t_rec.bottom() - t_rec.top()) / 2;
+    rez.setY(rtmp);
+
+#if 0
+    QLineF t_line = line();
+    qreal rtmp = t_line.p1().x() + (t_line.p2().x() - t_line.p1().x()) / 2;
+    rez.setX(rtmp);
+    rtmp = t_line.p1().y() + (t_line.p2().y() - t_line.p1().y()) / 2;
+    rez.setY(rtmp);
+
+    /*
+    for (int i = 0; i < 8; i++) {
+        cornerGrabber[i]->setVisible(false);
+    }
+    */
+#endif
+    return rez;
 }

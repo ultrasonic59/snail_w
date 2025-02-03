@@ -64,6 +64,7 @@ private:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+ ////   void drawMainAxis(QPainter* painter, const QRectF& rect);
 
 private:
     void property(QGraphicsItem* _item);

@@ -1,4 +1,4 @@
-#include <Qdebug>
+﻿#include <Qdebug>
 #include <QFont>
 #include <QMenu>
 #include <QMessageBox>
@@ -26,6 +26,8 @@ PaintScene::PaintScene(QObject* parent
     , m_altPressed(false)
     ,on_background(false)
 {
+  ///  ui->setupUi(this);
+ ///   this->setMouseTracking(true); //
 }
 
 PaintScene::~PaintScene()
@@ -37,7 +39,26 @@ PaintScene::~PaintScene()
 ///===================================================================
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+ ///   event->scenePos()
     QGraphicsScene::mousePressEvent(event);
+    ///QGraphicsItem* item = scene.itemAt(mapToScene(event->pos()), QTransform());
+    QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+ ///   qDebug() << "spos=" << event->scenePos() << "pos=" << event->pos();
+
+ ///   QGraphicsItem* item = itemAt(event->pos(), QTransform());
+    if(item)
+        currentItem = item;
+    if (event->button() == Qt::LeftButton)
+    {
+        m_leftMouseButtonPressed = true;
+        if (event->modifiers() == Qt::AltModifier)
+        {
+            m_altPressed = true;
+            rule_beg = event->scenePos();
+        }
+
+///        beg_rule = event->scenePos();
+    }
 
 #if 0
     QGraphicsScene::mousePressEvent(event);
@@ -164,10 +185,23 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
 #endif
 }
-
+///lab_mouse_x
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 QGraphicsScene::mouseMoveEvent(event);
+
+////if (event->modifiers() == Qt::AltModifier)
+QPointF cur_pos = event->scenePos();
+emit s_mouse_pos(cur_pos);
+
+////   qDebug() << "move spos=" << event->scenePos() << "move pos=" << event->pos();
+    if (event->modifiers() == Qt::AltModifier)
+    {
+        if (m_leftMouseButtonPressed)
+        {
+            qDebug() << "left move spos=";
+        }
+    }
 
 #if 0
 QPointF ev_point = event->scenePos();
@@ -360,9 +394,51 @@ void PaintScene::sl_test3(char* t_str) {
 }
 
 ///===========================================================
+#define TEXT_WIDTH  25
+#define TEXT_HIGHT  10
+
+#if 1
+void PaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
+{
+    painter->save();
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(2);
+    painter->setPen(apen);
+  ///  qreal left = rect.left();
+  ///  qreal right = rect.right();
+    painter->drawLine(rect.left(), rect.top(), rect.right()- TEXT_WIDTH, rect.top());
+    painter->drawLine(rect.left(), rect.top(), rect.left(), rect.bottom()- TEXT_HIGHT);
+    painter->drawText(QPoint(rect.right() - TEXT_WIDTH, rect.top()+ TEXT_HIGHT), QString::number(rect.right()- TEXT_WIDTH));
+    painter->drawText(QPoint(rect.left(), rect.bottom()), QString::number(rect.bottom()- TEXT_HIGHT));
+
+/*
+    for (int x = rect.left(); x < rect.right(); x += params::lib_grid_delt_x) {
+        painter->drawLine(x, rect.top(), x, rect.bottom());
+    }
+*/
+    painter->restore();
+
+#if 0
+    QColor coordLineColor(255, 0, 0, 255);
+    QColor outlineColor(0, 255, 0, 255);
+    QPen apen = QPen(coordLineColor);
+    apen.setWidth(5);
+    painter->setPen(apen);
+    painter->drawLine(QLine(0, 0, 300, 0));
+    painter->drawLine(QLine(0, 0, 0, 300));
+    painter->drawText(QPoint(5, 13), "0,0");
+    painter->drawText(QPoint(280, 13), "300");
+    painter->drawText(QPoint(5, 295), "300");
+#endif
+}
+#endif
 
 void PaintScene::drawBackground(QPainter* painter, const QRectF& rect)
 {
+  drawMainAxis(painter,rect);
+
 #if 0
     if (on_background)
     {
