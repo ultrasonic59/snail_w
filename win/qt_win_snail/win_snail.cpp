@@ -1185,7 +1185,7 @@ emit put_str_dial(idat);
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
-cust_group* pGroup = new cust_group();
+    component* pGroup = new component();
 
 scene->currentItem= pGroup;
 ///p_curGroup = pGroup;
@@ -1259,8 +1259,8 @@ switch(scene->currentItem->type())
       }
         break;
     case QGraphicsItemGroup::Type: {
-        cust_group* group = (cust_group*)scene->currentItem;
-        t_center = group->GetCenter();
+        component* comp = (component*)scene->currentItem;
+        t_center = comp->GetCenter();
 
         qDebug() << "QGraphicsItemGroup";
 

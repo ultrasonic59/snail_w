@@ -10,7 +10,7 @@
 
 
 
-cust_group::cust_group(QObject *parent) :
+component::component(QObject *parent) :
     QObject(parent)
  {
   ///  setAcceptHoverEvents(true);
@@ -18,19 +18,19 @@ cust_group::cust_group(QObject *parent) :
     setFlags(ItemIsSelectable | ItemIsMovable);
 }
 
-cust_group::~cust_group()
+component::~component()
 {
   ///  for(int i = 0; i < NUM_CORNERS; i++){
   ///      delete cornerGrabber[i];
   ///  }
 }
 
-QPointF cust_group::previousPosition() const
+QPointF component::previousPosition() const
 {
     return m_previousPosition;
 }
 
-void cust_group::setPreviousPosition(const QPointF previousPosition)
+void component::setPreviousPosition(const QPointF previousPosition)
 {
     if (m_previousPosition == previousPosition)
         return;
@@ -38,7 +38,7 @@ void cust_group::setPreviousPosition(const QPointF previousPosition)
     m_previousPosition = previousPosition;
     emit previousPositionChanged();
 }
-void cust_group::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void component::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   QPointF gr_pos = event->scenePos();
   qreal dx = gr_pos.x() - previousPosition().x();
@@ -167,7 +167,7 @@ if (m_leftMouseButtonPressed) {
 #endif
 }
 #endif
-void cust_group::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void component::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = true;
@@ -180,7 +180,7 @@ void cust_group::mousePressEvent(QGraphicsSceneMouseEvent *event)
 QGraphicsItem::mousePressEvent(event);
 }
 
-void cust_group::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void component::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() & Qt::LeftButton) {
         m_leftMouseButtonPressed = false;
@@ -188,7 +188,7 @@ void cust_group::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-void cust_group::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void component::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     bool sel = isSelected();
     setSelected(!sel);
@@ -197,21 +197,21 @@ void cust_group::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
 #if 1
-void cust_group::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void component::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
   ///  setPositionGrabbers();
  ///   setVisibilityGrabbers();
     QGraphicsItem::hoverEnterEvent(event);
 }
 
-void cust_group::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+void component::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
  ///   hideGrabbers();
     setCursor(Qt::CrossCursor);
     QGraphicsItem::hoverLeaveEvent( event );
 }
 
-void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+void component::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
     QPointF pt = event->pos();              // The current position of the mouse
  ///   qDebug() << "hoverMoveEvent="<< pt;
@@ -281,7 +281,7 @@ void cust_group::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 }
 #endif
 
-void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void component::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     if (isSelected()) {
         QPen pen(Qt::red, 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
@@ -291,7 +291,7 @@ void cust_group::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     }
 }
 
-QPointF cust_group::GetCenter()
+QPointF component::GetCenter()
 {
     QPointF rez;
     QRectF t_rec = boundingRect();

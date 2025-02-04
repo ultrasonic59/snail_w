@@ -1,5 +1,5 @@
-#ifndef __CUST_GROUP_H__
-#define __CUST_GROUP_H__
+#ifndef __COMPONENT_H__
+#define __COMPONENT_H__
 
 #include <QObject>
 #include <QGraphicsItemGroup>
@@ -10,14 +10,14 @@
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneEvent;
 
-class cust_group : public QObject, public QGraphicsItemGroup
+class component : public QObject, public QGraphicsItemGroup
 {
     Q_OBJECT
     Q_PROPERTY(QPointF previousPosition READ previousPosition WRITE setPreviousPosition NOTIFY previousPositionChanged)
 
 public:
-    explicit cust_group(QObject * parent = 0);
-    ~cust_group();
+    explicit component(QObject * parent = 0);
+    ~component();
  
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
@@ -25,9 +25,9 @@ public:
     QPointF GetCenter();
 
 signals:
-    void groupChanged(cust_group* rect);
+    void groupChanged(component* rect);
     void previousPositionChanged();
-    void clicked(cust_group* rect);
+    void clicked(component* rect);
     void signalMove(QGraphicsItem *item, qreal dx, qreal dy);
 
 protected:
