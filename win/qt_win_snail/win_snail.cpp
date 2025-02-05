@@ -237,6 +237,8 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  ///connect(scene, &PaintScene::signalPress, this, &DialLib::slShowBeg);
  connect(scene, SIGNAL(s_mouse_pos(QPointF)), this, SLOT(sl_mouse_pos(QPointF)));
 
+ connect(scene, SIGNAL(s_show_json(QByteArray)), this, SLOT(sl_show_json(QByteArray)));
+
  }
  void win_snail::sl_mouse_pos(QPointF pnt)
  {
@@ -1182,15 +1184,39 @@ void win_snail::sl_rsv_can_dat(char* idat)
 emit put_str_dial(idat);
 
 }
+void win_snail::sl_show_json(QByteArray byteArr)
+{
+  component* pGroup = new component();
+  scene->currentItem = pGroup;
+  pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QGraphicsItem* t_item = lib_util.getItem(ObjectValue);
+                if (t_item != nullptr) {
+                    pGroup->addToGroup(t_item);
+                    ///    scene->addItem(t_item);
+                }
+            }
+        }
+    }
+    scene->addItem(pGroup);
+
+}
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
-    component* pGroup = new component();
+ ///   component* pGroup = new component();
 
-scene->currentItem= pGroup;
-///p_curGroup = pGroup;
-    ////   QGraphicsItemGroup* pGroup = new QGraphicsItemGroup();
-pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+///scene->currentItem= pGroup;
+
+///pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 
 QString newPath = QFileDialog::getOpenFileName(this, tr("Open JSON"),
         lib_path, tr("JSON files (*.json)"));
@@ -1204,6 +1230,8 @@ if (!jsonFile.open(QIODevice::ReadOnly))
     }
 QByteArray byteArr = jsonFile.readAll();
 jsonFile.close();   //
+sl_show_json(byteArr);
+#if 0
 QString jsonStr = QString(byteArr);
 QJsonParseError err;
 QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
@@ -1221,6 +1249,7 @@ if (err.error == QJsonParseError::NoError && !doc.isNull()) {
     }
 }
 scene->addItem(pGroup);
+#endif
 }
 static qreal t_angl = 0;
 static float x_offs = 0;

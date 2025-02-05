@@ -111,6 +111,9 @@ DialLib::DialLib(QWidget *parent):
 ///================================================================
     connect(ui.ButtSaveJ, SIGNAL(clicked()), this, SLOT(SaveJ()));
     connect(ui.ButtLoadJ, SIGNAL(clicked()), this, SLOT(LoadJ()));
+
+////   connect(scene, SIGNAL(s_show_json(QByteArray)), this, SLOT(sl_show_json(QByteArray)));
+
 ///================================================================
     jsEngine = new QJSEngine(this);
 }

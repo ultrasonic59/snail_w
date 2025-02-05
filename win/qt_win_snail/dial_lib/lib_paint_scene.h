@@ -43,6 +43,8 @@ signals:
    void signalNewSelectItem(QGraphicsItem* item);
    void signalPress(QPointF pnt);
    void signalMove(QPointF pnt);
+///   void s_show_json(QByteArray byteArr);
+
    ///=======================================================
 public:
     en_item_type* p_item_type;

@@ -52,15 +52,20 @@ function style(fillColor, strokeColor, strokeWidth = DEFAULT_STROKE_WIDTH) {
 // style - стиль, см. функцию style
 // Если style не задан, то используется defaultStyle
 function ellipse(centerVec2, sizeVec2, style = defaultStyle) {
-  return Object.assign(
-    {
-      type: commands.CIRCLE,
-      pos: centerVec2,
-      width: sizeVec2.x,
-      height: sizeVec2.y,
-    },
-    style
-  );
+  return {
+    type: commands.CIRCLE,
+    pos: centerVec2,
+    width: sizeVec2.x,
+    height: sizeVec2.y,
+    // Добавляем стиль используя spread оператор
+    // Пример использования spread оператора:
+    // let a = { x: 1, y: 2 };
+    // let b = { ...a, z: 3 };
+    // console.log(b); // { x: 1, y: 2, z: 3 }
+    // Функция style уже возвращает объект, в нужном формате
+    // Поэтому его можно добавить к остальным полям используя spread оператор
+    ...style,
+  };
 }
 
 // Функция для создания круга
@@ -76,29 +81,25 @@ function circle(centerVec2, radius, style = defaultStyle) {
 // sizeVec2 - размеры прямоугольника по осям x и y
 // style - стиль, см. функцию style
 function rectangle(topLeftVec2, sizeVec2, style = defaultStyle) {
-  return Object.assign(
-    {
-      type: commands.RECTANGLE,
-      pos: topLeftVec2,
-      width: sizeVec2.x,
-      height: sizeVec2.y,
-    },
-    style
-  );
+  return {
+    type: commands.RECTANGLE,
+    pos: topLeftVec2,
+    width: sizeVec2.x,
+    height: sizeVec2.y,
+    ...style,
+  };
 }
 
 // Функция для создания линии
 // startVec2 - координаты начала линии
 // endVec2 - координаты конца линии
 function line(startVec2, endVec2, style = strokeOnlyDefaultStyle) {
-  return Object.assign(
-    {
-      type: commands.LINE,
-      p1: startVec2,
-      p2: endVec2,
-    },
-    style
-  );
+  return {
+    type: commands.LINE,
+    p1: startVec2,
+    p2: endVec2,
+    ...style,
+  };
 }
 
 // Функция для перемещения фигуры
@@ -110,14 +111,16 @@ function move(element, shiftVec2) {
     return element.map((el) => move(el, shiftVec2));
   }
   if (element.type === commands.LINE) {
-    return Object.assign({}, element, {
+    return {
+      ...element,
       p1: vec2(element.p1.x + shiftVec2.x, element.p1.y + shiftVec2.y),
       p2: vec2(element.p2.x + shiftVec2.x, element.p2.y + shiftVec2.y),
-    });
+    };
   } else {
-    return Object.assign({}, element, {
+    return {
+      ...element,
       pos: vec2(element.pos.x + shiftVec2.x, element.pos.y + shiftVec2.y),
-    });
+    };
   }
 }
 
@@ -141,8 +144,7 @@ function clone(element, numCopies, shiftVec2) {
 function cloneMany(elements, numCopies, shiftVec2) {
   let newElements = [];
   for (let element of elements) {
-    let clones = clone(element, numCopies, shiftVec2);
-    newElements.concat(clones);
+    newElements.push(...clone(element, numCopies, shiftVec2));
   }
   return newElements;
 }
@@ -150,7 +152,13 @@ function cloneMany(elements, numCopies, shiftVec2) {
 // elements - массив фигур
 // pretty - если true, то JSON будет отформатирован с отступами в 2 пробела (для человеческого восприятия)
 function toJson(elements, addObj = false, pretty = false) {
-  const flatElements = elements.reduce((acc, el) => acc.concat(el), []);
+  // flatMap - метод, которая применяет функцию к каждому элементу массива
+  // и объединяет результаты в один массив
+  // Пример использования:
+  // let arr = [1, 2, 3];
+  // let newArr = arr.flatMap((el) => [el, el * 2]);
+  // console.log(newArr); // [1, 2, 2, 4, 3, 6]
+  const flatElements = elements.flatMap((el) => el);
   const elementsObj = addObj
     ? flatElements.map((element) => ({ obj: element }))
     : flatElements;
@@ -197,8 +205,15 @@ function component() {
 }
 
 // Сериализация компонента в JSON
+/*
 function draw() {
-  scene.sl_obr_cmd(toJson(component(), true, true));
+  const component = component();
+  return toJson(component, true, true);
+}*/
+function draw() {
+  const component = component();
+  scene.sl_obr_cmd(toJson(component, true, true));
 }
 
 draw();
+

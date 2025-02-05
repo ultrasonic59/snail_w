@@ -174,6 +174,8 @@ public slots:
 
     void sl_rsv_can_dat(char*);
     void sl_state_changed();
+    void sl_show_json(QByteArray byteArr);
+
 private slots:
     void selectVideoSource();
 private slots:
