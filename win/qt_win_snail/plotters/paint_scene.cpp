@@ -643,42 +643,8 @@ void PaintScene::sl_place_item(QString i_str)
 }
 void PaintScene::sl_obr_cmd(QString i_cmd)
 {
-       qDebug() << "i_cmd=" << i_cmd;
-       QByteArray ba;
-       ///   void s_show_json(QByteArray byteArr);
-  ///     QString::fromUtf8(const QByteArray & str)
-  ///     QString::QString(const QByteArray & ba);
- ///      i_cmd::QString(const QByteArray & ba);
+qDebug() << "[PaintScene]i_cmd=" << i_cmd;
+QByteArray ba;
 ba+= i_cmd.toUtf8();
-       emit s_show_json(ba);
-#if 0
-QJsonDocument doc = QJsonDocument::fromJson(i_cmd.toUtf8());
-QJsonObject json = doc.object();
-QString type_cmd = json["cmd"].toString();
-quint16 width= json["width"].toInt();
-quint16 height = json["height"].toInt();
-QJsonValue point = json.value("point");
-int x;
-int y;
-if (point.isObject())
-   {
-    x = point["x"].toInt();
-    y = point["y"].toInt();
-   }
-int br= json["brush"].toInt();
-int t_col= json["color"].toInt();
-int thick= json["thick"].toInt();
-if (type_cmd == "Rect")
-   {
-    sl_place_rect(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
-   }
-else if(type_cmd == "Circle")
-   {
-    sl_place_circle(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
-   }
-else if (type_cmd == "Line")
-  {
-    sl_place_line(width, height, QPoint(x, y), QBrush(br), QColor(t_col), thick);
-  }
-#endif
+emit s_show_json(ba);
 }

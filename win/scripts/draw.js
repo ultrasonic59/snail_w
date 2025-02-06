@@ -186,12 +186,14 @@ function component() {
     line(vec2(200, 230), vec2(410, 230)),
     line(vec2(200, 330), vec2(410, 330)),
     // Композиция из 3 кругов
+	/*
     ...clone(
-      circle(vec2(220, 27), 20, style(colors.RED, colors.BLACK)),
+     circle(vec2(220, 27), 20, style(colors.RED, colors.BLACK)),
       3,
       50,
       0
     ),
+	*/
   ];
   return elements;
 }

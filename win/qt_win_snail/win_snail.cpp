@@ -1467,6 +1467,30 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 void win_snail::on_butt_test1()
 {
 QPointF _center;
+int num_circl = 0;
+int num_gr = 0;
+
+foreach(QGraphicsItem * item, scene->items())
+{
+    qDebug() << "item=" << item->type();
+    switch (item->type())
+    {
+    case QGraphicsEllipseItem::Type:
+        num_circl++;
+        qDebug() << "QGraphicsEllipseItem" << num_circl;
+
+        break;
+    case QGraphicsItemGroup::Type:
+        num_gr++;
+        qDebug() << "QGraphicsItemGroup"<< num_gr;
+
+        break;
+    }
+ ///   lib_util.insertItem(item, objObject);
+ ///   arrayObj.append(objObject);
+}
+
+
 #if 0
 if (p_curGroup != nullptr) {
 

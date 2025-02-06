@@ -54,11 +54,10 @@ private slots:
 	void  SlotTest2();
 	void  SlotTest3();
 	void  SlotTest4();
-
-
-
 public slots:
     void on_clr();
+	void sl_show_json(QByteArray byteArr);
+
 ///	Q_INVOKABLE void visibleMethod();
 private: 
 ///	en_rej cur_rej;

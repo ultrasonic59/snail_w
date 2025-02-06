@@ -43,7 +43,7 @@ signals:
    void signalNewSelectItem(QGraphicsItem* item);
    void signalPress(QPointF pnt);
    void signalMove(QPointF pnt);
-///   void s_show_json(QByteArray byteArr);
+   void s_show_json(QByteArray byteArr);
 
    ///=======================================================
 public:
@@ -80,20 +80,17 @@ public slots:
     void slotMove(QGraphicsItem* signalOwner, qreal dx, qreal dy);
     void sl_place_line(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick);
     void sl_place_circle(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick);
-
     void sl_place_rect(quint16 width, quint16 height, QPoint point, QBrush br, QColor color, quint8 thick);
     void sl_place_rect(QPoint point);
     void sl_place_item(QString i_str);
-
     void sl_obr_cmd(QString i_cmd);
-
     void sl_test1();
     void sl_test2(QString t_str);
-
     void sl_test3(char* t_str);
-
-private:
+public:
     QGraphicsItem* currentItem;
+private:
+ ///   QGraphicsItem* currentItem;
     int m_currentAction;
     int m_previousAction;
     QPointF m_previousPosition;
