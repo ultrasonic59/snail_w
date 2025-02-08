@@ -1,5 +1,5 @@
-#ifndef __DIMA_BOARD_V2_H__
-#define __DIMA_BOARD_V2_H__
+#ifndef __STEP_BOARD_H__
+#define __STEP_BOARD_H__
 ////=============================================
 
 #include "stm32f2xx_conf.h"
@@ -8,54 +8,14 @@
 #include "stm32f2xx_rcc.h"
 #include "stm32f2xx_tim.h"
 #include "stm32f2xx_spi.h"
-#include "stm32f2xx_flash.h"
 #include "misc.h"
-#include "flash_if.h"
-////=============================================
-/*
-#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
-#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x4000))
-#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-*/
-/* EEPROM start address in Flash */
-#define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
-                                                      after 16KByte of used Flash memory */
-#define EEPROM_START_SECTOR    FLASH_Sector_2
-#define PAGE0_SECTOR    FLASH_Sector_2                                                     
-#define PAGE1_SECTOR    FLASH_Sector_3                                                     
-
-#define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
-/* Pages 0 and 1 base and end addresses */
-#define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
-#define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
-#define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-
-////=============================================
-#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
-#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
-#define APP_END_ADDRESS         ((uint32_t)(APP_BASE_ADDRESS + (APP_PAGE_SIZE - 1)))
-
-#define BOOT_BASE_ADDRESS        ((uint32_t)0x08000000)
-#define BOOT_PAGE_SIZE           ((uint32_t)0x8000)           ////32 KB
 
 ////=============================================
 #define	APB1_pres	4
 #define APB2_pres	2
 
-#define DEF_MOT_TIM_PERIOD          500
-#define DEF_MOT_TIM_PRESC           64  ////8
-
-#define MAX_PER         64000
-#define MIN_PER         10        
-
+#define MOT_TIM_PERIOD     8000
+#define MOT_TIM_PRESC     8
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
 
@@ -63,6 +23,13 @@
 
 
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
+#if 0
+////=============== TST1 ============================
+#define TST1_PIN	    	GPIO_Pin_4
+#define TST1_PIN_NPIN	    	4
+#define TST1_PIN_GPIO	    	GPIOB
+#define TST1_PIN_RCC  	        RCC_AHB1Periph_GPIOB
+#endif
 ////=============== TST2============================
 #define TST2_PIN	    	GPIO_Pin_5
 #define TST2_PIN_NPIN	    	5
@@ -108,22 +75,15 @@
 #define UART_DBG_RX_PIN_NPIN	7
 #define UART_DBG_RX_GPIO        GPIOC
 #define UART_DBG_RX_RCC  	RCC_AHB1Periph_GPIOC
-////============== CAN1 ============================
-#define CAN1_CLK                    RCC_APB1Periph_CAN1
-#define CAN1_AF_PORT                GPIO_AF_CAN1
-#define CAN1_GPIO_CLK               RCC_AHB1Periph_GPIOB
-#define CAN1_GPIO_PORT              GPIOB
 ////============== CAN1_RX ============================
 #define CAN1_RX_PIN	    	GPIO_Pin_8
 #define CAN1_RX_PIN_SOURCE	GPIO_PinSource8
-#define CAN1_RX_SOURCE              GPIO_PinSource8
 #define CAN1_RX_PIN_NPIN	8
 #define CAN1_RX_PIN_GPIO	GPIOB
 #define CAN1_RX_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////============== CAN1_TX ============================
 #define CAN1_TX_PIN	    	GPIO_Pin_9
 #define CAN1_TX_PIN_SOURCE	GPIO_PinSource9
-#define CAN1_TX_SOURCE              GPIO_PinSource9
 #define CAN1_TX_PIN_NPIN	9
 #define CAN1_TX_PIN_GPIO	GPIOB
 #define CAN1_TX_PIN_RCC  	RCC_AHB1Periph_GPIOB
@@ -200,33 +160,29 @@
 #define MOT_SPI_PeriphClockCmd 	RCC_APB1PeriphClockCmd
 #define MOT_SPI_RCC 	RCC_APB1Periph_SPI2
 #define MOT_SPI_AF      GPIO_AF_SPI2
-////=============== CONC1 ============================
-#define CONC1_PIN	    GPIO_Pin_2
-#define CONC1_PIN_NPIN	    2
-#define CONC1_PIN_GPIO	    GPIOA
-#define CONC1_PIN_RCC  	    RCC_AHB1Periph_GPIOA
-////=============== CONC0 ============================
-#define CONC0_PIN	    GPIO_Pin_1
-#define CONC0_PIN_NPIN	    1
-#define CONC0_PIN_GPIO	    GPIOA
-#define CONC0_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+////=============== CONC ============================
+#define CONC_PIN	    GPIO_Pin_4
+#define CONC_PIN_NPIN	    4
+#define CONC_PIN_GPIO	    GPIOB
+#define CONC_PIN_RCC  	    RCC_AHB1Periph_GPIOB
 ////=============== ENC_A ============================
-////#define ENC_A_PIN	    GPIO_Pin_0
-////#define ENC_A_PIN_NPIN	    0
-////#define ENC_A_PIN_GPIO	    GPIOA
-////#define ENC_A_PIN_RCC  	    RCC_AHB1Periph_GPIOA
-////#define ENC_TIM  	    TIM5
-////#define ENC_TIM_RCC  	    RCC_APB1Periph_TIM5
+#define ENC_A_PIN	    GPIO_Pin_0
+#define ENC_A_PIN_NPIN	    0
+#define ENC_A_PIN_GPIO	    GPIOA
+#define ENC_A_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+#define ENC_TIM  	    TIM5
+#define ENC_TIM_RCC  	    RCC_APB1Periph_TIM5
+
 ////=============== ENC_B ============================
-////#define ENC_B_PIN	    GPIO_Pin_1
-////#define ENC_B_PIN_NPIN	    1
-////#define ENC_B_PIN_GPIO	    GPIOA
-////#define ENC_B_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+#define ENC_B_PIN	    GPIO_Pin_1
+#define ENC_B_PIN_NPIN	    1
+#define ENC_B_PIN_GPIO	    GPIOA
+#define ENC_B_PIN_RCC  	    RCC_AHB1Periph_GPIOA
 ////=============== ENC_C ============================
-/////#define ENC_C_PIN	    GPIO_Pin_2
-////#define ENC_C_PIN_NPIN	    2
-////#define ENC_C_PIN_GPIO	    GPIOA
-////#define ENC_C_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+#define ENC_C_PIN	    GPIO_Pin_2
+#define ENC_C_PIN_NPIN	    2
+#define ENC_C_PIN_GPIO	    GPIOA
+#define ENC_C_PIN_RCC  	    RCC_AHB1Periph_GPIOA
 ////=============== UART_RX1 ============================
 #define UART_RX1_PIN	    	    GPIO_Pin_7
 #define UART_RX1_PIN_NPIN	    7
@@ -266,7 +222,7 @@
 ////#define UART_DBG_TX_GPIO_PORT   GPIOC
 ////#define UART_DBG_RX_GPIO_PORT   GPIOC
 ////=================================================================
-#define GPIO_CLK_INIT           RCC_AHB1PeriphClockCmd
+#define GPIO_CLK_INIT     RCC_AHB1PeriphClockCmd
 #define UART_DBG_CLK            RCC_APB2Periph_USART6
 #define UART_DBG_CLK_INIT       RCC_APB2PeriphClockCmd
 
@@ -287,7 +243,6 @@
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
 
-#define DEF_MOT_REJ   2
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register
@@ -364,184 +319,42 @@ uint16_t STDLAT:1;  	// bit 7
 typedef union cmd_param_u
 {
 uint8_t bpar[4];
-uint16_t hpar[2];
 int32_t wpar;
-}cmd_param_t; 
-
+}cmd_param_t;  
 typedef struct cmd_s_
 {
 uint8_t cmd;
 cmd_param_t par;
 }cmd_t;
 extern cmd_t cur_cmd;
-////========================================================================
-////#define EXEC_CYCLE_STOP     (0x1<<2) // bitmask 00000100
-////#define STATE_HOMING        (0x1<<2) // Performing homing cycle
-
-
-#ifndef SEGMENT_BUFFER_SIZE
- #define SEGMENT_BUFFER_SIZE 10
-#endif
-#define N_AXIS 3 // Number of axes
-
-#define X_AXIS 0 // Axis indexing value.
-#define Y_AXIS 1
-#define Z_AXIS 2
-
-#define X_STEP_BIT 0
-#define Y_STEP_BIT 1
-#define Z_STEP_BIT 2
-#define  X_DIRECTION_BIT 0
-#define  Y_DIRECTION_BIT 1
-#define  Z_DIRECTION_BIT 2
-typedef struct system_s_{
-  uint8_t state;               // Tracks the current system state of Grbl.
-  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.             
-  uint8_t suspend;             // System suspend bitflag variable that manages holds, cancels, and safety door.
-  uint8_t soft_limit;          // Tracks soft limit errors for the state machine. (boolean)
-  uint8_t step_control;        // Governs the step segment generator depending on system state.
-  uint8_t probe_succeeded;     // Tracks if last probing cycle was successful.
-  uint8_t homing_axis_lock;    // Locks axes when limits engage. Used as an axis motion mask in the stepper ISR.
-  uint8_t f_override;          // Feed rate override value in percent
-  uint8_t r_override;          // Rapids override value in percent
-  uint8_t spindle_speed_ovr;   // Spindle speed value in percent
-  uint8_t spindle_stop_ovr;    // Tracks spindle stop override states
-  uint8_t report_ovr_counter;  // Tracks when to add override data to status reports.
-  uint8_t report_wco_counter;  // Tracks when to add work coordinate offset data to status reports.
-	#ifdef ENABLE_PARKING_OVERRIDE_CONTROL
-		uint8_t override_ctrl;     // Tracks override control states.
-	#endif
-	#ifdef VARIABLE_SPINDLE
-    float spindle_speed;
-  #endif
-} system_t;
-extern system_t sys;
-
-typedef struct {
-  uint32_t steps[N_AXIS];
-  uint32_t step_event_count;
-  uint8_t direction_bits;
-  #ifdef VARIABLE_SPINDLE
-    uint8_t is_pwm_rate_adjusted; // Tracks motions that require constant laser power/rate
-  #endif
-} st_block_t;
-
-////========================================================================
-// Primary stepper segment ring buffer. Contains small, short line segments for the stepper
-// algorithm to execute, which are "checked-out" incrementally from the first block in the
-// planner buffer. Once "checked-out", the steps in the segments buffer cannot be modified by
-// the planner, where the remaining planner block steps still can.
-typedef struct {
-  uint16_t n_step;           // Number of step events to be executed for this segment
-  uint16_t cycles_per_tick;  // Step distance traveled per ISR tick, aka step rate.
-  uint8_t  st_block_index;   // Stepper block data index. Uses this information to execute this segment.
-  #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-    uint8_t amass_level;    // Indicates AMASS level for the ISR to execute this segment
-  #else
-    uint8_t prescaler;      // Without AMASS, a prescaler is required to adjust for slow timing.
-  #endif
-  #ifdef VARIABLE_SPINDLE
-    uint8_t spindle_pwm;
-  #endif
-} segment_t;
-
-
-// Stepper ISR data struct. Contains the running data for the main stepper ISR.
-typedef struct stepper_s_{
-#if 0  
-  #ifdef STEP_PULSE_DELAY
-    uint8_t step_bits;  // Stores out_bits output to complete the step pulse delay
-  #endif
-
-  uint8_t execute_step;     // Flags step execution for each interrupt.
-  uint8_t step_pulse_time;  // Step pulse reset time after step rise
-
-  PORTPINDEF step_outbits;         // The next stepping-bits to be output
-  PORTPINDEF dir_outbits;
-  #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-    uint32_t steps[N_AXIS];
-  #endif
-
-#endif 
-  // Used by the bresenham line algorithm
-  uint32_t counter_x;        // Counter variables for the bresenham line tracer
-  uint32_t counter_y;
-  uint32_t counter_z;
-    
-  uint16_t step_count;       // Steps remaining in line segment motion
-  uint8_t exec_block_index; // Tracks the current st_block index. Change indicates new block.
-  st_block_t *exec_block;   // Pointer to the block data for the segment being executed
-segment_t *exec_segment;  // Pointer to the segment being executed
-uint8_t dir_outbits;
-uint8_t step_outbits;         // The next stepping-bits to be output
-} stepper_t;
-
-
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define CAN_SEND_STACK_SIZE                     1024////
-#define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define APP_PRIORITY	                       (6)	
-
-#define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-////=============Addr eeprom ==========================================
-#define ADDR_EEPROM_BOOT_WORK   0x0
-#define VAL_EEPROM_WORK  0xAA55
-#define ADDR_KS_APP             0x1
-#define ADDR_EEPROM_SIZEL_APP  0x2
-#define ADDR_EEPROM_SIZEH_APP  0x3
-#define ADDR_EEPROM_MOT_REJ    0x4
-
-#define MAX_MOT_REJ    0x8
-
-////============================================
-#if STEP_Z
-  #define MASK_CON0 0x1
-  #define MASK_CON1 0x2
-#else
-///  #define MASK_CON 0x3
-  #define MASK_CON0  0x1
-  #define MASK_CON1  0x2
-  
-#endif
-
-////============================================
-////=================================================================
-extern int32_t cur_coord;
-extern uint8_t cur_stat;
 
 extern void mot_spi_init(void);
 extern void init_step_mot(void);
 extern void ena_mot(uint8_t ena_dis);
-extern void motor_init(void);
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
 extern void put_mot_nstep(uint32_t nstep);
-///extern void set_step_per(uint16_t step_per);
-extern void set_mot_per(uint16_t per);
-
 extern void  set_sleep_mot(uint8_t idat);
 extern void  set_ena_mot(uint8_t idat);
 extern void  set_dir_mot(uint8_t idat);
 extern void  set_reset_mot(uint8_t idat);
 extern void set_mot_rej(uint8_t rej);
-extern int send_char_dbg (int c) ;
-extern int get_byte_dbg(void) ;
+extern int sendchar6 (int c) ;
+extern int get_byte6(void) ;
 extern void can1_init(void);
 extern void motor_task( void *pvParameters );
-extern int check_push_key_dbg(void);
-extern void print_mot_reg(void);
+extern int check_push_key(void);
 
-////#define dbg_sendchar  sendchar6 
-////#define dbg_get_byte get_byte6
+#define dbg_sendchar  sendchar6 
+#define dbg_get_byte get_byte6
 ////#define check_push_key get_byte6
 
 ////=============================================
-#endif ////__DIMA_BOARD_H__
+#endif ////__STEP_BOARD_H__
 
 
 

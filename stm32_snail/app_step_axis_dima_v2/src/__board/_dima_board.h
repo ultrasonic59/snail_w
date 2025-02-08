@@ -1,5 +1,5 @@
-#ifndef __DIMA_BOARD_V2_H__
-#define __DIMA_BOARD_V2_H__
+#ifndef __DIMA_BOARD_H__
+#define __DIMA_BOARD_H__
 ////=============================================
 
 #include "stm32f2xx_conf.h"
@@ -8,43 +8,26 @@
 #include "stm32f2xx_rcc.h"
 #include "stm32f2xx_tim.h"
 #include "stm32f2xx_spi.h"
-#include "stm32f2xx_flash.h"
 #include "misc.h"
-#include "flash_if.h"
 ////=============================================
-/*
-#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
-#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x4000))
-#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-*/
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
                                                       after 16KByte of used Flash memory */
-#define EEPROM_START_SECTOR    FLASH_Sector_2
-#define PAGE0_SECTOR    FLASH_Sector_2                                                     
-#define PAGE1_SECTOR    FLASH_Sector_3                                                     
-
 #define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
 /* Pages 0 and 1 base and end addresses */
 #define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
 #define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
 
 #define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
 #define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
 
 ////=============================================
-#define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
-#define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
-#define APP_END_ADDRESS         ((uint32_t)(APP_BASE_ADDRESS + (APP_PAGE_SIZE - 1)))
+#define APP_BASE_ADDRESS        ((uint32_t)0x08000000)
+#define APP_PAGE_SIZE           ((uint32_t)0x8000)           ////32 KB
+#define APP_END_ADDRESS         ((uint32_t)(TMP_BASE_ADDRESS + (TMP_PAGE_SIZE - 1)))
 
-#define BOOT_BASE_ADDRESS        ((uint32_t)0x08000000)
-#define BOOT_PAGE_SIZE           ((uint32_t)0x8000)           ////32 KB
+#define BOOT_BASE_ADDRESS        ((uint32_t)0x08010000)
+#define BOOT_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
 
 ////=============================================
 #define	APB1_pres	4
@@ -54,7 +37,7 @@
 #define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
-#define MIN_PER         10        
+#define MIN_PER         500        
 
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
@@ -286,8 +269,7 @@
 #define ADDR_MOT_STALL  5
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
-
-#define DEF_MOT_REJ   2
+#define DEF_MOT_REJ   0
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register
@@ -375,12 +357,12 @@ cmd_param_t par;
 }cmd_t;
 extern cmd_t cur_cmd;
 ////========================================================================
-////#define EXEC_CYCLE_STOP     (0x1<<2) // bitmask 00000100
-////#define STATE_HOMING        (0x1<<2) // Performing homing cycle
+#define EXEC_CYCLE_STOP     (0x1<<2) // bitmask 00000100
+#define STATE_HOMING        (0x1<<2) // Performing homing cycle
 
 
 #ifndef SEGMENT_BUFFER_SIZE
- #define SEGMENT_BUFFER_SIZE 10
+#define SEGMENT_BUFFER_SIZE 10
 #endif
 #define N_AXIS 3 // Number of axes
 
@@ -480,37 +462,15 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define CAN_SEND_STACK_SIZE                     1024////
+#define CAN_SEND_STACK_SIZE                 1024////
 #define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define APP_PRIORITY	                       (6)	
+#define         APP_PRIORITY	      (6)	
 
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-////=============Addr eeprom ==========================================
-#define ADDR_EEPROM_BOOT_WORK   0x0
-#define VAL_EEPROM_WORK  0xAA55
-#define ADDR_KS_APP             0x1
-#define ADDR_EEPROM_SIZEL_APP  0x2
-#define ADDR_EEPROM_SIZEH_APP  0x3
-#define ADDR_EEPROM_MOT_REJ    0x4
-
-#define MAX_MOT_REJ    0x8
-
-////============================================
-#if STEP_Z
-  #define MASK_CON0 0x1
-  #define MASK_CON1 0x2
-#else
-///  #define MASK_CON 0x3
-  #define MASK_CON0  0x1
-  #define MASK_CON1  0x2
-  
-#endif
-
-////============================================
 ////=================================================================
-extern int32_t cur_coord;
+extern uint32_t cur_coord;
 extern uint8_t cur_stat;
 
 extern void mot_spi_init(void);

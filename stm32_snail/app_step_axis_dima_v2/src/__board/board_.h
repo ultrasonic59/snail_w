@@ -9,23 +9,14 @@
 #endif
 #ifdef DIMA_BRD
   #include "dima_board.h"
-  #include "my_misc.h"
-#endif
-#ifdef DIMA_BRD_V2
-  #include "dima_board_v2.h"
-  #include "my_misc.h"
 #endif
 
+  #include "my_misc.h"
   #include "stm32f2xx_can.h"
 
 ////======================================
 ////extern void tst_task( void *pvParameters );
 
 #define msleep vTaskDelay
-#ifndef _MASTER_
-extern int32_t cur_coord;
-extern uint8_t cur_state;
-#endif
-extern uint8_t get_conc_n(void);
-extern uint8_t ena_check_conc;
+
 #endif

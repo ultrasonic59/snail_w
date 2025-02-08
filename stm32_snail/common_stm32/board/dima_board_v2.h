@@ -161,36 +161,37 @@
 #define MOT_DIR_PIN_GPIO	    GPIOC
 #define MOT_DIR_PIN_RCC  	RCC_AHB1Periph_GPIOC
 ////=============== MOT_BIN1 ============================
-#define MOT_BIN1_PIN	    	GPIO_Pin_8
-#define MOT_BIN1_PIN_NPIN	    8
-#define MOT_BIN1_PIN_GPIO	    GPIOC
-#define MOT_BIN1_PIN_RCC  	RCC_AHB1Periph_GPIOC
+///#define MOT_BIN1_PIN	    	GPIO_Pin_8
+///#define MOT_BIN1_PIN_NPIN	    8
+///#define MOT_BIN1_PIN_GPIO	    GPIOC
+////#define MOT_BIN1_PIN_RCC  	RCC_AHB1Periph_GPIOC
 ////=============== MOT_BIN2 ============================
-#define MOT_BIN2_PIN	    	GPIO_Pin_1
-#define MOT_BIN2_PIN_NPIN	    1
-#define MOT_BIN2_PIN_GPIO	    GPIOB
-#define MOT_BIN2_PIN_RCC  	RCC_AHB1Periph_GPIOB
+///#define MOT_BIN2_PIN	    	GPIO_Pin_1
+///#define MOT_BIN2_PIN_NPIN	    1
+///#define MOT_BIN2_PIN_GPIO	    GPIOB
+///#define MOT_BIN2_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////=============== MOT_STALLN ============================
-#define MOT_STALLN_PIN	    	GPIO_Pin_10
-#define MOT_STALLN_PIN_NPIN	    10
-#define MOT_STALLN_PIN_GPIO	    GPIOB
-#define MOT_STALLN_PIN_RCC  	RCC_AHB1Periph_GPIOB
+///#define MOT_STALLN_PIN	    	GPIO_Pin_10
+///#define MOT_STALLN_PIN_NPIN	    10
+///#define MOT_STALLN_PIN_GPIO	    GPIOB
+///#define MOT_STALLN_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////=============== MOT_SPI_SCK ============================
-#define MOT_SPI_SCK_PIN	    	GPIO_Pin_13
-#define MOT_SPI_SCK_PIN_NPIN	    13
-#define MOT_SPI_SCK_PIN_GPIO	    GPIOB
-#define MOT_SPI_SCK_PIN_RCC  	RCC_AHB1Periph_GPIOB
+///#define MOT_SPI_SCK_PIN	    	GPIO_Pin_13
+///#define MOT_SPI_SCK_PIN_NPIN	    13
+///#define MOT_SPI_SCK_PIN_GPIO	    GPIOB
+///#define MOT_SPI_SCK_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////=============== MOT_SPI_MOSI ============================
-#define MOT_SPI_MOSI_PIN	    	GPIO_Pin_15
-#define MOT_SPI_MOSI_PIN_NPIN	    15
-#define MOT_SPI_MOSI_PIN_GPIO	    GPIOB
-#define MOT_SPI_MOSI_PIN_RCC  	RCC_AHB1Periph_GPIOB
+///#define MOT_SPI_MOSI_PIN	    	GPIO_Pin_15
+///#define MOT_SPI_MOSI_PIN_NPIN	    15
+///#define MOT_SPI_MOSI_PIN_GPIO	    GPIOB
+///#define MOT_SPI_MOSI_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////=============== MOT_SPI_SCS ============================
-#define MOT_SPI_SCS_PIN	    	GPIO_Pin_12
-#define MOT_SPI_SCS_PIN_NPIN	    12
-#define MOT_SPI_SCS_PIN_GPIO	    GPIOB
-#define MOT_SPI_SCS_PIN_RCC  	RCC_AHB1Periph_GPIOB
+///#define MOT_SPI_SCS_PIN	    	GPIO_Pin_12
+///#define MOT_SPI_SCS_PIN_NPIN	    12
+///#define MOT_SPI_SCS_PIN_GPIO	    GPIOB
+///#define MOT_SPI_SCS_PIN_RCC  	RCC_AHB1Periph_GPIOB
 ////=============== MOT_SPI_MISO ============================
+#if 0
 #define MOT_SPI_MISO_PIN	    	GPIO_Pin_14
 #define MOT_SPI_MISO_PIN_NPIN	    14
 #define MOT_SPI_MISO_PIN_GPIO	    GPIOB
@@ -200,6 +201,7 @@
 #define MOT_SPI_PeriphClockCmd 	RCC_APB1PeriphClockCmd
 #define MOT_SPI_RCC 	RCC_APB1Periph_SPI2
 #define MOT_SPI_AF      GPIO_AF_SPI2
+#endif
 ////=============== CONC1 ============================
 #define CONC1_PIN	    GPIO_Pin_2
 #define CONC1_PIN_NPIN	    2
@@ -277,7 +279,7 @@
 ///#define UART_DBG_TX_SOURCE      GPIO_Pin_2
 ///#define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
-
+#if 0
 #define ADDR_MOT_CTRL   0
 #define ADDR_MOT_TORQUE 1
 #define ADDR_MOT_OFF    2
@@ -286,9 +288,10 @@
 #define ADDR_MOT_STALL  5
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
-
-#define DEF_MOT_REJ   2
+#endif
+#define DEF_MOT_REJ   0
 ////======================================
+#if 0
 // CTRL Register
 typedef struct CTRL_Register
 {
@@ -360,13 +363,14 @@ uint16_t UVLO:1;	// bit 5
 uint16_t STD:1;		// bit 6
 uint16_t STDLAT:1;  	// bit 7
 }STATUS_Register_t;
-
+#endif
 typedef union cmd_param_u
 {
 uint8_t bpar[4];
 uint16_t hpar[2];
 int32_t wpar;
 }cmd_param_t; 
+
 
 typedef struct cmd_s_
 {
@@ -513,8 +517,8 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 extern int32_t cur_coord;
 extern uint8_t cur_stat;
 
-extern void mot_spi_init(void);
-extern void init_step_mot(void);
+///extern void mot_spi_init(void);
+///extern void init_step_mot(void);
 extern void ena_mot(uint8_t ena_dis);
 extern void motor_init(void);
 
@@ -524,7 +528,7 @@ extern void put_mot_nstep(uint32_t nstep);
 ///extern void set_step_per(uint16_t step_per);
 extern void set_mot_per(uint16_t per);
 
-extern void  set_sleep_mot(uint8_t idat);
+///extern void  set_sleep_mot(uint8_t idat);
 extern void  set_ena_mot(uint8_t idat);
 extern void  set_dir_mot(uint8_t idat);
 extern void  set_reset_mot(uint8_t idat);
