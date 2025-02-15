@@ -118,6 +118,25 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
             break;
     };
 }
+void Cmotor_wrk::sl_mot_spi(spi_mot_cmd_t cmd) {
+    can_message_t t_can_message;
+    t_can_message.id = X_AXIS_CAN_ID;
+    t_can_message.dlc = cmd.len_dat+3;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+    memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
+    data_ready = false;
+    emit s_SendCmd(&t_can_message);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
+}
+
 ///=================================================
 void Cmotor_wrk::sl_mot_go(mot_cmd_t mot_cmd)
 {

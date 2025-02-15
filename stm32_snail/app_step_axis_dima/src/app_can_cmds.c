@@ -141,6 +141,22 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_rd_spi_mot_ans(spi_mot_cmd_t *t_ans)
+{
+can_msg_t  send_msg;
+can_cmd_t t_can_cmd;
+memcpy(&t_can_cmd.data,t_ans,sizeof(spi_mot_cmd_t));
+
+send_msg.len= 3+sizeof(uint8_t)*t_ans->len_dat;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,t_can_cmd.data,3+sizeof(uint8_t)*t_ans->len_dat);
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+return 0;
+}
+
+
 int put_can_wr_eeprom_ans(wr_eeprom_req_t *t_wr_eeprom_ans)
 {
 can_msg_t  send_msg;
@@ -285,6 +301,20 @@ switch(data[0]) {
          put_can_ack(SET_PARAM);
          set_param((set_param_cmd_t *)(data));
         break;
+       case WR_SPI_MOT:
+         put_can_ack(WR_SPI_MOT);
+         wr_spi_mot((spi_mot_cmd_t *)(data));
+        break;
+       case RD_SPI_MOT_REQ:
+         {
+         spi_mot_cmd_t  ans_spi_mot_cmd;
+         memcpy((void*)&ans_spi_mot_cmd,data,sizeof(spi_mot_cmd_t));
+         rd_spi_mot(&ans_spi_mot_cmd);
+         put_can_rd_spi_mot_ans(&ans_spi_mot_cmd);
+
+          }
+        break;
+      
      case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);
         printk("[stat=%x] ",boot_state);

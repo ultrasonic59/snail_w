@@ -7,7 +7,7 @@ DialDebug::DialDebug(QWidget *parent):
 	ui.setupUi(this);
 	ui.comboBox_rej->addItem("HID",HID_REJ);
  	ui.comboBox_rej->addItem("CAN",CAN_REJ);
-////	ui.comboBox_rej->addItem("LIN",LIN_REJ);
+	ui.comboBox_rej->addItem("SPI",SPI_REJ);
     connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
 
@@ -67,7 +67,7 @@ void  DialDebug::slot_send_can_msg()
 
 void  DialDebug::req_dbg_data_rdy(dbg_dat_req_t* p_dbg_dat)
 {
-#if 0
+#if 1
     QString tstr;
     int ii;
     if(p_dbg_dat->nbytes==0)
@@ -76,7 +76,7 @@ void  DialDebug::req_dbg_data_rdy(dbg_dat_req_t* p_dbg_dat)
         p_dbg_dat->nbytes=MAX_DBG_DATA_LEN;
     for(ii=0;ii<p_dbg_dat->nbytes;ii++)
     {
-        tstr.sprintf("\nAddr=%x->%x",p_dbg_dat->addr+ii,p_dbg_dat->data[ii]);
+        tstr.asprintf("\nAddr=%x->%x",p_dbg_dat->addr+ii,p_dbg_dat->data[ii]);
         ui.textEdit_rd_dat->append(tstr);
     }
     QTextCursor c = ui.textEdit_rd_dat->textCursor();

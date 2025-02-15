@@ -38,6 +38,7 @@ win_snail::win_snail(QWidget *parent)
 ///====================================
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<mot_cmd_t>("mot_cmd_t");
+  qRegisterMetaType<spi_mot_cmd_t>("spi_mot_cmd_t");
 
  
    p_camera = new CameraDevice(this);
@@ -188,7 +189,8 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  ///
  /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
   
- 
+ connect(this, SIGNAL(s_mot_spi(spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(spi_mot_cmd_t)));
+
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
 
  connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
@@ -736,6 +738,29 @@ else
 void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
+    switch (num)
+    {
+    case HID_REJ:
+        rd_hid_dbg(odat);
+        break;
+    case SPI_REJ:
+        qDebug() << "SPI_REJ _rd_dbg";
+        spi_mot_cmd_t t_spi_mot_cmd;
+        t_spi_mot_cmd.addr = odat->addr;
+        t_spi_mot_cmd.cmd = RD_SPI_MOT_REQ;
+        t_spi_mot_cmd.len_dat = 2;
+        emit s_mot_spi(t_spi_mot_cmd);
+         
+     ///   emit put_str_dial((char*)"SPI_REJ _rd_dbg");
+
+     ///   rd_hid_dbg(odat);
+        break;
+
+    }
+}
+void win_snail::rd_hid_dbg(dbg_dat_req_t* odat)
+{
+    qDebug() << "rd_hid_dbg";
     unsigned char buf[256];
     memset(buf, 0, sizeof(buf));
  int   res = 0;
@@ -874,21 +899,11 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
     case CAN_REJ:
  ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
         break;
-    }
+    case SPI_REJ:
+        ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
+        break;
 
-    /*
-    device_CMD.UpdateDevice(false);
-    switch (num)
-    {
-    case ALT_REJ:
-        device_CMD.p_dev_thr->dev_cmd.dev_put_alt(idat);
-        break;
-    case CONTR_REJ:
-        device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
-        break;
     }
-    device_CMD.UpdateDevice(true);
-    */
 }
 void win_snail::slot_send_can_dbg(can_message_t* idat)
 {

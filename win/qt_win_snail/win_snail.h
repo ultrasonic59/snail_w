@@ -70,6 +70,7 @@ private:
     struct hid_device_info* cur_dev;
 protected:
     bool put_hid_cmd(hid_cmd_t* cmd);
+    void rd_hid_dbg(dbg_dat_req_t* odat);
 
 public:
     plotterwidget* p_CamView;
@@ -243,7 +244,7 @@ signals:
 
     void s_mot_go(mot_cmd_t);
     void s_set_mot_rej(quint32, quint8);
-
+    void s_mot_spi(spi_mot_cmd_t);
 private:
  ///   QGraphicsItem* currentItem;
     PaintScene* scene;

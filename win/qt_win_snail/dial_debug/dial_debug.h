@@ -13,7 +13,7 @@ namespace Ui {
 
 #define HID_REJ		0
 #define CAN_REJ	    1
-///#define LIN_REJ		2
+#define SPI_REJ		2
 
 class DialDebug : public QDialog
 {

@@ -69,6 +69,11 @@
 #define PRG_PARAM             0x10
 
 #define ON_DOZA               0x11
+
+#define WR_SPI_MOT            0x12
+#define RD_SPI_MOT_REQ        0x13
+#define RD_SPI_MOT_ANS        0x14
+
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
 #define MOTOR_REJ             0x2
@@ -140,6 +145,13 @@ typedef __packed struct  set_param_cmd_s_{
   uint8_t   len_par;                     ///bytes 
   uint32_t  par_val;                      /// 
 }set_param_cmd_t;
+typedef __packed struct  spi_mot_cmd_s_{
+  uint8_t   cmd;                         /// 
+  uint8_t   addr;                        /// 
+  uint8_t   len_dat;                     ///bytes 
+  uint8_t   b_val;
+  uint32_t  w_val;                      /// 
+}spi_mot_cmd_t;
 
 #define MAX_CAN_NUM_BYTES  8
 typedef struct can_cmd_s{
@@ -173,6 +185,8 @@ uint32_t addr;
 uint16_t data;
 }rd_flash_ans_t;
 
+
+
 ///============ for progr =====================
 #define MAX_NUM_WORDS_PRG     3
 typedef struct  prg_flash_cmd_s_{
@@ -202,6 +216,10 @@ extern uint8_t check_erase_sectors(uint8_t *data);
 extern int go_cmd(go_cmd_t *p_go_cmd);
 extern int stop_mot_cmd(void);
 extern int set_param(set_param_cmd_t *i_data);
+///extern spi_mot_cmd_t  req_spi_mot_cmd;
+
+extern int wr_spi_mot(spi_mot_cmd_t *i_data);
+extern int rd_spi_mot(spi_mot_cmd_t *i_data);
 
 ///=====================================
 #define ERROR_OK            0

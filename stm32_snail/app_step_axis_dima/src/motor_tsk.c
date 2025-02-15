@@ -516,3 +516,26 @@ else
   
 }
 ///==============================================
+///spi_mot_cmd_t  req_spi_mot_cmd;
+
+int wr_spi_mot(spi_mot_cmd_t *i_cmd)
+{
+mot_spi_wr(i_cmd->addr&0x7, i_cmd->w_val&0xffff);
+if(i_cmd->len_dat==4)
+  mot_spi_wr((i_cmd->addr+1)&0x7, (i_cmd->w_val>>16)&0xffff);
+return 0;  
+}
+int rd_spi_mot(spi_mot_cmd_t *i_cmd)
+{
+uint32_t odat=0;  
+uint32_t odat1=0;  
+
+odat=mot_spi_rd(i_cmd->addr&0x7);
+if(i_cmd->len_dat==4)
+{
+odat1= mot_spi_rd((i_cmd->addr+1)&0x7);  
+odat|= odat1<<16;
+}
+i_cmd->w_val=odat;
+ return 0; 
+}

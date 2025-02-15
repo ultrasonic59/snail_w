@@ -49,6 +49,11 @@
 #define STOP_CMD              0xF
 #define PRG_PARAM             0x10
 #define ON_DOZA               0x11
+
+#define WR_SPI_MOT            0x12
+#define RD_SPI_MOT_REQ        0x13
+#define RD_SPI_MOT_ANS        0x14
+
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
 #define MOTOR_REJ             0x2
@@ -104,6 +109,13 @@ struct  mot_cmd_t {
 struct  mot_param_t {
 	quint16 len_step[NUM_AXIS];
 	quint8 mot_rej[NUM_AXIS];
+};
+struct  spi_mot_cmd_t {
+	uint8_t   cmd;                         /// 
+	uint8_t   addr;                        /// 
+	uint8_t   len_dat;                     ///bytes 
+	uint8_t   b_val;
+	uint32_t  w_val;                      /// 
 };
 
 
