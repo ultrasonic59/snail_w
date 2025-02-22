@@ -11,7 +11,7 @@
 #include "can_cmds.h"
 #include "printk.h"
 #include "my_misc.h"
-#include "emul_eeprom.h"
+///#include "emul_eeprom.h"
 
 ////=======================================
 extern uint8_t boot_state;
@@ -201,7 +201,7 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   return 0;
 }
 
-
+#if 0
 void rd_flash_dat(rd_flash_ans_t *t_rd_flash_ans)
 {
 uint16_t t_data;  
@@ -233,7 +233,8 @@ if(t_rd_eeprom_ans->num_dates==2)
  //// printk(" dat1[%x] ===",t_rd_eeprom_ans->data[1]); 
  
 }
-
+#endif
+#if 0
 void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 {
   printk("\n\r wr dat0[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
@@ -254,7 +255,7 @@ if(t_wr_eeprom_req->num_dates==2)
     }
   }
 }
-  
+#endif  
 
 int obr_can_cmd(uint8_t *data)
 {
@@ -285,6 +286,7 @@ switch(data[0]) {
          put_can_ack(SET_PARAM);
          set_param((set_param_cmd_t *)(data));
         break;
+#if 0        
      case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);
         printk("[stat=%x] ",boot_state);
@@ -293,10 +295,12 @@ switch(data[0]) {
  ////       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK,0);  ///???
         goto_booter();
         break;
+#endif
       case CHECK_CONN:
          put_can_ack(CHECK_CONN );
  ////   printk("CHECK_CONN[%x] ",cur_stat);
         break;
+#if 0
       case RD_EEPROM_REQ:
         {
         rd_eeprom_ans_t t_rd_eeprom_ans;  
@@ -318,11 +322,12 @@ switch(data[0]) {
  ////    printk("WR_EEPROM_REQ ");
         }
         break;
+#endif       
       case RD_FLASH_REQ:
         {
         rd_flash_ans_t t_rd_flash_ans;  
         memcpy(&t_rd_flash_ans.addr,&data[1],sizeof(uint32_t));
-        rd_flash_dat(&t_rd_flash_ans);
+       //// rd_flash_dat(&t_rd_flash_ans);
         put_can_rd_flash_ans(&t_rd_flash_ans);
 ////     printk("RD_EEPROM_REQ ");
         }

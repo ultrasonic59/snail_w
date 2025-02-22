@@ -3,9 +3,9 @@
 #include "my_misc.h"
 
 #include "can_cmds.h"
-#include "emul_eeprom.h"
+///#include "emul_eeprom.h"
 #include "printk.h"
-static uint32_t GetSector(uint32_t Address);
+////static uint32_t GetSector(uint32_t Address);
 
 ///=======================================================================
 void uDelay (const uint32_t usec)
@@ -22,7 +22,7 @@ do
 while (1);
 }
 ///=======================================================================
-
+#if 1
 pFunction Jump_To_Application;
 uint32_t jumpAddress;
 
@@ -60,8 +60,9 @@ __set_MSP(*(__IO uint32_t*) APP_BASE_ADDRESS);
 Jump_To_Application();
   
 }
+#endif
 ////=================================================
-#if 1
+#if 0
 void FLASH_If_Init(void)
 { 
 FLASH_Unlock(); 
@@ -201,6 +202,7 @@ else
 
 }
 #endif
+/*
 uint8_t check_ks_app(void)
 {
 uint16_t rd_ks=0;
@@ -226,4 +228,5 @@ if(tmp_ks!=rd_ks)
   return 0;
 return 1;
 }
+*/
 ////=================================================

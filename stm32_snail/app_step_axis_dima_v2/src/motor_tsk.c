@@ -10,7 +10,7 @@
 #include "snail_can_cmds.h"
 #include "can.h"
 #include "can_cmds.h"
-#include "emul_eeprom.h"
+///#include "emul_eeprom.h"
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 static uint8_t cur_mot_dir=0;
@@ -504,7 +504,7 @@ void motor_init(void)
 {
 mot_step_tim_init();
 ///mot_spi_init();
-uint16_t tmp;
+///uint16_t tmp;
 
 ///set_sleep_mot(1);
 ////set_ena_mot(1);
@@ -514,6 +514,7 @@ set_reset_mot(0);
 uDelay(20000);
 ///init_step_mot();
 ena_mot(0) ;
+/*
 if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
   {
     if(tmp>MAX_MOT_REJ)
@@ -521,6 +522,7 @@ if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
    set_mot_rej(tmp);
   }
 else
+*/
    set_mot_rej(DEF_MOT_REJ);
   
 }

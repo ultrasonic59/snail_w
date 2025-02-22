@@ -374,20 +374,8 @@ for(;;)
 {
 if(check_push_key_dbg())
   {
-  key=get_byte_dbg() ;  
-  switch(key)
-    {
-    case 'a':
-    case 'A':
-      printk("\n\r go to app"); 
-      goto_app();
-      break;
-    case 'b':
-    case 'B':
-      printk("\n\r go to boot"); 
-      goto_booter();
-      break;
-   }
+  key=get_byte_dbg() ; 
+      printk("\n\r [%]", key); 
   } 
 msleep(10);
 }

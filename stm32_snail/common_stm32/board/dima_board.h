@@ -510,7 +510,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 
 ////============================================
 ////=================================================================
-extern int32_t cur_coord;
+////extern int32_t cur_coord;
 extern uint8_t cur_stat;
 
 extern void mot_spi_init(void);
