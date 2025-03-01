@@ -84,6 +84,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f2xx_conf.h"
 #include "stm32f2xx_i2c.h"
 #include "stm32f2xx_rcc.h"
 
