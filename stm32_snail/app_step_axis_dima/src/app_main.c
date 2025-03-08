@@ -54,6 +54,7 @@ boot_state=BOOTER_NO_BOOT;
 #endif
 ////=================================================
 ///eeprom_init();
+
   FLASH_Unlock();
   EE_Init();
   FLASH_Lock();

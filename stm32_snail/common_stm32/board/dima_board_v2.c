@@ -41,6 +41,15 @@ void init_gpio(void)
 {
 ////RCC_AHBPeriphClockCmd(XEN_PIN_RCC_AHB,ENABLE);
 GPIO_InitTypeDef GPIO_InitStructure;
+////=============== TST1 ============================
+RCC_AHB1PeriphClockCmd(TST2_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = TST1_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( TST1_PIN_GPIO, &GPIO_InitStructure );
 ////=============== TST2 ============================
 RCC_AHB1PeriphClockCmd(TST2_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = TST2_PIN;
@@ -54,24 +63,60 @@ GPIO_Init( TST2_PIN_GPIO, &GPIO_InitStructure );
 RCC_AHB1PeriphClockCmd(TST3_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = TST3_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+///GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init( TST3_PIN_GPIO, &GPIO_InitStructure );
-GPIO_PinAFConfig(TST3_PIN_GPIO, TST3_PIN_NPIN, GPIO_AF_TIM1);
-
+///GPIO_PinAFConfig(TST3_PIN_GPIO, TST3_PIN_NPIN, GPIO_AF_TIM1);
+////=============== TST4 ============================
+RCC_AHB1PeriphClockCmd(TST4_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = TST4_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( TST4_PIN_GPIO, &GPIO_InitStructure );
+////=============== TST5 ============================
+RCC_AHB1PeriphClockCmd(TST5_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = TST5_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( TST5_PIN_GPIO, &GPIO_InitStructure );
+////=============== TST6 ============================
+RCC_AHB1PeriphClockCmd(TST6_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = TST6_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( TST6_PIN_GPIO, &GPIO_InitStructure );
 ////=============== TST7 ============================
 RCC_AHB1PeriphClockCmd(TST7_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = TST7_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+///GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
-GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
+///GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
+
+////=============== TST8 ============================
+RCC_AHB1PeriphClockCmd(TST7_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = TST8_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+///GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
+///GPIO_PinAFConfig(TST8_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
   
 ////=========== DBG_UART =================================================== 
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
@@ -90,21 +135,60 @@ GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
   
 GPIO_PinAFConfig(UART_DBG_TX_GPIO, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
-////===================================================================
-#if 0
-////=============== MOT_FAULT ============================
-RCC_AHB1PeriphClockCmd(MOT_FAULT_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_FAULT_PIN;
+////=============== MOT_ENA ============================
+RCC_AHB1PeriphClockCmd(MOT_ENA_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_ENA_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( MOT_FAULT_PIN_GPIO, &GPIO_InitStructure );
-////=============== MOT_STALLN ============================
-RCC_AHB1PeriphClockCmd(MOT_STALLN_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_STALLN_PIN;
+GPIO_Init( MOT_ENA_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_MS1 ============================
+RCC_AHB1PeriphClockCmd(MOT_MS1_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_MS1_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-GPIO_Init( MOT_STALLN_PIN_GPIO, &GPIO_InitStructure );
-#endif
+GPIO_Init( MOT_MS1_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_MS2 ============================
+RCC_AHB1PeriphClockCmd(MOT_MS2_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_MS2_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_Init( MOT_MS2_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_MS3 ============================
+RCC_AHB1PeriphClockCmd(MOT_MS3_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_MS3_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_Init( MOT_MS3_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_RESET ============================
+RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_RESET_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+GPIO_Init( MOT_RESET_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_SLEEP NC============================
+RCC_AHB1PeriphClockCmd(MOT_SLEEP_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_SLEEP_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init( MOT_SLEEP_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_STEP ============================
+RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
+////=============== MOT_DIR ============================
+RCC_AHB1PeriphClockCmd(MOT_DIR_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = MOT_DIR_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init( MOT_DIR_PIN_GPIO, &GPIO_InitStructure );
 ////=============== CONC1 ============================
 RCC_AHB1PeriphClockCmd(CONC1_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = CONC1_PIN;
@@ -117,71 +201,6 @@ GPIO_InitStructure.GPIO_Pin = CONC0_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 GPIO_Init( CONC0_PIN_GPIO, &GPIO_InitStructure );
-////=============== MOT_RESET ============================
-RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_RESET_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( MOT_RESET_PIN_GPIO, &GPIO_InitStructure );
-////=============== MOT_SLEEP ============================
-RCC_AHB1PeriphClockCmd(MOT_SLEEP_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_SLEEP_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( MOT_SLEEP_PIN_GPIO, &GPIO_InitStructure );
-////#define MOT_STEP_TIM  	        TIM12
-////=============== MOT_STEP ============================
-#if 0
-RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
-GPIO_PinAFConfig(MOT_STEP_PIN_GPIO, MOT_STEP_PIN_NPIN, GPIO_AF_TIM1);
-#else
-RCC_AHB1PeriphClockCmd(MOT_STEP_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_STEP_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-///GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( MOT_STEP_PIN_GPIO, &GPIO_InitStructure );
-////GPIO_PinAFConfig(MOT_STEP_PIN_GPIO, MOT_STEP_PIN_NPIN, GPIO_AF_TIM1);
-
-#endif
-////===================================================================
-
-////=============== MOT_DIR ============================
-RCC_AHB1PeriphClockCmd(MOT_DIR_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_DIR_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-////GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-GPIO_Init( MOT_DIR_PIN_GPIO, &GPIO_InitStructure );
-////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-#if 0
-////=============== MOT_SPI_SCS ============================
-RCC_AHB1PeriphClockCmd(MOT_SPI_SCS_PIN_RCC, ENABLE);
-GPIO_InitStructure.GPIO_Pin = MOT_SPI_SCS_PIN;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-GPIO_Init( MOT_SPI_SCS_PIN_GPIO, &GPIO_InitStructure );
-#endif
 ////=============== CAN1_INH ============================
 RCC_AHB1PeriphClockCmd(CAN1_INH_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = CAN1_INH_PIN;
@@ -287,6 +306,10 @@ CAN_FilterConfig(0,id,mask);
 }
 
 extern can_msg_t CAN_RxMsg;
+uint8_t cnt_led=0;
+uint8_t t_led=0;
+#define NUM_CNT_LED 20
+
 void state_task( void *pvParameters )
 {
   uint8_t tmp; 
@@ -306,7 +329,16 @@ for(;;)
       put_can_cmd_stat(cur_state,cur_coord);
      }
    else
+   {
       msleep(50);
+      cnt_led++;
+      if(cnt_led>NUM_CNT_LED)
+      {
+        cnt_led=0;
+        t_led++;
+        on_led(t_led);
+      }
+   }
   }
 
 }
@@ -381,3 +413,171 @@ msleep(10);
 }
 }
 	
+void  set_ms1(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_MS1_PIN_GPIO, MOT_MS1_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_MS1_PIN_GPIO, MOT_MS1_PIN);
+  }
+}
+void  set_ms2(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_MS2_PIN_GPIO, MOT_MS2_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_MS2_PIN_GPIO, MOT_MS2_PIN);
+  }
+}
+void  set_ms3(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_MS3_PIN_GPIO, MOT_MS3_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_MS3_PIN_GPIO, MOT_MS3_PIN);
+  }
+}
+void  set_mot_ms(uint8_t idat)
+{
+ set_ms1(idat&0x1) ;
+ idat>>=1;
+ set_ms2(idat&0x1) ;
+ idat>>=1;
+ set_ms3(idat&0x1) ;
+}
+void  set_ena_mot(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_ENA_PIN_GPIO, MOT_ENA_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_ENA_PIN_GPIO, MOT_ENA_PIN);
+  }
+}
+void  set_dir_mot(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_DIR_PIN_GPIO, MOT_DIR_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_DIR_PIN_GPIO, MOT_DIR_PIN);
+  }
+}
+
+void  set_reset_mot(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_RESET_PIN_GPIO, MOT_RESET_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_RESET_PIN_GPIO, MOT_RESET_PIN);
+  }
+}
+void  set_tst1(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST1_PIN_GPIO, TST1_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST1_PIN_GPIO, TST1_PIN);
+  }
+}
+void  set_tst2(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
+  }
+}
+void  set_tst3(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
+  }
+}
+void  set_tst4(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST4_PIN_GPIO, TST4_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST4_PIN_GPIO, TST4_PIN);
+  }
+}
+void  set_tst5(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST5_PIN_GPIO, TST5_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST5_PIN_GPIO, TST5_PIN);
+  }
+}
+void  set_tst6(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST6_PIN_GPIO, TST6_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST6_PIN_GPIO, TST6_PIN);
+  }
+}
+void  set_tst7(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
+  }
+}
+void  set_tst8(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST8_PIN_GPIO, TST8_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(TST8_PIN_GPIO, TST8_PIN);
+  }
+}
+
+void  on_led(uint8_t idat)
+{
+  set_tst7(idat);
+}

@@ -3440,7 +3440,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>STM32F205RB	ST STM32F205RB</state>
+                    <state>STM32F205RC	ST STM32F205RC</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -3486,7 +3486,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>STM32F205RB	ST STM32F205RB</state>
+                    <state>STM32F205RC	ST STM32F205RC</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -4096,7 +4096,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>app_step_x_dbg.out</state>
+                    <state>app_step_v2_x_dbg.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -4156,11 +4156,11 @@
                 </option>
                 <option>
                     <name>IlinkIcfOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$/config/linker/ST/stm32f205xB.icf</state>
+                    <state>$PROJ_DIR$\app_step_rtos.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -4599,11 +4599,5 @@
     </group>
     <file>
         <name>$PROJ_DIR$\src\can_thr.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul\emul_eeprom.c</name>
-        <excluded>
-            <configuration>app_step_v2_x_dbg</configuration>
-        </excluded>
     </file>
 </project>

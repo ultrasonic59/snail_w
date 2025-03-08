@@ -12,33 +12,6 @@
 #include "misc.h"
 #include "flash_if.h"
 ////=============================================
-/*
-#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
-#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x4000))
-#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-*/
-/* EEPROM start address in Flash */
-#define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
-                                                      after 16KByte of used Flash memory */
-#define EEPROM_START_SECTOR    FLASH_Sector_2
-#define PAGE0_SECTOR    FLASH_Sector_2                                                     
-#define PAGE1_SECTOR    FLASH_Sector_3                                                     
-
-#define EEPROM_PAGE_SIZE   ((uint32_t)0x4000)           ////16 KB
-/* Pages 0 and 1 base and end addresses */
-#define PAGE0_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + 0x000))
-#define PAGE0_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS      ((uint32_t)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
-#define PAGE1_END_ADDRESS       ((uint32_t)(EEPROM_START_ADDRESS + (2 * EEPROM_PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-
-////=============================================
 #define APP_BASE_ADDRESS        ((uint32_t)0x08010000)
 #define APP_PAGE_SIZE           ((uint32_t)0x10000)           ////64 KB
 #define APP_END_ADDRESS         ((uint32_t)(APP_BASE_ADDRESS + (APP_PAGE_SIZE - 1)))
@@ -63,6 +36,11 @@
 
 
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
+////=============== TST1============================
+#define TST1_PIN	    	GPIO_Pin_4
+#define TST1_PIN_NPIN	    	5
+#define TST1_PIN_GPIO	    	GPIOB
+#define TST1_PIN_RCC  	        RCC_AHB1Periph_GPIOB
 ////=============== TST2============================
 #define TST2_PIN	    	GPIO_Pin_5
 #define TST2_PIN_NPIN	    	5
@@ -133,102 +111,68 @@
 #define CAN1_INH_PIN_GPIO	    GPIOC
 #define CAN1_INH_PIN_RCC  	RCC_AHB1Periph_GPIOC
 
-////=============== MOT_FAULT ============================
-#define MOT_FAULT_PIN	    		GPIO_Pin_11
-#define MOT_FAULT_PIN_NPIN	    	11
-#define MOT_FAULT_PIN_GPIO	    	GPIOB
-#define MOT_FAULT_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== I2C2_SDA_EEPROM ============================
+#define SDA_EEPROM_PIN	    		GPIO_Pin_11
+#define SDA_EEPROM_PIN_NPIN	    	11
+#define SDA_EEPROM_PIN_GPIO	    	GPIOB
+#define SDA_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== I2C2_SCL_EEPROM ============================
+#define SCL_EEPROM_PIN	    	GPIO_Pin_10
+#define SCL_EEPROM_PIN_NPIN	    10
+#define SCL_EEPROM_PIN_GPIO	    GPIOB
+#define SCL_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== MOT_ENA ============================
+#define MOT_ENA_PIN	    	GPIO_Pin_2
+#define MOT_ENA_PIN_NPIN	    2
+#define MOT_ENA_PIN_GPIO	    GPIOB
+#define MOT_ENA_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== MOT_MS1 ============================
+#define MOT_MS1_PIN	    	GPIO_Pin_1
+#define MOT_MS1_PIN_NPIN	    1
+#define MOT_MS1_PIN_GPIO	    GPIOB
+#define MOT_MS1_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== MOT_MS2 ============================
+#define MOT_MS2_PIN	    	GPIO_Pin_0
+#define MOT_MS2_PIN_NPIN	    0
+#define MOT_MS2_PIN_GPIO	    GPIOB
+#define MOT_MS2_PIN_RCC  	RCC_AHB1Periph_GPIOB
+////=============== MOT_MS3 ============================
+#define MOT_MS3_PIN	    	GPIO_Pin_5
+#define MOT_MS3_PIN_NPIN	    5
+#define MOT_MS3_PIN_GPIO	    GPIOC
+#define MOT_MS3_PIN_RCC  	RCC_AHB1Periph_GPIOC
 ////=============== MOT_RESET ============================
-#define MOT_RESET_PIN	    	GPIO_Pin_9
-#define MOT_RESET_PIN_NPIN	9
-#define MOT_RESET_PIN_GPIO	GPIOA
-#define MOT_RESET_PIN_RCC  	RCC_AHB1Periph_GPIOA
-////=============== MOT_SLEEP ============================
-#define MOT_SLEEP_PIN	    	GPIO_Pin_10
-#define MOT_SLEEP_PIN_NPIN	10
+#define MOT_RESET_PIN	    	GPIO_Pin_4
+#define MOT_RESET_PIN_NPIN	4
+#define MOT_RESET_PIN_GPIO	GPIOC
+#define MOT_RESET_PIN_RCC  	RCC_AHB1Periph_GPIOC
+////=============== MOT_SLEEP NC ============================
+#define MOT_SLEEP_PIN	    	GPIO_Pin_7
+#define MOT_SLEEP_PIN_NPIN	7
 #define MOT_SLEEP_PIN_GPIO	GPIOA
 #define MOT_SLEEP_PIN_RCC  	RCC_AHB1Periph_GPIOA
 ////=============== MOT_STEP ============================
-#define MOT_STEP_PIN	    	GPIO_Pin_8
-#define MOT_STEP_PIN_NPIN	8
+#define MOT_STEP_PIN	    	GPIO_Pin_6
+#define MOT_STEP_PIN_NPIN	6
 #define MOT_STEP_PIN_GPIO	GPIOA
 #define MOT_STEP_PIN_RCC  	RCC_AHB1Periph_GPIOA
 #define MOT_STEP_TIM  	        TIM1
 #define MOT_STEP_TIM_RCC  	RCC_APB2Periph_TIM1
 ////=============== MOT_DIR ============================
-#define MOT_DIR_PIN	    	GPIO_Pin_9
-#define MOT_DIR_PIN_NPIN	    9
-#define MOT_DIR_PIN_GPIO	    GPIOC
-#define MOT_DIR_PIN_RCC  	RCC_AHB1Periph_GPIOC
-////=============== MOT_BIN1 ============================
-///#define MOT_BIN1_PIN	    	GPIO_Pin_8
-///#define MOT_BIN1_PIN_NPIN	    8
-///#define MOT_BIN1_PIN_GPIO	    GPIOC
-////#define MOT_BIN1_PIN_RCC  	RCC_AHB1Periph_GPIOC
-////=============== MOT_BIN2 ============================
-///#define MOT_BIN2_PIN	    	GPIO_Pin_1
-///#define MOT_BIN2_PIN_NPIN	    1
-///#define MOT_BIN2_PIN_GPIO	    GPIOB
-///#define MOT_BIN2_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== MOT_STALLN ============================
-///#define MOT_STALLN_PIN	    	GPIO_Pin_10
-///#define MOT_STALLN_PIN_NPIN	    10
-///#define MOT_STALLN_PIN_GPIO	    GPIOB
-///#define MOT_STALLN_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== MOT_SPI_SCK ============================
-///#define MOT_SPI_SCK_PIN	    	GPIO_Pin_13
-///#define MOT_SPI_SCK_PIN_NPIN	    13
-///#define MOT_SPI_SCK_PIN_GPIO	    GPIOB
-///#define MOT_SPI_SCK_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== MOT_SPI_MOSI ============================
-///#define MOT_SPI_MOSI_PIN	    	GPIO_Pin_15
-///#define MOT_SPI_MOSI_PIN_NPIN	    15
-///#define MOT_SPI_MOSI_PIN_GPIO	    GPIOB
-///#define MOT_SPI_MOSI_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== MOT_SPI_SCS ============================
-///#define MOT_SPI_SCS_PIN	    	GPIO_Pin_12
-///#define MOT_SPI_SCS_PIN_NPIN	    12
-///#define MOT_SPI_SCS_PIN_GPIO	    GPIOB
-///#define MOT_SPI_SCS_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== MOT_SPI_MISO ============================
-#if 0
-#define MOT_SPI_MISO_PIN	    	GPIO_Pin_14
-#define MOT_SPI_MISO_PIN_NPIN	    14
-#define MOT_SPI_MISO_PIN_GPIO	    GPIOB
-#define MOT_SPI_MISO_PIN_RCC  	RCC_AHB1Periph_GPIOB
-
-#define MOT_SPI                 SPI2
-#define MOT_SPI_PeriphClockCmd 	RCC_APB1PeriphClockCmd
-#define MOT_SPI_RCC 	RCC_APB1Periph_SPI2
-#define MOT_SPI_AF      GPIO_AF_SPI2
-#endif
+#define MOT_DIR_PIN	    	GPIO_Pin_5
+#define MOT_DIR_PIN_NPIN	    5
+#define MOT_DIR_PIN_GPIO	    GPIOA
+#define MOT_DIR_PIN_RCC  	RCC_AHB1Periph_GPIOA
 ////=============== CONC1 ============================
-#define CONC1_PIN	    GPIO_Pin_2
-#define CONC1_PIN_NPIN	    2
+#define CONC1_PIN	    GPIO_Pin_1
+#define CONC1_PIN_NPIN	    1
 #define CONC1_PIN_GPIO	    GPIOA
 #define CONC1_PIN_RCC  	    RCC_AHB1Periph_GPIOA
 ////=============== CONC0 ============================
-#define CONC0_PIN	    GPIO_Pin_1
-#define CONC0_PIN_NPIN	    1
+#define CONC0_PIN	    GPIO_Pin_0
+#define CONC0_PIN_NPIN	    0
 #define CONC0_PIN_GPIO	    GPIOA
 #define CONC0_PIN_RCC  	    RCC_AHB1Periph_GPIOA
-////=============== ENC_A ============================
-////#define ENC_A_PIN	    GPIO_Pin_0
-////#define ENC_A_PIN_NPIN	    0
-////#define ENC_A_PIN_GPIO	    GPIOA
-////#define ENC_A_PIN_RCC  	    RCC_AHB1Periph_GPIOA
-////#define ENC_TIM  	    TIM5
-////#define ENC_TIM_RCC  	    RCC_APB1Periph_TIM5
-////=============== ENC_B ============================
-////#define ENC_B_PIN	    GPIO_Pin_1
-////#define ENC_B_PIN_NPIN	    1
-////#define ENC_B_PIN_GPIO	    GPIOA
-////#define ENC_B_PIN_RCC  	    RCC_AHB1Periph_GPIOA
-////=============== ENC_C ============================
-/////#define ENC_C_PIN	    GPIO_Pin_2
-////#define ENC_C_PIN_NPIN	    2
-////#define ENC_C_PIN_GPIO	    GPIOA
-////#define ENC_C_PIN_RCC  	    RCC_AHB1Periph_GPIOA
 ////=============== UART_RX1 ============================
 #define UART_RX1_PIN	    	    GPIO_Pin_7
 #define UART_RX1_PIN_NPIN	    7
@@ -239,21 +183,17 @@
 #define UART_TX1_PIN_NPIN	    6
 #define UART_TX1_PIN_GPIO	    GPIOB
 #define UART_TX1_PIN_RCC  	    RCC_AHB1Periph_GPIOB
-////============== CAN1_RX ============================
-#define CAN1_RX_PIN	    	GPIO_Pin_8
-#define CAN1_RX_PIN_NPIN	8
-#define CAN1_RX_PIN_GPIO	GPIOB
-#define CAN1_RX_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////============== CAN1_TX ============================
-#define CAN1_TX_PIN	    	GPIO_Pin_9
-#define CAN1_TX_PIN_NPIN	9
-#define CAN1_TX_PIN_GPIO	GPIOB
-#define CAN1_TX_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////============== CAN1_INH ============================
-#define CAN1_INH_PIN	    	GPIO_Pin_0
-#define CAN1_INH_PIN_NPIN	    0
-#define CAN1_INH_PIN_GPIO	    GPIOC
-#define CAN1_INH_PIN_RCC  	RCC_AHB1Periph_GPIOC
+////=============== UART_RX2 ============================
+#define UART_RX2_PIN	    	    GPIO_Pin_3
+#define UART_RX2_PIN_NPIN	    3
+#define UART_RX2_PIN_GPIO	    GPIOA
+#define UART_RX2_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+////=============== UART_TX2 ============================
+#define UART_TX2_PIN	    	    GPIO_Pin_2
+#define UART_TX2_PIN_NPIN	    2
+#define UART_TX2_PIN_GPIO	    GPIOA
+#define UART_TX2_PIN_RCC  	    RCC_AHB1Periph_GPIOA
+
 ////================= USB ======================
 #define USB_DP_PIN	    	GPIO_Pin_12
 #define USB_DP_PIN_NPIN	    12
@@ -279,91 +219,8 @@
 ///#define UART_DBG_TX_SOURCE      GPIO_Pin_2
 ///#define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
-#if 0
-#define ADDR_MOT_CTRL   0
-#define ADDR_MOT_TORQUE 1
-#define ADDR_MOT_OFF    2
-#define ADDR_MOT_BLANK  3
-#define ADDR_MOT_DECAY  4
-#define ADDR_MOT_STALL  5
-#define ADDR_MOT_DRIVE  6
-#define ADDR_MOT_STATUS 7
-#endif
 #define DEF_MOT_REJ   0
 ////======================================
-#if 0
-// CTRL Register
-typedef struct CTRL_Register
-{
-uint16_t ENBL:1;		// bit 0
-uint16_t RDIR:1;		// bit 1
-uint16_t RSTEP:1;		// bit 2
-uint16_t MODE:4;		// bits 6-3
-uint16_t EXSTALL:1;	// bit 7
-uint16_t ISGAIN:2;	// bits 9-8
-uint16_t DTIME:2;		// bits 11-10
-}CTRL_Register_t;
-
-// TORQUE Register
-typedef struct TORQUE_Register
-{
-uint16_t TORQUE:8;	// bits 7-0
-uint16_t SIMPLTH:3;  	// bits 10-8
-}TORQUE_Register_t;
-
-// OFF Register
-typedef struct OFF_Register
-{
-uint16_t TOFF:8;		// bits 7-0
-uint16_t PWMMODE:1;  	// bit 8
-}OFF_Register_t;
-
-// BLANK Register
-typedef struct BLANK_Register
-{
-uint16_t TBLANK:8;	// bits 7-0
-uint16_t ABT:1;  		// bit 8
-}BLANK_Register_t;
-
-// DECAY Register
-typedef struct DECAY_Register
-{
-uint16_t TDECAY:8;	// bits 7-0
-  uint16_t DECMOD:3;  	// bits 10-8
-}DECAY_Register_t;
-
-// STALL Register
-typedef struct STALL_Register
-{
-uint16_t SDTHR:8;		// bits 7-0
-uint16_t SDCNT:2;		// bits 9-8
-  uint16_t VDIV:2;  	// bits 11-10
-}STALL_Register_t;
-
-// DRIVE Register
-typedef struct DRIVE_Register
-{
-uint16_t OCPTH:2;	// bits 1-0
-uint16_t OCPDEG:2;	// bits 3-2
-uint16_t TDRIVEN:2;	// bits 5-4
-uint16_t TDRIVEP:2;	// bits 7-6
-uint16_t IDRIVEN:2;	// bits 9-8
-uint16_t IDRIVEP:2;  	// bits 11-10
-}DRIVE_Register_t;
-
-// STATUS Register
-typedef struct STATUS_Register
-{
-uint16_t OTS:1;		// bit 0
-uint16_t AOCP:1;	// bit 1
-uint16_t BOCP:1;	// bit 2
-uint16_t APDF:1;	// bit 3
-uint16_t BPDF:1;	// bit 4
-uint16_t UVLO:1;	// bit 5
-uint16_t STD:1;		// bit 6
-uint16_t STDLAT:1;  	// bit 7
-}STATUS_Register_t;
-#endif
 typedef union cmd_param_u
 {
 uint8_t bpar[4];
@@ -519,7 +376,6 @@ extern uint8_t cur_stat;
 
 ///extern void mot_spi_init(void);
 ///extern void init_step_mot(void);
-extern void ena_mot(uint8_t ena_dis);
 extern void motor_init(void);
 
 extern void init_gpio(void);
@@ -538,11 +394,19 @@ extern int get_byte_dbg(void) ;
 extern void can1_init(void);
 extern void motor_task( void *pvParameters );
 extern int check_push_key_dbg(void);
-extern void print_mot_reg(void);
-
-////#define dbg_sendchar  sendchar6 
-////#define dbg_get_byte get_byte6
-////#define check_push_key get_byte6
+extern void  set_ms1(uint8_t idat);
+extern void  set_ms2(uint8_t idat);
+extern void  set_ms3(uint8_t idat);
+extern void  set_mot_ms(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  set_tst1(uint8_t idat);
+extern void  on_led(uint8_t idat);
 
 ////=============================================
 #endif ////__DIMA_BOARD_H__
