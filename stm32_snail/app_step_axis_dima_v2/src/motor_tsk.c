@@ -3,7 +3,6 @@
 #include "queue.h"
 #include "semphr.h"
 
-////#include "board.h"
 #include "board.h"
 #include "printk.h"
 
@@ -25,6 +24,9 @@ uint8_t psk=0;
 char key=0;
 int nstep=300;
 uint8_t dir=0;
+uint8_t t_ena=0;
+uint8_t t_reset=0;
+
 uint8_t mot_rej=0;
 printk("\n\r motor_task"); 
 motor_init();
@@ -47,6 +49,14 @@ if(check_push_key_dbg())
       dir ++;
       dir&=0x1;
       break;
+   case 'e':
+      t_ena ++;
+      t_ena&=0x1;
+      break;
+  case 'r':
+      t_reset ++;
+      t_reset&=0x1;
+      break;
     case 'm':
       mot_rej ++;
       if(mot_rej>8)
@@ -68,10 +78,12 @@ if(check_push_key_dbg())
    }
   btst = get_conc_n();
 
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]",nstep,dir,mot_rej,ena_check_conc,btst); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]ena=[%x]reset=[%x]",nstep,dir,mot_rej,ena_check_conc,btst,t_ena,t_reset); 
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
-  if(psk)
+  set_ena_mot(t_ena);
+  set_reset_mot(t_reset);
+ if(psk)
     {
     put_mot_nstep(nstep);
     psk=0;
@@ -153,7 +165,7 @@ NVIC_Init(&NVIC_InitStructure);
 ///===========================================================
 void put_mot_nstep(uint32_t nstep)
 {
-set_ena_mot(1) ;
+////set_ena_mot(1) ;
 num_step=nstep; 
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
@@ -179,6 +191,8 @@ if(cur_step_out)
   }
 else
 {
+if(ena_check_conc)
+{  
   if((cur_mot_dir&0x1)==0)
     {
       if((tconc & MASK_CON1) !=0x0)
@@ -189,6 +203,7 @@ else
      if((tconc & MASK_CON0) !=0x0)
            num_step=0;
      }
+} 
 if(num_step)
   {
    cur_step_out=1;
@@ -201,17 +216,20 @@ if(num_step)
    
   if(num_step==0)
     {
+   cur_step_out=0;
+   set_step_mot(cur_step_out);
+   
     stop_mot_step_tim(); 
     cur_state &= ~STATE_MASK;
     cur_state|=STATE_READY;  
 
-    set_ena_mot(0) ;
+  ////  set_ena_mot(0) ;
     }
   }
 else
   {
    stop_mot_step_tim(); 
-   set_ena_mot(0) ;
+ ///  set_ena_mot(0) ;
    }
 }
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
@@ -229,7 +247,7 @@ uDelay(1000);
 set_reset_mot(0);
 uDelay(20000);
 ///init_step_mot();
-set_ena_mot(0) ;
+////set_ena_mot(0) ;
 /*
 if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
   {

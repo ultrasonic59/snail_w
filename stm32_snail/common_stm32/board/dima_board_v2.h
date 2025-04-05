@@ -23,7 +23,7 @@
 #define	APB1_pres	4
 #define APB2_pres	2
 
-#define DEF_MOT_TIM_PERIOD          500
+#define DEF_MOT_TIM_PERIOD          1000        ////500
 #define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
@@ -111,16 +111,33 @@
 #define CAN1_INH_PIN_GPIO	    GPIOC
 #define CAN1_INH_PIN_RCC  	RCC_AHB1Periph_GPIOC
 
-////=============== I2C2_SDA_EEPROM ============================
+///=============== I2C2_SDA_EEPROM ============================
 #define SDA_EEPROM_PIN	    		GPIO_Pin_11
-#define SDA_EEPROM_PIN_NPIN	    	11
+#define SDA_EEPROM_NPIN	    	11
 #define SDA_EEPROM_PIN_GPIO	    	GPIOB
 #define SDA_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOB
-////=============== I2C2_SCL_EEPROM ============================
+///=============== I2C2_SCL_EEPROM ============================
 #define SCL_EEPROM_PIN	    	GPIO_Pin_10
-#define SCL_EEPROM_PIN_NPIN	    10
+#define SCL_EEPROM_NPIN	    10
 #define SCL_EEPROM_PIN_GPIO	    GPIOB
 #define SCL_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOB
+#define  I2C_EEPROM    I2C2
+#define  RCC_APB1Periph_I2C_EEPROM RCC_APB1Periph_I2C2
+#define  GPIO_AF_I2C_EEPROM    GPIO_AF_I2C2
+///=============== I2C3_SDA_ENCODER============================
+#define SDA_ENCODER_PIN	    		GPIO_Pin_9
+#define SDA_ENCODER_NPIN	    	9
+#define SDA_ENCODER_PIN_GPIO	    	GPIOC
+#define SDA_ENCODER_PIN_RCC  	RCC_AHB1Periph_GPIOC
+///=============== I2C3_SCL_ENCODER ============================
+#define SCL_ENCODER_PIN	    	GPIO_Pin_8
+#define SCL_ENCODER_NPIN	    8
+#define SCL_ENCODER_PIN_GPIO	    GPIOA
+#define SCL_ENCODER_PIN_RCC  	RCC_AHB1Periph_GPIOA
+#define  I2C_ENCODER    I2C3
+#define  RCC_APB1Periph_I2C_ENCODER RCC_APB1Periph_I2C3
+#define  GPIO_AF_I2C_ENCODER    GPIO_AF_I2C3
+
 ////=============== MOT_ENA ============================
 #define MOT_ENA_PIN	    	GPIO_Pin_2
 #define MOT_ENA_PIN_NPIN	    2

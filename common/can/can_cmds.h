@@ -3,7 +3,7 @@
 ///=========================================================
 #define CAN_MAX_LEN_QUEU 4
 
-#define ID_MASK         (uint32_t)(0x7e0)
+////#define ID_MASK         (uint32_t)(0x7e0)
 ///#define ID_MASK         (uint32_t)(0x7ff)
 ////#define ID_MASK         (uint32_t)(0x0)
 
@@ -24,7 +24,8 @@
   #error "\n\r=== STEP_... nodefined ==="; 
 #endif
 
-#define ID_BRD (AXIS_BRD<<5)
+#define ID_BRD     (AXIS_BRD<<5)
+#define ID_MASK    (AXIS_BRD<<5)
 
 #if 0
 #define ID_X_CMD         (0x1<<5)

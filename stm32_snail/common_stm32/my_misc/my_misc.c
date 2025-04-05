@@ -72,24 +72,6 @@ FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
                 FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
 }
 
-uint32_t FLASH_If_Erase(uint32_t StartSector)
-{
-uint32_t rez;  
-FLASH_Unlock(); 
-///printk("\n\r FLASH_If_Erase[%x] =>",StartSector); 
-
-uint32_t UserStartSector = GetSector(APP_BASE_ADDRESS);
-
-if (_FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
-    {
-    rez= ERROR_ERRASE;
-    }
-else
-  rez= ERROR_OK;
-FLASH_Lock(); 
-
-return rez;
-}
 uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t DataLength)
 {
   uint32_t i = 0;
@@ -120,6 +102,42 @@ uint32_t FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data ,uint32_t Da
   return (0);
 }
 
+static uint32_t curr_addr_prg=0;
+void set_curr_addr_prg(uint32_t *iaddr)
+{
+  curr_addr_prg= *iaddr;
+}
+
+
+#endif
+/*
+uint8_t check_ks_app(void)
+{
+uint16_t rd_ks=0;
+uint16_t tmp_ks=0;
+uint32_t size_app=0;
+uint32_t ii;
+uint16_t tmp=0;
+
+if(EE_ReadVariable(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
+  return 0;
+size_app=tmp;
+size_app<<=16;
+if(EE_ReadVariable(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
+  return 0;
+size_app|=tmp;
+if(EE_ReadVariable(ADDR_KS_APP, &rd_ks)!=0)
+  return 0;
+for(ii=0;ii< size_app;ii+=2)
+  {
+   tmp_ks+= *(uint16_t*)(APP_BASE_ADDRESS+ii); 
+  }
+if(tmp_ks!=rd_ks)
+  return 0;
+return 1;
+}
+*/
+////=================================================
 static uint32_t GetSector(uint32_t Address)
 {
   uint32_t sector = 0;
@@ -146,10 +164,29 @@ static uint32_t GetSector(uint32_t Address)
   }
     return sector;
 }
+
 static uint32_t curr_addr_prg=0;
 void set_curr_addr_prg(uint32_t *iaddr)
 {
   curr_addr_prg= *iaddr;
+}
+uint32_t FLASH_If_Erase(uint32_t StartSector)
+{
+uint32_t rez;  
+FLASH_Unlock(); 
+///printk("\n\r FLASH_If_Erase[%x] =>",StartSector); 
+
+uint32_t UserStartSector = GetSector(APP_BASE_ADDRESS);
+
+if (_FLASH_EraseSector(UserStartSector, VoltageRange_3) != FLASH_COMPLETE)
+    {
+    rez= ERROR_ERRASE;
+    }
+else
+  rez= ERROR_OK;
+FLASH_Lock(); 
+
+return rez;
 }
 
 uint8_t erase_sectors(uint8_t *data)
@@ -201,32 +238,5 @@ else
   return ERROR_FLAH_PRG;
 
 }
-#endif
-/*
-uint8_t check_ks_app(void)
-{
-uint16_t rd_ks=0;
-uint16_t tmp_ks=0;
-uint32_t size_app=0;
-uint32_t ii;
-uint16_t tmp=0;
 
-if(EE_ReadVariable(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
-  return 0;
-size_app=tmp;
-size_app<<=16;
-if(EE_ReadVariable(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
-  return 0;
-size_app|=tmp;
-if(EE_ReadVariable(ADDR_KS_APP, &rd_ks)!=0)
-  return 0;
-for(ii=0;ii< size_app;ii+=2)
-  {
-   tmp_ks+= *(uint16_t*)(APP_BASE_ADDRESS+ii); 
-  }
-if(tmp_ks!=rd_ks)
-  return 0;
-return 1;
-}
-*/
-////=================================================
+

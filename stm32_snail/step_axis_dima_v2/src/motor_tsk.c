@@ -82,7 +82,7 @@ if(check_push_key_dbg())
      psk=1;
       break;
    case 'z':
-     print_mot_reg();
+///     print_mot_reg();
       break;
     
    }

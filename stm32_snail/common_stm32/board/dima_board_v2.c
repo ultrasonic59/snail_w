@@ -6,6 +6,7 @@
 #include "can_cmds.h"
 #include "board.h"
 #include "printk.h"
+#include "i2c.h"
 
 extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
@@ -139,25 +140,25 @@ GPIO_PinAFConfig(UART_DBG_RX_GPIO, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 RCC_AHB1PeriphClockCmd(MOT_ENA_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_ENA_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_Init( MOT_ENA_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_MS1 ============================
 RCC_AHB1PeriphClockCmd(MOT_MS1_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_MS1_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_Init( MOT_MS1_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_MS2 ============================
 RCC_AHB1PeriphClockCmd(MOT_MS2_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_MS2_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_Init( MOT_MS2_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_MS3 ============================
 RCC_AHB1PeriphClockCmd(MOT_MS3_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = MOT_MS3_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_Init( MOT_MS3_PIN_GPIO, &GPIO_InitStructure );
 ////=============== MOT_RESET ============================
 RCC_AHB1PeriphClockCmd(MOT_RESET_PIN_RCC, ENABLE);
@@ -275,7 +276,7 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
 init_can();
-
+I2C_Eeprom_Init();
 /*
 #ifndef BOOTER
    motor_init();
