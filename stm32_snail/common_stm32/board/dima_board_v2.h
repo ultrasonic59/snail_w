@@ -367,7 +367,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK   0x0
-#define VAL_EEPROM_WORK  0xAA55
+#define VAL_EEPROM_WORK        0xAA55
 #define ADDR_KS_APP             0x1
 #define ADDR_EEPROM_SIZEL_APP  0x2
 #define ADDR_EEPROM_SIZEH_APP  0x3

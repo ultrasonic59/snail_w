@@ -1,6 +1,8 @@
 
 #include "board.h"
 #include "i2c.h"
+#include "FreeRTOS.h"
+#include "queue.h"
    
 void I2C_Eeprom_Init(void) {
   GPIO_InitTypeDef  GPIO_InitStructure;
@@ -28,7 +30,7 @@ void I2C_Eeprom_Init(void) {
   I2C_InitStructure.I2C_OwnAddress1 = 0x00; //We are the master. We don't need this
   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-  I2C_InitStructure.I2C_ClockSpeed = 100000;  //1e4-1e5 is ok
+  I2C_InitStructure.I2C_ClockSpeed = 100000;  //
   
   //Initialize the Peripheral
   I2C_Init(I2C_EEPROM, &I2C_InitStructure);
@@ -76,47 +78,177 @@ I2Cx->TRISE=20; //output max rise
 I2Cx->CR1|=I2C_CR1_PE;
 }
 #endif
-char i2c_readByte(char saddr,char maddr, char *data)
+volatile uint32_t wait_time;
+int i2c_readByte(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr, uint8_t *data)
 {
-#if 0
-volatile int tmp;
-while(I2Cx->SR2&I2C_SR2_BUSY){;}
+#if 1
+uint16_t tmp;
+wait_time=0;
+while(I2Cx->SR2&I2C_SR2_BUSY){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -1;
 I2Cx->CR1|=I2C_CR1_START;
-while(!(I2Cx->SR1&I2C_SR1_SB)){;}
-I2Cx->DR=saddr<<1;
-while(!(I2Cx->SR1&I2C_SR1_ADDR)){;}
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_SB)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -2;
+tmp=addr>>8;
+tmp&=0x3;
+tmp<<=1;
+I2Cx->DR=haddr|tmp;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_ADDR)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -3;
 tmp=I2Cx->SR2;
-while(!(I2Cx->SR1&I2C_SR1_TXE)){;}
-I2Cx->DR=maddr;
-while(!(I2Cx->SR1&I2C_SR1_TXE)){;}
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_TXE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -4;
+I2Cx->DR=addr&0xff;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_TXE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -5;
 I2Cx->CR1|=I2C_CR1_START;
-while(!(I2Cx->SR1&I2C_SR1_SB)){;}	
-I2Cx->DR=saddr<<1|1;
-while(!(I2Cx->SR1&I2C_SR1_ADDR)){;}
+wait_time=0;
+
+while(!(I2Cx->SR1&I2C_SR1_SB)){
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -6;
+I2Cx->DR=haddr|0x1;
+wait_time=0;
+
+while(!(I2Cx->SR1&I2C_SR1_ADDR)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -7;
 I2Cx->CR1&=~I2C_CR1_ACK;
 tmp =I2Cx->SR2;
 I2Cx->CR1|=I2C_CR1_STOP;
-while(!(I2Cx->SR1&I2C_SR1_RXNE)){;}
-*data++=I2Cx->DR;
+wait_time=0;
+
+while(!(I2Cx->SR1&I2C_SR1_RXNE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -8;
+
+*data = I2Cx->DR;
 #endif
 return 0;
 }
 
-void i2c_writeByte(char saddr,char maddr,char data){
-#if 0
-volatile int Temp;
-while(I2Cx->SR2&I2C_SR2_BUSY){;}          /*wait until bus not busy*/
+int i2c_writeByte(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr,uint8_t data)
+{
+#if 1
+volatile uint16_t tmp;
+wait_time=0;
+
+while(I2Cx->SR2&I2C_SR2_BUSY){          /*wait until bus not busy*/
+ wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+  
+}
+if(wait_time>=MAX_WAIT)
+     return -1;
 I2Cx->CR1|=I2C_CR1_START;                 /*generate start*/
-while(!(I2Cx->SR1&I2C_SR1_SB)){;}         /*wait until start bit is set*/
-I2Cx->DR = saddr<< 1;                 	 /* Send slave address*/
-while(!(I2Cx->SR1&I2C_SR1_ADDR)){;}      /*wait until address flag is set*/
-Temp = I2Cx->SR2; 											 /*clear SR2 by reading it */
-while(!(I2Cx->SR1&I2C_SR1_TXE)){;}       /*Wait until Data register empty*/
-I2Cx->DR = maddr;                        /* send memory address*/
-while(!(I2Cx->SR1&I2C_SR1_TXE)){;}       /*wait until data register empty*/
-I2Cx->DR = data; 	
-while (!(I2Cx->SR1 & I2C_SR1_BTF));      /*wait until transfer finished*/
-I2Cx->CR1 |=I2C_CR1_STOP;								 /*Generate Stop*/	
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_SB)){           /*wait until start bit is set*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -2;
+
+tmp=addr>>8;
+tmp&=0x3;
+tmp<<=1;
+I2Cx->DR=haddr|tmp;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_ADDR)){      /*wait until address flag is set*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -3;
+tmp = I2Cx->SR2; 
+wait_time=0;
+
+/*clear SR2 by reading it */
+while(!(I2Cx->SR1&I2C_SR1_TXE)){      /*Wait until Data register empty*/
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -4;
+I2Cx->DR=addr&0xff;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_TXE)){       /*wait until data register empty*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -5;
+I2Cx->DR = data; 
+wait_time=0;
+while (!(I2Cx->SR1 & I2C_SR1_BTF)){     /*wait until transfer finished*/
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -6;
+I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
+return 0;	
 #endif	
 }
 
@@ -141,6 +273,46 @@ for (uint8_t i=0;i<length;i++)
                              
 I2Cx->CR1 |= I2C_CR1_STOP;										//wait until transfer finished
 #endif
-
-
 }
+int i2c_readByteEEprom(uint16_t addr, uint8_t *data)
+{
+return   i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr, data);
+}
+int i2c_writeByteEEprom(uint16_t addr,uint8_t data){
+return  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr,data);
+}
+
+int i2c_readHwordEEprom(uint16_t addr, uint16_t *data)
+{
+uint8_t btmp;
+uint16_t tmp;
+int rez;
+rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2, &btmp);
+if(rez<0)
+   return rez;
+tmp=btmp;
+rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2+1, &btmp);
+if(rez<0)
+   return rez;
+tmp|= btmp<<8;
+*data=tmp;
+return 0;
+}
+int i2c_writeHwordEEprom(uint16_t addr,uint16_t data){
+ int rez;
+ 
+rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2,data&0xff);
+if(rez<0)
+   return rez;
+taskENTER_CRITICAL();
+uDelay (2000);
+
+rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2+1,(data>>8)&0xff);
+uDelay (2000);
+taskEXIT_CRITICAL();
+
+return rez;
+}
+
+
+

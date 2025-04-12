@@ -9,11 +9,16 @@
 #include "stm32f2xx_conf.h"
 #include "stm32f2xx_i2c.h"
 #include "stm32f2xx_rcc.h"
+#define MAX_WAIT  500000
+#define EEPROM_ADDR 0xa0
 
 extern void I2C_Eeprom_Init(void) ;
-///void i2c_init(void);
-///char i2c_readByte(char saddr,char maddr,char *data);
-///void i2c_writeByte(char saddr,char maddr,char data);
-///void i2c_WriteMulti(char saddr,char maddr,char *buffer, uint8_t length);
+extern int i2c_readByte(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr, uint8_t *data);
+extern int i2c_writeByte(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr,uint8_t data);
+extern int i2c_readByteEEprom(uint16_t addr, uint8_t *data);
+extern int i2c_writeByteEEprom(uint16_t addr,uint8_t data);
+extern int i2c_readHwordEEprom(uint16_t addr, uint16_t *data);
+extern int i2c_writeHwordEEprom(uint16_t addr,uint16_t data);
+
 #endif
 

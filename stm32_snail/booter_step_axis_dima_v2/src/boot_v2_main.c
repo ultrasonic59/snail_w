@@ -56,10 +56,9 @@ boot_state=BOOTER_STATE_IDLE;
 ///  FLASH_Unlock();
 ///  EE_Init();
 ///  FLASH_Lock();
-  
-#if 0
+#if 1
 ////eeprom_init();
-if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
+if(i2c_readHwordEEprom(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
   {
     if((tmp==VAL_EEPROM_WORK)&&(check_ks_app())) 
       {

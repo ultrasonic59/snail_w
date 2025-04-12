@@ -217,10 +217,10 @@ printk("\n\rflash [%x:%x] ===",t_rd_flash_ans->addr,t_rd_flash_ans->data);
 void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
 {
   printk("\n\r===rd_eeprom_dat[%x:%x]===",t_rd_eeprom_ans->num_dates,t_rd_eeprom_ans->addr); 
-/*
+
 if(t_rd_eeprom_ans->num_dates==0)
   return;
-if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
+if(i2c_readHwordEEprom(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   {
 
   t_rd_eeprom_ans->num_dates=0;
@@ -229,14 +229,14 @@ if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
 if(t_rd_eeprom_ans->num_dates==2)
   {
-  if(EE_ReadVariable(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
+  if(i2c_readHwordEEprom(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
     {
     t_rd_eeprom_ans->num_dates=1;
     return;
     }
   printk(" dat1[%x] ===",t_rd_eeprom_ans->data[1]); 
   }
- */
+
 }
 
 void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
@@ -245,24 +245,23 @@ void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 
 if(t_wr_eeprom_req->num_dates==0)
   return;
-/*
-if(EE_WriteVariable(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
+
+if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
   {
   t_wr_eeprom_req->num_dates=0;
   return;
   }
 if(t_wr_eeprom_req->num_dates==2)
   {
-  if(EE_WriteVariable(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
+  if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
     {
     t_wr_eeprom_req->num_dates=1;
     return;
     }
   }
-*/
+
 }
   
-
 int obr_can_cmd(uint8_t *data)
 {
 uint8_t tmp;  

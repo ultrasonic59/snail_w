@@ -3,7 +3,7 @@
 #include "my_misc.h"
 
 #include "can_cmds.h"
-///#include "emul_eeprom.h"
+#include "i2c.h"
 #include "printk.h"
 ////static uint32_t GetSector(uint32_t Address);
 
@@ -110,7 +110,7 @@ void set_curr_addr_prg(uint32_t *iaddr)
 
 
 #endif
-/*
+
 uint8_t check_ks_app(void)
 {
 uint16_t rd_ks=0;
@@ -119,14 +119,14 @@ uint32_t size_app=0;
 uint32_t ii;
 uint16_t tmp=0;
 
-if(EE_ReadVariable(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
+if(i2c_readHwordEEprom(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
   return 0;
 size_app=tmp;
 size_app<<=16;
-if(EE_ReadVariable(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
+if(i2c_readHwordEEprom(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
   return 0;
 size_app|=tmp;
-if(EE_ReadVariable(ADDR_KS_APP, &rd_ks)!=0)
+if(i2c_readHwordEEprom(ADDR_KS_APP, &rd_ks)!=0)
   return 0;
 for(ii=0;ii< size_app;ii+=2)
   {
@@ -136,7 +136,7 @@ if(tmp_ks!=rd_ks)
   return 0;
 return 1;
 }
-*/
+
 ////=================================================
 static uint32_t GetSector(uint32_t Address)
 {

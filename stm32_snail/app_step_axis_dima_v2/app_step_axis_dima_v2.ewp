@@ -3739,6 +3739,7 @@
                     <state>$PROJ_DIR$\..\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
+                    <state>$PROJ_DIR$\..\common_stm32\i2c</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -4536,6 +4537,9 @@
         <file>
             <name>$PROJ_DIR$\..\common_stm32\can\can_drv.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\i2c\i2c.c</name>
+        </file>
     </group>
     <group>
         <name>FreeRTOS</name>
@@ -4574,6 +4578,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_i2c.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</name>
