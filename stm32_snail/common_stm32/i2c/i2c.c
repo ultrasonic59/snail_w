@@ -3,6 +3,8 @@
 #include "i2c.h"
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "printk.h"
+
    
 void I2C_Eeprom_Init(void) {
   GPIO_InitTypeDef  GPIO_InitStructure;
@@ -187,8 +189,7 @@ while(I2Cx->SR2&I2C_SR2_BUSY){          /*wait until bus not busy*/
   if(wait_time>=MAX_WAIT){
     break;
   }
-  
-}
+ }
 if(wait_time>=MAX_WAIT)
      return -1;
 I2Cx->CR1|=I2C_CR1_START;                 /*generate start*/
@@ -251,33 +252,90 @@ I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
 return 0;	
 #endif	
 }
-
-void i2c_WriteMulti(char saddr,char maddr,char *buffer, uint8_t length){
-#if 0
-while (I2Cx->SR2 & I2C_SR2_BUSY);           //wait until bus not busy
-I2Cx->CR1 |= I2C_CR1_START;                   //generate start
-while (!(I2Cx->SR1 & I2C_SR1_SB)){;}					//wait until start is generated
-volatile int Temp;														
-I2Cx->DR = saddr<< 1;                 	 			// Send slave address
-while (!(I2Cx->SR1 & I2C_SR1_ADDR)){;}        //wait until address flag is set
-Temp = I2Cx->SR2; 						      //Clear SR2
-while (!(I2Cx->SR1 & I2C_SR1_TXE));           //Wait until Data register empty
-I2Cx->DR = maddr;                      				// send memory address
-while (!(I2Cx->SR1 & I2C_SR1_TXE));           //wait until data register empty
-//sending the data
-for (uint8_t i=0;i<length;i++)
- { 
- I2Cx->DR=buffer[i]; 													//filling buffer with command or data
-	while (!(I2Cx->SR1 & I2C_SR1_BTF));
- }	
-                             
-I2Cx->CR1 |= I2C_CR1_STOP;										//wait until transfer finished
-#endif
+int i2c_writeBuff(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr,uint8_t *data,uint8_t len)
+{
+#if 1
+volatile uint16_t tmp;
+wait_time=0;
+uint8_t ii;
+while(I2Cx->SR2&I2C_SR2_BUSY){          /*wait until bus not busy*/
+ wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+ }
+if(wait_time>=MAX_WAIT)
+     return -1;
+I2Cx->CR1|=I2C_CR1_START;                 /*generate start*/
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_SB)){           /*wait until start bit is set*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
 }
+if(wait_time>=MAX_WAIT)
+     return -2;
+
+tmp=addr>>8;
+tmp&=0x3;
+tmp<<=1;
+I2Cx->DR=haddr|tmp;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_ADDR)){      /*wait until address flag is set*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -3;
+tmp = I2Cx->SR2; 
+wait_time=0;
+
+/*clear SR2 by reading it */
+while(!(I2Cx->SR1&I2C_SR1_TXE)){      /*Wait until Data register empty*/
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -4;
+I2Cx->DR=addr&0xff;
+wait_time=0;
+while(!(I2Cx->SR1&I2C_SR1_TXE)){       /*wait until data register empty*/
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -5;
+for(ii=0;ii<len;ii++){
+I2Cx->DR = data[ii]; 
+wait_time=0;
+while (!(I2Cx->SR1 & I2C_SR1_BTF)){     /*wait until transfer finished*/
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+}
+I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
+if(wait_time>=MAX_WAIT)
+     return -6;
+////I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
+return 0;	
+#endif	
+}
+
+
 int i2c_readByteEEprom(uint16_t addr, uint8_t *data)
 {
 return   i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr, data);
 }
+
 int i2c_writeByteEEprom(uint16_t addr,uint8_t data){
 return  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr,data);
 }
@@ -287,32 +345,154 @@ int i2c_readHwordEEprom(uint16_t addr, uint16_t *data)
 uint8_t btmp;
 uint16_t tmp;
 int rez;
-rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2, &btmp);
+rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr, &btmp);
 if(rez<0)
    return rez;
 tmp=btmp;
-rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2+1, &btmp);
+rez= i2c_readByte(I2C_EEPROM ,EEPROM_ADDR ,addr+1, &btmp);
 if(rez<0)
    return rez;
 tmp|= btmp<<8;
 *data=tmp;
 return 0;
 }
-int i2c_writeHwordEEprom(uint16_t addr,uint16_t data){
+int i2c_writeHwordEEprom(uint16_t addr,uint16_t i_data){
  int rez;
- 
-rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2,data&0xff);
+uint8_t b_data[2];
+b_data[0]=i_data&0xff;
+b_data[1]=(i_data>>8)&0xff;
+rez=  i2c_writeBuff(I2C_EEPROM ,EEPROM_ADDR ,addr,b_data,2);
+uDelay (DELAY_WRITE);
+
+/*
 if(rez<0)
    return rez;
 taskENTER_CRITICAL();
-uDelay (2000);
+uDelay (DELAY_WRITE);
 
-rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr*2+1,(data>>8)&0xff);
-uDelay (2000);
+rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr+1,(data>>8)&0xff);
+uDelay (DELAY_WRITE);
+taskEXIT_CRITICAL();
+*/
+return rez;
+}
+#if 0
+int i2c_writeHwordEEprom(uint16_t addr,uint16_t data){
+ int rez;
+ 
+rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr,data&0xff);
+if(rez<0)
+   return rez;
+taskENTER_CRITICAL();
+uDelay (DELAY_WRITE);
+
+rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr+1,(data>>8)&0xff);
+uDelay (DELAY_WRITE);
 taskEXIT_CRITICAL();
 
 return rez;
 }
+#endif
+///========================================================================
+void i2c_dbg_task( void *pvParameters )
+{
+char key=0;
+uint16_t cur_addr=0;
+uint16_t w_dat=0x1234;
+uint8_t cur_cmd=0;
+uint8_t cur_size=0;
 
+int rez=0;
+printk("\n\r i2c_dbg_task"); 
+
+for(;;)
+{
+if(check_push_key_dbg())
+  {
+  key=get_byte_dbg() ;  
+  switch(key)
+    {
+    case 't':
+      if(w_dat==0x1234)
+        w_dat=0x5678;
+      else
+        w_dat=0x1234;
+       break;
+     case 'a':
+      cur_addr ++;
+      break;
+   case 's':
+      if(cur_addr)
+       cur_addr--;
+        break;
+    case '1':
+      cur_size=1;
+      break;
+    case '2':
+      cur_size=2;
+      break;
+    case '4':
+      cur_size=4;
+      break;
+   case 'r':
+      cur_cmd='r';
+       break;
+   case 'w':
+      cur_cmd='w';
+       break;
+   case 'z':
+       break;
+    
+   }
+  printk("\n\r addr[%x] size[%x] wdat[%x] cmd[%c]",cur_addr,cur_size, w_dat,cur_cmd); 
+  if(cur_cmd=='r')
+  {
+    if(cur_size==1)
+    {
+    uint8_t btmp;
+    rez=i2c_readByteEEprom(cur_addr, &btmp);
+   if(rez==0)
+      printk(": data[%x] ",btmp); 
+   else
+     printk(": error[%d] ",rez); 
+    }
+    else if(cur_size==2)
+    {
+    uint16_t htmp;
+    rez=i2c_readHwordEEprom(cur_addr, &htmp);
+   if(rez==0)
+      printk(": data[%x] ",htmp); 
+   else
+     printk(": error[%d] ",rez); 
+    }
+    
+  cur_cmd=0; 
+  }
+  else if(cur_cmd=='w')
+  {
+     if(cur_size==1)
+    {
+    rez=i2c_writeByteEEprom(cur_addr, w_dat&0xff);
+   if(rez==0)
+      printk(": ok "); 
+   else
+     printk(": error[%d] ",rez); 
+    }
+  else if(cur_size==2)
+    {
+    rez=i2c_writeHwordEEprom(cur_addr, w_dat);
+   if(rez==0)
+      printk(": ok "); 
+   else
+     printk(": error[%d] ",rez); 
+    }
+   cur_cmd=0; 
+  }
+ }  
+}
+}
+
+
+///========================================================================
 
 

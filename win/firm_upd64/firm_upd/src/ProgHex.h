@@ -19,10 +19,10 @@
 #define READ_WAIT_DELAY 5000
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK   0x0
-#define VAL_EEPROM_WORK  0xAA55
-#define ADDR_KS_APP             0x1
-#define ADDR_EEPROM_SIZEL_APP  0x2
-#define ADDR_EEPROM_SIZEH_APP  0x3
+#define VAL_EEPROM_WORK         0xAA55
+#define ADDR_KS_APP             0x2
+#define ADDR_EEPROM_SIZEL_APP   0x4
+#define ADDR_EEPROM_SIZEH_APP   0x6
 
 ///==== Can cmd ====================
 ////#define GET_STAT     0x2
@@ -67,10 +67,11 @@ private:
 
 	quint8 getDevStat(quint8 &stat);
 	quint8 SendResCanCmd(can_cmd_t *idat,can_cmd_t *odat=nullptr);
+	int prg_eeprom(void);
 
 	quint32	linAddr;
 	bin_data_t cur_bin_data;
-	quint16 t_ks;
+	quint16 cur_ks;
 	quint32 size_app;
 private:
     QSerialPort *m_pSerialPort;
@@ -90,6 +91,7 @@ public slots:
 	void sl_req_curr_state();
 	void sl_rd_eeprom(dat_req_t* data);
 	void sl_wr_eeprom(dat_req_t* data);
+	void sl_progr_eeprom(void);
 
 public:
 ///	bool progr(QFile *pFile);
@@ -102,7 +104,7 @@ public:
 	void rd_flash(dat_req_t* data );
 	void clr_ks(void)
 		{
-		t_ks=0;
+		cur_ks=0;
 		}
 
 signals:

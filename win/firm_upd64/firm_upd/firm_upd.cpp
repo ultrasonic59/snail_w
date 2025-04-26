@@ -72,6 +72,8 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 	connect(&dial_dbg, SIGNAL(req_wr_eeprom(dat_req_t*)), this, SLOT(slot_wr_eeprom_dat(dat_req_t*)));
 	connect(&dial_dbg, SIGNAL(req_rd_flash(dat_req_t*)), this, SLOT(slot_rd_flash_dat(dat_req_t*)));
 
+	connect(ui->pushButton_tst, SIGNAL(clicked()), m_pProgHex, SLOT(sl_progr_eeprom()));
+
 
 ////	connect(&prog_hex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));
 ///	connect(m_pProgHex, SIGNAL(sig_set_pb_val(quint32)), this, SLOT(set_pb_val(quint32)));

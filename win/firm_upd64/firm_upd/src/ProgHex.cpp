@@ -15,7 +15,7 @@ CprogHex::CprogHex(bool* data_ok, can_cmd_t* odat ,quint8 *stat, qint32* cur_pb_
 			p_stat(stat),
 	        p_cur_pb_val(cur_pb_val),
 ///			state_dev(0),
-			t_ks(0),
+			cur_ks(0),
 			size_app(0),
 			COM_port_name("COM8")
 {
@@ -263,7 +263,7 @@ memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
 for(quint8 ii=0;ii<len/2;ii++)
 	{
 	thdata= hdata[ii];
-	t_ks+= thdata;
+	cur_ks+= thdata;
 	}
 size_app+=len;
 return SendResCanCmd(&t_can_cmd);
@@ -401,8 +401,25 @@ else
    }
 return rez;
 }
+int CprogHex::prg_eeprom(void)
+{
+	if (wr_eeprom(ADDR_KS_APP, cur_ks)) {
+		if (wr_eeprom(ADDR_EEPROM_SIZEL_APP, size_app & 0xffff)) {
+			if (wr_eeprom(ADDR_EEPROM_SIZEH_APP, (size_app >> 16) & 0xffff)) {
+				if (wr_eeprom(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK)) {
 
+					return 1;
+				}
+			}
+		}
+	}
 
+return 0;
+}
+void CprogHex::sl_progr_eeprom(void)
+{
+	prg_eeprom();
+}
 void CprogHex::sl_progr(QFile *pFile)
 {
 QString tstr;
@@ -415,7 +432,7 @@ if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
 	if (erraseAddr(ADDR_FLASH_APP) != HEX_OK)
 		return;/// false;
 	}
-t_ks=0;
+cur_ks=0;
 size_app=0;
 while(!in.atEnd())
 	{
@@ -436,16 +453,11 @@ if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
 }
 else
 	{
-	if (wr_eeprom(ADDR_KS_APP, t_ks)) {
-		if (wr_eeprom(ADDR_EEPROM_SIZEL_APP, size_app & 0xffff)) {
-			if (wr_eeprom(ADDR_EEPROM_SIZEH_APP, (size_app >> 16) & 0xffff)) {
-				if (wr_eeprom(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK)) {
-					*p_stat = BOOTER_STATE_OK;
-					*p_data_ok = true;
-					return;
-				}
-			}
-		}
+	if (prg_eeprom())
+	{
+		*p_stat = BOOTER_STATE_OK;
+		*p_data_ok = true;
+		return;
 	}
 	*p_stat = BOOTER_STATE_ERROR;
 	*p_data_ok = true;
@@ -523,7 +535,7 @@ quint8 tdat=0;
 s_cmd.data[0]=WR_EEPROM_REQ;
 s_cmd.id=can_id;
 s_cmd.num_bytes=5;
-s_cmd.data[1]=2;
+s_cmd.data[1] =  2;
 s_cmd.data[2]=addr ;
 s_cmd.data[3]=data&0xff;
 s_cmd.data[4]=(data>>8)&0xff;

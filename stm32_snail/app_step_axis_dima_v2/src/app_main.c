@@ -38,6 +38,8 @@ int main( void )
 #endif
 __disable_irq();
 hw_board_init();
+motor_init();
+
 boot_state=BOOTER_NO_BOOT;
 #if STEP_X
   printk("\r\n[app_step_x_axis][%s]%s:%s] ",VERS, __DATE__, __TIME__);
@@ -55,7 +57,8 @@ boot_state=BOOTER_NO_BOOT;
 ////goto_booter();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
- xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+ ////xTaskCreate( motor_dbg_task, "motor_dbg_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );
+ xTaskCreate( i2c_dbg_task, "i2c_dbg_task", I2C_TASK_STACK_SIZE, NULL, I2C_TASK_PRIORITY, NULL );
 xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
 xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
 ////state_task( void *pvParameters );

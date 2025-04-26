@@ -16,7 +16,7 @@ static uint8_t cur_mot_dir=0;
 
 cmd_t cur_cmd={0};
 
-void motor_task( void *pvParameters )
+void motor_dbg_task( void *pvParameters )
 {
 uint8_t btst=0; 
 uint8_t psk=0; 

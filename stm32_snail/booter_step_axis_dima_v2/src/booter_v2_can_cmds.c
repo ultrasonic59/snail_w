@@ -244,22 +244,29 @@ void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
   printk("\n\r wr dat0[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
 
 if(t_wr_eeprom_req->num_dates==0)
+{
+  printk("-> error num_dates==0"); 
   return;
-
-if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
+}
+if(t_wr_eeprom_req->num_dates==1)
+{
+if(i2c_writeByteEEprom(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
   {
   t_wr_eeprom_req->num_dates=0;
-  return;
+    printk("->error  writeHwordEEprom0"); 
+   return;
   }
-if(t_wr_eeprom_req->num_dates==2)
+}
+else if(t_wr_eeprom_req->num_dates==2)
   {
-  if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
+  if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
     {
     t_wr_eeprom_req->num_dates=1;
+    printk("->error  writeHwordEEprom2"); 
     return;
     }
   }
-
+   printk("->OK"); 
 }
   
 int obr_can_cmd(uint8_t *data)

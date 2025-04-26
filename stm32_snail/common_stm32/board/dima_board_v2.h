@@ -356,6 +356,9 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 
 
 ////======================================
+#define I2C_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define I2C_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define CAN_SEND_STACK_SIZE                     1024////
@@ -368,10 +371,10 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK   0x0
 #define VAL_EEPROM_WORK        0xAA55
-#define ADDR_KS_APP             0x1
-#define ADDR_EEPROM_SIZEL_APP  0x2
-#define ADDR_EEPROM_SIZEH_APP  0x3
-#define ADDR_EEPROM_MOT_REJ    0x4
+#define ADDR_KS_APP             0x2
+#define ADDR_EEPROM_SIZEL_APP  0x4
+#define ADDR_EEPROM_SIZEH_APP  0x6
+#define ADDR_EEPROM_MOT_REJ    0x8
 
 #define MAX_MOT_REJ    0x8
 
@@ -409,7 +412,8 @@ extern void set_mot_rej(uint8_t rej);
 extern int send_char_dbg (int c) ;
 extern int get_byte_dbg(void) ;
 extern void can1_init(void);
-extern void motor_task( void *pvParameters );
+extern void motor_dbg_task( void *pvParameters );
+extern void i2c_dbg_task( void *pvParameters );
 extern int check_push_key_dbg(void);
 extern void  set_ms1(uint8_t idat);
 extern void  set_ms2(uint8_t idat);

@@ -11,7 +11,7 @@
 #include "can_cmds.h"
 #include "printk.h"
 #include "my_misc.h"
-///#include "emul_eeprom.h"
+#include "i2c.h"
 
 ////=======================================
 extern uint8_t boot_state;
@@ -201,7 +201,7 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
   return 0;
 }
 
-#if 0
+#if 1
 void rd_flash_dat(rd_flash_ans_t *t_rd_flash_ans)
 {
 uint16_t t_data;  
@@ -212,10 +212,9 @@ t_rd_flash_ans->data=t_data;
 
 void rd_eeprom_dat(rd_eeprom_ans_t *t_rd_eeprom_ans)
 {
-
 if(t_rd_eeprom_ans->num_dates==0)
   return;
-if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
+if(i2c_readHwordEEprom(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   {
 
   t_rd_eeprom_ans->num_dates=0;
@@ -224,7 +223,7 @@ if(EE_ReadVariable(t_rd_eeprom_ans->addr,&t_rd_eeprom_ans->data[0])!=0)
   printk("\n\rdat0[%x] ===",t_rd_eeprom_ans->data[0]); 
 if(t_rd_eeprom_ans->num_dates==2)
   {
-  if(EE_ReadVariable(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
+  if(i2c_readHwordEEprom(t_rd_eeprom_ans->addr+2,&t_rd_eeprom_ans->data[1])!=0)
     {
     t_rd_eeprom_ans->num_dates=1;
     return;
@@ -234,21 +233,21 @@ if(t_rd_eeprom_ans->num_dates==2)
  
 }
 #endif
-#if 0
+#if 1
 void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 {
   printk("\n\r wr dat0[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
 
 if(t_wr_eeprom_req->num_dates==0)
   return;
-if(EE_WriteVariable(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
+if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0])!=0)
   {
   t_wr_eeprom_req->num_dates=0;
   return;
   }
 if(t_wr_eeprom_req->num_dates==2)
   {
-  if(EE_WriteVariable(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
+  if(i2c_writeHwordEEprom(t_wr_eeprom_req->addr+2,t_wr_eeprom_req->data[1])!=0)
     {
     t_wr_eeprom_req->num_dates=1;
     return;
@@ -286,7 +285,7 @@ switch(data[0]) {
          put_can_ack(SET_PARAM);
          set_param((set_param_cmd_t *)(data));
         break;
-#if 0        
+#if 1        
      case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);
         printk("[stat=%x] ",boot_state);
@@ -300,7 +299,7 @@ switch(data[0]) {
          put_can_ack(CHECK_CONN );
  ////   printk("CHECK_CONN[%x] ",cur_stat);
         break;
-#if 0
+#if 1
       case RD_EEPROM_REQ:
         {
         rd_eeprom_ans_t t_rd_eeprom_ans;  
