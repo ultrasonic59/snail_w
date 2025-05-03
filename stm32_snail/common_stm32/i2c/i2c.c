@@ -63,6 +63,65 @@ void I2C_Eeprom_Init(void) {
 #endif
 ///  return; 
 }
+void I2C_encoder_Init(void) {
+  GPIO_InitTypeDef  GPIO_InitStructure;
+  I2C_InitTypeDef   I2C_InitStructure;
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C_ENCODER, ENABLE);
+  //Reset the Peripheral
+  RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C_ENCODER, ENABLE);
+  RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C_ENCODER, DISABLE);
+  RCC_AHB1PeriphClockCmd(SDA_ENCODER_PIN_RCC, ENABLE);
+  RCC_AHB1PeriphClockCmd(SCL_ENCODER_PIN_RCC, ENABLE);
+  //Configure and initialize the GPIOs
+  GPIO_InitStructure.GPIO_Pin = SDA_ENCODER_PIN;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
+  GPIO_Init(SDA_ENCODER_PIN_GPIO, &GPIO_InitStructure);
+  
+  GPIO_InitStructure.GPIO_Pin = SCL_ENCODER_PIN;
+  GPIO_Init(SCL_ENCODER_PIN_GPIO, &GPIO_InitStructure);
+  
+  GPIO_PinAFConfig(SCL_ENCODER_PIN_GPIO, SCL_ENCODER_NPIN, GPIO_AF_I2C_ENCODER);
+  GPIO_PinAFConfig(SDA_ENCODER_PIN_GPIO, SDA_ENCODER_NPIN, GPIO_AF_I2C_ENCODER);
+  //Configure and Initialize the I2C
+  I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
+  I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
+  I2C_InitStructure.I2C_OwnAddress1 = 0x00; //We are the master. We don't need this
+  I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
+  I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+  I2C_InitStructure.I2C_ClockSpeed = 400000;  //
+  
+  //Initialize the Peripheral
+  I2C_Init(I2C_ENCODER, &I2C_InitStructure);
+  // I2C Peripheral Enable
+  I2C_Cmd(I2C_ENCODER, ENABLE);
+  
+
+#if 0 
+  
+  //Enable the GPIOs for the SCL/SDA Pins
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIO_SCL | RCC_AHB1Periph_GPIO_SDA, ENABLE);
+  
+  //Configure and initialize the GPIOs
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SCL;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
+  GPIO_Init(GPIO_SCL, &GPIO_InitStructure);
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SDA;
+  GPIO_Init(GPIO_SDA, &GPIO_InitStructure);
+  
+  //Connect GPIO pins to peripheral
+  GPIO_PinAFConfig(GPIO_SCL, GPIO_PinSource_SCL, GPIO_AF_I2Cx);
+	GPIO_PinAFConfig(GPIO_SDA, GPIO_PinSource_SDA, GPIO_AF_I2Cx);
+  
+#endif
+///  return; 
+}
    
    
 #if 0
@@ -393,6 +452,126 @@ taskEXIT_CRITICAL();
 return rez;
 }
 #endif
+
+int i2c_readByteEncoder(uint8_t addr,uint8_t *data)
+{
+#if 1
+uint16_t tmp;
+wait_time=0;
+while(I2C_ENCODER->SR2&I2C_SR2_BUSY){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -1;
+I2C_ENCODER->CR1|=I2C_CR1_START;
+wait_time=0;
+while(!(I2C_ENCODER->SR1&I2C_SR1_SB)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -2;
+I2C_ENCODER->DR=ENCODER_ID ;
+wait_time=0;
+while(!(I2C_ENCODER->SR1&I2C_SR1_ADDR)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -3;
+tmp=I2C_ENCODER->SR2;
+wait_time=0;
+while(!(I2C_ENCODER->SR1&I2C_SR1_TXE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -4;
+I2C_ENCODER->DR=addr&0xff;
+wait_time=0;
+while(!(I2C_ENCODER->SR1&I2C_SR1_TXE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -5;
+I2C_ENCODER->CR1|=I2C_CR1_START;
+wait_time=0;
+
+while(!(I2C_ENCODER->SR1&I2C_SR1_SB)){
+   wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -6;
+I2C_ENCODER->DR=ENCODER_ID|0x1;
+wait_time=0;
+
+while(!(I2C_ENCODER->SR1&I2C_SR1_ADDR)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -7;
+I2C_ENCODER->CR1&=~I2C_CR1_ACK;
+tmp =I2C_ENCODER->SR2;
+I2C_ENCODER->CR1|=I2C_CR1_STOP;
+wait_time=0;
+
+while(!(I2C_ENCODER->SR1&I2C_SR1_RXNE)){
+  wait_time++;
+  if(wait_time>=MAX_WAIT){
+    break;
+  }
+}
+if(wait_time>=MAX_WAIT)
+     return -8;
+
+*data = I2C_ENCODER->DR;
+#endif
+return 0;
+}
+int read_encoder_val(uint16_t *oval)
+{
+int rez;
+uint16_t htmp;
+uint8_t btmp;
+rez=i2c_readByteEncoder(ENCODER_HVAL,&btmp);
+if(rez==0)
+   {
+     htmp=btmp;
+     rez=i2c_readByteEncoder(ENCODER_LVAL,&btmp);
+    if(rez==0)
+      {
+      htmp<<=8;
+      htmp|=btmp;
+      htmp>>=2;
+      if(oval)
+        *oval=htmp;
+  ///    printk(": data[%x] ",htmp); 
+      }
+   }
+////  else
+////     printk(": error[%d] ",rez); 
+////    }
+return rez;  
+}
+
 ///========================================================================
 void i2c_dbg_task( void *pvParameters )
 {
@@ -436,6 +615,9 @@ if(check_push_key_dbg())
       break;
    case 'r':
       cur_cmd='r';
+       break;
+   case 'e':
+      cur_cmd='e';
        break;
    case 'w':
       cur_cmd='w';
@@ -488,6 +670,41 @@ if(check_push_key_dbg())
     }
    cur_cmd=0; 
   }
+ else if(cur_cmd=='e')  /// read encoder
+  {
+    if(cur_size==1)
+    {
+    uint8_t btmp;
+     rez=i2c_readByteEncoder(ENCODER_HVAL,&btmp);
+   if(rez==0)
+      printk(": data[%x] ",btmp); 
+   else
+     printk(": error[%d] ",rez); 
+    }
+    else if(cur_size==2)
+    {
+    uint16_t htmp;
+    uint8_t btmp;
+    rez=i2c_readByteEncoder(ENCODER_HVAL,&btmp);
+   if(rez==0)
+   {
+     htmp=btmp;
+     rez=i2c_readByteEncoder(ENCODER_LVAL,&btmp);
+    if(rez==0)
+      {
+      htmp<<=8;
+      htmp|=btmp;
+      htmp>>=2;
+      printk(": data[%x] ",htmp); 
+      }
+   }
+   else
+     printk(": error[%d] ",rez); 
+    }
+    
+  cur_cmd=0; 
+  }
+
  }  
 }
 }

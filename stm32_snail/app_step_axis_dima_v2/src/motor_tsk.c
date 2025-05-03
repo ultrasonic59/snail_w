@@ -9,7 +9,7 @@
 #include "snail_can_cmds.h"
 #include "can.h"
 #include "can_cmds.h"
-///#include "emul_eeprom.h"
+#include "i2c.h"
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 static uint8_t cur_mot_dir=0;
@@ -26,6 +26,7 @@ int nstep=300;
 uint8_t dir=0;
 uint8_t t_ena=0;
 uint8_t t_reset=0;
+uint16_t t_enc_val=0;
 
 uint8_t mot_rej=0;
 printk("\n\r motor_task"); 
@@ -79,6 +80,17 @@ if(check_push_key_dbg())
   btst = get_conc_n();
 
   printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]ena=[%x]reset=[%x]",nstep,dir,mot_rej,ena_check_conc,btst,t_ena,t_reset); 
+  
+  if(read_encoder_val(&t_enc_val)==0)
+  {
+  uint32_t gr;
+  gr=t_enc_val*36000;
+  gr>>=14;
+  printk("\n\r encoder[%d][%x][%d]",t_enc_val,t_enc_val,gr); 
+  }
+  else
+   printk("\n\r read encoder!!!"); 
+      
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   set_ena_mot(t_ena);

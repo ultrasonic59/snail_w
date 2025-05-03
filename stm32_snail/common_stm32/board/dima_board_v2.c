@@ -277,6 +277,7 @@ init_gpio();
 UART_DBG_Init(); 
 init_can();
 I2C_Eeprom_Init();
+I2C_encoder_Init();
 /*
 #ifndef BOOTER
    motor_init();

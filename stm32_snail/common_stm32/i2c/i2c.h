@@ -12,6 +12,10 @@
 #define MAX_WAIT  500000
 #define EEPROM_ADDR 0xa0
 #define DELAY_WRITE  4000  ///~6ms
+///========= MT6701 ======================
+#define ENCODER_ID   0x0c
+#define ENCODER_HVAL 0x03
+#define ENCODER_LVAL 0x04
 
 extern void I2C_Eeprom_Init(void) ;
 extern int i2c_readByte(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr, uint8_t *data);
@@ -20,6 +24,8 @@ extern int i2c_readByteEEprom(uint16_t addr, uint8_t *data);
 extern int i2c_writeByteEEprom(uint16_t addr,uint8_t data);
 extern int i2c_readHwordEEprom(uint16_t addr, uint16_t *data);
 extern int i2c_writeHwordEEprom(uint16_t addr,uint16_t data);
+extern void I2C_encoder_Init(void) ;
+extern int read_encoder_val(uint16_t *oval);
 
 #endif
 
