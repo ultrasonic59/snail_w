@@ -236,7 +236,7 @@
 ///#define UART_DBG_TX_SOURCE      GPIO_Pin_2
 ///#define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
-#define DEF_MOT_REJ   0
+#define DEF_MOT_REJ   6    /// 1/16 step
 ////======================================
 typedef union cmd_param_u
 {

@@ -16,6 +16,8 @@ static uint8_t cur_mot_dir=0;
 
 cmd_t cur_cmd={0};
 
+////set_mot_per(p_go_cmd->step_per);
+
 void motor_dbg_task( void *pvParameters )
 {
 uint8_t btst=0; 
@@ -80,7 +82,7 @@ if(check_push_key_dbg())
   btst = get_conc_n();
 
   printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]ena=[%x]reset=[%x]",nstep,dir,mot_rej,ena_check_conc,btst,t_ena,t_reset); 
-  
+ /*
   if(read_encoder_val(&t_enc_val)==0)
   {
   uint32_t gr;
@@ -90,7 +92,7 @@ if(check_push_key_dbg())
   }
   else
    printk("\n\r read encoder!!!"); 
-      
+ */     
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   set_ena_mot(t_ena);

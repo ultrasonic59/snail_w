@@ -184,12 +184,12 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej)
 void Cmotor_wrk::sl_xplus_rel()
 {
     qDebug() << "sl_xplus_rel";
-    send_cmd_stop(X_AXIS_CAN_ID);
+ ///   send_cmd_stop(X_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_xminus_rel()
 {
     qDebug() << "sl_xminus_rel ";
-    send_cmd_stop(X_AXIS_CAN_ID);
+///    send_cmd_stop(X_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_clr_x()
 {
