@@ -3,7 +3,13 @@
 #include "my_misc.h"
 
 #include "can_cmds.h"
-#include "i2c.h"
+
+#if HW_I2C_EEPROM
+ #include "i2c.h"
+#else
+#include "emul_eeprom.h"
+#endif
+
 #include "printk.h"
 ////static uint32_t GetSector(uint32_t Address);
 
@@ -39,8 +45,8 @@ jumpAddress = *(__IO uint32_t*) (BOOT_BASE_ADDRESS + 4);
 __set_CONTROL(0) ;
 __set_MSP(*(__IO uint32_t*) BOOT_BASE_ADDRESS);
 Jump_To_Application();
-  
 }
+
 void goto_app(void)
 {
 ////uint32_t sp_tst=0;  
@@ -111,6 +117,8 @@ void set_curr_addr_prg(uint32_t *iaddr)
 
 #endif
 
+#if HW_I2C_EEPROM
+
 uint8_t check_ks_app(void)
 {
 uint16_t rd_ks=0;
@@ -136,7 +144,7 @@ if(tmp_ks!=rd_ks)
   return 0;
 return 1;
 }
-
+#endif
 ////=================================================
 static uint32_t GetSector(uint32_t Address)
 {

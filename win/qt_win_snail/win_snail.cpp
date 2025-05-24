@@ -39,6 +39,7 @@ win_snail::win_snail(QWidget *parent)
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<mot_cmd_t>("mot_cmd_t");
   qRegisterMetaType<spi_mot_cmd_t>("spi_mot_cmd_t");
+  qRegisterMetaType <can_message_t>("can_message_t");
 
  
    p_camera = new CameraDevice(this);
@@ -114,7 +115,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   connect(pSenderThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
   pSenderThread->start();
  /// connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
-  connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(char*)), this, SLOT(sl_rsv_can_dat(char*)));
+  connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(can_message_t)), this, SLOT(sl_rsv_can_dat(can_message_t)));
 
   ///============================================
 ///=======================================================
@@ -1193,10 +1194,11 @@ void win_snail::mousePressEvent(QMouseEvent* event)
     qDebug() << "mousePressEvent=" << event->pos();
 
 }
-void win_snail::sl_rsv_can_dat(char* idat)
+void win_snail::sl_rsv_can_dat(can_message_t msg)
 {
  ///   qDebug() << "sl_rsv_dat=" <<idat;
-emit put_str_dial(idat);
+////emit put_str_dial(idat);
+emit put_msg_dial(msg);
 
 }
 void win_snail::sl_show_json(QByteArray byteArr)

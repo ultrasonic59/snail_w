@@ -123,12 +123,9 @@ for(;;)
   xQueueReceive(queu_to_send,&snd_msg,portMAX_DELAY);
 ////  can_wait_ready(READY_X);             //// wait ready X,Y,Z
   CAN_wrMsg (&snd_msg);
-    printk("\n\r can_tx"); 
-    test_print(&snd_msg);
+  ///  printk("\n\r can_tx"); 
+  ///  test_print(&snd_msg);
   
- ////  tst_print();
-///  set_curr_dir(st.dir_outbits);
-////  obr_segment();
 ///=================================================
 ////  sys.state &= ~STATE_CYCLE;
 

@@ -41,6 +41,7 @@ private slots:
 	void  req_dbg_data_rdy(dbg_dat_req_t*);
 	void  req_xil_data_rdy(xil_dat_req_t*);
 	void  req_str_rdy(char*);
+	void  req_msg_rdy(can_message_t);
 	void  SlotTest();
 public slots:
     void clear_textEdit();

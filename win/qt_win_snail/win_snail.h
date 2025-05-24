@@ -173,7 +173,7 @@ public slots:
     void on_butt_test3();
     void on_butt_load();
 
-    void sl_rsv_can_dat(char*);
+    void sl_rsv_can_dat(can_message_t);
     void sl_state_changed();
     void sl_show_json(QByteArray byteArr);
 
@@ -241,6 +241,7 @@ signals:
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
+    void put_msg_dial(can_message_t);
 
     void s_mot_go(mot_cmd_t);
     void s_set_mot_rej(quint32, quint8);

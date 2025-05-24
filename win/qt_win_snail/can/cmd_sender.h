@@ -166,7 +166,7 @@ private slots:
 
 signals:
 	void s_connected(bool);
-	void s_rsv_can_dat(char*);
+	void s_rsv_can_dat(can_message_t);
 	void s_state_changed();
 
 };

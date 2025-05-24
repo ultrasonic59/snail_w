@@ -1,4 +1,5 @@
 #include "dial_debug.h"
+#include "cmd_sender.h"
 
 DialDebug::DialDebug(QWidget *parent):
     QDialog(parent, Qt::Window),pParent(parent)
@@ -14,7 +15,9 @@ DialDebug::DialDebug(QWidget *parent):
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
     connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 
-    connect(parent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+ ////  connect(parent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+  connect(pParent, SIGNAL(put_msg_dial(can_message_t)), this, SLOT(req_msg_rdy(can_message_t)));
+
     connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
 }
 
@@ -23,7 +26,8 @@ DialDebug::~DialDebug()
     disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
-    disconnect(pParent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+  ///  disconnect(pParent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+    disconnect(pParent, SIGNAL(put_msg_dial(can_message_t)), this, SLOT(req_msg_rdy(can_message_t)));
 
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 
@@ -113,6 +117,30 @@ void  DialDebug::req_str_rdy(char* istr)
  QTextCursor c = ui.textEdit_rd_dat->textCursor();
  c.movePosition(QTextCursor::End);
  ui.textEdit_rd_dat->setTextCursor(c);
+#endif
+}
+void  DialDebug::req_msg_rdy(can_message_t istr)
+{
+   //// QString tstr;
+    can_message_t t_can_message = istr;
+    spi_mot_cmd_t* spi_mot_cmd = (spi_mot_cmd_t*)t_can_message.data;
+    quint32 tmp;
+    if (spi_mot_cmd->len_dat > 1)
+        tmp = spi_mot_cmd->w_val;
+    else
+        tmp = spi_mot_cmd->b_val;
+    QString tstr = QString("Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr,16)).arg(QString::number(tmp,16));
+ ////   QTextStream(&tstr) << "Addr = " << 3.14;
+  ///????  tstr.asprintf("\nAddr=%x->%x", spi_mot_cmd->addr, tmp);
+    ui.textEdit_rd_dat->append(tstr);
+
+#if 0
+    QString tstr(istr);
+    ////tstr.sprintf("\n%s",istr);
+    ui.textEdit_rd_dat->append(tstr);
+    QTextCursor c = ui.textEdit_rd_dat->textCursor();
+    c.movePosition(QTextCursor::End);
+    ui.textEdit_rd_dat->setTextCursor(c);
 #endif
 }
 

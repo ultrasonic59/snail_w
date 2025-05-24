@@ -151,6 +151,7 @@ send_msg.len= 3+sizeof(uint8_t)*t_ans->len_dat;
 send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;
 memcpy(send_msg.data,t_can_cmd.data,3+sizeof(uint8_t)*t_ans->len_dat);
+///memcpy(send_msg.data,t_can_cmd.data,3+sizeof(uint8_t)*send_msg.len);
 send_msg.id=ID_MASTER_CMD; 
 xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 return 0;

@@ -80,12 +80,17 @@ void CcmdSender::handleRead()
 					emit s_state_changed();
 				   }
 				break;
+
 			default:
 				break;
 		    }
 
 ///		emit s_state_changed();
 	    }
+	else
+	{
+
+	}
 }
 void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
 {
@@ -232,8 +237,10 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 if (SendRes(snd_dat, rsv_dat))
 	{
 	*p_data_ready = true;
+	can_message_t t_rsv_msg;
+	parse_str(rsv_dat, t_rsv_msg);
 ////	memcpy(p_rsv_msg,)
-	emit s_rsv_can_dat(rsv_dat);
+	emit s_rsv_can_dat(t_rsv_msg);
 		return true;  ///
 	}
 	return false;  ///
