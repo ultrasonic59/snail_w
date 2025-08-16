@@ -7,6 +7,7 @@
 uint32_t summ_adc_dat=0;
 uint32_t num_adc_dat=0;
 volatile unsigned int adc_results[2]; 
+uint16_t cur_adc_dat=0;
 
 void adc_init(void)
 {
@@ -33,7 +34,7 @@ NVIC_InitTypeDef NVIC_InitStructure = {0};
     ADC_InitStructure.ADC_NbrOfChannel = 1;
     ADC_Init(ADC1, &ADC_InitStructure);
 
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 1, ADC_SampleTime_241Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 1, ADC_SampleTime_241Cycles);
 ////    ADC_InjectedChannelConfig(ADC1, ADC_Channel_3, 1, ADC_SampleTime_241Cycles);
     ADC_Calibration_Vol(ADC1, ADC_CALVOL_50PERCENT);
     ADC_AutoInjectedConvCmd(ADC1, ENABLE);
@@ -85,20 +86,20 @@ num_adc_dat++;
 
 void obr_adc_dat(void)
 {
-///uint32_t tmp;
-///float tmp1;
+uint32_t tmp;
+float tmp1;
 //// return; 
-/*
+
 if(num_adc_dat)
   {
   tmp= summ_adc_dat/num_adc_dat;
-  tmp1=ADC_IN_VAL*1023.0;
-  tmp1/=tmp;
+/////  tmp1=ADC_IN_VAL*1023.0;
+   tmp1=tmp;
    cur_adc_dat= (uint16_t)tmp1;
    summ_adc_dat=0;
    num_adc_dat=0;
   }
-  */
+
 }
 ///=====================================================
 void ADC1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));

@@ -3,14 +3,6 @@
 #include "stdint.h"
 ////#include "stm8s_conf.h"
 ////======== cmds =====================
-#define PUT_VIBRO       'V'
-#define PUT_LEDS        'L'
-#define PUT_GLED        'G'
-#define PUT_POW_GEN     'P'
-#define GET_BAT         'B'
-#define GET_TEMP        'T'
-#define GET_VERS        'v'
-
 ////===================================
 
 #define LEN_RX_BUFF 16
@@ -31,6 +23,7 @@ extern void uart_init(void);
 extern int rx_receive(void* dat,uint16_t len_rx);
 extern void obr_uart_cmd(uart_cmd_t *cmd);
 extern void tx_send(uart_cmd_t *cmd);
+extern void USART1_CFG(void);
 
 
 #endif

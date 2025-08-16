@@ -5,6 +5,12 @@
  *      Author: vagol
  */
 #include "enc6701_brd.h"
+#include "adc.h"
+#include "uart.h"
+#include "timers.h"
+#include "softuart.h"
+#include "i2c.h"
+
 
 void init_gpio(void)
 {
@@ -42,4 +48,24 @@ void set_led(uint8_t on_off)
  else
      GPIO_WriteBit(LED_GPIO,LED_PIN, Bit_RESET);
 }
+////extern void IIC_Init(u32 bound, u16 address);
+
+void init_hw(void)
+{
+init_gpio();
+USART1_CFG();
+
+TIM1_Config(); ///for softuart
+SoftUartInit(0,SOFT_TX_GPIO,SOFT_TX_PIN
+                  ,SOFT_RX_GPIO,SOFT_RX_PIN);
+SoftUartEnableRx(0);
+///============================================
+    IIC_Init( 100000); // 100Kbps
+    I2C1->CTLR1 |= 0x0080; // CTLR1_NOSTRETCH_Set - Disable clock stretching
+    I2C1->CTLR1 |= 0x0400; // CTLR1_ACK_Set - Enable ACK following each byte received - This also stops the clock stretching for each character received.
+///TIM2_Config(); ///for adc
+////adc_init();
+
+}
+
 

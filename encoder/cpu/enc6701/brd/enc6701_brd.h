@@ -40,7 +40,17 @@
 #define TIMER_PER 1000
 #define TIMER_PRE 100
 
+#define HOST_MODE   0
+#define SLAVE_MODE   1
+
+/* I2C Communication Mode Selection */
+#define I2C_MODE   HOST_MODE
+///#define I2C_MODE   SLAVE_MODE
+
+///#define RXAdderss   0x02
+
 extern void init_gpio(void);
 extern void set_led(uint8_t on_off);
+extern void init_hw(void);
 
 #endif /* ENC6701_BRD_H_ */
