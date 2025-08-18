@@ -33,6 +33,14 @@ void IIC_Init(u32 bound)
     I2C_InitTSturcture.I2C_Ack = I2C_Ack_Enable;
     I2C_InitTSturcture.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
     I2C_Init( I2C1, &I2C_InitTSturcture );
+    while( I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY ) != RESET ){
+        I2C_GenerateSTOP( I2C1, ENABLE );
+        I2C1->DATAR =0xff;
+
+    };
+
+
+
 }
 volatile uint32_t wait_time=0;
 int _i2c_readByteEncoder(uint16_t addr,uint8_t *o_data)
@@ -48,113 +56,82 @@ int _i2c_readByteEncoder(uint16_t addr,uint8_t *o_data)
 
     return 0;
 }
-
+volatile uint16_t vv_tmp=0;
 int i2c_readByteEncoder(uint16_t addr,uint8_t *o_data)
 {
 uint8_t temp=0;
-////uint16_t tmp;
-
+uint16_t tmp;
 wait_time=0;
-while( I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY ) != RESET ){
+while( I2C1->STAR2&I2C_SR2_BUSY){
     wait_time++;
     if(wait_time>=MAX_WAIT){
-      break;
+        return -1;
     }
-};
-if(wait_time>=MAX_WAIT)
-     return -1;
-I2C_GenerateSTART( I2C1, ENABLE );
+}
+I2C1->CTLR1|= I2C_CR1_START;
 wait_time=0;
-while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT ) ){
+
+while(!(I2C1->STAR1&I2C_SR1_SB)){
     wait_time++;
     if(wait_time>=MAX_WAIT){
-      break;
+        return -2;
     }
-    };
-if(wait_time>=MAX_WAIT)
-   return -2;
-
+    }
 I2C1->DATAR =ENCODER_ID;
 wait_time=0;
-while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED ) ){
+while(!(I2C1->STAR1&I2C_SR1_ADDR)){
     wait_time++;
     if(wait_time>=MAX_WAIT){
-      break;
+        return -3;
    }
-};
-if(wait_time>=MAX_WAIT)
-   return -3;
-/*
-tmp=I2Cx->SR2;
+}
+tmp=I2C1->STAR2;
+vv_tmp=tmp;
 wait_time=0;
-while(!(I2Cx->SR1&I2C_SR1_TXE)){
+while(!(I2C1->STAR1&I2C_SR1_TXE)){
   wait_time++;
   if(wait_time>=MAX_WAIT){
-    break;
+      return -4;
   }
 }
-if(wait_time>=MAX_WAIT)
-     return -4;
-*/
-    I2C_SendData( I2C1, (uint8_t)(addr&0xFF) );
-    wait_time=0;
-    while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED ) ){
+I2C1->DATAR =addr&0xFF;
+wait_time=0;
+while(!(I2C1->STAR1&I2C_SR1_TXE)){
         wait_time++;
         if(wait_time>=MAX_WAIT){
-          break;
+            return -5;
         }
     }
-    if(wait_time>=MAX_WAIT)
-         return -5;
-/*
-    I2Cx->CR1|=I2C_CR1_START;
-    wait_time=0;
-
-    while(!(I2Cx->SR1&I2C_SR1_SB)){
-       wait_time++;
+I2C1->CTLR1|= I2C_CR1_START;
+wait_time=0;
+while(!(I2C1->STAR1&I2C_SR1_SB)){
+     wait_time++;
       if(wait_time>=MAX_WAIT){
-        break;
+          return -6;
       }
     }
-    if(wait_time>=MAX_WAIT)
-         return -6;
-*/
-
-    I2C_GenerateSTART( I2C1, ENABLE );
-   while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT ) ){
-       wait_time++;
-       if(wait_time>=MAX_WAIT){
-         break;
-       }
-     }
-   if(wait_time>=MAX_WAIT)
-        return -6;
-   I2C1->DATAR =ENCODER_ID|0x1;
+  I2C1->DATAR =ENCODER_ID|0x1;
    wait_time=0;
-   while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED ) ){
+   while(!(I2C1->STAR1&I2C_SR1_ADDR)){
        wait_time++;
        if(wait_time>=MAX_WAIT){
-         break;
+           return -7;
       }
    };
-   if(wait_time>=MAX_WAIT)
-      return -7;
-   I2C_GenerateSTOP( I2C1, ENABLE );
+   I2C1->CTLR1&=~I2C_CR1_ACK;
+   tmp =I2C1->STAR2;
+   vv_tmp=tmp;
 
- ////   I2C_Send7bitAddress( I2C1, 0XA0, I2C_Direction_Receiver );
- ////   while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED ) );
-  while( I2C_GetFlagStatus( I2C1, I2C_FLAG_RXNE ) ==  RESET ){
-      wait_time++;
-      if(wait_time>=MAX_WAIT){
-        break;
-      }
-   };
-////    I2C_AcknowledgeConfig( I2C1, DISABLE );
-  if(wait_time>=MAX_WAIT)
-       return -8;
+   I2C1->CTLR1|=I2C_CR1_STOP;
+   wait_time=0;
+   while(!(I2C1->STAR1&I2C_SR1_RXNE)){
+     wait_time++;
+     if(wait_time>=MAX_WAIT){
+         return -8;
+     }
+   }
 
-    temp = I2C_ReceiveData( I2C1 );
-  I2C_GenerateSTOP( I2C1, ENABLE );
+temp = I2C1->DATAR;
 if(o_data)
     *o_data=temp;
 return 0;

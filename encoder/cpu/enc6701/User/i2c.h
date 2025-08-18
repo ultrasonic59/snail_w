@@ -5,7 +5,21 @@
 #include "debug.h"
 
 #include "../brd/enc6701_brd.h"
-#define MAX_WAIT  500000
+#define  I2C_CR1_START                       ((uint16_t)0x0100)            /*!<Start Generation */
+#define  I2C_CR1_STOP                        ((uint16_t)0x0200)            /*!<Stop Generation */
+#define  I2C_CR1_ACK                         ((uint16_t)0x0400)            /*!<Acknowledge Enable */
+#
+#define  I2C_SR1_SB                          ((uint16_t)0x0001)            /*!<Start Bit (Master mode) */
+#define  I2C_SR1_ADDR                        ((uint16_t)0x0002)            /*!<Address sent (master mode)/matched (slave mode) */
+#define  I2C_SR1_RXNE                        ((uint16_t)0x0040)            /*!<Data Register not Empty (receivers) */
+
+#define  I2C_SR1_TXE                         ((uint16_t)0x0080)            /*!<Data Register Empty (transmitters) */
+
+#define  I2C_SR2_BUSY                        ((uint16_t)(0x1<<1))            /*!<Bus Busy */
+
+
+
+#define MAX_WAIT  50000
 ///========= MT6701 ======================
 #define ENCODER_ID   0x0c
 #define ENCODER_HVAL 0x03

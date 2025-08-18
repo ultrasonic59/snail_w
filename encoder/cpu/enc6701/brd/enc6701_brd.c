@@ -60,9 +60,9 @@ SoftUartInit(0,SOFT_TX_GPIO,SOFT_TX_PIN
                   ,SOFT_RX_GPIO,SOFT_RX_PIN);
 SoftUartEnableRx(0);
 ///============================================
-    IIC_Init( 100000); // 100Kbps
-    I2C1->CTLR1 |= 0x0080; // CTLR1_NOSTRETCH_Set - Disable clock stretching
-    I2C1->CTLR1 |= 0x0400; // CTLR1_ACK_Set - Enable ACK following each byte received - This also stops the clock stretching for each character received.
+    IIC_Init( 100000); // 400Kbps
+///    I2C1->CTLR1 |= 0x0080; // CTLR1_NOSTRETCH_Set - Disable clock stretching
+///    I2C1->CTLR1 |= 0x0400; // CTLR1_ACK_Set - Enable ACK following each byte received - This also stops the clock stretching for each character received.
 ///TIM2_Config(); ///for adc
 ////adc_init();
 
