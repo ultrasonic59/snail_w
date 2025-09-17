@@ -63,9 +63,14 @@ uint8_t tmp[20] = {0x01, 0x80, 0xaa, 0x55};
  * @return  none
  */
 #define LEN_BUF 32
+#define MAX_CNT_LED 500
 int main(void)
 {
-    int t_rez=0;
+int t_rez=0;
+uint32_t t_cnt=0;
+uint16_t prev_adc_dat=0;
+uint8_t ena_send =0;
+
 uint8_t tst =0;
 uint16_t rdat;
 static uint16_t prev_enc=0;
@@ -75,12 +80,6 @@ static uint16_t prev_enc=0;
     Delay_Init();
     ///========================================
     init_hw();
-///    init_gpio();
-
- ///  TIM1_Config();  ///for softuart
-///   SoftUartInit(0,SOFT_TX_GPIO,SOFT_TX_PIN
-///                  ,SOFT_RX_GPIO,SOFT_RX_PIN);
-///    SoftUartEnableRx(0);
 ///============================================
 ////    SoftUARTFunc.Init(9600);
 #if 0
@@ -93,28 +92,34 @@ static uint16_t prev_enc=0;
     printf("SystemClk:%d\r\n",SystemCoreClock);
     printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
 
-////    USARTx_CFG();
-///    IIC_Init( 100000, RXAdderss ); // 100Kbps
-///    I2C1->CTLR1 |= 0x0080; // CTLR1_NOSTRETCH_Set - Disable clock stretching
-///   I2C1->CTLR1 |= 0x0400; // CTLR1_ACK_Set - Enable ACK following each byte received - This also stops the clock stretching for each character received.
-
-  ///  TIM2_Config();  ///for adc
-
  while(1)
     {
+     t_cnt++;
+     if(t_cnt>=MAX_CNT_LED){
+     t_cnt=0;
      tst++;
      set_led(tst);
-     Delay_Ms(300);
+     }
+ ///    Delay_Ms(300);
+     ena_send=1;
 
 ////    printf("cur_adc_dat:%d\r\n",cur_adc_dat);
     t_rez=read_encoder_val(&rdat);
     if(t_rez==0){
       if(prev_enc!=rdat){
           prev_enc=rdat;
-          printf( "enc:%04x\r\n",rdat);
+          ena_send=0;
+          printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
        }
     }
+    if(ena_send){
+     if(prev_adc_dat!=cur_adc_dat)   {
+         prev_adc_dat=cur_adc_dat ;
+         ena_send=0;
+         printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
 
+    }
+    }
  ///    send_char_suart(0x35);
   ///    SoftUartTransmitBit(&SUart[0],tst&0x1);
 

@@ -528,6 +528,7 @@ while(!(I2C_ENCODER->SR1&I2C_SR1_ADDR)){
 }
 if(wait_time>=MAX_WAIT)
      return -7;
+
 I2C_ENCODER->CR1&=~I2C_CR1_ACK;
 tmp =I2C_ENCODER->SR2;
 I2C_ENCODER->CR1|=I2C_CR1_STOP;

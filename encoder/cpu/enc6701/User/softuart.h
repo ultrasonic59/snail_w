@@ -9,10 +9,10 @@
 #define SUART_TIM_PRESC         2
 #define NUM_SUART_STM8          0
 
-#define 	NUM_S_UARTS 	1 	// Max 8
+///#define 	NUM_S_UARTS 	1 	// Max 8
 
 #define 	SUART_TX_BUFF_SIZE	32
-#define 	SoftUartRxBufferSize	64
+#define 	SoftUartRxBufferSize	32   ////64
 
 #define 	SoftUart_DATA_LEN       8 	// Max 8 Bit
 
@@ -51,21 +51,21 @@ typedef struct {
 
 //Call Every (0.2)*(1/9600) = 20.83 uS
 void 		SoftUartHandler(void);
-extern SoftUart_S          SUart[];
+extern SoftUart_S          SUart;
 
-void 		SoftUartWaitUntilTxComplate(uint8_t SoftUartNumber);
-uint8_t 	SoftUartRxAlavailable(uint8_t SoftUartNumber);
-SoftUartState_E SoftUartPuts(uint8_t SoftUartNumber,uint8_t *Str,uint8_t Len);
-SoftUartState_E SoftUartEnableRx(uint8_t SoftUartNumber);
-SoftUartState_E SoftUartDisableRx(uint8_t SoftUartNumber);
+extern void 		SoftUartWaitUntilTxComplate(void);
+extern uint8_t 	SoftUartRxAlavailable(void);
+extern SoftUartState_E SoftUartPuts(uint8_t *Str,uint8_t Len);
+extern SoftUartState_E SoftUartEnableRx(void);
+extern SoftUartState_E SoftUartDisableRx(void);
 
-extern SoftUartState_E SoftUartInit(uint8_t SoftUartNumber,GPIO_TypeDef *TxPort,uint16_t TxPin,GPIO_TypeDef *RxPort,uint16_t RxPin);
+extern SoftUartState_E SoftUartInit(GPIO_TypeDef *TxPort,uint16_t TxPin,GPIO_TypeDef *RxPort,uint16_t RxPin);
 
-SoftUartState_E SoftUartReadRxBuffer(uint8_t SoftUartNumber,uint8_t *Buffer,uint8_t Len);
-extern SoftUartState_E SUartPutChar(uint8_t SoftUartNumber,uint8_t idat);
+SoftUartState_E SoftUartReadRxBuffer(uint8_t *Buffer,uint8_t Len);
+extern SoftUartState_E SUartPutChar(uint8_t idat);
 extern void send_char_suart(char ch);
 extern void SoftUartTransmitBit(SoftUart_S *SU,uint8_t Bit0_1);
 
-extern uint8_t get_char(uint8_t SoftUartNumber);
-extern uint8_t check_rx_rdy(uint8_t SoftUartNumber);
+extern uint8_t get_char(void);
+extern uint8_t check_rx_rdy(void);
 #endif
