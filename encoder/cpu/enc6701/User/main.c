@@ -64,6 +64,7 @@ uint8_t tmp[20] = {0x01, 0x80, 0xaa, 0x55};
  */
 #define LEN_BUF 32
 #define MAX_CNT_LED 500
+#define MAX_DELTA  8
 int main(void)
 {
 int t_rez=0;
@@ -114,10 +115,12 @@ static uint16_t prev_enc=0;
     }
     if(ena_send){
      if(prev_adc_dat!=cur_adc_dat)   {
-         prev_adc_dat=cur_adc_dat ;
-         ena_send=0;
-         printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
-
+        if(abs(t_rez)>MAX_DELTA){
+            prev_adc_dat=cur_adc_dat ;
+            t_rez=cur_adc_dat-prev_adc_dat;
+             ena_send=0;
+             printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
+            }
     }
     }
  ///    send_char_suart(0x35);
