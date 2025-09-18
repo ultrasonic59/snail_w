@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdint.h>
 ///#include <contr_akela_brd.h>
+hdlc_stat_t g_hdlc;
 
 ///==============================
 void hdlc_error( char const *err )

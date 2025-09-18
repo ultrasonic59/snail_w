@@ -153,6 +153,65 @@ else
   return 0;
 
 }
+///========================================================================
+#if 0
+uint8_t uart_send_buff(uint8_t *buff, uint16_t len)
+{
+uint8_t rez=0;
+DMA_Cmd(DMA2_Channel5, DISABLE);
+DMA2_Channel5->MADDR=(uint32_t)buff;   ///set addr mem
+///DMA_SetCurrDataCounter(DMA2_Channel5, len);
+DMA2_Channel5->CNTR = len;            ///set len dat
+DMA_Cmd(DMA2_Channel5, ENABLE);
+DMA_ClearFlag(DMA2_FLAG_TC5);
+///DMA2->INTFCR=0x50000;
+
+USART_DMACmd(DEF_UART, USART_DMAReq_Tx, ENABLE);
+
+while(DMA_GetFlagStatus(DMA2_FLAG_TC5) == RESET) /* Wait until USART2 RX DMA1 Transfer Complete */
+{
+#if 0
+    tmpreg = DMA2->INTFR;
+    if(prev_tmpreg!= tmpreg)
+    {
+        prev_tmpreg= tmpreg ;
+    fprintf(stderr,"\n\rINTFR[%x]" ,tmpreg);
+    }
+ ///   DMA2->INTFCR=tmpreg;
+  ///  tmpreg = DMA2->INTFR;
+  ///  fprintf(stderr,"\n\rINTFR[%x]" ,tmpreg);
+
+  ///  tmpreg = DEF_UART->CTLR3;
+ ///   fprintf(stderr,"\n\rCTLR3[%x]" ,tmpreg);
+///    tmpreg = DEF_UART->STATR;
+ ////   fprintf(stderr,"\n\rSTATR[%x]" ,tmpreg);
+
+    Delay_Ms(2);
+#endif
+;////vTaskDelay(1);
+}
+while ((DEF_UART->STATR&USART_FLAG_TC)==0)
+{
+;////vTaskDelay(1);
+}
+
+////taskEXIT_CRITICAL();
+/*
+    while ((rs485_ports[num_port].uart_port->STATR&USART_FLAG_TXE)==0)
+    {
+    vTaskDelay(1);
+    }
+    */
+////printf("\n\rena_tx485(num_port,0)");
+////set_tst1(0);
+
+///ena_tx485(num_port,0);
+////set_tst1(0);
+return rez;
+}
+#endif
+
+///========================================================================
 void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 /*********************************************************************
  * @fn      USART1_IRQHandler
