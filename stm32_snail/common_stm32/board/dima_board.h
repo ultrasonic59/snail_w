@@ -11,6 +11,8 @@
 #include "stm32f2xx_flash.h"
 #include "misc.h"
 #include "flash_if.h"
+#include "uart.h"
+
 ////=============================================
 /*
 #define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
@@ -57,7 +59,7 @@
 #define MIN_PER         10        
 
 ////============================================
-#define ENC_TIM_PERIOD 0Xffff
+///#define ENC_TIM_PERIOD 0Xffff
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
@@ -93,11 +95,16 @@
 #define TST7_PIN_NPIN	    	15
 #define TST7_PIN_GPIO	    	GPIOA
 #define TST7_PIN_RCC  	        RCC_AHB1Periph_GPIOA
-////=============== TST8 ============================
-#define TST8_PIN	    	GPIO_Pin_10
-#define TST8_PIN_NPIN	    	10
-#define TST8_PIN_GPIO	    	GPIOC
-#define TST8_PIN_RCC  	        RCC_AHB1Periph_GPIOC
+////=============== ENC_TX ============================
+#define ENC_TX_PIN	    	GPIO_Pin_10
+#define ENC_TX_PIN_NPIN	    	10
+#define ENC_TX_PIN_GPIO	    	GPIOC
+#define ENC_TX_PIN_RCC  	        RCC_AHB1Periph_GPIOC
+////=============== ENC_RX ============================
+#define ENC_RX_PIN	    	GPIO_Pin_11
+#define ENC_RX_PIN_NPIN	    	11
+#define ENC_RX_PIN_GPIO	    	GPIOC
+#define ENC_RX_PIN_RCC  	RCC_AHB1Periph_GPIOC
 ////=========== DBG_TX ===============================
 #define UART_DBG_TX_PIN	    	GPIO_Pin_6
 #define UART_DBG_TX_PIN_NPIN	    	6
@@ -277,6 +284,17 @@
 ///#define UART_DBG_TX_SOURCE      GPIO_Pin_2
 ///#define UART_DBG_RX_SOURCE      GPIO_Pin_3
 ////=================================================================
+#define UART_ENC_CLK            RCC_APB1Periph_USART3
+#define UART_ENC_CLK_INIT       RCC_APB1PeriphClockCmd
+
+#define UART_ENC_RX_AF          GPIO_AF_USART3
+#define UART_ENC_TX_AF          GPIO_AF_USART3
+#define UART_ENC                USART3
+
+////#define USART3_IRQHandler       UART_ENC_IRQHandler
+#define UART_ENC_IRQHandler       USART3_IRQHandler       
+
+#define UART_ENC_IRQn           USART3_IRQn
 
 #define ADDR_MOT_CTRL   0
 #define ADDR_MOT_TORQUE 1
@@ -509,6 +527,9 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #endif
 
 ////============================================
+#define DBG_BR 115200
+#define ENC_BR 230400
+
 ////=================================================================
 ////extern int32_t cur_coord;
 extern uint8_t cur_stat;

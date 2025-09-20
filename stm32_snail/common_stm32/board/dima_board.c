@@ -202,6 +202,23 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
   GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
+////=========== UART_ENC =================================================== 
+RCC_AHB1PeriphClockCmd(ENC_TX_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = ENC_TX_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init(ENC_TX_PIN_GPIO, &GPIO_InitStructure );
+
+RCC_AHB1PeriphClockCmd(ENC_RX_PIN_RCC, ENABLE);
+GPIO_InitStructure.GPIO_Pin = ENC_RX_PIN;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+GPIO_Init( ENC_RX_PIN_GPIO, &GPIO_InitStructure );
+  
+GPIO_PinAFConfig(ENC_TX_PIN_GPIO, ENC_TX_PIN_NPIN, UART_ENC_TX_AF);
+GPIO_PinAFConfig(ENC_RX_PIN_GPIO, ENC_RX_PIN_NPIN, UART_ENC_RX_AF);
 
 }
 ////=============================================
@@ -211,7 +228,7 @@ void UART_DBG_Init(void)
 USART_InitTypeDef USART_InitStructure;
 UART_DBG_CLK_INIT(UART_DBG_CLK, ENABLE);
 USART_DeInit(UART_DBG);
-USART_InitStructure.USART_BaudRate = 115200;
+USART_InitStructure.USART_BaudRate = DBG_BR;
 USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 USART_InitStructure.USART_StopBits = USART_StopBits_1 ;
 USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -253,6 +270,7 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
 init_can();
+UART_ENC_Init();
 
 /*
 #ifndef BOOTER

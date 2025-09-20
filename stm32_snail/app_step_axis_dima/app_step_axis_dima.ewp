@@ -373,6 +373,8 @@
                     <state>$PROJ_DIR$\..\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
+                    <state>$PROJ_DIR$\..\common_stm32</state>
+                    <state>$PROJ_DIR$\src\hdlc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -3413,6 +3415,9 @@
         <file>
             <name>$PROJ_DIR$\..\common_stm32\can\can_drv.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\uart.c</name>
+        </file>
     </group>
     <group>
         <name>FreeRTOS</name>
@@ -3433,6 +3438,18 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
+        </file>
+    </group>
+    <group>
+        <name>hdlc</name>
+        <file>
+            <name>$PROJ_DIR$\src\hdlc\fcs16.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\hdlc\hdlc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\hdlc\hdlc.h</name>
         </file>
     </group>
     <group>

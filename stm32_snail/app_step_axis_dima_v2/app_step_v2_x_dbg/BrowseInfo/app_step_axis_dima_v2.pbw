@@ -156275,7 +156275,7 @@
     "display": "int read_encoder_val(uint16_t *)",
     "location": {
       "column": "5",
-      "line": "549",
+      "line": "550",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "read_encoder_val",
@@ -156283,13 +156283,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13407@F@read_encoder_val@rez",
+    "ID": "c:i2c.c@13409@F@read_encoder_val@rez",
     "What": "Variable",
     "defdec": "Def",
     "display": "rez",
     "location": {
       "column": "5",
-      "line": "551",
+      "line": "552",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "rez",
@@ -156297,13 +156297,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13417@F@read_encoder_val@htmp",
+    "ID": "c:i2c.c@13419@F@read_encoder_val@htmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "htmp",
     "location": {
       "column": "10",
-      "line": "552",
+      "line": "553",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "htmp",
@@ -156311,13 +156311,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13433@F@read_encoder_val@btmp",
+    "ID": "c:i2c.c@13435@F@read_encoder_val@btmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "btmp",
     "location": {
       "column": "9",
-      "line": "553",
+      "line": "554",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "btmp",
@@ -156331,7 +156331,7 @@
     "display": "void i2c_dbg_task(void *)",
     "location": {
       "column": "6",
-      "line": "576",
+      "line": "577",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "i2c_dbg_task",
@@ -156339,13 +156339,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13952@F@i2c_dbg_task@key",
+    "ID": "c:i2c.c@13954@F@i2c_dbg_task@key",
     "What": "Variable",
     "defdec": "Def",
     "display": "key",
     "location": {
       "column": "6",
-      "line": "578",
+      "line": "579",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "key",
@@ -156353,13 +156353,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13965@F@i2c_dbg_task@cur_addr",
+    "ID": "c:i2c.c@13967@F@i2c_dbg_task@cur_addr",
     "What": "Variable",
     "defdec": "Def",
     "display": "cur_addr",
     "location": {
       "column": "10",
-      "line": "579",
+      "line": "580",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "cur_addr",
@@ -156367,13 +156367,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@13987@F@i2c_dbg_task@w_dat",
+    "ID": "c:i2c.c@13989@F@i2c_dbg_task@w_dat",
     "What": "Variable",
     "defdec": "Def",
     "display": "w_dat",
     "location": {
       "column": "10",
-      "line": "580",
+      "line": "581",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "w_dat",
@@ -156381,13 +156381,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@14011@F@i2c_dbg_task@cur_cmd",
+    "ID": "c:i2c.c@14013@F@i2c_dbg_task@cur_cmd",
     "What": "Variable",
     "defdec": "Def",
     "display": "cur_cmd",
     "location": {
       "column": "9",
-      "line": "581",
+      "line": "582",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "cur_cmd",
@@ -156395,13 +156395,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@14031@F@i2c_dbg_task@cur_size",
+    "ID": "c:i2c.c@14033@F@i2c_dbg_task@cur_size",
     "What": "Variable",
     "defdec": "Def",
     "display": "cur_size",
     "location": {
       "column": "9",
-      "line": "582",
+      "line": "583",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "cur_size",
@@ -156409,13 +156409,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@14054@F@i2c_dbg_task@rez",
+    "ID": "c:i2c.c@14056@F@i2c_dbg_task@rez",
     "What": "Variable",
     "defdec": "Def",
     "display": "rez",
     "location": {
       "column": "5",
-      "line": "584",
+      "line": "585",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "rez",
@@ -156423,13 +156423,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@14900@F@i2c_dbg_task@btmp",
+    "ID": "c:i2c.c@14902@F@i2c_dbg_task@btmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "btmp",
     "location": {
       "column": "13",
-      "line": "634",
+      "line": "635",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "btmp",
@@ -156437,13 +156437,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@15100@F@i2c_dbg_task@htmp",
+    "ID": "c:i2c.c@15102@F@i2c_dbg_task@htmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "htmp",
     "location": {
       "column": "14",
-      "line": "643",
+      "line": "644",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "htmp",
@@ -156451,13 +156451,13 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@15763@F@i2c_dbg_task@btmp",
+    "ID": "c:i2c.c@15765@F@i2c_dbg_task@btmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "btmp",
     "location": {
       "column": "13",
-      "line": "677",
+      "line": "678",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "btmp",
@@ -156465,27 +156465,27 @@
     "scope": null
   },
   {
-    "ID": "c:i2c.c@15968@F@i2c_dbg_task@htmp",
+    "ID": "c:i2c.c@15970@F@i2c_dbg_task@htmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "htmp",
     "location": {
       "column": "14",
-      "line": "686",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
-    },
-    "name": "htmp",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:i2c.c@15988@F@i2c_dbg_task@btmp",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "btmp",
-    "location": {
-      "column": "13",
       "line": "687",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
+    },
+    "name": "htmp",
+    "origin": "project_file",
+    "scope": null
+  },
+  {
+    "ID": "c:i2c.c@15990@F@i2c_dbg_task@btmp",
+    "What": "Variable",
+    "defdec": "Def",
+    "display": "btmp",
+    "location": {
+      "column": "13",
+      "line": "688",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\i2c\\i2c.c"
     },
     "name": "btmp",

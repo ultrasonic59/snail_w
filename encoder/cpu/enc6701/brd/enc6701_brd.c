@@ -53,6 +53,7 @@ void set_led(uint8_t on_off)
 void init_hw(void)
 {
 init_gpio();
+DMA_INIT();
 USART1_CFG();
 
 TIM1_Config(); ///for softuart

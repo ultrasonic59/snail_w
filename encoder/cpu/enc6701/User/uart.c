@@ -2,35 +2,14 @@
 ////#include <stdio.h>
 #include "uart.h"
 #include "../brd/enc6701_brd.h"
-///#include "my_misc.h"
+#include "hdlc.h"
 
-volatile uint8_t rx_buff_ready=0;
-static uint8_t rx_buff[LEN_RX_BUFF];
-static uint8_t len_rx_dat=0;
-uart_cmd_t rx_cmd;
-uart_cmd_t tx_cmd;
 ////===================================
 void uart1_rx_handler(void)
 {
 uint8_t tdat;  
-////if(UART1->SR &UART1_FLAG_RXNE)
-{
-  tdat=(uint8_t)USART1->DATAR;
-  if(tdat=='\0'){
-    if(len_rx_dat!=0){
-      memcpy(rx_cmd.buff,rx_buff,len_rx_dat);
-      rx_cmd.len=len_rx_dat;
-      rx_buff_ready=1;
-      len_rx_dat=0;
-      }
-    }
-  else{
-    if(len_rx_dat<LEN_RX_BUFF){
-        rx_buff[len_rx_dat]= tdat;
-        len_rx_dat++;
-      }
-    }
-  }
+tdat=(uint8_t)USART1->DATAR;
+hdlc_on_bytein(tdat);
 }
 ///==========================================
 int uart_put_byte(uint8_t idat) 
@@ -44,21 +23,24 @@ int send_dat(uint8_t i_dat)
 USART1->DATAR = i_dat;
 return 0;
 }
-////=================================================
-void tx_send(uart_cmd_t *cmd)
+uint8_t uart_send_buff(uint8_t *buff, uint16_t len)
 {
-uint8_t ii=0;
-while(cmd->len)
-  {
-  uart_put_byte(cmd->buff[ii]) ;
-  cmd->len--;
-  ii++;
-  };
+ uint16_t ii;
+ printf( "send \r\n");
+
+ for(ii=0;ii<len;ii++){
+     uart_put_byte(buff[ii]);
+     printf( "[%02x]\r\n",buff[ii]);
+
 }
+ return len;
+}
+////=================================================
+#if 0
 volatile uint8_t v_tmp=0;
 void obr_uart_cmd(uart_cmd_t *cmd)
 {
-#if 0
+
  //// int tmp;
 ////uint16_t rez=0;
 uint16_t htmp;
@@ -126,9 +108,10 @@ switch(btmp)
  ///   rez=0;
     break;
 }
-#endif
+
 ////return rez;
 }
+#endif
 ////=================================================
 
 uint8_t uart_get_byte(void) 
@@ -154,21 +137,21 @@ else
 
 }
 ///========================================================================
-#if 0
-uint8_t uart_send_buff(uint8_t *buff, uint16_t len)
+#if 1
+uint8_t _uart_send_buff(uint8_t *buff, uint16_t len)
 {
 uint8_t rez=0;
-DMA_Cmd(DMA2_Channel5, DISABLE);
-DMA2_Channel5->MADDR=(uint32_t)buff;   ///set addr mem
+DMA_Cmd(DMA1_Channel4, DISABLE);
+DMA1_Channel4->MADDR=(uint32_t)buff;   ///set addr mem
 ///DMA_SetCurrDataCounter(DMA2_Channel5, len);
-DMA2_Channel5->CNTR = len;            ///set len dat
-DMA_Cmd(DMA2_Channel5, ENABLE);
-DMA_ClearFlag(DMA2_FLAG_TC5);
+DMA1_Channel4->CNTR = len;            ///set len dat
+DMA_Cmd(DMA1_Channel4, ENABLE);
+DMA_ClearFlag(DMA1_FLAG_TC4);
 ///DMA2->INTFCR=0x50000;
 
-USART_DMACmd(DEF_UART, USART_DMAReq_Tx, ENABLE);
+///USART_DMACmd(DEF_UART, USART_DMAReq_Tx, ENABLE);
 
-while(DMA_GetFlagStatus(DMA2_FLAG_TC5) == RESET) /* Wait until USART2 RX DMA1 Transfer Complete */
+while(DMA_GetFlagStatus(DMA1_FLAG_TC4) == RESET) /* Wait until USART2 RX DMA1 Transfer Complete */
 {
 #if 0
     tmpreg = DMA2->INTFR;
@@ -190,7 +173,7 @@ while(DMA_GetFlagStatus(DMA2_FLAG_TC5) == RESET) /* Wait until USART2 RX DMA1 Tr
 #endif
 ;////vTaskDelay(1);
 }
-while ((DEF_UART->STATR&USART_FLAG_TC)==0)
+while ((USART1->STATR&USART_FLAG_TC)==0)
 {
 ;////vTaskDelay(1);
 }
@@ -250,7 +233,7 @@ void USART1_CFG(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(GPIOD, &GPIO_InitStructure);
 
-    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_BaudRate = BR_ENC;///460800;///115200;
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
     USART_InitStructure.USART_StopBits = USART_StopBits_1;
     USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -258,6 +241,28 @@ void USART1_CFG(void)
     USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
 
     USART_Init(USART1, &USART_InitStructure);
+    DMA_Cmd(DMA1_Channel4, ENABLE); /* USART1 Tx */
+
     USART_Cmd(USART1, ENABLE);
+}
+void DMA_INIT(void)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+    DMA_DeInit(DMA1_Channel4);
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)(&USART1->DATAR);
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)g_hdlc.snd_buff;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+    DMA_InitStructure.DMA_BufferSize = g_hdlc.snd_buff_len;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+    DMA_Init(DMA1_Channel4, &DMA_InitStructure);
+
 }
 

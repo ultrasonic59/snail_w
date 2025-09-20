@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "ringbuffer.h"
-extern void *pvPortMalloc( size_t xWantedSize );
+////extern void *pvPortMalloc( size_t xWantedSize );
 
 uint8_t*  ringbuffer_init(ringbuffer_t *rbuffer,int size)
 {

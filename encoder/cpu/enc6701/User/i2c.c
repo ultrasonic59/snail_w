@@ -38,9 +38,6 @@ void IIC_Init(u32 bound)
         I2C1->DATAR =0xff;
 
     };
-
-
-
 }
 volatile uint32_t wait_time=0;
 int _i2c_readByteEncoder(uint16_t addr,uint8_t *o_data)

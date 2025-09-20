@@ -32,6 +32,7 @@
 #include "softuart.h"
 #include "adc.h"
 #include "i2c.h"
+#include "hdlc.h"
 
 ////https://www.youtube.com/watch?v=PtW0C0qOq-o
 
@@ -71,7 +72,7 @@ int t_rez=0;
 uint32_t t_cnt=0;
 uint16_t prev_adc_dat=0;
 uint8_t ena_send =0;
-
+send_data_t t_send_data;
 uint8_t tst =0;
 uint16_t rdat;
 static uint16_t prev_enc=0;
@@ -92,7 +93,7 @@ static uint16_t prev_enc=0;
 #endif
     printf("SystemClk:%d\r\n",SystemCoreClock);
     printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
-
+    hdlc_init(&g_hdlc);
  while(1)
     {
      t_cnt++;
@@ -111,6 +112,9 @@ static uint16_t prev_enc=0;
           prev_enc=rdat;
           ena_send=0;
           printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
+          t_send_data.coord=0x1234;///rdat;
+          t_send_data.val=0x5678;///cur_adc_dat;
+          hdlc_send_frame((uint8_t *)&t_send_data, sizeof(send_data_t));
        }
     }
     if(ena_send){
@@ -120,7 +124,10 @@ static uint16_t prev_enc=0;
             t_rez=cur_adc_dat-prev_adc_dat;
              ena_send=0;
              printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
-            }
+             t_send_data.coord=0x1234;///rdat;
+             t_send_data.val=0x5678;///cur_adc_dat;
+            hdlc_send_frame((uint8_t *)&t_send_data, sizeof(send_data_t));
+           }
     }
     }
  ///    send_char_suart(0x35);

@@ -6,9 +6,9 @@
  */
 
 #ifndef _ENC6701_BRD_H_
-#define _ENC6701__BRDH_
+#define _ENC6701_BRD_H_
 #include "ch32v00x_conf.h"
-
+#define BR_ENC  230400    ///;///460800;///115200;
 ///========================================
 ////=============dbg_rx==================================
   #define SOFT_RX_PIN          GPIO_Pin_0
@@ -46,6 +46,10 @@
 /* I2C Communication Mode Selection */
 #define I2C_MODE   HOST_MODE
 ///#define I2C_MODE   SLAVE_MODE
+typedef struct send_data_s{
+uint16_t coord;
+uint16_t val;
+}send_data_t;
 
 ///#define RXAdderss   0x02
 

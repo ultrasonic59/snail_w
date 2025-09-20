@@ -1,7 +1,7 @@
 #ifndef __HDLC_H_
 #define __HDLC_H_ 
 
-#include <my_types.h>
+///#include <my_types.h>
 ////#include <rtos.h>
 #include <stdint.h>
 
@@ -53,6 +53,7 @@
 #define TIMEOUT_SEND	10
 #define TIMEOUT_RSV	500
 ///========================================
+typedef uint8_t (*u8_fn_pu8_u16)(uint8_t*,uint16_t);
 
 ///==================================
 typedef struct hdlc_stat_s_
