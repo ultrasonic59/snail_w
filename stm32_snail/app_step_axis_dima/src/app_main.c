@@ -16,6 +16,7 @@
 #include "printk.h"
 #include "emul_eeprom.h"
 #include "can_cmds.h"
+#include "hdlc.h"
 
 #define VERS          "snail_axis_v1.1"
 
@@ -76,6 +77,7 @@ else
 ////CAN1_Init();
 ////goto_app();
 ////goto_booter();
+  hdlc_init(&g_hdlc);
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
  xTaskCreate( motor_task, "motor_task", MOTOR_TASK_STACK_SIZE, NULL, MOTOR_TASK_PRIORITY, NULL );

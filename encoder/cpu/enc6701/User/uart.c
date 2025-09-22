@@ -26,13 +26,14 @@ return 0;
 uint8_t uart_send_buff(uint8_t *buff, uint16_t len)
 {
  uint16_t ii;
- printf( "send \r\n");
+ ///printf( "send :");
 
  for(ii=0;ii<len;ii++){
      uart_put_byte(buff[ii]);
-     printf( "[%02x]\r\n",buff[ii]);
-
+ ///    printf( "[%02x]",buff[ii]);
 }
+ ////printf( "\r\n");
+
  return len;
 }
 ////=================================================

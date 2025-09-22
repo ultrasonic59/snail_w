@@ -51,10 +51,10 @@
 vu8 cur_val=0;
 
 ///===================================================
-///====================================================================
+#define VERS          "v1.0"
 
 ///===================================================
-uint8_t tmp[20] = {0x01, 0x80, 0xaa, 0x55};
+////uint8_t tmp[20] = {0x01, 0x80, 0xaa, 0x55};
 
 /*********************************************************************
  * @fn      main
@@ -91,8 +91,10 @@ static uint16_t prev_enc=0;
     USART_Printf_Init(115200);
 #endif
 #endif
-    printf("SystemClk:%d\r\n",SystemCoreClock);
-    printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
+///    printf("SystemClk:%d\r\n",SystemCoreClock);
+ ///   printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
+    printf("\r\n[enc6701][%s][%s:%s] ",VERS, __DATE__, __TIME__);
+
     hdlc_init(&g_hdlc);
  while(1)
     {
@@ -111,9 +113,9 @@ static uint16_t prev_enc=0;
       if(prev_enc!=rdat){
           prev_enc=rdat;
           ena_send=0;
-          printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
-          t_send_data.coord=0x1234;///rdat;
-          t_send_data.val=0x5678;///cur_adc_dat;
+          ///printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
+          t_send_data.coord=rdat;
+          t_send_data.val=cur_adc_dat;
           hdlc_send_frame((uint8_t *)&t_send_data, sizeof(send_data_t));
        }
     }
@@ -123,9 +125,9 @@ static uint16_t prev_enc=0;
             prev_adc_dat=cur_adc_dat ;
             t_rez=cur_adc_dat-prev_adc_dat;
              ena_send=0;
-             printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
-             t_send_data.coord=0x1234;///rdat;
-             t_send_data.val=0x5678;///cur_adc_dat;
+  ///           printf( "enc:%04x:%04x\r\n",rdat,cur_adc_dat);
+             t_send_data.coord=rdat;
+             t_send_data.val=cur_adc_dat;
             hdlc_send_frame((uint8_t *)&t_send_data, sizeof(send_data_t));
            }
     }

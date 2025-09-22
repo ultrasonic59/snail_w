@@ -27,9 +27,10 @@ if((tmp_sr&USART_FLAG_RXNE) != 0)
   {
   UART_ENC->SR &= ~USART_FLAG_RXNE;              ///  USART_ClearITPendingBit(UART_BT, USART_IT_RXNE);
   ch = (u8)(UART_ENC->DR & 0x0FF);
+  
   if (hdlc_on_bytein(ch) > 0)
     {
-     memcpy(&resiv_enc,g_hdlc.obr_buff,sizeof(send_data_t));
+ ///    memcpy(&resiv_enc,g_hdlc.obr_buff,sizeof(send_data_t));
 
       ;
    //// xQueueSendFromISR(g_hdlc_bt.ev_rsv_frame, &ch, &xHigherPriorityTaskWoken);

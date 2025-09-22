@@ -528,7 +528,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 
 ////============================================
 #define DBG_BR 115200
-#define ENC_BR 230400
+#define ENC_BR 460800   ///230400
 
 ////=================================================================
 ////extern int32_t cur_coord;

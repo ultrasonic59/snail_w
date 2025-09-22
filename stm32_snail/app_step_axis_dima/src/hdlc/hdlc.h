@@ -59,7 +59,7 @@ typedef uint8_t (*u8_fn_pu8_u16)(uint8_t*,uint16_t);
 typedef struct hdlc_stat_s_
 {
 uint16_t	frame_in_pos  ;				// Позиция для записи следующего принятого байта
-uint8_t 	*in_buf;				// Буфер принимаемого в данный момент кадра
+uint8_t 	*in_buff;				// Буфер принимаемого в данный момент кадра
 uint8_t 	*obr_buff;				//
 uint16_t    len_obr_dat;
 uint8_t     in_esc_byte;				// Флаг принятия ESC-байта
