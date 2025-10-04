@@ -11,6 +11,8 @@ extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
 
 int32_t cur_coord=0;
+int32_t offs_encoder=0;
+
 uint8_t cur_state=0;  /// .5-.4 conc, .3 - .0 status
 uint8_t ena_check_conc=0;
 void CAN_Config(void);
@@ -304,23 +306,34 @@ CAN_FilterConfig(0,id,mask);
 extern can_msg_t CAN_RxMsg;
 void state_task( void *pvParameters )
 {
-  uint8_t tmp; 
+uint8_t tmp; 
+uint16_t prev_enc=0;
+uint8_t ena_sleep=0; 
+
 int32_t prev_coord=0xffffffff;  
 uint8_t prev_state=0xff; 
 printk("\n\r state_task"); 
 for(;;)
   {
+  ena_sleep=1;
   tmp=get_conc_n();  
   tmp<<=4;
   cur_state&= ~CONC_MASK;
   cur_state |= tmp;
-    if((prev_state!=cur_state)||(prev_coord!=cur_coord))
+  if((prev_state!=cur_state)||(prev_coord!=cur_coord))
     {
       prev_state=cur_state;
       prev_coord=cur_coord;
       put_can_cmd_stat(cur_state,cur_coord);
+      ena_sleep=0;
      }
-   else
+  if(prev_enc!=resiv_enc.coord){
+    prev_enc=resiv_enc.coord ;
+    put_can_cmd_encoder(resiv_enc);
+      ena_sleep=0;
+    printk("\n\r encoder[%x]",resiv_enc.coord); 
+  }
+  if(ena_sleep)
       msleep(50);
   }
 

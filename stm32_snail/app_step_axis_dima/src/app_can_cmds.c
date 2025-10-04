@@ -80,6 +80,27 @@ if(step_z)
 }
 ////================================================
 #ifndef _MASTER_
+int put_can_cmd_encoder(encoder_data_t idata)
+{
+///uint8_t btst=0;  
+can_msg_t  send_msg;
+put_encoder_cmd_t t_put_encoder_cmd;
+t_put_encoder_cmd.cmd=PUT_STAT_CMD ;
+t_put_encoder_cmd.axis= AXIS_BRD;
+
+t_put_encoder_cmd.coord=idata.coord;
+t_put_encoder_cmd.temp_val=idata.val;
+
+t_put_encoder_cmd.state=cur_state;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_encoder_cmd,sizeof(put_encoder_cmd_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
 
 int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord)
@@ -298,6 +319,17 @@ switch(data[0]) {
          printk("[stat=%x] ",cur_state);
          }
         break;
+      case GET_ENCODER_CMD:
+        {
+        uint8_t tmp=get_conc_n();  
+        tmp<<=4;
+        cur_state&= ~CONC_MASK;
+        cur_state |= tmp;
+        put_can_cmd_encoder(resiv_enc);
+        printk("[enc=%x] ",resiv_enc.coord);
+         }
+        break;
+        
       case SET_PARAM:
          put_can_ack(SET_PARAM);
          set_param((set_param_cmd_t *)(data));
@@ -312,11 +344,9 @@ switch(data[0]) {
          memcpy((void*)&ans_spi_mot_cmd,data,sizeof(spi_mot_cmd_t));
          rd_spi_mot(&ans_spi_mot_cmd);
          put_can_rd_spi_mot_ans(&ans_spi_mot_cmd);
-
           }
         break;
-      
-     case GET_BOOT_STAT:
+       case GET_BOOT_STAT:
         put_can_boot_cmd_stat(boot_state);
         printk("[stat=%x] ",boot_state);
         break;

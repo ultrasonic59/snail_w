@@ -24,7 +24,6 @@ void mot_spi_init(void);
 void motor_task( void *pvParameters )
 {
 ///  int ii=0;
-  uint16_t prev_enc=0;
  /// uint16_t t_len=0;
 uint8_t btst=0; 
 uint8_t psk=0; 
@@ -53,10 +52,6 @@ init_step_mot();
  
 for(;;)
 {
-  if(prev_enc!=resiv_enc.coord){
-    prev_enc=resiv_enc.coord ;
-    printk("\n\r encoder[%x]",resiv_enc.coord); 
-  }
 /*
   if( g_hdlc.len_obr_dat){
     t_len=g_hdlc.len_obr_dat;

@@ -80,7 +80,7 @@ if( in_bt == PPP_FRAME )                        // Пришел флаг
     if(g_hdlc.frame_in_pos > 2 )               // Если между двумя флагами были данные:
         {
 ///        memcpy(g_hdlc.obr_buff,g_hdlc.in_buff,g_hdlc.frame_in_pos);
-        memcpy(&resiv_enc,g_hdlc.in_buff,sizeof(send_data_t));
+        memcpy(&resiv_enc,g_hdlc.in_buff,sizeof(encoder_data_t));
   
         g_hdlc.len_obr_dat=g_hdlc.frame_in_pos;
         g_hdlc.frame_in_pos = 0;

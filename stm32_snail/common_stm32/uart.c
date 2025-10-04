@@ -10,7 +10,7 @@
 #include "board.h"
 #include "hdlc.h"
 
-send_data_t resiv_enc={0};
+encoder_data_t resiv_enc={0};
 
 void UART_ENC_IRQHandler(void)
 {

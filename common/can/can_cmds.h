@@ -1,6 +1,8 @@
 #ifndef __CAN_CMDS_H_
 #define __CAN_CMDS_H_
 ///=========================================================
+#include "uart.h"
+
 #define CAN_MAX_LEN_QUEU 4
 
 ////#define ID_MASK         (uint32_t)(0x7e0)
@@ -74,7 +76,7 @@
 #define WR_SPI_MOT            0x12
 #define RD_SPI_MOT_REQ        0x13
 #define RD_SPI_MOT_ANS        0x14
-
+#define GET_ENCODER_CMD       0x15
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
 #define MOTOR_REJ             0x2
@@ -123,6 +125,15 @@ typedef struct  put_stat_cmd_s_{
   uint8_t  rsv;
   int32_t  coord;                      /// 
 }put_stat_cmd_t;
+
+typedef struct  put_encoder_cmd_s_{
+  uint8_t  cmd;                         /// 
+  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  state;                     /// ready,move,error
+  uint8_t  rsv;
+  uint16_t coord;
+  uint16_t temp_val;
+}put_encoder_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
   uint8_t  cmd;                         /// 
@@ -221,6 +232,7 @@ extern int set_param(set_param_cmd_t *i_data);
 
 extern int wr_spi_mot(spi_mot_cmd_t *i_data);
 extern int rd_spi_mot(spi_mot_cmd_t *i_data);
+extern int put_can_cmd_encoder(encoder_data_t idata);
 
 ///=====================================
 #define ERROR_OK            0
