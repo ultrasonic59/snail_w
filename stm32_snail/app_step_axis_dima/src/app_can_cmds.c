@@ -84,18 +84,18 @@ int put_can_cmd_encoder(encoder_data_t idata)
 {
 ///uint8_t btst=0;  
 can_msg_t  send_msg;
-put_encoder_cmd_t t_put_encoder_cmd;
-t_put_encoder_cmd.cmd=PUT_STAT_CMD ;
+encoder_cmd_t t_put_encoder_cmd;
+t_put_encoder_cmd.cmd=PUT_ENCODER_CMD ;
 t_put_encoder_cmd.axis= AXIS_BRD;
 
 t_put_encoder_cmd.coord=idata.coord;
 t_put_encoder_cmd.temp_val=idata.val;
 
-t_put_encoder_cmd.state=cur_state;
+////t_put_encoder_cmd.state=cur_state;
 send_msg.len=CAN_MAX_NUM_BYTES;
 send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;
-memcpy(send_msg.data,&t_put_encoder_cmd,sizeof(put_encoder_cmd_t));
+memcpy(send_msg.data,&t_put_encoder_cmd,sizeof(encoder_cmd_t));
 send_msg.id=ID_MASTER_CMD; 
 xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
@@ -321,12 +321,12 @@ switch(data[0]) {
         break;
       case GET_ENCODER_CMD:
         {
-        uint8_t tmp=get_conc_n();  
-        tmp<<=4;
-        cur_state&= ~CONC_MASK;
-        cur_state |= tmp;
+   ///     uint8_t tmp=get_conc_n();  
+   //     tmp<<=4;
+    //    cur_state&= ~CONC_MASK;
+    //    cur_state |= tmp;
         put_can_cmd_encoder(resiv_enc);
-        printk("[enc=%x] ",resiv_enc.coord);
+        printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
          }
         break;
         

@@ -18,7 +18,7 @@
 #include "can_cmds.h"
 #include "hdlc.h"
 
-#define VERS          "snail_axis_v1.1"
+#define VERS          "snail_axis_v1.2.1"
 
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );

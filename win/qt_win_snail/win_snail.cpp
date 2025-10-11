@@ -344,6 +344,9 @@ void win_snail::sl_state_changed()
     ui->le_x->setText(QString::number(dev_state.coord[XX]));
     ui->le_y->setText(QString::number(dev_state.coord[YY]));
     ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
+
+    ui->lab_coord_x->setText(QString::number(dev_state.coord_enc[XX]));
+
     showConState();
 }
 
@@ -602,7 +605,7 @@ void win_snail::on_butt_debug()
     Dial_dbg.ui.lineEdit_dat5->setText(QString::number(params::dbg_last_can_dat[5], 16));
     Dial_dbg.ui.lineEdit_dat6->setText(QString::number(params::dbg_last_can_dat[6], 16));
     Dial_dbg.ui.lineEdit_dat7->setText(QString::number(params::dbg_last_can_dat[7], 16));
-
+    Dial_dbg.show();
 if(Dial_dbg.exec())
 { 
  ///   qDebug() << "OK";
@@ -901,6 +904,14 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
  ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
         break;
     case SPI_REJ:
+        qDebug() << "SPI_REJ _WR_dbg";
+        spi_mot_cmd_t t_spi_mot_cmd;
+        t_spi_mot_cmd.addr = idat->addr;
+        t_spi_mot_cmd.cmd = WR_SPI_MOT;
+        t_spi_mot_cmd.len_dat = 2;
+        t_spi_mot_cmd.w_val  = idat->data[0];
+        emit s_mot_spi(t_spi_mot_cmd);
+
         ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
         break;
 
@@ -1198,6 +1209,7 @@ void win_snail::sl_rsv_can_dat(can_message_t msg)
 {
  ///   qDebug() << "sl_rsv_dat=" <<idat;
 ////emit put_str_dial(idat);
+///if(msg.data[0]!= PUT_ACK)
 emit put_msg_dial(msg);
 
 }

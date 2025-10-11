@@ -47,7 +47,8 @@ void  DialDebug::slot_butt_wr()
     dbg_dat_req.data[0]=ui.lineEdit_wr_dat->text().toInt(0,16);
 	if(ui.comboBox_rej->currentIndex()==CAN_REJ)
       dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
-
+    else if (ui.comboBox_rej->currentIndex() == SPI_REJ)
+        dbg_dat_req.nbytes = ui.lineEdit_count->text().toInt(0, 16)*2;
 	int num_rej=ui.comboBox_rej->currentIndex();
 	emit req_wr_dbg(num_rej,&dbg_dat_req);
 }
@@ -121,19 +122,26 @@ void  DialDebug::req_str_rdy(char* istr)
 }
 void  DialDebug::req_msg_rdy(can_message_t istr)
 {
-   //// QString tstr;
+    //// QString tstr;
     can_message_t t_can_message = istr;
-    spi_mot_cmd_t* spi_mot_cmd = (spi_mot_cmd_t*)t_can_message.data;
-    quint32 tmp;
-    if (spi_mot_cmd->len_dat > 1)
-        tmp = spi_mot_cmd->w_val;
-    else
-        tmp = spi_mot_cmd->b_val;
-    QString tstr = QString("Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr,16)).arg(QString::number(tmp,16));
- ////   QTextStream(&tstr) << "Addr = " << 3.14;
-  ///????  tstr.asprintf("\nAddr=%x->%x", spi_mot_cmd->addr, tmp);
-    ui.textEdit_rd_dat->append(tstr);
+    put_ack_t* p_put_ack = (put_ack_t*)t_can_message.data;
+    if (p_put_ack->cmd == PUT_ACK) {
+        QString tstr = QString("ack[axis:%1 cmd:%2]").arg(QString::number(p_put_ack->ack.axis)).arg(QString::number(p_put_ack->ack.ack_cmd, 16));
+        ui.textEdit_rd_dat->append(tstr);
 
+    }
+    else {
+        spi_mot_cmd_t* spi_mot_cmd = (spi_mot_cmd_t*)t_can_message.data;
+
+        quint32 tmp;
+        if (spi_mot_cmd->len_dat > 1)
+            tmp = spi_mot_cmd->w_val;
+        else
+            tmp = spi_mot_cmd->b_val;
+        QString tstr = QString("Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr, 16)).arg(QString::number(tmp, 16));
+
+        ui.textEdit_rd_dat->append(tstr);
+    }
 #if 0
     QString tstr(istr);
     ////tstr.sprintf("\n%s",istr);

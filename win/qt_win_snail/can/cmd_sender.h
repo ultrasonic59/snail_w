@@ -53,6 +53,8 @@
 #define WR_SPI_MOT            0x12
 #define RD_SPI_MOT_REQ        0x13
 #define RD_SPI_MOT_ANS        0x14
+#define GET_ENCODER_CMD       0x15
+#define PUT_ENCODER_CMD       0x16
 
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
@@ -118,11 +120,29 @@ struct  spi_mot_cmd_t {
 	uint32_t  w_val;                      /// 
 };
 
+struct  ack_t {
+	quint8  ack_cmd;                         /// 
+	quint8  axis;                        /// X,Y , Z 
+};
+
+struct  put_ack_t{
+	qint8  cmd;                         /// 
+	ack_t   ack;                         /// 
+};
 
 struct  dev_state_t {
-quint8  states[NUM_AXIS+1];                       /// 
-qint32  coord[NUM_AXIS+1];                 /// steps X,Y , Z 
+quint8  states[NUM_AXIS];                       /// 
+qint32  coord[NUM_AXIS];                 /// steps X,Y , Z 
+qint32  coord_enc[NUM_AXIS];                 /// enc X,Y , Z 
+qint16  temper[NUM_AXIS];                 /// temper motor X,Y , Z 
+
 };
+typedef struct  encoder_cmd_s_ {
+	quint8  cmd;                         /// 
+	quint8  axis;                        /// X,Y , Z 
+	qint32  coord;                     /// 
+	quint16 temp_val;
+}encoder_cmd_t;
 
 class CcmdSender : public QObject
 {

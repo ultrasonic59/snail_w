@@ -77,6 +77,8 @@
 #define RD_SPI_MOT_REQ        0x13
 #define RD_SPI_MOT_ANS        0x14
 #define GET_ENCODER_CMD       0x15
+#define PUT_ENCODER_CMD       0x16
+
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
 #define MOTOR_REJ             0x2
@@ -118,7 +120,7 @@ typedef struct  go_cmd_s_{
   uint32_t  steps;                 /// steps X,Y , Z 
 }go_cmd_t;
 
-typedef struct  put_stat_cmd_s_{
+typedef __packed struct  put_stat_cmd_s_{
   uint8_t  cmd;                         /// 
   uint8_t  axis;                        /// X,Y , Z 
   uint8_t  state;                     /// ready,move,error
@@ -126,14 +128,12 @@ typedef struct  put_stat_cmd_s_{
   int32_t  coord;                      /// 
 }put_stat_cmd_t;
 
-typedef struct  put_encoder_cmd_s_{
+typedef __packed struct  encoder_cmd_s_{
   uint8_t  cmd;                         /// 
   uint8_t  axis;                        /// X,Y , Z 
-  uint8_t  state;                     /// ready,move,error
-  uint8_t  rsv;
-  uint16_t coord;
+  int32_t  coord;                     /// 
   uint16_t temp_val;
-}put_encoder_cmd_t;
+}encoder_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
   uint8_t  cmd;                         /// 

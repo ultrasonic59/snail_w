@@ -121,7 +121,10 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
 void Cmotor_wrk::sl_mot_spi(spi_mot_cmd_t cmd) {
     can_message_t t_can_message;
     t_can_message.id = X_AXIS_CAN_ID;
-    t_can_message.dlc = cmd.len_dat+3;
+    if(cmd.len_dat==1)
+      t_can_message.dlc = cmd.len_dat+2;
+    else
+        t_can_message.dlc = cmd.len_dat + 6;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
