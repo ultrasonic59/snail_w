@@ -265,8 +265,38 @@ for(quint8 ii=0;ii<len/2;ii++)
 	thdata= hdata[ii];
 	cur_ks+= thdata;
 	}
+if (len < MAX_PROG_CHUNC_BYTES)
+{
+	for (quint8 ii = 0; ii < len / 2; ii++)
+	{
+		thdata = hdata[ii];
+		qDebug() << "ii " << ii << "data" << QString::number(thdata, 16);
+		cur_ks += thdata;
+	}
+}
 size_app+=len;
 return SendResCanCmd(&t_can_cmd);
+}
+quint8 CprogHex::verifyFlashChunc(quint8* data, quint8 len)
+{
+	////quint8 ii;
+	quint16 thdata;
+	quint16* hdata = (quint16*)data;
+	can_cmd_t t_can_cmd;
+	t_can_cmd.num_bytes = len + 2;
+	t_can_cmd.id = can_id;
+	if (len > MAX_PROG_CHUNC_BYTES)
+		len = MAX_PROG_CHUNC_BYTES;
+	-----t_can_cmd.data[OFFS_CAN_CMD] = PRG_DAT;///PROG_CHUNC;
+	-----t_can_cmd.data[OFFS_CAN_NUM_BYTES] = len;
+	-----memcpy(t_can_cmd.data + OFFS_CAN_DATA, data, len);
+	for (quint8 ii = 0; ii < len / 2; ii++)
+	{
+		thdata = hdata[ii];
+		cur_ks += thdata;
+	}
+	size_app += len;
+	return SendResCanCmd(&t_can_cmd);
 }
 
 quint8 CprogHex::setProgAddr(quint32 addres)
@@ -320,23 +350,111 @@ if(tmp)
 
 quint8 CprogHex::progFlashLine()
 {
-quint8 offs_dat=0;
-quint8 num_bytes=cur_bin_data.len_data;
-while(num_bytes > 0) {
-if(num_bytes > MAX_PROG_CHUNC_BYTES){
-	progFlashChunc(cur_bin_data.bytes+offs_dat, MAX_PROG_CHUNC_BYTES);
-	num_bytes -= MAX_PROG_CHUNC_BYTES;
-	offs_dat += MAX_PROG_CHUNC_BYTES;
+	quint8 offs_dat = 0;
+	quint8 num_bytes = cur_bin_data.len_data;
+	///qDebug() << "len_data " << cur_bin_data.len_data<<"data"<< cur_bin_data.bytes + cur_bin_data.len_data-1;
+
+	while (num_bytes > 0) {
+		if (num_bytes > MAX_PROG_CHUNC_BYTES) {
+			progFlashChunc(cur_bin_data.bytes + offs_dat, MAX_PROG_CHUNC_BYTES);
+			num_bytes -= MAX_PROG_CHUNC_BYTES;
+			offs_dat += MAX_PROG_CHUNC_BYTES;
+		}
+		else {
+			progFlashChunc(cur_bin_data.bytes + offs_dat, num_bytes);
+			num_bytes = 0;
+		}
 	}
-else{
-	progFlashChunc(cur_bin_data.bytes+offs_dat, num_bytes);
-	num_bytes=0;
-	}
+return HEX_OK;
+
 }
+quint8 CprogHex::verifyFlashLine()
+{
+	quint8 offs_dat = 0;
+	quint8 num_bytes = cur_bin_data.len_data;
+	///qDebug() << "len_data " << cur_bin_data.len_data<<"data"<< cur_bin_data.bytes + cur_bin_data.len_data-1;
+
+	while (num_bytes > 0) {
+		if (num_bytes > MAX_PROG_CHUNC_BYTES) {
+			verifyFlashChunc(cur_bin_data.bytes + offs_dat, MAX_PROG_CHUNC_BYTES);
+			num_bytes -= MAX_PROG_CHUNC_BYTES;
+			offs_dat += MAX_PROG_CHUNC_BYTES;
+		}
+		else {
+			verifyFlashChunc(cur_bin_data.bytes + offs_dat, num_bytes);
+			num_bytes = 0;
+		}
+	}
+
 return HEX_OK;
 }
 
-quint8 CprogHex::parseHexLine(QString line)
+quint8 CprogHex::progHexLine(QString line)
+{
+	quint8 rez = 0;
+	quint8 crc8 = 0;
+	line.remove(':');
+	for (int cc = 0; cc < line.length(); cc += 2)
+	{
+		crc8 += line.mid(cc, 2).toUShort(0, 16);
+	}
+	////QThread::msleep(1);
+	if (crc8 == 0)
+	{
+		quint8 lenData = line.mid(0, 2).toULong(0, 16);
+		quint8 lineType = line.mid(6, 2).toULong(0, 16);
+		quint32 offsAddr = line.mid(2, 4).toULong(0, 16);
+		quint32 tData = line.mid(8, lenData * 2).toULong(0, 16);
+		quint32 Address = linAddr + offsAddr;
+		switch (lineType)
+		{
+		case 0: /// Data
+			setProgAddr(Address);
+			hex2bin(line.mid(8, lenData * 2));
+			rez = progFlashLine();
+			break;
+		case 1: //
+			rez = END_OF_FILE;
+			////			qDebug() << "END_OF_FILE " ;
+			break;
+
+		case 2: // Extended Segment Address Record
+	////		segAddr = tData << 4; // *16
+			rez = HEX_OK;
+			qDebug() << "Extended Segment Address Record ";
+			break;
+
+		case 3: // Start Segment Address Record
+////				sRes ="[Start Segment Address: 0x" + DWORD2Hex(dwData) + "]\n";
+			qDebug() << "Start Segment Address Record ";
+
+			break;
+
+		case 4: // Extended Linear Address Record
+			linAddr = tData << 16; // *65536
+			qDebug() << "Extended Linear Address Record ";
+			break;
+		case 5: // Start Linear Address Record
+////				sRes ="[Start Linear Address: 0x" + DWORD2Hex(dwData) + "]\n";
+			qDebug() << "Start Linear Address Record ";
+			break;
+
+		default:
+			rez = ERR_TYPE_REC;
+			qDebug() << "Unknown type record: " << lineType;
+			////	sRes ="<Unknown type record>\n";
+			break;
+		}
+		////	nextAddr = Address + lenData;
+		/////		qDebug() << "nextAddr :" << nextAddr<< "Address :"<<Address <<"lenData" << lenData;
+	}
+	else
+	{
+		qDebug() << "Error crc ";
+	}
+	return rez;
+}
+quint8 CprogHex::verifyHexLine(QString line)
 {
 quint8 rez=0;
 quint8 crc8=0;
@@ -358,7 +476,7 @@ if(crc8 == 0)
 		case 0: /// Data
 			setProgAddr(Address);
 			hex2bin(line.mid(8, lenData * 2) );
-			rez = progFlashLine();
+			rez = verifyFlashLine();
 			break;
 		case 1: //
 			rez = END_OF_FILE;
@@ -420,29 +538,66 @@ void CprogHex::sl_progr_eeprom(void)
 {
 	prg_eeprom();
 }
-void CprogHex::sl_progr(QFile *pFile)
+void CprogHex::sl_progr(QFile* pFile)
+{
+	QString tstr;
+	quint8 t_rez = HEX_OK;
+	quint32 cur_pos = 0;
+
+	QTextStream in(pFile);
+	if (checkErraseAddr(ADDR_FLASH_APP) != HEX_OK)
+	{
+		if (erraseAddr(ADDR_FLASH_APP) != HEX_OK)
+			return;/// false;
+	}
+	cur_ks = 0;
+	size_app = 0;
+	while (!in.atEnd())
+	{
+		tstr = in.readLine();
+		t_rez = progHexLine(tstr);
+		if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
+			break;
+		cur_pos += tstr.length();
+		////	qDebug() << "cur_pos: " << cur_pos;
+		////	emit sig_set_pb_val(cur_pos);
+		*p_cur_pb_val = cur_pos;
+	}
+	if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
+	{
+		*p_stat = BOOTER_STATE_ERROR;
+		*p_data_ok = true;
+		return;//// false;
+	}
+	else
+	{
+		if (prg_eeprom())
+		{
+			*p_stat = BOOTER_STATE_OK;
+			*p_data_ok = true;
+			return;
+		}
+		*p_stat = BOOTER_STATE_ERROR;
+		*p_data_ok = true;
+		return;/// 
+	}
+}
+void CprogHex::sl_verif(QFile *pFile)
 {
 QString tstr;
 quint8 t_rez=HEX_OK;
 quint32 cur_pos=0;
 
 QTextStream in(pFile);
-if(checkErraseAddr(ADDR_FLASH_APP)!= HEX_OK)
-	{
-	if (erraseAddr(ADDR_FLASH_APP) != HEX_OK)
-		return;/// false;
-	}
 cur_ks=0;
 size_app=0;
 while(!in.atEnd())
 	{
 	tstr=in.readLine();
-	t_rez=parseHexLine(tstr);
+	t_rez=verifyHexLine(tstr);
 	if((t_rez!=HEX_OK)&&(t_rez!=END_OF_FILE))
 		break;
 	cur_pos += tstr.length();
-////	qDebug() << "cur_pos: " << cur_pos;
-////	emit sig_set_pb_val(cur_pos);
 	*p_cur_pb_val = cur_pos;
 	}
 if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
@@ -552,7 +707,7 @@ else
 
 }
 
-void CprogHex::rd_flash(dat_req_t* data )
+void CprogHex::sl_rd_flash(dat_req_t* data )
 {
 can_cmd_t s_cmd;
 can_cmd_t r_cmd;

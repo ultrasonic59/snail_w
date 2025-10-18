@@ -272,7 +272,10 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
 UART_DBG_Init(); 
 init_can();
+
+#ifndef BOOTER
 UART_ENC_Init();
+#endif
 
 /*
 #ifndef BOOTER

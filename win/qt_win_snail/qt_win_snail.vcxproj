@@ -39,7 +39,7 @@
     <QtInstall>qt-5.15.15-static</QtInstall>
     <QtModules>core;xml;sql;network;gui;svg;script;widgets;qml;serialport</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtPlugin>true</QtPlugin>
+    <QtPlugin>false</QtPlugin>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.15.0_static_x64</QtInstall>

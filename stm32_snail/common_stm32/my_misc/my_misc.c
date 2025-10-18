@@ -144,6 +144,37 @@ if(tmp_ks!=rd_ks)
   return 0;
 return 1;
 }
+#else
+
+uint8_t check_ks_app(void)
+{
+uint16_t rd_ks=0;
+uint16_t tmp_ks=0;
+uint32_t size_app=0;
+uint32_t ii;
+uint16_t tmp=0;
+///uint16_t *t_buff=(uint16_t*)APP_BASE_ADDRESS;
+if(EE_ReadVariable(ADDR_EEPROM_SIZEH_APP, &tmp)!=0)
+  return 0;
+size_app=tmp;
+size_app<<=16;
+if(EE_ReadVariable(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
+  return 0;
+size_app|=tmp;
+if(EE_ReadVariable(ADDR_KS_APP, &rd_ks)!=0)
+  return 0;
+for(ii=0;ii< size_app;ii+=2)
+/// for(ii=0;ii< size_app/2;ii++)
+ {
+   tmp= *(uint16_t*)(APP_BASE_ADDRESS+ii); 
+///   tmp= t_buff[ii]; 
+   tmp_ks+= tmp; 
+  }
+if(tmp_ks!=rd_ks)
+  return 0;
+return 1;
+}
+
 #endif
 ////=================================================
 static uint32_t GetSector(uint32_t Address)

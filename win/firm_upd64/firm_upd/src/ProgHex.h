@@ -20,9 +20,9 @@
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK   0x0
 #define VAL_EEPROM_WORK         0xAA55
-#define ADDR_KS_APP             0x2
-#define ADDR_EEPROM_SIZEL_APP   0x4
-#define ADDR_EEPROM_SIZEH_APP   0x6
+#define ADDR_KS_APP             0x1
+#define ADDR_EEPROM_SIZEL_APP   0x2
+#define ADDR_EEPROM_SIZEH_APP   0x3
 
 ///==== Can cmd ====================
 ////#define GET_STAT     0x2
@@ -57,13 +57,16 @@ public:
 
 private:
     quint8 getHexLineType(QString line);
-	quint8 parseHexLine(QString line);
+	quint8 progHexLine(QString line);
 	quint8 hex2bin(QString line );
 	quint8 progFlashLine();
 	quint8 progFlashChunc(quint8 *dat, quint8 len);
     quint8 setProgAddr(quint32 addres);
 	quint8 erraseAddr(quint32 addres);
 	quint8 checkErraseAddr(quint32 addres);
+	quint8 verifyHexLine(QString line);
+	quint8 verifyFlashLine();
+	quint8 verifyFlashChunc(quint8* dat, quint8 len);
 
 	quint8 getDevStat(quint8 &stat);
 	quint8 SendResCanCmd(can_cmd_t *idat,can_cmd_t *odat=nullptr);
@@ -92,6 +95,8 @@ public slots:
 	void sl_rd_eeprom(dat_req_t* data);
 	void sl_wr_eeprom(dat_req_t* data);
 	void sl_progr_eeprom(void);
+	void sl_rd_flash(dat_req_t* data);
+	void sl_verif(QFile*);
 
 public:
 ///	bool progr(QFile *pFile);
@@ -101,7 +106,7 @@ public:
 ///	void wr_eeprom(dat_req_t* data );
 	bool wr_eeprom(quint16 addr, quint16 data );
 
-	void rd_flash(dat_req_t* data );
+///	void rd_flash(dat_req_t* data );
 	void clr_ks(void)
 		{
 		cur_ks=0;

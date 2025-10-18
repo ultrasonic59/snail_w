@@ -1,9 +1,9 @@
 #include "firm_upd.h"
 #include <QtWidgets/QApplication>
-#include <QtPlugin>
-#include <QTranslator>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-Q_IMPORT_PLUGIN(QICOPlugin)
+////#include <QtPlugin>
+///#include <QTranslator>
+///Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+///Q_IMPORT_PLUGIN(QICOPlugin)
 ////Q_IMPORT_PLUGIN(DSServicePlugin)
 
 

@@ -77,6 +77,7 @@ public slots:
 	void progr_flash();
 	void set_pb_val(quint32 val);
 	void setBootMode();
+	void ver_flash();
 
 ///	void sl_set_curr_state(quint8);
 
@@ -97,6 +98,8 @@ signals:
 	void s_req_curr_state();
 	void s_rd_eeprom(dat_req_t*);
 	void s_wr_eeprom(dat_req_t*);
+	void s_rd_flash(dat_req_t*);
+	void s_verif(QFile*);
 
 private slots:
 	void on_butt_debug();

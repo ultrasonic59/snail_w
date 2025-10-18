@@ -67,6 +67,7 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
     connect(ui->pushButton_prog, SIGNAL(clicked()), this, SLOT(progr_flash()));
 	connect(ui->pushButt_debug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
 	connect(ui->butt_set_boot, SIGNAL(clicked()), this, SLOT(setBootMode()));
+	connect(ui->pushButton_ver, SIGNAL(clicked()), this, SLOT(ver_flash()));
 
 	connect(&dial_dbg, SIGNAL(req_rd_eeprom(dat_req_t*)), this, SLOT(slot_rd_eeprom_dat(dat_req_t*)));
 	connect(&dial_dbg, SIGNAL(req_wr_eeprom(dat_req_t*)), this, SLOT(slot_wr_eeprom_dat(dat_req_t*)));
@@ -92,6 +93,8 @@ Cfirm_upd::Cfirm_upd(QWidget *parent) :
 	connect(this, SIGNAL(s_req_curr_state()), m_pProgHex, SLOT(sl_req_curr_state()));
 	connect(this, SIGNAL(s_rd_eeprom(dat_req_t*)), m_pProgHex, SLOT(sl_rd_eeprom(dat_req_t*)));
 	connect(this, SIGNAL(s_wr_eeprom(dat_req_t*)), m_pProgHex, SLOT(sl_wr_eeprom(dat_req_t*)));
+	connect(this, SIGNAL(s_rd_flash(dat_req_t*)), m_pProgHex, SLOT(sl_rd_flash(dat_req_t*)));
+	connect(this, SIGNAL(s_verif(QFile*)), m_pProgHex, SLOT(sl_verif(QFile*)));
 
 ////	connect(m_pProgHex, SIGNAL(s_set_curr_state(quint8)), this, SLOT(sl_set_curr_state(quint8)));
 
@@ -376,6 +379,44 @@ if(curr_dev_state== BOOTER_STATE_OK)
 else
    ui->statusBar->showMessage("Prog Error");
 }
+void Cfirm_upd::ver_flash()
+{
+	quint64 file_size;
+	qint32 prev_pb_val = -1;
+	////ui->progressBar->show();
+	curFile->setFileName(CurFilePath);
+	if (!curFile->open(QFile::ReadOnly))
+	{
+		ui->statusBar->showMessage("Aborted: unable to open file for reading.");
+		return;
+	}
+	ui->statusBar->showMessage("Verifing... ");
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+	file_size = curFile->size();
+	ui->progressBar->setMinimum(0);
+	ui->progressBar->setMaximum(file_size);
+	ui->progressBar->show();
+	data_ok = false;
+	emit s_verif(curFile);
+	while (!data_ok)
+	{
+		if (prev_pb_val != cur_pb_val)
+		{
+			prev_pb_val = cur_pb_val;
+			set_pb_val(cur_pb_val);
+		}
+	}
+
+	curFile->close();
+
+	QApplication::restoreOverrideCursor();
+	ui->progressBar->hide();
+	if (curr_dev_state == BOOTER_STATE_OK)
+		ui->statusBar->showMessage("Prog OK");
+	else
+		ui->statusBar->showMessage("Prog Error");
+}
+
 ///=========================================================================
 void  Cfirm_upd::on_butt_debug()
 {
@@ -406,8 +447,7 @@ void Cfirm_upd::slot_rd_flash_dat(dat_req_t* odat)
 {
 if(!is_connected())
 	return;
-///odat->data[0]=0x4567;
-////???m_pProg_hex->rd_flash(odat);
-dial_dbg.req_data_rdy(odat);	
+emit s_rd_flash(odat);
+dial_dbg.req_data_rdy(odat);
 		return;
 }

@@ -241,7 +241,7 @@ if(t_rd_eeprom_ans->num_dates==2)
 
 void wr_eeprom_dat(wr_eeprom_req_t *t_wr_eeprom_req)
 {
-  printk("\n\r wr dat0[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
+  printk("\n\r wr_dat[%x:%x] ===",t_wr_eeprom_req->addr,t_wr_eeprom_req->data[0]); 
 
 if(t_wr_eeprom_req->num_dates==0)
   return;
@@ -312,7 +312,7 @@ switch(data[0]) {
       wr_eeprom_req_t t_wr_eeprom_req;
       t_wr_eeprom_req.num_dates=data[1];
      t_wr_eeprom_req.addr=data[2];
-    memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
+     memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
      wr_eeprom_dat(&t_wr_eeprom_req);
      put_can_wr_eeprom_ans(&t_wr_eeprom_req);
  ////    printk("WR_EEPROM_REQ ");
