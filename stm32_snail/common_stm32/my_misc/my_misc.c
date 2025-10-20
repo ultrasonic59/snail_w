@@ -278,4 +278,24 @@ else
 
 }
 
+uint8_t rd_nflash(prg_flash_cmd_t *data)
+{
+uint8_t ii;   
+uint16_t tdata;
+uint8_t num_words;
+prg_flash_cmd_t *p_prg_flash_cmd=(prg_flash_cmd_t *)data;
+num_words=p_prg_flash_cmd->num_bytes/2;
+
+if((num_words>MAX_NUM_WORDS_PRG)||(num_words==0))
+  return ERROR_NUM_BYTES_PRG;
+
+for(ii=0;ii<num_words;ii++)
+  {
+  tdata= *(uint16_t*)curr_addr_prg;  
+  p_prg_flash_cmd->data[ii]=tdata;
+  curr_addr_prg+=2;
+  }
+return 0;  
+
+}
 

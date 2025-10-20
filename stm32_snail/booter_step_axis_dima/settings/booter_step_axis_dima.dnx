@@ -37,17 +37,17 @@
     <StLinkDriver>
         <stlinkserialNo>48FF72065067545623571287</stlinkserialNo>
         <stlinkfoundProbes />
-        <stlinkResetStyle>0</stlinkResetStyle>
-        <stlinkResetStrategy>0</stlinkResetStrategy>
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <CStepIntDis>_ 0</CStepIntDis>
+        <stlinkResetStyle>0</stlinkResetStyle>
+        <stlinkResetStrategy>0</stlinkResetStrategy>
     </StLinkDriver>
     <ArmDriver>
-        <EnableCache>0</EnableCache>
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
+        <EnableCache>0</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>2652566882</Checksum>
+        <Checksum>1687240467</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -155,7 +155,7 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\common_stm32\my_misc\my_misc.c}.173.1" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp0>_ 0 "EMUL_DATA" "PRG_DAT_OK" 0 0 0 0 4294967295</Bp0>
         <Count>1</Count>
     </Breakpoints2>
     <Aliases>

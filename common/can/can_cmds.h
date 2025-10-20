@@ -84,6 +84,8 @@
 #define MOTOR_REJ             0x2
 
 ///===== booter cmd =============
+#define RD_NFLASH_REQ         0xF1
+#define RD_NFLASH_ANS         0xF2
 #define CHECK_ERASE_SECTORS   0xF3
 #define SET_ADDR_PRG          0xF4
 #define GO_TO_BOOTER          0xF5
@@ -192,6 +194,7 @@ uint8_t addr;
 typedef struct rd_flash_req_s{
 uint32_t addr;
 }rd_flash_req_t;
+
 typedef struct rd_flash_ans_s{
 uint32_t addr;
 uint16_t data;
@@ -206,6 +209,12 @@ typedef struct  prg_flash_cmd_s_{
   uint8_t    num_bytes;                   ///bytes  
   uint16_t    data[MAX_NUM_WORDS_PRG];                    /// 
 }prg_flash_cmd_t;
+
+typedef struct  rd_flash_cmd_s_{
+  uint8_t    cmd;                         /// 
+  uint8_t    num_bytes;                   ///bytes  
+  uint8_t    data[MAX_NUM_WORDS_PRG*2];                    /// 
+}rd_flash_cmd_t;
 
 typedef struct  set_flash_addr_s_{
   uint8_t    cmd;                      /// 

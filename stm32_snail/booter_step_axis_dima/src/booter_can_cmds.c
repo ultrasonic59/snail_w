@@ -202,6 +202,21 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_rd_nflash_ans(prg_flash_cmd_t *t_rd_flash_ans)
+{
+can_msg_t  send_msg;
+can_cmd_t t_can_cmd;
+t_can_cmd.data[0]= t_rd_flash_ans->cmd;
+t_can_cmd.data[1]=t_rd_flash_ans->num_bytes ;
+memcpy(&t_can_cmd.data[2],&t_rd_flash_ans->data,t_rd_flash_ans->num_bytes);
+send_msg.len= t_rd_flash_ans->num_bytes+2;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,t_can_cmd.data,5+sizeof(uint16_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+return 0;
+}
 
 
 void rd_flash_dat(rd_flash_ans_t *t_rd_flash_ans)
@@ -325,6 +340,17 @@ switch(data[0]) {
      rd_flash_dat(&t_rd_flash_ans);
      put_can_rd_flash_ans(&t_rd_flash_ans);
 ////     printk("RD_EEPROM_REQ ");
+     }
+    break;
+    case RD_NFLASH_REQ:
+     {
+     prg_flash_cmd_t *t_ans=(prg_flash_cmd_t *)data;
+     tmp= rd_nflash(t_ans);
+     t_ans->cmd= RD_NFLASH_ANS;
+   ///  memcpy(&t_ans.data,data,t_ans.num_bytes);
+     put_can_rd_nflash_ans(t_ans);
+       
+     printk("RD_NFLASH_REQ ");
      }
     break;
        

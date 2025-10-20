@@ -253,10 +253,11 @@ quint8 CprogHex::progFlashChunc(quint8 *data, quint8 len)
 quint16 thdata;
 quint16 *hdata=(quint16 *)data;
 can_cmd_t t_can_cmd;
-t_can_cmd.num_bytes=len+2;
-t_can_cmd.id=can_id;
 if(len>MAX_PROG_CHUNC_BYTES)
 	len=MAX_PROG_CHUNC_BYTES;
+t_can_cmd.num_bytes = len + 2;
+t_can_cmd.id = can_id;
+
 t_can_cmd.data[OFFS_CAN_CMD]=PRG_DAT;///PROG_CHUNC;
 t_can_cmd.data[OFFS_CAN_NUM_BYTES]=len;
 memcpy(t_can_cmd.data+OFFS_CAN_DATA,data,len);
@@ -265,6 +266,7 @@ for(quint8 ii=0;ii<len/2;ii++)
 	thdata= hdata[ii];
 	cur_ks+= thdata;
 	}
+#if 0
 if (len < MAX_PROG_CHUNC_BYTES)
 {
 	for (quint8 ii = 0; ii < len / 2; ii++)
@@ -273,30 +275,44 @@ if (len < MAX_PROG_CHUNC_BYTES)
 		qDebug() << "ii " << ii << "data" << QString::number(thdata, 16);
 		cur_ks += thdata;
 	}
+
 }
+#endif
 size_app+=len;
 return SendResCanCmd(&t_can_cmd);
 }
 quint8 CprogHex::verifyFlashChunc(quint8* data, quint8 len)
 {
-	////quint8 ii;
+	quint8 rez = 0;
 	quint16 thdata;
-	quint16* hdata = (quint16*)data;
-	can_cmd_t t_can_cmd;
-	t_can_cmd.num_bytes = len + 2;
-	t_can_cmd.id = can_id;
+///	quint16* hdata = (quint16*)data;
+	quint8 tdat = 0;
+	can_cmd_t r_cmd;
+
+	can_cmd_t s_cmd;
 	if (len > MAX_PROG_CHUNC_BYTES)
 		len = MAX_PROG_CHUNC_BYTES;
-	-----t_can_cmd.data[OFFS_CAN_CMD] = PRG_DAT;///PROG_CHUNC;
-	-----t_can_cmd.data[OFFS_CAN_NUM_BYTES] = len;
-	-----memcpy(t_can_cmd.data + OFFS_CAN_DATA, data, len);
-	for (quint8 ii = 0; ii < len / 2; ii++)
+	s_cmd.num_bytes = len + 2;
+	s_cmd.id = can_id;
+	s_cmd.data[OFFS_CAN_CMD] = RD_NFLASH_REQ;///
+	s_cmd.data[OFFS_CAN_NUM_BYTES] = len;
+	tdat = SendResCanCmd(&s_cmd, &r_cmd);
+	if ((tdat) && (r_cmd.data[0] == RD_FLASH_ANS))
 	{
-		thdata = hdata[ii];
-		cur_ks += thdata;
+		for (quint8 ii = 0; ii < len ; ii++)
+		{
+			cur_ks += r_cmd.data[ii + 2];
+			if (r_cmd.data[ii + 2] != data[ii])
+			{
+			qDebug() << "Eror  "<<ii<<"data="<< data[ii]<<"rdata="<< r_cmd.data[ii + 2];
+			rez = ii + 1;
+			break;
+			}
+		}
 	}
-	size_app += len;
-	return SendResCanCmd(&t_can_cmd);
+	else
+		rez = 0xff;
+	return rez;
 }
 
 quint8 CprogHex::setProgAddr(quint32 addres)
@@ -370,23 +386,26 @@ return HEX_OK;
 }
 quint8 CprogHex::verifyFlashLine()
 {
+	quint8 t_rez = HEX_OK;
 	quint8 offs_dat = 0;
 	quint8 num_bytes = cur_bin_data.len_data;
 	///qDebug() << "len_data " << cur_bin_data.len_data<<"data"<< cur_bin_data.bytes + cur_bin_data.len_data-1;
 
 	while (num_bytes > 0) {
 		if (num_bytes > MAX_PROG_CHUNC_BYTES) {
-			verifyFlashChunc(cur_bin_data.bytes + offs_dat, MAX_PROG_CHUNC_BYTES);
+			t_rez = verifyFlashChunc(cur_bin_data.bytes + offs_dat, MAX_PROG_CHUNC_BYTES);
 			num_bytes -= MAX_PROG_CHUNC_BYTES;
 			offs_dat += MAX_PROG_CHUNC_BYTES;
 		}
 		else {
-			verifyFlashChunc(cur_bin_data.bytes + offs_dat, num_bytes);
+			t_rez = verifyFlashChunc(cur_bin_data.bytes + offs_dat, num_bytes);
 			num_bytes = 0;
 		}
+		if (t_rez != 0)
+			break;
 	}
 
-return HEX_OK;
+return t_rez;
 }
 
 quint8 CprogHex::progHexLine(QString line)
@@ -606,6 +625,7 @@ if ((t_rez != HEX_OK) && (t_rez != END_OF_FILE))
 	*p_data_ok = true;
 	return;//// false;
 }
+#if 0
 else
 	{
 	if (prg_eeprom())
@@ -618,6 +638,7 @@ else
 	*p_data_ok = true;
 	return;/// 
 	}
+#endif
 }
 #define MIN_DATA_LEN 3
 
@@ -724,6 +745,4 @@ if((tdat)&&(r_cmd.data[0]==RD_FLASH_ANS))
 	}
 else
 	data->nbytes=0;
-
-
 }
