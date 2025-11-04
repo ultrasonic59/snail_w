@@ -14,6 +14,7 @@ namespace Ui {
 #define HID_REJ		0
 #define CAN_REJ	    1
 #define SPI_REJ		2
+#define EEPROM_REJ	3
 
 #define AXI_X       0
 #define AXI_Y       1

@@ -748,11 +748,17 @@ void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
         t_spi_mot_cmd.len_dat = 2;
         emit s_mot_spi(axi,t_spi_mot_cmd);
          
-     ///   emit put_str_dial((char*)"SPI_REJ _rd_dbg");
-
-     ///   rd_hid_dbg(odat);
         break;
-
+    case EEPROM_REJ:
+    {
+        qDebug() << "EEPROM_REJ _rd_dbg";
+        spi_mot_cmd_t t_spi_mot_cmd;
+        t_spi_mot_cmd.addr = odat->addr;
+        t_spi_mot_cmd.cmd = RD_EEPROM_REQ;
+        t_spi_mot_cmd.len_dat = 2;
+        ///       emit s_rd_eeprom(axi, t_spi_mot_cmd);
+    }
+        break;
     }
 }
 void win_snail::rd_hid_dbg(dbg_dat_req_t* odat)
@@ -905,6 +911,18 @@ void win_snail::slot_wr_dbg(int axi, int num, dbg_dat_req_t* idat)
         t_spi_mot_cmd.w_val  = idat->data[0];
         emit s_mot_spi(axi,t_spi_mot_cmd);
 
+        ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
+        break;
+    case EEPROM_REJ:
+    {
+        qDebug() << "EEPROM_REJ _wr_dbg";
+        spi_mot_cmd_t t_spi_mot_cmd;
+        t_spi_mot_cmd.addr = idat->addr;
+        t_spi_mot_cmd.cmd = WR_SPI_MOT;
+        t_spi_mot_cmd.len_dat = 2;
+        t_spi_mot_cmd.w_val = idat->data[0];
+        ///emit s_mot_spi(axi, t_spi_mot_cmd);
+    }
         ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
         break;
 

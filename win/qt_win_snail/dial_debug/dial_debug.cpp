@@ -9,6 +9,7 @@ DialDebug::DialDebug(QWidget *parent):
 	ui.comboBox_rej->addItem("HID",HID_REJ);
  	ui.comboBox_rej->addItem("CAN",CAN_REJ);
 	ui.comboBox_rej->addItem("SPI_MOT",SPI_REJ);
+    ui.comboBox_rej->addItem("EEPROM", EEPROM_REJ);
 
     ui.comboBox_axis->addItem("X", AXI_X);
     ui.comboBox_axis->addItem("Y", AXI_Y);
