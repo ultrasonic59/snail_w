@@ -194,6 +194,7 @@ uint16_t tmp;
 tmp=(addr&0x7)<<12;
 tmp|= idata&0xfff;
 mot_spi_transfer(tmp);
+printk("\n\r mot_spi_wr[%x:%x]",addr,idata);
 }
 void mot_spi_wrp(uint8_t addr,uint16_t *pdata)
 {
@@ -227,16 +228,16 @@ void init_step_mot(void)
 // CTRL Register
 
 G_CTRL_REG.DTIME 	= 0;///0x03;
-G_CTRL_REG.ISGAIN 	= 0;///0x03;
+G_CTRL_REG.ISGAIN 	=0x3;/// 0;///0x03;
 G_CTRL_REG.EXSTALL 	= 0x00;
-G_CTRL_REG.MODE 	= 0;///0x03;
+G_CTRL_REG.MODE 	= 0x8;///0x03;
 G_CTRL_REG.RSTEP 	= 0x00;
 G_CTRL_REG.RDIR 	= 0x00;
 G_CTRL_REG.ENBL 	= 0x01;
 
 // TORQUE Register
 G_TORQUE_REG.SIMPLTH = 0x00;
-G_TORQUE_REG.TORQUE  = 0xBA;
+G_TORQUE_REG.TORQUE  = 0x8;///0xBA;
 
 // OFF Register
 G_OFF_REG.PWMMODE 	= 0x00;
@@ -509,9 +510,9 @@ TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 ///=============================================
 void motor_init(void)
 {
+uint16_t tmp;
 mot_step_tim_init();
 mot_spi_init();
-uint16_t tmp;
 
 set_sleep_mot(1);
 ////set_ena_mot(1);
@@ -537,8 +538,13 @@ else
 int wr_spi_mot(spi_mot_cmd_t *i_cmd)
 {
 mot_spi_wr(i_cmd->addr&0x7, i_cmd->w_val&0xffff);
-if(i_cmd->len_dat==4)
+///printk("\n\r wr_spi_mot[%x:%x:%x]",i_cmd->addr,i_cmd->len_dat,odat);
+
+if(i_cmd->len_dat==4){
   mot_spi_wr((i_cmd->addr+1)&0x7, (i_cmd->w_val>>16)&0xffff);
+///  printk("\n\r wr_spi_mot[%x:%x:%x]",i_cmd->addr+1,i_cmd->len_dat,odat);
+
+}
 return 0;  
 }
 

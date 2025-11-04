@@ -1,0 +1,23 @@
+
+CTRL Register (Address = 0x00)
+.6-.3
+0000: Full-step, 71% current
+0001: Half step
+0010: 1/4 step
+0011: 1/8 step
+0100: 1/16 step
+0101: 1/32 step
+0110: 1/64 step
+0111: 1/128 step
+1000: 1/256 step
+1001 – 1111: Reserved
+.9- .8  ISGAIN
+ISENSE amplifier gain set
+00: Gain of 5
+01: Gain of 10
+10: Gain of 20
+11: Gain of 40
+
+TORQUE Register (Address = 0x01)
+7-0 TORQUE
+Sets full-scale output current for both H-bridges

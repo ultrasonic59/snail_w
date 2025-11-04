@@ -118,9 +118,26 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
             break;
     };
 }
-void Cmotor_wrk::sl_mot_spi(spi_mot_cmd_t cmd) {
+void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
     can_message_t t_can_message;
-    t_can_message.id = X_AXIS_CAN_ID;
+    switch (axi) {
+    case AXI_X:
+        t_can_message.id = X_AXIS_CAN_ID;
+        break;
+    case AXI_Y:
+        t_can_message.id = Y_AXIS_CAN_ID;
+        break;
+     case AXI_Z:
+        t_can_message.id = Z_AXIS_CAN_ID;
+        break;
+   case AXI_DOZA:
+        t_can_message.id = DOZA_CAN_ID;
+         break;
+   default:
+       return;
+       break;
+
+}
     if(cmd.len_dat==1)
       t_can_message.dlc = cmd.len_dat+2;
     else

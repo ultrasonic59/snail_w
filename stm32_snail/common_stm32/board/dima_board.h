@@ -305,7 +305,7 @@
 #define ADDR_MOT_DRIVE  6
 #define ADDR_MOT_STATUS 7
 
-#define DEF_MOT_REJ   2
+#define DEF_MOT_REJ   8
 ////======================================
 // CTRL Register
 typedef struct CTRL_Register

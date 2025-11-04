@@ -17,16 +17,8 @@ win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::win_snail())
     , cnf_flags(0)
-   /// , p_curGroup(nullptr)
-   /// ,xminusPushed(false)
-   /// ,xminusLongPush(false)
-  ///  ,yminusPushed(false)
-   /// ,yminusLongPush(false)
-   /// ,zminusPushed(false)
-  ///  ,zminusLongPush(false)
     , m_can_isConnected(false)
-  ///  , prev_states({0xff, 0xff, 0xff })
-    , on_esc_key(false)
+     , on_esc_key(false)
     , data_ready(false)
 
   {
@@ -146,7 +138,8 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
    connect(p_CamView, SIGNAL(sClrPoint(QPoint*)), p_cam_plotter, SLOT(slClrPoint(QPoint*)));
 
 
-   connect(p_CamView, SIGNAL(sel_rect_changet(QRect)), p_cam_plotter, SLOT(sl_set_sel_rect(QRect)), Qt::QueuedConnection);
+ ///  connect(p_CamView, SIGNAL(sel_rect_changet(QRect)), p_cam_plotter, SLOT(sl_set_sel_rect(QRect)), Qt::QueuedConnection);
+   connect(p_CamView, SIGNAL(sel_rect_changet(QRect)), p_cam_plotter, SLOT(sl_set_sel_rect(QRect)));
    connect(p_cam_plotter, SIGNAL(s_show_rule_coord(QRect&)), this, SLOT(sl_show_rule_coord(QRect&)));
 
  connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
@@ -190,7 +183,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  ///
  /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
   
- connect(this, SIGNAL(s_mot_spi(spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(spi_mot_cmd_t)));
+ connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
 
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
 
@@ -739,7 +732,7 @@ else
         delete port_dialog;
     }
 }
-void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
+void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
     switch (num)
@@ -753,7 +746,7 @@ void win_snail::slot_rd_dbg(int num, dbg_dat_req_t* odat)
         t_spi_mot_cmd.addr = odat->addr;
         t_spi_mot_cmd.cmd = RD_SPI_MOT_REQ;
         t_spi_mot_cmd.len_dat = 2;
-        emit s_mot_spi(t_spi_mot_cmd);
+        emit s_mot_spi(axi,t_spi_mot_cmd);
          
      ///   emit put_str_dial((char*)"SPI_REJ _rd_dbg");
 
@@ -870,7 +863,7 @@ bool win_snail::put_hid_cmd(hid_cmd_t* cmd)
 
 }
 
-void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
+void win_snail::slot_wr_dbg(int axi, int num, dbg_dat_req_t* idat)
 {
     qDebug() << "slot_wr_dbg";
     switch (num)
@@ -910,7 +903,7 @@ void win_snail::slot_wr_dbg(int num, dbg_dat_req_t* idat)
         t_spi_mot_cmd.cmd = WR_SPI_MOT;
         t_spi_mot_cmd.len_dat = 2;
         t_spi_mot_cmd.w_val  = idat->data[0];
-        emit s_mot_spi(t_spi_mot_cmd);
+        emit s_mot_spi(axi,t_spi_mot_cmd);
 
         ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
         break;

@@ -3,6 +3,7 @@
 #include <QThread>
 #include "can_message.h"
 #include "cmd_sender.h"
+#include "dial_debug.h"
 
 class Cmotor_wrk : public QObject
 {
@@ -39,7 +40,7 @@ public slots:
     void sl_go_home();
 
     void sl_mot_go(mot_cmd_t mot_cmd);
-    void sl_mot_spi(spi_mot_cmd_t);
+    void sl_mot_spi(int axi,spi_mot_cmd_t);
     void sl_clr_x();
     void sl_clr_y();
     void sl_clr_z();

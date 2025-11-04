@@ -8,9 +8,15 @@ DialDebug::DialDebug(QWidget *parent):
 	ui.setupUi(this);
 	ui.comboBox_rej->addItem("HID",HID_REJ);
  	ui.comboBox_rej->addItem("CAN",CAN_REJ);
-	ui.comboBox_rej->addItem("SPI",SPI_REJ);
-    connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
-    connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
+	ui.comboBox_rej->addItem("SPI_MOT",SPI_REJ);
+
+    ui.comboBox_axis->addItem("X", AXI_X);
+    ui.comboBox_axis->addItem("Y", AXI_Y);
+    ui.comboBox_axis->addItem("Z", AXI_Z);
+    ui.comboBox_axis->addItem("DOZA", AXI_DOZA);
+
+    connect(this, SIGNAL(req_rd_dbg(int,int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int,int, dbg_dat_req_t*)));
+    connect(this, SIGNAL(req_wr_dbg(int,int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int,int, dbg_dat_req_t*)));
 
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
     connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
@@ -38,7 +44,9 @@ void  DialDebug::slot_butt_rd()
 	dbg_dat_req.addr=ui.lineEdit_addr->text().toInt(0,16);
 	dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
 	int num_rej=ui.comboBox_rej->currentIndex();
-	emit req_rd_dbg(num_rej,&dbg_dat_req);
+    int num_axi = ui.comboBox_axis->currentIndex();
+
+	emit req_rd_dbg(num_axi,num_rej,&dbg_dat_req);
 }
 void  DialDebug::slot_butt_wr()
 {
@@ -50,7 +58,8 @@ void  DialDebug::slot_butt_wr()
     else if (ui.comboBox_rej->currentIndex() == SPI_REJ)
         dbg_dat_req.nbytes = ui.lineEdit_count->text().toInt(0, 16)*2;
 	int num_rej=ui.comboBox_rej->currentIndex();
-	emit req_wr_dbg(num_rej,&dbg_dat_req);
+    int num_axi = ui.comboBox_axis->currentIndex();
+    emit req_wr_dbg(num_axi, num_rej,&dbg_dat_req);
 }
 void  DialDebug::slot_send_can_msg()
 {

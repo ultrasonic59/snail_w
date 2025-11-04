@@ -164,8 +164,8 @@ public slots:
     void on_value_led0_changed(int value);
     void on_value_led1_changed(int value);
     void on_butt_debug();
-    void slot_rd_dbg(int num, dbg_dat_req_t* odat);
-    void slot_wr_dbg(int num, dbg_dat_req_t* idat);
+    void slot_rd_dbg(int axi,int num, dbg_dat_req_t* odat);
+    void slot_wr_dbg(int axi,int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
     void on_butt_test();
     void on_butt_test1();
@@ -245,7 +245,7 @@ signals:
 
     void s_mot_go(mot_cmd_t);
     void s_set_mot_rej(quint32, quint8);
-    void s_mot_spi(spi_mot_cmd_t);
+    void s_mot_spi(int axi,spi_mot_cmd_t);
 private:
  ///   QGraphicsItem* currentItem;
     PaintScene* scene;

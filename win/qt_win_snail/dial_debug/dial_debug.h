@@ -15,6 +15,12 @@ namespace Ui {
 #define CAN_REJ	    1
 #define SPI_REJ		2
 
+#define AXI_X       0
+#define AXI_Y       1
+#define AXI_Z       2
+#define AXI_DOZA    3
+
+
 class DialDebug : public QDialog
 {
 Q_OBJECT
@@ -28,8 +34,8 @@ public:
 	virtual ~DialDebug();
 	QWidget* pParent;
 signals:
-	void req_wr_dbg(int num,dbg_dat_req_t*);
-	void req_rd_dbg(int num,dbg_dat_req_t*);
+	void req_wr_dbg(int,int num,dbg_dat_req_t*);
+	void req_rd_dbg(int,int num,dbg_dat_req_t*);
 	void SignalTest();
 	void req_send_can_dbg(can_message_t*);
 
