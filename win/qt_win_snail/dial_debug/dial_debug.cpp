@@ -46,8 +46,10 @@ void  DialDebug::slot_butt_rd()
 	dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
 	int num_rej=ui.comboBox_rej->currentIndex();
     int num_axi = ui.comboBox_axis->currentIndex();
-
-	emit req_rd_dbg(num_axi,num_rej,&dbg_dat_req);
+  ///  if (ui.comboBox_rej->currentIndex() == EEPROM_REJ)
+  ///      emit req_rd_eeprom(&dat_req);
+  ///  else
+	    emit req_rd_dbg(num_axi,num_rej,&dbg_dat_req);
 }
 void  DialDebug::slot_butt_wr()
 {
