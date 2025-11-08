@@ -16,6 +16,9 @@
 #define RD_FLASH_ANS          0xD
 
 ///===== booter cmd =============
+#define RD_NFLASH_REQ         0xF1
+#define RD_NFLASH_ANS         0xF2
+
 #define CHECK_ERASE_SECTORS   0xF3
 #define SET_ADDR_PRG          0xF4
 #define GO_TO_BOOTER          0xF5
@@ -31,15 +34,26 @@
 #define BOOTER_STATE_ERASE    0xF1
 #define BOOTER_STATE_PROG     0xF2
 #define BOOTER_STATE_MASK     0xF0
-////#define BOOTER_NO_BOOT        0xF3
+#define BOOTER_STATE_ERROR    0xF3
+#define BOOTER_STATE_OK       0xF4
 
-#define AXIS_X           (0x1<<0)
-#define AXIS_Y           (0x1<<1)
-#define AXIS_Z           (0x1<<2)
+#define XX          0
+#define YY          1
+#define ZZ          2
+#define NOT_AXIS          10
+
+#define AXIS_X           (0x1<<XX)
+#define AXIS_Y           (0x1<<YY)
+#define AXIS_Z           (0x1<<ZZ)
+#define DOZA_ID          (0x1<<3)
 
 #define ID_BRD_X (AXIS_X<<5)
 #define ID_BRD_Y (AXIS_Y<<5)
 #define ID_BRD_Z (AXIS_Z<<5)
+
+#define MAX_WAIT_ANS 100
+#define MSLEEP_TIME 10
+
 
 typedef struct  put_boot_stat_cmd_s_{
   quint8  cmd;                         /// 
@@ -64,6 +78,15 @@ quint8 num_dates;
 quint8 addr;
 quint16 data[EEPROM_MAX_NUM_DATES ];
 }rd_eeprom_ans_t;
+
+#pragma pack (push,1)
+typedef struct eeprom_ans_s {
+	quint8 cmd;
+	quint8 num_dates;
+	quint8 addr;
+	quint16 data[EEPROM_MAX_NUM_DATES];
+}eeprom_ans_t;
+#pragma pack (pop)
 
 typedef struct wr_eeprom_req_s{
 quint8 num_dates;

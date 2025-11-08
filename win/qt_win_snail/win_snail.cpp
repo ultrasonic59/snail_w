@@ -52,7 +52,9 @@ win_snail::win_snail(QWidget *parent)
  ////   createThreads();
     setupActions();
     loadSettings();
-     /// ====================================
+    //======================================
+ //   ui->splitter->setSizes(splitter_sizes);
+    /// ====================================
  ////   qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
  ////   p_CamView = ui->CamWidget;
@@ -179,10 +181,9 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
  pMotorThread->start();
 
-  ////connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_wrk, SLOT(SlSendCmd(can_message_t *)));
- ///
- /// connect(p_motor_wrk, SIGNAL(s_mot_go(quint32,quint8, quint16, quint32);
-  
+ connect(this, SIGNAL(s_eeprom(int, eeprom_cmd_t)), this, SLOT(sl_eeprom(int, eeprom_cmd_t)));
+ connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+
  connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
 
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
@@ -193,28 +194,39 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  ///connect(this, SIGNAL(pressed()), this, SLOT(cl_go_x()));
 
- connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
-  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
-  connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
-  connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
-  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
-  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+ connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()), Qt::DirectConnection);
+  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()), Qt::DirectConnection);
 
+ // connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()), Qt::DirectConnection);
+ // connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()), Qt::DirectConnection);
+ //connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()),Qt::DirectConnection);
+ /// connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()), Qt::DirectConnection);
+  connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
+ connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
+ connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
+ connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+
+ 
  connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
 
   ///======================= upr motor ========================================
  connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(sl_stop()));
 
  ///connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
- connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xminus_rel()));
+ connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xminus_rel()), Qt::DirectConnection);
  ///connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
- connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xplus_rel()));
+ connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xplus_rel()), Qt::DirectConnection);
 
- connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yminus_rel()));
- connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yplus_rel()));
+ connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yminus_rel()), Qt::DirectConnection);
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yplus_rel()), Qt::DirectConnection);
+
+ ///connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()), Qt::DirectConnection);
+ ///connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()), Qt::DirectConnection);
 
  connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()));
  connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()));
+
+
  connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_x()));
  connect(ui->butt_clr_y, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_y()));
  connect(ui->butt_clr_z, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_z()));
@@ -222,7 +234,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_set_x, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
  connect(ui->butt_set_y, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
  connect(ui->butt_set_z, SIGNAL(pressed()), this, SLOT(sl_set_mot_rej()));
- connect(this, SIGNAL(s_set_mot_rej(quint32, quint8)), p_motor_wrk, SLOT(sl_set_rej(quint32, quint8)));
+ connect(this, SIGNAL(s_set_mot_rej(quint32, quint8, quint8)), p_motor_wrk, SLOT(sl_set_rej(quint32, quint8, quint8)));
 
  ////connect(ui->butt_go_x, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_x()));
  ///connect(ui->butt_go_y, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_go_y()));
@@ -747,16 +759,16 @@ void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
         t_spi_mot_cmd.cmd = RD_SPI_MOT_REQ;
         t_spi_mot_cmd.len_dat = 2;
         emit s_mot_spi(axi,t_spi_mot_cmd);
-         
+   
         break;
     case EEPROM_REJ:
     {
         qDebug() << "EEPROM_REJ _rd_dbg";
-        spi_mot_cmd_t t_spi_mot_cmd;
-        t_spi_mot_cmd.addr = odat->addr;
-        t_spi_mot_cmd.cmd = RD_EEPROM_REQ;
-        t_spi_mot_cmd.len_dat = 2;
-        ///       emit s_rd_eeprom(axi, t_spi_mot_cmd);
+        eeprom_cmd_t t_eeprom_cmd;
+        t_eeprom_cmd.addr = odat->addr;
+        t_eeprom_cmd.cmd = RD_EEPROM_REQ;
+        t_eeprom_cmd.num_dates = odat->nbytes;
+        emit s_eeprom(axi, t_eeprom_cmd);
     }
         break;
     }
@@ -911,20 +923,18 @@ void win_snail::slot_wr_dbg(int axi, int num, dbg_dat_req_t* idat)
         t_spi_mot_cmd.w_val  = idat->data[0];
         emit s_mot_spi(axi,t_spi_mot_cmd);
 
-        ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
-        break;
+         break;
     case EEPROM_REJ:
     {
         qDebug() << "EEPROM_REJ _wr_dbg";
-        spi_mot_cmd_t t_spi_mot_cmd;
-        t_spi_mot_cmd.addr = idat->addr;
-        t_spi_mot_cmd.cmd = WR_SPI_MOT;
-        t_spi_mot_cmd.len_dat = 2;
-        t_spi_mot_cmd.w_val = idat->data[0];
-        ///emit s_mot_spi(axi, t_spi_mot_cmd);
+        eeprom_cmd_t t_eeprom_cmd;
+        t_eeprom_cmd.addr = idat->addr;
+        t_eeprom_cmd.cmd = WR_EEPROM_REQ;
+        t_eeprom_cmd.num_dates = 1;
+        t_eeprom_cmd.data[0] = idat->data[0];
+        emit s_eeprom(axi, t_eeprom_cmd);
     }
-        ///       device_CMD.p_dev_thr->dev_cmd.dev_put_contr(idat);
-        break;
+         break;
 
     }
 }
@@ -988,6 +998,12 @@ void win_snail::saveSettings(void)
     settings.setValue("last_can_d5", params::dbg_last_can_dat[5]);
     settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
     settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
+    ///===========================geometr widg ==========================================
+    /*
+    QVariant t_variant;
+    t_variant.setValue<QList<int>>(ui->splitter->sizes());
+    settings.setValue("Splitter", t_variant);
+    */
     ///================== mot param =============================
     settings.setValue("len_step_x", mot_param.len_step[XX]);
     settings.setValue("mot_rej_x", mot_param.mot_rej[XX]);
@@ -1045,6 +1061,15 @@ void win_snail::loadSettings(void)
   params::dbg_last_can_dat[5] = settings.value("last_can_d5", 0).toInt();
   params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
   params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
+  ///===========================geometr widg ==========================================
+  /*
+  QList<int> default_splitter_size;
+  default_splitter_size << 200 << 200;
+  QVariant default_variant;
+  default_variant.setValue<QList<int>>(default_splitter_size);
+  splitter_sizes = settings.value("Splitter", default_variant).value<QList<int>>();
+  default_variant.clear();
+  */
   ///================== mot param =============================
   mot_param.len_step[XX] = settings.value("len_step_x", DEF_LEN_STEP_X).toInt();
   mot_param.mot_rej[XX] = settings.value("mot_rej_x", DEF_MOT_REJ_X).toInt();
@@ -1686,20 +1711,22 @@ void win_snail::sl_go_z()
  void win_snail::sl_set_mot_rej()
 {
     quint8 mot_rej = ui->combo_rej->currentText().toInt();
+    quint8 mot_trq = ui->le_trq->text().toInt();
+
     if (sender() == ui->butt_set_x)
        {
         qDebug() << "butt_set_x ";
-        emit s_set_mot_rej(X_AXIS_CAN_ID, mot_rej);
+        emit s_set_mot_rej(X_AXIS_CAN_ID, mot_rej,mot_trq);
     }
     else if (sender() == ui->butt_set_y)
     {
         qDebug() << "butt_set_y ";
-        emit s_set_mot_rej(Y_AXIS_CAN_ID, mot_rej);
+        emit s_set_mot_rej(Y_AXIS_CAN_ID, mot_rej, mot_trq);
     }
     else if (sender() == ui->butt_set_z)
     {
         qDebug() << "butt_set_z ";
-        emit s_set_mot_rej(Z_AXIS_CAN_ID, mot_rej);
+        emit s_set_mot_rej(Z_AXIS_CAN_ID, mot_rej, mot_trq);
     }
        ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
 
@@ -1798,7 +1825,7 @@ void win_snail::sl_zplus()
         num_step = MAX_NUM_STEP;
     mot_cmd_t t_mot_cmd;
     t_mot_cmd.id = Z_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_MINUS;
+    t_mot_cmd.dir = DIR_PLUS;
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
@@ -1819,7 +1846,7 @@ void win_snail::sl_zminus()
         num_step = MAX_NUM_STEP;
     mot_cmd_t t_mot_cmd;
     t_mot_cmd.id = Z_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_PLUS;
+    t_mot_cmd.dir = DIR_MINUS;
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
     emit s_mot_go(t_mot_cmd);
@@ -1835,4 +1862,42 @@ void win_snail::on_clr()
     scene->clear();
     scene->update();
     ////  ui.textEdit_rd_dat->clear();
+}
+void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
+    can_message_t t_can_message;
+    switch (axi) {
+    case AXI_X:
+        t_can_message.id = X_AXIS_CAN_ID;
+        break;
+    case AXI_Y:
+        t_can_message.id = Y_AXIS_CAN_ID;
+        break;
+    case AXI_Z:
+        t_can_message.id = Z_AXIS_CAN_ID;
+        break;
+    case AXI_DOZA:
+        t_can_message.id = DOZA_CAN_ID;
+        break;
+    default:
+        return;
+        break;
+    }
+    if(cmd.cmd== WR_EEPROM_REQ)
+       t_can_message.dlc = cmd.num_dates*2 + 3;
+    else
+       t_can_message.dlc = cmd.num_dates * 2 + 2;
+
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+    memcpy(t_can_message.data, &cmd, sizeof(eeprom_cmd_t));
+    data_ready = false;
+    emit s_SendCmd(&t_can_message);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
 }

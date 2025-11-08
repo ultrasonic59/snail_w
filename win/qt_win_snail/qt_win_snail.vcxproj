@@ -66,7 +66,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\common;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include;C:\QT\Qt5.15.0\5.15.0\msvc2019_static_x64\include\QtWidgets;C:\opencv\include;$(ProjectDir)\hidapi;$(ProjectDir)\dial_debug;$(ProjectDir)\utils;$(ProjectDir)\items;$(ProjectDir)\widgets;$(ProjectDir)\camera;$(ProjectDir)\can;$(ProjectDir)\plotters;$(ProjectDir)\dial_lib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPENCV_VIDEOCAPTURE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -163,6 +163,7 @@
     <QtMoc Include="dial_debug\dial_debug.h" />
     <QtMoc Include="can\cmd_sender.h" />
     <QtMoc Include="camera\cameradevice.h" />
+    <ClInclude Include="..\common\can_cmd.h" />
     <ClInclude Include="camera\DeviceEnumerator.h" />
     <ClInclude Include="can\can_message.h" />
     <QtMoc Include="csv\csv_dlg.h" />

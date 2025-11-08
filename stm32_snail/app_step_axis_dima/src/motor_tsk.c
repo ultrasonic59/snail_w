@@ -224,7 +224,7 @@ STATUS_Register_t 	G_STATUS_REG;
 
 void init_step_mot(void)
 {
-  
+uint16_t tmp; 
 // CTRL Register
 
 G_CTRL_REG.DTIME 	= 0;///0x03;
@@ -264,13 +264,47 @@ G_DRIVE_REG.TDRIVEP = 0x01;
 G_DRIVE_REG.TDRIVEN = 0x01;
 G_DRIVE_REG.OCPDEG 	= 0x01;
 
-mot_spi_wrp(ADDR_MOT_CTRL,(uint16_t*)&G_CTRL_REG);
-mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&G_TORQUE_REG);
-mot_spi_wrp(ADDR_MOT_OFF,(uint16_t*)&G_OFF_REG);
-mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&G_BLANK_REG);
-mot_spi_wrp(ADDR_MOT_DECAY,(uint16_t*)&G_DECAY_REG);
-mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&G_STALL_REG);
-mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&G_DRIVE_REG);
+if(EE_Rd(ADDR_EEPROM_MOT_CTRL,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_CTRL_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_CTRL,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_TORQUE,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_TORQUE_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_OFF,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_OFF_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_OFF,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_BLANK,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_BLANK_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&tmp);
+  
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_DECAY_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_DECAY,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_STALL_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&tmp);
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_DRIVE_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&tmp);
+
 mot_spi_wr(ADDR_MOT_STATUS,0);       
 
 }
@@ -287,6 +321,20 @@ mot_spi_wr(ADDR_MOT_CTRL,tmp);
 printk("\n\r set_mot_rej[%x]",rej);
 
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
+}
+
+void set_mot_trq(uint8_t trq)
+{
+uint16_t tmp;
+TORQUE_Register_t *t_trq_reg=(TORQUE_Register_t*)&tmp;
+tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+
+t_trq_reg->TORQUE=trq;
+mot_spi_wr(ADDR_MOT_TORQUE,tmp);
+
+tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+printk("\n\r set_mot_trq[%x]",tmp);
+
 }
 
 
@@ -510,7 +558,7 @@ TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 ///=============================================
 void motor_init(void)
 {
-uint16_t tmp;
+///uint16_t tmp;
 mot_step_tim_init();
 mot_spi_init();
 
@@ -522,6 +570,7 @@ set_reset_mot(0);
 uDelay(20000);
 init_step_mot();
 ena_mot(0) ;
+/*
 if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
   {
     if(tmp>MAX_MOT_REJ)
@@ -529,7 +578,8 @@ if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
    set_mot_rej(tmp);
   }
 else
-   set_mot_rej(DEF_MOT_REJ);
+*/
+ ///  set_mot_rej(DEF_MOT_REJ);
   
 }
 ///==============================================

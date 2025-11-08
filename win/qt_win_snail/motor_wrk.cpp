@@ -20,8 +20,6 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* 
 ///==============================================================
 
 #define MAX_WAIT_HOME 10000
-#define MAX_WAIT_ANS 100
-#define MSLEEP_TIME 10
 
 void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step)
 {
@@ -68,10 +66,10 @@ void Cmotor_wrk::send_cmd_stop(quint32 id)
             break;
     };
 }
-void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej) {
+void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej, quint8 trq) {
     can_message_t t_can_message;
     t_can_message.id = id;
-    t_can_message.dlc = 5;
+    t_can_message.dlc = 6;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     t_can_message.data[0] = SET_PARAM;
@@ -79,7 +77,7 @@ void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej) {
     t_can_message.data[2] = 0;
     t_can_message.data[3] = 1;
     t_can_message.data[4] = rej;
-    t_can_message.data[5] = 0;
+    t_can_message.data[5] = trq;
     t_can_message.data[6] = 0;
     t_can_message.data[7] = 0;
     data_ready = false;
@@ -187,10 +185,10 @@ void Cmotor_wrk::sl_go_home()
 #endif
 }
 ///=================================================
-void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej)
+void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
 {
     qDebug() << "sl_set_rej";
-   send_cmd_mot_rej(id, rej);
+   send_cmd_mot_rej(id, rej,trq);
    if(id== X_AXIS_CAN_ID)
       p_mot_param->mot_rej[XX] = rej;
    else if(id == Y_AXIS_CAN_ID)

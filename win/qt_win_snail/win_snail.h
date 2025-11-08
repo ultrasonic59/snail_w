@@ -69,6 +69,7 @@ private:
     struct hid_device_info* devs;
     struct hid_device_info* cur_dev;
 protected:
+    QList<int> splitter_sizes;
     bool put_hid_cmd(hid_cmd_t* cmd);
     void rd_hid_dbg(dbg_dat_req_t* odat);
 
@@ -236,7 +237,7 @@ protected slots:
 */
 signals:
     void updateCamView(QImage);
- ///   void s_SendCmd(can_message_t* msg);
+    void s_SendCmd(can_message_t* msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
@@ -244,8 +245,10 @@ signals:
     void put_msg_dial(can_message_t);
 
     void s_mot_go(mot_cmd_t);
-    void s_set_mot_rej(quint32, quint8);
+    void s_set_mot_rej(quint32, quint8, quint8);
     void s_mot_spi(int axi,spi_mot_cmd_t);
+    void s_eeprom(int axi, eeprom_cmd_t);
+
 private:
  ///   QGraphicsItem* currentItem;
     PaintScene* scene;
@@ -272,6 +275,7 @@ protected:
 protected slots:
     void on_clr();
     void sl_mouse_pos(QPointF pnt);
+    void sl_eeprom(int axi, eeprom_cmd_t cmd);
 
 
 };

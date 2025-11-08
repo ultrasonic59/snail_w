@@ -511,7 +511,18 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #define ADDR_KS_APP             0x1
 #define ADDR_EEPROM_SIZEL_APP  0x2
 #define ADDR_EEPROM_SIZEH_APP  0x3
-#define ADDR_EEPROM_MOT_REJ    0x4
+
+#define ADDR_EEPROM_MOT_CTRL   0x4
+#define ADDR_EEPROM_MOT_TORQUE 0x5
+#define ADDR_EEPROM_MOT_OFF    0x6
+#define ADDR_EEPROM_MOT_BLANK  0x7
+#define ADDR_EEPROM_MOT_DECAY  0x8
+#define ADDR_EEPROM_MOT_STALL  0x9
+#define ADDR_EEPROM_MOT_DRIVE  0xa
+
+///#define ADDR_EEPROM_MOT_REJ    0x4
+
+
 
 #define MAX_MOT_REJ    0x8
 
@@ -550,6 +561,8 @@ extern void  set_ena_mot(uint8_t idat);
 extern void  set_dir_mot(uint8_t idat);
 extern void  set_reset_mot(uint8_t idat);
 extern void set_mot_rej(uint8_t rej);
+extern void set_mot_trq(uint8_t trq);
+
 extern int send_char_dbg (int c) ;
 extern int get_byte_dbg(void) ;
 extern void can1_init(void);

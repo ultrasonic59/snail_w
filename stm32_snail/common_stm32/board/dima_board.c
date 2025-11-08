@@ -334,7 +334,7 @@ for(;;)
     prev_enc=resiv_enc.coord ;
     put_can_cmd_encoder(resiv_enc);
     ena_sleep=0;
-    printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
+ ///   printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
   }
   if(ena_sleep)
       msleep(50);

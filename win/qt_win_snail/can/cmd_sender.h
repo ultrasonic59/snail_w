@@ -9,6 +9,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QTimer>
 #include "can_message.h"
+#include "can_cmd.h"
 
 #define DEF_LEN_STEP_X  100
 #define DEF_LEN_STEP_Y  100
@@ -63,6 +64,7 @@
 #define DIR_PLUS            0
 #define DIR_MINUS           1
 ///============================================
+/*
 #define XX          0
 #define YY          1
 #define ZZ          2
@@ -72,7 +74,7 @@
 #define AXIS_Y           (0x1<<YY)
 #define AXIS_Z           (0x1<<ZZ)
 #define DOZA_ID          (0x1<<3)
-
+*/
 ///#define X_AXIS          0
 ///#define Y_AXIS          1
 ///#define Z_AXIS          2
@@ -119,6 +121,14 @@ struct  spi_mot_cmd_t {
 	uint8_t   b_val;
 	uint32_t  w_val;                      /// 
 };
+#pragma pack (push, 1)
+struct  eeprom_cmd_t {
+	uint8_t   cmd;                         /// 
+	quint8 num_dates;
+	quint8 addr;
+	quint16 data[EEPROM_MAX_NUM_DATES];
+};
+#pragma pack (pop)
 
 struct  ack_t {
 	quint8  ack_cmd;                         /// 

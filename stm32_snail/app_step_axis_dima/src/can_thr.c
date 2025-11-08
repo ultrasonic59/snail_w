@@ -54,11 +54,15 @@ extern uint8_t cur_mot_rej;
 ///========================================
 int set_param(set_param_cmd_t *i_data)
 {
+  uint8_t tmp;
 switch(i_data->num_par)
    {
    case MOTOR_REJ:
-     cur_mot_rej=i_data->par_val;
+     cur_mot_rej=i_data->par_val&0xff;
       set_mot_rej(cur_mot_rej);
+      tmp= (i_data->par_val>>8)&0xff;
+       set_mot_trq(tmp);
+     
      break;
    case SET_COORD:
      cur_coord=(int32_t)i_data->par_val;
@@ -90,8 +94,8 @@ printk("\n\r can_rsv_task");
     CAN_RxRdy=0;
     obr_can_cmd(CAN_RxMsg.data);
   
-    printk("\n\r can_rx"); 
-    test_print(&CAN_RxMsg);
+ ///   printk("\n\r can_rx"); 
+ ///   test_print(&CAN_RxMsg);
 #if 0
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
     printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);

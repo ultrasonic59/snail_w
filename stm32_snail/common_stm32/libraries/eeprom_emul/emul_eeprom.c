@@ -147,7 +147,7 @@ uint16_t ee_init(void)
           if (VarIdx != x)
           {
             /* Read the last variables' updates */
-            ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+            ReadStatus = EE_Rd(VirtAddVarTab[VarIdx], &DataVar);
             /* In case variable corresponding to the virtual address was found */
             if (ReadStatus != 0x1)
             {
@@ -239,7 +239,7 @@ uint16_t ee_init(void)
           if (VarIdx != x)
           {
             /* Read the last variables' updates */
-            ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+            ReadStatus = EE_Rd(VirtAddVarTab[VarIdx], &DataVar);
             /* In case variable corresponding to the virtual address was found */
             if (ReadStatus != 0x1)
             {
@@ -292,17 +292,7 @@ taskEXIT_CRITICAL();
  return rez;
 }
 
-/**
-  * @brief  Returns the last stored variable data, if found, which correspond to
-  *   the passed virtual address
-  * @param  VirtAddress: Variable virtual address
-  * @param  Data: Global variable contains the read variable value
-  * @retval Success or error status:
-  *           - 0: if variable was found
-  *           - 1: if the variable was not found
-  *           - NO_VALID_PAGE: if no valid page was found.
-  */
-uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data)
+uint16_t EE_Rd(uint16_t VirtAddress, uint16_t* Data)
 {
   uint16_t ValidPage = PAGE0;
   uint16_t AddressValue = 0x0;
@@ -352,17 +342,7 @@ uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data)
   return ReadStatus;
 }
 
-/**
-  * @brief  Writes/upadtes variable data in EEPROM.
-  * @param  VirtAddress: Variable virtual address
-  * @param  Data: 16 bit data to be written
-  * @retval Success or error status:
-  *           - FLASH_COMPLETE: on success
-  *           - PAGE_FULL: if valid page is full
-  *           - NO_VALID_PAGE: if no valid page was found
-  *           - Flash error code: on write Flash error
-  */
-uint16_t ee_WriteVariable(uint16_t VirtAddress, uint16_t Data)
+uint16_t ee_Write(uint16_t VirtAddress, uint16_t Data)
 {
   uint16_t Status = 0;
   FLASH_Unlock();
@@ -417,11 +397,11 @@ printk("\n\r +EE_Format!!! =");
   /* Return Page1 erase operation status */
   return FlashStatus;
 }
-uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data)
+uint16_t EE_Wr(uint16_t VirtAddress, uint16_t Data)
 {
 uint16_t rez;  
 taskENTER_CRITICAL();
-rez= ee_WriteVariable(VirtAddress, Data);
+rez= ee_Write(VirtAddress, Data);
 taskEXIT_CRITICAL();
 return rez;
 }
@@ -626,7 +606,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
     if (VirtAddVarTab[VarIdx] != VirtAddress)  /* Check each variable except the one passed as parameter */
     {
       /* Read the other last variable updates */
-      ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+      ReadStatus = EE_Rd(VirtAddVarTab[VarIdx], &DataVar);
       /* In case variable corresponding to the virtual address was found */
       if (ReadStatus != 0x1)
       {

@@ -1046,7 +1046,7 @@
       <widget class="ComboBoxKey" name="combo_steps">
        <property name="geometry">
         <rect>
-         <x>90</x>
+         <x>70</x>
          <y>440</y>
          <width>51</width>
          <height>21</height>
@@ -1112,7 +1112,7 @@
       <widget class="QLabel" name="label_step">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>40</x>
          <y>440</y>
          <width>29</width>
          <height>16</height>
@@ -1131,7 +1131,7 @@
       <widget class="QLabel" name="label_rej">
        <property name="geometry">
         <rect>
-         <x>140</x>
+         <x>120</x>
          <y>440</y>
          <width>21</width>
          <height>20</height>
@@ -1144,9 +1144,9 @@
       <widget class="ComboBoxKey" name="combo_rej">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>140</x>
          <y>440</y>
-         <width>51</width>
+         <width>31</width>
          <height>21</height>
         </rect>
        </property>
@@ -1194,6 +1194,11 @@
        <item>
         <property name="text">
          <string>7</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8</string>
         </property>
        </item>
       </widget>
@@ -1265,6 +1270,29 @@
        </property>
        <property name="text">
         <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_trq">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>440</y>
+         <width>41</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_tq">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>440</y>
+         <width>21</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TQ</string>
        </property>
       </widget>
      </widget>

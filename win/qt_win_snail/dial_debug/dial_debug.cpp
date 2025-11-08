@@ -142,7 +142,7 @@ void  DialDebug::req_msg_rdy(can_message_t istr)
         ui.textEdit_rd_dat->append(tstr);
 
     }
-    else {
+    else if (p_put_ack->cmd == RD_SPI_MOT_ANS) {
         spi_mot_cmd_t* spi_mot_cmd = (spi_mot_cmd_t*)t_can_message.data;
 
         quint32 tmp;
@@ -150,10 +150,24 @@ void  DialDebug::req_msg_rdy(can_message_t istr)
             tmp = spi_mot_cmd->w_val;
         else
             tmp = spi_mot_cmd->b_val;
-        QString tstr = QString("Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr, 16)).arg(QString::number(tmp, 16));
+        QString tstr = QString("spi_Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr, 16)).arg(QString::number(tmp, 16));
 
         ui.textEdit_rd_dat->append(tstr);
     }
+    else if (p_put_ack->cmd == RD_EEPROM_ANS) {
+        eeprom_ans_t* eeprom_cmd = (eeprom_ans_t*)t_can_message.data;
+
+        quint16 tmp;
+        tmp = eeprom_cmd->data[0];
+  
+        QString tstr = QString("eeprom_Addr=%1 :%2").arg(QString::number(eeprom_cmd->addr, 16)).arg(QString::number(tmp, 16));
+        if (eeprom_cmd->num_dates > 1) {
+            tmp = eeprom_cmd->data[1];
+            tstr += QString("\n\r eeprom_Addr=%1 :%2").arg(QString::number(eeprom_cmd->addr+1, 16)).arg(QString::number(tmp, 16));
+        }
+        ui.textEdit_rd_dat->append(tstr);
+}
+
 #if 0
     QString tstr(istr);
     ////tstr.sprintf("\n%s",istr);
