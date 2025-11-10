@@ -3,6 +3,8 @@
 #include "ViewProperties.h"
 #include <QColorDialog>
 #include <QtScript/QScriptValue>
+#include <QVariant>
+#include <QMetaType>
 
 #include "dial_lib.h"
 #include "params.h"
@@ -12,6 +14,7 @@
 #include "cust_circle.h"
 #include "component.h"
 
+Q_DECLARE_METATYPE(QList<int>)
 
 win_snail::win_snail(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +36,8 @@ win_snail::win_snail(QWidget *parent)
   qRegisterMetaType<spi_mot_cmd_t>("spi_mot_cmd_t");
   qRegisterMetaType <can_message_t>("can_message_t");
 
+  qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+
  
    p_camera = new CameraDevice(this);
    p_CamView = ui->CamWidget;
@@ -53,7 +58,7 @@ win_snail::win_snail(QWidget *parent)
     setupActions();
     loadSettings();
     //======================================
- //   ui->splitter->setSizes(splitter_sizes);
+    ui->splitter->setSizes(splitter_sizes);
     /// ====================================
  ////   qDebug() << QCameraInfo::availableCameras().count(); 
     int camid = 0; // video device id
@@ -999,11 +1004,12 @@ void win_snail::saveSettings(void)
     settings.setValue("last_can_d6", params::dbg_last_can_dat[6]);
     settings.setValue("last_can_d7", params::dbg_last_can_dat[7]);
     ///===========================geometr widg ==========================================
-    /*
-    QVariant t_variant;
-    t_variant.setValue<QList<int>>(ui->splitter->sizes());
-    settings.setValue("Splitter", t_variant);
-    */
+    //qDebug() << "saveSettings";
+
+    QVariant variant;
+    variant.setValue<QList<int>>(ui->splitter->sizes());
+    settings.setValue("Splitter", variant);
+  
     ///================== mot param =============================
     settings.setValue("len_step_x", mot_param.len_step[XX]);
     settings.setValue("mot_rej_x", mot_param.mot_rej[XX]);
@@ -1062,14 +1068,15 @@ void win_snail::loadSettings(void)
   params::dbg_last_can_dat[6] = settings.value("last_can_d6", 0).toInt();
   params::dbg_last_can_dat[7] = settings.value("last_can_d7", 0).toInt();
   ///===========================geometr widg ==========================================
-  /*
+  //qDebug() << "loadSettings";
+
   QList<int> default_splitter_size;
   default_splitter_size << 200 << 200;
   QVariant default_variant;
   default_variant.setValue<QList<int>>(default_splitter_size);
   splitter_sizes = settings.value("Splitter", default_variant).value<QList<int>>();
   default_variant.clear();
-  */
+ 
   ///================== mot param =============================
   mot_param.len_step[XX] = settings.value("len_step_x", DEF_LEN_STEP_X).toInt();
   mot_param.mot_rej[XX] = settings.value("mot_rej_x", DEF_MOT_REJ_X).toInt();

@@ -100,6 +100,11 @@ QImage _qimg = img.copy();
 	mat_img = QImage2Mat(_qimg);
 	///cv::flip(mat_img, mat_img, 0);
 	///cv::flip(mat, mat, 0);
+	if (*p_flags & FLG_ON_PNT)
+	{
+		drawPoints(mat_img);
+	}
+
 	if (*p_flags & FLG_ON_CRS)
 	{
 		drawCrs(mat_img);
