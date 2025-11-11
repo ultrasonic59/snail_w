@@ -194,7 +194,7 @@ uint16_t tmp;
 tmp=(addr&0x7)<<12;
 tmp|= idata&0xfff;
 mot_spi_transfer(tmp);
-printk("\n\r mot_spi_wr[%x:%x]",addr,idata);
+///printk("\n\r mot_spi_wr[%x:%x]",addr,idata);
 }
 void mot_spi_wrp(uint8_t addr,uint16_t *pdata)
 {

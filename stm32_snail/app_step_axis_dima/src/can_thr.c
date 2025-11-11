@@ -28,7 +28,7 @@ int go_cmd(go_cmd_t *p_go_cmd)
 {
 cur_state &= ~STATE_MASK;
 cur_state|=STATE_MOVE;  
-printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+///printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
 
 set_dir_mot(p_go_cmd->dirs);
 ////set_step_per(p_go_cmd->step_per);
@@ -42,7 +42,7 @@ int go_cmd_conc(go_cmd_t *p_go_cmd)
 {
 cur_state &= ~STATE_MASK;
 cur_state|=STATE_MOVE;  
-printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+///printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
 
 set_dir_mot(p_go_cmd->dirs);
 ////set_step_per(p_go_cmd->step_per);
