@@ -219,6 +219,9 @@
     <ClInclude Include="camera\DeviceEnumerator.h">
       <Filter>Header Files\camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\can_cmd.h">
+      <Filter>Header Files\can</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dial_debug\dial_debug.ui">

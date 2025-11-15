@@ -780,8 +780,15 @@
           <height>16</height>
          </rect>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(150, 158, 180);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -797,7 +804,7 @@
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(180, 208, 180);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -1039,7 +1046,7 @@
       <widget class="ComboBoxKey" name="combo_steps">
        <property name="geometry">
         <rect>
-         <x>90</x>
+         <x>70</x>
          <y>440</y>
          <width>51</width>
          <height>21</height>
@@ -1105,7 +1112,7 @@
       <widget class="QLabel" name="label_step">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>40</x>
          <y>440</y>
          <width>29</width>
          <height>16</height>
@@ -1124,7 +1131,7 @@
       <widget class="QLabel" name="label_rej">
        <property name="geometry">
         <rect>
-         <x>140</x>
+         <x>120</x>
          <y>440</y>
          <width>21</width>
          <height>20</height>
@@ -1137,9 +1144,9 @@
       <widget class="ComboBoxKey" name="combo_rej">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>140</x>
          <y>440</y>
-         <width>51</width>
+         <width>31</width>
          <height>21</height>
         </rect>
        </property>
@@ -1187,6 +1194,11 @@
        <item>
         <property name="text">
          <string>7</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8</string>
         </property>
        </item>
       </widget>
@@ -1240,6 +1252,47 @@
        </property>
        <property name="text">
         <string>clear</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_coord_x">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>260</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_trq">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>440</y>
+         <width>41</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_tq">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>440</y>
+         <width>21</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TQ</string>
        </property>
       </widget>
      </widget>

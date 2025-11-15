@@ -4,6 +4,8 @@
 #include "can_message.h"
 #include "cmd_sender.h"
 #include "dial_debug.h"
+extern QElapsedTimer el_timer;
+extern int	el_time;
 
 class Cmotor_wrk : public QObject
 {
@@ -21,19 +23,19 @@ public:
 public slots:
 	void SlSendCmd(can_message_t *msg);
 ///protected slots:
-    void sl_stop();
+    void sl_stop_all();
     ///void cl_xminus();
-    void sl_xminus_rel();
+    void sl_x_rel();
     ///void cl_xplus();
-    void sl_xplus_rel();
+    ///void sl_xplus_rel();
     ///void cl_yminus();
-    void sl_yminus_rel();
+    void sl_y_rel();
     ///void cl_yplus();
-    void sl_yplus_rel();
+    ///void sl_yplus_rel();
     ///void cl_zminus();
-    void sl_zminus_rel();
+    void sl_z_rel();
     //void cl_zplus();
-    void sl_zplus_rel();
+  ///  void sl_zplus_rel();
    /// void cl_go_xx();
     ///void cl_go_yy();
     ///void cl_go_zz();

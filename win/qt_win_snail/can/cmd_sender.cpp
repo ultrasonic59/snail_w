@@ -4,6 +4,8 @@
 
 ////extern void addfcs16( unsigned char *cp, int len );
 /////extern int checkfcs16(unsigned char *cp, const int len );
+extern QElapsedTimer el_timer;
+extern int	el_time;
 
 CcmdSender::CcmdSender(bool* data_ready, can_message_t* rsv_msg, dev_state_t* dev_state) :
            QObject(0),
@@ -243,6 +245,9 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 	}
 *t_str++ = '\r';
 *t_str++ = 0;
+el_time = el_timer.elapsed();
+qDebug() << "canSendMsg:" << el_time;
+
 if (SendRes(snd_dat, rsv_dat))
 	{
 	*p_data_ready = true;
@@ -250,8 +255,16 @@ if (SendRes(snd_dat, rsv_dat))
 	parse_str(rsv_dat, t_rsv_msg);
 ////	memcpy(p_rsv_msg,)
 	emit s_rsv_can_dat(t_rsv_msg);
-		return true;  ///
+
+	el_time = el_timer.elapsed();
+	qDebug() << "canSendMsg1:" << el_time;
+
+	return true;  ///
 	}
+el_time = el_timer.elapsed();
+qDebug() << "canSendMsg2:" << el_time;
+qDebug() << "canSendMsg_error" ;
+
 	return false;  ///
 }
 

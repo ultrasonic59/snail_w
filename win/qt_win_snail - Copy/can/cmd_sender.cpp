@@ -44,32 +44,28 @@ void CcmdSender::handleRead()
 	   {
 		QByteArray d = m_pSerialPort->readAll();
 		QString ds = d;
-///		qDebug() << d << ds.simplified();
-///		tst_coord++;
-///		p_dev_state->coord[0] = tst_coord;
-///		p_dev_state->coord[1] = tst_coord+4;
-///		p_dev_state->coord[2] = tst_coord+5;
 		parse_str(ds, t_can_message);
 		quint8 t_axis = 0;
+		switch (t_can_message.data[1])   ///axis
+		{
+		case AXIS_X:
+			t_axis = XX;
+			break;
+		case AXIS_Y:
+			t_axis = YY;
+			break;
+		case AXIS_Z:
+			t_axis = ZZ;
+			break;
+			break;
+		default:
+			t_axis = NOT_AXIS;
+			break;
+		}
+
 		switch (t_can_message.data[0])   ///cmd
 		    {
 		    case PUT_STAT_CMD:
-				switch (t_can_message.data[1])   ///axis
-				   {
-					case AXIS_X:
-						t_axis = XX;
-						break;
-					case AXIS_Y:
-						t_axis = YY;
-						break;
-					case AXIS_Z:
-						t_axis = ZZ;
-						break;
-							break;
-					default:
-						t_axis = NOT_AXIS;
-						break;
-				 }
 				if (t_axis < NUM_AXIS)
 				   {
 					p_dev_state->coord[t_axis] = t_can_message.data[4]
@@ -80,12 +76,30 @@ void CcmdSender::handleRead()
 					emit s_state_changed();
 				   }
 				break;
+			case PUT_ENCODER_CMD:
+				if (t_axis < NUM_AXIS)
+				{
+					p_dev_state->coord_enc[t_axis] = t_can_message.data[2]
+						| (t_can_message.data[3] << 8)
+						| (t_can_message.data[4] << 16)
+						| (t_can_message.data[5] << 24);
+					p_dev_state->temper[t_axis] = t_can_message.data[6]
+						| (t_can_message.data[7] << 8);
+					emit s_state_changed();
+				}
+
+				break;
 			default:
+
 				break;
 		    }
 
 ///		emit s_state_changed();
 	    }
+	else
+	{
+
+	}
 }
 void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
 {
@@ -232,8 +246,10 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 if (SendRes(snd_dat, rsv_dat))
 	{
 	*p_data_ready = true;
+	can_message_t t_rsv_msg;
+	parse_str(rsv_dat, t_rsv_msg);
 ////	memcpy(p_rsv_msg,)
-	emit s_rsv_can_dat(rsv_dat);
+	emit s_rsv_can_dat(t_rsv_msg);
 		return true;  ///
 	}
 	return false;  ///

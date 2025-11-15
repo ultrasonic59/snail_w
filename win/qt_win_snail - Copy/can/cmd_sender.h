@@ -9,6 +9,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QTimer>
 #include "can_message.h"
+#include "can_cmd.h"
 
 #define DEF_LEN_STEP_X  100
 #define DEF_LEN_STEP_Y  100
@@ -49,6 +50,13 @@
 #define STOP_CMD              0xF
 #define PRG_PARAM             0x10
 #define ON_DOZA               0x11
+
+#define WR_SPI_MOT            0x12
+#define RD_SPI_MOT_REQ        0x13
+#define RD_SPI_MOT_ANS        0x14
+#define GET_ENCODER_CMD       0x15
+#define PUT_ENCODER_CMD       0x16
+
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
 #define MOTOR_REJ             0x2
@@ -56,6 +64,7 @@
 #define DIR_PLUS            0
 #define DIR_MINUS           1
 ///============================================
+/*
 #define XX          0
 #define YY          1
 #define ZZ          2
@@ -65,7 +74,7 @@
 #define AXIS_Y           (0x1<<YY)
 #define AXIS_Z           (0x1<<ZZ)
 #define DOZA_ID          (0x1<<3)
-
+*/
 ///#define X_AXIS          0
 ///#define Y_AXIS          1
 ///#define Z_AXIS          2
@@ -105,12 +114,45 @@ struct  mot_param_t {
 	quint16 len_step[NUM_AXIS];
 	quint8 mot_rej[NUM_AXIS];
 };
+struct  spi_mot_cmd_t {
+	uint8_t   cmd;                         /// 
+	uint8_t   addr;                        /// 
+	uint8_t   len_dat;                     ///bytes 
+	uint8_t   b_val;
+	uint32_t  w_val;                      /// 
+};
+#pragma pack (push, 1)
+struct  eeprom_cmd_t {
+	uint8_t   cmd;                         /// 
+	quint8 num_dates;
+	quint8 addr;
+	quint16 data[EEPROM_MAX_NUM_DATES];
+};
+#pragma pack (pop)
 
+struct  ack_t {
+	quint8  ack_cmd;                         /// 
+	quint8  axis;                        /// X,Y , Z 
+};
+
+struct  put_ack_t{
+	qint8  cmd;                         /// 
+	ack_t   ack;                         /// 
+};
 
 struct  dev_state_t {
-quint8  states[NUM_AXIS+1];                       /// 
-qint32  coord[NUM_AXIS+1];                 /// steps X,Y , Z 
+quint8  states[NUM_AXIS];                       /// 
+qint32  coord[NUM_AXIS];                 /// steps X,Y , Z 
+qint32  coord_enc[NUM_AXIS];                 /// enc X,Y , Z 
+qint16  temper[NUM_AXIS];                 /// temper motor X,Y , Z 
+
 };
+typedef struct  encoder_cmd_s_ {
+	quint8  cmd;                         /// 
+	quint8  axis;                        /// X,Y , Z 
+	qint32  coord;                     /// 
+	quint16 temp_val;
+}encoder_cmd_t;
 
 class CcmdSender : public QObject
 {
@@ -154,7 +196,7 @@ private slots:
 
 signals:
 	void s_connected(bool);
-	void s_rsv_can_dat(char*);
+	void s_rsv_can_dat(can_message_t);
 	void s_state_changed();
 
 };

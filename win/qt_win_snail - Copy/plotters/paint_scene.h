@@ -44,6 +44,7 @@ signals:
    void signalPress(QPointF pnt);
    void signalMove(QPointF pnt);
    void s_mouse_pos(QPointF pnt);
+   void s_show_json(QByteArray byteArr);
 
    ///=======================================================
 public:

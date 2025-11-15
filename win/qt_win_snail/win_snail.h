@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QGraphicsItem>
 #include <QMessageBox>
+#include <QElapsedTimer>
 
 ////#include <QCamera>
 ///#include <QCameraInfo>
@@ -31,6 +32,9 @@
 #include "lib_util.h"
 
 ///======================================================================
+#define PLOT_TIME_DT  50
+extern QElapsedTimer el_timer;
+extern int	el_time;
 
 #define MAX_HID_BUG                     64
 ////#define DEF_HID_USB_VID                  0x1A86
@@ -83,26 +87,21 @@ private:
 
 public:
     c_snail_data snail_data;
- ///   Mat  mat_cam;
-///    Mat  mat_setka;
-///    Mat  mat_lines;
-
 private:
-    QLabel* _label;
-    QPen pen;
+  ///  QLabel* _Label;
+    QPen Pen;
 
  ////   VideoCapture _cap;
     int frame_width;
     int frame_height;
    Mat _frame;
-    QImage    _image;
+ ///   QImage    _Image;
+    QTimer* p_PlotTimer;
+
  ///  hid_device* hid_handle;
 private:
     QThread* pSenderThread;
-    CcmdSender* m_cmd_sender;
-    ////QPoint getMouseInsideCoord(QPoint inPos);
-////public slots:
-////    void setCamImage(QImage ipm);
+    CcmdSender* p_cmd_sender;
  
 protected:
     void timerEvent(QTimerEvent* e);
@@ -114,6 +113,7 @@ private:
     Ui::win_snail *ui;
 private:
     CameraDevice* p_camera;
+
   ////  QCamera* pt_qcam;
 ///    MyCamera *pt_camera;
 
@@ -276,6 +276,6 @@ protected slots:
     void on_clr();
     void sl_mouse_pos(QPointF pnt);
     void sl_eeprom(int axi, eeprom_cmd_t cmd);
-
+ 
 
 };

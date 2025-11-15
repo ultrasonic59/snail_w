@@ -69,7 +69,9 @@ private:
     struct hid_device_info* devs;
     struct hid_device_info* cur_dev;
 protected:
+    QList<int> splitter_sizes;
     bool put_hid_cmd(hid_cmd_t* cmd);
+    void rd_hid_dbg(dbg_dat_req_t* odat);
 
 public:
     plotterwidget* p_CamView;
@@ -163,8 +165,8 @@ public slots:
     void on_value_led0_changed(int value);
     void on_value_led1_changed(int value);
     void on_butt_debug();
-    void slot_rd_dbg(int num, dbg_dat_req_t* odat);
-    void slot_wr_dbg(int num, dbg_dat_req_t* idat);
+    void slot_rd_dbg(int axi,int num, dbg_dat_req_t* odat);
+    void slot_wr_dbg(int axi,int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
     void on_butt_test();
     void on_butt_test1();
@@ -172,8 +174,10 @@ public slots:
     void on_butt_test3();
     void on_butt_load();
 
-    void sl_rsv_can_dat(char*);
+    void sl_rsv_can_dat(can_message_t);
     void sl_state_changed();
+    void sl_show_json(QByteArray byteArr);
+
 private slots:
     void selectVideoSource();
 private slots:
@@ -233,14 +237,17 @@ protected slots:
 */
 signals:
     void updateCamView(QImage);
- ///   void s_SendCmd(can_message_t* msg);
+    void s_SendCmd(can_message_t* msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
     void put_str_dial(char*);
+    void put_msg_dial(can_message_t);
 
     void s_mot_go(mot_cmd_t);
-    void s_set_mot_rej(quint32, quint8);
+    void s_set_mot_rej(quint32, quint8, quint8);
+    void s_mot_spi(int axi,spi_mot_cmd_t);
+    void s_eeprom(int axi, eeprom_cmd_t);
 
 private:
  ///   QGraphicsItem* currentItem;
@@ -268,6 +275,7 @@ protected:
 protected slots:
     void on_clr();
     void sl_mouse_pos(QPointF pnt);
+    void sl_eeprom(int axi, eeprom_cmd_t cmd);
 
 
 };

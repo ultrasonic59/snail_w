@@ -26,9 +26,14 @@ CamPlotter::CamPlotter(PlotProperties *Plot_Prop, quint32* flags,c_snail_data* _
 	                           //// , m_flags(FLG_ON_RULE| FLG_ON_SEL)
 							    , p_flags(flags)
 	                            , redraw_sel_rc(false)
+	                             ,rdy_img(false)
 	                           ///// ,m_flags(FLG_ON_KRS)
 
 {
+	p_PlotTimer = new QTimer();
+	connect(p_PlotTimer, SIGNAL(timeout()), this, SLOT(plot_timer_timeout()));
+	p_PlotTimer->start(PLOT_TIME_DT);
+
 }
 CamPlotter::~CamPlotter(void)
 {
@@ -52,6 +57,7 @@ cv::Mat QImage2Mat(QImage const& src)
 }
 
 ///====================================================================
+#if 0
 void CamPlotter::sl_update_image(QImage& img, QImage::Format _format)
 {
 #if 0
@@ -93,6 +99,7 @@ if (*p_flags & FLG_ON_PNT)
 emit s_update_image(img, _format);
 #endif
 }
+#endif
 void CamPlotter::sl_update_image(const QImage& img)
 {
 QImage _qimg = img.copy();
@@ -127,17 +134,18 @@ QImage _qimg = img.copy();
 		drawPoints(mat_img);
 	   }
 	cv::Mat RGBframe;
-	QImage  t_qimg;
+///	QImage  t_qimg;
 	if (mat_img.channels() == 3) {
 		cv::cvtColor(mat_img, RGBframe, COLOR_BGR2RGB);
-		t_qimg = QImage((const unsigned char*)(RGBframe.data),
+		cur_qimg = QImage((const unsigned char*)(RGBframe.data),
 			RGBframe.cols, RGBframe.rows, QImage::Format_RGB888);
 	}
 	else {
-		t_qimg = QImage((const unsigned char*)(mat_img.data),
+		cur_qimg = QImage((const unsigned char*)(mat_img.data),
 			mat_img.cols, mat_img.rows, QImage::Format_Indexed8);
 	}
-   emit s_update_image(t_qimg);
+	rdy_img = true;
+   emit s_update_image(cur_qimg);
 #endif
 }
 
@@ -299,4 +307,15 @@ void CamPlotter::sl_set_sel_rect(QRect t_rect)
 		emit s_show_rule_coord(rule_rect);
 	}
 ////	redraw_sel_rc = true;
+}
+void  CamPlotter::plot_timer_timeout()
+{
+	if (rdy_img)
+	{
+///		emit s_update_image(cur_qimg);
+		rdy_img = false;
+	}
+
+	///	sl_plot_all_chan(true);
+	///emit s_plot_all_chan();
 }

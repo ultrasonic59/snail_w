@@ -1,4 +1,5 @@
 #include "dial_debug.h"
+#include "cmd_sender.h"
 
 DialDebug::DialDebug(QWidget *parent):
     QDialog(parent, Qt::Window),pParent(parent)
@@ -7,14 +8,23 @@ DialDebug::DialDebug(QWidget *parent):
 	ui.setupUi(this);
 	ui.comboBox_rej->addItem("HID",HID_REJ);
  	ui.comboBox_rej->addItem("CAN",CAN_REJ);
-////	ui.comboBox_rej->addItem("LIN",LIN_REJ);
-    connect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
-    connect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
+	ui.comboBox_rej->addItem("SPI_MOT",SPI_REJ);
+    ui.comboBox_rej->addItem("EEPROM", EEPROM_REJ);
+
+    ui.comboBox_axis->addItem("X", AXI_X);
+    ui.comboBox_axis->addItem("Y", AXI_Y);
+    ui.comboBox_axis->addItem("Z", AXI_Z);
+    ui.comboBox_axis->addItem("DOZA", AXI_DOZA);
+
+    connect(this, SIGNAL(req_rd_dbg(int,int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int,int, dbg_dat_req_t*)));
+    connect(this, SIGNAL(req_wr_dbg(int,int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int,int, dbg_dat_req_t*)));
 
 	connect(ui.pushButton_test, SIGNAL(clicked()), this, SLOT(SlotTest()));
     connect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 
-    connect(parent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+ ////  connect(parent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+  connect(pParent, SIGNAL(put_msg_dial(can_message_t)), this, SLOT(req_msg_rdy(can_message_t)));
+
     connect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
 }
 
@@ -23,7 +33,8 @@ DialDebug::~DialDebug()
     disconnect(this, SIGNAL(req_rd_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_rd_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_wr_dbg(int, dbg_dat_req_t*)), pParent, SLOT(slot_wr_dbg(int, dbg_dat_req_t*)));
     disconnect(this, SIGNAL(req_send_can_dbg(can_message_t*)), pParent, SLOT(slot_send_can_dbg(can_message_t*)));
-    disconnect(pParent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+  ///  disconnect(pParent, SIGNAL(put_str_dial(char*)), this, SLOT(req_str_rdy(char*)));
+    disconnect(pParent, SIGNAL(put_msg_dial(can_message_t)), this, SLOT(req_msg_rdy(can_message_t)));
 
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 
@@ -34,7 +45,11 @@ void  DialDebug::slot_butt_rd()
 	dbg_dat_req.addr=ui.lineEdit_addr->text().toInt(0,16);
 	dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
 	int num_rej=ui.comboBox_rej->currentIndex();
-	emit req_rd_dbg(num_rej,&dbg_dat_req);
+    int num_axi = ui.comboBox_axis->currentIndex();
+  ///  if (ui.comboBox_rej->currentIndex() == EEPROM_REJ)
+  ///      emit req_rd_eeprom(&dat_req);
+  ///  else
+	    emit req_rd_dbg(num_axi,num_rej,&dbg_dat_req);
 }
 void  DialDebug::slot_butt_wr()
 {
@@ -43,9 +58,11 @@ void  DialDebug::slot_butt_wr()
     dbg_dat_req.data[0]=ui.lineEdit_wr_dat->text().toInt(0,16);
 	if(ui.comboBox_rej->currentIndex()==CAN_REJ)
       dbg_dat_req.nbytes=ui.lineEdit_count->text().toInt(0,16);
-
+    else if (ui.comboBox_rej->currentIndex() == SPI_REJ)
+        dbg_dat_req.nbytes = ui.lineEdit_count->text().toInt(0, 16)*2;
 	int num_rej=ui.comboBox_rej->currentIndex();
-	emit req_wr_dbg(num_rej,&dbg_dat_req);
+    int num_axi = ui.comboBox_axis->currentIndex();
+    emit req_wr_dbg(num_axi, num_rej,&dbg_dat_req);
 }
 void  DialDebug::slot_send_can_msg()
 {
@@ -67,7 +84,7 @@ void  DialDebug::slot_send_can_msg()
 
 void  DialDebug::req_dbg_data_rdy(dbg_dat_req_t* p_dbg_dat)
 {
-#if 0
+#if 1
     QString tstr;
     int ii;
     if(p_dbg_dat->nbytes==0)
@@ -76,7 +93,7 @@ void  DialDebug::req_dbg_data_rdy(dbg_dat_req_t* p_dbg_dat)
         p_dbg_dat->nbytes=MAX_DBG_DATA_LEN;
     for(ii=0;ii<p_dbg_dat->nbytes;ii++)
     {
-        tstr.sprintf("\nAddr=%x->%x",p_dbg_dat->addr+ii,p_dbg_dat->data[ii]);
+        tstr.asprintf("\nAddr=%x->%x",p_dbg_dat->addr+ii,p_dbg_dat->data[ii]);
         ui.textEdit_rd_dat->append(tstr);
     }
     QTextCursor c = ui.textEdit_rd_dat->textCursor();
@@ -113,6 +130,51 @@ void  DialDebug::req_str_rdy(char* istr)
  QTextCursor c = ui.textEdit_rd_dat->textCursor();
  c.movePosition(QTextCursor::End);
  ui.textEdit_rd_dat->setTextCursor(c);
+#endif
+}
+void  DialDebug::req_msg_rdy(can_message_t istr)
+{
+    //// QString tstr;
+    can_message_t t_can_message = istr;
+    put_ack_t* p_put_ack = (put_ack_t*)t_can_message.data;
+    if (p_put_ack->cmd == PUT_ACK) {
+        QString tstr = QString("ack[axis:%1 cmd:%2]").arg(QString::number(p_put_ack->ack.axis)).arg(QString::number(p_put_ack->ack.ack_cmd, 16));
+        ui.textEdit_rd_dat->append(tstr);
+
+    }
+    else if (p_put_ack->cmd == RD_SPI_MOT_ANS) {
+        spi_mot_cmd_t* spi_mot_cmd = (spi_mot_cmd_t*)t_can_message.data;
+
+        quint32 tmp;
+        if (spi_mot_cmd->len_dat > 1)
+            tmp = spi_mot_cmd->w_val;
+        else
+            tmp = spi_mot_cmd->b_val;
+        QString tstr = QString("spi_Addr=%1 :%2").arg(QString::number(spi_mot_cmd->addr, 16)).arg(QString::number(tmp, 16));
+
+        ui.textEdit_rd_dat->append(tstr);
+    }
+    else if (p_put_ack->cmd == RD_EEPROM_ANS) {
+        eeprom_ans_t* eeprom_cmd = (eeprom_ans_t*)t_can_message.data;
+
+        quint16 tmp;
+        tmp = eeprom_cmd->data[0];
+  
+        QString tstr = QString("eeprom_Addr=%1 :%2").arg(QString::number(eeprom_cmd->addr, 16)).arg(QString::number(tmp, 16));
+        if (eeprom_cmd->num_dates > 1) {
+            tmp = eeprom_cmd->data[1];
+            tstr += QString("\n\r eeprom_Addr=%1 :%2").arg(QString::number(eeprom_cmd->addr+1, 16)).arg(QString::number(tmp, 16));
+        }
+        ui.textEdit_rd_dat->append(tstr);
+}
+
+#if 0
+    QString tstr(istr);
+    ////tstr.sprintf("\n%s",istr);
+    ui.textEdit_rd_dat->append(tstr);
+    QTextCursor c = ui.textEdit_rd_dat->textCursor();
+    c.movePosition(QTextCursor::End);
+    ui.textEdit_rd_dat->setTextCursor(c);
 #endif
 }
 

@@ -13,7 +13,14 @@ namespace Ui {
 
 #define HID_REJ		0
 #define CAN_REJ	    1
-///#define LIN_REJ		2
+#define SPI_REJ		2
+#define EEPROM_REJ	3
+
+#define AXI_X       0
+#define AXI_Y       1
+#define AXI_Z       2
+#define AXI_DOZA    3
+
 
 class DialDebug : public QDialog
 {
@@ -28,8 +35,8 @@ public:
 	virtual ~DialDebug();
 	QWidget* pParent;
 signals:
-	void req_wr_dbg(int num,dbg_dat_req_t*);
-	void req_rd_dbg(int num,dbg_dat_req_t*);
+	void req_wr_dbg(int,int num,dbg_dat_req_t*);
+	void req_rd_dbg(int,int num,dbg_dat_req_t*);
 	void SignalTest();
 	void req_send_can_dbg(can_message_t*);
 
@@ -41,6 +48,7 @@ private slots:
 	void  req_dbg_data_rdy(dbg_dat_req_t*);
 	void  req_xil_data_rdy(xil_dat_req_t*);
 	void  req_str_rdy(char*);
+	void  req_msg_rdy(can_message_t);
 	void  SlotTest();
 public slots:
     void clear_textEdit();

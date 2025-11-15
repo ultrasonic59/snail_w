@@ -23,6 +23,9 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* 
 
 void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step)
 {
+    el_time = el_timer.elapsed();
+    qDebug() << "send_cmd_go:" << el_time;
+
     can_message_t t_can_message;
     t_can_message.id = id;
     t_can_message.dlc = 8;
@@ -43,9 +46,15 @@ void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 n
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
+        if (wait_rdy_cnt > MAX_WAIT_ANS) {
+            qDebug() << "send_cmd_go [wait_rdy_cnt]:" << wait_rdy_cnt;
+
             break;
+        }
     };
+    el_time = el_timer.elapsed();
+    qDebug() << "send_cmd_go1:" << el_time;
+
 }
 void Cmotor_wrk::send_cmd_stop(quint32 id)
 {
@@ -199,29 +208,20 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
 }
 
 ///=================== X ===========================
-void Cmotor_wrk::sl_xplus_rel()
+void Cmotor_wrk::sl_x_rel()
 {
-    qDebug() << "sl_xplus_rel";
- ///   send_cmd_stop(X_AXIS_CAN_ID);
+    qDebug() << "sl_x_rel";
+    send_cmd_stop(X_AXIS_CAN_ID);
 }
-void Cmotor_wrk::sl_xminus_rel()
-{
-    qDebug() << "sl_xminus_rel ";
-///    send_cmd_stop(X_AXIS_CAN_ID);
-}
+
 void Cmotor_wrk::sl_clr_x()
 {
     send_cmd_set_coord(X_AXIS_CAN_ID, 0);
 }
 ///=================== Y ===========================
-void Cmotor_wrk::sl_yplus_rel()
+void Cmotor_wrk::sl_y_rel()
 {
-    qDebug() << "sl_yplus_rel";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-void Cmotor_wrk::sl_yminus_rel()
-{
-    qDebug() << "sl_yminus_rel ";
+    qDebug() << "sl_y_rel";
     send_cmd_stop(Y_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_clr_y()
@@ -229,14 +229,9 @@ void Cmotor_wrk::sl_clr_y()
     send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
 }
 ///=================== Z ===========================
-void Cmotor_wrk::sl_zplus_rel()
+void Cmotor_wrk::sl_z_rel()
 {
-    qDebug() << "sl_zplus_rel";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-}
-void Cmotor_wrk::sl_zminus_rel()
-{
-    qDebug() << "sl_zminus_rel ";
+    qDebug() << "sl_z_rel";
     send_cmd_stop(Z_AXIS_CAN_ID);
 }
 
@@ -245,14 +240,14 @@ void Cmotor_wrk::sl_clr_z()
     send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
 }
 ///==================================================
-void Cmotor_wrk::sl_stop()
+void Cmotor_wrk::sl_stop_all()
 {
 ////send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
  ////   send_cmd_stop(X_AXIS_CAN_ID);
-    qDebug() << "sl_stop0";
+    qDebug() << "sl_stop_all0";
 
    send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID| Z_AXIS_CAN_ID);
-    qDebug() << "sl_stop";
+    qDebug() << "sl_stop_all";
 
 }
 

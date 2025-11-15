@@ -51,7 +51,7 @@ public slots:
     void sl_is_open();
 
 private slots:
-    void onTimeout();
+    void cameraTimeout();
 
 private:
     bool stop;
@@ -63,7 +63,7 @@ private:
 
     cv::VideoCapture *m_capture;
   ///  VideoCapture* m_capture;
-    QTimer * m_timer;
+    QTimer * camera_timer;
 };
 
 #endif // CAMERADEVICE_H

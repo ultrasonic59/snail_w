@@ -30,7 +30,7 @@ namespace cv{
 */
 ////using namespace cv;
 ///using namespace cv;
-#define CAMERA_TICK 40
+#define CAMERA_TICK 80  ///40
 
 class CameraDevice : public QObject
 {

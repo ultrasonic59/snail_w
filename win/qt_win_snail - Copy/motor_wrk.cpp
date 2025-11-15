@@ -20,8 +20,6 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* 
 ///==============================================================
 
 #define MAX_WAIT_HOME 10000
-#define MAX_WAIT_ANS 100
-#define MSLEEP_TIME 10
 
 void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step)
 {
@@ -68,10 +66,10 @@ void Cmotor_wrk::send_cmd_stop(quint32 id)
             break;
     };
 }
-void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej) {
+void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej, quint8 trq) {
     can_message_t t_can_message;
     t_can_message.id = id;
-    t_can_message.dlc = 5;
+    t_can_message.dlc = 6;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     t_can_message.data[0] = SET_PARAM;
@@ -79,7 +77,7 @@ void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej) {
     t_can_message.data[2] = 0;
     t_can_message.data[3] = 1;
     t_can_message.data[4] = rej;
-    t_can_message.data[5] = 0;
+    t_can_message.data[5] = trq;
     t_can_message.data[6] = 0;
     t_can_message.data[7] = 0;
     data_ready = false;
@@ -118,6 +116,45 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
             break;
     };
 }
+void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
+    can_message_t t_can_message;
+    switch (axi) {
+    case AXI_X:
+        t_can_message.id = X_AXIS_CAN_ID;
+        break;
+    case AXI_Y:
+        t_can_message.id = Y_AXIS_CAN_ID;
+        break;
+     case AXI_Z:
+        t_can_message.id = Z_AXIS_CAN_ID;
+        break;
+   case AXI_DOZA:
+        t_can_message.id = DOZA_CAN_ID;
+         break;
+   default:
+       return;
+       break;
+
+}
+    if(cmd.len_dat==1)
+      t_can_message.dlc = cmd.len_dat+2;
+    else
+        t_can_message.dlc = cmd.len_dat + 6;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+    memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
+    data_ready = false;
+    emit s_SendCmd(&t_can_message);
+    int wait_rdy_cnt = 0;
+    while (data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
+}
+
 ///=================================================
 void Cmotor_wrk::sl_mot_go(mot_cmd_t mot_cmd)
 {
@@ -148,10 +185,10 @@ void Cmotor_wrk::sl_go_home()
 #endif
 }
 ///=================================================
-void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej)
+void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
 {
     qDebug() << "sl_set_rej";
-   send_cmd_mot_rej(id, rej);
+   send_cmd_mot_rej(id, rej,trq);
    if(id== X_AXIS_CAN_ID)
       p_mot_param->mot_rej[XX] = rej;
    else if(id == Y_AXIS_CAN_ID)
@@ -165,12 +202,12 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej)
 void Cmotor_wrk::sl_xplus_rel()
 {
     qDebug() << "sl_xplus_rel";
-    send_cmd_stop(X_AXIS_CAN_ID);
+ ///   send_cmd_stop(X_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_xminus_rel()
 {
     qDebug() << "sl_xminus_rel ";
-    send_cmd_stop(X_AXIS_CAN_ID);
+///    send_cmd_stop(X_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_clr_x()
 {
@@ -214,7 +251,7 @@ void Cmotor_wrk::sl_stop()
  ////   send_cmd_stop(X_AXIS_CAN_ID);
     qDebug() << "sl_stop0";
 
-   send_cmd_stop(Y_AXIS_CAN_ID);
+   send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID| Z_AXIS_CAN_ID);
     qDebug() << "sl_stop";
 
 }

@@ -111,6 +111,9 @@ DialLib::DialLib(QWidget *parent):
 ///================================================================
     connect(ui.ButtSaveJ, SIGNAL(clicked()), this, SLOT(SaveJ()));
     connect(ui.ButtLoadJ, SIGNAL(clicked()), this, SLOT(LoadJ()));
+
+   connect(scene, SIGNAL(s_show_json(QByteArray)), this, SLOT(sl_show_json(QByteArray)));
+
 ///================================================================
     jsEngine = new QJSEngine(this);
 }
@@ -711,6 +714,31 @@ QJsonObject objObject;
     }
 
 ///====================================================
+}
+void DialLib::sl_show_json(QByteArray byteArr)
+{
+    component* pGroup = new component();
+    scene->currentItem = pGroup;
+    pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QGraphicsItem* t_item = lib_util.getItem(ObjectValue);
+                if (t_item != nullptr) {
+                    pGroup->addToGroup(t_item);
+                    ///    scene->addItem(t_item);
+                }
+            }
+        }
+    }
+    scene->addItem(pGroup);
+
 }
 
 
