@@ -2,9 +2,9 @@
 #include <Qdebug>
 #include <QMessageBox>
 
-Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* mot_par)
+Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, bool* data_ready,mot_param_t* mot_par)
                       :p_cmd_sender(sender),p_dev_state(dev_state)
-                       ,p_mot_param(mot_par)
+                       ,p_mot_param(mot_par), p_data_ready(data_ready)
 {
 /*
     len_step[XX] = DEF_LEN_STEP_X;
@@ -39,10 +39,10 @@ void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 n
     t_can_message.data[5] = (num_step >> 8) & 0xff;
     t_can_message.data[6] = (num_step >> 16) & 0xff;
     t_can_message.data[7] = (num_step >> 24) & 0xff;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -64,10 +64,10 @@ void Cmotor_wrk::send_cmd_stop(quint32 id)
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     t_can_message.data[0] = STOP_CMD;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -89,10 +89,10 @@ void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej, quint8 trq) {
     t_can_message.data[5] = trq;
     t_can_message.data[6] = 0;
     t_can_message.data[7] = 0;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -114,10 +114,10 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
     t_can_message.data[5] = (coord >> 8) & 0xff;
     t_can_message.data[6] = (coord >> 16) & 0xff;;
     t_can_message.data[7] = (coord >> 24) & 0xff;;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -152,10 +152,10 @@ void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -205,6 +205,11 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
    else if(id == Z_AXIS_CAN_ID)
        p_mot_param->mot_rej[ZZ] = rej;
 
+}
+void Cmotor_wrk::sl_axi_rel(int axi)
+{
+    qDebug() << "sl_axi_rel"<< axi;
+    send_cmd_stop(axi);
 }
 
 ///=================== X ===========================

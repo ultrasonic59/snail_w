@@ -184,7 +184,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  scene->setSceneRect(0, 0, 2000, 2000); //
 ///==================================================
  pMotorThread = new QThread(this);
- p_motor_wrk =new Cmotor_wrk(p_cmd_sender, &dev_state,&mot_param);
+ p_motor_wrk =new Cmotor_wrk(p_cmd_sender, &dev_state,&data_ready, &mot_param);
  p_motor_wrk->moveToThread(pMotorThread);
  connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
  pMotorThread->start();
@@ -210,6 +210,13 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
  connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
  connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+
+ connect(this, SIGNAL(s_key_release(int)), p_motor_wrk, SLOT(sl_axi_rel(int)));
+
+ ///void s_key_release(int axi);
+
 
  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
@@ -743,6 +750,8 @@ else
 void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
+    el_timer.start();
+
     switch (num)
     {
     case HID_REJ:
@@ -1385,10 +1394,11 @@ void win_snail::keyPressEvent(QKeyEvent* event)
         scene->currentItem->moveBy(0, 20);
 
     }
-                  break;
+    break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
-        scene->currentItem->moveBy(0, -20);
+ ///       scene->currentItem->moveBy(0, -20);
+        sl_yplus();
 
     }
                   break;
@@ -1524,8 +1534,21 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///    QGraphicsScene::keyPressEvent(event);
 
 }
-///==============================================
+void win_snail::keyReleaseEvent(QKeyEvent* event) {
+    switch (event->key()) {
+    case Qt::Key_W: {
+        ///       qDebug() << "Key_W";
+        ///       scene->currentItem->moveBy(0, -20);
+        /// 
+        /// 
+     ///   sl_yplus();
+        emit s_key_release(Y_AXIS_CAN_ID);
+    }
+    }
 
+    QMainWindow::keyReleaseEvent(event);
+}
+///==============================================
 ///==============================================
 void win_snail::on_butt_test1()
 {
@@ -1869,6 +1892,9 @@ void win_snail::on_clr()
     ////  ui.textEdit_rd_dat->clear();
 }
 void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
+    el_time = el_timer.elapsed();
+    qDebug() << "sl_eeprom:" << el_time;
+
     can_message_t t_can_message;
     switch (axi) {
     case AXI_X:
@@ -1902,7 +1928,15 @@ void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
+        if (wait_rdy_cnt > MAX_WAIT_ANS) {
+            qDebug() << "sl_eeprom1 [wait_rdy_cnt]:" << wait_rdy_cnt;
+
             break;
+        }
     };
+    el_time = el_timer.elapsed();
+    qDebug() << "sl_eeprom2:" << el_time;
+
+
 }
+

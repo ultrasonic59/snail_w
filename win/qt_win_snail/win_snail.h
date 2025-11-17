@@ -106,6 +106,7 @@ private:
 protected:
     void timerEvent(QTimerEvent* e);
     virtual void keyPressEvent(QKeyEvent*);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
     QPoint last_pn;
     QRect sel_rc;
@@ -223,8 +224,7 @@ protected slots:
     void sl_yminus();
     void sl_zplus();
     void sl_zminus();
-
-/*
+ /*
 protected slots:
     void cl_stop();
     void cl_xminus_rel();
@@ -248,6 +248,7 @@ signals:
     void s_set_mot_rej(quint32, quint8, quint8);
     void s_mot_spi(int axi,spi_mot_cmd_t);
     void s_eeprom(int axi, eeprom_cmd_t);
+    void s_key_release(int axi);
 
 private:
  ///   QGraphicsItem* currentItem;
