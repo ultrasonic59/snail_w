@@ -14,6 +14,9 @@
 #include "cust_circle.h"
 #include "component.h"
 
+QElapsedTimer el_timer;
+int	el_time=0;
+
 Q_DECLARE_METATYPE(QList<int>)
 
 win_snail::win_snail(QWidget *parent)
@@ -109,12 +112,12 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
   connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(on_value_led1_changed(int)));
   ///===================================================
   pSenderThread = new QThread(this);
-  m_cmd_sender = new CcmdSender(&data_ready, &rsv_msg,  &dev_state);
-  m_cmd_sender->moveToThread(pSenderThread);
-  connect(pSenderThread, SIGNAL(finished()), m_cmd_sender, SLOT(deleteLater()));
+  p_cmd_sender = new CcmdSender(&data_ready, &rsv_msg,  &dev_state);
+  p_cmd_sender->moveToThread(pSenderThread);
+  connect(pSenderThread, SIGNAL(finished()), p_cmd_sender, SLOT(deleteLater()));
   pSenderThread->start();
  /// connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
-  connect(m_cmd_sender, SIGNAL(s_rsv_can_dat(can_message_t)), this, SLOT(sl_rsv_can_dat(can_message_t)));
+  connect(p_cmd_sender, SIGNAL(s_rsv_can_dat(can_message_t)), this, SLOT(sl_rsv_can_dat(can_message_t)));
 
   ///============================================
 ///=======================================================
@@ -159,10 +162,10 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
  ///==========================================================================
- connect(this, SIGNAL(s_can_connect(bool)), m_cmd_sender, SLOT(sl_connect(bool)));
- connect(m_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
- connect(this, SIGNAL(s_set_can_com_name(QString)), m_cmd_sender, SLOT(sl_set_com_name(QString)));
- connect(m_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
+ connect(this, SIGNAL(s_can_connect(bool)), p_cmd_sender, SLOT(sl_connect(bool)));
+ connect(p_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
+ connect(this, SIGNAL(s_set_can_com_name(QString)), p_cmd_sender, SLOT(sl_set_com_name(QString)));
+ connect(p_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
 
 
  pCamThread->start();
@@ -181,13 +184,13 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  scene->setSceneRect(0, 0, 2000, 2000); //
 ///==================================================
  pMotorThread = new QThread(this);
- p_motor_wrk =new Cmotor_wrk(m_cmd_sender, &dev_state,&mot_param);
+ p_motor_wrk =new Cmotor_wrk(p_cmd_sender, &dev_state,&data_ready, &mot_param);
  p_motor_wrk->moveToThread(pMotorThread);
  connect(pMotorThread, SIGNAL(finished()), p_motor_wrk, SLOT(deleteLater()));
  pMotorThread->start();
 
  connect(this, SIGNAL(s_eeprom(int, eeprom_cmd_t)), this, SLOT(sl_eeprom(int, eeprom_cmd_t)));
- connect(this, SIGNAL(s_SendCmd(can_message_t*)), m_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+ connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
 
  connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
 
@@ -197,39 +200,34 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
  connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(sl_go_z()));
 
- ///connect(this, SIGNAL(pressed()), this, SLOT(cl_go_x()));
+ 
+ connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
+  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
+  connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
+  connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
 
- connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()), Qt::DirectConnection);
-  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()), Qt::DirectConnection);
-
- // connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()), Qt::DirectConnection);
- // connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()), Qt::DirectConnection);
- //connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()),Qt::DirectConnection);
- /// connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()), Qt::DirectConnection);
-  connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
+connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
+ connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+
+ connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+
+ connect(this, SIGNAL(s_key_release(int)), p_motor_wrk, SLOT(sl_axi_rel(int)));
+
+ ///void s_key_release(int axi);
+
+
  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+ connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
+ connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
 
  
  connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
 
   ///======================= upr motor ========================================
- connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(sl_stop()));
-
- ///connect(ui->butt_XMinus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xminus()));
- connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xminus_rel()), Qt::DirectConnection);
- ///connect(ui->butt_XPlus, SIGNAL(pressed()), p_motor_wrk, SLOT(cl_xplus()));
- connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_xplus_rel()), Qt::DirectConnection);
-
- connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yminus_rel()), Qt::DirectConnection);
- connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_yplus_rel()), Qt::DirectConnection);
-
- ///connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()), Qt::DirectConnection);
- ///connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()), Qt::DirectConnection);
-
- connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zminus_rel()));
- connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_zplus_rel()));
+ connect(ui->butt_Stop, SIGNAL(clicked()), p_motor_wrk, SLOT(sl_stop_all()));
 
 
  connect(ui->butt_clr_x, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_clr_x()));
@@ -752,6 +750,8 @@ else
 void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
+    el_timer.start();
+
     switch (num)
     {
     case HID_REJ:
@@ -1394,10 +1394,11 @@ void win_snail::keyPressEvent(QKeyEvent* event)
         scene->currentItem->moveBy(0, 20);
 
     }
-                  break;
+    break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
-        scene->currentItem->moveBy(0, -20);
+ ///       scene->currentItem->moveBy(0, -20);
+        sl_yplus();
 
     }
                   break;
@@ -1533,8 +1534,21 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///    QGraphicsScene::keyPressEvent(event);
 
 }
-///==============================================
+void win_snail::keyReleaseEvent(QKeyEvent* event) {
+    switch (event->key()) {
+    case Qt::Key_W: {
+        ///       qDebug() << "Key_W";
+        ///       scene->currentItem->moveBy(0, -20);
+        /// 
+        /// 
+     ///   sl_yplus();
+        emit s_key_release(Y_AXIS_CAN_ID);
+    }
+    }
 
+    QMainWindow::keyReleaseEvent(event);
+}
+///==============================================
 ///==============================================
 void win_snail::on_butt_test1()
 {
@@ -1744,6 +1758,8 @@ void win_snail::sl_go_z()
 void win_snail::sl_xplus()
 {
 qDebug() << "sl_xplus";
+el_timer.start();
+
 ///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
  ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
     quint16 len_step = ui->combo_steps->currentText().toInt();
@@ -1765,7 +1781,7 @@ void win_snail::sl_xminus()
  qDebug() << "sl_xminus ";
  ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
  ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-
+ el_timer.start();
     quint16 len_step = ui->combo_steps->currentText().toInt();
     quint32 num_step =  ui->combo_num_steps->currentText().toInt();
     if (num_step == 0)
@@ -1783,7 +1799,10 @@ void win_snail::sl_xminus()
 ///=================== Y ===========================
 void win_snail::sl_yplus()
 {
+
     qDebug() << "cl_yplus";
+    el_timer.start();
+
 ///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
 ///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
 
@@ -1805,6 +1824,8 @@ void win_snail::sl_yminus()
 {
 
     qDebug() << "cl_yminus ";
+    el_timer.start();
+
 ///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
 ///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
     quint16 len_step =  ui->combo_steps->currentText().toInt();
@@ -1871,6 +1892,9 @@ void win_snail::on_clr()
     ////  ui.textEdit_rd_dat->clear();
 }
 void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
+    el_time = el_timer.elapsed();
+    qDebug() << "sl_eeprom:" << el_time;
+
     can_message_t t_can_message;
     switch (axi) {
     case AXI_X:
@@ -1904,7 +1928,15 @@ void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
+        if (wait_rdy_cnt > MAX_WAIT_ANS) {
+            qDebug() << "sl_eeprom1 [wait_rdy_cnt]:" << wait_rdy_cnt;
+
             break;
+        }
     };
+    el_time = el_timer.elapsed();
+    qDebug() << "sl_eeprom2:" << el_time;
+
+
 }
+

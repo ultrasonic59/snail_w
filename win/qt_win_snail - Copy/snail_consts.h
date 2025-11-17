@@ -1,5 +1,7 @@
 #pragma once
 
+#define PLOT_TIME_DT  50
+
 #ifndef FLG_ON_CRS
 #define FLG_ON_CRS     (0x1<<0)
 #endif

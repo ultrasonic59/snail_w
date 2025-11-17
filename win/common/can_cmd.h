@@ -40,6 +40,8 @@
 #define XX          0
 #define YY          1
 #define ZZ          2
+#define DZ          3
+
 #define NOT_AXIS          10
 
 #define AXIS_X           (0x1<<XX)

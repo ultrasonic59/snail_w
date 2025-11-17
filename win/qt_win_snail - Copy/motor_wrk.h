@@ -4,36 +4,41 @@
 #include "can_message.h"
 #include "cmd_sender.h"
 #include "dial_debug.h"
+extern QElapsedTimer el_timer;
+extern int	el_time;
 
 class Cmotor_wrk : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Cmotor_wrk(CcmdSender* sender, dev_state_t* p_dev_state, mot_param_t* mot_par = nullptr);
+	explicit Cmotor_wrk(CcmdSender* sender, dev_state_t* p_dev_state
+        ,  bool* p_data_ready = nullptr, mot_param_t* mot_par = nullptr);
 	////bool getAllData(sensors_data_t *data ) ;
 private:
 	CcmdSender* p_cmd_sender;
 public:
-    bool data_ready;
+    bool *p_data_ready;
     dev_state_t* p_dev_state;
     mot_param_t* p_mot_param;
 
 public slots:
 	void SlSendCmd(can_message_t *msg);
 ///protected slots:
-    void sl_stop();
+    void sl_stop_all();
     ///void cl_xminus();
-    void sl_xminus_rel();
+    void sl_axi_rel(int axi);
+
+    void sl_x_rel();
     ///void cl_xplus();
-    void sl_xplus_rel();
+    ///void sl_xplus_rel();
     ///void cl_yminus();
-    void sl_yminus_rel();
+    void sl_y_rel();
     ///void cl_yplus();
-    void sl_yplus_rel();
+    ///void sl_yplus_rel();
     ///void cl_zminus();
-    void sl_zminus_rel();
+    void sl_z_rel();
     //void cl_zplus();
-    void sl_zplus_rel();
+  ///  void sl_zplus_rel();
    /// void cl_go_xx();
     ///void cl_go_yy();
     ///void cl_go_zz();

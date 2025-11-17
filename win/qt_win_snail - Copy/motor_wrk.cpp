@@ -2,9 +2,9 @@
 #include <Qdebug>
 #include <QMessageBox>
 
-Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* mot_par)
+Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, bool* data_ready,mot_param_t* mot_par)
                       :p_cmd_sender(sender),p_dev_state(dev_state)
-                       ,p_mot_param(mot_par)
+                       ,p_mot_param(mot_par), p_data_ready(data_ready)
 {
 /*
     len_step[XX] = DEF_LEN_STEP_X;
@@ -23,6 +23,9 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, mot_param_t* 
 
 void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 num_step)
 {
+    el_time = el_timer.elapsed();
+    qDebug() << "send_cmd_go:" << el_time;
+
     can_message_t t_can_message;
     t_can_message.id = id;
     t_can_message.dlc = 8;
@@ -36,16 +39,22 @@ void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 n
     t_can_message.data[5] = (num_step >> 8) & 0xff;
     t_can_message.data[6] = (num_step >> 16) & 0xff;
     t_can_message.data[7] = (num_step >> 24) & 0xff;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
-        if (wait_rdy_cnt > MAX_WAIT_ANS)
+        if (wait_rdy_cnt > MAX_WAIT_ANS) {
+            qDebug() << "send_cmd_go [wait_rdy_cnt]:" << wait_rdy_cnt;
+
             break;
+        }
     };
+    el_time = el_timer.elapsed();
+    qDebug() << "send_cmd_go1:" << el_time;
+
 }
 void Cmotor_wrk::send_cmd_stop(quint32 id)
 {
@@ -55,10 +64,10 @@ void Cmotor_wrk::send_cmd_stop(quint32 id)
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     t_can_message.data[0] = STOP_CMD;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -80,10 +89,10 @@ void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej, quint8 trq) {
     t_can_message.data[5] = trq;
     t_can_message.data[6] = 0;
     t_can_message.data[7] = 0;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -105,10 +114,10 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
     t_can_message.data[5] = (coord >> 8) & 0xff;
     t_can_message.data[6] = (coord >> 16) & 0xff;;
     t_can_message.data[7] = (coord >> 24) & 0xff;;
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -143,10 +152,10 @@ void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
-    data_ready = false;
+    *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
-    while (data_ready == false)
+    while (*p_data_ready == false)
     {
         wait_rdy_cnt++;
         QThread::msleep(MSLEEP_TIME);
@@ -197,31 +206,27 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
        p_mot_param->mot_rej[ZZ] = rej;
 
 }
+void Cmotor_wrk::sl_axi_rel(int axi)
+{
+    qDebug() << "sl_axi_rel"<< axi;
+    send_cmd_stop(axi);
+}
 
 ///=================== X ===========================
-void Cmotor_wrk::sl_xplus_rel()
+void Cmotor_wrk::sl_x_rel()
 {
-    qDebug() << "sl_xplus_rel";
- ///   send_cmd_stop(X_AXIS_CAN_ID);
+    qDebug() << "sl_x_rel";
+    send_cmd_stop(X_AXIS_CAN_ID);
 }
-void Cmotor_wrk::sl_xminus_rel()
-{
-    qDebug() << "sl_xminus_rel ";
-///    send_cmd_stop(X_AXIS_CAN_ID);
-}
+
 void Cmotor_wrk::sl_clr_x()
 {
     send_cmd_set_coord(X_AXIS_CAN_ID, 0);
 }
 ///=================== Y ===========================
-void Cmotor_wrk::sl_yplus_rel()
+void Cmotor_wrk::sl_y_rel()
 {
-    qDebug() << "sl_yplus_rel";
-    send_cmd_stop(Y_AXIS_CAN_ID);
-}
-void Cmotor_wrk::sl_yminus_rel()
-{
-    qDebug() << "sl_yminus_rel ";
+    qDebug() << "sl_y_rel";
     send_cmd_stop(Y_AXIS_CAN_ID);
 }
 void Cmotor_wrk::sl_clr_y()
@@ -229,14 +234,9 @@ void Cmotor_wrk::sl_clr_y()
     send_cmd_set_coord(Y_AXIS_CAN_ID, 0);
 }
 ///=================== Z ===========================
-void Cmotor_wrk::sl_zplus_rel()
+void Cmotor_wrk::sl_z_rel()
 {
-    qDebug() << "sl_zplus_rel";
-    send_cmd_stop(Z_AXIS_CAN_ID);
-}
-void Cmotor_wrk::sl_zminus_rel()
-{
-    qDebug() << "sl_zminus_rel ";
+    qDebug() << "sl_z_rel";
     send_cmd_stop(Z_AXIS_CAN_ID);
 }
 
@@ -245,14 +245,14 @@ void Cmotor_wrk::sl_clr_z()
     send_cmd_set_coord(Z_AXIS_CAN_ID, 0);
 }
 ///==================================================
-void Cmotor_wrk::sl_stop()
+void Cmotor_wrk::sl_stop_all()
 {
 ////send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID|DOZA_CAN_ID);
  ////   send_cmd_stop(X_AXIS_CAN_ID);
-    qDebug() << "sl_stop0";
+    qDebug() << "sl_stop_all0";
 
    send_cmd_stop(X_AXIS_CAN_ID| Y_AXIS_CAN_ID| Z_AXIS_CAN_ID);
-    qDebug() << "sl_stop";
+    qDebug() << "sl_stop_all";
 
 }
 

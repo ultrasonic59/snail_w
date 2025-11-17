@@ -25,27 +25,17 @@ public slots:
 	void SlSendCmd(can_message_t *msg);
 ///protected slots:
     void sl_stop_all();
-    ///void cl_xminus();
-    void sl_axi_rel(int axi);
+     void sl_axi_rel(int axi);
 
     void sl_x_rel();
-    ///void cl_xplus();
-    ///void sl_xplus_rel();
-    ///void cl_yminus();
     void sl_y_rel();
-    ///void cl_yplus();
-    ///void sl_yplus_rel();
-    ///void cl_zminus();
     void sl_z_rel();
-    //void cl_zplus();
-  ///  void sl_zplus_rel();
-   /// void cl_go_xx();
-    ///void cl_go_yy();
-    ///void cl_go_zz();
     void sl_go_home();
 
     void sl_mot_go(mot_cmd_t mot_cmd);
     void sl_mot_spi(int axi,spi_mot_cmd_t);
+    void sl_doza(doza_cmd_t cmd);
+
     void sl_clr_x();
     void sl_clr_y();
     void sl_clr_z();

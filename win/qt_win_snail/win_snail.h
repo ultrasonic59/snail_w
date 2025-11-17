@@ -224,6 +224,8 @@ protected slots:
     void sl_yminus();
     void sl_zplus();
     void sl_zminus();
+    void sl_doza();
+
  /*
 protected slots:
     void cl_stop();

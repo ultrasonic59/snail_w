@@ -64,25 +64,10 @@
 #define DIR_PLUS            0
 #define DIR_MINUS           1
 ///============================================
-/*
-#define XX          0
-#define YY          1
-#define ZZ          2
-#define NOT_AXIS          10
-
-#define AXIS_X           (0x1<<XX)
-#define AXIS_Y           (0x1<<YY)
-#define AXIS_Z           (0x1<<ZZ)
-#define DOZA_ID          (0x1<<3)
-*/
-///#define X_AXIS          0
-///#define Y_AXIS          1
-///#define Z_AXIS          2
-
 #define X_AXIS_CAN_ID     ((0x1 << XX) << 5)   ///0x20
 #define Y_AXIS_CAN_ID     ((0x1 << YY) << 5)   ///0x40
 #define Z_AXIS_CAN_ID     ((0x1 << ZZ) << 5)  /// 0x80
-#define DOZA_CAN_ID          ((0x1 << 3) << 5)   ///0x100
+#define DOZA_CAN_ID       ((0x1 << DZ) << 5)   ///0x100
 #define NUM_AXIS          (3)    ///x,y,z 
 
 struct  go_cmd_t {
@@ -127,6 +112,13 @@ struct  eeprom_cmd_t {
 	quint8 num_dates;
 	quint8 addr;
 	quint16 data[EEPROM_MAX_NUM_DATES];
+};
+#pragma pack (pop)
+
+#pragma pack (push, 1)
+struct  doza_cmd_t {
+	quint8   cmd;                         /// 
+	quint16 time;
 };
 #pragma pack (pop)
 
