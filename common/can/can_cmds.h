@@ -1,7 +1,7 @@
 #ifndef __CAN_CMDS_H_
 #define __CAN_CMDS_H_
 ///=========================================================
-#include "uart.h"
+///#include "uart.h"
 
 #define CAN_MAX_LEN_QUEU 4
 
@@ -112,6 +112,13 @@
 
 #define CAN_REQ_STAT_NUM_BYTES 1
 
+#ifdef  DOZA_BRD
+#define  _packed_ __attribute__((packed))
+#else
+#define  _packed_  __packed
+#endif
+
+
 typedef struct  go_cmd_s_{
   uint8_t  cmd;                       /// 
   uint8_t  dirs;                     /// .7 -check conc Dirs X,Y,Z ....
@@ -119,20 +126,24 @@ typedef struct  go_cmd_s_{
   uint32_t  steps;                 /// steps X,Y , Z 
 }go_cmd_t;
 
-typedef __packed struct  put_stat_cmd_s_{
+struct   _packed_ put_stat_cmd_s_{
   uint8_t  cmd;                         /// 
   uint8_t  axis;                        /// X,Y , Z 
   uint8_t  state;                     /// ready,move,error
   uint8_t  rsv;
   int32_t  coord;                      /// 
-}put_stat_cmd_t;
+};
 
-typedef __packed struct  encoder_cmd_s_{
+typedef struct  put_stat_cmd_s_ put_stat_cmd_t;
+
+struct _packed_  encoder_cmd_s_{
   uint8_t  cmd;                         /// 
   uint8_t  axis;                        /// X,Y , Z 
   int32_t  coord;                     /// 
   uint16_t temp_val;
-}encoder_cmd_t;
+};
+
+typedef struct  encoder_cmd_s_ encoder_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
   uint8_t  cmd;                         /// 
@@ -149,14 +160,13 @@ typedef struct  put_ack_s_{
   uint8_t  cmd;                         /// 
   ack_t   ack;                         /// 
 }put_ack_t;
-
-typedef __packed struct  set_param_cmd_s_{
+typedef  struct _packed_ set_param_cmd_s_{
   uint8_t   cmd;                         /// 
   uint16_t  num_par;                        /// 
   uint8_t   len_par;                     ///bytes 
   uint32_t  par_val;                      /// 
 }set_param_cmd_t;
-typedef __packed struct  spi_mot_cmd_s_{
+typedef  struct _packed_ spi_mot_cmd_s_{
   uint8_t   cmd;                         /// 
   uint8_t   addr;                        /// 
   uint8_t   len_dat;                     ///bytes 
@@ -197,6 +207,11 @@ uint32_t addr;
 uint16_t data;
 }rd_flash_ans_t;
 
+typedef struct _packed_ doza_cmd_s {
+    uint8_t   cmd;                         ///
+    uint16_t time;
+}doza_cmd_t;
+
 
 
 ///============ for progr =====================
@@ -231,15 +246,18 @@ extern int put_can_ack(uint8_t cmd );
 extern int obr_can_cmd(uint8_t *data);
 extern int put_can_boot_ans(uint8_t cmd,uint8_t state);
 extern uint8_t check_erase_sectors(uint8_t *data);
-extern int go_cmd(go_cmd_t *p_go_cmd);
+extern int put_doza(doza_cmd_t *p_go_cmd);
+
 extern int stop_mot_cmd(void);
 extern int set_param(set_param_cmd_t *i_data);
 ///extern spi_mot_cmd_t  req_spi_mot_cmd;
+#ifndef  DOZA_BRD
+extern int go_cmd(go_cmd_t *p_go_cmd);
 
 extern int wr_spi_mot(spi_mot_cmd_t *i_data);
 extern int rd_spi_mot(spi_mot_cmd_t *i_data);
 extern int put_can_cmd_encoder(encoder_data_t idata);
-
+#endif
 ///=====================================
 #define ERROR_OK            0
 

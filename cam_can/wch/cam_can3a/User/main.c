@@ -38,6 +38,8 @@ TaskHandle_t Task1Task_Handler;
 TaskHandle_t Task2Task_Handler;
 TaskHandle_t  can_send_thread_handle;
 
+TimerHandle_t timer_doza;
+
 ////extern int put_can_ack(uint8_t cmd );
 #if 0
 void task1_task(void *pvParameters)
@@ -142,6 +144,18 @@ int main(void)
                     (UBaseType_t    )TASK1_TASK_PRIO,
                     (TaskHandle_t*  )&Task1Task_Handler);
   */
+    timer_doza = xTimerCreate(
+                    "Doza", //
+                     1000, //
+                    pdFALSE,  //
+                    (void *)0, //
+                    vTimerDozaCallback   //
+                  );
+
+     if(timer_doza == NULL)
+     {
+         printf("Error create timer!!!\n");
+     }
 
     vTaskStartScheduler();
 

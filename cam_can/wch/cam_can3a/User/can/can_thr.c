@@ -11,23 +11,14 @@
 
 QueueHandle_t queu_to_send;
 uint8_t         CAN_RxRdy = 0;              /* CAN HW received a message        */
+extern TimerHandle_t timer_doza;
 
-int stop_mot_cmd(void)
+int put_doza(doza_cmd_t *p_cmd)
 {
-cur_stat=STATE_IDLE;
-printf("\n\rSTATE_IDLE ");
-///put_mot_nstep(0);
-return 0;
-}
-int go_cmd(go_cmd_t *p_go_cmd)
-{
-///cur_stat=STATE_MOVE;
-//// printf("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
-
-///set_dir_mot(p_go_cmd->dirs);
-////set_step_per(p_go_cmd->step_per);
-///set_mot_per(p_go_cmd->step_per);
-////put_mot_nstep(p_go_cmd->steps);
+    printf("\n\rput_doza[%x] ",p_cmd->time);
+    on_off_dv(0x1) ;
+    xTimerChangePeriod(timer_doza,p_cmd->time,0);
+    xTimerStart(timer_doza, 0);
 return 0;
 }
 

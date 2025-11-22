@@ -34,7 +34,8 @@ public slots:
 
     void sl_mot_go(mot_cmd_t mot_cmd);
     void sl_mot_spi(int axi,spi_mot_cmd_t);
-    void sl_doza(doza_cmd_t cmd);
+    void sl_put_doza(doza_cmd_t cmd);
+    void sl_stop_doza();
 
     void sl_clr_x();
     void sl_clr_y();

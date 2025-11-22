@@ -40,6 +40,7 @@ win_snail::win_snail(QWidget *parent)
   qRegisterMetaType <can_message_t>("can_message_t");
 
   qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+  qRegisterMetaType <doza_cmd_t>("doza_cmd_t");
 
  
    p_camera = new CameraDevice(this);
@@ -193,8 +194,9 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
 
  connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
-
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
+
+ connect(this, SIGNAL(s_put_doza(doza_cmd_t)), p_motor_wrk, SLOT(sl_put_doza(doza_cmd_t)));
 
  connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
  connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
@@ -223,8 +225,9 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
  connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
 
- connect(ui->butt_Doza, SIGNAL(pressed()), this, SLOT(sl_zminus()));
- 
+ connect(ui->butt_Doza, SIGNAL(pressed()), this, SLOT(sl_doza()));
+ connect(ui->butt_Doza, SIGNAL(released()), p_motor_wrk, SLOT(sl_stop_doza()));
+
  connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
 
   ///======================= upr motor ========================================
@@ -1857,23 +1860,15 @@ void win_snail::sl_zminus()
 
 void win_snail::sl_doza()
 {
-    qDebug() << "cl_zminus ";
-    ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-    ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = Z_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_MINUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
-
-    ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-
+    qDebug() << "cl_doza ";
+    quint16 len_doza = ui->combo_len_doza->currentText().toInt();
+    if (len_doza == 0)
+        len_doza = MAX_LEN_DOZA;
+    doza_cmd_t t_doza_cmd;
+  ///  t_doza_cmd.id = DOZA_CAN_ID;
+    t_doza_cmd.cmd = ON_DOZA;
+     t_doza_cmd.time = len_doza;
+    emit s_put_doza(t_doza_cmd);
 }
 
 

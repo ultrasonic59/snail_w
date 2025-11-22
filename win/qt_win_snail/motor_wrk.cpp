@@ -125,13 +125,13 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
     };
 }
 ///========================================================
-void Cmotor_wrk::sl_doza(doza_cmd_t cmd) {
+void Cmotor_wrk::sl_put_doza(doza_cmd_t cmd) {
     can_message_t t_can_message;
     t_can_message.id = DOZA_CAN_ID;
     t_can_message.dlc = 3;
     t_can_message.IDE = 0;
     t_can_message.RTR = 0;
-    memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
+    memcpy(t_can_message.data, &cmd, sizeof(doza_cmd_t));
     *p_data_ready = false;
     emit s_SendCmd(&t_can_message);
     int wait_rdy_cnt = 0;
@@ -279,4 +279,11 @@ void Cmotor_wrk::SlSendCmd(can_message_t* msg)
 	qDebug() << "SlSendCmd";
 
 }
+
+void Cmotor_wrk::sl_stop_doza()
+{
+    qDebug() << "sl_stop_doza";
+    send_cmd_stop(DOZA_CAN_ID);
+}
+
 ///==========================================================

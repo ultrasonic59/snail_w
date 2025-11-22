@@ -2,6 +2,11 @@
 #define __CAM_CAN_BRD_H__
 
 #include "debug.h"
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+
+#include "timers.h"
 
 #define DOZA_BRD    1
 
@@ -76,6 +81,8 @@ extern void set_tst1(uint8_t on_off);
 extern void set_tst2(uint8_t on_off);
 extern void set_tst3(uint8_t on_off);
 extern void board_init(void);
+extern void stop_doza(void);
+extern void vTimerDozaCallback (TimerHandle_t xTimer);
 
 #define msleep vTaskDelay
 

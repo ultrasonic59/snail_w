@@ -271,10 +271,13 @@ int obr_can_cmd(uint8_t *data)
 printf("obr_can_cmd[%x] \n\r",data[0]);
 
 switch(data[0]) {
-      case CMD_STOP:
-        put_can_ack(CMD_STOP);
-        stop_mot_cmd();
+      case STOP_CMD:
+        put_can_ack(STOP_CMD);
+        stop_doza();                 ///stop dv
+
+ ///       stop_mot_cmd();
         break;
+#if 0
       case GO_CMD:
         {
         put_can_ack(GO_CMD);
@@ -282,6 +285,7 @@ switch(data[0]) {
   ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
         }
         break;
+#endif
       case GET_STAT_CMD:
         {
         put_can_cmd_stat(cur_stat,0);
@@ -295,30 +299,6 @@ switch(data[0]) {
          put_can_ack(CHECK_CONN );
  ////   printk("CHECK_CONN[%x] ",cur_stat);
         break;
-      case RD_EEPROM_REQ:
-       /*
-        {
-        rd_eeprom_ans_t t_rd_eeprom_ans;  
-        t_rd_eeprom_ans.num_dates=data[1];
-        t_rd_eeprom_ans.addr=data[2];
-        rd_eeprom_dat(&t_rd_eeprom_ans);
-        put_can_rd_eeprom_ans(&t_rd_eeprom_ans);
-
-        }
-        */
-        break;
-      case WR_EEPROM_REQ:
- /*
-        {
-        wr_eeprom_req_t t_wr_eeprom_req;
-        t_wr_eeprom_req.num_dates=data[1];
-        t_wr_eeprom_req.addr=data[2];
-        memcpy(t_wr_eeprom_req.data,&data[3],sizeof(uint16_t)*t_wr_eeprom_req.num_dates); 
-        wr_eeprom_dat(&t_wr_eeprom_req);
-        put_can_wr_eeprom_ans(&t_wr_eeprom_req);
-        }
-        */
-        break;
       case RD_FLASH_REQ:
           /*
         {
@@ -331,7 +311,8 @@ switch(data[0]) {
         break;
       case ON_DOZA:
           put_can_ack(ON_DOZA);
-          on_off_dv(data[1]);
+
+          put_doza((doza_cmd_t *)data);
           ///set_led(data[1]);
 
           break;

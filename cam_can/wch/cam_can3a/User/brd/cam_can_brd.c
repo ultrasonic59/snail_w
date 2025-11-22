@@ -206,6 +206,19 @@ void set_led1_pwm(uint16_t led_pwm)
 {
     TIM_PWM_Led1_set_val(led_pwm);
 }
+///===============================================
+void stop_doza(void)
+{
+    printf("\n\rstop_doza\n\r ");
+    on_off_dv(0);
+
+}
+void vTimerDozaCallback (TimerHandle_t xTimer)
+{
+   configASSERT(xTimer);
+   stop_doza();
+   xTimerStop( xTimer, 0 );
+}
 
 #if 0
 /*********************************************************************

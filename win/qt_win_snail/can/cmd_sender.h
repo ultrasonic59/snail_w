@@ -88,6 +88,7 @@ struct  go_cmd_t {
 #define CONC1_FLG            (0x1<<5)
 
 #define MAX_NUM_STEP 10000000
+#define MAX_LEN_DOZA 65000
 
 struct  mot_cmd_t {
 	quint32 id;
