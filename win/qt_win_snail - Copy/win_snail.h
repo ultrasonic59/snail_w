@@ -224,6 +224,8 @@ protected slots:
     void sl_yminus();
     void sl_zplus();
     void sl_zminus();
+    void sl_doza();
+
  /*
 protected slots:
     void cl_stop();
@@ -249,6 +251,7 @@ signals:
     void s_mot_spi(int axi,spi_mot_cmd_t);
     void s_eeprom(int axi, eeprom_cmd_t);
     void s_key_release(int axi);
+    void s_put_doza(doza_cmd_t);
 
 private:
  ///   QGraphicsItem* currentItem;

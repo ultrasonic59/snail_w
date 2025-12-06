@@ -38,6 +38,7 @@ struct el_pos_t
 	float Rotation;
 
 };
+/*
 struct element_data_t
 {
 	QString RefDes;
@@ -45,8 +46,18 @@ struct element_data_t
 	QString Value;
 	QString Layer;
 	el_pos_t cvs_pos;
-	el_pos_t mach_pos;
-	el_pos_t cur_pos;
+	el_pos_t _mach_pos;
+	el_pos_t _cur_pos;
+};
+*/
+#define MAX_NAME_LEN 64
+struct element_data_t
+{
+char RefDes[MAX_NAME_LEN];
+char PatternName[MAX_NAME_LEN];
+bool Layer;
+bool check;
+el_pos_t cvs_pos;
 };
 
 
@@ -56,8 +67,10 @@ public:
 	c_snail_data();
 	~c_snail_data();
 public:
-	quint32 offs_x;
-	quint32 offs_y;
+	quint32 num_elem;
+
+	quint32 offs_x;        /// in pix (0.01) mm
+	quint32 offs_y;        /// in pix (0.01) mm
 	QList<element_data_t> elements;
 	QList<point_data_t> points;
 	void insertPoint(point_data_t point_data);

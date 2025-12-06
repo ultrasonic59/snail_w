@@ -167,18 +167,19 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(p_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
  connect(this, SIGNAL(s_set_can_com_name(QString)), p_cmd_sender, SLOT(sl_set_com_name(QString)));
  connect(p_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
+ connect(ui->sh_widget, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
 
 
  pCamThread->start();
  ///======================================================
  scene = new PaintScene(this);       // 
  scene->setItemIndexMethod(QGraphicsScene::NoIndex); ///???
- 
+ view_sc = ui->sh_widget;
  ui->sh_widget->setScene(scene);  // 
  ui->sh_widget->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
  ui->sh_widget->setDragMode(QGraphicsView::ScrollHandDrag);
  /// GraphicsView->setStyleSheet("background: transparent;border:0px");
- ui->sh_widget->setStyleSheet("background: transparent;border:0px");
+ ui->sh_widget->setStyleSheet("background: transparent;border:10px");
 
  ////ui.graphicsView->setCursor(QCursor());
 
@@ -1614,7 +1615,8 @@ void win_snail::on_butt_test2()
     ///   QRectF boundingRect()
     ///   pGroup->setTransformOriginPoint(0, 0);
     ////   pGroup->setRotation(45);
-    ///   pGroup->setScale(2);
+   ///    pGroup->setScale(2);
+ ///   view_sc->scale(.5, .5);
 }
 ///====================================================================
 void win_snail::sl_go_x()
@@ -1926,5 +1928,13 @@ void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
     qDebug() << "sl_eeprom2:" << el_time;
 
 
+}
+void win_snail::sl_zoom_changed(double value)
+{
+    ui->lab_zoom->setText(QString("zoom=%1").arg(value));
+
+    ///double currentScale = uitransform().m11();
+    ///    qDebug() << "zoom changed:" << value;
+    ///ui.lineEdit_zoom->setText(QString::number(value));
 }
 

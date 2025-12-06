@@ -1,6 +1,9 @@
 #include "snail_data.h"
 
-c_snail_data::c_snail_data()
+c_snail_data::c_snail_data(): 
+	num_elem(0),
+    offs_x(0),
+    offs_y(0)
 {
 
 }

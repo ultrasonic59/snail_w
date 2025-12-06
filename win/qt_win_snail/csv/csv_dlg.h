@@ -7,6 +7,7 @@
 #include <QList>
 
 #include "ui_csv_dlg.h"
+#include "snail_data.h"
 
 #define CSV_NUM_COL 7
 
@@ -22,40 +23,20 @@ protected:
 	Ui::csv_dlg ui;
 
 public:
-	csv_dlg(QWidget* parent = 0);
+	csv_dlg(QWidget* parent = 0, c_snail_data *sn_data=nullptr);
 	virtual ~csv_dlg();
 	QWidget* pParent;
-/*
-signals:
-	void req_wr_dbg(int num, dbg_dat_req_t*);
-	void req_rd_dbg(int num, dbg_dat_req_t*);
-	void SignalTest();
-	void req_send_can_dbg(can_message_t*);
-
-private slots:
-	void  slot_send_can_msg();
-
-	void  slot_butt_rd();
-	void  slot_butt_wr();
-	void  req_dbg_data_rdy(dbg_dat_req_t*);
-	void  req_xil_data_rdy(xil_dat_req_t*);
-	void  req_str_rdy(char*);
-	void  SlotTest();
-public slots:
-	void clear_textEdit();
-
-private:
-	dbg_dat_req_t  dbg_dat_req;
-	dbg_dat_req_t  dbg_dat;
-	xil_dat_req_t  xil_dat_req;
-	xil_dat_req_t  xil_dat;
-	can_message_t can_data;
-	*/
+public :
+	c_snail_data* p_sn_data;
 private:
 	QStandardItemModel* csvModel;
+	void conv_data();
+	void set_dat_col(int num_row, int num_col, QString rec);
 
+	QString fileName_csv;
 private slots:
 	void SlotOpenFile();
+	void SlotSaveFile();
 
 };
 

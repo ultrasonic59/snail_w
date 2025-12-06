@@ -121,8 +121,23 @@ void LibGraphicView::wheelEvent(QWheelEvent* event) {
     if (event->modifiers() == Qt::ShiftModifier) {
         int cur_angle = event->angleDelta().y();
         qreal scaleFactor = (cur_angle > 0) ? 1.2 : 1.0 / 1.2;
+//=========================================================
+ // Get the current transformation matrix
+ ///       transform = this->transform();
+  ///      QPointF mousePos = this->mapToScene( event->position());
+        ///QPointF tPos = event->position();
+        ///QPoint ttPos = tPos.toPoint();
+        QPointF mousePos = this->mapToScene(event->position().toPoint());
+//=========================================================
     ///   qreal scaleFactorY = (event->angleDelta().y() > 0) ? 1.2 : 1.0 / 1.2;
        scale(scaleFactor, scaleFactor);
+       // Calculate the new view center based on the mouse position
+       QPointF newMousePos = this->mapToScene(event->position().toPoint());
+       QPointF offset = mousePos - newMousePos;
+
+       // Adjust the view position to keep the zoom centered on the mouse
+       this->translate(offset.x(), offset.y());
+
        double currentScale = transform().m11();
        emit zoom_chnged(currentScale);
      }

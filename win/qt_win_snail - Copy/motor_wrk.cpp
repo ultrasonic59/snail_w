@@ -48,14 +48,13 @@ void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 n
         QThread::msleep(MSLEEP_TIME);
         if (wait_rdy_cnt > MAX_WAIT_ANS) {
             qDebug() << "send_cmd_go [wait_rdy_cnt]:" << wait_rdy_cnt;
-
             break;
         }
     };
     el_time = el_timer.elapsed();
     qDebug() << "send_cmd_go1:" << el_time;
-
 }
+
 void Cmotor_wrk::send_cmd_stop(quint32 id)
 {
     can_message_t t_can_message;
@@ -125,6 +124,26 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
             break;
     };
 }
+///========================================================
+void Cmotor_wrk::sl_put_doza(doza_cmd_t cmd) {
+    can_message_t t_can_message;
+    t_can_message.id = DOZA_CAN_ID;
+    t_can_message.dlc = 3;
+    t_can_message.IDE = 0;
+    t_can_message.RTR = 0;
+    memcpy(t_can_message.data, &cmd, sizeof(doza_cmd_t));
+    *p_data_ready = false;
+    emit s_SendCmd(&t_can_message);
+    int wait_rdy_cnt = 0;
+    while (*p_data_ready == false)
+    {
+        wait_rdy_cnt++;
+        QThread::msleep(MSLEEP_TIME);
+        if (wait_rdy_cnt > MAX_WAIT_ANS)
+            break;
+    };
+}
+
 void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
     can_message_t t_can_message;
     switch (axi) {
@@ -137,9 +156,9 @@ void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
      case AXI_Z:
         t_can_message.id = Z_AXIS_CAN_ID;
         break;
-   case AXI_DOZA:
-        t_can_message.id = DOZA_CAN_ID;
-         break;
+ ///  case AXI_DOZA:
+ ///       t_can_message.id = DOZA_CAN_ID;
+ ///        break;
    default:
        return;
        break;
@@ -211,7 +230,6 @@ void Cmotor_wrk::sl_axi_rel(int axi)
     qDebug() << "sl_axi_rel"<< axi;
     send_cmd_stop(axi);
 }
-
 ///=================== X ===========================
 void Cmotor_wrk::sl_x_rel()
 {
@@ -261,4 +279,11 @@ void Cmotor_wrk::SlSendCmd(can_message_t* msg)
 	qDebug() << "SlSendCmd";
 
 }
+
+void Cmotor_wrk::sl_stop_doza()
+{
+    qDebug() << "sl_stop_doza";
+    send_cmd_stop(DOZA_CAN_ID);
+}
+
 ///==========================================================

@@ -40,6 +40,7 @@ win_snail::win_snail(QWidget *parent)
   qRegisterMetaType <can_message_t>("can_message_t");
 
   qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+  qRegisterMetaType <doza_cmd_t>("doza_cmd_t");
 
  
    p_camera = new CameraDevice(this);
@@ -193,8 +194,9 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
 
  connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
-
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
+
+ connect(this, SIGNAL(s_put_doza(doza_cmd_t)), p_motor_wrk, SLOT(sl_put_doza(doza_cmd_t)));
 
  connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
  connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
@@ -223,7 +225,9 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
  connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
 
- 
+ connect(ui->butt_Doza, SIGNAL(pressed()), this, SLOT(sl_doza()));
+ connect(ui->butt_Doza, SIGNAL(released()), p_motor_wrk, SLOT(sl_stop_doza()));
+
  connect(ui->butt_home, SIGNAL(pressed()), p_motor_wrk, SLOT(sl_go_home()));
 
   ///======================= upr motor ========================================
@@ -1380,54 +1384,47 @@ void win_snail::keyPressEvent(QKeyEvent* event)
     case Qt::Key_Escape: {
         qDebug() << "Key_Escape";
         on_esc_key = true;
-    }
-     break;
-
+        }
+        break;
     case Qt::Key_A: {
  ///       qDebug() << "Key_A";
-        scene->currentItem->moveBy(-20, 0);
-
-       }
-     break;
+ ///       scene->currentItem->moveBy(-20, 0);
+        sl_xminus();
+        }
+        break;
     case Qt::Key_S: {
  ///       qDebug() << "Key_S";
-        scene->currentItem->moveBy(0, 20);
-
-    }
-    break;
+///        scene->currentItem->moveBy(0, 20);
+        sl_yminus();
+       }
+       break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
  ///       scene->currentItem->moveBy(0, -20);
         sl_yplus();
-
-    }
-                  break;
+        }
+       break;
     case Qt::Key_D: {
   ///      qDebug() << "Key_D";
-        scene->currentItem->moveBy(20, 0);
+   ///     scene->currentItem->moveBy(20, 0);
+        sl_xplus();
+        }
+        break;
+    case Qt::Key_E: {
+        sl_zplus();
+        }
+        break;
+    case Qt::Key_F: {
+        sl_zminus();
+       }
+       break;
 
-    }
-                  break;
     case Qt::Key_R: {
      ///   QTransform	transform();
         t_angl -= 5.0;
         rotateComp(t_angl);
-
-/*
-        QPointF pnt = scene->currentItem->transformOriginPoint();
-        QPointF pos = scene->currentItem->pos();
-        QPointF spos = scene->currentItem->scenePos();
-
-             qDebug() << "pnt=" << pnt<<"pos="<< pos << "spos=" << spos;
-*/
-     ////   scene->currentItem->setTransformOriginPoint(200, 0);
-
-        ///scene->currentItem->setRotation(t_angl);
-
- ///       scene->currentItem->setRotation(-5);
-
-    }
-                  break;
+        }
+        break;
     case Qt::Key_Q: {
 
         ///      qDebug() << "Key_D";
@@ -1505,48 +1502,25 @@ void win_snail::keyPressEvent(QKeyEvent* event)
 ///=========================================================
     }
 
-#if 0
-    switch (event->key()) {
-    case Qt::Key_Delete: {
-        foreach(QGraphicsItem * item, selectedItems()) {
-            removeItem(item);
-            delete item;
-        }
-        deselectItems();
-        break;
-    }
-
-#if 0
-    case Qt::Key_A: {
-        if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
-            foreach(QGraphicsItem * item, items()) {
-                item->setSelected(true);
-            }
-            if (selectedItems().length() == 1) signalSelectItem(selectedItems().at(0));
-        }
-        break;
-    }
-#endif
-    default:
-        break;
-}
-#endif
-///    QGraphicsScene::keyPressEvent(event);
+    QMainWindow::keyPressEvent(event);
 
 }
 void win_snail::keyReleaseEvent(QKeyEvent* event) {
     switch (event->key()) {
-    case Qt::Key_W: {
-        ///       qDebug() << "Key_W";
-        ///       scene->currentItem->moveBy(0, -20);
-        /// 
-        /// 
-     ///   sl_yplus();
+    case Qt::Key_A:
+    case Qt::Key_D:
+        emit s_key_release(X_AXIS_CAN_ID);
+        break;
+    case Qt::Key_S: 
+    case Qt::Key_W:
         emit s_key_release(Y_AXIS_CAN_ID);
+         break;
+    case Qt::Key_E: 
+    case Qt::Key_F:
+        emit s_key_release(Z_AXIS_CAN_ID);
+        break;
     }
-    }
-
-    QMainWindow::keyReleaseEvent(event);
+ QMainWindow::keyReleaseEvent(event);
 }
 ///==============================================
 ///==============================================
@@ -1884,6 +1858,20 @@ void win_snail::sl_zminus()
 
 }
 
+void win_snail::sl_doza()
+{
+    qDebug() << "cl_doza ";
+    quint16 len_doza = ui->combo_len_doza->currentText().toInt();
+    if (len_doza == 0)
+        len_doza = MAX_LEN_DOZA;
+    doza_cmd_t t_doza_cmd;
+  ///  t_doza_cmd.id = DOZA_CAN_ID;
+    t_doza_cmd.cmd = ON_DOZA;
+     t_doza_cmd.time = len_doza;
+    emit s_put_doza(t_doza_cmd);
+}
+
+
 ///================================================================
 void win_snail::on_clr()
 {
@@ -1906,9 +1894,9 @@ void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
     case AXI_Z:
         t_can_message.id = Z_AXIS_CAN_ID;
         break;
-    case AXI_DOZA:
-        t_can_message.id = DOZA_CAN_ID;
-        break;
+ ///   case AXI_DOZA:
+ ///       t_can_message.id = DOZA_CAN_ID;
+ ///       break;
     default:
         return;
         break;
