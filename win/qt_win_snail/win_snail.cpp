@@ -488,7 +488,8 @@ void win_snail::sl_setDrawProp()
 void win_snail::sl_openCsvFile()
 {
  qDebug() << "sl_openCsvFile";
-  csv_dlg CsvDlg(this);
+ 
+  csv_dlg CsvDlg(this, &snail_data);
 
  if (CsvDlg.exec())
  {

@@ -283,6 +283,4 @@ protected slots:
     void sl_mouse_pos(QPointF pnt);
     void sl_eeprom(int axi, eeprom_cmd_t cmd);
     void sl_zoom_changed(double value);
-
-
 };

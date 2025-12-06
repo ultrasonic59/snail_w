@@ -22,35 +22,47 @@ csv_dlg::~csv_dlg()
 }
 void csv_dlg::set_dat_col(int num_row, int num_col, QString rec) {
     QString trec=rec;
-    char *tstr = trec.toStdString().c_str();
-  ///  trec.chop(3);
-  ///  tstr = trec.toStdString().c_str();
-    switch (num_col) {
-    case 1:
-         qDebug() << "rec= " << trec;
+    char *char_str;
+    std::string str = trec.toStdString();
+    const char* tstr = str.c_str();
 
+    switch (num_col) {
+    case 0:
+       strcpy(t_element_data.RefDes, tstr);
+        break;
+    case 1:
+  ///      p_sn_data->
+  ///       qDebug() << "rec= " << tstr;
+         strcpy(t_element_data.PatternName, tstr);
         break;
     case 2:
+        ///qDebug() << "rec= " << tstr;
         break;
     case 3:
+        t_element_data.Layer = (trec == "Top") ? false : true;
         break;
     case 4:
+        t_element_data.cvs_pos.LocationX = trec.toFloat();
         break;
     case 5:
+        t_element_data.cvs_pos.LocationY = trec.toFloat();
         break;
     case 6:
+        t_element_data.cvs_pos.Rotation = trec.toFloat();
         break;
     case 7:
+        t_element_data.check = (trec == "") ? false : true;
         break;
-
     }
-
 }
 
-void csv_dlg::conv_data()
+bool csv_dlg::conv_data()
 {
+    if (p_sn_data == nullptr)
+        return false;
     QString tstr= QString();
     QStandardItem* item;
+
     QList<QStandardItem*> itemList;
     QModelIndex index = csvModel->index(0,0);
     for (int ii = 1; ii < csvModel->rowCount(); ii++) {
@@ -58,15 +70,42 @@ void csv_dlg::conv_data()
             index = csvModel->index(ii,jj);
                 tstr = index.data().toString();
              ///   qDebug() << "tstr= " << tstr;
-//            }
            set_dat_col(ii, jj, tstr);
         }
+    p_sn_data->elements << t_element_data;
 }
-
+    return true;
 }
 void csv_dlg::SlotSaveFile()
 {
-    conv_data();
+  if (!conv_data())
+      return;
+  element_data_t t_elem_data;
+
+  QString fileName_tbl = fileName_csv;
+  fileName_tbl.chop(3);
+  fileName_tbl += "tbl";
+  qDebug() << "fileName_tbl= " << fileName_tbl;
+  QFile file(fileName_tbl);
+ 
+  if (!file.open(QIODevice::WriteOnly)) {
+      QMessageBox::critical(this, tr("Error"), tr("Could not open file"));
+      return;
+  }
+ 
+  int cnt_el=p_sn_data->elements.count();
+  qDebug() << "cnt_el= " << cnt_el;
+  for (int ii = 0; ii < cnt_el; ii++) {
+  ///    t_elem_data << p_sn_data->elements;
+      t_elem_data = p_sn_data->elements.takeFirst();
+      qDebug() << "el= " << t_elem_data.RefDes;
+
+      file.write( (const char*) &t_elem_data,sizeof(element_data_t));
+
+  }
+ /// file.write( (doc.toJson(QJsonDocument::Indented));
+ /// 
+file.close();
 }
 void csv_dlg::SlotOpenFile()
 {
@@ -109,7 +148,7 @@ void csv_dlg::SlotOpenFile()
             csvModel->insertRow(csvModel->rowCount(), standardItemsList);
             num_comp++;
         }
-        ////qDebug() << "num_comp= "<< num_comp;
+        qDebug() << "num_comp= "<< num_comp;
 
         file.close();
     }

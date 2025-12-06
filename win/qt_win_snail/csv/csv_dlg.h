@@ -30,9 +30,9 @@ public :
 	c_snail_data* p_sn_data;
 private:
 	QStandardItemModel* csvModel;
-	void conv_data();
+	bool conv_data();
 	void set_dat_col(int num_row, int num_col, QString rec);
-
+	element_data_t t_element_data;
 	QString fileName_csv;
 private slots:
 	void SlotOpenFile();
