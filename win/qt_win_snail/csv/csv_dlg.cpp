@@ -20,20 +20,20 @@ csv_dlg::~csv_dlg()
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 */
 }
-void csv_dlg::set_dat_col(int num_row, int num_col, QString rec) {
-    QString trec=rec;
+void csv_dlg::set_dat_col(int num_row, int num_col, QString irec) {
+    QString trec=irec.mid(1);
+    trec.chop(1);
     char *char_str;
     std::string str = trec.toStdString();
     const char* tstr = str.c_str();
-
     switch (num_col) {
     case 0:
-       strcpy(t_element_data.RefDes, tstr);
+        strcpy(t_element_data.RefDes, tstr);
         break;
     case 1:
-  ///      p_sn_data->
-  ///       qDebug() << "rec= " << tstr;
-         strcpy(t_element_data.PatternName, tstr);
+        ///      p_sn_data->
+        ///       qDebug() << "rec= " << tstr;
+        strcpy(t_element_data.PatternName, tstr);
         break;
     case 2:
         ///qDebug() << "rec= " << tstr;
@@ -42,7 +42,13 @@ void csv_dlg::set_dat_col(int num_row, int num_col, QString rec) {
         t_element_data.Layer = (trec == "Top") ? false : true;
         break;
     case 4:
-        t_element_data.cvs_pos.LocationX = trec.toFloat();
+    {
+        float ftmp;
+        ftmp = trec.toFloat();
+        t_element_data.cvs_pos.LocationX = ftmp;
+
+ ///       qDebug() << "trec= " << trec << ftmp << t_element_data.cvs_pos.LocationX;
+    }
         break;
     case 5:
         t_element_data.cvs_pos.LocationY = trec.toFloat();
@@ -81,6 +87,11 @@ void csv_dlg::SlotSaveFile()
   if (!conv_data())
       return;
   element_data_t t_elem_data;
+  float min_x = 0;
+  float min_y = 0;
+  float max_x = 0;
+  float max_y = 0;
+  ///int num_el = 0;
 
   QString fileName_tbl = fileName_csv;
   fileName_tbl.chop(3);
@@ -98,14 +109,25 @@ void csv_dlg::SlotSaveFile()
   for (int ii = 0; ii < cnt_el; ii++) {
   ///    t_elem_data << p_sn_data->elements;
       t_elem_data = p_sn_data->elements.takeFirst();
-      qDebug() << "el= " << t_elem_data.RefDes;
+    /// qDebug() << "el= " << t_elem_data.cvs_pos.LocationX;/// check;/// .Layer;
 
       file.write( (const char*) &t_elem_data,sizeof(element_data_t));
-
+      if (min_x > t_elem_data.cvs_pos.LocationX)
+          min_x = t_elem_data.cvs_pos.LocationX;
+      if (min_y > t_elem_data.cvs_pos.LocationY)
+          min_y = t_elem_data.cvs_pos.LocationY;
+      if (max_x < t_elem_data.cvs_pos.LocationX)
+          max_x = t_elem_data.cvs_pos.LocationX;
+      if (max_y < t_elem_data.cvs_pos.LocationY)
+          max_y = t_elem_data.cvs_pos.LocationY;
   }
- /// file.write( (doc.toJson(QJsonDocument::Indented));
- /// 
 file.close();
+p_sn_data->max_x = max_x;
+p_sn_data->max_y = max_y;
+p_sn_data->min_x = min_x;
+p_sn_data->min_y = min_y;
+p_sn_data->num_elem = cnt_el;
+
 }
 void csv_dlg::SlotOpenFile()
 {

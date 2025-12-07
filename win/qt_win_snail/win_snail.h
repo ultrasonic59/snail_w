@@ -22,6 +22,9 @@
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
 #include "csv/csv_dlg.h"
+
+#include "tbl/tbl_dlg.h"
+
 #include "snail_data.h"
 #include "motor_wrk.h"
 #include "CamPlotter.h"
@@ -88,7 +91,6 @@ private:
 public:
     c_snail_data snail_data;
 private:
-  ///  QLabel* _Label;
     QPen Pen;
 
  ////   VideoCapture _cap;
@@ -97,8 +99,6 @@ private:
    Mat _frame;
  ///   QImage    _Image;
     QTimer* p_PlotTimer;
-
- ///  hid_device* hid_handle;
 private:
     QThread* pSenderThread;
     CcmdSender* p_cmd_sender;
@@ -115,13 +115,9 @@ private:
 private:
     CameraDevice* p_camera;
 
-  ////  QCamera* pt_qcam;
-///    MyCamera *pt_camera;
-
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void setupActions();
- ////   void createThreads();
 
     void saveSettings(void);
     void loadSettings(void);
@@ -141,6 +137,7 @@ private:
     QAction* actionFile;
     QAction* actionSelect;
     QAction* actionFile_Csv;
+    QAction* actionFile_Tbl;
     QAction* actionSet_colors;
     QAction* actionNew_prj;
     QAction* actionNew_file;
@@ -169,10 +166,12 @@ public slots:
     void slot_rd_dbg(int axi,int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int axi,int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
+
     void on_butt_test();
     void on_butt_test1();
     void on_butt_test2();
     void on_butt_test3();
+
     void on_butt_load();
 
     void sl_rsv_can_dat(can_message_t);
@@ -185,6 +184,8 @@ private slots:
     void sl_show_rule_coord(QRect& rc);
     void sl_setDrawProp();
     void sl_openCsvFile();
+    void sl_openTblFile();
+
     void sl_newPrj();
     void sl_newFile();
 
@@ -199,12 +200,6 @@ private slots:
     bool okToContinue();
     bool saveAs();
     void sl_set_mot_rej();
-  ///  void sl_set_rej_y();
-  ///  void sl_set_rej_z();
-
-    ///void cl_clr_x();
-    ///void cl_clr_y();
-    ///void cl_clr_z();
 /*
 protected:
     bool    xminusPushed;
@@ -254,13 +249,10 @@ signals:
     void s_put_doza(doza_cmd_t);
 
 private:
- ///   QGraphicsItem* currentItem;
     PaintScene* scene;
-  ///  QGraphicsView* view_sc;
     LibGraphicView* view_sc;
     QString lib_path;
     LibUtil lib_util;
-///    cust_group* p_curGroup;
     void showConState();
     quint8  prev_states[NUM_AXIS];                       /// 
 
@@ -274,6 +266,7 @@ protected:
     void send_cmd_stop(quint32 id);
     void send_cmd_mot_rej(quint32 id,quint8 rej);
     void send_cmd_set_coord(quint32 id, quint32 coord); */
+
     void mousePressEvent(QMouseEvent* event);
     QThread* pMotorThread;
     Cmotor_wrk* p_motor_wrk;

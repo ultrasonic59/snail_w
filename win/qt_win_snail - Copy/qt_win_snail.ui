@@ -1388,6 +1388,24 @@
         <string>TQ</string>
        </property>
       </widget>
+      <widget class="QLabel" name="lab_zoom">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>220</y>
+         <width>141</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>xxxxxxx</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

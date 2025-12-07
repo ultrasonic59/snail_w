@@ -131,6 +131,7 @@
     <ClCompile Include="plotters\camplotter.cpp" />
     <ClCompile Include="plotters\paint_scene.cpp" />
     <ClCompile Include="plotters\PlotProperties.cpp" />
+    <ClCompile Include="tbl\tbl_dlg.cpp" />
     <ClCompile Include="utils\colorlabel.cpp" />
     <ClCompile Include="utils\lib_util.cpp" />
     <ClCompile Include="utils\svgreader.cpp" />
@@ -145,6 +146,7 @@
     <QtUic Include="dial_lib\dial_lib.ui" />
     <QtUic Include="port_prop_dialog.ui" />
     <QtUic Include="qt_win_snail.ui" />
+    <QtUic Include="tbl\tbl_dlg.ui" />
     <QtUic Include="ViewProperies.ui" />
     <QtMoc Include="win_snail.h" />
     <ClCompile Include="can\cmd_sender.cpp" />
@@ -189,6 +191,7 @@
     <QtMoc Include="utils\colorlabel.h" />
     <QtMoc Include="utils\svgreader.h" />
     <QtMoc Include="utils\lib_util.h" />
+    <QtMoc Include="tbl\tbl_dlg.h" />
     <ClInclude Include="widgets\comboboxkey.h" />
     <QtMoc Include="widgets\plotterwidget.h" />
     <QtMoc Include="widgets\param_ed.h" />

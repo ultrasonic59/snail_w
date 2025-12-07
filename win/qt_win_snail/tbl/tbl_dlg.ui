@@ -1,38 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>csv_dlg</class>
- <widget class="QDialog" name="csv_dlg">
+ <class>tbl_dlg</class>
+ <widget class="QDialog" name="tbl_dlg">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>888</width>
+    <width>780</width>
     <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>csv_dlg</string>
+   <string>Tbl_dlg</string>
   </property>
   <property name="modal">
    <bool>true</bool>
   </property>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>400</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionOpen_csv_file"/>
-   </widget>
-   <addaction name="menuFile"/>
-  </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -54,12 +37,12 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>861</width>
+     <width>761</width>
      <height>291</height>
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonFile">
+  <widget class="QPushButton" name="pushButtonOpen">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -69,12 +52,25 @@
     </rect>
    </property>
    <property name="text">
-    <string>File</string>
+    <string>Open</string>
    </property>
   </widget>
-  <action name="actionOpen_csv_file">
+  <widget class="QPushButton" name="pushButtonSave">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>320</y>
+     <width>51</width>
+     <height>23</height>
+    </rect>
+   </property>
    <property name="text">
-    <string>Open csv file</string>
+    <string>Save</string>
+   </property>
+  </widget>
+  <action name="actionOpen_tbl_file">
+   <property name="text">
+    <string>Open tbl file</string>
    </property>
   </action>
  </widget>
@@ -83,7 +79,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>csv_dlg</receiver>
+   <receiver>tbl_dlg</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -99,7 +95,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>csv_dlg</receiver>
+   <receiver>tbl_dlg</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

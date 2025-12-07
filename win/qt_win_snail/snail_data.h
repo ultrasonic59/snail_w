@@ -69,8 +69,13 @@ public:
 public:
 	quint32 num_elem;
 
-	quint32 offs_x;        /// in pix (0.01) mm
-	quint32 offs_y;        /// in pix (0.01) mm
+	qint32 offs_x;        /// in pix (0.01) mm
+	qint32 offs_y;        /// in pix (0.01) mm
+	float min_x;        /// in pix (0.01) mm
+	float min_y;        /// in pix (0.01) mm
+	float max_x;        /// in pix (0.01) mm
+	float max_y;        /// in pix (0.01) mm
+
 	QList<element_data_t> elements;
 	QList<point_data_t> points;
 	void insertPoint(point_data_t point_data);

@@ -1,12 +1,13 @@
 ﻿#include "csv_dlg.h"
 
-csv_dlg::csv_dlg(QWidget* parent) :
-    QDialog(parent, Qt::Window), pParent(parent)
+csv_dlg::csv_dlg(QWidget* parent, c_snail_data* sn_data) :
+    QDialog(parent, Qt::Window), pParent(parent), p_sn_data(sn_data)
     , ui()
 {
     ui.setupUi(this);
 
-connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(SlotOpenFile()));
+connect(ui.pushButtonOpen, SIGNAL(clicked()), this, SLOT(SlotOpenFile()));
+connect(ui.pushButtonSave, SIGNAL(clicked()), this, SLOT(SlotSaveFile()));
 
 }
 
@@ -19,35 +20,105 @@ csv_dlg::~csv_dlg()
     disconnect(ui.pushButton_send_can, SIGNAL(clicked()), this, SLOT(slot_send_can_msg()));
 */
 }
-#if 0
-newAct = new QAction(QIcon(":/images/new.png"), tr("&Новый"), this);
-//Параметры конструктора QAction: иконка из ресурсов, текст меню, родитель
-newAct->setShortcuts(QKeySequence::New);
-//В классе QKeySequence уже определены стандартные комбинации клавиш
-newAct->setStatusTip(tr("Создать новый файл"));
-//Подсказка для строки состояния;
-//tr() - макрос, который может пригодиться
-//при автоматической локализации приложения
-connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
-//Назначили слот для обработки выбора пункта меню
-#endif
+void csv_dlg::set_dat_col(int num_row, int num_col, QString rec) {
+    QString trec=rec;
+    char *char_str;
+    std::string str = trec.toStdString();
+    const char* tstr = str.c_str();
 
+    switch (num_col) {
+    case 0:
+       strcpy(t_element_data.RefDes, tstr);
+        break;
+    case 1:
+  ///      p_sn_data->
+  ///       qDebug() << "rec= " << tstr;
+         strcpy(t_element_data.PatternName, tstr);
+        break;
+    case 2:
+        ///qDebug() << "rec= " << tstr;
+        break;
+    case 3:
+        t_element_data.Layer = (trec == "Top") ? false : true;
+        break;
+    case 4:
+        t_element_data.cvs_pos.LocationX = trec.toFloat();
+        break;
+    case 5:
+        t_element_data.cvs_pos.LocationY = trec.toFloat();
+        break;
+    case 6:
+        t_element_data.cvs_pos.Rotation = trec.toFloat();
+        break;
+    case 7:
+        t_element_data.check = (trec == "") ? false : true;
+        break;
+    }
+}
 
+bool csv_dlg::conv_data()
+{
+    if (p_sn_data == nullptr)
+        return false;
+    QString tstr= QString();
+    QStandardItem* item;
+
+    QList<QStandardItem*> itemList;
+    QModelIndex index = csvModel->index(0,0);
+    for (int ii = 1; ii < csvModel->rowCount(); ii++) {
+        for (int jj = 0; jj < csvModel->columnCount(); jj++) {
+            index = csvModel->index(ii,jj);
+                tstr = index.data().toString();
+             ///   qDebug() << "tstr= " << tstr;
+           set_dat_col(ii, jj, tstr);
+        }
+    p_sn_data->elements << t_element_data;
+}
+    return true;
+}
+void csv_dlg::SlotSaveFile()
+{
+  if (!conv_data())
+      return;
+  element_data_t t_elem_data;
+
+  QString fileName_tbl = fileName_csv;
+  fileName_tbl.chop(3);
+  fileName_tbl += "tbl";
+  qDebug() << "fileName_tbl= " << fileName_tbl;
+  QFile file(fileName_tbl);
+ 
+  if (!file.open(QIODevice::WriteOnly)) {
+      QMessageBox::critical(this, tr("Error"), tr("Could not open file"));
+      return;
+  }
+ 
+  int cnt_el=p_sn_data->elements.count();
+  qDebug() << "cnt_el= " << cnt_el;
+  for (int ii = 0; ii < cnt_el; ii++) {
+  ///    t_elem_data << p_sn_data->elements;
+      t_elem_data = p_sn_data->elements.takeFirst();
+      qDebug() << "el= " << t_elem_data.RefDes;
+
+      file.write( (const char*) &t_elem_data,sizeof(element_data_t));
+
+  }
+ /// file.write( (doc.toJson(QJsonDocument::Indented));
+ /// 
+file.close();
+}
 void csv_dlg::SlotOpenFile()
 {
-    // Создаём модель данных для отображения таблицы из CSV файла
+    quint32 num_comp = 0;
     csvModel = new QStandardItemModel(this);
-    csvModel->setColumnCount(CSV_NUM_COL);
- ///   csvModel->setHorizontalHeaderLabels(QStringList() << "Марка" << "Модель" << "Цена");
-    ui.tableView->setModel(csvModel); // Устанавливаем модель в таблицу
+    csvModel->setColumnCount(CSV_NUM_COL+1);   /// +1 for check
+     ui.tableView->setModel(csvModel); // Устанавливаем модель в таблицу
   ////  csvModel->setHorizontalHeaderLabels(QStringList() << "Марка" << "Модель" << "Цена");
 
-
-QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
-        tr("Csv Files (*.csv *.pnp)"));
-  ////      tr("Csv Files (*.csv);;C++ Files (*.cpp *.h)"));
-    if (fileName != "") {
-        QFile file(fileName);
+     fileName_csv = QFileDialog::getOpenFileName(this, tr("Open File"), "",
+        tr("Csv Files (*.csv *.pnp )"));
+      if (fileName_csv != "") {
+        QFile file(fileName_csv);
         if (!file.open(QIODevice::ReadOnly)) {
             QMessageBox::critical(this, tr("Error"), tr("Could not open file"));
             return;
@@ -58,6 +129,8 @@ QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
      for (QString h_item : head_line.split(",")) {
          head_list<< h_item;
      }
+     head_list << "Check";
+
      csvModel->setHorizontalHeaderLabels(head_list);
 
      while (!in.atEnd())
@@ -66,11 +139,17 @@ QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
             QString line = in.readLine();
             // Добавляем в модель по строке с элементами
             QList<QStandardItem*> standardItemsList;
+           
             for (QString item : line.split(",")) {
+       ///         qDebug() << "item= " << item;
+
                 standardItemsList.append(new QStandardItem(item));
             }
             csvModel->insertRow(csvModel->rowCount(), standardItemsList);
+            num_comp++;
         }
+        qDebug() << "num_comp= "<< num_comp;
+
         file.close();
     }
 }

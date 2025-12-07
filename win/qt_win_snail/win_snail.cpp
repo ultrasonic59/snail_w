@@ -254,6 +254,21 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(scene, SIGNAL(s_mouse_pos(QPointF)), this, SLOT(sl_mouse_pos(QPointF)));
 
  connect(scene, SIGNAL(s_show_json(QByteArray)), this, SLOT(sl_show_json(QByteArray)));
+ //========================================================================
+ /*
+ QString validString = "123.45";
+
+
+ bool ok;
+ float result1 = validString.toFloat(&ok);
+ if (ok) {
+     qDebug() << "Conversion successful! Result:" << result1;
+ }
+ else {
+     qDebug() << "Conversion failed for:" << validString;
+ }
+ */
+ //========================================================================
 
  }
  void win_snail::sl_mouse_pos(QPointF pnt)
@@ -398,20 +413,12 @@ void win_snail::setupActions()
   connect(actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
   connect(actionSelect, SIGNAL(triggered()), this, SLOT(selectVideoSource()));
   connect(actionFile_Csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
+  connect(actionFile_Tbl, SIGNAL(triggered()), this, SLOT(sl_openTblFile()));
+
   connect(actionNew_prj, SIGNAL(triggered()), this, SLOT(sl_newPrj()));
   connect(actionNew_file, SIGNAL(triggered()), this, SLOT(sl_newFile()));
 
 
-///====    actionFile_csv ========
-#if 0
-    ui->actionFile_csv->setStatusTip(tr("Open csv file"));
-    connect(ui->actionFile_csv, SIGNAL(triggered()), this, SLOT(sl_openCsvFile()));
-
-    ui->actionSelect->setStatusTip(tr("Select video source"));
-    connect(ui->actionSelect, SIGNAL(triggered()), this, SLOT(__selectVideoSource()));
-
-    connect(ui->actionSet_colors, SIGNAL(triggered()), this, SLOT(sl_setDrawProp()));
-#endif
 /*
     ui->pausevideoAct->setStatusTip(tr("Pause video"));
     connect(ui->pausevideoAct, SIGNAL(triggered(bool)), pt_qvideosource, SLOT(pause()));
@@ -494,17 +501,34 @@ void win_snail::sl_openCsvFile()
  if (CsvDlg.exec())
  {
      qDebug() << "Ok";
-
  }
  else
  {
      qDebug() << "cancel";
-
  }
  ////ViewProperties* viewProp;
  ////viewProp = new ViewProperties(this, this, &PlotProp);
  ////viewProp->show();
 }
+void win_snail::sl_openTblFile()
+{
+    qDebug() << "sl_openTblFile";
+
+    tbl_dlg TblDlg(this, &snail_data);
+
+    if (TblDlg.exec())
+    {
+        qDebug() << "Ok";
+    }
+    else
+    {
+        qDebug() << "cancel";
+    }
+    ////ViewProperties* viewProp;
+    ////viewProp = new ViewProperties(this, this, &PlotProp);
+    ////viewProp->show();
+}
+
 #if 0
 static QString getExistingDirectory(QWidget* parent = nullptr,
     const QString& caption = QString(),
@@ -1121,6 +1145,9 @@ void win_snail::createMenus() {
     menuFile->addAction(actionSet_colors);
     actionFile_Csv = new QAction("Open csv", this);
     menuOpen->addAction(actionFile_Csv);
+    actionFile_Tbl = new QAction("Open tbl", this);
+    menuOpen->addAction(actionFile_Tbl);
+
 ///====== new =======================================
     actionNew_prj= new QAction("New proj", this);
     actionNew_file = new QAction("New file", this);
@@ -1604,7 +1631,7 @@ if (tmp_tst & 0x1)
 }
 void win_snail::on_butt_test2()
 {
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
+ ///   quint8 mot_rej = ui->combo_rej->currentText().toInt();
 ///    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
 #if 0
     if (p_curGroup != nullptr) {
@@ -1618,6 +1645,8 @@ void win_snail::on_butt_test2()
     ////   pGroup->setRotation(45);
    ///    pGroup->setScale(2);
  ///   view_sc->scale(.5, .5);
+    scene->currentItem->moveBy(10, 10);// > setRotation(t_angl);
+
 }
 ///====================================================================
 void win_snail::sl_go_x()

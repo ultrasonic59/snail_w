@@ -182,7 +182,6 @@ void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
             break;
     };
 }
-
 ///=================================================
 void Cmotor_wrk::sl_mot_go(mot_cmd_t mot_cmd)
 {

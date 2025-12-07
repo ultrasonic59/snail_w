@@ -1,0 +1,112 @@
+[
+    {
+        "obj": {
+            "brush": {
+                "color": "ffaaaaff",
+                "style": 1
+            },
+            "height": 150,
+            "pen": {
+                "color": "ff000000",
+                "width": 2
+            },
+            "pos": {
+                "x": 190,
+                "y": 230
+            },
+            "type": "Rect",
+            "width": 85
+        }
+    },
+    {
+        "obj": {
+            "brush": {
+                "color": "ffaaaaff",
+                "style": 1
+            },
+            "height": 150,
+            "pen": {
+                "color": "ff000000",
+                "width": 2
+            },
+            "pos": {
+                "x": 360,
+                "y": 230
+            },
+            "type": "Rect",
+            "width": 85
+        }
+    },
+    {
+        "obj": {
+            "p1": {
+                "x": 270,
+                "y": 230
+            },
+            "p2": {
+                "x": 370,
+                "y": 230
+            },
+            "pen": {
+                "color": "ff000000",
+                "width": 2
+            },
+            "type": "Line"
+        }
+    },
+    {
+        "obj": {
+            "p1": {
+                "x": 270,
+                "y": 380
+            },
+            "p2": {
+                "x": 360,
+                "y": 380
+            },
+            "pen": {
+                "color": "ff000000",
+                "width": 2
+            },
+            "type": "Line"
+        }
+    },
+    {
+        "obj": {
+            "brush": {
+                "color": "ffff0000",
+                "style": 1
+            },
+            "height": 25,
+            "pen": {
+                "color": "ffff0000",
+                "width": 2
+            },
+            "pos": {
+                "x": 218,
+                "y": 288
+            },
+            "type": "Circle",
+            "width": 25
+        }
+    },
+    {
+        "obj": {
+            "brush": {
+                "color": "ffff0000",
+                "style": 1
+            },
+            "height": 25,
+            "pen": {
+                "color": "ffff0000",
+                "width": 2
+            },
+            "pos": {
+                "x": 388,
+                "y": 288
+            },
+            "type": "Circle",
+            "width": 25
+        }
+    }
+]

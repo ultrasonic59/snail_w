@@ -256,6 +256,8 @@ signals:
 private:
  ///   QGraphicsItem* currentItem;
     PaintScene* scene;
+  ///  QGraphicsView* view_sc;
+    LibGraphicView* view_sc;
     QString lib_path;
     LibUtil lib_util;
 ///    cust_group* p_curGroup;
@@ -280,6 +282,5 @@ protected slots:
     void on_clr();
     void sl_mouse_pos(QPointF pnt);
     void sl_eeprom(int axi, eeprom_cmd_t cmd);
- 
-
+    void sl_zoom_changed(double value);
 };

@@ -78,6 +78,12 @@
     <Filter Include="Source Files\camera">
       <UniqueIdentifier>{aecf2846-6a74-4f0d-95ea-6a7de6bb55a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\tbl">
+      <UniqueIdentifier>{c23db28f-7314-4feb-922b-3f3adb682c10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tbl">
+      <UniqueIdentifier>{72961e48-65cf-447a-a16d-a3c4ce3d9507}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_snail.qrc">
@@ -181,6 +187,9 @@
     <ClCompile Include="items\component.cpp">
       <Filter>Source Files\items</Filter>
     </ClCompile>
+    <ClCompile Include="tbl\tbl_dlg.cpp">
+      <Filter>Source Files\tbl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\comboboxkey.h">
@@ -240,6 +249,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="qt_win_snail.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="tbl\tbl_dlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -303,6 +315,9 @@
     </QtMoc>
     <QtMoc Include="items\component.h">
       <Filter>Header Files\items</Filter>
+    </QtMoc>
+    <QtMoc Include="tbl\tbl_dlg.h">
+      <Filter>Header Files\tbl</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
