@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QFile>
 #include <QList>
-
+#include <QtableView>
 #include "ui_tbl_dlg.h"
 #include "snail_data.h"
 
@@ -21,7 +21,8 @@ class tbl_dlg : public QDialog
 
 protected:
 	Ui::tbl_dlg ui;
-
+	QTableView *tableWidget;
+///	QTableWidget* tableWidget;
 public:
 	tbl_dlg(QWidget* parent = 0, c_snail_data *sn_data=nullptr);
 	virtual ~tbl_dlg();
@@ -35,6 +36,7 @@ private:
 private slots:
 	void SlotOpenFile();
 	void SlotSaveFile();
+	void onCellClicked(const QModelIndex& index);
 
 };
 

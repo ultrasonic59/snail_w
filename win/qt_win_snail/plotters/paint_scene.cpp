@@ -400,6 +400,7 @@ void PaintScene::sl_test3(char* t_str) {
 #if 1
 void PaintScene::drawMainAxis(QPainter* painter, const QRectF& rect)
 {
+    return;
     painter->save();
     QColor coordLineColor(255, 0, 0, 255);
     QColor outlineColor(0, 255, 0, 255);

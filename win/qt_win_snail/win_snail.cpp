@@ -1608,6 +1608,9 @@ if (p_curGroup != nullptr) {
 quint8 tmp_tst = 0;
 void win_snail::on_butt_test3()
 {
+    scene->currentItem->setPos(40, 60);
+
+#if 0
     tmp_tst++;
  
 if (tmp_tst & 0x1)
@@ -1627,7 +1630,7 @@ if (tmp_tst & 0x1)
   ////         ui->Butt_test3->setStyleSheet("background-color: red;");
 
         }
- 
+#endif
 }
 void win_snail::on_butt_test2()
 {
@@ -1645,7 +1648,8 @@ void win_snail::on_butt_test2()
     ////   pGroup->setRotation(45);
    ///    pGroup->setScale(2);
  ///   view_sc->scale(.5, .5);
-    scene->currentItem->moveBy(10, 10);// > setRotation(t_angl);
+  ///  scene->currentItem->moveBy(10, 10);// > setRotation(t_angl);
+    scene->currentItem->setPos(60, 40);
 
 }
 ///====================================================================
