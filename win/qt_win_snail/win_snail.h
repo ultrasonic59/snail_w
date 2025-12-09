@@ -276,4 +276,9 @@ protected slots:
     void sl_mouse_pos(QPointF pnt);
     void sl_eeprom(int axi, eeprom_cmd_t cmd);
     void sl_zoom_changed(double value);
+public:
+  ///  bool json2component(QByteArray byteArr, component& comp);
+  ///  bool json2component(QByteArray byteArr, component* pGroup);
+    component* json2component(QByteArray byteArr);
+
 };

@@ -1312,12 +1312,69 @@ void win_snail::sl_show_json(QByteArray byteArr)
         }
     }
     scene->addItem(pGroup);
-
 }
+component* win_snail::json2component(QByteArray byteArr)
+{
+   component* pGroup = new component();
+ /// pGroup = new component();
+
+ ///   scene->currentItem = pGroup;
+    pGroup->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QGraphicsItem* t_item = lib_util.getItem(ObjectValue);
+                if (t_item != nullptr) {
+                    pGroup->addToGroup(t_item);
+                    ///    scene->addItem(t_item);
+                }
+            }
+        }
+     return pGroup;
+    }
+  ///  scene->addItem(pGroup);
+    return nullptr;
+}
+
+#if 0
+bool win_snail::json2component(QByteArray byteArr, component& comp )
+{
+ ///   component* pGroup = new component();
+  ///  scene->currentItem = pGroup;
+    comp.setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QString jsonStr = QString(byteArr);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArr, &err);
+    if (err.error == QJsonParseError::NoError && !doc.isNull()) {
+        if (doc.isArray()) {
+            QJsonArray array = doc.array();
+            for (int index = 0; index < array.size(); index++) {
+                QJsonObject ObjectValue = array.at(index).toObject().value("obj").toObject();
+                QGraphicsItem* t_item = lib_util.getItem(ObjectValue);
+                if (t_item != nullptr) {
+                    comp.addToGroup(t_item);
+                    ///    scene->addItem(t_item);
+                }
+            }
+        }
+        return true;
+    }
+ ///   scene->addItem(pGroup);
+    return false;
+}
+#endif
 void win_snail::on_butt_load()
 {
     qDebug() << "start load";
- ///   component* pGroup = new component();
+ ///   component* pComp = new component();
+ ///   component t_comp;/// = new component();
 
 ///scene->currentItem= pGroup;
 
@@ -1335,7 +1392,21 @@ if (!jsonFile.open(QIODevice::ReadOnly))
     }
 QByteArray byteArr = jsonFile.readAll();
 jsonFile.close();   //
-sl_show_json(byteArr);
+
+component* pComp = json2component(byteArr);
+
+if (pComp ){
+    scene->addItem(pComp);
+
+}
+/*
+if (json2component(byteArr, t_comp)) {
+    scene->addItem(&t_comp);
+}
+*/
+///sl_show_json(byteArr);
+
+
 #if 0
 QString jsonStr = QString(byteArr);
 QJsonParseError err;

@@ -6,7 +6,7 @@
 
 #define NUM_CORNERS 4
 
-///class DotSignal;
+
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneEvent;
 
@@ -21,7 +21,7 @@ public:
  
     QPointF previousPosition() const;
     void setPreviousPosition(const QPointF previousPosition);
-  ///  QString Name;
+    QString name;
     QPointF GetCenter();
 
 signals:

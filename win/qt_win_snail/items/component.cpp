@@ -11,7 +11,7 @@
 
 
 component::component(QObject *parent) :
-    QObject(parent)
+    QObject(parent), name("none")
  {
   ///  setAcceptHoverEvents(true);
  ///   setFlags(ItemIsSelectable|ItemSendsGeometryChanges| ItemIsMovable);
