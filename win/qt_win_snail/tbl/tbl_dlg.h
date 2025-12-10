@@ -30,13 +30,14 @@ public:
 public :
 	c_snail_data* p_sn_data;
 private:
-	QStandardItemModel* csvModel;
+	QStandardItemModel* tblModel;
 ///	element_data_t t_element_data;
 	QString fileName_tbl;
 private slots:
 	void SlotOpenFile();
 	void SlotSaveFile();
 	void onCellClicked(const QModelIndex& index);
+	void onCellDblClicked(const QModelIndex& index);
 
 };
 

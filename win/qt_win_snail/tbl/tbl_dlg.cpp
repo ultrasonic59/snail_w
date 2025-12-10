@@ -14,7 +14,7 @@ tbl_dlg::tbl_dlg(QWidget* parent, c_snail_data* sn_data) :
  ///   connect(tableWidget, &QTableWidget::cellClicked, this, &tbl_dlg::onCellClicked);
   //  connect(ui.tableView, SIGNAL(cellClicked(int,int)), this, SLOT(onCellClicked(int,int)));
   //  connect(ui.tableView, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(onCellClicked(int, int)));
-    connect(ui.tableView, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(onCellClicked(const QModelIndex&)));
+    connect(ui.tableView, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(onCellDblClicked(const QModelIndex&)));
 
     connect(ui.pushButtonSave, SIGNAL(clicked()), this, SLOT(SlotSaveFile()));
 SlotOpenFile();
@@ -23,8 +23,20 @@ SlotOpenFile();
 
 }
 
-void tbl_dlg::onCellClicked(const QModelIndex& index) {
-        qDebug() << "onCellClicked" ;
+void tbl_dlg::onCellDblClicked(const QModelIndex& index) {
+   qDebug() << "onCellDblClicked" << index.column() << index.row();
+   if (index.column() == 6) {
+       QString tstr = tblModel->data(index).toString();
+       if (tstr == "Off") {
+          /// tblModel->item()
+           qDebug() << "Off"<< tstr;
+       }
+       else {
+           qDebug() << "On" << tstr;
+
+       }
+
+        }
 
 ///    qDebug() << "Cell clicked at row:" << row << ", column:" << column;
     // You can now access the item at this position
@@ -32,6 +44,16 @@ void tbl_dlg::onCellClicked(const QModelIndex& index) {
   ///  if (item) {
   ///      qDebug() << "The text in this cell is:" << item->text();
  ///   }
+}
+void tbl_dlg::onCellClicked(const QModelIndex& index) {
+    qDebug() << "onCellClicked";
+
+    ///    qDebug() << "Cell clicked at row:" << row << ", column:" << column;
+        // You can now access the item at this position
+     ///   QTableWidgetItem* item = tableWidget->item(row, column);
+      ///  if (item) {
+      ///      qDebug() << "The text in this cell is:" << item->text();
+     ///   }
 }
 
 tbl_dlg::~tbl_dlg()
@@ -73,9 +95,9 @@ void tbl_dlg::SlotOpenFile()
     int num_el = 0;
 
     int rez = 0;
-    csvModel = new QStandardItemModel(this);
-    csvModel->setColumnCount(TBL_NUM_COL);   ///
-    ui.tableView->setModel(csvModel); // Устанавливаем модель в таблицу
+    tblModel = new QStandardItemModel(this);
+    tblModel->setColumnCount(TBL_NUM_COL);   ///
+    ui.tableView->setModel(tblModel); // Устанавливаем модель в таблицу
   
      fileName_tbl = QFileDialog::getOpenFileName(this, tr("Open File"), "",
         tr("Tbl Files (*.tbl )"));
@@ -87,11 +109,11 @@ void tbl_dlg::SlotOpenFile()
         }
     /// QTextStream in(&file);
         p_sn_data->elements.clear();
-        QModelIndex index = csvModel->index(0, 0);
+        QModelIndex index = tblModel->index(0, 0);
 
      QStringList head_list;
      head_list << "RefDef" << "PatternName" << "Layer" << "LocationX" << "LocationY" << "Rotation" << "Check";
-     csvModel->setHorizontalHeaderLabels(head_list);
+     tblModel->setHorizontalHeaderLabels(head_list);
      QString item;
      for (int ii=0;ii< MAX_NUM_ELEM;ii++) {
          QList<QStandardItem*> standardItemsList;
@@ -124,7 +146,7 @@ void tbl_dlg::SlotOpenFile()
          if (max_y < t_elem_data.cvs_pos.LocationY)
              max_y = t_elem_data.cvs_pos.LocationY;
 
-         csvModel->insertRow(csvModel->rowCount(), standardItemsList);
+         tblModel->insertRow(tblModel->rowCount(), standardItemsList);
          num_el++;
      }
      p_sn_data->max_x = max_x;
