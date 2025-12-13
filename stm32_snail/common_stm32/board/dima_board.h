@@ -14,15 +14,6 @@
 #include "uart.h"
 
 ////=============================================
-/*
-#define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
-#define PAGE0_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (PAGE_SIZE - 1)))
-#define PAGE0_ID               FLASH_Sector_2
-
-#define PAGE1_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x4000))
-#define PAGE1_END_ADDRESS     ((uint32_t)(EEPROM_START_ADDRESS + (2 * PAGE_SIZE - 1)))
-#define PAGE1_ID               FLASH_Sector_3
-*/
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS    ((uint32_t)0x08008000) /* EEPROM emulation start address:
                                                       after 16KByte of used Flash memory */
@@ -59,7 +50,6 @@
 #define MIN_PER         10        
 
 ////============================================
-///#define ENC_TIM_PERIOD 0Xffff
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
@@ -512,17 +502,22 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #define ADDR_EEPROM_SIZEL_APP  0x2
 #define ADDR_EEPROM_SIZEH_APP  0x3
 
-#define ADDR_EEPROM_MOT_CTRL   0x4
-#define ADDR_EEPROM_MOT_TORQUE 0x5
-#define ADDR_EEPROM_MOT_OFF    0x6
-#define ADDR_EEPROM_MOT_BLANK  0x7
-#define ADDR_EEPROM_MOT_DECAY  0x8
-#define ADDR_EEPROM_MOT_STALL  0x9
-#define ADDR_EEPROM_MOT_DRIVE  0xa
+#define ADDR_EEPROM_CONF       0x4
+
+#define ADDR_EEPROM_MOT_CTRL   0x5
+#define ADDR_EEPROM_MOT_TORQUE 0x6
+#define ADDR_EEPROM_MOT_OFF    0x7
+#define ADDR_EEPROM_MOT_BLANK  0x8
+#define ADDR_EEPROM_MOT_DECAY  0x9
+#define ADDR_EEPROM_MOT_STALL  0xa
+#define ADDR_EEPROM_MOT_DRIVE  0xb
 
 ///#define ADDR_EEPROM_MOT_REJ    0x4
 
+///#define ADDR_EEPROM_MOT_CTRL   0x4
 
+/// ADDR_EEPROM_CONF
+#define COORD_ENC_STEP   (0x1<<0)     ///=1 -encoder , =0 -step
 
 #define MAX_MOT_REJ    0x8
 
@@ -542,6 +537,10 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 #define ENC_BR 460800   ///230400
 
 ////=================================================================
+extern uint16_t enc_offs;  ///when coord =0;
+extern uint16_t curr_enc;  ///
+extern int16_t enc_obor;
+
 ////extern int32_t cur_coord;
 extern uint8_t cur_stat;
 

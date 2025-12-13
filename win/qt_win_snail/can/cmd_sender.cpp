@@ -81,7 +81,7 @@ void CcmdSender::handleRead()
 			case PUT_ENCODER_CMD:
 				if (t_axis < NUM_AXIS)
 				{
-					p_dev_state->coord_enc[t_axis] = t_can_message.data[2]
+					p_dev_state->Coord_enc[t_axis] = t_can_message.data[2]
 						| (t_can_message.data[3] << 8)
 						| (t_can_message.data[4] << 16)
 						| (t_can_message.data[5] << 24);
@@ -91,6 +91,21 @@ void CcmdSender::handleRead()
 				}
 
 				break;
+			case PUT_ENC_COORD_CMD:
+				if (t_axis < NUM_AXIS)
+				{
+					p_dev_state->Coord_enc[t_axis] = t_can_message.data[2]
+						| (t_can_message.data[3] << 8)
+						| (t_can_message.data[4] << 16)
+						| (t_can_message.data[5] << 24);
+
+					p_dev_state->obor_enc[t_axis] = t_can_message.data[6]
+						| (t_can_message.data[7] << 8);
+					emit s_state_changed();
+				}
+
+				break;
+
 			default:
 
 				break;

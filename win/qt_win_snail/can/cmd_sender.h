@@ -56,6 +56,7 @@
 #define RD_SPI_MOT_ANS        0x14
 #define GET_ENCODER_CMD       0x15
 #define PUT_ENCODER_CMD       0x16
+#define PUT_ENC_COORD_CMD     0x17
 
 ///========== SET_PARAM ====================
 #define SET_COORD             0x1
@@ -136,7 +137,8 @@ struct  put_ack_t{
 struct  dev_state_t {
 quint8  states[NUM_AXIS];                       /// 
 qint32  coord[NUM_AXIS];                 /// steps X,Y , Z 
-qint32  coord_enc[NUM_AXIS];                 /// enc X,Y , Z 
+quint16  Coord_enc[NUM_AXIS];                 /// enc X,Y , Z 
+qint16   obor_enc[NUM_AXIS];                 /// obor enc X,Y , Z 
 qint16  temper[NUM_AXIS];                 /// temper motor X,Y , Z 
 
 };

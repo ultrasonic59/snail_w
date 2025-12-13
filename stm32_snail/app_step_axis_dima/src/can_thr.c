@@ -9,6 +9,7 @@
 #include "can_cmds.h"
 #include "board.h"
 #include "printk.h"
+#include "emul_eeprom.h"
 
 extern can_msg_t CAN_RxMsg;
 
@@ -52,20 +53,40 @@ return 0;
 }
 extern uint8_t cur_mot_rej;
 ///========================================
+#define CTRL_MODE_MASK (0xf<<3)
+#define CTRL_MODE_OFFS 3
+#define CTRL_TORQUE_MASK (0xff)
+#define CTRL_TORQUE_OFFS 0
+
 int set_param(set_param_cmd_t *i_data)
 {
-  uint8_t tmp;
+uint8_t tmp;
+uint16_t htmp;
 switch(i_data->num_par)
    {
    case MOTOR_REJ:
-     cur_mot_rej=i_data->par_val&0xff;
+     cur_mot_rej=i_data->par_val&0xf;
       set_mot_rej(cur_mot_rej);
+      if(EE_Rd(ADDR_EEPROM_MOT_CTRL,&htmp)==0){
+        htmp&= ~CTRL_MODE_MASK;
+        htmp|= ((cur_mot_rej<<CTRL_MODE_OFFS)&CTRL_MODE_MASK);
+        EE_Wr(ADDR_EEPROM_MOT_CTRL,htmp);
+      }
       tmp= (i_data->par_val>>8)&0xff;
-       set_mot_trq(tmp);
-     
+      set_mot_trq(tmp);
+     if(EE_Rd(ADDR_EEPROM_MOT_TORQUE,&htmp)==0){
+        htmp&= ~CTRL_TORQUE_MASK;
+        htmp|= (tmp&CTRL_TORQUE_MASK);
+        EE_Wr(ADDR_EEPROM_MOT_TORQUE,htmp);
+      }
+    
      break;
    case SET_COORD:
+     printk("\n\r SET_COORD[%x]",i_data->par_val);
+    
      cur_coord=(int32_t)i_data->par_val;
+     if(i_data->par_val==0)
+       enc_offs=curr_enc;
      break;
    }
 return 0;

@@ -373,7 +373,8 @@ void win_snail::sl_state_changed()
     ui->le_y->setText(QString::number(dev_state.coord[YY]));
     ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
 
-    ui->lab_coord_x->setText(QString::number(dev_state.coord_enc[XX]));
+    ui->lab_enc_coord_x->setText(QString::number(dev_state.Coord_enc[XX]));
+    ui->lab_enc_obor_x->setText(QString::number(dev_state.obor_enc[XX]));
 
     showConState();
 }

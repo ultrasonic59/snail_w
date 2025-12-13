@@ -101,6 +101,27 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+int put_can_cmd_enc_coord(encoder_data_t idata)
+{
+///uint8_t btst=0;  
+can_msg_t  send_msg;
+encoder_cmd_t t_put_encoder_cmd;
+t_put_encoder_cmd.cmd=PUT_ENC_COORD_CMD ;
+t_put_encoder_cmd.axis= AXIS_BRD;
+
+t_put_encoder_cmd.coord=idata.coord;
+t_put_encoder_cmd.temp_val=idata.val;
+
+////t_put_encoder_cmd.state=cur_state;
+send_msg.len=CAN_MAX_NUM_BYTES;
+send_msg.format=STANDARD_FORMAT;
+send_msg.type=DATA_FRAME;
+memcpy(send_msg.data,&t_put_encoder_cmd,sizeof(encoder_cmd_t));
+send_msg.id=ID_MASTER_CMD; 
+xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
+
+  return 0;
+}
 
 int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord)

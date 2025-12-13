@@ -3,7 +3,7 @@
 
 typedef struct encoder_data_s{
 uint16_t coord;
-uint16_t val;
+int16_t val;   ///temper
 }encoder_data_t;
 
 extern encoder_data_t resiv_enc;

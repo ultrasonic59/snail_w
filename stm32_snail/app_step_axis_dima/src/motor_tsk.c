@@ -266,7 +266,7 @@ G_DRIVE_REG.OCPDEG 	= 0x01;
 
 if(EE_Rd(ADDR_EEPROM_MOT_CTRL,&tmp)!=0)
   {
-  memcpy(&tmp,(uint16_t*)&G_CTRL_REG,sizeof(uint16_t));
+  memcpy(&tmp,(uint16_t*)&G_CTRL_REG,sizeof(uint16_t)); ///error read
   }
 mot_spi_wrp(ADDR_MOT_CTRL,(uint16_t*)&tmp);
 

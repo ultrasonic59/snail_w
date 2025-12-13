@@ -305,6 +305,8 @@ CAN_FilterConfig(0,id,mask);
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
+#define MAX_TRIG   12000
+#define MIN_TRIG   200
 
 extern can_msg_t CAN_RxMsg;
 void state_task( void *pvParameters )
@@ -330,9 +332,20 @@ for(;;)
       put_can_cmd_stat(cur_state,cur_coord);
       ena_sleep=0;
      }
-  if(prev_enc!=resiv_enc.coord){
-    prev_enc=resiv_enc.coord ;
-    put_can_cmd_encoder(resiv_enc);
+  curr_enc=resiv_enc.coord;
+
+  if(prev_enc!=curr_enc){
+    encoder_data_t t_encoder_data;
+    if((prev_enc>MAX_TRIG)&&(curr_enc<MIN_TRIG))
+      enc_obor++;
+    else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))
+       enc_obor--;
+    prev_enc=curr_enc ;
+    t_encoder_data.coord=curr_enc-enc_offs;
+    t_encoder_data.val= enc_obor;
+    put_can_cmd_enc_coord(t_encoder_data);
+ ///    put_can_cmd_encoder(t_encoder_data);
+   
     ena_sleep=0;
  ///   printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
   }

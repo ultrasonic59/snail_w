@@ -18,7 +18,7 @@
 #include "can_cmds.h"
 #include "hdlc.h"
 
-#define VERS          "snail_axis_v1.2.1"
+#define VERS          "snail_axis_v1.2.2"
 
 ///=======================================================================
 ////extern void tst_task( void *pvParameters );
@@ -27,6 +27,10 @@ extern void tst_task( void *pvParameters );
 extern void can_rsv_task( void *pvParameters );
 extern void can_send_thread(void* pp);
 uint8_t boot_state=BOOTER_NO_BOOT;
+uint16_t cur_conf=0;
+int16_t enc_obor=0;
+uint16_t enc_offs=0;  ///when coord =0;
+uint16_t curr_enc=0;  ///
 
 ////extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;
@@ -37,7 +41,7 @@ uint16_t VirtAddVarTab[NB_OF_VAR]={0,1,2,3,4,5,6,7,8,9,0xA,0xB,0xC,0xD,0xE,0xf,
 ////============================================
 int main( void )
 {
-///uint16_t tmp=0;
+uint16_t tmp=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -60,20 +64,11 @@ boot_state=BOOTER_NO_BOOT;
   EE_Init();
   FLASH_Lock();
 
-/*
-if(EE_ReadVariable(ADDR_EEPROM_BOOT_WORK, &tmp)==0)
-  {
-    if(tmp!=VAL_EEPROM_WORK) ///
-      {
-       EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
-      }
-  }
-else
-  {
-  EE_WriteVariable(ADDR_EEPROM_BOOT_WORK, VAL_EEPROM_WORK);
-  }
-*/
 ////=================================================
+  if(EE_Rd(ADDR_EEPROM_CONF,&tmp)==0){
+   cur_conf=tmp; 
+  }
+  
 ////CAN1_Init();
 ////goto_app();
 ////goto_booter();
