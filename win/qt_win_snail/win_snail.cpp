@@ -26,12 +26,14 @@ win_snail::win_snail(QWidget *parent)
     , m_can_isConnected(false)
      , on_esc_key(false)
     , data_ready(false)
+    
 
   {
     ui->setupUi(this);
     prev_states[XX] = 0xff;
     prev_states[YY] = 0xff;
     prev_states[ZZ] = 0xff;
+    init_con_axis();
 
 ///====================================
   qRegisterMetaType<cv::Mat>("cv::Mat");
@@ -166,7 +168,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(this, SIGNAL(s_can_connect(bool)), p_cmd_sender, SLOT(sl_connect(bool)));
  connect(p_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
  connect(this, SIGNAL(s_set_can_com_name(QString)), p_cmd_sender, SLOT(sl_set_com_name(QString)));
- connect(p_cmd_sender, SIGNAL(s_state_changed()), this, SLOT(sl_state_changed()));
+ connect(p_cmd_sender, SIGNAL(s_state_changed(quint8)), this, SLOT(sl_state_changed(quint8)));
  connect(ui->sh_widget, SIGNAL(zoom_chnged(double)), this, SLOT(sl_zoom_changed(double)));
 
 
@@ -199,18 +201,24 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
 
  connect(this, SIGNAL(s_put_doza(doza_cmd_t)), p_motor_wrk, SLOT(sl_put_doza(doza_cmd_t)));
 
- connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go_x()));
- connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go_y()));
- connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(sl_go_z()));
+ connect(ui->butt_go_x, SIGNAL(pressed()), this, SLOT(sl_go()));
+ connect(ui->butt_go_y, SIGNAL(pressed()), this, SLOT(sl_go()));
+ connect(ui->butt_go_z, SIGNAL(pressed()), this, SLOT(sl_go()));
 
- 
- connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
-  connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
+ connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+ connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+ connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+ connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+ connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
+
+ ///connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
+ /// connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
   connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
   connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
 
-connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
- connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
+///connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
+/// connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
  connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
  connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
 
@@ -221,8 +229,8 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  ///void s_key_release(int axi);
 
 
- connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
- connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+ ///connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
+ ///connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
  connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
  connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
 
@@ -254,23 +262,97 @@ connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
  connect(scene, SIGNAL(s_mouse_pos(QPointF)), this, SLOT(sl_mouse_pos(QPointF)));
 
  connect(scene, SIGNAL(s_show_json(QByteArray)), this, SLOT(sl_show_json(QByteArray)));
- //========================================================================
- /*
- QString validString = "123.45";
-
-
- bool ok;
- float result1 = validString.toFloat(&ok);
- if (ok) {
-     qDebug() << "Conversion successful! Result:" << result1;
- }
- else {
-     qDebug() << "Conversion failed for:" << validString;
- }
- */
- //========================================================================
+ p_ReqTimer = new QTimer();
+ connect(p_ReqTimer, SIGNAL(timeout()), this, SLOT(req_timer_timeout()));
+///p_ReqTimer->start(REQ_TIME_DT);
+///connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
 
  }
+ void win_snail::show_con_axis(void)
+ {
+     if (ConAxis.prev_connected_axis[XX] != ConAxis.connected_axis[XX]) {
+         ConAxis.prev_connected_axis[XX] = ConAxis.connected_axis[XX];
+         if(ConAxis.connected_axis[XX])
+            ui->Butt_x_con->setStyleSheet("background-color: green; ");
+         else
+             ui->Butt_x_con->setStyleSheet("");
+
+     }
+     if (ConAxis.prev_connected_axis[YY] != ConAxis.connected_axis[YY]) {
+         ConAxis.prev_connected_axis[YY] = ConAxis.connected_axis[YY];
+         if (ConAxis.connected_axis[YY])
+             ui->Butt_y_con->setStyleSheet("background-color: green; ");
+         else
+             ui->Butt_y_con->setStyleSheet("");
+     }
+     if (ConAxis.prev_connected_axis[ZZ] != ConAxis.connected_axis[ZZ]) {
+         ConAxis.prev_connected_axis[ZZ] = ConAxis.connected_axis[ZZ];
+         if (ConAxis.connected_axis[ZZ])
+             ui->Butt_z_con->setStyleSheet("background-color: green; ");
+         else
+             ui->Butt_z_con->setStyleSheet("");
+     }
+     if (ConAxis.prev_connected_axis[DZ] != ConAxis.connected_axis[DZ]) {
+         ConAxis.prev_connected_axis[DZ] = ConAxis.connected_axis[DZ];
+         if (ConAxis.connected_axis[DZ])
+             ui->Butt_doza_con->setStyleSheet("background-color: green; ");
+         else
+             ui->Butt_doza_con->setStyleSheet("");
+     }
+ }
+ void win_snail::check_con_axis(void)
+ {
+     for (int ii = 0; ii < MAX_NUM_AXIS; ii++) {
+         if (ConAxis.cnt_no_conn[ii] < MAX_CNT_CONN) {
+             ConAxis.cnt_no_conn[ii]++;
+         }
+         else {
+             ConAxis.connected_axis[ii] = false;
+         }
+     }
+ }
+ void win_snail::set_con_axis(quint8 axi)
+ {
+     if (axi > MAX_NUM_AXIS)
+         axi = MAX_NUM_AXIS-1;
+     ConAxis.cnt_no_conn[axi] =0;
+     ConAxis.connected_axis[axi] = true;
+ }
+ void win_snail::init_con_axis(void) {
+     for (int ii = 0; ii < MAX_NUM_AXIS; ii++) {
+         ConAxis.cnt_no_conn[ii] = 0;
+         ConAxis.prev_connected_axis[ii] = true;
+         ConAxis.connected_axis[ii] = false;
+}
+}
+
+ void win_snail::req_timer_timeout(void)
+ {
+     if (!msg_queue.isEmpty()) {
+         can_message_t t_can_message;
+         t_can_message = msg_queue.dequeue();
+         s_SendCmd(&t_can_message);
+     }
+     else {
+         req_status_axis();
+         check_con_axis();
+         show_con_axis();
+     }
+ }
+
+ void win_snail::req_status_axis(void)
+ {
+     can_message_t t_can_message;
+     t_can_message.id = X_AXIS_CAN_ID| Y_AXIS_CAN_ID|Z_AXIS_CAN_ID | DOZA_CAN_ID;
+     t_can_message.dlc = 1;
+     t_can_message.IDE = 0;
+     t_can_message.RTR = 0;
+     t_can_message.data[0] = GET_STAT_CMD;
+     emit s_send_msg(&t_can_message);
+ }
+
+
+
  void win_snail::sl_mouse_pos(QPointF pnt)
  {
      ui->lab_mouse_x->setText(QString("X=%1").arg(pnt.x()));
@@ -367,15 +449,25 @@ change_con = prev_states[YY] ^ dev_state.states[YY];
     }
 }
 
-void win_snail::sl_state_changed()
+void win_snail::sl_state_changed(quint8 axi)
 {
-    ui->le_x->setText(QString::number(dev_state.coord[XX]));
-    ui->le_y->setText(QString::number(dev_state.coord[YY]));
-    ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
+    if (axi == XX) {
+        ui->le_x->setText(QString::number(dev_state.coord[XX]));
+        ui->lab_enc_coord_x->setText(QString::number(dev_state.Coord_enc[XX]));
+        ui->lab_enc_obor_x->setText(QString::number(dev_state.obor_enc[XX]));
+    }
+    else if (axi == YY) {
+        ui->le_y->setText(QString::number(dev_state.coord[YY]));
+    }
+    else if (axi == ZZ) {
+        ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
+    }
+    else if (axi == DZ) {
 
-    ui->lab_enc_coord_x->setText(QString::number(dev_state.Coord_enc[XX]));
-    ui->lab_enc_obor_x->setText(QString::number(dev_state.obor_enc[XX]));
-
+    }
+    if (axi < NUM_AXIS) {
+        set_con_axis(axi);
+    }
     showConState();
 }
 
@@ -746,11 +838,18 @@ void win_snail::sl_can_connected(bool iflag)
     ui->buttConCAN->setStyleSheet("background-color: green;");
     qDebug() << "connected " << ComPortName;
     ui->buttConCAN->setText(tr("Disconnect"));
+    p_ReqTimer->start(REQ_TIME_DT);
+    connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
     }
  else
     {
       ui->buttConCAN->setText(tr("Connect"));
       ui->buttConCAN->setStyleSheet("");
+      p_ReqTimer->stop();
+      disconnect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
+      init_con_axis();
+      show_con_axis();
+
     }
 }
 void win_snail::on_butt_con_can()
@@ -1490,33 +1589,33 @@ void win_snail::keyPressEvent(QKeyEvent* event)
     case Qt::Key_A: {
  ///       qDebug() << "Key_A";
  ///       scene->currentItem->moveBy(-20, 0);
-        sl_xminus();
+        ///sl_xminus();
         }
         break;
     case Qt::Key_S: {
  ///       qDebug() << "Key_S";
 ///        scene->currentItem->moveBy(0, 20);
-        sl_yminus();
+       /// sl_yminus();
        }
        break;
     case Qt::Key_W: {
  ///       qDebug() << "Key_W";
  ///       scene->currentItem->moveBy(0, -20);
-        sl_yplus();
+       /// sl_yplus();
         }
        break;
     case Qt::Key_D: {
   ///      qDebug() << "Key_D";
    ///     scene->currentItem->moveBy(20, 0);
-        sl_xplus();
+       /// sl_xplus();
         }
         break;
     case Qt::Key_E: {
-        sl_zplus();
+      ///  sl_zplus();
         }
         break;
     case Qt::Key_F: {
-        sl_zminus();
+      ///  sl_zminus();
        }
        break;
 
@@ -1627,6 +1726,8 @@ void win_snail::keyReleaseEvent(QKeyEvent* event) {
 ///==============================================
 void win_snail::on_butt_test1()
 {
+ ///   req_status_axis();
+/*
 QPointF _center;
 int num_circl = 0;
 int num_gr = 0;
@@ -1649,6 +1750,7 @@ foreach(QGraphicsItem * item, scene->items())
     }
  ///   lib_util.insertItem(item, objObject);
  ///   arrayObj.append(objObject);
+ 
 }
 
 
@@ -1676,6 +1778,7 @@ if (p_curGroup != nullptr) {
 #endif
     ///   rect->setBrush(QBrush(Qt::NoBrush));
     ///   rect->setPen(QPen(Qt::red, 2));
+    */
 }
 quint8 tmp_tst = 0;
 void win_snail::on_butt_test3()
@@ -1725,13 +1828,80 @@ void win_snail::on_butt_test2()
 
 }
 ///====================================================================
+void win_snail::sl_go()
+{
+  ///  mot_cmd_t t_mot_cmd;
+    int cur_coord;
+    quint8 t_dir = DIR_PLUS;
+    quint32 num_step;
+    quint16 len_step;
+    quint8 axi;
+    int need_coord = ui->le_xx->text().toInt();
+    if (sender() == ui->butt_go_x) {
+        cur_coord = dev_state.coord[XX];
+        len_step = mot_param.len_step[XX];
+        need_coord = ui->le_xx->text().toInt();
+        axi = X_AXIS_CAN_ID;
+    }
+    else if (sender() == ui->butt_go_y) {
+        cur_coord = dev_state.coord[YY];
+        len_step = mot_param.len_step[YY];
+        need_coord = ui->le_yy->text().toInt();
+        axi = Y_AXIS_CAN_ID;
+
+    }
+    else if (sender() == ui->butt_go_z) {
+        cur_coord = dev_state.coord[ZZ];
+        len_step = mot_param.len_step[ZZ];
+        need_coord = ui->le_zz->text().toInt();
+        axi = Z_AXIS_CAN_ID;
+    }
+
+    int t_num_step = need_coord - cur_coord;
+    if (t_num_step > 0)
+    {
+        num_step = t_num_step;
+        t_dir = DIR_PLUS;
+    }
+    else
+    {
+        num_step = -t_num_step;
+        t_dir = DIR_MINUS;
+    }
+    if (num_step != 0)
+    {
+        can_message_t t_can_message;
+        t_can_message.id = axi;
+        t_can_message.dlc = 8;
+        t_can_message.IDE = 0;
+        t_can_message.RTR = 0;
+        t_can_message.data[0] = GO_CMD;
+        t_can_message.data[1] = t_dir;
+        t_can_message.data[2] = len_step & 0xff;
+        t_can_message.data[3] = (len_step >> 8) & 0xff;
+        t_can_message.data[4] = num_step & 0xff;
+        t_can_message.data[5] = (num_step >> 8) & 0xff;
+        t_can_message.data[6] = (num_step >> 16) & 0xff;
+        t_can_message.data[7] = (num_step >> 24) & 0xff;
+        msg_queue.enqueue(t_can_message);
+
+/*
+        t_mot_cmd.id = axi;
+        t_mot_cmd.dir = t_dir;
+        t_mot_cmd.len_step = len_step;
+        t_mot_cmd.num_step = num_step;
+        emit s_mot_go(t_mot_cmd);
+        */
+    }
+}
+/*
 void win_snail::sl_go_x()
 {
  mot_cmd_t t_mot_cmd;
 int cur_coord = dev_state.coord[XX];
 quint8 t_dir = DIR_PLUS;
 quint32 num_step;
-quint16 len_step = mot_param.len_step[XX];/// 0;//// = ui->combo_steps->currentText().toInt();
+quint16 len_step = mot_param.len_step[XX];
 int need_coord = ui->le_xx->text().toInt();
 int t_num_step = need_coord - cur_coord;
     if (t_num_step > 0)
@@ -1810,10 +1980,11 @@ void win_snail::sl_go_z()
         emit s_mot_go(t_mot_cmd);
     }
 }
+*/
 ///===================================================================
  void win_snail::sl_set_mot_rej()
 {
-    quint8 mot_rej = ui->combo_rej->currentText().toInt();
+     quint8 mot_rej = ui->combo_rej->currentIndex();/// > currentText().toInt();
     quint8 mot_trq = ui->le_trq->text().toInt();
 
     if (sender() == ui->butt_set_x)
@@ -1835,8 +2006,8 @@ void win_snail::sl_go_z()
 
 }
 
-
 ///=================== X ===========================
+ /*
 void win_snail::sl_xplus()
 {
 qDebug() << "sl_xplus";
@@ -1857,13 +2028,12 @@ emit s_mot_go(t_mot_cmd);
 ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
  ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 }
-
+*/
+/*
 void win_snail::sl_xminus()
 {
  qDebug() << "sl_xminus ";
- ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
- ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
- el_timer.start();
+  el_timer.start();
     quint16 len_step = ui->combo_steps->currentText().toInt();
     quint32 num_step =  ui->combo_num_steps->currentText().toInt();
     if (num_step == 0)
@@ -1873,12 +2043,79 @@ void win_snail::sl_xminus()
     t_mot_cmd.dir = DIR_MINUS;
     t_mot_cmd.len_step = len_step;
     t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
+    can_message_t* t_can_message = (can_message_t*) & t_mot_cmd;
+    msg_queue.enqueue(*t_can_message);
+ ///   emit s_mot_go(t_mot_cmd);
     ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
 
  ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 }
+*/
+void win_snail::sl_motor_go()
+{
+    qDebug() << "sl_motor_go ";
+    quint8 dir;
+    quint8 axi;
+    quint8 num_axi;
+
+    if (sender() == ui->butt_XMinus) {
+        axi = X_AXIS_CAN_ID;
+        dir = DIR_MINUS;
+        num_axi = XX;
+}
+    else if (sender() == ui->butt_XPlus) {
+        axi = X_AXIS_CAN_ID;
+        dir = DIR_PLUS;
+        num_axi = XX;
+    }
+    else if (sender() == ui->butt_YMinus) {
+        axi = Y_AXIS_CAN_ID;
+        dir = DIR_MINUS;
+        num_axi = YY;
+    }
+    else if (sender() == ui->butt_YPlus) {
+        axi = Y_AXIS_CAN_ID;
+        dir = DIR_PLUS;
+        num_axi = YY;
+    }
+    else if (sender() == ui->butt_ZMinus) {
+        axi = Z_AXIS_CAN_ID;
+        dir = DIR_MINUS;
+        num_axi = ZZ;
+    }
+    else if (sender() == ui->butt_ZPlus) {
+        axi = Z_AXIS_CAN_ID;
+        dir = DIR_PLUS;
+        num_axi = ZZ;
+    }
+    if (ConAxis.connected_axis[num_axi]) {
+        el_timer.start();
+        quint16 len_step = ui->combo_steps->currentText().toInt();
+        quint32 num_step = ui->combo_num_steps->currentText().toInt();
+        if (num_step == 0)
+            num_step = MAX_NUM_STEP;
+        can_message_t t_can_message;
+        t_can_message.id = axi;
+        t_can_message.dlc = 8;
+        t_can_message.IDE = 0;
+        t_can_message.RTR = 0;
+        t_can_message.data[0] = GO_CMD;
+        t_can_message.data[1] = dir;
+        t_can_message.data[2] = len_step & 0xff;
+        t_can_message.data[3] = (len_step >> 8) & 0xff;
+        t_can_message.data[4] = num_step & 0xff;
+        t_can_message.data[5] = (num_step >> 8) & 0xff;
+        t_can_message.data[6] = (num_step >> 16) & 0xff;
+        t_can_message.data[7] = (num_step >> 24) & 0xff;
+        msg_queue.enqueue(t_can_message);
+        ///   emit s_mot_go(t_mot_cmd);
+        ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
+    }
+}
+    ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
+
 ///=================== Y ===========================
+/*
 void win_snail::sl_yplus()
 {
 
@@ -1965,7 +2202,7 @@ void win_snail::sl_zminus()
  ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
 
 }
-
+*/
 void win_snail::sl_doza()
 {
     qDebug() << "cl_doza ";

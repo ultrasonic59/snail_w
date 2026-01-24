@@ -43,7 +43,8 @@ void CcmdSender::handleRead()
 {
 	can_message_t t_can_message;
 	if (!wait_ans)
-	   {
+///	if (1)
+		{
 		QByteArray d = m_pSerialPort->readAll();
 		QString ds = d;
 		parse_str(ds, t_can_message);
@@ -59,6 +60,8 @@ void CcmdSender::handleRead()
 		case AXIS_Z:
 			t_axis = ZZ;
 			break;
+		case DOZA_ID:
+			t_axis = DZ;
 			break;
 		default:
 			t_axis = NOT_AXIS;
@@ -75,7 +78,7 @@ void CcmdSender::handleRead()
 						| (t_can_message.data[6] << 16)
 						| (t_can_message.data[7] << 24);
 					p_dev_state->states[t_axis] = t_can_message.data[2];
-					emit s_state_changed();
+					emit s_state_changed(t_axis);
 				   }
 				break;
 			case PUT_ENCODER_CMD:
@@ -87,7 +90,7 @@ void CcmdSender::handleRead()
 						| (t_can_message.data[5] << 24);
 					p_dev_state->temper[t_axis] = t_can_message.data[6]
 						| (t_can_message.data[7] << 8);
-					emit s_state_changed();
+					emit s_state_changed(t_axis);
 				}
 
 				break;
@@ -101,7 +104,7 @@ void CcmdSender::handleRead()
 
 					p_dev_state->obor_enc[t_axis] = t_can_message.data[6]
 						| (t_can_message.data[7] << 8);
-					emit s_state_changed();
+					emit s_state_changed(t_axis);
 				}
 
 				break;
@@ -113,10 +116,10 @@ void CcmdSender::handleRead()
 
 ///		emit s_state_changed();
 	    }
-	else
-	{
+///	else
+///	{
 
-	}
+///	}
 }
 void CcmdSender::handleError(QSerialPort::SerialPortError serialPortError)
 {
@@ -149,6 +152,18 @@ wait_ans = false;
 if (len == 0)
 	return false;
 return true;
+}
+bool CcmdSender::Send(char* sent_data)
+{
+	if (m_pSerialPort->isOpen() == false)
+		return false;
+	if ((sent_data == 0) )
+		return false;
+	m_pSerialPort->write(sent_data);
+	if (!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
+		return false;
+///	wait_ans = true;
+	return true;
 }
 
 void CcmdSender::config_port()
@@ -247,7 +262,7 @@ static char* put_hex_byte(char* str, quint8 val) {
 	return str;
 }
 ///==================================================
-bool CcmdSender::canSendMsg(can_message_t* msg) {
+bool CcmdSender::canSendResMsg(can_message_t* msg) {
 	char snd_dat[64];
 	char* t_str = snd_dat;
 	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
@@ -261,7 +276,7 @@ bool CcmdSender::canSendMsg(can_message_t* msg) {
 *t_str++ = '\r';
 *t_str++ = 0;
 el_time = el_timer.elapsed();
-qDebug() << "canSendMsg:" << el_time;
+qDebug() << "canSendResMsg[send]:" << el_time;
 
 if (SendRes(snd_dat, rsv_dat))
 	{
@@ -272,15 +287,36 @@ if (SendRes(snd_dat, rsv_dat))
 	emit s_rsv_can_dat(t_rsv_msg);
 
 	el_time = el_timer.elapsed();
-	qDebug() << "canSendMsg1:" << el_time;
+	qDebug() << "canSendResMsg1[rsv]:" << el_time;
 
 	return true;  ///
 	}
 el_time = el_timer.elapsed();
-qDebug() << "canSendMsg2:" << el_time;
-qDebug() << "canSendMsg_error" ;
+qDebug() << "canSendResMsg2:" << el_time;
+qDebug() << "canSendResMsg_error" ;
 
 	return false;  ///
+}
+bool CcmdSender::can_send_msg(can_message_t* msg) {
+	char snd_dat[64];
+	char* t_str = snd_dat;
+	*t_str++ = CMD_SEND;
+	t_str = put_hex_digit(t_str, msg->id >> 8);
+	t_str = put_hex_byte(t_str, msg->id & 0xff);
+	t_str = put_hex_digit(t_str, msg->dlc);
+	for (quint8 ii = 0; ii < msg->dlc; ii++) {
+		t_str = put_hex_byte(t_str, msg->data[ii]);
+	}
+	*t_str++ = '\r';
+	*t_str++ = 0;
+///	el_time = el_timer.elapsed();
+///	qDebug() << "canSendResMsg[send]:" << el_time;
+	if (Send(snd_dat))
+	{
+///		*p_data_ready = true;
+		return true;  ///
+	}
+return false;  ///
 }
 
 const char* slcan_get_baud_string(quint32 bps) {
@@ -319,7 +355,7 @@ t_can_message.dlc = 8;
 t_can_message.IDE = 0;
 t_can_message.RTR = 0;
 memcpy(t_can_message.data, (quint8*)&cmd, 8);
-return canSendMsg(&t_can_message);
+return canSendResMsg(&t_can_message);
 }
 
 ///====================================================
@@ -330,6 +366,7 @@ void CcmdSender::sl_connect(bool on_off)
 	else
 		disconnectToDev();
 	emit s_connected(m_isConnected);
+
 }
 void CcmdSender::sl_set_com_name(QString name)
 {
@@ -337,5 +374,5 @@ void CcmdSender::sl_set_com_name(QString name)
 }
 void CcmdSender::SlSendCmd(can_message_t* msg)
 {
-canSendMsg(msg);
+canSendResMsg(msg);
 }

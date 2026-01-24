@@ -79,7 +79,7 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 xTaskCreate(can_send_thread, (const char*)"can_send_thread",CAN_SEND_STACK_SIZE/2, 0, APP_PRIORITY, &can_send_thread_handle);
 xTaskCreate( can_rsv_task, "can_rsv_task", CAN_TASK_STACK_SIZE, NULL, CAN_TASK_PRIORITY, NULL );
 ////state_task( void *pvParameters );
-xTaskCreate( state_task, "state_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+///xTaskCreate( state_task, "state_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 
 ///xTaskCreate( tst_task, "tst_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 /* Start the scheduler. */

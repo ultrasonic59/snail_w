@@ -152525,34 +152525,6 @@
     "scope": null
   },
   {
-    "ID": "c:stm32f2xx_conf.h@1281@macro@__STM32F2xx_CONF_H",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "__STM32F2xx_CONF_H",
-    "location": {
-      "column": "9",
-      "line": "30",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\stm32f2xx_conf.h"
-    },
-    "name": "__STM32F2xx_CONF_H",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stm32f2xx_conf.h@2157@macro@assert_param",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "assert_param",
-    "location": {
-      "column": "11",
-      "line": "56",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\stm32f2xx_conf.h"
-    },
-    "name": "assert_param",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
     "ID": "c:uart.h@28@macro@__UART_H__",
     "What": "MacroDef",
     "defdec": "Def",
@@ -152719,6 +152691,132 @@
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\uart.h"
     },
     "name": "UART_ENC_Init",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:system_stm32f2xx.h@1356@macro@__SYSTEM_STM32F2XX_H",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "__SYSTEM_STM32F2XX_H",
+    "location": {
+      "column": "9",
+      "line": "40",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "__SYSTEM_STM32F2XX_H",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@SystemCoreClock",
+    "What": "Variable",
+    "defdec": "Dec",
+    "display": "SystemCoreClock",
+    "location": {
+      "column": "17",
+      "line": "59",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemCoreClock",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@SystemCoreClock",
+    "What": "Variable",
+    "defdec": "Dec",
+    "display": "SystemCoreClock",
+    "location": {
+      "column": "17",
+      "line": "59",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemCoreClock",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@F@SystemInit",
+    "What": "Function",
+    "defdec": "Dec",
+    "display": "void SystemInit(void)",
+    "location": {
+      "column": "13",
+      "line": "86",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemInit",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@F@SystemInit",
+    "What": "Function",
+    "defdec": "Dec",
+    "display": "void SystemInit(void)",
+    "location": {
+      "column": "13",
+      "line": "86",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemInit",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@F@SystemCoreClockUpdate",
+    "What": "Function",
+    "defdec": "Dec",
+    "display": "void SystemCoreClockUpdate(void)",
+    "location": {
+      "column": "13",
+      "line": "87",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemCoreClockUpdate",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:@F@SystemCoreClockUpdate",
+    "What": "Function",
+    "defdec": "Dec",
+    "display": "void SystemCoreClockUpdate(void)",
+    "location": {
+      "column": "13",
+      "line": "87",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
+    },
+    "name": "SystemCoreClockUpdate",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stm32f2xx_conf.h@1281@macro@__STM32F2xx_CONF_H",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "__STM32F2xx_CONF_H",
+    "location": {
+      "column": "9",
+      "line": "30",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\stm32f2xx_conf.h"
+    },
+    "name": "__STM32F2xx_CONF_H",
+    "origin": "user_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stm32f2xx_conf.h@2157@macro@assert_param",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "assert_param",
+    "location": {
+      "column": "11",
+      "line": "56",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\stm32f2xx_conf.h"
+    },
+    "name": "assert_param",
     "origin": "user_include",
     "scope": null
   },
@@ -153000,104 +153098,6 @@
     },
     "name": "remove",
     "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:system_stm32f2xx.h@1356@macro@__SYSTEM_STM32F2XX_H",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "__SYSTEM_STM32F2XX_H",
-    "location": {
-      "column": "9",
-      "line": "40",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "__SYSTEM_STM32F2XX_H",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@SystemCoreClock",
-    "What": "Variable",
-    "defdec": "Dec",
-    "display": "SystemCoreClock",
-    "location": {
-      "column": "17",
-      "line": "59",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemCoreClock",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@SystemCoreClock",
-    "What": "Variable",
-    "defdec": "Dec",
-    "display": "SystemCoreClock",
-    "location": {
-      "column": "17",
-      "line": "59",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemCoreClock",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@F@SystemInit",
-    "What": "Function",
-    "defdec": "Dec",
-    "display": "void SystemInit(void)",
-    "location": {
-      "column": "13",
-      "line": "86",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemInit",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@F@SystemInit",
-    "What": "Function",
-    "defdec": "Dec",
-    "display": "void SystemInit(void)",
-    "location": {
-      "column": "13",
-      "line": "86",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemInit",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@F@SystemCoreClockUpdate",
-    "What": "Function",
-    "defdec": "Dec",
-    "display": "void SystemCoreClockUpdate(void)",
-    "location": {
-      "column": "13",
-      "line": "87",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemCoreClockUpdate",
-    "origin": "user_include",
-    "scope": null
-  },
-  {
-    "ID": "c:@F@SystemCoreClockUpdate",
-    "What": "Function",
-    "defdec": "Dec",
-    "display": "void SystemCoreClockUpdate(void)",
-    "location": {
-      "column": "13",
-      "line": "87",
-      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\common_stm32\\libraries\\STM32F2xx_StdPeriph_Driver\\system_stm32f2xx.h"
-    },
-    "name": "SystemCoreClockUpdate",
-    "origin": "user_include",
     "scope": null
   },
   {
@@ -154689,6 +154689,20 @@
     "scope": null
   },
   {
+    "ID": "c:app_can_cmds.c@prev_state",
+    "What": "Variable",
+    "defdec": "Def",
+    "display": "prev_state",
+    "location": {
+      "column": "16",
+      "line": "317",
+      "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\app_step_axis_dima\\src\\app_can_cmds.c"
+    },
+    "name": "prev_state",
+    "origin": "project_file",
+    "scope": null
+  },
+  {
     "ID": "c:@F@obr_can_cmd",
     "What": "Function",
     "defdec": "Def",
@@ -154703,7 +154717,7 @@
     "scope": null
   },
   {
-    "ID": "c:app_can_cmds.c@8464@F@obr_can_cmd@tmp",
+    "ID": "c:app_can_cmds.c@8495@F@obr_can_cmd@tmp",
     "What": "Variable",
     "defdec": "Def",
     "display": "tmp",
@@ -154717,13 +154731,13 @@
     "scope": null
   },
   {
-    "ID": "c:app_can_cmds.c@9295@F@obr_can_cmd@ans_spi_mot_cmd",
+    "ID": "c:app_can_cmds.c@9446@F@obr_can_cmd@ans_spi_mot_cmd",
     "What": "Variable",
     "defdec": "Def",
     "display": "ans_spi_mot_cmd",
     "location": {
       "column": "25",
-      "line": "364",
+      "line": "368",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\app_step_axis_dima\\src\\app_can_cmds.c"
     },
     "name": "ans_spi_mot_cmd",
@@ -154731,13 +154745,13 @@
     "scope": null
   },
   {
-    "ID": "c:app_can_cmds.c@9947@F@obr_can_cmd@t_rd_eeprom_ans",
+    "ID": "c:app_can_cmds.c@10098@F@obr_can_cmd@t_rd_eeprom_ans",
     "What": "Variable",
     "defdec": "Def",
     "display": "t_rd_eeprom_ans",
     "location": {
       "column": "25",
-      "line": "384",
+      "line": "388",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\app_step_axis_dima\\src\\app_can_cmds.c"
     },
     "name": "t_rd_eeprom_ans",
@@ -154745,13 +154759,13 @@
     "scope": null
   },
   {
-    "ID": "c:app_can_cmds.c@10267@F@obr_can_cmd@t_wr_eeprom_req",
+    "ID": "c:app_can_cmds.c@10418@F@obr_can_cmd@t_wr_eeprom_req",
     "What": "Variable",
     "defdec": "Def",
     "display": "t_wr_eeprom_req",
     "location": {
       "column": "25",
-      "line": "394",
+      "line": "398",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\app_step_axis_dima\\src\\app_can_cmds.c"
     },
     "name": "t_wr_eeprom_req",
@@ -154759,13 +154773,13 @@
     "scope": null
   },
   {
-    "ID": "c:app_can_cmds.c@10676@F@obr_can_cmd@t_rd_flash_ans",
+    "ID": "c:app_can_cmds.c@10827@F@obr_can_cmd@t_rd_flash_ans",
     "What": "Variable",
     "defdec": "Def",
     "display": "t_rd_flash_ans",
     "location": {
       "column": "24",
-      "line": "405",
+      "line": "409",
       "path": "D:\\proj\\velograph\\snail_w\\stm32_snail\\app_step_axis_dima\\src\\app_can_cmds.c"
     },
     "name": "t_rd_flash_ans",
@@ -156351,90 +156365,6 @@
     "scope": null
   },
   {
-    "ID": "c:stdarg.h@65@macro@_STDARG",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "_STDARG",
-    "location": {
-      "column": "9",
-      "line": "4",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "_STDARG",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stdarg.h@T@va_list",
-    "What": "Typedef",
-    "defdec": "Def",
-    "display": "__builtin_va_list",
-    "location": {
-      "column": "29",
-      "line": "10",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "va_list",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stdarg.h@181@macro@va_start",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "va_start",
-    "location": {
-      "column": "9",
-      "line": "11",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "va_start",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stdarg.h@240@macro@va_end",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "va_end",
-    "location": {
-      "column": "9",
-      "line": "12",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "va_end",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stdarg.h@290@macro@va_arg",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "va_arg",
-    "location": {
-      "column": "9",
-      "line": "13",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "va_arg",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
-    "ID": "c:stdarg.h@346@macro@va_copy",
-    "What": "MacroDef",
-    "defdec": "Def",
-    "display": "va_copy",
-    "location": {
-      "column": "9",
-      "line": "14",
-      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
-    },
-    "name": "va_copy",
-    "origin": "system_include",
-    "scope": null
-  },
-  {
     "ID": "c:DLib_Product_stdlib.h@251@macro@_DLIB_PRODUCTS_STDLIB_H_",
     "What": "MacroDef",
     "defdec": "Def",
@@ -156585,6 +156515,90 @@
       "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\DLib_Product_stdlib.h"
     },
     "name": "lldiv",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@65@macro@_STDARG",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "_STDARG",
+    "location": {
+      "column": "9",
+      "line": "4",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "_STDARG",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@T@va_list",
+    "What": "Typedef",
+    "defdec": "Def",
+    "display": "__builtin_va_list",
+    "location": {
+      "column": "29",
+      "line": "10",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "va_list",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@181@macro@va_start",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "va_start",
+    "location": {
+      "column": "9",
+      "line": "11",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "va_start",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@240@macro@va_end",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "va_end",
+    "location": {
+      "column": "9",
+      "line": "12",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "va_end",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@290@macro@va_arg",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "va_arg",
+    "location": {
+      "column": "9",
+      "line": "13",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "va_arg",
+    "origin": "system_include",
+    "scope": null
+  },
+  {
+    "ID": "c:stdarg.h@346@macro@va_copy",
+    "What": "MacroDef",
+    "defdec": "Def",
+    "display": "va_copy",
+    "location": {
+      "column": "9",
+      "line": "14",
+      "path": "C:\\iar\\ewarm-9.60.2\\arm\\inc\\c\\stdarg.h"
+    },
+    "name": "va_copy",
     "origin": "system_include",
     "scope": null
   },

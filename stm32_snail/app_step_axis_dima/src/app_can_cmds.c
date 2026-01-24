@@ -314,7 +314,7 @@ if(t_wr_eeprom_req->num_dates==2)
   }
 }
   
-
+static uint8_t prev_state=0xff;
 int obr_can_cmd(uint8_t *data)
 {
 ////uint8_t tmp;  
@@ -337,7 +337,11 @@ switch(data[0]) {
         cur_state&= ~CONC_MASK;
         cur_state |= tmp;
         put_can_cmd_stat(cur_state,cur_coord);
+        put_can_cmd_encoder(resiv_enc);
+        if(prev_state!=cur_state){
+         prev_state=cur_state;
          printk("[stat=%x] ",cur_state);
+        }
          }
         break;
       case GET_ENCODER_CMD:

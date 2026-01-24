@@ -9,27 +9,9 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\list.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_can_cmds.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\FreeRTOS_1129108015262781380.dir\list.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\retarget.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\zzzz.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\zzzz.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_can.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\drv_9119342922082540178.dir\app_can_cmds.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -39,45 +21,9 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_can_cmds.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\drv_9119342922082540178.dir\app_can_cmds.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
             <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\can\can_drv.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\drv_9119342922082540178.dir\can_drv.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_gpio.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\dima_board.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_main.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\uart.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\drv_9119342922082540178.dir\uart.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_flash.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -87,9 +33,21 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\zzzz.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\zzzz.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_main.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\eeprom_emul\emul_eeprom.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\emul_eeprom.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -99,15 +57,15 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_sys_stm32f2xx.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\app_sys_stm32f2xx.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
             <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\misc.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\uart.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\drv_9119342922082540178.dir\uart.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -117,27 +75,21 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\startup\stm32f2xx_it.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\dima_board.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\startup_5253055491327143397.dir\stm32f2xx_it.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\can_thr.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\retarget.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\can_thr.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\hdlc.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\hdlc_18177243310313440249.dir\hdlc.lst</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\fcs16.c</Path>
-            <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\hdlc_18177243310313440249.dir\fcs16.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -153,9 +105,9 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_gpio.lst</Path>
             </Output>
         </Parent>
         <Parent>
@@ -165,15 +117,63 @@
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\eeprom_emul\emul_eeprom.c</Path>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\fcs16.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\emul_eeprom.lst</Path>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\hdlc_18177243310313440249.dir\fcs16.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\can_thr.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\can_thr.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\hdlc.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\hdlc_18177243310313440249.dir\hdlc.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_can.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_flash.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
             </Output>
         </Parent>
         <Parent>
             <Path>D:\proj\velograph\snail_w\common\freertos\source\port\ARM_CM3\port.c</Path>
             <Output>
                 <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\FreeRTOS_1129108015262781380.dir\port.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\startup\stm32f2xx_it.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\startup_5253055491327143397.dir\stm32f2xx_it.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_sys_stm32f2xx.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\ST Library_14760386059681792492.dir\app_sys_stm32f2xx.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\velograph\snail_w\common\freertos\source\list.c</Path>
+            <Output>
+                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_y_dbg\List\FreeRTOS_1129108015262781380.dir\list.lst</Path>
             </Output>
         </Parent>
     </Tool>

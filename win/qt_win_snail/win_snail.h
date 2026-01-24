@@ -6,9 +6,7 @@
 #include <QGraphicsItem>
 #include <QMessageBox>
 #include <QElapsedTimer>
-
-////#include <QCamera>
-///#include <QCameraInfo>
+#include <QQueue>
 
 #include "PlotterWidget.h"
 #include "ui_qt_win_snail.h"
@@ -17,7 +15,6 @@
 #include "hidapi.h"
 #include "dial_debug.h"
 
-///#include "my_camera.h"
 #include "hid_cmd.h"
 #include "port_prop_dialog.h"
 #include "cmd_sender.h"
@@ -30,12 +27,11 @@
 #include "CamPlotter.h"
 #include "cameradevice.h"
 #include "paint_scene.h"
-///#include "myitem.h"
 #include "component.h"
 #include "lib_util.h"
 
 ///======================================================================
-#define PLOT_TIME_DT  50
+/// #define PLOT_TIME_DT  50
 extern QElapsedTimer el_timer;
 extern int	el_time;
 
@@ -57,11 +53,30 @@ extern int	el_time;
 #define MOTOR_ON true
 /// #define MAX_NUM_STEP 10000000
 
+#define REQ_TIME_DT   20
+
+#define MAX_NUM_AXIS   4
+/*
+#define X_AXI          0
+#define Y_AXI          1
+#define Z_AXI          2
+#define DOZA_AXI       3
+*/
 QT_BEGIN_NAMESPACE
 namespace Ui { class win_snail; };
 QT_END_NAMESPACE
 
 using namespace cv;
+#define MAX_CNT_CONN 20
+struct conn_axis {
+    bool connected_axis[MAX_NUM_AXIS];
+    bool prev_connected_axis[MAX_NUM_AXIS];
+    int cnt_no_conn[MAX_NUM_AXIS];
+
+};
+
+
+
 
 class win_snail : public QMainWindow
 {
@@ -125,8 +140,20 @@ protected:
     QString ComPortName;
 
 protected:
-////    DialDebug dial_dbg;
-  ////     csv_dlg CsvDlg;
+    QTimer* p_ReqTimer;
+    conn_axis ConAxis;
+ ///  bool connected_axis[MAX_NUM_AXIS];
+    QQueue < can_message_t> msg_queue;
+    void show_con_axis(void);
+    void check_con_axis(void);
+    void set_con_axis(quint8 axi);
+    void init_con_axis(void);
+
+  ///  void req_status_axis();
+private slots:
+    void req_timer_timeout(void);
+    void req_status_axis();
+
 private :
     bool eventFilter(QObject* obj, QEvent* event);
     void createMenus();
@@ -175,7 +202,7 @@ public slots:
     void on_butt_load();
 
     void sl_rsv_can_dat(can_message_t);
-    void sl_state_changed();
+    void sl_state_changed(quint8);
     void sl_show_json(QByteArray byteArr);
 
 private slots:
@@ -210,15 +237,18 @@ protected:
     bool    zminusLongPush;
     */
 protected slots:
+    void sl_go();
+
     void sl_go_x();
     void sl_go_y();
     void sl_go_z();
-    void sl_xminus();
-    void sl_xplus();
-    void sl_yplus();
-    void sl_yminus();
-    void sl_zplus();
-    void sl_zminus();
+
+    void sl_motor_go();
+ ///   void sl_xplus();
+ ///   void sl_yplus();
+ ///   void sl_yminus();
+ ///   void sl_zplus();
+ ///   void sl_zminus();
     void sl_doza();
 
  /*
@@ -247,6 +277,7 @@ signals:
     void s_eeprom(int axi, eeprom_cmd_t);
     void s_key_release(int axi);
     void s_put_doza(doza_cmd_t);
+    void s_send_msg(can_message_t* msg);
 
 private:
     PaintScene* scene;

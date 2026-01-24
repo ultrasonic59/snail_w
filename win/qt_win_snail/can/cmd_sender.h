@@ -22,7 +22,7 @@
 #define DEFAULT_BAUD_RATE QSerialPort::Baud115200
 
 #define WRITE_WAIT_DELAY 100
-#define READ_WAIT_DELAY 5000
+#define READ_WAIT_DELAY 500		///5000
 #define MAX_BUFF_SIZE  4096
 #define MAX_FRAME_LEN				4096
 #define DEFAULT_CAN_BR       500000
@@ -173,17 +173,19 @@ private:
 	bool canOpen(void);
 	bool canClose(void);
 
+	bool Send(char* sent_data);
 	bool SendRes(char *sent_data,char *res_data);
 	char *out_buffer;
 	char vers[256];
 	bool wait_ans;
 public:
-	bool canSendMsg(can_message_t* msg);
+	bool canSendResMsg(can_message_t* msg);
 	bool canSendCmdGo(quint32 id, go_cmd_t cmd);
 public slots:
 	void sl_set_com_name(QString);
 	void sl_connect(bool);
 	void SlSendCmd(can_message_t* msg);
+	bool can_send_msg(can_message_t* msg);
 
 private slots:
 	void handleRead();
@@ -192,7 +194,7 @@ private slots:
 signals:
 	void s_connected(bool);
 	void s_rsv_can_dat(can_message_t);
-	void s_state_changed();
+	void s_state_changed(quint8);
 
 };
 
