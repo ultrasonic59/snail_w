@@ -327,7 +327,7 @@ switch(data[0]) {
         {
         put_can_ack(GO_CMD);
          go_cmd((go_cmd_t *)data);
-  ////       printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
+ ///        printk("Go [dir=%x:per=%d:steps=%d] ",p_can_cmd->dirs,p_can_cmd->step_per,p_can_cmd->steps);
         }
         break;
       case GET_STAT_CMD:
@@ -336,8 +336,8 @@ switch(data[0]) {
         tmp<<=4;
         cur_state&= ~CONC_MASK;
         cur_state |= tmp;
-        put_can_cmd_stat(cur_state,cur_coord);
-        put_can_cmd_encoder(resiv_enc);
+        put_can_cmd_stat(cur_state,curr_coord);
+        ///put_can_cmd_encoder(resiv_enc);
         if(prev_state!=cur_state){
          prev_state=cur_state;
          printk("[stat=%x] ",cur_state);

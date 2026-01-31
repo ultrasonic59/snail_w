@@ -239,9 +239,9 @@ protected:
 protected slots:
     void sl_go();
 
-    void sl_go_x();
-    void sl_go_y();
-    void sl_go_z();
+ ///   void sl_go_x();
+ ///   void sl_go_y();
+///    void sl_go_z();
 
     void sl_motor_go();
  ///   void sl_xplus();

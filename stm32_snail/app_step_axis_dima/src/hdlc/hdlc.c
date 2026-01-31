@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "uart.h"
 #include "printk.h"
+#include "board.h"
 
 hdlc_stat_t g_hdlc;
 
@@ -81,7 +82,9 @@ if( in_bt == PPP_FRAME )                        // Пришел флаг
         {
 ///        memcpy(g_hdlc.obr_buff,g_hdlc.in_buff,g_hdlc.frame_in_pos);
         memcpy(&resiv_enc,g_hdlc.in_buff,sizeof(encoder_data_t));
-  
+        
+        change_coord();
+        
         g_hdlc.len_obr_dat=g_hdlc.frame_in_pos;
         g_hdlc.frame_in_pos = 0;
         g_hdlc.in_esc_byte  = 0;

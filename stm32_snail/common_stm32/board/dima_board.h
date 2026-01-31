@@ -539,7 +539,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ////=================================================================
 extern uint16_t enc_offs;  ///when coord =0;
 extern uint16_t curr_enc;  ///
-extern int16_t enc_obor;
+extern int32_t enc_obor;
 
 ////extern int32_t cur_coord;
 extern uint8_t cur_stat;
@@ -551,7 +551,7 @@ extern void motor_init(void);
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
-extern void put_mot_nstep(uint32_t nstep);
+extern void put_mot_nStep(uint32_t nstep);
 ///extern void set_step_per(uint16_t step_per);
 extern void set_mot_per(uint16_t per);
 
@@ -568,7 +568,7 @@ extern void can1_init(void);
 extern void motor_task( void *pvParameters );
 extern int check_push_key_dbg(void);
 extern void print_mot_reg(void);
-
+extern void change_coord(void);
 ////#define dbg_sendchar  sendchar6 
 ////#define dbg_get_byte get_byte6
 ////#define check_push_key get_byte6

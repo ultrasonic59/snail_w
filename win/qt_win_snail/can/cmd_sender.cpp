@@ -307,6 +307,9 @@ bool CcmdSender::can_send_msg(can_message_t* msg) {
 	for (quint8 ii = 0; ii < msg->dlc; ii++) {
 		t_str = put_hex_byte(t_str, msg->data[ii]);
 	}
+	if(msg->dlc!=1)
+			qDebug() << "dlc:" << msg->dlc;
+
 	*t_str++ = '\r';
 	*t_str++ = 0;
 ///	el_time = el_timer.elapsed();

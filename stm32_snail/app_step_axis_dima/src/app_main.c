@@ -28,9 +28,9 @@ extern void can_rsv_task( void *pvParameters );
 extern void can_send_thread(void* pp);
 uint8_t boot_state=BOOTER_NO_BOOT;
 uint16_t cur_conf=0;
-int16_t enc_obor=0;
-uint16_t enc_offs=0;  ///when coord =0;
-uint16_t curr_enc=0;  ///
+///int16_t enc_obor=0;
+///uint16_t enc_offs=0;  ///when coord =0;
+///uint16_t curr_enc=0;  ///
 
 ////extern void CAN1_Init (void);
 TaskHandle_t  can_send_thread_handle;

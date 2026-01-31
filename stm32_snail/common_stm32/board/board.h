@@ -20,7 +20,9 @@
 
 ////======================================
 ////extern void tst_task( void *pvParameters );
-extern int32_t cur_coord;
+extern int32_t curr_coord;
+extern uint8_t use_enc;
+extern int32_t next_coord;
 
 #define msleep vTaskDelay
 #ifndef _MASTER_

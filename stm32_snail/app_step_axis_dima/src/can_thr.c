@@ -21,7 +21,7 @@ cur_state &= ~STATE_MASK;
 cur_state|=STATE_IDLE;  
 printk("\n\rSTATE_IDLE ");
 
-put_mot_nstep(0);
+put_mot_nStep(0);
 return 0;
 }
 
@@ -29,12 +29,24 @@ int go_cmd(go_cmd_t *p_go_cmd)
 {
 cur_state &= ~STATE_MASK;
 cur_state|=STATE_MOVE;  
-///printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
+printk("\n\rGo [dir=%x:per=%x:steps=%x] ",p_go_cmd->dirs,p_go_cmd->step_per,p_go_cmd->steps);
 
 set_dir_mot(p_go_cmd->dirs);
 ////set_step_per(p_go_cmd->step_per);
 set_mot_per(p_go_cmd->step_per);
-put_mot_nstep(p_go_cmd->steps);
+if(use_enc){
+  if(p_go_cmd->dirs==0){ ///up
+    next_coord=curr_coord+p_go_cmd->steps;
+  }
+  else{
+        next_coord=curr_coord-p_go_cmd->steps;
+  }
+put_mot_nStep(p_go_cmd->steps);
+  
+}
+else{
+put_mot_nStep(p_go_cmd->steps);
+}
 ////msleep(1000);
 ////cur_stat=STATE_READY;  
 return 0;
@@ -48,7 +60,7 @@ cur_state|=STATE_MOVE;
 set_dir_mot(p_go_cmd->dirs);
 ////set_step_per(p_go_cmd->step_per);
 set_mot_per(p_go_cmd->step_per);
-put_mot_nstep(p_go_cmd->steps);
+put_mot_nStep(p_go_cmd->steps);
 return 0;
 }
 extern uint8_t cur_mot_rej;
@@ -84,7 +96,7 @@ switch(i_data->num_par)
    case SET_COORD:
      printk("\n\r SET_COORD[%x]",i_data->par_val);
     
-     cur_coord=(int32_t)i_data->par_val;
+     curr_coord=(int32_t)i_data->par_val;
      if(i_data->par_val==0)
        enc_offs=curr_enc;
      break;

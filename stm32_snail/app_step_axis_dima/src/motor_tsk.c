@@ -15,6 +15,7 @@
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 static uint8_t cur_mot_dir=0;
+int32_t next_coord=0;
 
 cmd_t cur_cmd={0};
 void mot_spi_wr(uint8_t addr,uint16_t idata);
@@ -108,7 +109,7 @@ if(check_push_key_dbg())
   set_mot_rej(mot_rej);
   if(psk)
     {
-    put_mot_nstep(nstep);
+    put_mot_nStep(nstep);
     psk=0;
     }
   
@@ -383,7 +384,7 @@ void stop_mot_step_tim(void)
 TIM_Cmd(MOT_STEP_TIM, DISABLE);
 
 }
-volatile uint32_t num_step=0;
+volatile uint32_t num_Step=0;
 
 void  set_dir_mot(uint8_t idat)
 {
@@ -488,17 +489,21 @@ tmp&= ~0x1;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
 
-void put_mot_nstep(uint32_t nstep)
+void put_mot_nStep(uint32_t nstep)
 {
 ena_mot(1) ;
-num_step=nstep; 
+num_Step=nstep; 
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
 
 static uint8_t cur_step_out=0;
+uint8_t use_enc=1;
+int32_t step_coord=0;
+
 void MOT_STEP_TIM_IRQHandler(void)
 { 
+///uint8_t end_step=0;  
 uint8_t tconc;
 tconc=  get_conc_n();
 #if 0
@@ -516,40 +521,50 @@ if(cur_step_out)
   }
 else
 {
+  ///=====check conc =========
   if((cur_mot_dir&0x1)==0)
     {
       if((tconc & MASK_CON1) !=0x0)
-           num_step=0;
+           num_Step=0;
     }
   else
      {
      if((tconc & MASK_CON0) !=0x0)
-           num_step=0;
+           num_Step=0;
      }
-if(num_step)
-  {
-   cur_step_out=1;
-   set_step_mot(cur_step_out);
-  num_step--;
-  if((cur_mot_dir&0x1)==0)
-    cur_coord++;
-  else
-    cur_coord--;
-   
-  if(num_step==0)
-    {
+  if(num_Step==0){
     stop_mot_step_tim(); 
     cur_state &= ~STATE_MASK;
     cur_state|=STATE_READY;  
-
-    ena_mot(0) ;
+ ///   ena_mot(0) ;
+   }
+  else{ 
+  if(use_enc){
+   cur_step_out=1;
+   set_step_mot(cur_step_out);
+    if((cur_mot_dir&0x1)==0){
+      if(curr_coord>=next_coord)
+        num_Step=0;
+      else
+        num_Step=1;
+    }
+    else{
+      if(curr_coord<=next_coord)
+        num_Step=0;
+      else
+        num_Step=1;
     }
   }
-else
-  {
-   stop_mot_step_tim(); 
-   ena_mot(0) ;
-   }
+  else {  
+   cur_step_out=1;
+   set_step_mot(cur_step_out);
+  num_Step--;
+  if((cur_mot_dir&0x1)==0)
+    step_coord++;
+  else
+    step_coord--;
+  }
+  }
 }
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);

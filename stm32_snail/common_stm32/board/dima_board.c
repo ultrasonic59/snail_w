@@ -10,7 +10,7 @@
 extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
 
-int32_t cur_coord=0;
+int32_t curr_coord=0;
 int32_t offs_encoder=0;
 
 uint8_t cur_state=0;  /// .5-.4 conc, .3 - .0 status
@@ -305,17 +305,39 @@ CAN_FilterConfig(0,id,mask);
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
-#define MAX_TRIG   12000
+#define MAX_TRIG   14000
 #define MIN_TRIG   200
 
 extern can_msg_t CAN_RxMsg;
+///============================================
+uint16_t curr_enc=0;  ///
+int32_t enc_obor=0;
+uint16_t enc_offs=0;  ///when coord =0;
+
+void change_coord(void){
+static uint16_t prev_enc=0;
+curr_enc=resiv_enc.coord;
+ if(prev_enc!=curr_enc){
+///    encoder_data_t t_encoder_data;
+    if((prev_enc>MAX_TRIG)&&(curr_enc<MIN_TRIG))
+      enc_obor++;
+    else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))
+       enc_obor--;
+    prev_enc=curr_enc ;
+curr_coord= (enc_obor<<14) + curr_enc;  
+
+ ///   t_encoder_data.coord=curr_enc-enc_offs;
+///    t_encoder_data.val= enc_obor;
+  }
+}
+
 void state_task( void *pvParameters )
 {
 uint8_t tmp; 
-uint16_t prev_enc=0;
+///uint16_t prev_enc=0;
 uint8_t ena_sleep=0; 
 
-int32_t prev_coord=0xffffffff;  
+///int32_t prev_coord=0xffffffff;  
 uint8_t prev_state=0xff; 
 printk("\n\r state_task"); 
 for(;;)
@@ -325,13 +347,14 @@ for(;;)
   tmp<<=4;
   cur_state&= ~CONC_MASK;
   cur_state |= tmp;
-  if((prev_state!=cur_state)||(prev_coord!=cur_coord))
+  if((prev_state!=cur_state))
     {
       prev_state=cur_state;
-      prev_coord=cur_coord;
-      put_can_cmd_stat(cur_state,cur_coord);
+ ///     prev_coord=curr_coord;
+  ///    put_can_cmd_stat(cur_state,cur_coord);
       ena_sleep=0;
      }
+#if 0  
   curr_enc=resiv_enc.coord;
 
   if(prev_enc!=curr_enc){
@@ -343,12 +366,12 @@ for(;;)
     prev_enc=curr_enc ;
     t_encoder_data.coord=curr_enc-enc_offs;
     t_encoder_data.val= enc_obor;
-    put_can_cmd_enc_coord(t_encoder_data);
+ ///   put_can_cmd_enc_coord(t_encoder_data);
  ///    put_can_cmd_encoder(t_encoder_data);
-   
+#endif  
     ena_sleep=0;
  ///   printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
-  }
+ /// }
   if(ena_sleep)
       msleep(50);
   }

@@ -458,6 +458,10 @@ void win_snail::sl_state_changed(quint8 axi)
     }
     else if (axi == YY) {
         ui->le_y->setText(QString::number(dev_state.coord[YY]));
+///        ui->lab_enc_coord_y->setText(QString::number(dev_state.Coord_enc[YY]));
+        ui->lab_enc_coord_y->setText(QString::number(dev_state.coord[YY]));
+        ui->lab_enc_obor_y->setText(QString::number(dev_state.obor_enc[YY]));
+
     }
     else if (axi == ZZ) {
         ui->le_z->setText(QString::number(dev_state.coord[ZZ]));
