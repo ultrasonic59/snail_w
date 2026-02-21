@@ -26,6 +26,7 @@ win_snail::win_snail(QWidget *parent)
     , m_can_isConnected(false)
      , on_esc_key(false)
     , data_ready(false)
+    , cnt_req(0)
     
 
   {
@@ -334,9 +335,18 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
          s_SendCmd(&t_can_message);
      }
      else {
-         req_status_axis();
-         check_con_axis();
-         show_con_axis();
+         if (cnt_req >= MAX_CNT_REQ)
+         {
+             cnt_req = 0;
+             req_status_axis();
+             ///       ConAxis.connected_axis[YY] = true;
+             ///       ConAxis.prev_connected_axis[YY] = false;
+             ///       set_con_axis(YY);
+             check_con_axis();
+             show_con_axis();
+         }
+         else
+             cnt_req++;
      }
  }
 
@@ -843,6 +853,8 @@ void win_snail::sl_can_connected(bool iflag)
     qDebug() << "connected " << ComPortName;
     ui->buttConCAN->setText(tr("Disconnect"));
     p_ReqTimer->start(REQ_TIME_DT);
+    cnt_req = 0;
+
     connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
     }
  else
@@ -884,7 +896,7 @@ else
 void win_snail::slot_rd_dbg(int axi, int num, dbg_dat_req_t* odat)
 {
     qDebug() << "slot_rd_dbg";
-    el_timer.start();
+   el_timer.start();
 
     switch (num)
     {
@@ -1390,6 +1402,7 @@ void win_snail::sl_rsv_can_dat(can_message_t msg)
  ///   qDebug() << "sl_rsv_dat=" <<idat;
 ////emit put_str_dial(idat);
 ///if(msg.data[0]!= PUT_ACK)
+
 emit put_msg_dial(msg);
 
 }
@@ -2061,6 +2074,10 @@ void win_snail::sl_motor_go()
     quint8 dir;
     quint8 axi;
     quint8 num_axi;
+    int t_time;
+ ///   t_time = el_timer.elapsed();
+///    qDebug() << "sl_motor_go:" << t_time;
+    el_timer.start();
 
     if (sender() == ui->butt_XMinus) {
         axi = X_AXIS_CAN_ID;
@@ -2093,7 +2110,7 @@ void win_snail::sl_motor_go()
         num_axi = ZZ;
     }
     if (ConAxis.connected_axis[num_axi]) {
-        el_timer.start();
+ ///       el_timer.start();
         quint16 len_step = ui->combo_steps->currentText().toInt();
         quint32 num_step = ui->combo_num_steps->currentText().toInt();
         if (num_step == 0)

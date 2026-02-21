@@ -53,7 +53,8 @@ extern int	el_time;
 #define MOTOR_ON true
 /// #define MAX_NUM_STEP 10000000
 
-#define REQ_TIME_DT   20
+#define REQ_TIME_DT   20  ///100  ///20
+#define MAX_CNT_REQ   5  ///100  ///20
 
 #define MAX_NUM_AXIS   4
 /*
@@ -94,7 +95,7 @@ protected:
     QList<int> splitter_sizes;
     bool put_hid_cmd(hid_cmd_t* cmd);
     void rd_hid_dbg(dbg_dat_req_t* odat);
-
+    quint8 cnt_req;
 public:
     plotterwidget* p_CamView;
     CamPlotter* p_cam_plotter;

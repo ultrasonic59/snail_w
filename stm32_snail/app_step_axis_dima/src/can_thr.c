@@ -97,8 +97,10 @@ switch(i_data->num_par)
      printk("\n\r SET_COORD[%x]",i_data->par_val);
     
      curr_coord=(int32_t)i_data->par_val;
-     if(i_data->par_val==0)
+     if(i_data->par_val==0){
+       enc_obor=0;
        enc_offs=curr_enc;
+     }
      break;
    }
 return 0;

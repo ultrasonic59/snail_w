@@ -14,36 +14,24 @@ encoder_data_t resiv_enc={0};
 
 void UART_ENC_IRQHandler(void)
 {
-///int cnt;  
 uint8_t ch;
 uint32_t tmp_sr;
-////signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-////signed portBASE_TYPE xTaskWoken= pdFALSE;
 
 tmp_sr=UART_ENC->SR;  
 ////put_tst1(1);  
 if((tmp_sr&USART_FLAG_RXNE) != 0)
-////if(USART_GetITStatus(UART4, USART_IT_RXNE) != RESET)
   {
   UART_ENC->SR &= ~USART_FLAG_RXNE;              ///  USART_ClearITPendingBit(UART_BT, USART_IT_RXNE);
   ch = (u8)(UART_ENC->DR & 0x0FF);
   
   if (hdlc_on_bytein(ch) > 0)
     {
- ///    memcpy(&resiv_enc,g_hdlc.obr_buff,sizeof(send_data_t));
-
       ;
-   //// xQueueSendFromISR(g_hdlc_bt.ev_rsv_frame, &ch, &xHigherPriorityTaskWoken);
   }
   }
 else if((tmp_sr&USART_FLAG_ORE) != 0)
-////if(USART_GetITStatus(UART4, USART_IT_RXNE) != RESET)
   {
-////  put_tst3(1);  
   ch = (u8)(UART_ENC->DR & 0x0FF);
-///  ringbuffer_putc(&rx_bt_buffer, ch); 
-////  rt_hw_serial_isr(&serial4);
-  /* clear interrupt */
   USART_ClearITPendingBit(UART_ENC, USART_FLAG_ORE);
   }
 

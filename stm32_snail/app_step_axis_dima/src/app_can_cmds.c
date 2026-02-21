@@ -88,7 +88,7 @@ encoder_cmd_t t_put_encoder_cmd;
 t_put_encoder_cmd.cmd=PUT_ENCODER_CMD ;
 t_put_encoder_cmd.axis= AXIS_BRD;
 
-t_put_encoder_cmd.coord=idata.coord;
+t_put_encoder_cmd.coord=idata.Coord;
 t_put_encoder_cmd.temp_val=idata.val;
 
 ////t_put_encoder_cmd.state=cur_state;
@@ -109,7 +109,7 @@ encoder_cmd_t t_put_encoder_cmd;
 t_put_encoder_cmd.cmd=PUT_ENC_COORD_CMD ;
 t_put_encoder_cmd.axis= AXIS_BRD;
 
-t_put_encoder_cmd.coord=idata.coord;
+t_put_encoder_cmd.coord=idata.Coord;
 t_put_encoder_cmd.temp_val=idata.val;
 
 ////t_put_encoder_cmd.state=cur_state;
@@ -351,7 +351,7 @@ switch(data[0]) {
     //    cur_state&= ~CONC_MASK;
     //    cur_state |= tmp;
         put_can_cmd_encoder(resiv_enc);
-        printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
+        printk("[enc=%x:%d] \n\r",resiv_enc.Coord,resiv_enc.Coord);
          }
         break;
         

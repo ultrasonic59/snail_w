@@ -173,8 +173,8 @@ private:
 	bool canOpen(void);
 	bool canClose(void);
 
-	bool Send(char* sent_data);
-	bool SendRes(char *sent_data,char *res_data);
+	bool send(char* sent_data);
+	bool res(char *res_data);
 	char *out_buffer;
 	char vers[256];
 	bool wait_ans;

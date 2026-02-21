@@ -307,6 +307,7 @@ CAN_FilterConfig(0,id,mask);
 }
 #define MAX_TRIG   14000
 #define MIN_TRIG   200
+#define MAX_ENC_COORD   ((1<<14)-1)
 
 extern can_msg_t CAN_RxMsg;
 ///============================================
@@ -316,9 +317,8 @@ uint16_t enc_offs=0;  ///when coord =0;
 
 void change_coord(void){
 static uint16_t prev_enc=0;
-curr_enc=resiv_enc.coord;
+curr_enc= MAX_ENC_COORD -resiv_enc.Coord;
  if(prev_enc!=curr_enc){
-///    encoder_data_t t_encoder_data;
     if((prev_enc>MAX_TRIG)&&(curr_enc<MIN_TRIG))
       enc_obor++;
     else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))

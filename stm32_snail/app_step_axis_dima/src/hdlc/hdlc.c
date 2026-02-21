@@ -72,10 +72,6 @@ return len_o;
 }
 int hdlc_on_bytein( uint8_t in_bt )
 {
-///p_hdlc->bytes_received++;
-/// set_tst3(1);
-////        printk("[%x]",in_bt);
-///uint8_t ii;
 if( in_bt == PPP_FRAME )                        // Пришел флаг
     {
     if(g_hdlc.frame_in_pos > 2 )               // Если между двумя флагами были данные:

@@ -2,7 +2,7 @@
 #define __UART_H__
 
 typedef struct encoder_data_s{
-uint16_t coord;
+uint16_t Coord;
 int16_t val;   ///temper
 }encoder_data_t;
 

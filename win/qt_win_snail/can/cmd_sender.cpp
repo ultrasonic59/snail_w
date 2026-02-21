@@ -132,16 +132,16 @@ bool CcmdSender::isConnected() const
 {
     return m_isConnected;
 }
-bool CcmdSender::SendRes(char *sent_data,char *res_data)
+bool CcmdSender::res(char *res_data)
 {
-if (m_pSerialPort->isOpen() == false)
-		return false;
-if ((sent_data == 0) || (res_data == 0))
+if ( (res_data == 0))
 	return false;
-m_pSerialPort->write(sent_data);
-if(!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
-	return false;
+	el_time = el_timer.elapsed();
+	qDebug() << "Res:" << el_time;
 wait_ans = true;
+el_time = el_timer.elapsed();
+qDebug() << "Res1:" << el_time;
+
 if (!m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY))
     {
 	wait_ans = false;
@@ -151,18 +151,24 @@ quint64 len = m_pSerialPort->read(res_data, MAX_BUFF_SIZE);
 wait_ans = false;
 if (len == 0)
 	return false;
+el_time = el_timer.elapsed();
+qDebug() << "Res2:" << el_time;
 return true;
 }
-bool CcmdSender::Send(char* sent_data)
+bool CcmdSender::send(char* sent_data)
 {
 	if (m_pSerialPort->isOpen() == false)
 		return false;
 	if ((sent_data == 0) )
 		return false;
+///	el_time = el_timer.elapsed();
+///	qDebug() << "Send:" << el_time;
+
 	m_pSerialPort->write(sent_data);
 	if (!m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY))
 		return false;
-///	wait_ans = true;
+///	el_time = el_timer.elapsed();
+////	qDebug() << "end_Send:" << el_time;
 	return true;
 }
 
@@ -206,13 +212,13 @@ bool CcmdSender::getVers(char *vers)
 	snd_dat[0] = CMD_VERS;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
-
-	if(SendRes(snd_dat, rsv_dat))
+	if(send(snd_dat))
 	{
-	////qDebug() << "getVers "<< rsv_dat;
-	if (vers)
-		strcpy(vers, rsv_dat);
-	return true;  ///
+		if (res(rsv_dat)) {
+			if (vers)
+				strcpy(vers, rsv_dat);
+			return true;  ///
+		}
 	}
 return false;  ///
 }
@@ -223,9 +229,10 @@ bool CcmdSender::canOpen(void)
 	snd_dat[0] = CMD_OPEN;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
-	if (SendRes(snd_dat, rsv_dat))
+	if (send(snd_dat))
 	{
-		return true;  ///
+		if (res(rsv_dat))
+			return true;  ///
 	}
 return false;  ///
 }
@@ -236,9 +243,10 @@ bool CcmdSender::canClose(void)
 	snd_dat[0] = CMD_CLOSE;
 	snd_dat[1] = '\r';
 	snd_dat[2] = 0;
-	if (SendRes(snd_dat, rsv_dat))
+	if (send(snd_dat))
 	{
-		return true;  ///
+		if (res(rsv_dat))
+			return true;  ///
 	}
 return false;  ///
 }
@@ -263,34 +271,27 @@ static char* put_hex_byte(char* str, quint8 val) {
 }
 ///==================================================
 bool CcmdSender::canSendResMsg(can_message_t* msg) {
-	char snd_dat[64];
-	char* t_str = snd_dat;
+	bool rez;
 	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
-	*t_str++ = CMD_SEND;
-	t_str = put_hex_digit(t_str, msg->id >> 8);
-	t_str = put_hex_byte(t_str, msg->id & 0xff);
-	t_str = put_hex_digit(t_str, msg->dlc);
-	for (quint8 ii = 0; ii < msg->dlc; ii++) {
-		t_str = put_hex_byte(t_str, msg->data[ii]);
-	}
-*t_str++ = '\r';
-*t_str++ = 0;
+
 el_time = el_timer.elapsed();
 qDebug() << "canSendResMsg[send]:" << el_time;
-
-if (SendRes(snd_dat, rsv_dat))
-	{
-	*p_data_ready = true;
-	can_message_t t_rsv_msg;
-	parse_str(rsv_dat, t_rsv_msg);
-////	memcpy(p_rsv_msg,)
-	emit s_rsv_can_dat(t_rsv_msg);
-
-	el_time = el_timer.elapsed();
-	qDebug() << "canSendResMsg1[rsv]:" << el_time;
-
-	return true;  ///
+rez = can_send_msg(msg);
+if (!rez)
+   return rez;
+for (int ii = 0; ii < 5; ii++) {
+	if (res(rsv_dat)) {
+		///	*p_data_ready = true;
+		can_message_t t_rsv_msg;
+		parse_str(rsv_dat, t_rsv_msg);
+		if (t_rsv_msg.data[0] == PUT_ACK) {
+			emit s_rsv_can_dat(t_rsv_msg);
+			el_time = el_timer.elapsed();
+			qDebug() << "canSendResMsg1[rsv]:" << el_time;
+			return true;  ///
+		}
 	}
+}
 el_time = el_timer.elapsed();
 qDebug() << "canSendResMsg2:" << el_time;
 qDebug() << "canSendResMsg_error" ;
@@ -307,14 +308,21 @@ bool CcmdSender::can_send_msg(can_message_t* msg) {
 	for (quint8 ii = 0; ii < msg->dlc; ii++) {
 		t_str = put_hex_byte(t_str, msg->data[ii]);
 	}
-	if(msg->dlc!=1)
-			qDebug() << "dlc:" << msg->dlc;
+///	if(msg->dlc!=1)
+///			qDebug() << "dlc:" << msg->dlc;
+	if (msg->data[0] != GET_STAT_CMD) {
+		qDebug() << "data[0]" << QString::number(msg->data[0], 16);
+	///	qDebug() << "snd_dat[3]" << QString::number(snd_dat[3], 16) << "snd_dat[4]" << QString::number(snd_dat[4], 16) << "snd_dat[5]" << QString::number(snd_dat[5], 16);
 
+	///	qDebug() << "snd_dat[6]" << QString::number(snd_dat[6], 16) << "snd_dat[7]" << QString::number(snd_dat[7], 16) << "snd_dat[8]" << QString::number(snd_dat[8], 16);
+	///	qDebug() << "snd_dat[9]" << QString::number(snd_dat[9], 16) << "snd_dat[10]" << QString::number(snd_dat[10], 16) << "snd_dat[11]" << QString::number(snd_dat[11], 16);
+
+	}
 	*t_str++ = '\r';
 	*t_str++ = 0;
 ///	el_time = el_timer.elapsed();
 ///	qDebug() << "canSendResMsg[send]:" << el_time;
-	if (Send(snd_dat))
+	if (send(snd_dat))
 	{
 ///		*p_data_ready = true;
 		return true;  ///
@@ -343,12 +351,12 @@ bool CcmdSender::setBaudRate(quint32 bps)
 	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 	strcpy(snd_dat, slcan_get_baud_string(bps));
 	
-	if (SendRes(snd_dat, rsv_dat))
-	{
+	if (send(snd_dat))
+		if (res(rsv_dat))
+		{
 		return true;  ///
 	}
-
-	return false;  ///
+return false;  ///
 }
 bool CcmdSender::canSendCmdGo(quint32 id, go_cmd_t cmd)
 {
