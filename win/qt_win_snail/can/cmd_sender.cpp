@@ -132,7 +132,7 @@ bool CcmdSender::isConnected() const
 {
     return m_isConnected;
 }
-bool CcmdSender::res(char *res_data)
+bool CcmdSender::Res(char *res_data)
 {
 if ( (res_data == 0))
 	return false;
@@ -214,7 +214,7 @@ bool CcmdSender::getVers(char *vers)
 	snd_dat[2] = 0;
 	if(send(snd_dat))
 	{
-		if (res(rsv_dat)) {
+		if (Res(rsv_dat)) {
 			if (vers)
 				strcpy(vers, rsv_dat);
 			return true;  ///
@@ -231,7 +231,7 @@ bool CcmdSender::canOpen(void)
 	snd_dat[2] = 0;
 	if (send(snd_dat))
 	{
-		if (res(rsv_dat))
+		if (Res(rsv_dat))
 			return true;  ///
 	}
 return false;  ///
@@ -245,7 +245,7 @@ bool CcmdSender::canClose(void)
 	snd_dat[2] = 0;
 	if (send(snd_dat))
 	{
-		if (res(rsv_dat))
+		if (Res(rsv_dat))
 			return true;  ///
 	}
 return false;  ///
@@ -270,17 +270,17 @@ static char* put_hex_byte(char* str, quint8 val) {
 	return str;
 }
 ///==================================================
-bool CcmdSender::canSendResMsg(can_message_t* msg) {
+bool CcmdSender::canSendResMsg(can_message_t msg) {
 	bool rez;
 	char rsv_dat[MAX_BUFF_SIZE] = { 0 };
 
 el_time = el_timer.elapsed();
 qDebug() << "canSendResMsg[send]:" << el_time;
-rez = can_send_msg(msg);
+rez = sl_can_send_msg1(&msg);
 if (!rez)
    return rez;
 for (int ii = 0; ii < 5; ii++) {
-	if (res(rsv_dat)) {
+	if (Res(rsv_dat)) {
 		///	*p_data_ready = true;
 		can_message_t t_rsv_msg;
 		parse_str(rsv_dat, t_rsv_msg);
@@ -298,7 +298,7 @@ qDebug() << "canSendResMsg_error" ;
 
 	return false;  ///
 }
-bool CcmdSender::can_send_msg(can_message_t* msg) {
+bool CcmdSender::sl_can_send_msg1(can_message_t* msg) {
 	char snd_dat[64];
 	char* t_str = snd_dat;
 	*t_str++ = CMD_SEND;
@@ -308,10 +308,46 @@ bool CcmdSender::can_send_msg(can_message_t* msg) {
 	for (quint8 ii = 0; ii < msg->dlc; ii++) {
 		t_str = put_hex_byte(t_str, msg->data[ii]);
 	}
-///	if(msg->dlc!=1)
-///			qDebug() << "dlc:" << msg->dlc;
+	if ((msg->dlc > 8) || (msg->dlc == 0)) {
+		qDebug() << "sl_can_send_msg1 dlc:" << msg->dlc << "data[0]=" << QString::number(msg->data[0], 16);
+		return false;
+	}
 	if (msg->data[0] != GET_STAT_CMD) {
-		qDebug() << "data[0]" << QString::number(msg->data[0], 16);
+		qDebug() << "sl_can_send_msg1 data[0]=" << QString::number(msg->data[0], 16) << "dlc=" << msg->dlc;
+		///	qDebug() << "snd_dat[3]" << QString::number(snd_dat[3], 16) << "snd_dat[4]" << QString::number(snd_dat[4], 16) << "snd_dat[5]" << QString::number(snd_dat[5], 16);
+
+		///	qDebug() << "snd_dat[6]" << QString::number(snd_dat[6], 16) << "snd_dat[7]" << QString::number(snd_dat[7], 16) << "snd_dat[8]" << QString::number(snd_dat[8], 16);
+		///	qDebug() << "snd_dat[9]" << QString::number(snd_dat[9], 16) << "snd_dat[10]" << QString::number(snd_dat[10], 16) << "snd_dat[11]" << QString::number(snd_dat[11], 16);
+
+	}
+	*t_str++ = '\r';
+	*t_str++ = 0;
+	///	el_time = el_timer.elapsed();
+	///	qDebug() << "canSendResMsg[send]:" << el_time;
+	if (send(snd_dat))
+	{
+		///		*p_data_ready = true;
+		return true;  ///
+	}
+	return false;  ///
+}
+
+bool CcmdSender::sl_can_send_msg(can_message_t& msg) {
+	char snd_dat[64];
+	char* t_str = snd_dat;
+	*t_str++ = CMD_SEND;
+	t_str = put_hex_digit(t_str, msg.id >> 8);
+	t_str = put_hex_byte(t_str, msg.id & 0xff);
+	t_str = put_hex_digit(t_str, msg.dlc);
+	for (quint8 ii = 0; ii < msg.dlc; ii++) {
+		t_str = put_hex_byte(t_str, msg.data[ii]);
+	}
+	if ((msg.dlc > 8) || (msg.dlc == 0)) {
+		qDebug() << "sl_can_send_msg dlc:" << msg.dlc << "data[0]=" << QString::number(msg.data[0], 16);
+		return false;
+	}
+	if (msg.data[0] != GET_STAT_CMD) {
+		qDebug() << "data[0]=" << QString::number(msg.data[0], 16)<<"dlc="<< msg.dlc;
 	///	qDebug() << "snd_dat[3]" << QString::number(snd_dat[3], 16) << "snd_dat[4]" << QString::number(snd_dat[4], 16) << "snd_dat[5]" << QString::number(snd_dat[5], 16);
 
 	///	qDebug() << "snd_dat[6]" << QString::number(snd_dat[6], 16) << "snd_dat[7]" << QString::number(snd_dat[7], 16) << "snd_dat[8]" << QString::number(snd_dat[8], 16);
@@ -328,6 +364,17 @@ bool CcmdSender::can_send_msg(can_message_t* msg) {
 		return true;  ///
 	}
 return false;  ///
+}
+void CcmdSender::sl_req_status_axis(void)
+{
+	can_message_t t_can_message;
+	t_can_message.id = X_AXIS_CAN_ID | Y_AXIS_CAN_ID | Z_AXIS_CAN_ID | DOZA_CAN_ID;
+	t_can_message.dlc = 1;
+	t_can_message.IDE = 0;
+	t_can_message.RTR = 0;
+	t_can_message.data[0] = GET_STAT_CMD;
+	sl_can_send_msg(t_can_message);
+///	emit s_send_msg(&t_can_message);
 }
 
 const char* slcan_get_baud_string(quint32 bps) {
@@ -352,7 +399,7 @@ bool CcmdSender::setBaudRate(quint32 bps)
 	strcpy(snd_dat, slcan_get_baud_string(bps));
 	
 	if (send(snd_dat))
-		if (res(rsv_dat))
+		if (Res(rsv_dat))
 		{
 		return true;  ///
 	}
@@ -366,7 +413,7 @@ t_can_message.dlc = 8;
 t_can_message.IDE = 0;
 t_can_message.RTR = 0;
 memcpy(t_can_message.data, (quint8*)&cmd, 8);
-return canSendResMsg(&t_can_message);
+return canSendResMsg(t_can_message);
 }
 
 ///====================================================
@@ -383,7 +430,9 @@ void CcmdSender::sl_set_com_name(QString name)
 {
 	COM_port_name = name;
 }
+/*
 void CcmdSender::SlSendCmd(can_message_t* msg)
 {
 canSendResMsg(msg);
 }
+*/

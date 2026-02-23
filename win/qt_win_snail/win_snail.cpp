@@ -100,20 +100,20 @@ win_snail::win_snail(QWidget *parent)
     qDebug() << "int=" << tsize;
     */
     ///=======================================================
-connect(ui->Butt_test, SIGNAL(clicked()), this, SLOT(on_butt_test()));
-connect(ui->Butt_test1, SIGNAL(clicked()), this, SLOT(on_butt_test1()));
-connect(ui->Butt_test2, SIGNAL(clicked()), this, SLOT(on_butt_test2()));
-connect(ui->Butt_test3, SIGNAL(clicked()), this, SLOT(on_butt_test3()));
+connect(ui->Butt_test, SIGNAL(clicked()), this, SLOT(slot_butt_test()));
+connect(ui->Butt_test1, SIGNAL(clicked()), this, SLOT(slot_butt_test1()));
+connect(ui->Butt_test2, SIGNAL(clicked()), this, SLOT(slot_butt_test2()));
+connect(ui->Butt_test3, SIGNAL(clicked()), this, SLOT(slot_butt_test3()));
 
-connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
+connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(slot_butt_load()));
 
- connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
- connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(on_butt_con_hid()));
+ connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(slot_butt_debug()));
+ connect(ui->buttConHid, SIGNAL(clicked()), this, SLOT(slot_butt_con_hid()));
  ///==================CAN =============================================
- connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(on_butt_con_can()));
+ connect(ui->buttConCAN, SIGNAL(clicked()), this, SLOT(slot_butt_con_can()));
 
-  connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(on_value_led0_changed(int)));
-  connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(on_value_led1_changed(int)));
+  connect(ui->lightSlider0, SIGNAL(valueChanged(int)), this, SLOT(slot_value_led0_changed(int)));
+  connect(ui->lightSlider1, SIGNAL(valueChanged(int)), this, SLOT(slot_value_led1_changed(int)));
   ///===================================================
   pSenderThread = new QThread(this);
   p_cmd_sender = new CcmdSender(&data_ready, &rsv_msg,  &dev_state);
@@ -157,14 +157,14 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
    connect(p_cam_plotter, SIGNAL(s_show_rule_coord(QRect&)), this, SLOT(sl_show_rule_coord(QRect&)));
 
  connect(pCamThread, SIGNAL(finished()), p_cam_plotter, SLOT(deleteLater()));
- ///connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(on_butt_debug()));
+ ///connect(ui->buttDebug, SIGNAL(clicked()), this, SLOT(slot_butt_debug()));
 
- connect(ui->pushButtonCross, SIGNAL(clicked()), this, SLOT(on_butt_cross()));
- connect(ui->pushButtonSel, SIGNAL(clicked()), this, SLOT(on_butt_sel()));
- connect(ui->pushButtonRule, SIGNAL(clicked()), this, SLOT(on_butt_rule()));
- connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(on_butt_pnt()));
+ connect(ui->pushButtonCross, SIGNAL(clicked()), this, SLOT(slot_butt_cross()));
+ connect(ui->pushButtonSel, SIGNAL(clicked()), this, SLOT(slot_butt_sel()));
+ connect(ui->pushButtonRule, SIGNAL(clicked()), this, SLOT(slot_butt_rule()));
+ connect(ui->pushButtonPnt, SIGNAL(clicked()), this, SLOT(slot_butt_pnt()));
 
- connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(on_butt_grid()));
+ connect(ui->pushButtonGrid, SIGNAL(clicked()), this, SLOT(slot_butt_grid()));
  ///==========================================================================
  connect(this, SIGNAL(s_can_connect(bool)), p_cmd_sender, SLOT(sl_connect(bool)));
  connect(p_cmd_sender, SIGNAL(s_connected(bool)), this, SLOT(sl_can_connected(bool)));
@@ -195,7 +195,9 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  pMotorThread->start();
 
  connect(this, SIGNAL(s_eeprom(int, eeprom_cmd_t)), this, SLOT(sl_eeprom(int, eeprom_cmd_t)));
- connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+ ///connect(this, SIGNAL(s_sendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+ connect(this, SIGNAL(s_sendCmd(can_message_t)), p_cmd_sender, SLOT(canSendResMsg(can_message_t)));
+
 
  connect(this, SIGNAL(s_mot_spi(int,spi_mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_spi(int,spi_mot_cmd_t)));
  connect(this, SIGNAL(s_mot_go(mot_cmd_t)), p_motor_wrk, SLOT(sl_mot_go(mot_cmd_t)));
@@ -213,25 +215,17 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
  connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_motor_go()));
 
- ///connect(ui->butt_XMinus, SIGNAL(pressed()), this, SLOT(sl_xminus()));
- /// connect(ui->butt_XPlus, SIGNAL(pressed()), this, SLOT(sl_xplus()));
-  connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
-  connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
+ connect(ui->butt_XMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
+ connect(ui->butt_XPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_x_rel()));
 
-///connect(ui->butt_YMinus, SIGNAL(pressed()), this, SLOT(sl_yminus()));
-/// connect(ui->butt_YPlus, SIGNAL(pressed()), this, SLOT(sl_yplus()));
  connect(ui->butt_YMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
  connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
 
- connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
+ ////connect(ui->butt_YPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_y_rel()));
 
  connect(this, SIGNAL(s_key_release(int)), p_motor_wrk, SLOT(sl_axi_rel(int)));
 
- ///void s_key_release(int axi);
-
-
- ///connect(ui->butt_ZMinus, SIGNAL(pressed()), this, SLOT(sl_zminus()));
- ///connect(ui->butt_ZPlus, SIGNAL(pressed()), this, SLOT(sl_zplus()));
+ 
  connect(ui->butt_ZMinus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
  connect(ui->butt_ZPlus, SIGNAL(released()), p_motor_wrk, SLOT(sl_z_rel()));
 
@@ -267,8 +261,13 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
  connect(p_ReqTimer, SIGNAL(timeout()), this, SLOT(req_timer_timeout()));
 ///p_ReqTimer->start(REQ_TIME_DT);
 ///connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
+ connect(p_motor_wrk, SIGNAL(s_SendCmd(can_message_t)), this, SLOT(sl_SendCmd(can_message_t)));
 
  }
+void win_snail::sl_SendCmd(can_message_t pmsg)
+{
+    msg_queue.enqueue(pmsg);
+}
  void win_snail::show_con_axis(void)
  {
      if (ConAxis.prev_connected_axis[XX] != ConAxis.connected_axis[XX]) {
@@ -332,13 +331,20 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
      if (!msg_queue.isEmpty()) {
          can_message_t t_can_message;
          t_can_message = msg_queue.dequeue();
-         s_SendCmd(&t_can_message);
+         if ((t_can_message.dlc > 8) || (t_can_message.dlc == 0)) {
+             qDebug() << "req_timer_timeout dlc:" << t_can_message.dlc<<"data[0]"<< t_can_message.data[0];
+             return ;
+         }
+
+         emit s_sendCmd(t_can_message);
      }
      else {
          if (cnt_req >= MAX_CNT_REQ)
          {
              cnt_req = 0;
-             req_status_axis();
+             emit s_req_status_axis();
+           ///  req_status_axis();
+           /// 
              ///       ConAxis.connected_axis[YY] = true;
              ///       ConAxis.prev_connected_axis[YY] = false;
              ///       set_con_axis(YY);
@@ -349,7 +355,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
              cnt_req++;
      }
  }
-
+ /*
  void win_snail::req_status_axis(void)
  {
      can_message_t t_can_message;
@@ -360,7 +366,7 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(on_butt_load()));
      t_can_message.data[0] = GET_STAT_CMD;
      emit s_send_msg(&t_can_message);
  }
-
+ */
 
 
  void win_snail::sl_mouse_pos(QPointF pnt)
@@ -651,15 +657,15 @@ void win_snail::sl_newPrj()
 {
     qDebug() << "sl_newPrj";
     QString path = QFileDialog::getSaveFileName(this, tr("New project"), tr("Project files (*.dprj)")); 
-    QFile file(path); /*Ñîçäàåì ýêçåìïëÿð êëàññà QFile*/
-    if (file.open(QIODevice::WriteOnly)) /*Îòêðûâàåì ôàéë â ðåæèìå òîëüêî äëÿ çàïèñè. Â ýòîì ñ*/
+    QFile file(path); /*   QFile*/
+    if (file.open(QIODevice::WriteOnly)) /*      .   */
     {
         QByteArray data;
         data = QString("first string").toUtf8();
        ///?? data.append(QString("second string"));
       ///???  data.append(QString("%1").arg(100));
-        file.write(data); /*Çàïèñûâàåì äàííûå*/
-        file.close(); /*Çàêðûâàåì ôàéë*/
+        file.write(data); /* */
+        file.close(); /* */
     }
   ///  QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Dir"));
 
@@ -687,7 +693,7 @@ void win_snail::createThreads()
     */
 }
 #endif
-void win_snail::on_butt_cross()
+void win_snail::slot_butt_cross()
 {
 /// qDebug() << "on_butt_cross";
 cnf_flags ^= FLG_ON_CRS;
@@ -696,7 +702,7 @@ if(cnf_flags& FLG_ON_CRS)
 else
     ui->pushButtonCross->setStyleSheet("");
 }
-void win_snail::on_butt_sel()
+void win_snail::slot_butt_sel()
 {
   ///  qDebug() << "on_butt_sel";
     cnf_flags ^= FLG_ON_SEL;
@@ -705,7 +711,7 @@ void win_snail::on_butt_sel()
     else
         ui->pushButtonSel->setStyleSheet("");
 }
-void win_snail::on_butt_rule()
+void win_snail::slot_butt_rule()
 {
  ///   qDebug() << "on_butt_sel";
     cnf_flags ^= FLG_ON_RULE;
@@ -715,7 +721,7 @@ void win_snail::on_butt_rule()
         ui->pushButtonRule->setStyleSheet("");
 }
 
-void win_snail::on_butt_grid()
+void win_snail::slot_butt_grid()
 {
  ///   qDebug() << "on_butt_sel";
     cnf_flags ^= FLG_ON_GRID;
@@ -724,7 +730,7 @@ void win_snail::on_butt_grid()
     else
         ui->pushButtonGrid->setStyleSheet("");
 }
-void win_snail::on_butt_pnt()
+void win_snail::slot_butt_pnt()
 {
     ///   qDebug() << "on_butt_sel";
     cnf_flags ^= FLG_ON_PNT;
@@ -735,7 +741,7 @@ void win_snail::on_butt_pnt()
 }
 
 ///================================
-void win_snail::on_butt_debug()
+void win_snail::slot_butt_debug()
 {
     qDebug() << "start debug" ;
     DialDebug Dial_dbg(this);
@@ -784,7 +790,7 @@ else
 
 
 }
-void win_snail::on_butt_test()
+void win_snail::slot_butt_test()
 {
     qDebug() << "start test";
  ///   DialDebug _dial_dbg(this);
@@ -802,7 +808,7 @@ void win_snail::on_butt_test()
 }
 
 ///=====================================================
-void win_snail::on_value_led0_changed(int value)
+void win_snail::slot_value_led0_changed(int value)
 {
     hid_cmd_t t_cmd;
     t_cmd.cmd = CMD_SET_LED0;
@@ -816,7 +822,7 @@ void win_snail::on_value_led0_changed(int value)
     put_hid_cmd(&t_cmd);
 
 }
-void win_snail::on_value_led1_changed(int value)
+void win_snail::slot_value_led1_changed(int value)
 {
     hid_cmd_t t_cmd;
     t_cmd.cmd = CMD_SET_LED1;
@@ -831,7 +837,7 @@ void win_snail::on_value_led1_changed(int value)
 
 }
 
-void win_snail::on_butt_con_hid()
+void win_snail::slot_butt_con_hid()
 {
     qDebug() << "start con";
     if (hid_handle)
@@ -855,20 +861,22 @@ void win_snail::sl_can_connected(bool iflag)
     p_ReqTimer->start(REQ_TIME_DT);
     cnt_req = 0;
 
-    connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
+   /// connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(sl_can_send_msg(can_message_t*)));
+    connect(this, SIGNAL(s_req_status_axis()), p_cmd_sender, SLOT(sl_req_status_axis()));
+
     }
  else
     {
       ui->buttConCAN->setText(tr("Connect"));
       ui->buttConCAN->setStyleSheet("");
       p_ReqTimer->stop();
-      disconnect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
+      disconnect(this, SIGNAL(s_req_status_axis()), p_cmd_sender, SLOT(sl_req_status_axis()));
       init_con_axis();
       show_con_axis();
 
     }
 }
-void win_snail::on_butt_con_can()
+void win_snail::slot_butt_con_can()
 {
     qDebug() << "start can";
  if (m_can_isConnected)
@@ -1487,7 +1495,7 @@ bool win_snail::json2component(QByteArray byteArr, component& comp )
     return false;
 }
 #endif
-void win_snail::on_butt_load()
+void win_snail::slot_butt_load()
 {
     qDebug() << "start load";
  ///   component* pComp = new component();
@@ -1741,7 +1749,7 @@ void win_snail::keyReleaseEvent(QKeyEvent* event) {
 }
 ///==============================================
 ///==============================================
-void win_snail::on_butt_test1()
+void win_snail::slot_butt_test1()
 {
  ///   req_status_axis();
 /*
@@ -1798,7 +1806,7 @@ if (p_curGroup != nullptr) {
     */
 }
 quint8 tmp_tst = 0;
-void win_snail::on_butt_test3()
+void win_snail::slot_butt_test3()
 {
     scene->currentItem->setPos(40, 60);
 
@@ -1824,7 +1832,7 @@ if (tmp_tst & 0x1)
         }
 #endif
 }
-void win_snail::on_butt_test2()
+void win_snail::slot_butt_test2()
 {
  ///   quint8 mot_rej = ui->combo_rej->currentText().toInt();
 ///    send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
@@ -2276,7 +2284,7 @@ void win_snail::sl_eeprom(int axi, eeprom_cmd_t cmd){
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(eeprom_cmd_t));
     data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_sendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (data_ready == false)
     {

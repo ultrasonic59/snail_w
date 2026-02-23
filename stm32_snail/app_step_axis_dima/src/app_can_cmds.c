@@ -350,8 +350,8 @@ switch(data[0]) {
    //     tmp<<=4;
     //    cur_state&= ~CONC_MASK;
     //    cur_state |= tmp;
-        put_can_cmd_encoder(resiv_enc);
-        printk("[enc=%x:%d] \n\r",resiv_enc.Coord,resiv_enc.Coord);
+ ///       put_can_cmd_encoder(resiv_enc);
+ ///       printk("[enc=%x:%d] \n\r",resiv_enc.Coord,resiv_enc.Coord);
          }
         break;
         

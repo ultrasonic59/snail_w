@@ -276,6 +276,7 @@ if(EE_Rd(ADDR_EEPROM_MOT_TORQUE,&tmp)!=0)
   memcpy(&tmp,(uint16_t*)&G_TORQUE_REG,sizeof(uint16_t));
   }
 mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&tmp);
+printk("\n\r TORQUE [%d]",tmp);
 
 if(EE_Rd(ADDR_EEPROM_MOT_OFF,&tmp)!=0)
   {

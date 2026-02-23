@@ -54,7 +54,7 @@ extern int	el_time;
 /// #define MAX_NUM_STEP 10000000
 
 #define REQ_TIME_DT   20  ///100  ///20
-#define MAX_CNT_REQ   5  ///100  ///20
+#define MAX_CNT_REQ   2  ///100  ///20
 
 #define MAX_NUM_AXIS   4
 /*
@@ -153,7 +153,7 @@ protected:
   ///  void req_status_axis();
 private slots:
     void req_timer_timeout(void);
-    void req_status_axis();
+  ///  void req_status_axis();
 
 private :
     bool eventFilter(QObject* obj, QEvent* event);
@@ -184,23 +184,23 @@ private:
     void rotateComp(qreal angle);
 
 public slots:
-    void on_butt_con_hid();
-    void on_butt_con_can();
+    void slot_butt_con_hid();
+    void slot_butt_con_can();
     void sl_can_connected(bool iflag);
     ///===== for debug =======
-    void on_value_led0_changed(int value);
-    void on_value_led1_changed(int value);
-    void on_butt_debug();
+    void slot_value_led0_changed(int value);
+    void slot_value_led1_changed(int value);
+    void slot_butt_debug();
     void slot_rd_dbg(int axi,int num, dbg_dat_req_t* odat);
     void slot_wr_dbg(int axi,int num, dbg_dat_req_t* idat);
     void slot_send_can_dbg(can_message_t* idat);
 
-    void on_butt_test();
-    void on_butt_test1();
-    void on_butt_test2();
-    void on_butt_test3();
+    void slot_butt_test();
+    void slot_butt_test1();
+    void slot_butt_test2();
+    void slot_butt_test3();
 
-    void on_butt_load();
+    void slot_butt_load();
 
     void sl_rsv_can_dat(can_message_t);
     void sl_state_changed(quint8);
@@ -217,11 +217,11 @@ private slots:
     void sl_newPrj();
     void sl_newFile();
 
-    void on_butt_cross();
-    void on_butt_sel();
-    void on_butt_rule();
-    void on_butt_grid();
-    void on_butt_pnt();
+    void slot_butt_cross();
+    void slot_butt_sel();
+    void slot_butt_rule();
+    void slot_butt_grid();
+    void slot_butt_pnt();
     void openRecentFile();
     bool save();
     bool saveFile(const QString& fileName);
@@ -265,7 +265,7 @@ protected slots:
 */
 signals:
     void updateCamView(QImage);
-    void s_SendCmd(can_message_t* msg);
+    void s_sendCmd(can_message_t msg);
     void s_start(int);
     void s_can_connect(bool);
     void s_set_can_com_name(QString);
@@ -279,6 +279,7 @@ signals:
     void s_key_release(int axi);
     void s_put_doza(doza_cmd_t);
     void s_send_msg(can_message_t* msg);
+    void s_req_status_axis(void);
 
 private:
     PaintScene* scene;
@@ -308,6 +309,8 @@ protected slots:
     void sl_mouse_pos(QPointF pnt);
     void sl_eeprom(int axi, eeprom_cmd_t cmd);
     void sl_zoom_changed(double value);
+    void sl_SendCmd(can_message_t pmsg);
+
 public:
   ///  bool json2component(QByteArray byteArr, component& comp);
   ///  bool json2component(QByteArray byteArr, component* pGroup);

@@ -305,9 +305,6 @@ CAN_FilterConfig(0,id,mask);
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
-#define MAX_TRIG   14000
-#define MIN_TRIG   200
-#define MAX_ENC_COORD   ((1<<14)-1)
 
 extern can_msg_t CAN_RxMsg;
 ///============================================
@@ -315,21 +312,6 @@ uint16_t curr_enc=0;  ///
 int32_t enc_obor=0;
 uint16_t enc_offs=0;  ///when coord =0;
 
-void change_coord(void){
-static uint16_t prev_enc=0;
-curr_enc= MAX_ENC_COORD -resiv_enc.Coord;
- if(prev_enc!=curr_enc){
-    if((prev_enc>MAX_TRIG)&&(curr_enc<MIN_TRIG))
-      enc_obor++;
-    else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))
-       enc_obor--;
-    prev_enc=curr_enc ;
-curr_coord= (enc_obor<<14) + curr_enc;  
-
- ///   t_encoder_data.coord=curr_enc-enc_offs;
-///    t_encoder_data.val= enc_obor;
-  }
-}
 
 void state_task( void *pvParameters )
 {

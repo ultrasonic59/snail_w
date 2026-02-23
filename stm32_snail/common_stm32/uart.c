@@ -10,7 +10,34 @@
 #include "board.h"
 #include "hdlc.h"
 
-encoder_data_t resiv_enc={0};
+#define MAX_TRIG   14000
+#define MIN_TRIG   200
+#define MAX_ENC_COORD   ((1<<14)-1)
+
+extern uint16_t curr_enc;  ///
+extern int32_t enc_obor;
+extern uint16_t enc_offs;  ///when coord =0;
+
+static encoder_data_t resiv_Enc={0};
+
+void change_coord(void){
+uint16_t t_enc;  
+static uint16_t prev_enc=0;
+memcpy(&resiv_Enc,g_hdlc.in_buff,sizeof(encoder_data_t));
+t_enc=resiv_Enc.Coord;
+curr_enc= MAX_ENC_COORD -t_enc;
+ if(prev_enc!=curr_enc){
+    if((prev_enc>MAX_TRIG)&&(curr_enc<MIN_TRIG))
+      enc_obor++;
+    else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))
+       enc_obor--;
+    prev_enc=curr_enc ;
+curr_coord= (enc_obor<<14) + curr_enc- enc_offs;  
+
+ ///   t_encoder_data.coord=curr_enc-enc_offs;
+///    t_encoder_data.val= enc_obor;
+  }
+}
 
 void UART_ENC_IRQHandler(void)
 {

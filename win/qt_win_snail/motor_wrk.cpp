@@ -14,7 +14,7 @@ Cmotor_wrk::Cmotor_wrk(CcmdSender* sender, dev_state_t* dev_state, bool* data_re
     mot_rej[YY] = DEF_MOT_REJ_Y;
     mot_rej[ZZ] = DEF_MOT_REJ_Z;
     */
-    connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(SlSendCmd(can_message_t*)));
+ ///   connect(this, SIGNAL(s_SendCmd(can_message_t*)), p_cmd_sender, SLOT(sl_can_send_msg(can_message_t*)));
 
 }
 ///==============================================================
@@ -40,7 +40,7 @@ void Cmotor_wrk::send_cmd_go(quint32 id, quint8 dir, quint16 len_step, quint32 n
     t_can_message.data[6] = (num_step >> 16) & 0xff;
     t_can_message.data[7] = (num_step >> 24) & 0xff;
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {
@@ -64,7 +64,7 @@ void Cmotor_wrk::send_cmd_stop(quint32 id)
     t_can_message.RTR = 0;
     t_can_message.data[0] = STOP_CMD;
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {
@@ -89,7 +89,7 @@ void Cmotor_wrk::send_cmd_mot_rej(quint32 id, quint8 rej, quint8 trq) {
     t_can_message.data[6] = 0;
     t_can_message.data[7] = 0;
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {
@@ -114,7 +114,7 @@ void Cmotor_wrk::send_cmd_set_coord(quint32 id, quint32 coord) {
     t_can_message.data[6] = (coord >> 16) & 0xff;;
     t_can_message.data[7] = (coord >> 24) & 0xff;;
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {
@@ -133,7 +133,7 @@ void Cmotor_wrk::sl_put_doza(doza_cmd_t cmd) {
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(doza_cmd_t));
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {
@@ -172,7 +172,7 @@ void Cmotor_wrk::sl_mot_spi(int axi, spi_mot_cmd_t cmd) {
     t_can_message.RTR = 0;
     memcpy(t_can_message.data, &cmd, sizeof(spi_mot_cmd_t));
     *p_data_ready = false;
-    emit s_SendCmd(&t_can_message);
+    emit s_SendCmd(t_can_message);
     int wait_rdy_cnt = 0;
     while (*p_data_ready == false)
     {

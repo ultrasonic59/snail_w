@@ -174,18 +174,21 @@ private:
 	bool canClose(void);
 
 	bool send(char* sent_data);
-	bool res(char *res_data);
+	bool Res(char *res_data);
 	char *out_buffer;
 	char vers[256];
 	bool wait_ans;
 public:
-	bool canSendResMsg(can_message_t* msg);
+///	bool canSendResMsg(can_message_t* msg);
 	bool canSendCmdGo(quint32 id, go_cmd_t cmd);
 public slots:
 	void sl_set_com_name(QString);
 	void sl_connect(bool);
-	void SlSendCmd(can_message_t* msg);
-	bool can_send_msg(can_message_t* msg);
+	///void SlSendCmd(can_message_t* msg);
+	bool sl_can_send_msg(can_message_t &msg);
+	bool sl_can_send_msg1(can_message_t* msg);
+	bool canSendResMsg(can_message_t msg);
+	void sl_req_status_axis(void);
 
 private slots:
 	void handleRead();

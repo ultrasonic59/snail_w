@@ -91,6 +91,7 @@ switch(i_data->num_par)
         htmp|= (tmp&CTRL_TORQUE_MASK);
         EE_Wr(ADDR_EEPROM_MOT_TORQUE,htmp);
       }
+     printk("\n\r MOTOR_REJ[%d:%d]",cur_mot_rej,tmp);
     
      break;
    case SET_COORD:
