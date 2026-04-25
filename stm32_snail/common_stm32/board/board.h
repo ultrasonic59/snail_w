@@ -17,6 +17,11 @@
 #endif
 
   #include "stm32f2xx_can.h"
+///========================================
+#define CTRL_MODE_MASK (0xf<<3)
+#define CTRL_MODE_OFFS 3
+#define CTRL_TORQUE_MASK (0xff)
+#define CTRL_TORQUE_OFFS 0
 
 ////======================================
 ////extern void tst_task( void *pvParameters );

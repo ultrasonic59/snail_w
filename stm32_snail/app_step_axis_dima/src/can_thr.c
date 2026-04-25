@@ -20,7 +20,6 @@ int stop_mot_cmd(void)
 cur_state &= ~STATE_MASK;
 cur_state|=STATE_IDLE;  
 printk("\n\rSTATE_IDLE ");
-
 put_mot_nStep(0);
 return 0;
 }
@@ -64,11 +63,6 @@ put_mot_nStep(p_go_cmd->steps);
 return 0;
 }
 extern uint8_t cur_mot_rej;
-///========================================
-#define CTRL_MODE_MASK (0xf<<3)
-#define CTRL_MODE_OFFS 3
-#define CTRL_TORQUE_MASK (0xff)
-#define CTRL_TORQUE_OFFS 0
 
 int set_param(set_param_cmd_t *i_data)
 {

@@ -276,7 +276,7 @@ if(EE_Rd(ADDR_EEPROM_MOT_TORQUE,&tmp)!=0)
   memcpy(&tmp,(uint16_t*)&G_TORQUE_REG,sizeof(uint16_t));
   }
 mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&tmp);
-printk("\n\r TORQUE [%d]",tmp);
+printk("\n\r _TORQUE_ [%d]",tmp);
 
 if(EE_Rd(ADDR_EEPROM_MOT_OFF,&tmp)!=0)
   {
@@ -328,6 +328,7 @@ tmp=mot_spi_rd(ADDR_MOT_CTRL);
 void set_mot_trq(uint8_t trq)
 {
 uint16_t tmp;
+///uint16_t htmp;
 TORQUE_Register_t *t_trq_reg=(TORQUE_Register_t*)&tmp;
 tmp=mot_spi_rd(ADDR_MOT_TORQUE);
 
@@ -335,6 +336,7 @@ t_trq_reg->TORQUE=trq;
 mot_spi_wr(ADDR_MOT_TORQUE,tmp);
 
 tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+EE_Wr(ADDR_EEPROM_MOT_TORQUE,tmp);
 printk("\n\r set_mot_trq[%x]",tmp);
 
 }
@@ -492,10 +494,18 @@ mot_spi_wr(ADDR_MOT_CTRL,tmp);
 
 void put_mot_nStep(uint32_t nstep)
 {
-ena_mot(1) ;
-num_Step=nstep; 
-TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
-TIM_Cmd(MOT_STEP_TIM, ENABLE);
+  if(nstep){
+     ena_mot(1) ;
+     num_Step=nstep; 
+     TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
+     TIM_Cmd(MOT_STEP_TIM, ENABLE);
+  }
+  else{
+  ///    ena_mot(0) ;
+      num_Step=nstep; 
+      TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, DISABLE);
+      TIM_Cmd(MOT_STEP_TIM, DISABLE);  
+  }
 }
 
 static uint8_t cur_step_out=0;

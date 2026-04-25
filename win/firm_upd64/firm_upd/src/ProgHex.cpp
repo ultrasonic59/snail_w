@@ -84,13 +84,14 @@ if(!m_isConnected)
 }
 QByteArray CprogHex::SendRes(QByteArray sentData)
 {
-m_pSerialPort->write(sentData);
-m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY);
-////    this->thread()->msleep(50);
-m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY);
-if(m_pSerialPort->size() )
- return m_pSerialPort->readAll();
-else
+	if (m_isOpened) {
+		m_pSerialPort->write(sentData);
+		m_pSerialPort->waitForBytesWritten(WRITE_WAIT_DELAY);
+		////    this->thread()->msleep(50);
+		m_pSerialPort->waitForReadyRead(READ_WAIT_DELAY);
+		if (m_pSerialPort->size())
+			return m_pSerialPort->readAll();
+	}
  return QByteArray();
 }
 
@@ -202,6 +203,9 @@ sentData += tstr;
 ///qDebug() << "send:"<< tstr << sentData; 
 QByteArray rdata;
 rdata=SendRes(sentData);
+if(rdata.size()==0)
+   return 0;
+
 ///put_boot_stat_cmd_t t_stat;
 ///qDebug() << "resiv:"<< rdata ; 
 QString rstr;
