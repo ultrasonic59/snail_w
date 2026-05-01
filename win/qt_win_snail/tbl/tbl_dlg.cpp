@@ -5,15 +5,7 @@ tbl_dlg::tbl_dlg(QWidget* parent, c_snail_data* sn_data) :
     , ui()
 {
     ui.setupUi(this);
- ///   void clicked(const QModelIndex & index);
- ///   void doubleClicked(const QModelIndex & index);
-
-  ///  cellDoubleClicked
- //   tableWidget = ui.tableView;
-///connect(ui.pushButtonOpen, SIGNAL(clicked()), this, SLOT(SlotOpenFile()));
- ///   connect(tableWidget, &QTableWidget::cellClicked, this, &tbl_dlg::onCellClicked);
-  //  connect(ui.tableView, SIGNAL(cellClicked(int,int)), this, SLOT(onCellClicked(int,int)));
-  //  connect(ui.tableView, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(onCellClicked(int, int)));
+ 
     connect(ui.tableView, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(onCellDblClicked(const QModelIndex&)));
 
     connect(ui.pushButtonSave, SIGNAL(clicked()), this, SLOT(SlotSaveFile()));
@@ -38,12 +30,6 @@ void tbl_dlg::onCellDblClicked(const QModelIndex& index) {
 
         }
 
-///    qDebug() << "Cell clicked at row:" << row << ", column:" << column;
-    // You can now access the item at this position
- ///   QTableWidgetItem* item = tableWidget->item(row, column);
-  ///  if (item) {
-  ///      qDebug() << "The text in this cell is:" << item->text();
- ///   }
 }
 void tbl_dlg::onCellClicked(const QModelIndex& index) {
     qDebug() << "onCellClicked";

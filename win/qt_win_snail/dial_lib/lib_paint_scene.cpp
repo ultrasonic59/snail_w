@@ -112,20 +112,10 @@ void LibPaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::FlatCap));
                 ///           , Qt::SolidLine, Qt::RoundCap));
-/*
-lineItem->setLine(QLineF(0, 0, 100, 100));
-pen.setColor(QColor(0, 50, 230));
-lineItem->setPen(pen);
-lineItem->setFlag(QGraphicsItem::ItemIsMovable);
-*/
+
                 line->setFlag(QGraphicsItem::ItemIsMovable);
                 line->setLine(gr_point.x(), gr_point.y(), gr_point.x(), gr_point.y() + params::LibItemWidth);
-
- ///               QPainterPath path;
- ///               path.moveTo(gr_point);
- ///               path.lineTo(gr_point.x(), gr_point.y() + params::LibItemWidth);
-  ///              line->setPath(path);
-                  }
+                   }
                   break;
             case HLINE_TYPE: {
                 cust_line* line = new cust_line(this);
@@ -137,11 +127,6 @@ lineItem->setFlag(QGraphicsItem::ItemIsMovable);
                 line->setPen(QPen(params::LibItemBrdColor, params::LibItemBrdThick
                     , Qt::SolidLine, Qt::SquareCap));
 
-                ////            , Qt::SolidLine, Qt::RoundCap));
- ///               QPainterPath path;
- ///               path.moveTo(gr_point);
- ///               path.lineTo(gr_point.x() + params::LibItemWidth, gr_point.y());
- ///               line->setPath(path);
                 line->setLine(gr_point.x(), gr_point.y(), gr_point.x() + params::LibItemWidth, gr_point.y());
 
                  }
