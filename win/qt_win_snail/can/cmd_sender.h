@@ -100,6 +100,8 @@ struct  mot_cmd_t {
 struct  mot_param_t {
 	quint16 len_step[NUM_AXIS];
 	quint8 mot_rej[NUM_AXIS];
+	quint8 mot_trq[NUM_AXIS];
+
 };
 struct  spi_mot_cmd_t {
 	uint8_t   cmd;                         /// 

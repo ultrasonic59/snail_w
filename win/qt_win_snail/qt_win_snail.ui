@@ -1350,9 +1350,9 @@
       <widget class="QLabel" name="lab_enc_coord_x">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>110</x>
          <y>220</y>
-         <width>81</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>
@@ -1404,24 +1404,6 @@
        </property>
        <property name="text">
         <string>xxxxxxx</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="lab_enc_obor_x">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>220</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
        </property>
       </widget>
       <widget class="QPushButton" name="Butt_x_con">
@@ -1476,30 +1458,12 @@
         <string>D</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lab_enc_obor_y">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>250</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="lab_enc_coord_y">
        <property name="geometry">
         <rect>
          <x>110</x>
          <y>250</y>
-         <width>81</width>
+         <width>91</width>
          <height>31</height>
         </rect>
        </property>

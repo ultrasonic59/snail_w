@@ -49,6 +49,7 @@ protected:
     void send_cmd_set_coord(quint32 id, quint32 coord);
 signals:
     void s_SendCmd(can_message_t msg);
+    void showMessageBox(const QString& title, const QString& text);
 
 };
 

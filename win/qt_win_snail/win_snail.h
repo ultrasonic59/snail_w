@@ -205,6 +205,10 @@ public slots:
     void sl_rsv_can_dat(can_message_t);
     void sl_state_changed(quint8);
     void sl_show_json(QByteArray byteArr);
+    void onShowMessageBox(const QString& title, const QString& text)
+    {
+        QMessageBox::information(this, title, text);
+    }
 
 private slots:
     void selectVideoSource();

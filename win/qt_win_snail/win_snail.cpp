@@ -263,6 +263,9 @@ connect(ui->Butt_load, SIGNAL(clicked()), this, SLOT(slot_butt_load()));
 ///connect(this, SIGNAL(s_send_msg(can_message_t*)), p_cmd_sender, SLOT(can_send_msg(can_message_t*)));
  connect(p_motor_wrk, SIGNAL(s_SendCmd(can_message_t)), this, SLOT(sl_SendCmd(can_message_t)));
 
+ connect(p_motor_wrk, SIGNAL(showMessageBox(const QString& , const QString& )), this
+     , SLOT(onShowMessageBox(const QString& , const QString& )));
+
  }
 void win_snail::sl_SendCmd(can_message_t pmsg)
 {
@@ -469,14 +472,15 @@ void win_snail::sl_state_changed(quint8 axi)
 {
     if (axi == XX) {
         ui->le_x->setText(QString::number(dev_state.coord[XX]));
-        ui->lab_enc_coord_x->setText(QString::number(dev_state.Coord_enc[XX]));
-        ui->lab_enc_obor_x->setText(QString::number(dev_state.obor_enc[XX]));
+ ///       ui->lab_enc_coord_x->setText(QString::number(dev_state.Coord_enc[XX]));
+        ui->lab_enc_coord_x->setText(QString::number(dev_state.coord[XX]));
+  ///      ui->lab_enc_obor_x->setText(QString::number(dev_state.obor_enc[XX]));
     }
     else if (axi == YY) {
         ui->le_y->setText(QString::number(dev_state.coord[YY]));
 ///        ui->lab_enc_coord_y->setText(QString::number(dev_state.Coord_enc[YY]));
         ui->lab_enc_coord_y->setText(QString::number(dev_state.coord[YY]));
-        ui->lab_enc_obor_y->setText(QString::number(dev_state.obor_enc[YY]));
+ ///       ui->lab_enc_obor_y->setText(QString::number(dev_state.obor_enc[YY]));
 
     }
     else if (axi == ZZ) {
@@ -1910,121 +1914,40 @@ void win_snail::sl_go()
         t_can_message.data[7] = (num_step >> 24) & 0xff;
         msg_queue.enqueue(t_can_message);
 
-/*
-        t_mot_cmd.id = axi;
-        t_mot_cmd.dir = t_dir;
-        t_mot_cmd.len_step = len_step;
-        t_mot_cmd.num_step = num_step;
-        emit s_mot_go(t_mot_cmd);
-        */
     }
-}
-/*
-void win_snail::sl_go_x()
-{
- mot_cmd_t t_mot_cmd;
-int cur_coord = dev_state.coord[XX];
-quint8 t_dir = DIR_PLUS;
-quint32 num_step;
-quint16 len_step = mot_param.len_step[XX];
-int need_coord = ui->le_xx->text().toInt();
-int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-if (num_step != 0)
-    {
-        t_mot_cmd.id = X_AXIS_CAN_ID;
-        t_mot_cmd.dir = t_dir;
-        t_mot_cmd.len_step = len_step;
-        t_mot_cmd.num_step = num_step;
-        emit s_mot_go(t_mot_cmd);
-     }
 }
 
-void win_snail::sl_go_y()
-{
-    mot_cmd_t t_mot_cmd;
-    int cur_coord = dev_state.coord[YY];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
-    quint16 len_step = mot_param.len_step[YY];/// 0;//// = ui->combo_steps->currentText().toInt();
-    int need_coord = ui->le_yy->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-    {
-        t_mot_cmd.id = Y_AXIS_CAN_ID;
-        t_mot_cmd.dir = t_dir;
-        t_mot_cmd.len_step = len_step;
-        t_mot_cmd.num_step = num_step;
-        emit s_mot_go(t_mot_cmd);
-    }
-}
-void win_snail::sl_go_z()
-{
-    mot_cmd_t t_mot_cmd;
-    int cur_coord = dev_state.coord[ZZ];
-    quint8 t_dir = DIR_PLUS;
-    quint32 num_step;
-    quint16 len_step = mot_param.len_step[ZZ];/// 0;//// = ui->combo_steps->currentText().toInt();
-    int need_coord = ui->le_zz->text().toInt();
-    int t_num_step = need_coord - cur_coord;
-    if (t_num_step > 0)
-    {
-        num_step = t_num_step;
-        t_dir = DIR_PLUS;
-    }
-    else
-    {
-        num_step = -t_num_step;
-        t_dir = DIR_MINUS;
-    }
-    if (num_step != 0)
-    {
-        t_mot_cmd.id = Z_AXIS_CAN_ID;
-        t_mot_cmd.dir = t_dir;
-        t_mot_cmd.len_step = len_step;
-        t_mot_cmd.num_step = num_step;
-        emit s_mot_go(t_mot_cmd);
-    }
-}
-*/
 ///===================================================================
  void win_snail::sl_set_mot_rej()
 {
-     quint8 mot_rej = ui->combo_rej->currentIndex();/// > currentText().toInt();
-    quint8 mot_trq = ui->le_trq->text().toInt();
+   quint8 mot_rej = ui->combo_rej->currentIndex();/// > currentText().toInt();
+   quint8 mot_trq = ui->le_trq->text().toInt();
+   quint16 mot_len_step = ui->combo_steps->currentText().toInt();
 
     if (sender() == ui->butt_set_x)
        {
         qDebug() << "butt_set_x ";
+        mot_param.len_step[XX] = mot_len_step;
+        mot_param.mot_rej[XX] = mot_rej;
+        mot_param.mot_trq[XX] = mot_trq;
         emit s_set_mot_rej(X_AXIS_CAN_ID, mot_rej,mot_trq);
     }
     else if (sender() == ui->butt_set_y)
     {
         qDebug() << "butt_set_y ";
+        mot_param.len_step[YY] = mot_len_step;
+        mot_param.mot_rej[YY] = mot_rej;
+        mot_param.mot_trq[YY] = mot_trq;
+
         emit s_set_mot_rej(Y_AXIS_CAN_ID, mot_rej, mot_trq);
     }
     else if (sender() == ui->butt_set_z)
     {
         qDebug() << "butt_set_z ";
+        mot_param.len_step[ZZ] = mot_len_step;
+        mot_param.mot_rej[ZZ] = mot_rej;
+        mot_param.mot_trq[ZZ] = mot_trq;
+
         emit s_set_mot_rej(Z_AXIS_CAN_ID, mot_rej, mot_trq);
     }
        ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
@@ -2032,50 +1955,6 @@ void win_snail::sl_go_z()
 }
 
 ///=================== X ===========================
- /*
-void win_snail::sl_xplus()
-{
-qDebug() << "sl_xplus";
-el_timer.start();
-
-///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
- ///   send_cmd_mot_rej(X_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
- if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-mot_cmd_t t_mot_cmd;
-t_mot_cmd.id = X_AXIS_CAN_ID;
-t_mot_cmd.dir = DIR_PLUS;
-t_mot_cmd.len_step = len_step;
-t_mot_cmd.num_step = num_step;
-emit s_mot_go(t_mot_cmd);
-ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
- ///   send_cmd_go(X_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-}
-*/
-/*
-void win_snail::sl_xminus()
-{
- qDebug() << "sl_xminus ";
-  el_timer.start();
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = X_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_MINUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    can_message_t* t_can_message = (can_message_t*) & t_mot_cmd;
-    msg_queue.enqueue(*t_can_message);
- ///   emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[XX]));
-
- ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-*/
 void win_snail::sl_motor_go()
 {
     qDebug() << "sl_motor_go ";
@@ -2118,8 +1997,10 @@ void win_snail::sl_motor_go()
         num_axi = ZZ;
     }
     if (ConAxis.connected_axis[num_axi]) {
- ///       el_timer.start();
-        quint16 len_step = ui->combo_steps->currentText().toInt();
+
+      ///   quint16 len_step = ui->combo_steps->currentText().toInt();
+         quint16 len_step = mot_param.len_step[num_axi];
+
         quint32 num_step = ui->combo_num_steps->currentText().toInt();
         if (num_step == 0)
             num_step = MAX_NUM_STEP;
@@ -2144,94 +2025,7 @@ void win_snail::sl_motor_go()
     ///   send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
 
 ///=================== Y ===========================
-/*
-void win_snail::sl_yplus()
-{
 
-    qDebug() << "cl_yplus";
-    el_timer.start();
-
-///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-
-    quint16 len_step =  ui->combo_steps->currentText().toInt();
-    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = Y_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_PLUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
-    ///   send_cmd_go(Y_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-
-}
-void win_snail::sl_yminus()
-{
-
-    qDebug() << "cl_yminus ";
-    el_timer.start();
-
-///    quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
-///    send_cmd_mot_rej(Y_AXIS_CAN_ID, mot_rej);
-    quint16 len_step =  ui->combo_steps->currentText().toInt();
-    quint32 num_step =  ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = Y_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_MINUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[YY]));
-    ///    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-}
-///=================== Z ===========================
-void win_snail::sl_zplus()
-{
-    qDebug() << "cl_zplus";
- ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
- ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = Z_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_PLUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
-
- ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_MINUS, len_step, num_step);
-
-}
-
-void win_snail::sl_zminus()
-{
-    qDebug() << "cl_zminus ";
- ///   quint8 mot_rej = 0;/// ui->combo_rej->currentText().toInt();
- ///   send_cmd_mot_rej(Z_AXIS_CAN_ID, mot_rej);
-    quint16 len_step = ui->combo_steps->currentText().toInt();
-    quint32 num_step = ui->combo_num_steps->currentText().toInt();
-    if (num_step == 0)
-        num_step = MAX_NUM_STEP;
-    mot_cmd_t t_mot_cmd;
-    t_mot_cmd.id = Z_AXIS_CAN_ID;
-    t_mot_cmd.dir = DIR_MINUS;
-    t_mot_cmd.len_step = len_step;
-    t_mot_cmd.num_step = num_step;
-    emit s_mot_go(t_mot_cmd);
-    ui->lab_rej->setText(QString::number(mot_param.mot_rej[ZZ]));
-
- ///   send_cmd_go(Z_AXIS_CAN_ID, DIR_PLUS, len_step, num_step);
-
-}
-*/
 void win_snail::sl_doza()
 {
     qDebug() << "cl_doza ";

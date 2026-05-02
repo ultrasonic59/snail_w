@@ -188,12 +188,15 @@ void Cmotor_wrk::sl_mot_go(mot_cmd_t mot_cmd)
 send_cmd_go(mot_cmd.id, mot_cmd.dir, mot_cmd.len_step, mot_cmd.num_step);
 }
 ///=================== ===========================
+#define LEN_STEP_HOME 200
+
 void Cmotor_wrk::sl_go_home()
 {
 #if 1
  ////   quint16 len_step = 0;/// ui->combo_steps->currentText().toInt();
     send_cmd_go(X_AXIS_CAN_ID, DIR_MINUS, p_mot_param->len_step[XX], MAX_NUM_STEP);
-    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, p_mot_param->len_step[YY], MAX_NUM_STEP);
+  ///  send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, p_mot_param->len_step[YY], MAX_NUM_STEP);
+    send_cmd_go(Y_AXIS_CAN_ID, DIR_MINUS, LEN_STEP_HOME, MAX_NUM_STEP);
     int wait_end_cnt = 0;
     while (!((p_dev_state->states[XX] & CONC0_FLG) && (p_dev_state->states[YY] & CONC0_FLG)))
        {
@@ -208,7 +211,8 @@ void Cmotor_wrk::sl_go_home()
         sl_clr_y();
        }
     else
-        QMessageBox::information(nullptr, "Error!", "go home");
+       /// QMessageBox::information(nullptr, "Error!", "go home");
+       emit showMessageBox("Error!", "Go home");
 #endif
 }
 ///=================================================
@@ -216,13 +220,14 @@ void Cmotor_wrk::sl_set_rej(quint32 id, quint8 rej, quint8 trq)
 {
     qDebug() << "sl_set_rej";
    send_cmd_mot_rej(id, rej,trq);
+/*
    if(id== X_AXIS_CAN_ID)
       p_mot_param->mot_rej[XX] = rej;
    else if(id == Y_AXIS_CAN_ID)
        p_mot_param->mot_rej[YY] = rej;
    else if(id == Z_AXIS_CAN_ID)
        p_mot_param->mot_rej[ZZ] = rej;
-
+*/
 }
 void Cmotor_wrk::sl_axi_rel(int axi)
 {
