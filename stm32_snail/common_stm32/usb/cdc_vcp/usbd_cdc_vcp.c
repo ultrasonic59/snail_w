@@ -28,12 +28,13 @@
 #include <string.h>
 #include "usbd_conf.h"
 #include "usbd_desc.h"
+///#include "atomic.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-////#include "my_misc.h"
-#include "_hdlc.h"
+#include "my_types.h"
+///#include "_hdlc.h"
 #include "printk.h"
 #include "min_max.h"
 #include "ring_buff.h"
@@ -47,7 +48,7 @@ extern int send_char_dbg(int ch);
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 
 #include "usbd_cdc_vcp.h"
-hdlc_stat_t g_hdlc_vcp;
+///hdlc_stat_t g_hdlc_vcp;
 #if 0
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

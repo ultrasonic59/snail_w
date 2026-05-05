@@ -1,5 +1,5 @@
 #pragma once
-
+#include <intrinsics.h> 
 /*
  * IAR specific functions for IRQ disable/enable
  */
