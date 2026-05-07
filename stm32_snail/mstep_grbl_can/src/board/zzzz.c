@@ -46,38 +46,54 @@ void stepper_init()
 {
 
 }
-void system_init()
-{
-	//Eeprom_Write_CR();
-}
 void serial_reset_read_buffer()
 {
 ///  serial_rx_buffer_tail = serial_rx_buffer_head;
 }
 
-void gc_init()
-{
-///  memset(&gc_state, 0, sizeof(parser_state_t));
-
-  // Load default G54 coordinate system.
- /// if (!(settings_read_coord_data(gc_state.modal.coord_select,gc_state.coord_system))) {
- ///   report_status_message(STATUS_SETTING_READ_FAIL);
-///  }
-}
 
 void spindle_init(){}
 void coolant_init(){}
 ///void limits_init(){}
 void probe_init(){}
-void plan_reset(){} // Clear block buffer and planner variables
+///void plan_reset(){} // Clear block buffer and planner variables
 void st_reset(){}// Clear stepper subsystem variables.
 
 	    // Sync cleared gcode and planner positions to current system position.
-void plan_sync_position(){}
-void gc_sync_position(){}
+///void plan_sync_position(){}
 
-void report_init_message(){}
+///void report_init_message(){}
 
 	    // Start Grbl main loop. Processes program inputs and executes them.
-void protocol_main_loop(){}
+///void protocol_main_loop(){}
+uint32_t get_count(){
+  return 0;
+}
 
+int read_parameter_setting(char * line, int * counter, float * parameters, int *id){
+return 0;
+}
+uint8_t serial_read(){
+  return 0;
+}
+void  __disable_irq(){}
+void  __enable_irq(){}
+// Wait end of motion
+void mc_wait_end_of_motion(){}
+uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data){
+  return 0;
+}
+uint32_t plc_output_set_state(uint8_t number, uint8_t state){
+  return 0;
+}
+uint32_t plc_wait_input_event(uint32_t pin, uint32_t edge, uint32_t timeout){
+  return 0;
+}
+void spindle_sync(uint8_t state, float rpm){}
+void coolant_sync(uint8_t mode){}
+void mc_dwell(float seconds){}
+void settings_write_coord_data(uint8_t coord_select, float *coord_data){}
+void mc_line(float *target, plan_line_data_t *pl_data){}
+
+
+void CDC_send_str(char *str_report, uint32_t len){}

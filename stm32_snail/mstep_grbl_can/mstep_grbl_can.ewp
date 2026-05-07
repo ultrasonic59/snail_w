@@ -4545,6 +4545,9 @@
     <group>
         <name>grbl</name>
         <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\gcode.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\grbl_init.c</name>
         </file>
         <file>
@@ -4554,7 +4557,22 @@
             <name>$PROJ_DIR$\src\grbl_tsk.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\jog.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\nuts_bolts.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\planner.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\protocol.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\report.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\system.c</name>
         </file>
     </group>
     <group>

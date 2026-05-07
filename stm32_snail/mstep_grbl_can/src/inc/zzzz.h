@@ -23,10 +23,15 @@ extern void st_reset(); // Clear stepper subsystem variables.
 	    // Sync cleared gcode and planner positions to current system position.
 extern void plan_sync_position();
 extern void gc_sync_position();
+extern void  __disable_irq();
+extern void  __enable_irq();
 
-extern void report_init_message();
+///extern void report_init_message();
 
 	    // Start Grbl main loop. Processes program inputs and executes them.
-extern void protocol_main_loop();
+///extern void protocol_main_loop();
+extern uint32_t get_count();
+extern void CDC_send_str(char *str_report, uint32_t len);
+
 
 #endif ////  __ZZZZ_H__ 

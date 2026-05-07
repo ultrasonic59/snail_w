@@ -178,7 +178,7 @@ void system_init();
 uint8_t system_control_get_state();
 
 // Returns if safety door is open or closed, based on pin state.
-uint8_t system_check_safety_door_ajar();
+extern uint8_t system_check_safety_door_ajar();
 
 // Executes an internal system command, defined as a string starting with a '$'
 uint8_t system_execute_line(char *line);

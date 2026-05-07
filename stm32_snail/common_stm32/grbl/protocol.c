@@ -20,6 +20,7 @@
 */
 
 #include "grbl.h"
+#include "zzzz.h"
 
 // Define line flags. Includes comment type tracking and line overflow detection.
 #define LINE_FLAG_OVERFLOW bit(0)
@@ -27,7 +28,7 @@
 #define LINE_FLAG_COMMENT_SEMICOLON bit(2)
 
 extern setup _setup;
-extern TIM_HandleTypeDef htim5;
+///extern TIM_HandleTypeDef htim5;
 
 static char line[LINE_BUFFER_SIZE]; // Line to be executed. Zero-terminated.
 
@@ -518,7 +519,9 @@ void protocol_exec_rt_system()
 	  }
   }
 
-  sys.encoder_count = htim5.Instance->CNT;
+///  sys.encoder_count = htim5.Instance->CNT;
+    sys.encoder_count = get_count();
+
 }
 
 

@@ -19,7 +19,8 @@
 */
 
 #include "grbl.h"
-#include "gpio.h"
+///#include "gpio.h"
+#include "zzzz.h"
 
 
 void system_init()
@@ -34,6 +35,7 @@ void system_init()
 uint8_t system_control_get_state()
 {
   uint8_t control_state = 0;
+#if 0  
   uint16_t pin = GPIO_ReadPort(CONTROL_PIN_PORT) & CONTROL_MASK;
 
 #ifdef INVERT_CONTROL_PIN_MASK
@@ -47,6 +49,7 @@ uint8_t system_control_get_state()
 	  if (bit_isfalse(pin,(1<<CONTROL_FEED_HOLD_BIT))) { control_state |= CONTROL_PIN_INDEX_FEED_HOLD; }
 	  if (bit_isfalse(pin,(1<<CONTROL_CYCLE_START_BIT))) { control_state |= CONTROL_PIN_INDEX_CYCLE_START; }
   }
+#endif 
   return(control_state);
 }
 
@@ -77,7 +80,7 @@ void _EXTI15_10_IRQHandler(void)
 	  {
 		  bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR);
 	  }
-	  NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
+////???	  NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
 }
 }
 

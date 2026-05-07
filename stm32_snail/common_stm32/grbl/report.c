@@ -25,9 +25,12 @@
   different style feedback is desired (i.e. JSON), then a user can change these following
   methods to accomodate their needs.
 */
+#include <string.h>
+#include <stdio.h>
 
 #include "grbl.h"
-#include "usbd_cdc_if.h"
+///#include "usbd_cdc_if.h"
+#include "zzzz.h"
 
 char str_report[2048];
 
