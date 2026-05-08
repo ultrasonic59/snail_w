@@ -128,19 +128,34 @@ uint8_t system_execute_line(char *line)
   uint8_t helper_var = 0; // Helper variable
   float parameter, value;
   switch( line[char_counter] ) {
-    case 0 : report_grbl_help(); break;
+    case 0 : 
+      report_grbl_help(); 
+      break;
     case 'J' : // Jogging
       // Execute only if in IDLE, CYCLE or JOG states.
-      if (sys.state != STATE_IDLE && sys.state != STATE_JOG && sys.state != STATE_CYCLE) { return(STATUS_IDLE_ERROR); }
-      if(line[2] != '=') { return(STATUS_INVALID_STATEMENT); }
+      if (sys.state != STATE_IDLE && sys.state != STATE_JOG && sys.state != STATE_CYCLE) { 
+        return(STATUS_IDLE_ERROR); 
+        }
+      if(line[2] != '=') { 
+        return(STATUS_INVALID_STATEMENT); 
+      }
       return(gc_execute_line(line)); // NOTE: $J= is ignored inside g-code parser and used to detect jog motions.
       break;
-    case '$': case 'G': case 'C': case 'X':
-      if ( line[2] != 0 ) { return(STATUS_INVALID_STATEMENT); }
+    case '$': 
+    case 'G': 
+    case 'C':  
+    case 'X':
+      if ( line[2] != 0 ) { 
+        return(STATUS_INVALID_STATEMENT); 
+       }
       switch( line[1] ) {
         case '$' : // Prints Grbl settings
-          if ( sys.state & (STATE_CYCLE | STATE_HOLD) ) { return(STATUS_IDLE_ERROR); } // Block during cycle. Takes too long to print.
-          else { report_grbl_settings(); }
+          if ( sys.state & (STATE_CYCLE | STATE_HOLD) ) {  
+            return(STATUS_IDLE_ERROR); 
+          } // Block during cycle. Takes too long to print.
+          else {
+            report_grbl_settings(); 
+          }
           break;
         case 'G' : // Prints gcode parser state
           // TODO: Move this to realtime commands for GUIs to request this data during suspend-state.
@@ -154,7 +169,9 @@ uint8_t system_execute_line(char *line)
             mc_reset();
             report_feedback_message(MESSAGE_DISABLED);
           } else {
-            if (sys.state) { return(STATUS_IDLE_ERROR); } // Requires no alarm mode.
+            if (sys.state) { 
+              return(STATUS_IDLE_ERROR);
+            } // Requires no alarm mode.
             sys.state = STATE_CHECK_MODE;
             report_feedback_message(MESSAGE_ENABLED);
           }
@@ -162,7 +179,9 @@ uint8_t system_execute_line(char *line)
         case 'X' : // Disable alarm lock [ALARM]
           if (sys.state == STATE_ALARM) {
             // Block if safety door is ajar.
-            if (system_check_safety_door_ajar()) { return(STATUS_CHECK_DOOR); }
+            if (system_check_safety_door_ajar()) { 
+              return(STATUS_CHECK_DOOR);
+            }
             report_feedback_message(MESSAGE_ALARM_UNLOCK);
             sys.state = STATE_IDLE;
             // Don't run startup script. Prevents stored moves in startup from causing accidents.
@@ -172,14 +191,22 @@ uint8_t system_execute_line(char *line)
       break;
     default :
       // Block any system command that requires the state as IDLE/ALARM. (i.e. EEPROM, homing)
-      if ( !(sys.state == STATE_IDLE || sys.state == STATE_ALARM) ) { return(STATUS_IDLE_ERROR); }
+      if ( !(sys.state == STATE_IDLE || sys.state == STATE_ALARM) ) { 
+        return(STATUS_IDLE_ERROR); 
+      }
       switch( line[1] ) {
         case '#' : // Print Grbl NGC parameters
-          if ( line[2] != 0 ) { return(STATUS_INVALID_STATEMENT); }
-          else { report_ngc_parameters(); }
+          if ( line[2] != 0 ) { 
+            return(STATUS_INVALID_STATEMENT); 
+          }
+          else { 
+            report_ngc_parameters(); 
+          }
           break;
         case 'H' : // Perform homing cycle [IDLE/ALARM]
-          if (bit_isfalse(settings.flags,BITFLAG_HOMING_ENABLE)) {return(STATUS_SETTING_DISABLED); }
+          if (bit_isfalse(settings.flags,BITFLAG_HOMING_ENABLE)) {
+            return(STATUS_SETTING_DISABLED); 
+          }
           if (system_check_safety_door_ajar()) { return(STATUS_CHECK_DOOR); } // Block if safety door is ajar.
           sys.state = STATE_HOMING; // Set system state variable
           if (line[2] == 0) {
@@ -264,7 +291,7 @@ uint8_t system_execute_line(char *line)
             helper_var = gc_execute_line(line); // Set helper_var to returned status code.
             if (helper_var) { return(helper_var); }
             else {
-              helper_var = trunc(parameter); // Set helper_var to int value of parameter
+              helper_var = (uint8_t)trunc(parameter); // Set helper_var to int value of parameter
               settings_store_startup_line(helper_var,line);
             }
           } else { // Store global setting.
@@ -356,49 +383,49 @@ uint8_t system_check_travel_limits(float *target)
 
 // Special handlers for setting and clearing Grbl's real-time execution flags.
 void system_set_exec_state_flag(uint8_t mask) {
-  __disable_irq();
+  ///__disable_irq();
   sys_rt_exec_state |= (mask);
-   __enable_irq();
+ ///  __enable_irq();
 }
 
 void system_clear_exec_state_flag(uint8_t mask) {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_state &= ~(mask);
-  __enable_irq();
+ //// __enable_irq();
 }
 
 void system_set_exec_alarm(uint8_t code) {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_alarm |= (code);
-  __enable_irq();
+ /// __enable_irq();
 }
 
 void system_clear_exec_alarm() {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_alarm = 0;
-  __enable_irq();
+ /// __enable_irq();
 }
 
 void system_set_exec_motion_override_flag(uint8_t mask) {
-  __disable_irq();
+///  __disable_irq();
   sys_rt_exec_motion_override |= (mask);
-  __enable_irq();
+///  __enable_irq();
 }
 
 void system_set_exec_accessory_override_flag(uint8_t mask) {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_accessory_override |= (mask);
-  __enable_irq();
+ /// __enable_irq();
 }
 
 void system_clear_exec_motion_overrides() {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_motion_override = 0;
-  __enable_irq();
+ /// __enable_irq();
 }
 
 void system_clear_exec_accessory_overrides() {
-  __disable_irq();
+ /// __disable_irq();
   sys_rt_exec_accessory_override = 0;
-  __enable_irq();
+ /// __enable_irq();
 }

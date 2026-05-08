@@ -20,6 +20,7 @@
 */
 
 #include "grbl.h"
+
 #include "zzzz.h"
 
 // Define line flags. Includes comment type tracking and line overflow detection.
@@ -28,6 +29,7 @@
 #define LINE_FLAG_COMMENT_SEMICOLON bit(2)
 
 extern setup _setup;
+
 ///extern TIM_HandleTypeDef htim5;
 
 static char line[LINE_BUFFER_SIZE]; // Line to be executed. Zero-terminated.
@@ -170,10 +172,12 @@ void protocol_main_loop()
     protocol_auto_cycle_start();
 
     protocol_execute_realtime();  // Runtime command check point.
-    if (sys.abort) { return; } // Bail to main() program loop to reset system.
+    if (sys.abort) {
+      return; 
+    } // Bail to main() program loop to reset system.
   }
 
-  return; /* Never reached */
+///  return; /* Never reached */
 }
 
 
@@ -218,7 +222,9 @@ void protocol_auto_cycle_start()
 void protocol_execute_realtime()
 {
   protocol_exec_rt_system();
-  if (sys.suspend) { protocol_exec_rt_suspend(); }
+  if (sys.suspend) { 
+    protocol_exec_rt_suspend(); 
+  }
 }
 
 
@@ -422,11 +428,21 @@ void protocol_exec_rt_system()
     system_clear_exec_motion_overrides(); // Clear all motion override flags.
 
     uint8_t new_f_override =  sys.f_override;
-    if (rt_exec & EXEC_FEED_OVR_RESET) { new_f_override = DEFAULT_FEED_OVERRIDE; }
-    if (rt_exec & EXEC_FEED_OVR_COARSE_PLUS) { new_f_override += FEED_OVERRIDE_COARSE_INCREMENT; }
-    if (rt_exec & EXEC_FEED_OVR_COARSE_MINUS) { new_f_override -= FEED_OVERRIDE_COARSE_INCREMENT; }
-    if (rt_exec & EXEC_FEED_OVR_FINE_PLUS) { new_f_override += FEED_OVERRIDE_FINE_INCREMENT; }
-    if (rt_exec & EXEC_FEED_OVR_FINE_MINUS) { new_f_override -= FEED_OVERRIDE_FINE_INCREMENT; }
+    if (rt_exec & EXEC_FEED_OVR_RESET) { 
+      new_f_override = DEFAULT_FEED_OVERRIDE; 
+    }
+    if (rt_exec & EXEC_FEED_OVR_COARSE_PLUS) { 
+      new_f_override += FEED_OVERRIDE_COARSE_INCREMENT; 
+    }
+    if (rt_exec & EXEC_FEED_OVR_COARSE_MINUS) { 
+      new_f_override -= FEED_OVERRIDE_COARSE_INCREMENT;
+    }
+    if (rt_exec & EXEC_FEED_OVR_FINE_PLUS) { 
+      new_f_override += FEED_OVERRIDE_FINE_INCREMENT; 
+    }
+    if (rt_exec & EXEC_FEED_OVR_FINE_MINUS) { 
+      new_f_override -= FEED_OVERRIDE_FINE_INCREMENT; 
+    }
     new_f_override = min(new_f_override,MAX_FEED_RATE_OVERRIDE);
     new_f_override = max(new_f_override,MIN_FEED_RATE_OVERRIDE);
 
@@ -569,7 +585,9 @@ static void protocol_exec_rt_suspend()
 
   while (sys.suspend) {
 
-    if (sys.abort) { return; }
+    if (sys.abort) { 
+      return; 
+    }
 
     // Block until initial hold is complete and the machine has stopped motion.
     if (sys.suspend & SUSPEND_HOLD_COMPLETE) {

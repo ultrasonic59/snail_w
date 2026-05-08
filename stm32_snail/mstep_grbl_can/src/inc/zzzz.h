@@ -26,6 +26,10 @@ extern void gc_sync_position();
 extern void  __disable_irq();
 extern void  __enable_irq();
 
+#define EEPROM_PAGE0 0
+
+extern void Eeprom_Read_Page(uint16_t BufferOffset);
+
 ///extern void report_init_message();
 
 	    // Start Grbl main loop. Processes program inputs and executes them.

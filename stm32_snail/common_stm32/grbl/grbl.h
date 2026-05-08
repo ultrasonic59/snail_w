@@ -58,6 +58,7 @@
 #include "jog.h"
 #include "plc_io.h"
 #include "param.h"
+#include "zzzz.h"
 
 // ---------------------------------------------------------------------------------------
 // COMPILE-TIME ERROR CHECKING OF DEFINE VALUES:

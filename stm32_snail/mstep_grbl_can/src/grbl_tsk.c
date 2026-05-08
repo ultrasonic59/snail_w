@@ -10,6 +10,7 @@
 #include "snail_cmds.h"
 #include "grbl.h"
 
+///setup _setup;
 ///cmd_t cur_cmd={0};
 void grbl_task( void *pvParameters )
 {

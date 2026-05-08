@@ -6,8 +6,6 @@
 #include "board.h"
 #include "zzzz.h"
 
-////#define TEST_PIN ZSTP_PIN
-////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
 
 void  put_tst_pin(uint8_t idat)
 {
@@ -27,62 +25,32 @@ else
 #endif 
 }
 ///=================================================================
-settings_t settings;
+///settings_t settings;
 
 uint32_t HAL_GetTick(void){
   return 0;
 }
-void settings_init() {
-#if 0 
-  if(!read_global_settings()) {
-    report_status_message(STATUS_SETTING_READ_FAIL);
-    settings_restore(SETTINGS_RESTORE_DEFAULTS); // Force restore all EEPROM data.
-    report_grbl_settings();
-  }
-#endif
+///============= eeprom ===================================
+void Eeprom_Read_Page(uint16_t BufferOffset){}
+void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size){}
+int memcpy_from_eeprom_with_checksum(char *destination, unsigned int source, unsigned int size){
+  return 0;
 }
-// Initialize and start the stepper motor subsystem
-void stepper_init()
-{
-
+unsigned char eeprom_get_char(unsigned int addr){
+  return 0;
 }
-void serial_reset_read_buffer()
-{
-///  serial_rx_buffer_tail = serial_rx_buffer_head;
-}
-
 
 void spindle_init(){}
 void coolant_init(){}
-///void limits_init(){}
 void probe_init(){}
-///void plan_reset(){} // Clear block buffer and planner variables
-void st_reset(){}// Clear stepper subsystem variables.
-
-	    // Sync cleared gcode and planner positions to current system position.
-///void plan_sync_position(){}
-
-///void report_init_message(){}
-
-	    // Start Grbl main loop. Processes program inputs and executes them.
-///void protocol_main_loop(){}
 uint32_t get_count(){
   return 0;
 }
+ void spindle_set_state(uint8_t state, float rpm)
+ {
+ }
 
-int read_parameter_setting(char * line, int * counter, float * parameters, int *id){
-return 0;
-}
-uint8_t serial_read(){
-  return 0;
-}
-void  __disable_irq(){}
-void  __enable_irq(){}
-// Wait end of motion
-void mc_wait_end_of_motion(){}
-uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data){
-  return 0;
-}
+
 uint32_t plc_output_set_state(uint8_t number, uint8_t state){
   return 0;
 }
@@ -91,9 +59,37 @@ uint32_t plc_wait_input_event(uint32_t pin, uint32_t edge, uint32_t timeout){
 }
 void spindle_sync(uint8_t state, float rpm){}
 void coolant_sync(uint8_t mode){}
-void mc_dwell(float seconds){}
-void settings_write_coord_data(uint8_t coord_select, float *coord_data){}
-void mc_line(float *target, plan_line_data_t *pl_data){}
+///void mc_dwell(float seconds){}
+///void mc_line(float *target, plan_line_data_t *pl_data){}
+void probe_configure_invert_mask(uint8_t is_probe_away)
+{
+///  probe_invert_mask = 0; // Initialize as zero.
+///  if (bit_isfalse(settings.flags,BITFLAG_INVERT_PROBE_PIN)) { probe_invert_mask ^= PROBE_MASK; }
+ /// if (is_probe_away) { probe_invert_mask ^= PROBE_MASK; }
+}
+uint8_t probe_get_state(){
+  return 0;
+}
+void spindle_stop(){}
+
+void coolant_stop()
+{
+}
+
+uint8_t coolant_get_state( )
+{ 
+ return 0;
+}
+  
+ void st_update_plan_block_parameters()
+ {
+ }
+ uint8_t spindle_get_state()
+{
+  return 0;
+}
+
+void coolant_set_state(uint8_t mode){}
 
 
 void CDC_send_str(char *str_report, uint32_t len){}

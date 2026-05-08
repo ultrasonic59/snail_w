@@ -428,8 +428,9 @@ void report_realtime_status()
         	sprintf(str_report + strlen(str_report),"Door:2"); // Retracting
         }
       }
-      break;
-      sprintf(str_report + strlen(str_report),"Sleep");
+       sprintf(str_report + strlen(str_report),"Sleep");
+     break;
+   ///   sprintf(str_report + strlen(str_report),"Sleep");
   }
 
   float wco[N_AXIS];

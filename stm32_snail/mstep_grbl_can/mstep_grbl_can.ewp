@@ -4545,6 +4545,9 @@
     <group>
         <name>grbl</name>
         <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\can_steper.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\gcode.c</name>
         </file>
         <file>
@@ -4560,7 +4563,13 @@
             <name>$PROJ_DIR$\..\common_stm32\grbl\jog.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\motion_control.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\nuts_bolts.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\param.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\planner.c</name>
@@ -4570,6 +4579,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\report.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\serial.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common_stm32\grbl\settings.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\common_stm32\grbl\system.c</name>

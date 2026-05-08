@@ -330,21 +330,54 @@ uint8_t gc_execute_line(char *line)
           // case 'D': // Not supported
           case 'F': word_bit = WORD_F; gc_block.values.f = value; break;
           // case 'H': // Not supported
-          case 'I': word_bit = WORD_I; gc_block.values.ijk[X_AXIS] = value; ijk_words |= (1<<X_AXIS); break;
-          case 'J': word_bit = WORD_J; gc_block.values.ijk[Y_AXIS] = value; ijk_words |= (1<<Y_AXIS); break;
-          case 'K': word_bit = WORD_K; gc_block.values.ijk[Z_AXIS] = value; ijk_words |= (1<<Z_AXIS); break;
-          case 'L': word_bit = WORD_L; gc_block.values.l = (uint8_t)int_value; break;
-          case 'N': word_bit = WORD_N; gc_block.values.n = truncf(value); break;
-          case 'P': word_bit = WORD_P; gc_block.values.p = value; break;
-          case 'Q': word_bit = WORD_Q; gc_block.values.q = value; break;
+          case 'I': 
+            word_bit = WORD_I; 
+            gc_block.values.ijk[X_AXIS] = value; 
+            ijk_words |= (1<<X_AXIS); 
+            break;
+          case 'J': 
+            word_bit = WORD_J; 
+            gc_block.values.ijk[Y_AXIS] = value; 
+            ijk_words |= (1<<Y_AXIS);
+            break;
+          case 'K': 
+            word_bit = WORD_K; 
+            gc_block.values.ijk[Z_AXIS] = value; 
+            ijk_words |= (1<<Z_AXIS);
+            break;
+          case 'L': 
+            word_bit = WORD_L; 
+            gc_block.values.l = (uint8_t)int_value; 
+            break;
+          case 'N': 
+            word_bit = WORD_N; 
+            gc_block.values.n = (uint32_t)truncf(value);
+            break;
+          case 'P':
+            word_bit = WORD_P; 
+            gc_block.values.p = value; 
+            break;
+          case 'Q': 
+            word_bit = WORD_Q; 
+            gc_block.values.q = value; 
+            break;
           // NOTE: For certain commands, P value must be an integer, but none of these commands are supported.
           // case 'Q': // Not supported
-          case 'R': word_bit = WORD_R; gc_block.values.r = value; break;
-          case 'S': word_bit = WORD_S; gc_block.values.s = value; break;
-          case 'T': word_bit = WORD_T; 
-					if (value > MAX_TOOL_NUMBER) { FAIL(STATUS_GCODE_MAX_VALUE_EXCEEDED); }
-					gc_block.values.t = (uint8_t)int_value;
-					break;
+          case 'R': 
+            word_bit = WORD_R; 
+            gc_block.values.r = value; 
+            break;
+          case 'S': 
+            word_bit = WORD_S; 
+            gc_block.values.s = value; 
+            break;
+          case 'T': 
+            word_bit = WORD_T; 
+		if (value > MAX_TOOL_NUMBER) { 
+                  FAIL(STATUS_GCODE_MAX_VALUE_EXCEEDED);
+               }
+		gc_block.values.t = (uint8_t)int_value;
+		break;
           case 'X': word_bit = WORD_X; gc_block.values.xyz[X_AXIS] = value; axis_words |= (1<<X_AXIS); break;
           case 'Y': word_bit = WORD_Y; gc_block.values.xyz[Y_AXIS] = value; axis_words |= (1<<Y_AXIS); break;
           case 'Z': switch (gc_state.z_select) {
@@ -370,12 +403,16 @@ uint8_t gc_execute_line(char *line)
         	  	  	  word_bit = WORD_V; gc_block.values.xyz[V_AXIS] = value; axis_words |= (1<<V_AXIS);
           	  	    }
           	  	  	break;
-          case 'W': if (gc_state.z_select == MAP_P0) {
-        	  	  	  word_bit = WORD_W; gc_block.values.xyz[W_AXIS] = value; axis_words |= (1<<W_AXIS);
+          case 'W': 
+            if (gc_state.z_select == MAP_P0) {
+          	  word_bit = WORD_W; 
+                  gc_block.values.xyz[W_AXIS] = value; 
+                  axis_words |= (1<<W_AXIS);
                     }
           	  	    break;
-          case 'A': switch (gc_state.z_select) {
-	  	  	        	case MAP_P0 :
+          case 'A': 
+            switch (gc_state.z_select) {
+	       	case MAP_P0 :
 	  	  	        	case MAP_P1 : word_bit = WORD_A;
 	  	  	        				  gc_block.values.xyz[A_AXIS] = value;
 	  	  	        				  axis_words |= (1<<A_AXIS);
@@ -617,7 +654,7 @@ uint8_t gc_execute_line(char *line)
       // [G10 L20 Errors]: P must be 0 to nCoordSys(max 9). Axis words missing.
       if (!axis_words) { FAIL(STATUS_GCODE_NO_AXIS_WORDS) }; // [No axis words]
       if (bit_isfalse(value_words,((1<<WORD_P)|(1<<WORD_L)))) { FAIL(STATUS_GCODE_VALUE_WORD_MISSING); } // [P/L word missing]
-      coord_select = truncf(gc_block.values.p); // Convert p value to int.
+      coord_select = (uint8_t)truncf(gc_block.values.p); // Convert p value to int.
       if (coord_select > N_COORDINATE_SYSTEM) { FAIL(STATUS_GCODE_UNSUPPORTED_COORD_SYS); } // [Greater than N sys]
       if (gc_block.values.l != 20) {
         if (gc_block.values.l == 2) {

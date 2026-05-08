@@ -21,6 +21,9 @@
 
 #include "grbl.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 // Execute linear motion in absolute millimeter coordinates. Feed rate given in millimeters/second
 // unless invert_feed_rate is true. Then the feed_rate means that the motion should be completed in
@@ -35,11 +38,15 @@ void mc_line(float *target, plan_line_data_t *pl_data)
   // from everywhere in Grbl.
   if (bit_istrue(settings.flags,BITFLAG_SOFT_LIMIT_ENABLE)) {
     // NOTE: Block jog state. Jogging is a special case and soft limits are handled independently.
-    if (sys.state != STATE_JOG) { limits_soft_check(target); }
+    if (sys.state != STATE_JOG) { 
+      limits_soft_check(target); 
+    }
   }
 
   // If in check gcode mode, prevent motion by blocking planner. Soft limits still work.
-  if (sys.state == STATE_CHECK_MODE) { return; }
+  if (sys.state == STATE_CHECK_MODE) { 
+    return; 
+  }
 
   // NOTE: Backlash compensation may be installed here. It will need direction info to track when
   // to insert a backlash line motion(s) before the intended line motion and will require its own
@@ -59,9 +66,15 @@ void mc_line(float *target, plan_line_data_t *pl_data)
   // Remain in this loop until there is room in the buffer.
   do {
     protocol_execute_realtime(); // Check for any run-time commands
-    if (sys.abort) { return; } // Bail, if system abort.
-    if ( plan_check_full_buffer() ) { protocol_auto_cycle_start(); } // Auto-cycle start when buffer is full.
-    else { break; }
+    if (sys.abort) { 
+      return; 
+    } // Bail, if system abort.
+    if ( plan_check_full_buffer() ) {
+      protocol_auto_cycle_start(); 
+    } // Auto-cycle start when buffer is full.
+    else { 
+      break; 
+    }
   } while (1);
 
   // Plan and queue motion into planner buffer

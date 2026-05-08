@@ -209,7 +209,6 @@ void SysTick_Handler(void)
 void SDIO_IRQHandler(void)
 {
   /* Process All SDIO Interrupt Sources */
- ///// sdio_irq();
 }
 ////extern void sdio_dma_irq(void);
 void DMA2_Stream3_IRQHandler(void)
