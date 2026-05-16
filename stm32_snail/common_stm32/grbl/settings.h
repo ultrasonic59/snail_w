@@ -23,11 +23,25 @@
 #define settings_h
 
 #include "grbl.h"
+#include "config.h"
 
 
 // Version of the EEPROM data. Will be used to migrate existing data from older versions of Grbl
 // when firmware is upgraded. Always stored in byte 0 of eeprom
 #define SETTINGS_VERSION 10  // NOTE: Check settings_reset() when moving to next version.
+
+// Some useful constants.
+#define DT_SEGMENT (1.0/(ACCELERATION_TICKS_PER_SECOND*60.0)) // min/segment
+#define REQ_MM_INCREMENT_SCALAR 1.25
+#define RAMP_ACCEL 0
+#define RAMP_CRUISE 1
+#define RAMP_DECEL 2
+#define RAMP_DECEL_OVERRIDE 3
+
+#define PREP_FLAG_RECALCULATE bit(0)
+#define PREP_FLAG_HOLD_PARTIAL_BLOCK bit(1)
+#define PREP_FLAG_PARKING bit(2)
+#define PREP_FLAG_DECEL_OVERRIDE bit(3)
 
 // Define bit flag masks for the boolean settings in settings.flag.
 #define BIT_REPORT_INCHES      0
@@ -82,6 +96,26 @@
 #define AXIS_N_SETTINGS          4
 #define AXIS_SETTINGS_START_VAL  100 // NOTE: Reserving settings values >= 100 for axis settings. Up to 255.
 #define AXIS_SETTINGS_INCREMENT  10  // Must be greater than the number of axis settings
+// Define Adaptive Multi-Axis Step-Smoothing(AMASS) levels and cutoff frequencies. The highest level
+// frequency bin starts at 0Hz and ends at its cutoff frequency. The next lower level frequency bin
+// starts at the next higher cutoff frequency, and so on. The cutoff frequencies for each level must
+// be considered carefully against how much it over-drives the stepper ISR, the accuracy of the 16-bit
+// timer, and the CPU overhead. Level 0 (no AMASS, normal operation) frequency bin starts at the
+// Level 1 cutoff frequency and up to as fast as the CPU allows (over 30kHz in limited testing).
+// NOTE: AMASS cutoff frequency multiplied by ISR overdrive factor must not exceed maximum step frequency.
+// NOTE: Current settings are set to overdrive the ISR to no more than 16kHz, balancing CPU overhead
+// and timer accuracy.  Do not alter these settings unless you know what you are doing.
+#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
+	#define MAX_AMASS_LEVEL 3
+	// AMASS_LEVEL0: Normal operation. No AMASS. No upper cutoff frequency. Starts at LEVEL1 cutoff frequency.
+	#define AMASS_LEVEL1 (F_TIM/8000) // Over-drives ISR (x2). Defined as F_CPU/(Cutoff frequency in Hz)
+	#define AMASS_LEVEL2 (F_TIM/4000) // Over-drives ISR (x4)
+	#define AMASS_LEVEL3 (F_TIM/2000) // Over-drives ISR (x8)
+
+  #if MAX_AMASS_LEVEL <= 0
+    error "AMASS must have 1 or more levels to operate correctly."
+  #endif
+#endif
 
 // Global persistent settings (Stored from byte EEPROM_ADDR_GLOBAL onwards)
 typedef struct {
@@ -111,6 +145,7 @@ typedef struct {
   uint16_t homing_debounce_delay;
   float homing_pulloff;
 } settings_t;
+
 extern settings_t settings;
 
 // Initialize the configuration subsystem (load settings from EEPROM)

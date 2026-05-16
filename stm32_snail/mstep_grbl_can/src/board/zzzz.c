@@ -6,6 +6,8 @@
 #include "board.h"
 #include "zzzz.h"
 
+/// uint32_t SystemCoreClock = 120000000;
+
 
 void  put_tst_pin(uint8_t idat)
 {
@@ -49,6 +51,10 @@ uint32_t get_count(){
  void spindle_set_state(uint8_t state, float rpm)
  {
  }
+  uint8_t spindle_compute_pwm_value(float rpm) // 328p PWM register is 8-bit.
+    {
+   return 0;
+}
 
 
 uint32_t plc_output_set_state(uint8_t number, uint8_t state){
@@ -92,4 +98,4 @@ uint8_t coolant_get_state( )
 void coolant_set_state(uint8_t mode){}
 
 
-void CDC_send_str(char *str_report, uint32_t len){}
+///void CDC_send_str(char *str_report, uint32_t len){}

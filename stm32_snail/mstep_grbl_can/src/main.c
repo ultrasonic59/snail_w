@@ -34,11 +34,16 @@
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define GRBL_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
+#define VCP_TASK_STACK_SIZE                     1024
+
 #define GRBL_TASK_PRIORITY				( tskIDLE_PRIORITY + 4 )
+#define VCP_TASK_PRIORITY				( tskIDLE_PRIORITY + 5 )
 
 ////extern void tst_task( void *pvParameters );
 extern void tst1_task( void *pvParameters );
 extern void grbl_task( void *pvParameters );
+extern void vcp_thread(void *pdata);
+extern TaskHandle_t  vcp_thread_handle;
 
 extern int can_main(void);
 #pragma data_alignment=8   
@@ -89,6 +94,9 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 /////	vSetupTimerTest();
 xTaskCreate( grbl_task, "tst_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
 xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+BaseType_t rez;  
+rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TASK_STACK_SIZE, 0, VCP_TASK_PRIORITY, &vcp_thread_handle);
+printk("\n\r vcp_thread[%x]",rez); 
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();

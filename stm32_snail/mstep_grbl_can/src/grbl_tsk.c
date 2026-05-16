@@ -15,6 +15,7 @@
 void grbl_task( void *pvParameters )
 {
 printk("\n\r grbl_task"); 
+
 grbl_init();
 
 }

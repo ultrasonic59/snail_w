@@ -4,7 +4,8 @@
 #include "settings.h"
 
 ///=======================================================================
-extern settings_t settings;
+///extern settings_t settings;
+extern  uint32_t SystemCoreClock ;
 
 extern uint32_t HAL_GetTick(void);
 extern void settings_init() ;
@@ -27,6 +28,7 @@ extern void  __disable_irq();
 extern void  __enable_irq();
 
 #define EEPROM_PAGE0 0
+
 
 extern void Eeprom_Read_Page(uint16_t BufferOffset);
 

@@ -28,7 +28,8 @@
 #include <string.h>
 #include "usbd_conf.h"
 #include "usbd_desc.h"
-///#include "atomic.h"
+#include "config.h"
+#include "system.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -40,6 +41,9 @@
 #include "ring_buff.h"
 #include "can.h"
 extern int send_char_dbg(int ch); 
+
+extern uint8_t serial_rx_buffer[];
+extern uint8_t serial_rx_buffer_head ;
 
 #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
 
@@ -197,6 +201,10 @@ if (sz)
 return sz;
 }
 
+void CDC_send_str(char *str_report, uint32_t len){
+  VCP_PutContig(str_report,len);
+}
+
 ///==========================================
 
 #if 0
@@ -280,20 +288,133 @@ return USBD_OK;
 }
 #endif
 
-extern int serial_read_tx(void);
+///extern int serial_read_tx(void);
 extern uint8_t serial_get_tx_buffer_count(void);
 
-extern void OnUsbDataRx(uint8_t* data_in, uint16_t length);
+
+void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
+///  printk("\n\r OnUsbDataRx [%x:%x]\n\r",rd_dat[0],sz); 
+volatile uint8_t data; 
+volatile uint8_t *ptdata;
+ptdata=rd_dat;
+data = *ptdata;
+volatile uint8_t RxBufferCount;
+RxBufferCount = sz;
+
+/// CDC_led_rx_on(1);
+  // Pick off realtime command characters directly from the serial stream. These characters are
+  // not passed into the main buffer, but these set system state flag bits for realtime execution.
+  switch (data) {
+      case CMD_RESET:	
+        mc_reset();
+      	 //report_init_message();
+      	 break; // Call motion control reset routine.
+      case CMD_STATUS_REPORT: 
+        system_set_exec_state_flag(EXEC_STATUS_REPORT); 
+        break; // Set as true
+      case CMD_CYCLE_START:   
+        system_set_exec_state_flag(EXEC_CYCLE_START); 
+        break; // Set as true
+      case CMD_FEED_HOLD:     
+        system_set_exec_state_flag(EXEC_FEED_HOLD); 
+        break; // Set as true
+      default :
+        if (data > 0x7F) { // Real-time control characters are extended ACSII only.
+          switch(data) {
+            case CMD_SAFETY_DOOR:   
+              system_set_exec_state_flag(EXEC_SAFETY_DOOR); 
+              break; // Set as true
+            case CMD_JOG_CANCEL:
+              if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
+                system_set_exec_state_flag(EXEC_MOTION_CANCEL);
+              }
+              break;
+            #ifdef DEBUG
+              case CMD_DEBUG_REPORT: {
+                uint8_t sreg = SREG; 
+                cli(); 
+                bit_true(sys_rt_exec_debug,EXEC_DEBUG_REPORT); 
+                SREG = sreg;
+              } break;
+            #endif
+            case CMD_FEED_OVR_RESET           : 
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET); 
+              break;
+            case CMD_FEED_OVR_COARSE_PLUS     : 
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS); 
+              break;
+            case CMD_FEED_OVR_COARSE_MINUS    : 
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS); 
+              break;
+            case CMD_FEED_OVR_FINE_PLUS       : 
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS); 
+              break;
+            case CMD_FEED_OVR_FINE_MINUS      : 
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS); 
+              break;
+            case CMD_RAPID_OVR_RESET          : 
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET); 
+              break;
+            case CMD_RAPID_OVR_MEDIUM         : 
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM); 
+              break;
+            case CMD_RAPID_OVR_LOW            : 
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW); 
+              break;
+            case CMD_SPINDLE_OVR_RESET        : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET); 
+              break;
+            case CMD_SPINDLE_OVR_COARSE_PLUS  : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS); 
+              break;
+            case CMD_SPINDLE_OVR_COARSE_MINUS : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS); 
+              break;
+            case CMD_SPINDLE_OVR_FINE_PLUS    : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS); 
+              break;
+            case CMD_SPINDLE_OVR_FINE_MINUS   : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS); 
+              break;
+            case CMD_SPINDLE_OVR_STOP         : 
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP); 
+              break;
+            case CMD_COOLANT_FLOOD_OVR_TOGGLE : 
+              system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE); 
+              break;
+
+            #ifdef ENABLE_M7
+              case CMD_COOLANT_MIST_OVR_TOGGLE: 
+                system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); 
+                break;
+            #endif
+
+          }
+          // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
+        } else { // Write character to buffer
+          // Write data to buffer unless it is full.
+        	do {
+        		serial_rx_buffer[serial_rx_buffer_head++] = *ptdata++;
+        	}
+        	while(--RxBufferCount);
+        }
+  }
+ }
+
+
+
+
+
 #define MAX_LEN_RD_DAT 256
 ////===================================
 void vcp_thread(void *pdata)
 {
 ///uint8_t on_sleep=0;
 uint8_t rd_dat[MAX_LEN_RD_DAT];  
-uint32_t ii; 
+//uint32_t ii; 
 uint32_t sz; 
-int t_dat;
-uint8_t rd_tdat;
+//int t_dat;
+//uint8_t rd_tdat;
 printk("\n\r vcp_Thread\n\r"); 
 
 #if 1  
@@ -327,6 +448,7 @@ while (sz)
 #endif  
 //// on_sleep=0;
   }
+/*
 sz  =  serial_get_tx_buffer_count();
 if(sz)
 {
@@ -341,6 +463,7 @@ for(ii=0;ii<sz;ii++)
     
   }
 }
+*/
 #if 0
 if(CAN_RxRdy)
   {
