@@ -30,7 +30,7 @@ extern void  __enable_irq();
 #define EEPROM_PAGE0 0
 
 
-extern void Eeprom_Read_Page(uint16_t BufferOffset);
+///extern void Eeprom_Read_Page(uint16_t BufferOffset);
 
 ///extern void report_init_message();
 

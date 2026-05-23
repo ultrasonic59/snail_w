@@ -33,14 +33,11 @@ uint32_t HAL_GetTick(void){
   return 0;
 }
 ///============= eeprom ===================================
-void Eeprom_Read_Page(uint16_t BufferOffset){}
-void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size){}
-int memcpy_from_eeprom_with_checksum(char *destination, unsigned int source, unsigned int size){
-  return 0;
-}
-unsigned char eeprom_get_char(unsigned int addr){
-  return 0;
-}
+///void Eeprom_Read_Page(uint16_t BufferOffset){}
+///void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size){}
+///int memcpy_from_eeprom_with_checksum(char *destination, unsigned int source, unsigned int size){
+ /// return 0;
+///}
 
 void spindle_init(){}
 void coolant_init(){}

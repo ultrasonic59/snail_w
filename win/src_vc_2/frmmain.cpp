@@ -82,7 +82,6 @@ frmMain::frmMain(QWidget *parent) :
 
     settings_file("/settings.ini")
 
-
 {
     m_status << "Unknown"
              << "Idle"
@@ -216,7 +215,7 @@ frmMain::frmMain(QWidget *parent) :
 
     connect(ui->cboCommand, SIGNAL(returnPressed()), this, SLOT(onCboCommandReturnPressed()));
 
-    foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d")))
+    foreach(StyledToolButton * button, this->findChildren<StyledToolButton*>(QRegularExpression("cmdUser\\d")))
     {
         connect(button, SIGNAL(clicked(bool)), this, SLOT(onCmdUserClicked(bool)));
     }
@@ -315,7 +314,8 @@ frmMain::frmMain(QWidget *parent) :
     updateControlsState();
 
     // Prepare jog buttons
-    foreach (StyledToolButton* button, ui->grpJog->findChildren<StyledToolButton*>(QRegExp("cmdJogFeed\\d")))
+ ///   foreach (StyledToolButton* button, ui->grpJog->findChildren<StyledToolButton*>(QRegExp("cmdJogFeed\\d")))
+        foreach(StyledToolButton* button, ui->grpJog->findChildren<StyledToolButton*>(QRegularExpression("cmdJogFeed\\d")))
     {
         connect(button, SIGNAL(clicked(bool)), this, SLOT(onCmdJogFeedClicked()));
     }
@@ -798,6 +798,7 @@ void frmMain::onTimerUpdateSpindleParser()
 
 void frmMain::onTimerStatusQuery()
 {
+    return;
     if (SerialIf_IsOpen() && m_resetCompleted && m_statusReceived)
     {
         // Status report: ?
@@ -1133,7 +1134,7 @@ bool buttonLessThan(StyledToolButton *b1, StyledToolButton *b2)
 
 void frmMain::updateParser()
 {
-    QTime time;
+    QElapsedTimer time;
 
     qDebug() << "Updating parser:" << m_currentModel << m_currentDrawer;
     time.start();
@@ -1412,7 +1413,7 @@ void frmMain::on_cmdFileReset_clicked()
 
     if (!m_heightMapMode)
     {
-        QTime time;
+        QElapsedTimer time;
 
         time.start();
 

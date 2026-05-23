@@ -205,7 +205,7 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
 // Reads Grbl global settings struct from EEPROM.
 uint8_t read_global_settings() {
   // Check version-byte of eeprom
-  Eeprom_Read_Page(EEPROM_PAGE0);
+ /// Eeprom_Read_Page(EEPROM_PAGE0);
   uint8_t version = eeprom_get_char(0);
   if (version == SETTINGS_VERSION) {
     // Read settings-record and check checksum

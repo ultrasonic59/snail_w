@@ -70,7 +70,7 @@ typedef struct segment_s{
   #endif
 } segment_t;
 
-typedef struct {
+typedef struct stepper_s_{
   // Used by the bresenham line algorithm
   uint32_t counter_x,        // Counter variables for the bresenham line tracer
            counter_y,

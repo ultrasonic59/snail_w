@@ -185,6 +185,20 @@
 #define ON_LED1_PIN_NPIN	1
 #define ON_LED1_PIN_GPIO	GPIOA
 #define ON_LED1_PIN_RCC  	RCC_AHB1Periph_GPIOA
+///=============== I2C3_SDA_EEPROM ============================
+#define SDA_EEPROM_PIN	    		GPIO_Pin_9
+#define SDA_EEPROM_NPIN	    	9
+#define SDA_EEPROM_PIN_GPIO	    	GPIOC
+#define SDA_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOC
+///=============== I2C3_SCL_EEPROM ============================
+#define SCL_EEPROM_PIN	    	GPIO_Pin_8
+#define SCL_EEPROM_NPIN	        8
+#define SCL_EEPROM_PIN_GPIO	GPIOA
+#define SCL_EEPROM_PIN_RCC  	RCC_AHB1Periph_GPIOA
+#define  I2C_EEPROM    I2C3
+#define  RCC_APB1Periph_I2C_EEPROM RCC_APB1Periph_I2C3
+#define  GPIO_AF_I2C_EEPROM    GPIO_AF_I2C3
+
 ////================= USB ======================
 #define USB_DP_PIN	    	GPIO_Pin_12
 #define USB_DP_PIN_NPIN	    12

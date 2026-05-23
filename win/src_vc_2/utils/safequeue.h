@@ -91,7 +91,7 @@ public:
     {
         //std::unique_lock<std::mutex> lock(mMutex);
         QMutexLocker locker(&mMutex);
-        return mQueue.size();
+        return (int)mQueue.size();
     }
 
     bool empty() const

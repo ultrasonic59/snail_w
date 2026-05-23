@@ -21,6 +21,7 @@
 #include "frmmain.h"
 #include "ui_frmmain.h"
 
+#include <QElapsedTimer>
 
 
 void frmMain::resetHeightmap()
@@ -528,7 +529,7 @@ void frmMain::on_chkHeightMapUse_clicked(bool checked)
         progress.setStyleSheet("QProgressBar {text-align: center; qproperty-format: \"\"}");
 
         // Performance test
-        QTime time;
+        QElapsedTimer time;
 
         // Set current model to prevent reseting heightmap cache
         m_currentModel = &m_programHeightmapModel;
@@ -685,8 +686,10 @@ void frmMain::on_chkHeightMapUse_clicked(bool checked)
                                 while ((j < list->count()) && (list->at(j)->getLineNumber() == line)) {
 
                                     point = list->at(j)->getEnd();
-                                    if (!list->at(j)->isAbsolute()) point -= list->at(j)->getStart();
-                                    if (!list->at(j)->isMetric()) point /= 25.4;
+                                    if (!list->at(j)->isAbsolute()) 
+                                        point -= list->at(j)->getStart();
+                                    if (!list->at(j)->isMetric()) 
+                                        point /= 25.4f;
 
                                     item.command = newCommand + QString("X%1Y%2Z%3")
                                             .arg(point.x(), 0, 'f', 3).arg(point.y(), 0, 'f', 3).arg(point.z(), 0, 'f', 3);

@@ -1,4 +1,4 @@
-// This file is a part of "Candle" application.
+﻿// This file is a part of "Candle" application.
 // Copyright 2015-2016 Hayrullin Denis Ravilevich
 
 #include "gcodedrawer.h"
@@ -272,7 +272,15 @@ bool GcodeDrawer::updateRaster()
         foreach (int i, m_indexes) setImagePixelColor(m_image, (list->at(i)->getEnd().x() - origin.x()) / pixelSize,
                                                       (list->at(i)->getEnd().y() - origin.y()) / pixelSize, getSegmentColor(list->at(i)).rgb());
 
-        if (m_texture) m_texture->setData(QOpenGLTexture::RGB, QOpenGLTexture::UInt8, m_image.bits());
+        if (m_texture) {
+       ///     m_texture->setData(QOpenGLTexture::RGB, QOpenGLTexture::UInt8, m_image.bits());
+// Убедитесь, что изображение в нужном формате (обычно RGBA или RGB)
+// OpenGL предпочитает данные, выровненные по 4 байта
+            QImage textureImage = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+            m_texture->setData(textureImage);
+
+         }
     }
 
     m_indexes.clear();

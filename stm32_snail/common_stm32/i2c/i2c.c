@@ -38,31 +38,8 @@ void I2C_Eeprom_Init(void) {
   I2C_Init(I2C_EEPROM, &I2C_InitStructure);
   // I2C Peripheral Enable
   I2C_Cmd(I2C_EEPROM, ENABLE);
-  
-
-#if 0 
-  
-  //Enable the GPIOs for the SCL/SDA Pins
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIO_SCL | RCC_AHB1Periph_GPIO_SDA, ENABLE);
-  
-  //Configure and initialize the GPIOs
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SCL;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
-  GPIO_Init(GPIO_SCL, &GPIO_InitStructure);
-
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SDA;
-  GPIO_Init(GPIO_SDA, &GPIO_InitStructure);
-  
-  //Connect GPIO pins to peripheral
-  GPIO_PinAFConfig(GPIO_SCL, GPIO_PinSource_SCL, GPIO_AF_I2Cx);
-	GPIO_PinAFConfig(GPIO_SDA, GPIO_PinSource_SDA, GPIO_AF_I2Cx);
-  
-#endif
-///  return; 
 }
+#if USE_ENCODER
 void I2C_encoder_Init(void) {
   GPIO_InitTypeDef  GPIO_InitStructure;
   I2C_InitTypeDef   I2C_InitStructure;
@@ -122,7 +99,7 @@ void I2C_encoder_Init(void) {
 #endif
 ///  return; 
 }
-   
+#endif   
    
 #if 0
 void i2c_init(void){
@@ -452,7 +429,7 @@ taskEXIT_CRITICAL();
 return rez;
 }
 #endif
-
+#if USE_ENCODER
 int i2c_readByteEncoder(uint8_t addr,uint8_t *data)
 {
 #if 1
@@ -572,7 +549,8 @@ if(rez==0)
 ////    }
 return rez;  
 }
-
+#endif
+extern int check_push_key_dbg(void);
 ///========================================================================
 void i2c_dbg_task( void *pvParameters )
 {
@@ -671,6 +649,9 @@ if(check_push_key_dbg())
     }
    cur_cmd=0; 
   }
+  
+#if USE_ENCODER  
+  
  else if(cur_cmd=='e')  /// read encoder
   {
     if(cur_size==1)
@@ -699,14 +680,16 @@ if(check_push_key_dbg())
       printk(": data[%x] ",htmp); 
       }
    }
+
    else
      printk(": error[%d] ",rez); 
     }
     
   cur_cmd=0; 
   }
+  #endif
+ } 
 
- }  
 }
 }
 

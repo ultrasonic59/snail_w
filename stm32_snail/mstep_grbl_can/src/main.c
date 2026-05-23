@@ -15,21 +15,12 @@
 #include "usb_conf.h"
 #include "usbd_desc.h"
 
-#if 0
-#include "usb_lib.h"
-#ifdef USEUSB
-#include "usb_desc.h"
-#endif
-#include "hw_config.h"
-#ifdef USEUSB
-#include "usb_pwr.h"
-#endif
-#include "stm32eeprom.h"
-///#include "eeprom.h"
-#endif
 
 #include "misc.h"
 #include "printk.h"
+#include "eeprom.h"
+#include "grbl.h"
+
 ///=======================================================================
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
 #define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
@@ -56,7 +47,7 @@ extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
 ////============================================
 int main( void )
 {
-////uint8_t btst=0; 
+uint8_t btst=0; 
 ////uint32_t tst=0;
 #ifdef DEBUG
   debug();
@@ -71,14 +62,21 @@ hw_board_init();
             &USBD_Class_cb, 
             &USR_cb);
 
-printk("\n\r=== [test1] ==="); 
+printk("\n\r=== usb-grbl-can ==="); 
+printk("\n\r=== settings_t [%x]===",sizeof(settings_t)); 
 
 ////=================================================
 can1_init();
 ////can_main();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-        
+/*
+for(;;){
+btst = eeprom_get_char( 0 );
+printk("\n\r[%x]",btst); 
+
+}
+*/        
 ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
          
 	/* Start the tasks defined within this file/specific to this demo. */
@@ -92,8 +90,8 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
 	/* Configure the timers used by the fast interrupt timer test. */
 /////	vSetupTimerTest();
-xTaskCreate( grbl_task, "tst_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
-xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
+xTaskCreate( grbl_task, "grbl_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
+///xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
 BaseType_t rez;  
 rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TASK_STACK_SIZE, 0, VCP_TASK_PRIORITY, &vcp_thread_handle);
 printk("\n\r vcp_thread[%x]",rez); 

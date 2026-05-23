@@ -259,8 +259,8 @@ void frmMain::ProcessGRBL1_1()
             static QRegExp ov("Ov:([^,]*),([^,]*),([^,^>^|]*)");
             if(ov.indexIn(data) != -1)
             {
-                UpdateOverride(ui->slbFeedOverride, ov.cap(1).toInt(), 0x91);
-                UpdateOverride(ui->slbSpindleOverride, ov.cap(3).toInt(), 0x9a);
+                UpdateOverride(ui->slbFeedOverride, ov.cap(1).toInt(), 0x91u);
+                UpdateOverride(ui->slbSpindleOverride, ov.cap(3).toInt(), 0x9au);
 
                 int rapid = ov.cap(2).toInt();
                 ui->slbRapidOverride->setCurrentValue(rapid);
@@ -703,7 +703,7 @@ void frmMain::ProcessGRBL1_1()
                     {
                         int num = 0;
 
-                        sscanf(response.toUpper().toStdString().c_str(), "ERROR:%d", &num);
+                        sscanf_s(response.toUpper().toStdString().c_str(), "ERROR:%d", &num);
                         qDebug() << "Error: " << num;
 
                         ui->txtConsole->appendPlainText("ERROR: " + GetErrorMsg(num));
@@ -1035,8 +1035,8 @@ void frmMain::ProcessGRBL_ETH(QString data)
             static QRegExp ov("Ov:([^,]*),([^,]*),([^,^>^|]*)");
             if(ov.indexIn(data) != -1)
             {
-                UpdateOverride(ui->slbFeedOverride, ov.cap(1).toInt(), 0x91);
-                UpdateOverride(ui->slbSpindleOverride, ov.cap(3).toInt(), 0x9a);
+                UpdateOverride(ui->slbFeedOverride, ov.cap(1).toInt(), 0x91u);
+                UpdateOverride(ui->slbSpindleOverride, ov.cap(3).toInt(), 0x9au);
 
                 int rapid = ov.cap(2).toInt();
                 ui->slbRapidOverride->setCurrentValue(rapid);
@@ -1167,7 +1167,7 @@ void frmMain::ProcessGRBL_ETH(QString data)
                         int num = -1;
                         if(ca.command.toUpper().contains("T"))
                         {
-                            sscanf(ca.command.toUpper().toStdString().c_str(), "T%d", &num);
+                            sscanf_s(ca.command.toUpper().toStdString().c_str(), "T%d", &num);
                         }
 
                         QString msg = "Confirm tool change: T";
@@ -1185,7 +1185,7 @@ void frmMain::ProcessGRBL_ETH(QString data)
                             }
                             else if(m_Protocol == PROT_GRIP)
                             {
-                                Pdu_t p = {(uint8_t*)(res.data()), res.size()};
+                                Pdu_t p = {(uint8_t*)(res.data()), static_cast<uint16_t>(res.size())};
                                 GrIP_Transmit(MSG_REALTIME_CMD, 0, &p);
                             }
                             QThread::msleep(5);
@@ -1465,7 +1465,7 @@ void frmMain::ProcessGRBL_ETH(QString data)
                     {
                         int num = 0;
 
-                        sscanf(response.toUpper().toStdString().c_str(), "ERROR:%d", &num);
+                        sscanf_s(response.toUpper().toStdString().c_str(), "ERROR:%d", &num);
                         qDebug() << "Error: " << num;
 
                         ui->txtConsole->appendPlainText("ERROR: " + GetErrorMsg(num));

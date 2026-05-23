@@ -4,7 +4,7 @@
 ///#include "stm32f2xx_gpio.h"
 ///#include "stm32f2xx_rcc.h"
 
-////#include "mstep_board.h"
+#include "i2c.h"
 #include "board.h"
 #include "printk.h"
 ///=============================
@@ -19,6 +19,10 @@ int get_byte_dbg (void)
 {
 while (!(UART_DBG->SR & 0x0020));
 return (UART_DBG->DR);
+}
+int check_push_key_dbg(void)
+{
+return  (UART_DBG->SR & USART_SR_RXNE); 
 }
 
 #if 1
@@ -457,9 +461,11 @@ void hw_board_init(void)
 {
 init_gpio();
 UART_DBG_Init(); 
-
+/// I2C_Eeprom_Init();
+#ifndef USB_GRBL_CAN
 led_tim_init();
 mot_tim_init();
+#endif
 }
 ////============================================
 extern uint8_t can1_send(uint16_t id,uint8_t data_len,uint8_t *data);
@@ -496,7 +502,7 @@ for(;;)
 }
 
 ////========================================================  
-void tst1_task( void *pvParameters )
+void _tst1_task( void *pvParameters )
 {
 ////uint8_t btst=0; 
 uint8_t ii=0; 

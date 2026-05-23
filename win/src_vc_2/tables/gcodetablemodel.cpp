@@ -124,9 +124,14 @@ QVariant GCodeTableModel::headerData(int section, Qt::Orientation orientation, i
 
 Qt::ItemFlags GCodeTableModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid()) return NULL;
-    if (index.column() == 1) return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
-    else return QAbstractTableModel::flags(index);
+    if (!index.isValid()) 
+        return Qt::NoItemFlags;
+    auto flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable; // 
+
+    if (index.column() == 1)
+        flags |= Qt::ItemIsEditable;
+ 
+return flags;
 }
 
 QList<GCodeItem> &GCodeTableModel::data()
