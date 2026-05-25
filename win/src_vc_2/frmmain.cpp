@@ -464,6 +464,7 @@ void frmMain::preloadSettings()
 
 void frmMain::updateControlsState()
 {
+    return;  ///???
     bool portOpened = SerialIf_IsOpen();
 
     // Disable interface options (shouldn't be changed while open)
@@ -581,6 +582,8 @@ void frmMain::updateControlsState()
 
 void frmMain::sendCommand(QString command, int tableIndex, bool showInConsole)
 {
+    return; ///???
+
     if (!SerialIf_IsOpen() || !m_resetCompleted)
     {
         // Not connected or still resetting
@@ -694,7 +697,7 @@ int frmMain::BufferLength()
 void frmMain::onProcessData()
 {
     RX_Packet_t dat;
-
+  ///return; ///???
     switch (m_Protocol)
     {
     case PROT_GRIP:
@@ -721,6 +724,7 @@ void frmMain::onProcessData()
 
 void frmMain::onSendSerial()
 {
+ ///   return; ///???
     if(mCommandsWait.size() > 0)
     {
         if (!SerialIf_IsOpen())
@@ -780,6 +784,7 @@ void frmMain::onSendSerial()
 
 void frmMain::onTimerUpdateSpindleParser()
 {
+ ///   return;///???
     if (SerialIf_IsOpen() && !m_homing && !ui->cmdFilePause->isChecked() && mCommandsWait.size() == 0)
     {
         if (m_updateSpindleSpeed)
@@ -798,7 +803,7 @@ void frmMain::onTimerUpdateSpindleParser()
 
 void frmMain::onTimerStatusQuery()
 {
-    return;
+///    return; ///???
     if (SerialIf_IsOpen() && m_resetCompleted && m_statusReceived)
     {
         // Status report: ?
@@ -905,7 +910,7 @@ void frmMain::onActSendFromLineTriggered()
 {
     if (m_currentModel->rowCount() == 1)
         return;
-
+  ///  return;///???
     //Line to start from
     int commandIndex = ui->tblProgram->currentIndex().row();
 
