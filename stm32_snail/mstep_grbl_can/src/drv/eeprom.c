@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include "FreeRTOS.h"
+#include "task.h"
 #include "i2c.h"
 #include "eeprom.h"
 #include "board.h"

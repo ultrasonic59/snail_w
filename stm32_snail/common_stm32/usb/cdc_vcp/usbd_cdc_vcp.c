@@ -448,6 +448,8 @@ while (sz)
 #endif  
 //// on_sleep=0;
   }
+  msleep(20);
+
 /*
 sz  =  serial_get_tx_buffer_count();
 if(sz)

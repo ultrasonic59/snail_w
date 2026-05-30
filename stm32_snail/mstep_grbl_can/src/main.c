@@ -47,7 +47,8 @@ extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
 ////============================================
 int main( void )
 {
-uint8_t btst=0; 
+///uint8_t btst=0; 
+BaseType_t rez; 
 ////uint32_t tst=0;
 #ifdef DEBUG
   debug();
@@ -90,9 +91,11 @@ printk("\n\r[%x]",btst);
 
 	/* Configure the timers used by the fast interrupt timer test. */
 /////	vSetupTimerTest();
-xTaskCreate( grbl_task, "grbl_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
+rez=xTaskCreate( grbl_task, "grbl_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
+printk("\n\r grbl_task[%x]",rez); 
+
 ///xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
-BaseType_t rez;  
+ 
 rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TASK_STACK_SIZE, 0, VCP_TASK_PRIORITY, &vcp_thread_handle);
 printk("\n\r vcp_thread[%x]",rez); 
 
