@@ -56,6 +56,11 @@ void st_update_plan_block_parameters();
 // Called by realtime status reporting if realtime rate reporting is enabled in config.h.
 float st_get_realtime_rate();
 
+#ifdef CAN_SEND_DEBUG
+void st_can_debug_begin_line(const char *line);
+void st_can_send_count_report(void);
+#endif
+
 void _TIM2_IRQHandler(void);
 
 #endif

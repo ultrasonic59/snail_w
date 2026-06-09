@@ -26,9 +26,11 @@
 #include "stm32f2xx_it.h"
 #include "stm32f2xx_can.h"
 
+#ifndef USE_THREADX
 extern void vPortSVCHandler(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
+#endif
 extern void usart1_irq(void);
 extern void usart2_irq(void);
 
@@ -149,10 +151,12 @@ void UsageFault_Handler(void)
   * @retval None
   */
 
+#ifndef USE_THREADX
 void SVC_Handler(void) 
 {
   vPortSVCHandler();
 }
+#endif
 
 /**
   * @brief  This function handles Debug Monitor exception.
@@ -163,6 +167,7 @@ void DebugMon_Handler(void)
 {
 }
 
+#ifndef USE_THREADX
 /**
   * @brief  This function handles PendSVC exception.
   * @param  None
@@ -172,7 +177,7 @@ void PendSV_Handler(void)
 {
   xPortPendSVHandler();
 }
-extern void user_tick_hnd(void);
+
 /**
   * @brief  This function handles SysTick Handler.
   * @param  None
@@ -181,8 +186,8 @@ extern void user_tick_hnd(void);
 void SysTick_Handler(void) 
 {
   xPortSysTickHandler();
-  
 }
+#endif
 
 /******************************************************************************/
 /*                 STM32F2xx Peripherals Interrupt Handlers                   */
@@ -279,44 +284,11 @@ extern CanRxMsg RxMessage;
 
 extern USB_OTG_CORE_HANDLE           USB_OTG_dev;
 extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-/////extern void my_USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 extern xQueueHandle q_usb_in;
-////USB_OTG_CORE_HANDLE           *pUSB_OTG_dev;
-/**
-* @brief  This function handles OTG_HS Handler.
-* @param  None
-* @retval None
-*/
+
 void OTG_FS_IRQHandler(void)
 {
 USBD_OTG_ISR_Handler(&USB_OTG_dev) ; 
-#if 0  
-///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-///pUSB_OTG_dev=&USB_OTG_dev;
-////xQueueSendFromISR(q_usb_in, &pUSB_OTG_dev, &xHigherPriorityTaskWoken);
-my_USBD_OTG_ISR_Handler (&USB_OTG_dev);
-#endif  
 }
 
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
-/**
-* @brief  This function handles EP1_IN Handler.
-* @param  None
-* @retval None
-*/
-void OTG_HS_EP1_IN_IRQHandler(void)
-{
-  USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
-}
-
-/**
-* @brief  This function handles EP1_OUT Handler.
-* @param  None
-* @retval None
-*/
-void OTG_HS_EP1_OUT_IRQHandler(void)
-{
-  USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
-}
-#endif  /// USEUSB
-#endif
+#endif /* USEUSB */

@@ -57,12 +57,17 @@
 
         EXTERN  __iar_program_start
         EXTERN  SystemInit
-        EXTERN  vPortSVCHandler
-        EXTERN  xPortPendSVHandler
         EXTERN  hard_fault_handler_c
  ;////       EXTERN  RTC_WKUP_irq
-        EXTERN  xPortSysTickHandler ;///SysTick_Handler
  ;////       EXTERN  TIM7_irq
+#ifdef USE_THREADX
+        EXTERN  PendSV_Handler
+        EXTERN  SysTick_Handler
+#else
+        EXTERN  vPortSVCHandler
+        EXTERN  xPortPendSVHandler
+        EXTERN  xPortSysTickHandler
+#endif
         PUBLIC  __vector_table
 
         DATA
@@ -79,11 +84,19 @@ __vector_table
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved                    10
+#ifdef USE_THREADX
+        DCD     SVC_Handler               ; SVCall Handler
+        DCD     DebugMon_Handler          ; Debug Monitor Handler
+        DCD     0                         ; Reserved
+        DCD     PendSV_Handler            ; PendSV Handler
+        DCD     SysTick_Handler           ; SysTick Handler
+#else
         DCD     vPortSVCHandler               ; SVCall Handler
         DCD     DebugMon_Handler          ; Debug Monitor Handler
         DCD     0                         ; Reserved
         DCD     xPortPendSVHandler            ; PendSV Handler
         DCD     xPortSysTickHandler     ;///SysTick_Handler           ; SysTick Handler
+#endif
 
          ; External Interrupts
         DCD     WWDG_IRQHandler                   ; Window WatchDog                                        
@@ -232,6 +245,7 @@ SVC_Handler
 DebugMon_Handler
         B DebugMon_Handler
 
+#ifndef USE_THREADX
         PUBWEAK PendSV_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 PendSV_Handler
@@ -241,6 +255,7 @@ PendSV_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 SysTick_Handler
         B SysTick_Handler
+#endif
 
         PUBWEAK WWDG_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)

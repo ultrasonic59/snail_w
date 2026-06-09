@@ -21,11 +21,16 @@
 
 #include "grbl.h"
 
+#ifdef USEUSB
+#include "FreeRTOS.h"
+#include "task.h"
+#endif
+
 #define RX_RING_BUFFER (RX_BUFFER_SIZE+1)
 #define TX_RING_BUFFER (TX_BUFFER_SIZE+1)
 
 uint8_t serial_rx_buffer[RX_RING_BUFFER];
-uint8_t serial_rx_buffer_head = 0;
+volatile uint8_t serial_rx_buffer_head = 0;
 volatile uint8_t serial_rx_buffer_tail = 0;
 
 uint8_t serial_tx_buffer[TX_RING_BUFFER];
@@ -54,7 +59,7 @@ uint8_t serial_get_rx_buffer_count()
 
 // Returns the number of bytes used in the TX serial buffer.
 // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
-uint8_t _serial_get_tx_buffer_count()
+uint8_t serial_get_tx_buffer_count()
 {
   uint8_t ttail = serial_tx_buffer_tail; // Copy to limit multiple calls to volatile
   if (serial_tx_buffer_head >= ttail) { return(serial_tx_buffer_head-ttail); }
@@ -70,21 +75,73 @@ void serial_init()
 
 // Writes one byte to the TX serial buffer. Called by main program.
 void serial_write(uint8_t data) {
+#ifdef USEUSB
+  uint8_t next_head = serial_tx_buffer_head + 1;
+  uint32_t wait = 0;
 
+  while (next_head == serial_tx_buffer_tail) {
+    if (sys_rt_exec_state & EXEC_RESET) {
+      return;
+    }
+    taskYIELD();
+    if (++wait > 8000U) {
+      return;
+    }
+  }
+  serial_tx_buffer[serial_tx_buffer_head] = data;
+  serial_tx_buffer_head = next_head;
+#else
+  (void)data;
+#endif
+}
+
+int serial_read_tx(void)
+{
+  uint8_t tail = serial_tx_buffer_tail;
+
+  if (serial_tx_buffer_head == tail) {
+    return -1;
+  }
+  uint8_t data = serial_tx_buffer[tail];
+  tail++;
+  serial_tx_buffer_tail = tail;
+  return data;
+}
+
+void serial_tx_unget(void)
+{
+  if (serial_tx_buffer_tail != serial_tx_buffer_head) {
+    serial_tx_buffer_tail--;
+  }
+}
+
+
+void serial_rx_push(uint8_t data)
+{
+  uint8_t next_head = serial_rx_buffer_head + 1;
+
+  if (next_head != serial_rx_buffer_tail) {
+    serial_rx_buffer[serial_rx_buffer_head] = data;
+    serial_rx_buffer_head = next_head;
+  }
 }
 
 
 // Fetches the first byte in the serial read buffer. Called by main program.
 uint8_t serial_read()
 {
-	uint8_t data;
+  uint8_t tail = serial_rx_buffer_tail;
 
-	if (serial_rx_buffer_head == serial_rx_buffer_tail) {
-	    return SERIAL_NO_DATA;
-	  } else {
-	  data = serial_rx_buffer[serial_rx_buffer_tail++];
-	  }
-	return data;
+  if (serial_rx_buffer_head == tail) {
+    return SERIAL_NO_DATA;
+  }
+  {
+    uint8_t data = serial_rx_buffer[tail];
+
+    tail++;
+    serial_rx_buffer_tail = tail;
+    return data;
+  }
 }
 
 

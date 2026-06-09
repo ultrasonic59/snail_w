@@ -42,9 +42,6 @@
 #include "can.h"
 extern int send_char_dbg(int ch); 
 
-extern uint8_t serial_rx_buffer[];
-extern uint8_t serial_rx_buffer_head ;
-
 #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED 
@@ -202,7 +199,16 @@ return sz;
 }
 
 void CDC_send_str(char *str_report, uint32_t len){
-  VCP_PutContig(str_report,len);
+  uint32_t sent = 0U;
+
+  while (sent < len) {
+    unsigned chunk = VCP_PutContig(str_report + sent, len - sent);
+    if (chunk == 0U) {
+      msleep(1);
+      continue;
+    }
+    sent += chunk;
+  }
 }
 
 ///==========================================
@@ -290,24 +296,20 @@ return USBD_OK;
 
 ///extern int serial_read_tx(void);
 extern uint8_t serial_get_tx_buffer_count(void);
+extern int serial_read_tx(void);
 
 
 void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
-///  printk("\n\r OnUsbDataRx [%x:%x]\n\r",rd_dat[0],sz); 
-volatile uint8_t data; 
-volatile uint8_t *ptdata;
-ptdata=rd_dat;
-data = *ptdata;
-volatile uint8_t RxBufferCount;
-RxBufferCount = sz;
+  uint32_t i;
+  uint8_t data;
 
-/// CDC_led_rx_on(1);
+  for (i = 0; i < sz; i++) {
+    data = rd_dat[i];
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.
   switch (data) {
       case CMD_RESET:	
         mc_reset();
-      	 //report_init_message();
       	 break; // Call motion control reset routine.
       case CMD_STATUS_REPORT: 
         system_set_exec_state_flag(EXEC_STATUS_REPORT); 
@@ -392,12 +394,9 @@ RxBufferCount = sz;
           }
           // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
         } else { // Write character to buffer
-          // Write data to buffer unless it is full.
-        	do {
-        		serial_rx_buffer[serial_rx_buffer_head++] = *ptdata++;
-        	}
-        	while(--RxBufferCount);
+          serial_rx_push(data);
         }
+  }
   }
  }
 
@@ -409,20 +408,21 @@ RxBufferCount = sz;
 ////===================================
 void vcp_thread(void *pdata)
 {
-///uint8_t on_sleep=0;
 uint8_t rd_dat[MAX_LEN_RD_DAT];  
-//uint32_t ii; 
 uint32_t sz; 
-//int t_dat;
-//uint8_t rd_tdat;
+int t_dat;
+uint8_t rd_tdat;
 printk("\n\r vcp_Thread\n\r"); 
 
 #if 1  
 for (;;) 
 {
+  uint8_t did_work = 0;
+
 sz  = VCP_DataAvailContig();
 while (sz)
   {
+  did_work = 1;
   if (sz > MAX_LEN_RD_DAT)
     {
     VCP_GetContig(rd_dat,MAX_LEN_RD_DAT);
@@ -435,48 +435,28 @@ while (sz)
     OnUsbDataRx(rd_dat,sz); 
     sz=0;
     }
-#if 0  
-  for(ii=0;ii<sz;ii++)
-    {
-    VCP_GetContig(&rd_dat,1);
- ////   rd_dat++;
-    ////=====================================
-    send_char_dbg(rd_dat);
-    ////==========================================
-   VCP_PutContig(&rd_dat,1);
-    }
-#endif  
-//// on_sleep=0;
   }
-  msleep(20);
 
-/*
-sz  =  serial_get_tx_buffer_count();
-if(sz)
-{
-for(ii=0;ii<sz;ii++)
+sz = serial_get_tx_buffer_count();
+while (sz)
   {
-  t_dat=serial_read_tx();  
-  if(t_dat>0)
-    {
-    rd_tdat=t_dat;
-    VCP_PutContig(&rd_tdat,1);
-    }
-    
+  t_dat = serial_read_tx();
+  if (t_dat < 0) {
+    break;
   }
-}
-*/
-#if 0
-if(CAN_RxRdy)
-  {
-    
-  on_sleep=0;  
+  rd_tdat = (uint8_t)t_dat;
+  if (VCP_PutContig(&rd_tdat, 1) == 0U) {
+    serial_tx_unget();
+    msleep(1);
+    break;
   }
-if(on_sleep)
-  {
-  msleep(1);
+  did_work = 1;
+  sz = serial_get_tx_buffer_count();
   }
-#endif
+
+  if (!did_work) {
+    msleep(1);
+  }
 }
 #endif
 }

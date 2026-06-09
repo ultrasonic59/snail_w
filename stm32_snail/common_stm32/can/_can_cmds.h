@@ -85,7 +85,7 @@
 
 #define LEN_ACK_QU      8
 
-#define CAN_REQ_STAT_NUM_BYTES 1
+#define CAN_REQ_STAT_NUM_BYTES 2
 
 typedef struct  go_cmd_s_{
   uint8_t  cmd;                       /// 

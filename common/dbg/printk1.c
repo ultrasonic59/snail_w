@@ -2,6 +2,32 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#ifdef USE_THREADX
+#include "tx_api.h"
+
+static TX_MUTEX s_printk_mutex;
+static UCHAR s_printk_mutex_ready;
+
+static void printk_lock(void)
+{
+  if (!s_printk_mutex_ready) {
+    if (tx_mutex_create(&s_printk_mutex, "printk", TX_NO_INHERIT) == TX_SUCCESS) {
+      s_printk_mutex_ready = 1;
+    }
+  }
+  if (s_printk_mutex_ready) {
+    tx_mutex_get(&s_printk_mutex, TX_WAIT_FOREVER);
+  }
+}
+
+static void printk_unlock(void)
+{
+  if (s_printk_mutex_ready) {
+    tx_mutex_put(&s_printk_mutex);
+  }
+}
+#endif
+
 extern void _putk(char ch);
 
 enum { UI, UH, UL, SI, SH, SL };
@@ -41,9 +67,15 @@ int _printk(const char *format, ...)
   int return_count;
   va_list sp;
 
+#ifdef USE_THREADX
+  printk_lock();
+#endif
   va_start(sp, format);
   return_count = _print_out(NULL, format, sp);
   va_end(sp);
+#ifdef USE_THREADX
+  printk_unlock();
+#endif
   return (return_count);
 }
 
@@ -223,6 +255,53 @@ int _print_out(char *s, const char *format, va_list sp)
             str_len = 1; /* if value was zero, we need to increment length */
           
           tmp_buf[str_len] = 0;
+          break;
+        }
+
+        case 'f':
+        case 'F':
+        {
+          static char float_buf[24];
+          static const unsigned long base10[] = {1000000000,100000000,10000000,1000000,100000,10000,1000,100,10,1};
+          double fval = va_arg(sp, double);
+          int frac = (precision > 0) ? precision : 6;
+          int pos = 0;
+          unsigned long ipart;
+          int fi;
+
+          if (frac > 9) {
+            frac = 9;
+          }
+          if (fval < 0.0) {
+            prefix_select = 1;
+            fval = -fval;
+          }
+          ipart = (unsigned long)fval;
+          fval -= (double)ipart;
+
+          for (index = 0; index < 10; index++) {
+            tmp_char = (unsigned char)(ipart / base10[index]);
+            ipart -= (unsigned long)tmp_char * base10[index];
+            float_buf[pos] = tmp_char + '0';
+            if ((tmp_char != 0) || (pos != 0)) {
+              pos++;
+            }
+          }
+          if (pos == 0) {
+            float_buf[pos++] = '0';
+          }
+          if (frac > 0) {
+            float_buf[pos++] = '.';
+            for (fi = 0; fi < frac; fi++) {
+              fval *= 10.0;
+              tmp_char = (unsigned char)fval;
+              fval -= (double)tmp_char;
+              float_buf[pos++] = tmp_char + '0';
+            }
+          }
+          float_buf[pos] = 0;
+          str_ptr = float_buf;
+          str_len = pos;
           break;
         }
 

@@ -71,7 +71,7 @@ int read_one_item( /* ARGUMENTS                                      */
   int index;
 
   letter = line[*counter];  /* check if in array range */
-  CHK(((letter < 0) || (letter > 'Z')), NCE_BAD_CHARACTER_USED);
+  CHK((letter > 'Z'), NCE_BAD_CHARACTER_USED);
   CHP(read_parameter_setting(line, counter, parameters, &index));
   return RS274NGC_OK;
 }

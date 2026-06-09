@@ -1,3 +1,7 @@
+/* 16 MHz HSE + PLL_M=16 -> 120 MHz SYSCLK (see SetSysClock below). */
+#ifndef HSE_VALUE
+#define HSE_VALUE  ((uint32_t)16000000)
+#endif
 
 #include "stm32f2xx.h"
 #include "board.h"

@@ -228,6 +228,7 @@ extern void uDelay (const uint32_t usec);
 
 extern void init_gpio(void);
 extern void hw_board_init(void);
+extern void UART_DBG_Init(void);
 extern void  on_led0(uint8_t idat);
 extern void  on_led1(uint8_t idat);
 extern void set_led_dutycycle (uint32_t val);
@@ -240,6 +241,7 @@ extern void set_mot_rej(uint8_t rej);
 extern int send_char_dbg (int c) ;
 extern int get_byte_dbg(void) ;
 extern void can1_init(void);
+extern uint8_t can1_send(uint16_t id, uint8_t data_len, uint8_t *data);
 
 #define dbg_sendchar  send_char_dbg 
 #define dbg_get_byte get_byte_dbg

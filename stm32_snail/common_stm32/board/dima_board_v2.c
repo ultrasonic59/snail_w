@@ -302,7 +302,7 @@ mask= ID_MASK << 21; ///5+16
 
 id=ID_BRD<<21; ///5+16
 
-CAN_FilterConfig(0,id,mask);	
+CAN_FilterConfig(0,id,mask);
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }

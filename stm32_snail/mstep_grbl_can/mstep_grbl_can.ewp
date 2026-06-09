@@ -1480,17 +1480,17 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\.</state>
                     <state>$PROJ_DIR$\src\board</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
+                    <state>$PROJ_DIR$\..\common\freertos\source\inc</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
-                    <state>$PROJ_DIR$\..\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\usb\cdc_vcp</state>
                     <state>$PROJ_DIR$\..\common_stm32\usb\drv\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\usb\core\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\usb\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\can</state>
+                    <state>D:\proj\grbl_can\common\can</state>
                     <state>$PROJ_DIR$\..\common_stm32\grbl</state>
                     <state>$PROJ_DIR$\..\common_stm32\i2c</state>
                 </option>
@@ -2287,7 +2287,7 @@
     <group>
         <name>dbg</name>
         <file>
-            <name>$PROJ_DIR$\..\..\common\dbg\printk1.c</name>
+            <name>$PROJ_DIR$\..\common\dbg\printk1.c</name>
         </file>
     </group>
     <group>
@@ -2314,25 +2314,25 @@
     <group>
         <name>FreeRTOS</name>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\MemMang\heap_2.c</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\port\MemMang\heap_2.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\list.c</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\port.c</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\port.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portmacro.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\queue.c</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
+            <name>$PROJ_DIR$\..\common\freertos\source\tasks.c</name>
         </file>
     </group>
     <group>

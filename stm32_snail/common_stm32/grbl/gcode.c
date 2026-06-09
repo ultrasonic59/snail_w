@@ -21,6 +21,10 @@
 
 #include "grbl.h"
 
+#ifdef GCODE_CONSOLE_LOG
+#include "printk.h"
+#endif
+
 // NOTE: Max line number is defined by the g-code standard to be 99999. It seems to be an
 // arbitrary value, and some GUIs may require more. So we increased it based on a max safe
 // value when converting a float (7.2 digit precision)s to an integer.
@@ -65,6 +69,14 @@ void gc_sync_position()
 // coordinates, respectively.
 uint8_t gc_execute_line(char *line)
 {
+#ifdef CAN_SEND_DEBUG
+  st_can_debug_begin_line(line);
+#elif defined(GCODE_CONSOLE_LOG)
+  if (line != NULL && line[0] != 0) {
+    printk("\r\nG:%s", line);
+  }
+#endif
+
   /* -------------------------------------------------------------------------------------
      STEP 1: Initialize parser block struct and copy current g-code state modes. The parser
      updates these modes and commands as the block line is parser and will only be used and
@@ -146,15 +158,21 @@ uint8_t gc_execute_line(char *line)
       case 'G':
         // Determine 'G' command and its modal group
         switch(int_value) {
-          case 10: case 28: case 30: case 92:
+          case 10: 
+          case 28: 
+          case 30: 
+          case 92:
             // Check for G10/28/30/92 being called with G0/1/2/3/38 on same block.
             // * G43.1 is also an axis command but is not explicitly defined this way.
             if (mantissa == 0) { // Ignore G28.1, G30.1, and G92.1
-              if (axis_command) { FAIL(STATUS_GCODE_AXIS_COMMAND_CONFLICT); } // [Axis word/command conflict]
+              if (axis_command) { 
+                FAIL(STATUS_GCODE_AXIS_COMMAND_CONFLICT); 
+              } // [Axis word/command conflict]
               axis_command = AXIS_COMMAND_NON_MODAL;
             }
             // No break. Continues to next line.
-          case 4: case 53:
+          case 4: 
+          case 53:
             word_bit = MODAL_GROUP_G0;
             gc_block.non_modal_command = (uint8_t)int_value;
             if ((int_value == 28) || (int_value == 30) || (int_value == 92)) {
@@ -163,7 +181,11 @@ uint8_t gc_execute_line(char *line)
               mantissa = 0; // Set to zero to indicate valid non-integer G command.
             }                
             break;
-          case 0: case 1: case 2: case 3: case 38:
+          case 0: 
+          case 1: 
+          case 2: 
+          case 3: 
+          case 38:
             // Check for G0/1/2/3/38 being called with G10/28/30/92 on same block.
             // * G43.1 is also an axis command but is not explicitly defined this way.
             if (axis_command) { FAIL(STATUS_GCODE_AXIS_COMMAND_CONFLICT); } // [Axis word/command conflict]
@@ -180,11 +202,14 @@ uint8_t gc_execute_line(char *line)
               mantissa = 0; // Set to zero to indicate valid non-integer G command.
             }  
             break;
-          case 17: case 18: case 19:
+          case 17: 
+          case 18: 
+          case 19:
             word_bit = MODAL_GROUP_G2;
             gc_block.modal.plane_select = (uint8_t)int_value - 17;
             break;
-          case 90: case 91:
+          case 90: 
+          case 91:
             if (mantissa == 0) {
               word_bit = MODAL_GROUP_G3;
               gc_block.modal.distance = (uint8_t)int_value - 90;
@@ -195,11 +220,13 @@ uint8_t gc_execute_line(char *line)
               // Otherwise, arc IJK incremental mode is default. G91.1 does nothing.
             }
             break;
-          case 93: case 94:
+          case 93: 
+          case 94:
             word_bit = MODAL_GROUP_G5;
             gc_block.modal.feed_rate = 94 - (uint8_t)int_value;
             break;
-          case 20: case 21:
+          case 20:
+          case 21:
             word_bit = MODAL_GROUP_G6;
             gc_block.modal.units = 21 - (uint8_t)int_value;
             break;
@@ -209,7 +236,8 @@ uint8_t gc_execute_line(char *line)
             // to support G40 commands that often appear in g-code program headers to setup defaults.
             // gc_block.modal.cutter_comp = CUTTER_COMP_DISABLE; // G40
             break;
-          case 43: case 49:
+          case 43: 
+          case 49:
             word_bit = MODAL_GROUP_G8;
             // NOTE: The NIST g-code standard vaguely states that when a tool length offset is changed,
             // there cannot be any axis motion or coordinate offsets updated. Meaning G43, G43.1, and G49
@@ -380,65 +408,7 @@ uint8_t gc_execute_line(char *line)
 		break;
           case 'X': word_bit = WORD_X; gc_block.values.xyz[X_AXIS] = value; axis_words |= (1<<X_AXIS); break;
           case 'Y': word_bit = WORD_Y; gc_block.values.xyz[Y_AXIS] = value; axis_words |= (1<<Y_AXIS); break;
-          case 'Z': switch (gc_state.z_select) {
-          	  	  	  case MAP_P0 :
-          	  	  	  case MAP_P1 :
-          	  	  	  case MAP_P2 : word_bit = WORD_Z;
-          	  	                    gc_block.values.xyz[Z_AXIS] = value;
-          	  	            	  	axis_words |= (1<<Z_AXIS);
-          	  	            	  	break;
-
-          	  	     case MAP_P3 :
-          	  	     case MAP_P4 : word_bit = WORD_U;
-          	  	            	   gc_block.values.xyz[U_AXIS] = value;
-          	  	            	   axis_words |= (1<<U_AXIS);
-          	  	            	   break;
-          	  	  	}
-          	  	  	break;
-          case 'U': if (gc_state.z_select == MAP_P0) {
-        	  	  	  word_bit = WORD_U; gc_block.values.xyz[U_AXIS] = value; axis_words |= (1<<U_AXIS);
-          	  	    }
-          	  	  	break;
-          case 'V': if (gc_state.z_select == MAP_P0) {
-        	  	  	  word_bit = WORD_V; gc_block.values.xyz[V_AXIS] = value; axis_words |= (1<<V_AXIS);
-          	  	    }
-          	  	  	break;
-          case 'W': 
-            if (gc_state.z_select == MAP_P0) {
-          	  word_bit = WORD_W; 
-                  gc_block.values.xyz[W_AXIS] = value; 
-                  axis_words |= (1<<W_AXIS);
-                    }
-          	  	    break;
-          case 'A': 
-            switch (gc_state.z_select) {
-	       	case MAP_P0 :
-	  	  	        	case MAP_P1 : word_bit = WORD_A;
-	  	  	        				  gc_block.values.xyz[A_AXIS] = value;
-	  	  	        				  axis_words |= (1<<A_AXIS);
-	  	  	        				  break;
-	  	  	        	case MAP_P2 : word_bit = WORD_B;
-	  	  	        	  	  	      gc_block.values.xyz[B_AXIS] = value;
-	  	  	        	  	  	      axis_words |= (1<<B_AXIS);
-	  	  	        	  	  	      break;
-	  	  	        	case MAP_P3 : word_bit = WORD_C;
-	  	  	    	  	  	          gc_block.values.xyz[C_AXIS] = value;
-	  	  	    	  	  	          axis_words |= (1<<C_AXIS);
-	  	  	    	  	  	          break;
-	  	  	        	case MAP_P4 : word_bit = WORD_V;
-	  	  		  	  	        	  gc_block.values.xyz[V_AXIS] = value;
-	  	  		  	  	        	  axis_words |= (1<<V_AXIS);
-	  	  		  	  	        	  break;
-          	  	  	}
-                    break;
-          case 'B': if (gc_state.z_select == MAP_P0) {
-        	  	  	  word_bit = WORD_B; gc_block.values.xyz[B_AXIS] = value; axis_words |= (1<<B_AXIS);
-          	  	    }
-          	  	    break;
-          case 'C': if (gc_state.z_select == MAP_P0) {
-        	  	  	  word_bit = WORD_C; gc_block.values.xyz[C_AXIS] = value; axis_words |= (1<<C_AXIS);
-          	  	    }
-          	  	  	break;
+          case 'Z': word_bit = WORD_Z; gc_block.values.xyz[Z_AXIS] = value; axis_words |= (1<<Z_AXIS); break;
           default: FAIL(STATUS_GCODE_UNSUPPORTED_COMMAND);
         }
 
@@ -960,7 +930,7 @@ uint8_t gc_execute_line(char *line)
   } else {
     bit_false(value_words,(bit(WORD_N)|bit(WORD_F)|bit(WORD_S)|bit(WORD_T))); // Remove single-meaning value words.
   }
-  if (axis_command) { bit_false(value_words,(bit(WORD_X)|bit(WORD_Y)|bit(WORD_Z)|bit(WORD_A)|bit(WORD_B)|bit(WORD_C)|bit(WORD_U)|bit(WORD_V)|bit(WORD_W))); } // Remove axis words.
+  if (axis_command) { bit_false(value_words,(bit(WORD_X)|bit(WORD_Y)|bit(WORD_Z))); } // Remove axis words.
   if (value_words) { FAIL(STATUS_GCODE_UNUSED_WORDS); } // [Unused words]
 
   /* -------------------------------------------------------------------------------------
@@ -1063,7 +1033,9 @@ uint8_t gc_execute_line(char *line)
         if (bit_isfalse(gc_parser_flags,GC_PARSER_LASER_ISMOTION)) {
           if (bit_istrue(gc_parser_flags,GC_PARSER_LASER_DISABLE)) {
              spindle_sync(gc_state.modal.spindle, 0.0);
-          } else { spindle_sync(gc_state.modal.spindle, gc_block.values.s); }
+          } else { 
+            spindle_sync(gc_state.modal.spindle, gc_block.values.s); 
+          }
         }
       #else
         spindle_sync(gc_state.modal.spindle, 0.0f);
@@ -1160,11 +1132,14 @@ uint8_t gc_execute_line(char *line)
         system_flag_wco_change();
       }
       break;
-    case NON_MODAL_GO_HOME_0: case NON_MODAL_GO_HOME_1:
+    case NON_MODAL_GO_HOME_0: 
+    case NON_MODAL_GO_HOME_1:
       // Move to intermediate position before going home. Obeys current coordinate system and offsets
       // and absolute and incremental modes.
       pl_data->condition |= PL_COND_FLAG_RAPID_MOTION; // Set rapid motion condition flag.
-      if (axis_command) { mc_line(gc_block.values.xyz, pl_data); }
+      if (axis_command) { 
+        mc_line(gc_block.values.xyz, pl_data); 
+      }
       mc_line(gc_block.values.ijk, pl_data);
       memcpy(gc_state.position, gc_block.values.ijk, N_AXIS*sizeof(float));
       break;

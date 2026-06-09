@@ -145,6 +145,17 @@ xQueueSend(queu_to_send,&send_msg,CAN_TIMEOUT_SEND);
 
   return 0;
 }
+
+volatile uint8_t can_stat_notify = 0;
+
+void can_stat_notify_if_pending(void)
+{
+  if (can_stat_notify) {
+    can_stat_notify = 0;
+    put_can_cmd_stat(cur_state, (uint32_t)curr_coord);
+  }
+}
+
 int put_can_boot_ans(uint8_t cmd,uint8_t state)
 {
 can_msg_t  send_msg;
@@ -332,7 +343,8 @@ switch(data[0]) {
         break;
       case GET_STAT_CMD:
         {
-        uint8_t tmp=get_conc_n();  
+        uint8_t tmp;
+        tmp=get_conc_n();  
         tmp<<=4;
         cur_state&= ~CONC_MASK;
         cur_state |= tmp;
@@ -340,7 +352,6 @@ switch(data[0]) {
         ///put_can_cmd_encoder(resiv_enc);
         if(prev_state!=cur_state){
          prev_state=cur_state;
-         printk("[stat=%x] ",cur_state);
         }
          }
         break;

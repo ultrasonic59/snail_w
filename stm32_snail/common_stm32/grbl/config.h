@@ -91,7 +91,7 @@
 // If homing is enabled, homing init lock sets Grbl into an alarm state upon power up. This forces
 // the user to perform the homing cycle (or override the locks) before doing anything else. This is
 // mainly a safety feature to remind the user to home, since position is unknown to Grbl.
-#define HOMING_INIT_LOCK // Comment to disable
+/// #define HOMING_INIT_LOCK // Comment to disable
 
 // Define the homing cycle patterns with bitmasks. The homing cycle first performs a search mode
 // to quickly engage the limit switches, followed by a slower locate mode, and finished by a short
@@ -232,8 +232,9 @@
 // At power-up or a reset, Grbl will check the limit switch states to ensure they are not active
 // before initialization. If it detects a problem and the hard limits setting is enabled, Grbl will
 // simply message the user to check the limits and enter an alarm state, rather than idle. Grbl will
+
 // not throw an alarm message.
-#define CHECK_LIMITS_AT_INIT
+///#define CHECK_LIMITS_AT_INIT
 
 // ---------------------------------------------------------------------------------------
 // ADVANCED CONFIGURATION OPTIONS:
@@ -264,7 +265,7 @@
 // When a M2 or M30 program end command is executed, most g-code states are restored to their defaults.
 // This compile-time option includes the restoring of the feed, rapid, and spindle speed override values
 // to their default values at program end.
-#define RESTORE_OVERRIDES_AFTER_PROGRAM_END // Default enabled. Comment to disable.
+/// #define RESTORE_OVERRIDES_AFTER_PROGRAM_END // Default enabled. Comment to disable.
 
 // The status report change for Grbl v1.1 and after also removed the ability to disable/enable most data
 // fields from the report. This caused issues for GUI developers, who've had to manage several scenarios
@@ -342,7 +343,7 @@
 // enable pin will output 5V for maximum RPM with 256 intermediate levels and 0V when disabled.
 // NOTE: IMPORTANT for Arduino Unos! When enabled, the Z-limit pin D11 and spindle enable pin D12 switch!
 // The hardware PWM output on pin D11 is required for variable spindle output voltages.
-#define VARIABLE_SPINDLE // Default enabled. Comment to disable.
+///#define VARIABLE_SPINDLE // Default enabled. Comment to disable.
 
 // Used by variable spindle output only. This forces the PWM output to a minimum duty cycle when enabled.
 // The PWM pin will still read 0V when the spindle is disabled. Most users will not need this option, but
@@ -381,6 +382,89 @@
 // performance. If absolutely needed for normal operation, the serial write buffer should be greatly increased
 // to help minimize transmission waiting within the serial write protocol.
 // #define REPORT_ECHO_LINE_RECEIVED // Default disabled. Uncomment to enable.
+
+// Print received G-code lines to UART debug console (printk).
+#define GCODE_CONSOLE_LOG
+
+// CAN stepper debug: print G-code line on input and total GO_CMD count when motion completes.
+///#define CAN_SEND_DEBUG 1
+
+// Wait in st_send_segment_can() until slaves finish the segment (PUT_ACK/PUT_STAT or timeout).
+#define CAN_SEGMENT_WAIT
+
+// Bitmask of axes (1<<X_AXIS, 1<<Y_AXIS, ...) enabled on CAN: GO is sent and segment
+// wait applies only to axes with a set bit; cleared bits skip both send and wait.
+#ifndef CAN_WAIT_AXIS_MASK
+///#define CAN_WAIT_AXIS_MASK  ((1U << X_AXIS) | (1U << Y_AXIS) | (1U << Z_AXIS))
+#define CAN_WAIT_AXIS_MASK  ( (1U << Z_AXIS) )
+
+#endif
+
+#define ST_CAN_AXIS_ENABLED(axis)  (((CAN_WAIT_AXIS_MASK >> (axis)) & 1U) != 0U)
+
+#ifndef CAN_CMD_RSP_TIMEOUT_MS
+#define CAN_CMD_RSP_TIMEOUT_MS  100
+#endif
+
+#ifndef CAN_STAT_POLL_PERIOD_MS
+#define CAN_STAT_POLL_PERIOD_MS  50
+#endif
+
+#ifndef CAN_STAT_WAIT_POLL_MS
+#define CAN_STAT_WAIT_POLL_MS  2
+#endif
+
+#ifndef CAN_STAT_FALLBACK_POLL_MS
+#define CAN_STAT_FALLBACK_POLL_MS  20
+#endif
+
+// Send GO without waiting for motion between batches; wait only at block/cycle end.
+// Slave go_cmd_queue depth is 8; overflow calls go_cmd_run() and drops the active GO.
+#ifndef CAN_PIPELINE_GO
+#define CAN_PIPELINE_GO  0
+#endif
+
+// Background can_poll_task (group GET_STAT every CAN_STAT_POLL_PERIOD_MS).
+#ifndef CAN_BACKGROUND_STAT_POLL
+#define CAN_BACKGROUND_STAT_POLL  0
+#endif
+
+// Coalesce GO_CMD by speed (step_per): one CAN GO per constant-speed run.
+#ifndef CAN_STEP_PER_QUANT
+#define CAN_STEP_PER_QUANT  32U
+#endif
+#ifndef CAN_STEP_PER_QUANT_RAMP
+#define CAN_STEP_PER_QUANT_RAMP  64U
+#endif
+#ifndef CAN_STEP_PER_RAMP_HYST
+#define CAN_STEP_PER_RAMP_HYST  256U
+#endif
+#ifndef CAN_BATCH_MIN_STEPS_RAMP
+#define CAN_BATCH_MIN_STEPS_RAMP  256U
+#endif
+#ifndef CAN_SPEED_ZONE_SHIFT
+#define CAN_SPEED_ZONE_SHIFT  8U
+#endif
+#ifndef CAN_BATCH_MAX_STEPS
+#define CAN_BATCH_MAX_STEPS  65535U
+#endif
+#ifndef CAN_BATCH_IDLE_FLUSH_LOOPS
+#define CAN_BATCH_IDLE_FLUSH_LOOPS  32U
+#endif
+// Scale planner acceleration in CAN prep only (<1 = longer accel/decel on the wire).
+#ifndef CAN_RAMP_ACCEL_SCALE
+#define CAN_RAMP_ACCEL_SCALE  0.2f
+#endif
+// Min prescaled step_per on GO at send time. Match slave MIN_PER in _dima_board.h.
+#ifndef CAN_STEP_PER_SLAVE_MIN
+#define CAN_STEP_PER_SLAVE_MIN  100U
+#endif
+#ifndef CAN_STEP_PER_MIN
+#define CAN_STEP_PER_MIN  10U
+#endif
+#ifndef CAN_STEP_PER_MAX
+#define CAN_STEP_PER_MAX  60000U
+#endif
 
 // Minimum planner junction speed. Sets the default minimum junction speed the planner plans to at
 // every buffer block junction, except for starting from rest and end of the buffer, which are always

@@ -37,7 +37,10 @@
 #define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
-#define MIN_PER         500        
+#define MIN_PER         100
+#ifndef MOT_PER_RAMP_STEPS
+#define MOT_PER_RAMP_STEPS  32U
+#endif
 
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
@@ -483,6 +486,7 @@ extern void hw_board_init(void);
 extern void put_mot_nstep(uint32_t nstep);
 ///extern void set_step_per(uint16_t step_per);
 extern void set_mot_per(uint16_t per);
+extern void mot_go_start(uint8_t dirs, uint16_t per, uint32_t steps);
 
 extern void  set_sleep_mot(uint8_t idat);
 extern void  set_ena_mot(uint8_t idat);

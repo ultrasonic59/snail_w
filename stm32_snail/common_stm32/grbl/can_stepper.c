@@ -7,7 +7,76 @@
 #include "can_stepper.h"
 #include "planner.h"
 #include "settings.h"
+#include "cpu_map.h"
+#include "protocol.h"
 #include "printk.h"
+#include "serial.h"
+
+#ifdef USE_THREADX
+#include "rtos_compat.h"
+#endif
+
+#ifndef CAN_SEND_DEBUG
+#include "can_master.h"
+#endif
+
+#define GO_CMD            0x1U
+#define GET_STAT_CMD      0x2U
+
+#ifndef CAN_SEND_DEBUG
+#define ID_MASTER_CMD     (0x1U << 9)
+#define PUT_STAT_CMD      0x3U
+#define PUT_ACK           0x4U
+#define ST_CAN_AXIS_STATE_MASK  0xFU
+#define ST_CAN_STATE_IDLE  0U
+#define ST_CAN_STATE_MOVE  2U
+
+typedef struct {
+  uint8_t cmd;
+  uint8_t axis;
+  uint8_t state;
+  uint8_t rsv;
+  int32_t coord;
+} put_stat_cmd_t;
+
+typedef struct {
+  uint8_t ack_cmd;
+  uint8_t axis;
+} ack_body_t;
+
+typedef struct {
+  uint8_t cmd;
+  ack_body_t ack;
+} put_ack_t;
+
+static volatile uint8_t st_can_axis_state[N_AXIS];
+static volatile uint8_t st_can_go_ack_mask;
+#endif
+
+typedef struct {
+  uint8_t  cmd;
+  uint8_t  dirs;
+  uint16_t step_per;
+  uint32_t steps;
+} go_cmd_t;
+
+#ifdef CAN_SEND_DEBUG
+static uint32_t can_send_count;
+#endif
+
+static void st_execute_can_segments(void);
+
+static uint32_t can_batch_steps[N_AXIS];
+static uint32_t can_batch_sent_steps[N_AXIS];
+static uint16_t can_batch_step_per;
+static uint16_t can_batch_step_per_max;
+static uint8_t can_batch_ramp_type;
+static uint8_t can_batch_block_index;
+static uint8_t can_batch_dirs;
+static uint8_t can_batch_direction_bits;
+static uint8_t can_batch_active;
+static st_block_t *can_batch_block;
+static float st_can_block_accel;
 
 static st_prep_t prep;
 static stepper_t st;
@@ -67,11 +136,7 @@ void st_wake_up()
 ///???  TIM2->EGR = TIM_EGR_UG;
 ///???  TIM3->EGR = TIM_EGR_UG; // ++
 
-///???  HAL_NVIC_EnableIRQ(TIM2_IRQn);
-///??? HAL_NVIC_EnableIRQ(TIM3_IRQn);
-uint32_t  cycles_per_tick;
-cycles_per_tick=(uint32_t)st.exec_segment->cycles_per_tick - 1;
-printk("\n\r st_wake_up[%d]",cycles_per_tick);
+  busy = false;
 }
 
 static uint8_t st_next_block_index(uint8_t block_index)
@@ -81,6 +146,841 @@ static uint8_t st_next_block_index(uint8_t block_index)
     return(0);
   }
   return(block_index);
+}
+
+static uint32_t *st_axis_counter(uint8_t axis)
+{
+  switch (axis) {
+    case X_AXIS: return &st.counter_x;
+    case Y_AXIS: return &st.counter_y;
+    case Z_AXIS: return &st.counter_z;
+    default:     return &st.counter_z;
+  }
+}
+
+static uint32_t st_axis_step_delta(uint8_t axis)
+{
+#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
+  return st.steps[axis];
+#else
+  return st.exec_block->steps[axis];
+#endif
+}
+
+static void st_init_bresenham_counters(void)
+{
+  uint32_t half = st.exec_block->step_event_count >> 1;
+
+  st.counter_x = st.counter_y = st.counter_z = half;
+}
+
+static void st_bresenham_one_step(uint32_t axis_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    uint32_t *counter = st_axis_counter(idx);
+    uint16_t step_mask = get_step_pin_mask(idx);
+
+    *counter += st_axis_step_delta(idx);
+    if (*counter > st.exec_block->step_event_count) {
+      *counter -= st.exec_block->step_event_count;
+      if (sys.state != STATE_HOMING || (sys.homing_axis_lock & step_mask)) {
+        axis_steps[idx]++;
+        if (st.exec_block->direction_bits & get_direction_pin_mask(idx)) {
+          sys_position[idx]--;
+        } else {
+          sys_position[idx]++;
+        }
+      }
+    }
+  }
+}
+
+static uint8_t st_can_go_dirs_for_axis(uint8_t axis, uint8_t direction_bits)
+{
+  uint8_t dirs = (uint8_t)(direction_bits ^ dir_port_invert_mask);
+
+  if (dirs & (uint8_t)get_direction_pin_mask(axis)) {
+    return 1U;
+  }
+  return 0U;
+}
+
+static void can_send_axis_go(uint8_t axis, uint8_t dirs, uint16_t step_per, uint32_t steps)
+{
+  uint16_t id;
+
+  if (steps == 0) {
+    return;
+  }
+
+  id = (uint16_t)((1U << axis) << 5);
+  dirs = st_can_go_dirs_for_axis(axis, dirs);
+
+#ifdef CAN_SEND_DEBUG
+  can_send_count++;
+  printk("\r\nCAN GO #%lu axis=%u id=0x%X dirs=0x%02X step_per=%u steps=%lu",
+         (unsigned long)can_send_count, (unsigned)axis, (unsigned)id, dirs,
+         (unsigned)step_per, (unsigned long)steps);
+#else
+  go_cmd_t cmd;
+
+  cmd.cmd = GO_CMD;
+  cmd.dirs = dirs;
+  cmd.step_per = step_per;
+  cmd.steps = steps;
+  can_master_tx(id, (const uint8_t *)&cmd, sizeof(cmd));
+#endif
+}
+
+#ifdef CAN_SEND_DEBUG
+void st_can_debug_begin_line(const char *line)
+{
+  can_send_count = 0;
+  if (line != NULL && line[0] != 0) {
+    printk("\r\n>>> %s", line);
+  }
+}
+
+void st_can_send_count_report(void)
+{
+  printk("\r\nCAN total: %lu", (unsigned long)can_send_count);
+}
+
+void st_can_master_poll_stat(void)
+{
+}
+#endif
+
+#ifndef CAN_SEND_DEBUG
+static uint8_t st_can_axis_bit(uint8_t axis)
+{
+  return (uint8_t)(1U << axis);
+}
+
+static uint8_t st_can_axis_idx_from_brd(uint8_t axis_brd)
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (axis_brd == (uint8_t)(1U << idx)) {
+      return idx;
+    }
+  }
+  return 0xFFU;
+}
+
+void st_can_master_poll_stat(void)
+{
+  uint8_t cmd[2];
+  uint8_t brd_mask = (uint8_t)CAN_WAIT_AXIS_MASK;
+
+  if (brd_mask == 0U) {
+    return;
+  }
+
+  cmd[0] = GET_STAT_CMD;
+  cmd[1] = brd_mask;
+  can_master_tx((uint32_t)(brd_mask << 5), cmd, 2U);
+}
+
+static void st_can_rx_process_msg(const can_msg_t *msg)
+{
+  uint8_t idx;
+
+  if (msg->format != STANDARD_FORMAT || msg->id != ID_MASTER_CMD) {
+    return;
+  }
+
+  if (msg->data[0] == PUT_ACK && msg->len >= sizeof(put_ack_t)) {
+    const put_ack_t *ack = (const put_ack_t *)msg->data;
+
+    if (ack->ack.ack_cmd == GO_CMD) {
+      idx = st_can_axis_idx_from_brd(ack->ack.axis);
+      if (idx < N_AXIS) {
+        st_can_go_ack_mask |= st_can_axis_bit(idx);
+        st_can_axis_state[idx] = ST_CAN_STATE_MOVE;
+      }
+    }
+  } else if (msg->data[0] == PUT_STAT_CMD && msg->len >= 4U) {
+    const put_stat_cmd_t *stat = (const put_stat_cmd_t *)msg->data;
+
+    idx = st_can_axis_idx_from_brd(stat->axis);
+    if (idx < N_AXIS) {
+      st_can_axis_state[idx] = stat->state;
+    }
+  }
+}
+#endif
+
+void st_can_on_master_rx(const can_msg_t *msg)
+{
+#ifndef CAN_SEND_DEBUG
+  if (msg != NULL) {
+    st_can_rx_process_msg(msg);
+  }
+#else
+  (void)msg;
+#endif
+}
+
+static uint32_t st_can_segment_time_ms(uint16_t step_per, uint32_t max_steps)
+{
+  uint64_t ticks;
+
+  if (max_steps == 0 || step_per == 0) {
+    return 0;
+  }
+
+  ticks = (uint64_t)max_steps * (uint64_t)step_per * (uint64_t)CAN_STEP_PER_PRESCALE;
+  ticks = (ticks * 1000ULL + (uint64_t)F_TIM - 1ULL) / (uint64_t)F_TIM;
+  if (ticks > 0xFFFFFFFFULL) {
+    return 0xFFFFFFFFUL;
+  }
+  return (uint32_t)ticks;
+}
+
+static void st_can_yield_ms(void)
+{
+#ifndef CAN_SEND_DEBUG
+  st_can_master_service_rx();
+#endif
+#ifdef USE_THREADX
+  taskYIELD();
+#endif
+}
+
+#ifdef CAN_SEGMENT_WAIT
+#ifndef CAN_SEND_DEBUG
+static int st_can_axis_is_idle(uint8_t axis)
+{
+  return (st_can_axis_state[axis] & ST_CAN_AXIS_STATE_MASK) == ST_CAN_STATE_IDLE;
+}
+
+#if CAN_PIPELINE_GO
+static void st_can_send_go_fire(uint8_t move_mask, uint8_t dirs, uint16_t step_per,
+                                const uint32_t axis_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (move_mask & st_can_axis_bit(idx)) {
+      st_can_axis_state[idx] = ST_CAN_STATE_MOVE;
+      can_send_axis_go(idx, dirs, step_per, axis_steps[idx]);
+    }
+  }
+}
+#endif
+
+#if !CAN_PIPELINE_GO
+static void st_can_send_go_one_axis_with_retry(uint8_t axis, uint8_t dirs, uint16_t step_per,
+                                             uint32_t steps)
+{
+  uint32_t last_send;
+  uint8_t axis_bit = st_can_axis_bit(axis);
+  uint8_t retries = 0;
+
+  st_can_go_ack_mask &= (uint8_t)~axis_bit;
+  st_can_axis_state[axis] = ST_CAN_STATE_MOVE;
+  can_send_axis_go(axis, dirs, step_per, steps);
+  last_send = HAL_GetTick();
+
+  for (;;) {
+    st_can_master_service_rx();
+    if (st_can_go_ack_mask & axis_bit) {
+      return;
+    }
+    if (sys.abort) {
+      return;
+    }
+
+    if ((HAL_GetTick() - last_send) >= (uint32_t)CAN_CMD_RSP_TIMEOUT_MS) {
+      if (++retries >= 3U) {
+        return;
+      }
+      can_send_axis_go(axis, dirs, step_per, steps);
+      last_send = HAL_GetTick();
+    }
+
+    protocol_execute_realtime();
+    st_can_yield_ms();
+  }
+}
+
+static void st_can_send_go_with_retry(uint8_t move_mask, uint8_t dirs, uint16_t step_per,
+                                    const uint32_t axis_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  st_can_go_ack_mask = 0;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (!(move_mask & st_can_axis_bit(idx))) {
+      continue;
+    }
+    st_can_send_go_one_axis_with_retry(idx, dirs, step_per, axis_steps[idx]);
+    if (sys.abort) {
+      return;
+    }
+  }
+}
+#endif
+
+static void st_can_wait_axes_move_done(uint8_t move_mask, uint16_t step_per, uint32_t max_steps)
+{
+  uint32_t timeout_ms;
+  uint32_t t0;
+  uint32_t last_fallback_poll = 0;
+
+  timeout_ms = st_can_segment_time_ms(step_per, max_steps);
+  timeout_ms += (timeout_ms >> 2) + 10U;
+  t0 = HAL_GetTick();
+  last_fallback_poll = t0;
+
+  for (;;) {
+    uint8_t idx;
+    uint8_t done = 1;
+
+    st_can_master_service_rx();
+    if (sys.abort) {
+      return;
+    }
+    if (sys_rt_exec_state & EXEC_RESET) {
+      sys.abort = true;
+      return;
+    }
+
+    for (idx = 0; idx < N_AXIS; idx++) {
+      if ((move_mask & st_can_axis_bit(idx)) && !st_can_axis_is_idle(idx)) {
+        done = 0;
+        break;
+      }
+    }
+    if (done) {
+      return;
+    }
+
+    if ((HAL_GetTick() - t0) >= timeout_ms) {
+      return;
+    }
+
+    if ((HAL_GetTick() - last_fallback_poll) >= (uint32_t)CAN_STAT_FALLBACK_POLL_MS) {
+      st_can_master_poll_stat();
+      last_fallback_poll = HAL_GetTick();
+    }
+
+    st_can_yield_ms();
+  }
+}
+#endif
+#endif
+
+static uint16_t st_can_step_per_clamp(uint16_t step_per)
+{
+  if (step_per == 0U || step_per >= 65535U) {
+    return step_per;
+  }
+  if (step_per < CAN_STEP_PER_MIN) {
+    step_per = (uint16_t)CAN_STEP_PER_MIN;
+  }
+#if CAN_STEP_PER_SLAVE_MIN > 0U
+  if (step_per < CAN_STEP_PER_SLAVE_MIN) {
+    step_per = (uint16_t)CAN_STEP_PER_SLAVE_MIN;
+  }
+#endif
+#if CAN_STEP_PER_MAX > 0U
+  if (step_per > CAN_STEP_PER_MAX) {
+    return (uint16_t)CAN_STEP_PER_MAX;
+  }
+#endif
+  return step_per;
+}
+
+static uint16_t st_can_step_per_batch_key_ex(uint16_t step_per, uint16_t quant)
+{
+  uint32_t key;
+
+  if (step_per == 0U || step_per >= 65535U) {
+    return step_per;
+  }
+  if (quant < 1U) {
+    quant = 1U;
+  }
+  key = step_per;
+  if (quant > 1U) {
+    key = (key + quant / 2U) / quant * quant;
+  }
+#if CAN_STEP_PER_SLAVE_MIN > 0U
+  if (key < CAN_STEP_PER_SLAVE_MIN) {
+    key = CAN_STEP_PER_SLAVE_MIN;
+  }
+#endif
+  if (key > 65535U) {
+    key = 65535U;
+  }
+  return (uint16_t)key;
+}
+
+static void st_send_segment_can(uint8_t dirs, uint16_t step_per,
+                                const uint32_t axis_steps[N_AXIS], uint8_t wait_done)
+{
+  uint8_t idx;
+  uint8_t move_mask = 0;
+  uint32_t max_steps = 0;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (axis_steps[idx] == 0 || !ST_CAN_AXIS_ENABLED(idx)) {
+      continue;
+    }
+    move_mask |= st_can_axis_bit(idx);
+    if (axis_steps[idx] > max_steps) {
+      max_steps = axis_steps[idx];
+    }
+  }
+
+  if (move_mask == 0) {
+    return;
+  }
+
+  step_per = st_can_step_per_clamp(step_per);
+
+#ifdef CAN_SEGMENT_WAIT
+#ifndef CAN_SEND_DEBUG
+#if CAN_PIPELINE_GO
+  st_can_send_go_fire(move_mask, dirs, step_per, axis_steps);
+  if (wait_done) {
+    st_can_wait_axes_move_done(move_mask, step_per, max_steps);
+  }
+#else
+  st_can_send_go_with_retry(move_mask, dirs, step_per, axis_steps);
+  if (wait_done) {
+    st_can_wait_axes_move_done(move_mask, step_per, max_steps);
+  }
+#endif
+#else
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (move_mask & st_can_axis_bit(idx)) {
+      can_send_axis_go(idx, dirs, step_per, axis_steps[idx]);
+    }
+  }
+#endif
+#else
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (move_mask & st_can_axis_bit(idx)) {
+      can_send_axis_go(idx, dirs, step_per, axis_steps[idx]);
+    }
+  }
+#endif
+}
+
+static void st_discard_current_segment(void)
+{
+  st.exec_segment = NULL;
+  segment_buffer_tail++;
+  if (segment_buffer_tail == SEGMENT_BUFFER_SIZE) {
+    segment_buffer_tail = 0;
+  }
+}
+
+static uint16_t st_can_step_per_from_segment(const segment_t *seg)
+{
+  uint32_t cycles = seg->cycles_per_tick;
+
+#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
+  cycles <<= seg->amass_level;
+#else
+  if (seg->prescaler == 2) {
+    cycles <<= 3;
+  } else if (seg->prescaler == 3) {
+    cycles <<= 6;
+  }
+#endif
+  if (cycles == 0) {
+    return 65535;
+  }
+  cycles = (cycles + CAN_STEP_PER_PRESCALE - 1U) / CAN_STEP_PER_PRESCALE;
+  if (cycles < 1) {
+    cycles = 1;
+  }
+  if (cycles > 65535) {
+    cycles = 65535;
+  }
+  return (uint16_t)cycles;
+}
+
+static uint8_t st_can_planner_starved(void)
+{
+  return (pl_block == NULL && plan_get_current_block() == NULL) ? 1U : 0U;
+}
+
+static uint32_t st_can_batch_max_axis_steps(void)
+{
+  uint32_t max_steps = 0;
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (ST_CAN_AXIS_ENABLED(idx) && can_batch_steps[idx] > max_steps) {
+      max_steps = can_batch_steps[idx];
+    }
+  }
+  return max_steps;
+}
+
+static uint8_t st_can_dir_key(uint8_t dirs)
+{
+  uint8_t key = 0;
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (ST_CAN_AXIS_ENABLED(idx)) {
+      key |= (uint8_t)(dirs & get_direction_pin_mask(idx));
+    }
+  }
+  return key;
+}
+
+static uint8_t st_can_ramp_zone(uint8_t ramp_type)
+{
+  if (ramp_type == RAMP_CRUISE) {
+    return RAMP_CRUISE;
+  }
+  if (ramp_type == RAMP_ACCEL) {
+    return RAMP_ACCEL;
+  }
+  return RAMP_DECEL;
+}
+
+static float st_can_mm_min_for_step_per(float steps_per_mm, uint16_t step_per)
+{
+  uint32_t cycles;
+
+  if (step_per == 0U || steps_per_mm <= 0.0f) {
+    return 0.0f;
+  }
+  cycles = (uint32_t)step_per * (uint32_t)CAN_STEP_PER_PRESCALE;
+  if (cycles == 0U) {
+    return 0.0f;
+  }
+  return (float)((uint64_t)F_TIM * 60ULL) / ((float)cycles * steps_per_mm);
+}
+
+static void st_can_cap_prep_profile(plan_block_t *pb, st_prep_t *prep_p, float steps_per_mm,
+                                    float block_accel)
+{
+  float cap;
+  float cap_sqr;
+  float exit_sqr;
+  float entry_sqr;
+  float inv_2_accel;
+  float intersect;
+
+  if (CAN_STEP_PER_SLAVE_MIN == 0U) {
+    return;
+  }
+  cap = st_can_mm_min_for_step_per(steps_per_mm, (uint16_t)CAN_STEP_PER_SLAVE_MIN);
+  if (cap <= 0.0f || prep_p->maximum_speed <= cap) {
+    return;
+  }
+
+  inv_2_accel = 0.5f / block_accel;
+  exit_sqr = prep_p->exit_speed * prep_p->exit_speed;
+  entry_sqr = pb->entry_speed_sqr;
+  cap_sqr = cap * cap;
+  prep_p->maximum_speed = cap;
+  prep_p->accelerate_until = pb->millimeters;
+  prep_p->decelerate_after = 0.0f;
+  prep_p->ramp_type = RAMP_ACCEL;
+
+  intersect = 0.5f * (pb->millimeters + inv_2_accel * (entry_sqr - exit_sqr));
+  if (intersect > 0.0f && intersect < pb->millimeters) {
+    prep_p->decelerate_after = inv_2_accel * (cap_sqr - exit_sqr);
+    if (prep_p->decelerate_after < intersect) {
+      prep_p->accelerate_until -= inv_2_accel * (cap_sqr - entry_sqr);
+      if (entry_sqr >= cap_sqr - 0.001f) {
+        prep_p->ramp_type = RAMP_CRUISE;
+      }
+    } else {
+      prep_p->accelerate_until = intersect;
+      prep_p->decelerate_after = intersect;
+      prep_p->maximum_speed = sqrtf(2.0f * block_accel * intersect + exit_sqr);
+      if (prep_p->maximum_speed > cap) {
+        prep_p->maximum_speed = cap;
+      }
+    }
+  } else if (intersect <= 0.0f) {
+    prep_p->ramp_type = RAMP_DECEL;
+  }
+}
+
+static uint8_t st_can_batch_should_idle_flush(void)
+{
+  if (!can_batch_active || st_can_batch_max_axis_steps() == 0U) {
+    return 0U;
+  }
+  if (st_can_planner_starved()) {
+    return 0U;
+  }
+  if (can_batch_ramp_type == RAMP_CRUISE || can_batch_ramp_type == RAMP_DECEL) {
+    return 1U;
+  }
+  return 0U;
+}
+
+static uint8_t st_can_batch_key_change_flush(uint8_t seg_zone, uint16_t seg_key)
+{
+  uint32_t batch_steps;
+
+  batch_steps = st_can_batch_max_axis_steps();
+  if (batch_steps >= (uint32_t)CAN_BATCH_MIN_STEPS_RAMP) {
+    return 1U;
+  }
+  if (can_batch_ramp_type == RAMP_ACCEL && seg_key < can_batch_step_per) {
+    if (((uint32_t)can_batch_step_per - (uint32_t)seg_key) >= (uint32_t)CAN_STEP_PER_RAMP_HYST) {
+      return 1U;
+    }
+    return 0U;
+  }
+  if (can_batch_ramp_type == RAMP_DECEL && seg_key > can_batch_step_per_max) {
+    if (((uint32_t)seg_key - (uint32_t)can_batch_step_per_max) >= (uint32_t)CAN_STEP_PER_RAMP_HYST) {
+      return 1U;
+    }
+    return 0U;
+  }
+  return 1U;
+}
+
+static uint8_t st_can_batch_need_flush(uint8_t seg_dirs, uint8_t seg_block_index)
+{
+  if (!can_batch_active) {
+    return 0;
+  }
+  if (st_can_batch_max_axis_steps() >= CAN_BATCH_MAX_STEPS) {
+    return 1U;
+  }
+  if (st_can_dir_key(seg_dirs) != can_batch_dirs) {
+    return 1U;
+  }
+  if (seg_block_index != can_batch_block_index) {
+    return 1U;
+  }
+  return 0U;
+}
+
+static void st_can_batch_clamp_to_planner(uint32_t send_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    send_steps[idx] = can_batch_steps[idx];
+  }
+  if (can_batch_block == NULL) {
+    return;
+  }
+  for (idx = 0; idx < N_AXIS; idx++) {
+    uint32_t rem = can_batch_block->planner_steps[idx];
+
+    if (rem > can_batch_sent_steps[idx]) {
+      rem -= can_batch_sent_steps[idx];
+    } else {
+      rem = 0;
+    }
+    if (send_steps[idx] > rem) {
+      send_steps[idx] = rem;
+    }
+    can_batch_steps[idx] -= send_steps[idx];
+  }
+}
+
+static uint16_t st_can_batch_send_step_per(void)
+{
+  if (can_batch_ramp_type == RAMP_DECEL) {
+    return can_batch_step_per_max;
+  }
+  return can_batch_step_per;
+}
+
+static void st_can_batch_reset(void)
+{
+  memset(can_batch_steps, 0, sizeof(can_batch_steps));
+  can_batch_step_per = 0;
+  can_batch_step_per_max = 0;
+  can_batch_ramp_type = 0;
+  can_batch_dirs = 0;
+  can_batch_direction_bits = 0;
+  can_batch_active = 0;
+  can_batch_block = NULL;
+}
+
+static void st_can_batch_note_sent(const uint32_t send_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    can_batch_sent_steps[idx] += send_steps[idx];
+  }
+}
+
+static void st_can_batch_flush(uint8_t wait_done)
+{
+  uint32_t send_steps[N_AXIS];
+  uint8_t idx;
+  uint8_t has_send = 0U;
+  uint8_t has_remain = 0U;
+
+  if (!can_batch_active) {
+    return;
+  }
+
+  memset(send_steps, 0, sizeof(send_steps));
+  st_can_batch_clamp_to_planner(send_steps);
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (send_steps[idx] != 0U && ST_CAN_AXIS_ENABLED(idx)) {
+      has_send = 1U;
+      break;
+    }
+  }
+  if (has_send) {
+    st_send_segment_can(can_batch_direction_bits, st_can_batch_send_step_per(), send_steps, wait_done);
+    st_can_batch_note_sent(send_steps);
+  }
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (can_batch_steps[idx] != 0U) {
+      has_remain = 1U;
+      break;
+    }
+  }
+  if (!has_remain) {
+    st_can_batch_reset();
+  }
+}
+
+void st_can_batch_flush_if_pending(void)
+{
+  if (can_batch_active) {
+    st_can_batch_flush(1U);
+  }
+}
+
+/* Execute prepared segments: Bresenham -> GO_CMD on CAN (one packet per axis). */
+static void st_execute_can_segments(void)
+{
+  uint32_t axis_steps[N_AXIS];
+
+  if (busy) {
+    return;
+  }
+  busy = true;
+
+  while (segment_buffer_head != segment_buffer_tail) {
+    uint8_t seg_dirs;
+    uint16_t n;
+    uint8_t idx;
+
+    if (st.exec_segment == NULL) {
+      st.exec_segment = &segment_buffer[segment_buffer_tail];
+      st.step_count = st.exec_segment->n_step;
+      if (st.step_count == 0) {
+        st_discard_current_segment();
+        continue;
+      }
+
+      if (st.exec_block_index != st.exec_segment->st_block_index) {
+        st.exec_block_index = st.exec_segment->st_block_index;
+        st.exec_block = &st_block_buffer[st.exec_block_index];
+        st_init_bresenham_counters();
+      }
+
+#ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
+      {
+        uint8_t amass_idx;
+        for (amass_idx = 0; amass_idx < N_AXIS; amass_idx++) {
+          st.steps[amass_idx] = st.exec_block->steps[amass_idx] >> st.exec_segment->amass_level;
+        }
+      }
+#endif
+
+#ifdef VARIABLE_SPINDLE
+      spindle_set_speed(st.exec_segment->spindle_pwm);
+#endif
+    }
+
+    if (sys_probe_state == PROBE_ACTIVE) {
+      probe_state_monitor();
+    }
+
+    memset(axis_steps, 0, sizeof(axis_steps));
+    n = st.step_count;
+    while (n--) {
+      st_bresenham_one_step(axis_steps);
+    }
+
+    seg_dirs = st.exec_block->direction_bits;
+    {
+      uint16_t seg_step_per = st.exec_segment->can_step_per;
+      uint8_t seg_ramp_type = st.exec_segment->ramp_type;
+      uint8_t seg_zone = st_can_ramp_zone(seg_ramp_type);
+      uint16_t seg_quant = (seg_zone == RAMP_CRUISE) ? CAN_STEP_PER_QUANT : CAN_STEP_PER_QUANT_RAMP;
+      uint16_t seg_key = st_can_step_per_batch_key_ex(seg_step_per, seg_quant);
+      uint8_t seg_block_index = st.exec_segment->st_block_index;
+      uint8_t do_flush = 0U;
+      uint8_t flush_wait = 0U;
+
+      if (can_batch_active) {
+        if (st_can_batch_need_flush(seg_dirs, seg_block_index)) {
+          do_flush = 1U;
+          flush_wait = 1U;
+        } else if (seg_zone != can_batch_ramp_type) {
+          do_flush = 1U;
+          flush_wait = 0U;
+        } else if (seg_key != can_batch_step_per) {
+          if (st_can_batch_key_change_flush(seg_zone, seg_key)) {
+            do_flush = 1U;
+            flush_wait = 0U;
+          } else if (seg_zone == RAMP_DECEL && seg_key > can_batch_step_per_max) {
+            can_batch_step_per_max = seg_key;
+          }
+        }
+        if (do_flush) {
+          st_can_batch_flush(flush_wait);
+        }
+      }
+      for (idx = 0; idx < N_AXIS; idx++) {
+        if (ST_CAN_AXIS_ENABLED(idx)) {
+          can_batch_steps[idx] += axis_steps[idx];
+        }
+      }
+      if (!can_batch_active) {
+        if (seg_block_index != can_batch_block_index) {
+          memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
+          can_batch_block_index = seg_block_index;
+        }
+        can_batch_block = st.exec_block;
+        can_batch_step_per = seg_key;
+        can_batch_step_per_max = seg_key;
+        can_batch_ramp_type = seg_zone;
+        can_batch_dirs = st_can_dir_key(seg_dirs);
+        can_batch_direction_bits = seg_dirs;
+        can_batch_active = 1;
+      } else if (seg_zone != RAMP_CRUISE && seg_key > can_batch_step_per_max) {
+        can_batch_step_per_max = seg_key;
+      }
+    }
+
+    st_discard_current_segment();
+  }
+
+  if (segment_buffer_head == segment_buffer_tail) {
+    if (st_can_batch_should_idle_flush()) {
+      st_can_batch_flush(0U);
+    }
+    if (st_can_planner_starved()) {
+      st_can_batch_flush_if_pending();
+      st_go_idle();
+      system_set_exec_state_flag(EXEC_CYCLE_STOP);
+    }
+    busy = false;
+  }
 }
 
 /* Prepares step segment buffer. Continuously called from main program.
@@ -98,9 +998,8 @@ static uint8_t st_next_block_index(uint8_t block_index)
 */
 void st_prep_buffer()
 {
-  // Block step prep buffer, while in a suspend state and there is no suspend motion to execute.
-  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) { 
-    return; 
+  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) {
+    goto can_execute_exit;
   }
 
   
@@ -112,7 +1011,7 @@ void st_prep_buffer()
       // Query planner for a queued block
       if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) { pl_block = plan_get_system_motion_block(); }
       else { pl_block = plan_get_current_block(); }
-      if (pl_block == NULL) { return; } // No planner blocks. Exit.
+      if (pl_block == NULL) { goto can_execute_exit; } // No planner blocks. Exit.
 
       // Check if we need to only recompute the velocity profile or load a new block.
       if (prep.recalculate_flag & PREP_FLAG_RECALCULATE) {
@@ -158,6 +1057,11 @@ void st_prep_buffer()
         // Initialize segment buffer data for generating the segments.
         prep.steps_remaining = (float)pl_block->step_event_count;
         prep.step_per_mm = prep.steps_remaining/pl_block->millimeters;
+        st_prep_block->feed_rate = pl_block->programmed_rate;
+        st_prep_block->steps_per_mm = pl_block->step_event_count / pl_block->millimeters;
+        for (idx=0; idx<N_AXIS; idx++) {
+          st_prep_block->planner_steps[idx] = pl_block->steps[idx];
+        }
         prep.req_mm_increment = REQ_MM_INCREMENT_SCALAR/prep.step_per_mm;
         prep.dt_remainder = 0.0; // Reset for new segment block
 
@@ -191,7 +1095,12 @@ void st_prep_buffer()
 			 hold, override the planner velocities and decelerate to the target exit speed.
 			*/
 			prep.mm_complete = 0.0; // Default velocity profile complete at 0.0mm from end of block.
-			float inv_2_accel = 0.5/pl_block->acceleration;
+			if (sys.step_control & STEP_CONTROL_EXECUTE_HOLD) {
+        st_can_block_accel = pl_block->acceleration;
+      } else {
+        st_can_block_accel = pl_block->acceleration * CAN_RAMP_ACCEL_SCALE;
+      }
+			float inv_2_accel = 0.5f / st_can_block_accel;
 			if (sys.step_control & STEP_CONTROL_EXECUTE_HOLD) { // [Forced Deceleration to Zero Velocity]
 				// Compute velocity profile parameters for a feed hold in-progress. This profile overrides
 				// the planner block profile, enforcing a deceleration to zero speed.
@@ -261,7 +1170,7 @@ void st_prep_buffer()
 						} else { // Triangle type
 							prep.accelerate_until = intersect_distance;
 							prep.decelerate_after = intersect_distance;
-							prep.maximum_speed = sqrt(2.0*pl_block->acceleration*intersect_distance+exit_speed_sqr);
+							prep.maximum_speed = sqrtf(2.0f * st_can_block_accel * intersect_distance + exit_speed_sqr);
 						}
 					} else { // Deceleration-only type
             prep.ramp_type = RAMP_DECEL;
@@ -274,6 +1183,11 @@ void st_prep_buffer()
 					prep.maximum_speed = prep.exit_speed;
 				}
 			}
+
+      if (!(sys.step_control & STEP_CONTROL_EXECUTE_HOLD)) {
+        st_prep_block = &st_block_buffer[prep.st_block_index];
+        st_can_cap_prep_profile(pl_block, &prep, st_prep_block->steps_per_mm, st_can_block_accel);
+      }
       
       #ifdef VARIABLE_SPINDLE
         bit_true(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM); // Force update whenever updating block.
@@ -312,7 +1226,7 @@ void st_prep_buffer()
     do {
       switch (prep.ramp_type) {
         case RAMP_DECEL_OVERRIDE:
-          speed_var = pl_block->acceleration*time_var;
+          speed_var = st_can_block_accel * time_var;
           if (prep.current_speed-prep.maximum_speed <= speed_var) {
             // Cruise or cruise-deceleration types only for deceleration override.
             mm_remaining = prep.accelerate_until;
@@ -327,7 +1241,7 @@ void st_prep_buffer()
         case RAMP_ACCEL:
           // NOTE: Acceleration ramp only computes during first do-while loop.
         	// dT = A*dT
-          speed_var = pl_block->acceleration*time_var;
+          speed_var = st_can_block_accel * time_var;
           // dX = dX - (0.5*A*dT? + V0*dT)
           mm_remaining -= time_var*(prep.current_speed + 0.5*speed_var);
           if (mm_remaining < prep.accelerate_until) { // End of acceleration ramp.
@@ -357,7 +1271,7 @@ void st_prep_buffer()
           break;
         default: // case RAMP_DECEL:
           // NOTE: mm_var used as a misc worker variable to prevent errors when near zero speed.
-          speed_var = pl_block->acceleration*time_var; // Used as delta speed (mm/min)
+          speed_var = st_can_block_accel * time_var; // Used as delta speed (mm/min)
           if (prep.current_speed > speed_var) { // Check if at or below zero speed.
             // Compute distance from end of segment to end of block.
             mm_var = mm_remaining - time_var*(prep.current_speed - 0.5*speed_var); // (mm)
@@ -433,7 +1347,7 @@ void st_prep_buffer()
         #ifdef PARKING_ENABLE
           if (!(prep.recalculate_flag & PREP_FLAG_PARKING)) { prep.recalculate_flag |= PREP_FLAG_HOLD_PARTIAL_BLOCK; }
         #endif
-        return; // Segment not generated, but current step data still retained.
+        goto can_execute_exit; // Segment not generated, but current step data still retained.
       }
     }
 
@@ -482,6 +1396,9 @@ void st_prep_buffer()
       }
     #endif
 
+    prep_segment->can_step_per = st_can_step_per_from_segment(prep_segment);
+    prep_segment->ramp_type = prep.ramp_type;
+
     // Segment complete! Increment segment buffer indices, so stepper ISR can immediately execute it.
     segment_buffer_head = segment_next_head;
     if ( ++segment_next_head == SEGMENT_BUFFER_SIZE ) { segment_next_head = 0; }
@@ -502,18 +1419,31 @@ void st_prep_buffer()
         #ifdef PARKING_ENABLE
           if (!(prep.recalculate_flag & PREP_FLAG_PARKING)) { prep.recalculate_flag |= PREP_FLAG_HOLD_PARTIAL_BLOCK; }
         #endif
-        return; // Bail!
+        goto can_execute_exit; // Bail!
       } else { // End of planner block
         // The planner block is complete. All steps are set to be executed in the segment buffer.
         if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) {
           bit_true(sys.step_control,STEP_CONTROL_END_MOTION);
-          return;
+          goto can_execute_exit;
         }
         pl_block = NULL; // Set pointer to indicate check and load next planner block.
         plan_discard_current_block();
       }
     }
 
+  }
+
+can_execute_exit:
+  st_execute_can_segments();
+}
+
+
+void st_update_plan_block_parameters()
+{
+  if (pl_block != NULL) {
+    prep.recalculate_flag |= PREP_FLAG_RECALCULATE;
+    pl_block->entry_speed_sqr = prep.current_speed * prep.current_speed;
+    pl_block = NULL;
   }
 }
 
@@ -600,6 +1530,24 @@ void st_reset()
   segment_buffer_head = 0; // empty = tail
   segment_next_head = 1;
   busy = false;
+
+  st_can_batch_reset();
+  can_batch_block_index = 0;
+  memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
+
+#ifndef CAN_SEND_DEBUG
+  {
+    uint8_t idx;
+    for (idx = 0; idx < N_AXIS; idx++) {
+      st_can_axis_state[idx] = ST_CAN_STATE_IDLE;
+    }
+    st_can_go_ack_mask = 0;
+  }
+#endif
+
+#ifdef CAN_SEND_DEBUG
+  can_send_count = 0;
+#endif
 
   st_generate_step_dir_invert_masks();
   st.dir_outbits = dir_port_invert_mask; // Initialize direction bits to default.

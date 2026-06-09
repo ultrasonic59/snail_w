@@ -3,10 +3,18 @@
 #include <stdint.h>
 #include "config.h"
 #include "nuts_bolts.h"
+#include "can.h"
+
+void st_can_on_master_rx(const can_msg_t *msg);
+void st_can_master_poll_stat(void);
+void st_can_batch_flush_if_pending(void);
 
 #ifndef SEGMENT_BUFFER_SIZE
   #define SEGMENT_BUFFER_SIZE 6
 #endif
+
+// GO_CMD step_per is sent in prescaled F_TIM ticks; slave restores: period = step_per * PRESCALE.
+#define CAN_STEP_PER_PRESCALE  64U
 
 typedef struct {
   uint8_t st_block_index;  // Index of stepper common data block being prepped
@@ -48,6 +56,9 @@ typedef struct st_block_s{
   uint32_t steps[N_AXIS];
   uint32_t step_event_count;
   uint8_t direction_bits;
+  float feed_rate;     // programmed_rate from planner (F word, mm/min)
+  float steps_per_mm;  // planner step_event_count / millimeters
+  uint32_t planner_steps[N_AXIS]; // pl_block->steps[] (physical steps per axis)
   #ifdef ENABLE_DUAL_AXIS
     uint8_t direction_bits_dual;
   #endif
@@ -59,6 +70,8 @@ typedef struct st_block_s{
 typedef struct segment_s{
   uint16_t n_step;           // Number of step events to be executed for this segment
   uint32_t cycles_per_tick;  // Step distance traveled per ISR tick, aka step rate.
+  uint16_t can_step_per;     // Prescaled timer period for GO_CMD (from segment speed profile)
+  uint8_t  ramp_type;        // Velocity ramp phase (RAMP_ACCEL/CRUISE/DECEL) for GO batching
   uint8_t  st_block_index;   // Stepper block data index. Uses this information to execute this segment.
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     uint8_t amass_level;    // Indicates AMASS level for the ISR to execute this segment
@@ -72,14 +85,9 @@ typedef struct segment_s{
 
 typedef struct stepper_s_{
   // Used by the bresenham line algorithm
-  uint32_t counter_x,        // Counter variables for the bresenham line tracer
+  uint32_t counter_x,
            counter_y,
-           counter_z,
-    	   counter_a,
-	   counter_b,
-	   counter_c,
-	   counter_u,
-	   counter_v;
+           counter_z;
 
   #ifdef STEP_PULSE_DELAY
     uint8_t step_bits;  // Stores out_bits output to complete the step pulse delay

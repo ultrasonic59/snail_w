@@ -1,34 +1,325 @@
 # ninja log v5
-740	790	8026282277560144	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
-331	738	8026282276765772	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	f361f60c356efc50
-518	830	8026282277926315	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	f475c5c561eb3750
-566	804	8026282277510144	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	dd9dc7c7a44ae1d
-30	539	8026282274957179	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	5f05db331850f35c
-393	515	8026282274751461	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	af78f11ea4295d5
-26	390	8026282273517909	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	fea457cf85047178
-299	480	8026282274431321	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	f6bd6ec8a25cfa8c
-2	303	8026282272605487	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	3b74f0d44c1ec0ce
-13	298	8026282272605487	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	e67f407a68a1fa4
-11	447	8026282274049315	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	ed6f6cc0c17f8758
-48	487	8026282274455398	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	329d3ff9324b7bd2
-5	327	8026282272850702	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	6ac1dccb6ed796b2
-489	698	8026282276578740	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	5f64725832cefb02
-17	508	8026282274465396	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	cb9b23a57be5b24b
-483	706	8026282276480589	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	181a83482ea28597
-306	564	8026282275251026	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	b00b7d0036b40c49
-338	611	8026282275697044	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	85b82097f9ae45c2
-511	844	8026282278006378	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	4dd5ba13c2da868f
-414	672	8026282276350514	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	e0dfbd68e00e3f5
-710	765	8026282277305534	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
-57	714	8026282276491196	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/hdlc.o	d900080f11c01df3
-43	859	8026282278151639	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	f3cbba957403f2bc
-541	788	8026282277448514	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	1e51102f80618c5e
-614	920	8026282278816776	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	61e7f4b9056cb8a0
-450	744	8026282276951991	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	e9aafa243ba414b2
-701	952	8026282279166769	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	dc10ea88bb1cc132
-717	932	8026282278956776	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	5fd351eb601bd9f4
-676	1036	8026282279966958	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	7abe1757f7e70fcd
-1040	1141	8026282281077214	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	89ac908bee8359c8
-1143	1154	8026282281277090	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
-40	412	8026282273732473	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/fcs16.o	3f0c3d2930645c8d
-22	335	8026282272900898	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/uart.o	33e4c4ebfb79f369
+570	601	7994472839622071	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+244	538	7994472838858427	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	f361f60c356efc50
+420	621	7994472839777951	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	f475c5c561eb3750
+22	419	7994472837748720	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	5f05db331850f35c
+293	377	7994472837357564	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	af78f11ea4295d5
+510	656	7994472840169694	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	dd9dc7c7a44ae1d
+8	168	7994472835300365	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	fea457cf85047178
+169	284	7994472836407122	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	f6bd6ec8a25cfa8c
+5	241	7994472836017938	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	3b74f0d44c1ec0ce
+12	343	7994472836917883	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	ed6f6cc0c17f8758
+18	308	7994472836554377	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	e67f407a68a1fa4
+38	437	7994472837863887	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	329d3ff9324b7bd2
+1	314	7994472836523902	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	6ac1dccb6ed796b2
+365	567	7994472838973548	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	5f64725832cefb02
+10	362	7994472837082081	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	cb9b23a57be5b24b
+379	573	7994472839174172	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	181a83482ea28597
+286	458	7994472838126932	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	b00b7d0036b40c49
+311	529	7994472838743263	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	85b82097f9ae45c2
+338	593	7994472839333995	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	4dd5ba13c2da868f
+316	507	7994472838602202	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	e0dfbd68e00e3f5
+540	576	7994472839366331	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+29	620	7994472839667270	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	f3cbba957403f2bc
+33	501	7994472838552122	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/hdlc.o	d900080f11c01df3
+503	696	7994472840555912	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	1e51102f80618c5e
+460	708	7994472840625993	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	61e7f4b9056cb8a0
+345	559	7994472839013524	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	e9aafa243ba414b2
+562	745	7994472841068467	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	dc10ea88bb1cc132
+532	711	7994472840681097	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	5fd351eb601bd9f4
+439	762	7994472841216062	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	7abe1757f7e70fcd
+764	847	7994472842083202	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	89ac908bee8359c8
+848	902	7994472842699367	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+26	334	7994472836847934	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/fcs16.o	3f0c3d2930645c8d
+15	290	7994472836357110	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/uart.o	33e4c4ebfb79f369
+74	320	8024565192403385	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	e67f407a68a1fa4
+72	350	8024565192708172	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	fea457cf85047178
+1	370	8024565192898250	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	3b74f0d44c1ec0ce
+67	389	8024565193060327	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	6ac1dccb6ed796b2
+372	455	8024565193785504	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	af78f11ea4295d5
+69	477	8024565193885503	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/uart.o	33e4c4ebfb79f369
+87	483	8024565193997355	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	329d3ff9324b7bd2
+77	489	8024565193997355	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	cb9b23a57be5b24b
+81	513	8024565194287458	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	ed6f6cc0c17f8758
+94	549	8024565194683637	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/fcs16.o	3f0c3d2930645c8d
+352	567	8024565194793664	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	b00b7d0036b40c49
+84	572	8024565194763678	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	5f05db331850f35c
+391	622	8024565195408826	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	85b82097f9ae45c2
+458	642	8024565195501379	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	f6bd6ec8a25cfa8c
+320	648	8024565195458856	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	f361f60c356efc50
+90	653	8024565195581517	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/hdlc.o	d900080f11c01df3
+480	667	8024565195681562	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	181a83482ea28597
+486	728	8024565196081479	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	5f64725832cefb02
+669	769	8024565196907207	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+492	785	8024565196917213	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	4dd5ba13c2da868f
+551	798	8024565197131117	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	e0dfbd68e00e3f5
+644	814	8024565197271206	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	dd9dc7c7a44ae1d
+772	819	8024565197416334	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+515	820	8024565197271206	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	e9aafa243ba414b2
+100	849	8024565197686290	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	f3cbba957403f2bc
+569	864	8024565197756311	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	1e51102f80618c5e
+625	877	8024565197938151	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	f475c5c561eb3750
+655	901	8024565198228266	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	dc10ea88bb1cc132
+649	916	8024565198383334	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	61e7f4b9056cb8a0
+731	927	8024565198483321	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	5fd351eb601bd9f4
+574	961	8024565198813316	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	7abe1757f7e70fcd
+963	1117	8024565200404482	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	89ac908bee8359c8
+1119	1167	8024565200964476	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+15	108	8024565487675707	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/list.o	fea457cf85047178
+27	128	8024565487765732	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/fcs16.o	3f0c3d2930645c8d
+10	150	8024565488009377	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/heap_2.o	e67f407a68a1fa4
+22	158	8024565487935741	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/port.o	329d3ff9324b7bd2
+1	165	8024565488009377	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	3b74f0d44c1ec0ce
+4	194	8024565488522168	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	6ac1dccb6ed796b2
+8	201	8024565488552131	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/uart.o	33e4c4ebfb79f369
+12	218	8024565488692159	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	ed6f6cc0c17f8758
+30	235	8024565488892115	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/queue.o	5f05db331850f35c
+6	241	8024565488902125	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	cb9b23a57be5b24b
+152	258	8024565489063694	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	af78f11ea4295d5
+33	264	8024565489103688	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/hdlc.o	d900080f11c01df3
+130	276	8024565489263671	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	f6bd6ec8a25cfa8c
+18	324	8024565489808864	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/tasks.o	f3cbba957403f2bc
+161	343	8024565489988870	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	b00b7d0036b40c49
+110	350	8024565489988870	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	85b82097f9ae45c2
+204	369	8024565490261757	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	e0dfbd68e00e3f5
+197	377	8024565490171730	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	181a83482ea28597
+353	384	8024565490361785	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/FreeRTOS_1129108015262781380.dir/portasm.o	be64692ac4be5fa6
+260	399	8024565490341767	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	dd9dc7c7a44ae1d
+244	407	8024565490622006	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	5f64725832cefb02
+386	410	8024565490722009	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	e9dd0434f94eabee
+238	424	8024565490812001	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	e9aafa243ba414b2
+168	445	8024565491061990	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	f361f60c356efc50
+278	476	8024565491342051	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	1e51102f80618c5e
+219	479	8024565491362053	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	4dd5ba13c2da868f
+265	489	8024565491462036	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	61e7f4b9056cb8a0
+346	522	8024565491824115	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	f475c5c561eb3750
+372	535	8024565491964120	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	5fd351eb601bd9f4
+380	556	8024565492155598	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	dc10ea88bb1cc132
+326	598	8024565492580692	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	7abe1757f7e70fcd
+600	662	8024565493275652	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	89ac908bee8359c8
+663	672	8024565493405747	D:/proj/velograph/snail_w/stm32_snail/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	1a6aa4766874c35e
+11	109	8027313309977828	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/retarget.o	7a3ec1dfc6dd3d3e
+1	159	8027313310459949	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/app_main.o	e205a48ebdb7e52b
+32	196	8027313310825891	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/app_sys_stm32f2xx.o	9de6d702e46703f5
+7	220	8027313310962129	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/my_misc.o	4c4a66b14081ce13
+3	227	8027313311007297	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/dima_board.o	799c12ac919f0f74
+15	239	8027313311112604	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/can_drv.o	beae009ba1989e0a
+9	248	8027313311102589	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/zzzz.o	514cbbf95c0cedfd
+19	253	8027313311241631	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/dbg_456133768103443040.dir/printk1.o	e90719da6eedd704
+162	272	8027313311506463	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/fcs16.o	2714462cde37a0e3
+22	280	8027313311379938	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/uart.o	e95c9b158d1589af
+24	301	8027313311707814	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/drv_9119342922082540178.dir/app_can_cmds.o	1f2d3602990dc298
+27	307	8027313311842947	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_can.o	4d4f4722d2912ac4
+111	328	8027313312112358	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/misc.o	1977a0a0b30beddb
+5	334	8027313312082226	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/Board_7221520210927654578.dir/motor_tsk.o	bd7232a51284e3ff
+242	361	8027313312458505	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_disable.o	a515b5758974a31b
+229	367	8027313312458505	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_event_unfilter.o	7b71d4a8fee81e74
+222	372	8027313312478511	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_interrupt_control.o	4c44a5ce6a41f84
+249	390	8027313312638982	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_isr_enter_insert.o	fee48b309068a1ed
+256	398	8027313312764035	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_initialize.o	8b76431bd96f6802
+275	414	8027313312879359	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_event_filter.o	8070fad5c53d07b5
+281	420	8027313313029699	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_enable.o	d8260535f6eab7e6
+304	438	8027313313129590	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_buffer_full_notify.o	bbc3cbf46637192f
+330	444	8027313313254693	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_pool_info_get.o	ce5d9932cac447c9
+310	463	8027313313504008	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_isr_exit_insert.o	b825cec012aec992
+335	482	8027313313623552	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_object_unregister.o	13ad8fc3727d5d96
+199	487	8027313313633562	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/hdlc_18177243310313440249.dir/hdlc.o	db06ba234e61047c
+374	506	8027313313895538	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_pool_create.o	c01904616cf89ae9
+364	514	8027313313955503	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_user_event_insert.o	cc2729e2f8209995
+369	531	8027313314055433	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_allocate.o	a63472f6f7ec4965
+393	537	8027313314065417	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_pool_delete.o	753def606fd925ba
+400	542	8027313314065417	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_trace_object_register.o	f7e26c9a7c7ab195
+416	560	8027313314471226	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_pool_prioritize.o	3ae85d14094a8bb0
+422	565	8027313314471226	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_block_release.o	22aeb471630b1717
+447	582	8027313314696749	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_pool_prioritize.o	fdaf27bc236c453d
+441	600	8027313314839682	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_allocate.o	6ad514943ea5646e
+483	618	8027313315010263	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_info_get.o	add0da056a191143
+465	624	8027313314980197	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_pool_delete.o	4f2302abbd1703f4
+489	630	8027313315020267	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_get.o	260f9f4528349e9c
+509	647	8027313315180578	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_delete.o	3858d63061c0339e
+516	653	8027313315240650	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_pool_info_get.o	690ad71bdc64f18d
+539	672	8027313315535904	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_pool_create.o	d18da2e2f01b9b3b
+534	678	8027313315535904	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_create.o	5ca6d8eb65ba24d2
+543	695	8027313315724875	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_byte_release.o	6039b14ac9c1c3e9
+562	701	8027313315832812	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_set_notify.o	bac102d4296b4813
+584	716	8027313315946210	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_info_get.o	9b385cbb313e3c90
+567	732	8027313316162786	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_event_flags_set.o	88e7abcd3c7f9e72
+602	750	8027313316339080	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_put.o	d34448472a37a372
+631	758	8027313316419659	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_create.o	4d7aa81bdd515f8e
+621	774	8027313316444208	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_create.o	51668b95e3c8dce7
+626	780	8027313316514276	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_prioritize.o	760168181dacc093
+649	798	8027313316730500	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_delete.o	f4188bc43d5a12c5
+656	804	8027313316770443	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_mutex_get.o	e09d949cebcae501
+674	809	8027313316864067	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_flush.o	d69f08d0a63b75eb
+697	835	8027313317224681	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_delete.o	9d3d189266d809a3
+680	840	8027313317224681	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_front_send.o	ba82a9a1f1e51a8f
+718	857	8027313317359945	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_terminate.o	f9e2266bbf8fc3eb
+734	864	8027313317450534	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_activate.o	26c9dae319a4a232
+837	869	8027313317569616	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_context_save.o	8ae124ae458a0755
+842	873	8027313317650284	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_context_restore.o	3bcba092cadf35e7
+703	889	8027313317569616	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_delete.o	f2dc944ba3de2cec
+754	893	8027313317559609	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_deactivate.o	561cb777b51b9917
+759	901	8027313317681071	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_suspend.o	5c5ccccfa3d00af8
+866	905	8027313317854192	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_interrupt_control.o	a195079653a358a9
+875	910	8027313317939086	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_initialize_low_level.o	a274284b4843e3f6
+891	917	8027313318082145	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_interrupt_disable.o	5b2010d2307eba9a
+897	926	8027313318220134	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/startup_stm32f2xx.o	1830c843fbd47baf
+776	933	8027313318105027	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_time_slice_change.o	36aa87d684d7059a
+783	950	8027313318331020	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_change.o	78533e7ddf6d7f1c
+801	967	8027313318492558	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_wait_abort.o	4f6ef0fd527348ef
+806	990	8027313318777948	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_create.o	714b105db09ee11a
+859	996	8027313318798084	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_timer_info_get.o	99a84d61e0e1c6e1
+907	1021	8027313319116148	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_send.o	ca13840986f1fea5
+903	1042	8027313319199815	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_create.o	37983939d61a3939
+912	1050	8027313319214527	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_info_get.o	cc4a81f903dea3f5
+935	1070	8027313319412163	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_receive.o	ec1b19e6dfe6281b
+952	1077	8027313319402171	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_send_notify.o	6cd5ea1766cca093
+927	1084	8027313319422173	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_get.o	6e965c0f83fd34dd
+919	1089	8027313319422173	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_delete.o	51d81e089b0f8450
+970	1119	8027313320065352	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_queue_prioritize.o	1a535030e60b85b5
+810	1127	8027313320080429	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/emul_eeprom.o	b06265f7e7975ca2
+998	1147	8027313320263082	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_info_get.o	2cb61d7eb56d1997
+992	1153	8027313320253062	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_ceiling_put.o	7d79b8f4ed7263bb
+870	1159	8027313320223075	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/can_thr.o	71c1b58987cccc44
+1044	1177	8027313320470209	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_delete.o	7aec91149bbc4669
+1024	1184	8027313320650440	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_prioritize.o	d88c9edbcca377e0
+1052	1204	8027313320770042	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_entry_exit_notify.o	6ca85bd39018bf16
+1073	1209	8027313320920360	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_put.o	6b7fab98bdc65117
+1080	1230	8027313321163656	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_semaphore_put_notify.o	731cae4a76d6fe44
+1085	1236	8027313321178734	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_info_get.o	a19d04e543a591e
+1130	1271	8027313321561003	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_reset.o	a128003c1c4dee49
+1122	1278	8027313321616145	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_priority_change.o	57bdd0438cfc109c
+1160	1297	8027313321646157	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_relinquish.o	ddebef35d67fa7f1
+1149	1302	8027313321646157	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_resume.o	6e265b5c6cf8834e
+1155	1307	8027313321771013	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_preemption_change.o	7bad50312484b871
+1091	1313	8027313321700959	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/txe_thread_create.o	99b749aae1124c25
+1232	1398	8027313322829181	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/rtos_compat.o	f3de49258a5752a9
+1187	1423	8027313322979439	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_gpio.o	a550c53be0a1b923
+1304	1446	8027313323190709	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_info_get.o	49e8c0837004b809
+1299	1456	8027313323215608	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/startup_5253055491327143397.dir/stm32f2xx_it.o	c3642d8061ece48f
+1309	1464	8027313323280545	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_cleanup.o	80cc07da8f67257c
+1180	1471	8027313323180619	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_flash.o	6edc6fa972061000
+1315	1559	8027313323361098	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_delete.o	38d0daf62f75f04f
+1211	1582	8027313323512418	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_spi.o	35157d5a1f42c1b9
+1281	1587	8027313323657541	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_application.o	3ff2d980e08131d7
+1206	1592	8027313323881509	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_rcc.o	d152f5382b654f0f
+1238	1599	8027313323766235	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_usart.o	5637290246289078
+1273	1604	8027313324632222	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ST Library_14760386059681792492.dir/stm32f2xx_tim.o	d63a1e18dc0328e3
+1449	1647	8027313325322412	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_performance_system_info_get.o	f835860c37c605cb
+1561	1656	8027313325392936	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_initialize.o	44013dda2980c332
+1467	1680	8027313325560112	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_prioritize.o	69189141e2fa3601
+1426	1686	8027313325479942	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_create.o	eb106254940deb43
+1459	1691	8027313325479942	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_release.o	67f3587a4e30f709
+1401	1696	8027313325560112	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_allocate.o	bd78d1e32eb57f94
+1474	1702	8027313325540137	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_block_pool_performance_info_get.o	b0cceb92dbced7bc
+1589	1743	8027313326316041	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_info_get.o	1695fade8ff7b1fb
+1584	1750	8027313326346043	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_delete.o	43035b40da7b7eff
+1606	1768	8027313326381091	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_cleanup.o	fc2a633a3ba27970
+1600	1773	8027313326481211	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_allocate.o	700d05e6db8644b6
+1658	1779	8027313326527989	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_create.o	1acc264c09d863c6
+1594	1784	8027313326431225	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_create.o	4870b3d82dc31ffa
+1651	1798	8027313326646777	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_delete.o	3dc79476cbf094e5
+1698	1836	8027313327219910	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_performance_system_info_get.o	b5484f6c897775e9
+1693	1860	8027313327392143	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_prioritize.o	c1912196852cda6
+1703	1867	8027313327422225	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_search.o	c667b2d8aed63db
+1746	1871	8027313327376647	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_performance_info_get.o	3bfb7c349bb0007b
+1682	1876	8027313327301499	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_get.o	e633f3cf162451d4
+1687	1882	8027313327509104	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_release.o	2b5141e1ce2f56bd
+1752	1887	8027313327519147	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_cleanup.o	de1ea78e768670fd
+1770	1902	8027313327923662	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_byte_pool_initialize.o	9729de37506d83a6
+1786	1924	8027313328137411	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_iar.o	ed33983276045c54
+1776	1941	8027313328225233	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_info_get.o	6cb215e377f1de06
+1840	1963	8027313328411006	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_performance_info_get.o	813c7455843de000
+1800	1968	8027313328431031	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_initialize_high_level.o	5f942ac5751b8c38
+1781	1973	8027313328491330	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_set.o	a5afa40e70f9d20f
+1863	1979	8027313328521409	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_initialize.o	b9069639aaf5ba9d
+1868	2006	8027313328919181	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_set_notify.o	8c307652d222bc89
+1873	2025	8027313329021796	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_event_flags_performance_system_info_get.o	30e0b66c3998e7b4
+1878	2031	8027313329061777	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_initialize_kernel_enter.o	dbce80404dcf4537
+1883	2051	8027313329233444	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_initialize_kernel_setup.o	eaa84d43d49bf7ea
+1904	2057	8027313329243499	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_info_get.o	c185920c8a827fe0
+1926	2063	8027313329320755	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_create.o	5ffc414b3191e263
+1889	2068	8027313329233444	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_cleanup.o	d4fba36311935db1
+1943	2086	8027313329729732	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_performance_info_get.o	dd15388f169bf8d1
+1965	2102	8027313329909419	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_initialize.o	b553dc26d11d27c2
+1981	2117	8027313330004556	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_misra.o	d72df2ce9652d2cb
+1970	2136	8027313330169662	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_delete.o	a5203af1287b6804
+1975	2141	8027313330204887	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_get.o	3519d8ceeafa9013
+2008	2159	8027313330360632	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_performance_system_info_get.o	c79097eb61ff1dc1
+2026	2167	8027313330496362	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_flush.o	646a08c40b99ad75
+2033	2185	8027313330655675	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_cleanup.o	75d589b509532d40
+2059	2207	8027313330911284	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_delete.o	600c39ed7ac751a
+2054	2214	8027313330933336	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_priority_change.o	2741aec4485757a4
+2070	2232	8027313331084040	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_info_get.o	ff3013122477bb8e
+2065	2239	8027313331243658	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_front_send.o	93b6df07278591a6
+2138	2256	8027313331441363	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_initialize.o	15625e05c2e7ff54
+2088	2264	8027313331431330	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_prioritize.o	adccbaf4a6958d94
+2120	2270	8027313331360692	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_create.o	76bfbd7b31d3db2a
+2104	2287	8027313331636872	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_mutex_put.o	9172fb603e6c0a39
+2144	2305	8027313331897940	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_delete.o	4d5161c51c65ed69
+2169	2325	8027313332054644	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_info_get.o	c3bc06004369567b
+2187	2332	8027313332169740	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_performance_system_info_get.o	ba75f3c2f5d1adfe
+2162	2338	8027313332139755	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_prioritize.o	a6130a0a91122d1f
+2216	2357	8027313332430647	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_performance_info_get.o	2cc16c37e9400214
+2210	2369	8027313332513243	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_put_notify.o	38e048035fe33e9
+2241	2376	8027313332628390	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_initialize.o	836e37c9a71fd8b1
+2259	2393	8027313332813330	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_put.o	9e25aa65940f6ffd
+2235	2414	8027313332918502	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_create.o	4f961ab37d194eff
+2266	2438	8027313333228694	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_cleanup.o	5915d9dab9309faa
+2272	2444	8027313333258727	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_prioritize.o	7cb7459709ccbb65
+2307	2462	8027313333411706	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_ceiling_put.o	d9a020abc4ed6a35
+2289	2471	8027313333320925	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_send.o	89b9b3e834e870a5
+2328	2476	8027313333366191	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_performance_info_get.o	b7eda0e96c04336
+2340	2494	8027313333672386	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_create.o	9979f2b5f6e8117e
+2335	2501	8027313333600395	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_send_notify.o	4f5269a5869a3e6
+2360	2505	8027313333822634	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_performance_system_info_get.o	49bddcb2c6d0cf73
+2379	2542	8027313334310610	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_get.o	388db4aa272c9f46
+2417	2551	8027313334330582	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_stack_error_handler.o	eee4650d40eddc01
+2440	2573	8027313334496250	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_system_preempt_check.o	ebea20533720cbdc
+2397	2607	8027313334481147	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_semaphore_delete.o	d14111bb1412ae32
+2372	2612	8027313334546239	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_queue_receive.o	2a11b8fc84023be9
+2447	2616	8027313334566260	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_stack_error_notify.o	4d8a68e09395571d
+2465	2635	8027313334788731	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_suspend.o	a7924b498a8d0bf5
+2473	2641	8027313335220766	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_stack_analyze.o	87878b14741c49b5
+2502	2661	8027313335497625	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_shell_entry.o	2bf05b41cb243f83
+2507	2680	8027313335654920	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_sleep.o	86628d17b9629602
+2497	2702	8027313335787290	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_system_resume.o	1369ab396122a1ce
+2479	2709	8027313335841603	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_system_suspend.o	db151fcfcca5f3db
+2545	2714	8027313335886704	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_relinquish.o	7dbd829d7a76b33e
+2553	2719	8027313335787290	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_entry_exit_notify.o	ac2dc79d97fe79d
+2609	2747	8027313336361029	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_initialize.o	f61ff46b1b5b8dde
+2575	2755	8027313336402405	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_preemption_change.o	a1ec819143b21a91
+2618	2774	8027313336592559	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_priority_change.o	6eaa01e1eb2a3562
+2614	2781	8027313336472374	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_performance_info_get.o	7a93d91e928dc4c9
+2664	2798	8027313336757804	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_performance_system_info_get.o	f38794656ebc2ae5
+2637	2804	8027313336792964	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_info_get.o	2cf1e314cabcf76f
+2643	2821	8027313336999164	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_identify.o	7c86834ad1421c47
+2683	2841	8027313337296345	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_resume.o	b72113063f7c7cd7
+2711	2860	8027313337391576	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_performance_info_get.o	c10e2e7db11d27cd
+2705	2867	8027313337425018	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_reset.o	e9a212c489d473a6
+2716	2887	8027313337690461	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_info_get.o	80958c923c641913
+2722	2892	8027313337625360	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_delete.o	c4de3f84bf0befc6
+2758	2899	8027313337625360	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_system_activate.o	98f7eec2bd01a70d
+2751	2904	8027313337560286	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_system_deactivate.o	c13f8b6756144fab
+2783	2931	8027313338201969	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_performance_system_info_get.o	5e9bd23a47a1c4df
+2801	2953	8027313338327112	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_initialize.o	c5144d2241a51140
+2776	2960	8027313338402746	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_expiration_process.o	8159f17f0919699e
+2806	2966	8027313338454028	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_thread_entry.o	37349c254545f636
+2822	2981	8027313338530530	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_activate.o	8ecef7021a8f7650
+2843	2986	8027313338544619	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_change.o	3528da5601c9f5e3
+2968	2994	8027313338898101	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_system_return.o	a639c129a1dc1ab9
+2862	3002	8027313338888085	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_wait_abort.o	93d250a9039e0247
+2983	3007	8027313339033176	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_stack_build.o	1c1d6b6e2721f134
+2988	3015	8027313339098545	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_interrupt.o	97ee1f4afdf11a6c
+2869	3023	8027313339003210	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_time_get.o	6cf278bce3a0ff43
+2997	3025	8027313339198914	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_schedule.o	c25c583f5eac8bf1
+3004	3033	8027313339249035	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_interrupt_restore.o	6659cc2165df00c5
+2889	3040	8027313339188911	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_time_set.o	15697e2241fde1cb
+2896	3052	8027313339429408	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_time_slice_change.o	a7cf0967381d0c2d
+2901	3088	8027313339735231	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_time_slice.o	f3ba2a9160721001
+2906	3090	8027313339755251	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_terminate.o	c8db459d2ee993d7
+2934	3092	8027313339745750	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_thread_timeout.o	58d5278db7bcb3c1
+2963	3094	8027313339755251	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_deactivate.o	1c17c08a2ede1562
+2955	3095	8027313339745750	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Obj/ThreadX_13026001993561026850.dir/tx_timer_create.o	4504701b1be766ef
+3097	3247	8027313341353384	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Exe/app_step_z_dbg.out	9d60e94ff3368258
+3249	3265	8027313341631977	D:/proj/grbl_can/app_step_axis_dima/app_step_z_dbg/Exe/axis_z.hex	fc271318f7aeccb4

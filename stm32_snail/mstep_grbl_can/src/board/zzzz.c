@@ -29,8 +29,17 @@ else
 ///=================================================================
 ///settings_t settings;
 
-uint32_t HAL_GetTick(void){
+#ifdef USE_THREADX
+#include "tx_api.h"
+#endif
+
+uint32_t HAL_GetTick(void)
+{
+#ifdef USE_THREADX
+  return (uint32_t)tx_time_get();
+#else
   return 0;
+#endif
 }
 ///============= eeprom ===================================
 ///void Eeprom_Read_Page(uint16_t BufferOffset){}
@@ -73,6 +82,9 @@ void probe_configure_invert_mask(uint8_t is_probe_away)
 uint8_t probe_get_state(){
   return 0;
 }
+void probe_state_monitor(void)
+{
+}
 void spindle_stop(){}
 
 void coolant_stop()
@@ -84,9 +96,6 @@ uint8_t coolant_get_state( )
  return 0;
 }
   
- void st_update_plan_block_parameters()
- {
- }
  uint8_t spindle_get_state()
 {
   return 0;

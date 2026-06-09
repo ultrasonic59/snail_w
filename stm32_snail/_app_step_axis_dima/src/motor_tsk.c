@@ -10,6 +10,12 @@
 #include "snail_can_cmds.h"
 #include "can.h"
 #include "can_cmds.h"
+#include "emul_eeprom.h"
+#include "hdlc.h"
+
+uint8_t cur_mot_rej=DEF_MOT_REJ;
+static uint8_t cur_mot_dir=0;
+int32_t next_coord=0;
 
 cmd_t cur_cmd={0};
 void mot_spi_wr(uint8_t addr,uint16_t idata);
@@ -18,7 +24,9 @@ void mot_spi_init(void);
 
 void motor_task( void *pvParameters )
 {
-///uint8_t btst=0; 
+///  int ii=0;
+ /// uint16_t t_len=0;
+uint8_t btst=0; 
 uint8_t psk=0; 
 ///uint16_t tst;
 char key=0;
@@ -45,6 +53,19 @@ init_step_mot();
  
 for(;;)
 {
+/*
+  if( g_hdlc.len_obr_dat){
+    t_len=g_hdlc.len_obr_dat;
+    g_hdlc.len_obr_dat=0;
+        printk("\n\r len[%x]",t_len); 
+
+    for(ii=0;ii<t_len;ii++){
+         printk("%x=[%x] ",ii,g_hdlc.obr_buff[ii]   ); 
+     
+    }
+
+  }
+*/
 if(check_push_key_dbg())
   {
   key=get_byte_dbg() ;  
@@ -81,12 +102,14 @@ if(check_push_key_dbg())
       break;
     
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x]",nstep,dir,mot_rej,ena_check_conc); 
+  btst = get_conc_n();
+
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]",nstep,dir,mot_rej,ena_check_conc,btst); 
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
     {
-    put_mot_nstep(nstep);
+    put_mot_nStep(nstep);
     psk=0;
     }
   
@@ -172,6 +195,7 @@ uint16_t tmp;
 tmp=(addr&0x7)<<12;
 tmp|= idata&0xfff;
 mot_spi_transfer(tmp);
+///printk("\n\r mot_spi_wr[%x:%x]",addr,idata);
 }
 void mot_spi_wrp(uint8_t addr,uint16_t *pdata)
 {
@@ -201,20 +225,20 @@ STATUS_Register_t 	G_STATUS_REG;
 
 void init_step_mot(void)
 {
-  
+uint16_t tmp; 
 // CTRL Register
 
 G_CTRL_REG.DTIME 	= 0;///0x03;
-G_CTRL_REG.ISGAIN 	= 0;///0x03;
+G_CTRL_REG.ISGAIN 	=0x3;/// 0;///0x03;
 G_CTRL_REG.EXSTALL 	= 0x00;
-G_CTRL_REG.MODE 	= 0;///0x03;
+G_CTRL_REG.MODE 	= 0x8;///0x03;
 G_CTRL_REG.RSTEP 	= 0x00;
 G_CTRL_REG.RDIR 	= 0x00;
 G_CTRL_REG.ENBL 	= 0x01;
 
 // TORQUE Register
 G_TORQUE_REG.SIMPLTH = 0x00;
-G_TORQUE_REG.TORQUE  = 0xBA;
+G_TORQUE_REG.TORQUE  = 0x8;///0xBA;
 
 // OFF Register
 G_OFF_REG.PWMMODE 	= 0x00;
@@ -241,13 +265,48 @@ G_DRIVE_REG.TDRIVEP = 0x01;
 G_DRIVE_REG.TDRIVEN = 0x01;
 G_DRIVE_REG.OCPDEG 	= 0x01;
 
-mot_spi_wrp(ADDR_MOT_CTRL,(uint16_t*)&G_CTRL_REG);
-mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&G_TORQUE_REG);
-mot_spi_wrp(ADDR_MOT_OFF,(uint16_t*)&G_OFF_REG);
-mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&G_BLANK_REG);
-mot_spi_wrp(ADDR_MOT_DECAY,(uint16_t*)&G_DECAY_REG);
-mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&G_STALL_REG);
-mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&G_DRIVE_REG);
+if(EE_Rd(ADDR_EEPROM_MOT_CTRL,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_CTRL_REG,sizeof(uint16_t)); ///error read
+  }
+mot_spi_wrp(ADDR_MOT_CTRL,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_TORQUE,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_TORQUE_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_TORQUE,(uint16_t*)&tmp);
+printk("\n\r _TORQUE_ [%d]",tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_OFF,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_OFF_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_OFF,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_BLANK,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_BLANK_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&tmp);
+  
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_DECAY_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_DECAY,(uint16_t*)&tmp);
+
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_STALL_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&tmp);
+if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
+  {
+  memcpy(&tmp,(uint16_t*)&G_DRIVE_REG,sizeof(uint16_t));
+  }
+mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&tmp);
+
 mot_spi_wr(ADDR_MOT_STATUS,0);       
 
 }
@@ -261,7 +320,25 @@ tmp=mot_spi_rd(ADDR_MOT_CTRL);
 t_ctrl_reg->MODE=rej;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 
+printk("\n\r set_mot_rej[%x]",rej);
+
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
+}
+
+void set_mot_trq(uint8_t trq)
+{
+uint16_t tmp;
+///uint16_t htmp;
+TORQUE_Register_t *t_trq_reg=(TORQUE_Register_t*)&tmp;
+tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+
+t_trq_reg->TORQUE=trq;
+mot_spi_wr(ADDR_MOT_TORQUE,tmp);
+
+tmp=mot_spi_rd(ADDR_MOT_TORQUE);
+EE_Wr(ADDR_EEPROM_MOT_TORQUE,tmp);
+printk("\n\r set_mot_trq[%x]",tmp);
+
 }
 
 
@@ -300,6 +377,8 @@ else if(per<MIN_PER)
   per=MIN_PER;
 MOT_STEP_TIM ->ARR = per*2;////
 MOT_STEP_TIM ->CCR1 = per;////
+printk("\n\r set_mot_per[%x]",per);
+
 }
 
 ////=======================================================
@@ -308,10 +387,12 @@ void stop_mot_step_tim(void)
 TIM_Cmd(MOT_STEP_TIM, DISABLE);
 
 }
-volatile uint32_t num_step=0;
+volatile uint32_t num_Step=0;
+
 void  set_dir_mot(uint8_t idat)
 {
 uint8_t tdat=idat&0x1;
+cur_mot_dir= tdat;
 #if 0
 #if STEP_X
   tdat=idat&DIR_X;
@@ -340,6 +421,17 @@ if(idat&0x1)
 else
   {
    GPIO_ResetBits(MOT_RESET_PIN_GPIO, MOT_RESET_PIN);
+  }
+}
+void  set_step_mot(uint8_t idat)
+{
+if(idat&0x1)
+  {
+  GPIO_SetBits(MOT_STEP_PIN_GPIO, MOT_STEP_PIN);
+  }
+else
+  {
+   GPIO_ResetBits(MOT_STEP_PIN_GPIO, MOT_STEP_PIN);
   }
 }
 
@@ -400,40 +492,91 @@ tmp&= ~0x1;
 mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
 
-void put_mot_nstep(uint32_t nstep)
+void put_mot_nStep(uint32_t nstep)
 {
-ena_mot(1) ;
-num_step=nstep; 
-TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
-TIM_Cmd(MOT_STEP_TIM, ENABLE);
+  if(nstep){
+     ena_mot(1) ;
+     num_Step=nstep; 
+     TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
+     TIM_Cmd(MOT_STEP_TIM, ENABLE);
+  }
+  else{
+  ///    ena_mot(0) ;
+      num_Step=nstep; 
+      TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, DISABLE);
+      TIM_Cmd(MOT_STEP_TIM, DISABLE);  
+  }
 }
+
+static uint8_t cur_step_out=0;
+uint8_t use_enc=1;
+int32_t step_coord=0;
 
 void MOT_STEP_TIM_IRQHandler(void)
 { 
-  uint8_t tconc;
+///uint8_t end_step=0;  
+uint8_t tconc;
+tconc=  get_conc_n();
+#if 0
 if(ena_check_conc)
 {
-tconc=  get_conc_n();
-if(tconc!=0x3)
+///tconc=  get_conc_n();
+if(tconc & MASK_CON !=0x0)
   num_step=0;
 }
-if(num_step)
+#endif
+if(cur_step_out)
   {
-  num_step--;  
-  if(num_step==0)
+   cur_step_out=0;
+   set_step_mot(cur_step_out);
+  }
+else
+{
+  ///=====check conc =========
+  if((cur_mot_dir&0x1)==0)
     {
+      if((tconc & MASK_CON1) !=0x0)
+           num_Step=0;
+    }
+  else
+     {
+     if((tconc & MASK_CON0) !=0x0)
+           num_Step=0;
+     }
+  if(num_Step==0){
     stop_mot_step_tim(); 
     cur_state &= ~STATE_MASK;
     cur_state|=STATE_READY;  
-
-    ena_mot(0) ;
+ ///   ena_mot(0) ;
+   }
+  else{ 
+  if(use_enc){
+   cur_step_out=1;
+   set_step_mot(cur_step_out);
+    if((cur_mot_dir&0x1)==0){
+      if(curr_coord>=next_coord)
+        num_Step=0;
+      else
+        num_Step=1;
+    }
+    else{
+      if(curr_coord<=next_coord)
+        num_Step=0;
+      else
+        num_Step=1;
     }
   }
-else
-  {
-   stop_mot_step_tim(); 
-   ena_mot(0) ;
-   }
+  else {  
+   cur_step_out=1;
+   set_step_mot(cur_step_out);
+  num_Step--;
+  if((cur_mot_dir&0x1)==0)
+    step_coord++;
+  else
+    step_coord--;
+  }
+  }
+}
 ////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 }
@@ -441,6 +584,7 @@ TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 ///=============================================
 void motor_init(void)
 {
+///uint16_t tmp;
 mot_step_tim_init();
 mot_spi_init();
 
@@ -452,7 +596,48 @@ set_reset_mot(0);
 uDelay(20000);
 init_step_mot();
 ena_mot(0) ;
-set_mot_rej(DEF_MOT_REJ);
+/*
+if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
+  {
+    if(tmp>MAX_MOT_REJ)
+      tmp=MAX_MOT_REJ;
+   set_mot_rej(tmp);
+  }
+else
+*/
+ ///  set_mot_rej(DEF_MOT_REJ);
   
 }
 ///==============================================
+///spi_mot_cmd_t  req_spi_mot_cmd;
+
+int wr_spi_mot(spi_mot_cmd_t *i_cmd)
+{
+mot_spi_wr(i_cmd->addr&0x7, i_cmd->w_val&0xffff);
+///printk("\n\r wr_spi_mot[%x:%x:%x]",i_cmd->addr,i_cmd->len_dat,odat);
+
+if(i_cmd->len_dat==4){
+  mot_spi_wr((i_cmd->addr+1)&0x7, (i_cmd->w_val>>16)&0xffff);
+///  printk("\n\r wr_spi_mot[%x:%x:%x]",i_cmd->addr+1,i_cmd->len_dat,odat);
+
+}
+return 0;  
+}
+
+int rd_spi_mot(spi_mot_cmd_t *i_cmd)
+{
+uint32_t odat=0;  
+uint32_t odat1=0;  
+
+odat=mot_spi_rd(i_cmd->addr&0x7);
+if(i_cmd->len_dat==4)
+{
+odat1= mot_spi_rd((i_cmd->addr+1)&0x7);  
+odat|= odat1<<16;
+}
+i_cmd->w_val=odat;
+i_cmd->len_dat=5;    ///send all dat
+printk("\n\r rd_spi_mot[%x:%x:%x]",i_cmd->addr,i_cmd->len_dat,odat);
+
+ return 0; 
+}

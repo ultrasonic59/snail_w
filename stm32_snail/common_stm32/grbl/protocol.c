@@ -399,10 +399,12 @@ void protocol_exec_rt_system()
         plan_cycle_reinitialize();
         if (sys.step_control & STEP_CONTROL_EXECUTE_HOLD) { sys.suspend |= SUSPEND_HOLD_COMPLETE; }
         bit_false(sys.step_control,(STEP_CONTROL_EXECUTE_HOLD | STEP_CONTROL_EXECUTE_SYS_MOTION));
-      } else {
-        // Motion complete. Includes CYCLE/JOG/HOMING states and jog cancel/motion cancel/soft limit events.
-        // NOTE: Motion and jog cancel both immediately return to idle after the hold completes.
-        if (sys.suspend & SUSPEND_JOG_CANCEL) {   // For jog cancel, flush buffers and sync positions.
+        } else {
+          // Motion complete. Includes CYCLE/JOG/HOMING states and jog cancel/motion cancel/soft limit events.
+          // NOTE: Motion and jog cancel both immediately return to idle after the hold completes.
+          // Final GO batch is flushed in st_execute_can_segments() before EXEC_CYCLE_STOP is raised.
+          bit_false(sys.step_control, STEP_CONTROL_END_MOTION);
+          if (sys.suspend & SUSPEND_JOG_CANCEL) {   // For jog cancel, flush buffers and sync positions.
           sys.step_control = STEP_CONTROL_NORMAL_OP;
           plan_reset();
           st_reset();
@@ -415,6 +417,10 @@ void protocol_exec_rt_system()
           sys.state = STATE_SAFETY_DOOR;
         } else {
           sys.suspend = SUSPEND_DISABLE;
+          if (sys.prev_state == STATE_JOG) {
+            gc_sync_position();
+            plan_sync_position();
+          }
           sys.state = STATE_IDLE;
         }
       }

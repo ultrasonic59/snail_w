@@ -1,0 +1,15 @@
+#ifndef TX_USER_H
+#define TX_USER_H
+
+#define TX_MAX_PRIORITIES                   32
+#define TX_MINIMUM_STACK                    128
+#define TX_TIMER_THREAD_STACK_SIZE          512
+#define TX_TIMER_THREAD_PRIORITY            0
+#define TX_DISABLE_PREEMPTION_THRESHOLD
+#define TX_DISABLE_REDUNDANT_CLEARING
+#define TX_DISABLE_NOTIFY_CALLBACKS
+#define TX_NO_FILEX_POINTER
+#define TX_TIMER_PROCESS_IN_ISR
+#define TX_DISABLE_STACK_FILLING
+
+#endif /* TX_USER_H */

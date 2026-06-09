@@ -269,11 +269,11 @@ void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
 void canfilter_init(void)
 {
 uint32_t id;
-uint32_t mask= ID_MASK << 21; ///5+16;
+uint32_t mask= ID_MASK << 21;
 
-id=ID_BRD<<21; ///5+16
+id=ID_BRD<<21;
 
-CAN_FilterConfig(0,id,mask);	
+CAN_FilterConfig(0,id,mask);
 }
 ////=============================================================================================
 int can_init( FunctionalState ttcm, FunctionalState abom, FunctionalState awum, FunctionalState nart,

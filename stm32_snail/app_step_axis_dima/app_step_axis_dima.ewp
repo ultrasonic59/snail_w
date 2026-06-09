@@ -240,6 +240,9 @@
                     <state>DIMA_BRD</state>
                     <state>STEP_X</state>
                     <state>STM32F205xx</state>
+                    <state>USE_THREADX</state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>HSE_VALUE=16000000</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -363,14 +366,15 @@
                     <state>$PROJ_DIR$\.</state>
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common_stm32\my_misc</state>
-                    <state>$PROJ_DIR$\..\..\common\can</state>
-                    <state>$PROJ_DIR$\..\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
                     <state>$PROJ_DIR$\..\common_stm32</state>
@@ -558,7 +562,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>USE_THREADX</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -796,7 +800,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_rtos.icf</state>
+                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1364,6 +1368,9 @@
                     <state>DIMA_BRD</state>
                     <state>STEP_Z</state>
                     <state>STM32F205xx</state>
+                    <state>USE_THREADX</state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>HSE_VALUE=16000000</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1487,14 +1494,15 @@
                     <state>$PROJ_DIR$\.</state>
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common_stm32\my_misc</state>
-                    <state>$PROJ_DIR$\..\..\common\can</state>
-                    <state>$PROJ_DIR$\..\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
                     <state>$PROJ_DIR$\..\common_stm32</state>
@@ -1682,7 +1690,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>USE_THREADX</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1920,7 +1928,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_rtos.icf</state>
+                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2488,6 +2496,9 @@
                     <state>DIMA_BRD</state>
                     <state>STEP_Y</state>
                     <state>STM32F205xx</state>
+                    <state>USE_THREADX</state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>HSE_VALUE=16000000</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -2611,14 +2622,15 @@
                     <state>$PROJ_DIR$\.</state>
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\inc</state>
-                    <state>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3</state>
+                    <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
+                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common_stm32\my_misc</state>
-                    <state>$PROJ_DIR$\..\..\common\can</state>
-                    <state>$PROJ_DIR$\..\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\common\can</state>
+                    <state>$PROJ_DIR$\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
                     <state>$PROJ_DIR$\src\hdlc</state>
@@ -2806,7 +2818,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>USE_THREADX</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -3044,7 +3056,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_rtos.icf</state>
+                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -3408,7 +3420,7 @@
     <group>
         <name>dbg</name>
         <file>
-            <name>$PROJ_DIR$\..\..\common\dbg\printk1.c</name>
+            <name>$PROJ_DIR$\..\common\dbg\printk1.c</name>
         </file>
     </group>
     <group>
@@ -3424,24 +3436,600 @@
         </file>
     </group>
     <group>
-        <name>FreeRTOS</name>
+        <name>ThreadX</name>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\MemMang\heap_2.c</name>
+            <name>$PROJ_DIR$\azure_port\tx_initialize_low_level.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\list.c</name>
+            <name>$PROJ_DIR$\azure_port\rtos_compat.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\port.c</name>
+            <name>$PROJ_DIR$\azure_port\tx_application.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\port\ARM_CM3\portasm.s</name>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_iar.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\queue.c</name>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_allocate.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\common\freertos\source\tasks.c</name>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_pool_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_block_release.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_allocate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_pool_search.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_byte_release.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_set.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_event_flags_set_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_initialize_high_level.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_initialize_kernel_enter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_initialize_kernel_setup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_misra.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_priority_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_mutex_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_flush.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_front_send.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_receive.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_send.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_queue_send_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_ceiling_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_cleanup.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_semaphore_put_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_entry_exit_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_identify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_preemption_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_priority_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_relinquish.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_reset.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_resume.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_shell_entry.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_sleep.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_stack_analyze.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_stack_error_handler.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_stack_error_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_suspend.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_system_preempt_check.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_system_resume.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_system_suspend.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_terminate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_time_slice.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_time_slice_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_timeout.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_thread_wait_abort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_time_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_time_set.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_activate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_deactivate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_expiration_process.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_performance_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_performance_system_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_system_activate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_system_deactivate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_timer_thread_entry.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_buffer_full_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_disable.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_enable.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_event_filter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_event_unfilter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_initialize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_interrupt_control.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_isr_enter_insert.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_isr_exit_insert.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_object_register.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_object_unregister.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\tx_trace_user_event_insert.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_allocate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_pool_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_pool_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_pool_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_pool_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_block_release.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_allocate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_pool_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_pool_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_pool_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_pool_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_byte_release.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_set.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_event_flags_set_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_mutex_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_flush.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_front_send.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_receive.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_send.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_queue_send_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_ceiling_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_prioritize.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_put.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_semaphore_put_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_entry_exit_notify.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_preemption_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_priority_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_relinquish.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_reset.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_resume.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_suspend.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_terminate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_time_slice_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_thread_wait_abort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_activate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_change.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_create.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_deactivate.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_delete.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\common\src\txe_timer_info_get.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_context_restore.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_context_save.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_interrupt_control.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_interrupt_disable.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_interrupt_restore.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_schedule.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_stack_build.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_thread_system_return.s</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_timer_interrupt.s</name>
         </file>
     </group>
     <group>

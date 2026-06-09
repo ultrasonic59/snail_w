@@ -3,177 +3,1275 @@
     <Tool>
         <Name>compiler</Name>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\dbg\printk1.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\dbg_456133768103443040.dir\printk1.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\zzzz.c</Path>
+            <Path>D:\proj\grbl_can\common_stm32\uart.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\zzzz.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\uart.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_main.c</Path>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\azure_port\rtos_compat.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\rtos_compat.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_can_cmds.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_initialize_kernel_enter.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\app_can_cmds.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_initialize_kernel_enter.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\port\MemMang\heap_2.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_initialize.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\FreeRTOS_1129108015262781380.dir\heap_2.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_initialize.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\list.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_delete.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\FreeRTOS_1129108015262781380.dir\list.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_delete.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\board\dima_board.c</Path>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\motor_tsk.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\motor_tsk.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\my_misc\my_misc.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_put_notify.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\my_misc.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_put_notify.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\queue.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_initialize_kernel_setup.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\FreeRTOS_1129108015262781380.dir\queue.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_initialize_kernel_setup.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\tasks.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_performance_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\FreeRTOS_1129108015262781380.dir\tasks.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_performance_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\can\can_drv.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\can_drv.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\uart.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\uart.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\fcs16.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\hdlc_18177243310313440249.dir\fcs16.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\motor_tsk.c</Path>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\azure_port\tx_application.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\motor_tsk.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_application.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\retarget.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_create.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_create.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_delete.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_delete.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_allocate.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_tim.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_allocate.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\misc.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</Path>
+            <Path>D:\proj\grbl_can\common_stm32\can\can_drv.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_gpio.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\can_drv.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_initialize.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_can.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_initialize.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\startup\stm32f2xx_it.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_allocate.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\startup_5253055491327143397.dir\stm32f2xx_it.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_allocate.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\eeprom_emul\emul_eeprom.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_initialize.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\emul_eeprom.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_initialize.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_performance_info_get.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_flash.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_performance_info_get.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Path>D:\proj\grbl_can\common_stm32\my_misc\my_misc.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\my_misc.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\hdlc\hdlc.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_initialize_high_level.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\hdlc_18177243310313440249.dir\hdlc.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_initialize_high_level.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\app_sys_stm32f2xx.c</Path>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\retarget.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\app_sys_stm32f2xx.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\retarget.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_entry_exit_notify.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_usart.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_entry_exit_notify.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\src\can_thr.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_prioritize.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\can_thr.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_prioritize.lst</Path>
             </Output>
         </Parent>
         <Parent>
-            <Path>D:\proj\velograph\snail_w\common\freertos\source\port\ARM_CM3\port.c</Path>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_flush.c</Path>
             <Output>
-                <Path>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_x_dbg\List\FreeRTOS_1129108015262781380.dir\port.lst</Path>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_flush.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\app_can_cmds.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\drv_9119342922082540178.dir\app_can_cmds.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_release.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_release.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_usart.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_usart.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_allocate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_allocate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_priority_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_priority_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\board\zzzz.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\zzzz.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\ports\cortex_m3\iar\src\tx_iar.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_iar.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_block_pool_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_block_pool_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_set.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_set.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_identify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_identify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_pool_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_pool_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_search.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_search.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_pool_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_pool_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_byte_release.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_byte_release.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\dbg\printk1.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\dbg_456133768103443040.dir\printk1.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_gpio.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_gpio.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_front_send.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_front_send.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_set_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_set_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_interrupt_control.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_interrupt_control.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_mutex_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_mutex_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_object_register.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_object_register.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_misra.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_misra.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_event_flags_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_event_flags_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_stack_error_handler.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_stack_error_handler.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_suspend.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_suspend.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_send.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_send.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_system_preempt_check.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_system_preempt_check.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_priority_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_priority_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_relinquish.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_relinquish.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_stack_analyze.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_stack_analyze.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_receive.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_receive.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_sleep.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_sleep.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_stack_error_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_stack_error_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_preemption_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_preemption_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_cleanup.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_cleanup.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_resume.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_resume.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_queue_send_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_queue_send_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_reset.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_reset.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_shell_entry.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_shell_entry.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_entry_exit_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_entry_exit_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_ceiling_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_ceiling_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_semaphore_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_semaphore_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_performance_system_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_performance_system_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_object_unregister.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_object_unregister.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_user_event_insert.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_user_event_insert.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_allocate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_allocate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_tim.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_tim.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_pool_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_pool_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_system_suspend.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_system_suspend.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_system_resume.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_system_resume.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_performance_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_performance_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_initialize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_initialize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_system_deactivate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_system_deactivate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_buffer_full_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_buffer_full_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_event_filter.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_event_filter.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_wait_abort.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_wait_abort.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_system_activate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_system_activate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_time_set.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_time_set.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_enable.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_enable.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_event_unfilter.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_event_unfilter.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_flash.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_flash.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_wait_abort.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_wait_abort.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_timeout.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_timeout.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_time_slice.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_time_slice.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_deactivate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_deactivate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_terminate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_terminate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_thread_entry.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_thread_entry.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_expiration_process.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_expiration_process.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_disable.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_disable.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_isr_enter_insert.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_isr_enter_insert.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_time_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_time_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_thread_time_slice_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_thread_time_slice_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_trace_isr_exit_insert.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_trace_isr_exit_insert.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\tx_timer_activate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\tx_timer_activate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_pool_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_pool_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_set.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_set.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_receive.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_receive.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_pool_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_pool_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_release.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_release.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_send_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_send_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_pool_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_pool_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_pool_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_pool_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\misc.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_flush.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_flush.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_send.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_send.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_ceiling_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_ceiling_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_mutex_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_mutex_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_set_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_set_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_front_send.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_front_send.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_release.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_release.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_byte_pool_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_byte_pool_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_block_pool_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_block_pool_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_event_flags_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_event_flags_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_priority_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_priority_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_queue_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_queue_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\hdlc\fcs16.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\hdlc_18177243310313440249.dir\fcs16.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_deactivate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_deactivate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\can_thr.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\can_thr.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_reset.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_reset.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_rcc.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_rcc.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_terminate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_terminate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_spi.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_spi.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_can.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\stm32f2xx_can.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_prioritize.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_prioritize.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\libraries\eeprom_emul\emul_eeprom.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\emul_eeprom.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_relinquish.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_relinquish.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_preemption_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_preemption_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_delete.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_delete.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_suspend.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_suspend.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_timer_activate.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_timer_activate.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\hdlc\hdlc.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\hdlc_18177243310313440249.dir\hdlc.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_put_notify.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_put_notify.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_create.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_create.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\app_sys_stm32f2xx.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ST Library_14760386059681792492.dir\app_sys_stm32f2xx.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\startup\stm32f2xx_it.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\startup_5253055491327143397.dir\stm32f2xx_it.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_info_get.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_info_get.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_time_slice_change.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_time_slice_change.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_thread_resume.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_thread_resume.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common\azure_rtos\threadx\common\src\txe_semaphore_put.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\ThreadX_13026001993561026850.dir\txe_semaphore_put.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\app_step_axis_dima\src\app_main.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\app_main.lst</Path>
+            </Output>
+        </Parent>
+        <Parent>
+            <Path>D:\proj\grbl_can\common_stm32\board\dima_board.c</Path>
+            <Output>
+                <Path>D:\proj\grbl_can\app_step_axis_dima\app_step_x_dbg\List\Board_7221520210927654578.dir\dima_board.lst</Path>
             </Output>
         </Parent>
     </Tool>

@@ -173,7 +173,7 @@ void report_grbl_settings() {
   sprintf(str_report + strlen(str_report), "$%d=%d\r\n",     22, bit_istrue(settings.flags,BITFLAG_HOMING_ENABLE));
   sprintf(str_report + strlen(str_report), "$%d=%d\r\n",     23, settings.homing_dir_mask);
   sprintf(str_report + strlen(str_report), "$%d=%.3f\r\n",  24, settings.homing_feed_rate);
-  sprintf(str_report + strlen(str_report), "$%d=%.3f\r\n",  24, settings.homing_seek_rate);
+  sprintf(str_report + strlen(str_report), "$%d=%.3f\r\n",  25, settings.homing_seek_rate);
   sprintf(str_report + strlen(str_report), "$%d=%d\r\n",     26, settings.homing_debounce_delay);
   sprintf(str_report + strlen(str_report), "$%d=%.3f\r\n",  27, settings.homing_pulloff);
   sprintf(str_report + strlen(str_report), "$%d=%.3f\r\n",  30, settings.rpm_max);
@@ -393,19 +393,35 @@ void report_realtime_status()
   // Report current machine state and sub-states
   sprintf(str_report, "<");
   switch (sys.state) {
-    case STATE_IDLE: sprintf(str_report + strlen(str_report),"Idle"); break;
-    case STATE_CYCLE: sprintf(str_report + strlen(str_report),"Run"); break;
+    case STATE_IDLE: 
+      sprintf(str_report + strlen(str_report),"Idle"); 
+      break;
+    case STATE_CYCLE: 
+      sprintf(str_report + strlen(str_report),"Run"); 
+      break;
     case STATE_HOLD:
       if (!(sys.suspend & SUSPEND_JOG_CANCEL)) {
-        if (sys.suspend & SUSPEND_HOLD_COMPLETE) { sprintf(str_report + strlen(str_report),"Hold:0"); } // Ready to resume
-        else { sprintf(str_report + strlen(str_report),"Hold:1"); } // Actively holding
+        if (sys.suspend & SUSPEND_HOLD_COMPLETE) { 
+          sprintf(str_report + strlen(str_report),"Hold:0"); 
+        } // Ready to resume
+        else { 
+          sprintf(str_report + strlen(str_report),"Hold:1"); 
+        } // Actively holding
         break;
       } // Continues to print jog state during jog cancel.
       break;
-    case STATE_JOG: sprintf(str_report + strlen(str_report),"Jog"); break;
-    case STATE_HOMING: sprintf(str_report + strlen(str_report),"Home"); break;
-    case STATE_ALARM: sprintf(str_report + strlen(str_report),"Alarm"); break;
-    case STATE_CHECK_MODE: sprintf(str_report + strlen(str_report),"Check"); break;
+    case STATE_JOG: 
+      sprintf(str_report + strlen(str_report),"Jog"); 
+      break;
+    case STATE_HOMING: 
+      sprintf(str_report + strlen(str_report),"Home"); 
+      break;
+    case STATE_ALARM: 
+      sprintf(str_report + strlen(str_report),"Alarm"); 
+      break;
+    case STATE_CHECK_MODE: 
+      sprintf(str_report + strlen(str_report),"Check"); 
+      break;
 
     /*- `Hold:0` Hold complete. Ready to resume.
     - `Hold:1` Hold in-progress. Reset will throw an alarm.
@@ -452,19 +468,8 @@ void report_realtime_status()
   } else {
 	  sprintf(str_report + strlen(str_report),"|WPos:");
   }
-  switch (gc_state.z_select) {
-  	  case MAP_P0 :
-  	  case MAP_P1 : sprintf(str_report + strlen(str_report),"%.3f,%.3f,%.3f,%.3f", print_position[X_AXIS], print_position[Y_AXIS], print_position[Z_AXIS], print_position[A_AXIS]);
-  		  	  	  	break;
-  	  case MAP_P2 : sprintf(str_report + strlen(str_report),"%.3f,%.3f,%.3f,%.3f", print_position[X_AXIS], print_position[Y_AXIS], print_position[Z_AXIS], print_position[B_AXIS]);
-  	  		  	  	break;
-  	  case MAP_P3 : sprintf(str_report + strlen(str_report),"%.3f,%.3f,%.3f,%.3f", print_position[X_AXIS], print_position[Y_AXIS], print_position[U_AXIS], print_position[C_AXIS]);
-  	  	  		    break;
-  	  case MAP_P4 : sprintf(str_report + strlen(str_report),"%.3f,%.3f,%.3f,%.3f", print_position[X_AXIS], print_position[Y_AXIS], print_position[U_AXIS], print_position[V_AXIS]);
-  	  	  		  	break;
-  }
-
-
+  sprintf(str_report + strlen(str_report),"%.3f,%.3f,%.3f",
+          print_position[X_AXIS], print_position[Y_AXIS], print_position[Z_AXIS]);
 
   // Returns planner and serial read buffer states.
   #ifdef REPORT_FIELD_BUFFER_STATE

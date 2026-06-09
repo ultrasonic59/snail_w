@@ -45,6 +45,9 @@ void serial_write(uint8_t data);
 // Fetches the first byte in the serial read buffer. Called by main program.
 uint8_t serial_read();
 
+// Push one byte from USB/ISR into the RX ring buffer.
+void serial_rx_push(uint8_t data);
+
 // Reset and empty data in read buffer. Used by e-stop and reset.
 void serial_reset_read_buffer();
 
@@ -58,5 +61,8 @@ uint8_t serial_get_rx_buffer_count();
 // Returns the number of bytes used in the TX serial buffer.
 // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
 uint8_t serial_get_tx_buffer_count();
+
+int serial_read_tx(void);
+void serial_tx_unget(void);
 
 #endif

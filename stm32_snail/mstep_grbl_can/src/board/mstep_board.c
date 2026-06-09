@@ -28,8 +28,7 @@ return  (UART_DBG->SR & USART_SR_RXNE);
 #if 1
 void _putk(char ch)
 {
-//sendchar_hdlc(ch);
-send_char_dbg(ch);
+  send_char_dbg(ch);
 }
 #endif
 
@@ -225,7 +224,6 @@ GPIO_Init( ON_LED1_PIN_GPIO, &GPIO_InitStructure );
 ////=============================================
 void UART_DBG_Init(void)
 {
-////GPIO_InitTypeDef GPIO_InitStructure;
 USART_InitTypeDef USART_InitStructure;
 UART_DBG_CLK_INIT(UART_DBG_CLK, ENABLE);
 USART_DeInit(UART_DBG);
@@ -238,6 +236,14 @@ USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 USART_Init(UART_DBG, &USART_InitStructure);
 UART_DBG->CR1 |= USART_CR1_RXNEIE;
 USART_Cmd(UART_DBG, ENABLE);
+}
+
+void USART2_IRQHandler(void)
+{
+if (USART_GetITStatus(UART_DBG, USART_IT_RXNE) != RESET)
+  {
+  (void)UART_DBG->DR;
+  }
 }
 
 ////==================================================
@@ -460,8 +466,8 @@ return GPIO_ReadInputDataBit(CONC_PIN_GPIO, CONC_PIN);
 void hw_board_init(void)
 {
 init_gpio();
-UART_DBG_Init(); 
-/// I2C_Eeprom_Init();
+UART_DBG_Init();
+I2C_Eeprom_Init();
 #ifndef USB_GRBL_CAN
 led_tim_init();
 mot_tim_init();

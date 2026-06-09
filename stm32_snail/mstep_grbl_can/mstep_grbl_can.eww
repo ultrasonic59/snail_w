@@ -3,6 +3,9 @@
     <project>
         <path>$WS_DIR$\mstep_grbl_can.ewp</path>
     </project>
+    <project>
+        <path>$WS_DIR$\mstep_grbl_can_threadx.ewp</path>
+    </project>
     <batchBuild>
         <batchDefinition>
             <name>mstep_gbrl_can_dbg</name>

@@ -228,6 +228,7 @@ void UART_DBG_Init(void)
 {
 ////GPIO_InitTypeDef GPIO_InitStructure;
 USART_InitTypeDef USART_InitStructure;
+SystemCoreClockUpdate();
 UART_DBG_CLK_INIT(UART_DBG_CLK, ENABLE);
 USART_DeInit(UART_DBG);
 USART_InitStructure.USART_BaudRate = DBG_BR;
@@ -301,7 +302,7 @@ mask= ID_MASK << 21; ///5+16
 
 id=ID_BRD<<21; ///5+16
 
-CAN_FilterConfig(0,id,mask);	
+CAN_FilterConfig(0,id,mask);
   /* Enable FIFO 0 message pending Interrupt */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }

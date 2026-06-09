@@ -51,8 +51,9 @@ typedef struct  CAN_msg_s_{
 extern void CAN1_Init (void);
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
-////extern CanRxMsg RxMessage;
-extern void CAN_wrMsg (can_msg_t *msg);
+extern can_msg_t  CAN_RxMsg;
+extern void CAN_rdMsg(can_msg_t *msg);
+extern void CAN_wrMsg(can_msg_t *msg);
 extern void CAN_Config(void);
 extern void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask);
 extern void init_can(void);

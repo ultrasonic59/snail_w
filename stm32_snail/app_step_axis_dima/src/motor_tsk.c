@@ -3,15 +3,22 @@
 #include "queue.h"
 #include "semphr.h"
 
-////#include "board.h"
 #include "board.h"
 #include "printk.h"
+#include "task.h"
 
 #include "snail_can_cmds.h"
 #include "can.h"
 #include "can_cmds.h"
 #include "emul_eeprom.h"
 #include "hdlc.h"
+
+extern volatile uint8_t can_go_step_done;
+extern uint8_t cur_state;
+extern BaseType_t mot_go_try_chain_isr(BaseType_t *pxHigherPriorityTaskWoken);
+
+volatile uint32_t num_Step = 0U;
+static void stop_mot_step_tim(void);
 
 uint8_t cur_mot_rej=DEF_MOT_REJ;
 static uint8_t cur_mot_dir=0;
@@ -367,27 +374,127 @@ void reset_mot_step(void)
 {
   
 }
-////void put_mot_nstep(uint32_t nstep)
+
+static void set_mot_per_hw(uint16_t per)
+{
+  MOT_STEP_TIM->ARR = (uint32_t)per * 2U;
+  MOT_STEP_TIM->CCR1 = per;
+}
+
+static uint16_t mot_clamp_per(uint16_t per)
+{
+  if (per > MAX_PER) {
+    return MAX_PER;
+  }
+  if (per < MIN_PER) {
+    return MIN_PER;
+  }
+  return per;
+}
+
+static struct {
+  uint16_t start_per;
+  uint16_t end_per;
+  uint16_t ramp_steps;
+  uint16_t ramp_left;
+  uint16_t active_per;
+} mot_ramp;
+
+static void mot_ramp_begin(uint16_t target_per, uint32_t move_steps)
+{
+  uint16_t from;
+  uint16_t to;
+  uint16_t steps;
+
+  to = mot_clamp_per(target_per);
+  from = mot_ramp.active_per;
+  if (from < MIN_PER) {
+    from = MIN_PER;
+  }
+  mot_ramp.start_per = from;
+  mot_ramp.end_per = to;
+  steps = MOT_PER_RAMP_STEPS;
+  if (move_steps > 0U && move_steps < steps) {
+    steps = (uint16_t)move_steps;
+  }
+  if (from == to || steps == 0U) {
+    mot_ramp.ramp_steps = 0U;
+    mot_ramp.ramp_left = 0U;
+    mot_ramp.active_per = to;
+    set_mot_per_hw(to);
+    return;
+  }
+  mot_ramp.ramp_steps = steps;
+  mot_ramp.ramp_left = steps;
+  mot_ramp.active_per = from;
+  set_mot_per_hw(from);
+}
+
+static void mot_ramp_on_step(void)
+{
+  uint16_t done;
+  int32_t delta;
+  uint16_t per;
+
+  if (mot_ramp.ramp_left == 0U) {
+    return;
+  }
+  mot_ramp.ramp_left--;
+  done = (uint16_t)(mot_ramp.ramp_steps - mot_ramp.ramp_left);
+  delta = (int32_t)mot_ramp.end_per - (int32_t)mot_ramp.start_per;
+  per = (uint16_t)((int32_t)mot_ramp.start_per +
+                   (delta * (int32_t)done) / (int32_t)mot_ramp.ramp_steps);
+  per = mot_clamp_per(per);
+  mot_ramp.active_per = per;
+  set_mot_per_hw(per);
+  if (mot_ramp.ramp_left == 0U) {
+    mot_ramp.active_per = mot_ramp.end_per;
+    set_mot_per_hw(mot_ramp.end_per);
+  }
+}
+
+static uint8_t mot_finish_stepping(void)
+{
+  BaseType_t woken = pdFALSE;
+
+  if (mot_go_try_chain_isr(&woken) == pdTRUE) {
+    (void)woken;
+    return 1U;
+  }
+  stop_mot_step_tim();
+  can_go_step_done = 1U;
+  return 0U;
+}
+
+void mot_go_start(uint8_t dirs, uint16_t per, uint32_t steps)
+{
+  if (steps == 0U) {
+    put_mot_nStep(0U);
+    return;
+  }
+  set_dir_mot(dirs);
+  mot_ramp_begin(per, steps);
+  ena_mot(1);
+  num_Step = steps;
+  TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
+  TIM_Cmd(MOT_STEP_TIM, ENABLE);
+}
 
 void set_mot_per(uint16_t per)
 {
-if(per>MAX_PER)
-  per=MAX_PER;
-else if(per<MIN_PER)
-  per=MIN_PER;
-MOT_STEP_TIM ->ARR = per*2;////
-MOT_STEP_TIM ->CCR1 = per;////
-printk("\n\r set_mot_per[%x]",per);
-
+  per = mot_clamp_per(per);
+  mot_ramp.ramp_left = 0U;
+  mot_ramp.active_per = per;
+  set_mot_per_hw(per);
+  printk("\n\r set_mot_per[%x]", per);
 }
 
 ////=======================================================
-void stop_mot_step_tim(void)
+static void stop_mot_step_tim(void)
 {
 TIM_Cmd(MOT_STEP_TIM, DISABLE);
 
 }
-volatile uint32_t num_Step=0;
 
 void  set_dir_mot(uint8_t idat)
 {
@@ -455,6 +562,8 @@ RCC->APB2ENR |= MOT_STEP_TIM_RCC;
 MOT_STEP_TIM ->PSC = DEF_MOT_TIM_PRESC;
 MOT_STEP_TIM ->ARR = DEF_MOT_TIM_PERIOD;////
 MOT_STEP_TIM ->CCR1 = DEF_MOT_TIM_PERIOD/2;////30;
+TIM_ARRPreloadConfig(MOT_STEP_TIM, ENABLE);
+TIM_OC1PreloadConfig(MOT_STEP_TIM, TIM_OCPreload_Enable);
 MOT_STEP_TIM->CCER |= TIM_CCER_CC1E;////TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
 MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1; 
@@ -473,6 +582,8 @@ NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 
+mot_ramp.active_per = MIN_PER;
+mot_ramp.ramp_left = 0U;
 }
 
 ///===========================================================
@@ -509,7 +620,8 @@ void put_mot_nStep(uint32_t nstep)
 }
 
 static uint8_t cur_step_out=0;
-uint8_t use_enc=1;
+uint8_t use_enc=0;///1;
+
 int32_t step_coord=0;
 
 void MOT_STEP_TIM_IRQHandler(void)
@@ -544,10 +656,7 @@ else
            num_Step=0;
      }
   if(num_Step==0){
-    stop_mot_step_tim(); 
-    cur_state &= ~STATE_MASK;
-    cur_state|=STATE_READY;  
- ///   ena_mot(0) ;
+    mot_finish_stepping();
    }
   else{ 
   if(use_enc){
@@ -574,10 +683,13 @@ else
     step_coord++;
   else
     step_coord--;
+  mot_ramp_on_step();
+  if (num_Step == 0U) {
+    mot_finish_stepping();
+  }
   }
   }
 }
-////TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC2);
 TIM_ClearITPendingBit(MOT_STEP_TIM, TIM_IT_CC1);
 }
 

@@ -111,7 +111,7 @@
 
 #define LEN_ACK_QU           8
 
-#define CAN_REQ_STAT_NUM_BYTES 1
+#define CAN_REQ_STAT_NUM_BYTES 2
 
 #ifdef  DOZA_BRD
 #define  _packed_ __attribute__((packed))
@@ -244,6 +244,11 @@ extern int put_can_cmd_go(uint8_t dirs,uint16_t per
 
 extern int put_can_cmd_stat(uint8_t state
                    ,uint32_t coord);
+extern volatile uint8_t can_stat_notify;
+extern volatile uint8_t can_go_step_done;
+extern void can_stat_notify_if_pending(void);
+extern void can_motion_done_if_pending(void);
+extern void go_cmd_queue_clear(void);
 extern int put_can_ack(uint8_t cmd );
 extern int obr_can_cmd(uint8_t *data);
 extern int put_can_boot_ans(uint8_t cmd,uint8_t state);

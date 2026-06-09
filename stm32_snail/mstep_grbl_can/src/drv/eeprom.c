@@ -7,19 +7,27 @@
 #include "printk.h"
 
 ///=====================================================
-uint8_t eeprom_get_char( uint16_t addr )
+uint8_t eeprom_get_char(uint16_t addr)
 {
-uint8_t rez;
-if(addr>EEPROM_MAX_ADDR)
+  uint8_t rez = 0xFF;
+
+  if (addr > EEPROM_MAX_ADDR) {
     return 0;
-i2c_readByteEEprom(addr, &rez);
-return rez;
+  }
+  if (i2c_readByteEEprom(addr, &rez) != 0) {
+    return 0xFF;
+  }
+  return rez;
 }
-void eeprom_put_char(  uint16_t addr, uint8_t new_value )
+
+void eeprom_put_char(uint16_t addr, uint8_t new_value)
 {
-if(addr>EEPROM_MAX_ADDR)
+  if (addr > EEPROM_MAX_ADDR) {
     return;
- i2c_writeByteEEprom(addr, new_value); 
+  }
+  if (i2c_writeByteEEprom(addr, new_value) == 0) {
+    uDelay(DELAY_WRITE);
+  }
 }
 void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size) {
   unsigned char checksum = 0;
