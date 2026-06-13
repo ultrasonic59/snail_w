@@ -8,9 +8,10 @@
 void st_can_on_master_rx(const can_msg_t *msg);
 void st_can_master_poll_stat(void);
 void st_can_batch_flush_if_pending(void);
+uint8_t st_can_get_present_mask(void);
 
 #ifndef SEGMENT_BUFFER_SIZE
-  #define SEGMENT_BUFFER_SIZE 6
+  #define SEGMENT_BUFFER_SIZE 32
 #endif
 
 // GO_CMD step_per is sent in prescaled F_TIM ticks; slave restores: period = step_per * PRESCALE.
@@ -43,7 +44,7 @@ typedef struct {
 
   #ifdef VARIABLE_SPINDLE
     float inv_rate;    // Used by PWM laser mode to speed up segment calculations.
-    uint8_t current_spindle_pwm; 
+    uint8_t current_spindle_pwm;
   #endif
 } st_prep_t;
 // Stores the planner block Bresenham algorithm execution data for the segments in the segment

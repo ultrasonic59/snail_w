@@ -39,5 +39,4 @@ uint16_t e_speed;
 uint16_t flags;
 }step_cmd_t;
 
-
 #endif

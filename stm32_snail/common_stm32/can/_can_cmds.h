@@ -14,8 +14,8 @@
   #define AXIS_BRD AXIS_Y
 #elif STEP_Z
   #define AXIS_BRD AXIS_Z
-#else 
-  #error "\n\r=== STEP_... nodefined ==="; 
+#else
+  #error "\n\r=== STEP_... nodefined ===";
 #endif
 
 #define ID_BRD (AXIS_BRD<<5)
@@ -76,7 +76,6 @@
 #define BOOTER_STATE_PROG     0xF2
 #define BOOTER_NO_BOOT        0xF3
 
-
 #define STATE_IDLE           0
 #define STATE_READY          1
 #define STATE_MOVE           2
@@ -88,41 +87,41 @@
 #define CAN_REQ_STAT_NUM_BYTES 2
 
 typedef struct  go_cmd_s_{
-  uint8_t  cmd;                       /// 
+  uint8_t  cmd;                       ///
   uint8_t  dirs;                     /// Dirs X,Y,Z ....
   uint16_t  step_per;                 /// period step
-  uint32_t  steps;                 /// steps X,Y , Z 
+  uint32_t  steps;                 /// steps X,Y , Z
 }go_cmd_t;
 
 typedef struct  put_stat_cmd_s_{
-  uint8_t  cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
   uint8_t  state;                     /// ready,move,error
   uint8_t  rsv;
-  uint32_t  coord;                      /// 
+  uint32_t  coord;                      ///
 }put_stat_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
-  uint8_t  cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
-  uint8_t  state;                     /// 
+  uint8_t  cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
+  uint8_t  state;                     ///
 }put_boot_stat_cmd_t;
 
 typedef struct  ack_s_{
-  uint8_t  ack_cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  ack_cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
 }ack_t;
 
 typedef struct  put_ack_s_{
-  uint8_t  cmd;                         /// 
-  ack_t   ack;                         /// 
+  uint8_t  cmd;                         ///
+  ack_t   ack;                         ///
 }put_ack_t;
 
 typedef struct  prg_param_cmd_s_{
-  uint8_t   cmd;                         /// 
-  uint16_t  num_par;                        /// 
-  uint8_t   len_par;                     ///bytes 
-  uint32_t  par_val;                      /// 
+  uint8_t   cmd;                         ///
+  uint16_t  num_par;                        ///
+  uint8_t   len_par;                     ///bytes
+  uint32_t  par_val;                      ///
 }prg_param_cmd_t;
 
 #define MAX_CAN_NUM_BYTES  8
@@ -160,14 +159,14 @@ uint16_t data;
 ///============ for progr =====================
 #define MAX_NUM_WORDS_PRG     3
 typedef struct  prg_flash_cmd_s_{
-  uint8_t    cmd;                         /// 
-  uint8_t    num_bytes;                   ///bytes  
-  uint16_t    data[MAX_NUM_WORDS_PRG];                    /// 
+  uint8_t    cmd;                         ///
+  uint8_t    num_bytes;                   ///bytes
+  uint16_t    data[MAX_NUM_WORDS_PRG];                    ///
 }prg_flash_cmd_t;
 
 typedef struct  set_flash_addr_s_{
-  uint8_t    cmd;                      /// 
-  uint32_t   b_addr;                   ///  
+  uint8_t    cmd;                      ///
+  uint32_t   b_addr;                   ///
 }set_flash_addr_t;
 
 ///=========================================================

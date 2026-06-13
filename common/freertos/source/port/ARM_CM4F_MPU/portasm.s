@@ -99,7 +99,6 @@ xPortPendSVHandler:
 
 	bx r14
 
-
 /*-----------------------------------------------------------*/
 
 vPortSVCHandler:

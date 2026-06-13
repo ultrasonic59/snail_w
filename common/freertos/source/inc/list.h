@@ -132,7 +132,6 @@ use of FreeRTOS.*/
 	#define listTEST_LIST_INTEGRITY( pxList )			configASSERT( ( ( pxList )->xListIntegrityValue1 == pdINTEGRITY_CHECK_VALUE ) && ( ( pxList )->xListIntegrityValue2 == pdINTEGRITY_CHECK_VALUE ) )
 #endif /* configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES */
 
-
 /*
  * Definition of the only type of object that a list can contain.
  */
@@ -287,7 +286,6 @@ List_t * const pxConstList = ( pxList );													\
 	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;											\
 }
 
-
 /*
  * Access function to obtain the owner of the first entry in a list.  Lists
  * are normally sorted in ascending item value order.
@@ -409,4 +407,3 @@ UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove ) PRIVILEGED_FUNCTIO
 #endif
 
 #endif
-

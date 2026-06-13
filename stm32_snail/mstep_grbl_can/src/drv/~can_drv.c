@@ -57,7 +57,7 @@ GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 ////GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_Init(CAN1_TX_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(CAN1_TX_PIN_GPIO, CAN1_TX_PIN_SOURCE, GPIO_AF_CAN1);
-  
+
 }
 ////==================================================================
 TestStatus CAN_Polling(void)
@@ -71,7 +71,7 @@ TestStatus CAN_Polling(void)
 
   /* CAN register init */
   CAN_DeInit(CANx);
-  
+
   /* CAN cell init */
   CAN_InitStructure.CAN_TTCM = DISABLE;
   CAN_InitStructure.CAN_ABOM = DISABLE;
@@ -95,7 +95,7 @@ TestStatus CAN_Polling(void)
   CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
   CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
   CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;  
+  CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
   CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
 
   CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
@@ -132,7 +132,7 @@ TestStatus CAN_Polling(void)
 
   if (RxMessage.StdId != 0x11)
   {
-    return FAILED;  
+    return FAILED;
   }
 
   if (RxMessage.IDE != CAN_ID_STD)
@@ -142,14 +142,14 @@ TestStatus CAN_Polling(void)
 
   if (RxMessage.DLC != 2)
   {
-    return FAILED;  
+    return FAILED;
   }
 
   if ((RxMessage.Data[0]<<8|RxMessage.Data[1]) != 0xCAFE)
   {
     return FAILED;
   }
-  
+
   return PASSED; /* Test Passed */
 }
 
@@ -172,7 +172,7 @@ TestStatus CAN_Interrupt(void)
   CAN_InitStructure.CAN_TXFP = DISABLE;
   CAN_InitStructure.CAN_Mode = CAN_Mode_LoopBack;
   CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
-  
+
   /* Baudrate = 500 Kbps */
   CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
   CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
@@ -191,7 +191,7 @@ TestStatus CAN_Interrupt(void)
   CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
   CAN_FilterInit(&CAN_FilterInitStructure);
 
-  /* CAN FIFO0 message pending interrupt enable */ 
+  /* CAN FIFO0 message pending interrupt enable */
   CAN_ITConfig(CANx, CAN_IT_FMP0, ENABLE);
 
   /* transmit 1 message */
@@ -206,17 +206,17 @@ TestStatus CAN_Interrupt(void)
 
   /* initialize the value that will be returned */
   ret = 0xFF;
-       
+
   /* receive message with interrupt handling */
   i = 0;
   while((ret ==  0xFF) && (i < 0xFFF))
   {
     i++;
   }
-  
+
   if (i ==  0xFFF)
   {
-    ret = 0;  
+    ret = 0;
   }
 
   /* disable interrupt handling */
@@ -258,11 +258,10 @@ if (TestRx !=  FAILED)
   /* Infinite loop */
   while (1)
   {
-    
+
   }
 
 return 0;
 }
-
 
 ////==================================================================

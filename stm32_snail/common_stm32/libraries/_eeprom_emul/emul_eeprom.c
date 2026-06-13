@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    EEPROM_Emulation/src/eeprom.c 
+  * @file    EEPROM_Emulation/src/eeprom.c
   * @author  MCD Application Team
   * @version V3.1.0
   * @date    07/27/2009
@@ -16,18 +16,16 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2009 STMicroelectronics</center></h2>
-  */ 
+  */
 /** @addtogroup EEPROM_Emulation
   * @{
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "emul_eeprom.h"
 
-
 /* Global variable used to store variable value in read sequence */
 uint16_t DataVar = 0;
-
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -267,7 +265,7 @@ uint8_t EE_Read(uint16_t VirtAddress, uint16_t* Data)
  uint32_t PageStartAddress;
  uint32_t Address;
  uint16_t AddressValue;
- 
+
  /// uint16_t AddressValue = 0x5555, ReadStatus = 1;
  //// uint32_t Address = 0x08010000, PageStartAddress = 0x08010000;
 
@@ -338,7 +336,7 @@ FLASH_Unlock();
     /* Perform Page transfer */
     Status = EE_PageTransfer(VirtAddress, Data);
   }
-////==================================================  
+////==================================================
 FLASH_Lock();
 
   /* Return last operation status */
@@ -531,7 +529,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
  ////uint32_t OldPageAddress = PAGE0_BASE_ADDRESS;
   ///uint16_t NewPageSector = PAGE1_SECTOR;
   uint16_t OldPageSector = PAGE0_SECTOR;
- 
+
   uint16_t ValidPage = PAGE0;
   uint16_t VarIdx = 0;
   uint16_t EepromStatus = 0;
@@ -640,6 +638,6 @@ return rez;
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

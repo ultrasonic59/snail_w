@@ -64,7 +64,6 @@ extern "C" {
 struct StreamBufferDef_t;
 typedef struct StreamBufferDef_t * StreamBufferHandle_t;
 
-
 /**
  * message_buffer.h
  *

@@ -91,7 +91,6 @@ void HardFaultException_handler( uint32_t MSP, uint32_t PSP, uint32_t LR );
  *               Function Definitions
  ******************************************************/
 
-
 #ifdef DEBUG_HARDFAULT
 PLATFORM_DEFINE_NAKED_ISR( HardFaultException )
 {
@@ -138,7 +137,6 @@ void HardFaultException_handler( uint32_t MSP, uint32_t PSP, uint32_t LR )
     {
         /* Hard Fault is an escalated fault that was not handled */
         /* Need to read the other fault status registers */
-
 
         if ( ( SCB->CFSR & SCB_CFSR_MMARVALID    ) != 0 )
         {
@@ -280,4 +278,3 @@ void HardFaultException_handler( uint32_t MSP, uint32_t PSP, uint32_t LR )
 #endif /* if defined( __GNUC__ ) && ( ! defined( __clang__ ) ) */
 
 #endif /* ifdef DEBUG_HARDFAULT */
-

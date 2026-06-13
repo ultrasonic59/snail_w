@@ -40,7 +40,6 @@
 	#define static
 #endif
 
-
 /* Lists for ready and blocked co-routines. --------------------*/
 static List_t pxReadyCoRoutineLists[ configMAX_CO_ROUTINE_PRIORITIES ];	/*< Prioritised ready co-routines. */
 static List_t xDelayedCoRoutineList1;									/*< Delayed co-routines. */
@@ -350,4 +349,3 @@ BaseType_t xReturn;
 }
 
 #endif /* configUSE_CO_ROUTINES == 0 */
-

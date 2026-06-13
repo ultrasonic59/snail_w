@@ -367,6 +367,7 @@
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
                     <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common_stm32\threadx_app</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
@@ -1495,6 +1496,7 @@
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
                     <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common_stm32\threadx_app</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
@@ -2623,6 +2625,7 @@
                     <state>$PROJ_DIR$\src\board</state>
                     <state>$PROJ_DIR$\src\inc</state>
                     <state>$PROJ_DIR$\azure_port</state>
+                    <state>$PROJ_DIR$\..\common_stm32\threadx_app</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
                     <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
@@ -3441,7 +3444,7 @@
             <name>$PROJ_DIR$\azure_port\tx_initialize_low_level.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\azure_port\rtos_compat.c</name>
+            <name>$PROJ_DIR$\..\common_stm32\threadx_app\threadx_app.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\azure_port\tx_application.c</name>

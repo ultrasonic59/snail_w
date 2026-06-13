@@ -24,7 +24,6 @@
 #define TEMP_SENSOR_AVG_SLOPE_MV_PER_CELSIUS      2.5f
 #define TEMP_SENSOR_VOLTAGE_MV_AT_25            760.0f
 
-
 // on-off switch settings
 #define OFF 0
 #define ON 1

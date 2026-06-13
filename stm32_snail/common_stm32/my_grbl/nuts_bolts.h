@@ -78,7 +78,6 @@ void delay_sec(float seconds, uint8_t mode);
 // Delays variable-defined milliseconds. Compiler compatibility fix for _delay_ms().
 void delay__ms(uint16_t ms);
 
-
 // Computes hypotenuse, avoiding avr-gcc's bloated version and the extra error checking.
 float hypot_f(float x, float y);
 

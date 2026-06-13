@@ -24,9 +24,8 @@
 ////#define MOT_STEP_TIM_IRQHandler	 TIM1_TRG_COM_TIM11_IRQHandler
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
-
 ////#define MOT_STEP_TIM_IRQHandler	TIM8_BRK_TIM12_IRQHandler
-////#define TIM8_TRG_COM_TIM14_IRQHandler  MOT_STEP_TIM_IRQHandler	
+////#define TIM8_TRG_COM_TIM14_IRQHandler  MOT_STEP_TIM_IRQHandler
 
 ////#define TIM_LED_FREQ	100000
 ////#define MOT_TIM_IRQN    TIM1_TRG_COM_TIM11_IRQn////TIM8_BRK_TIM12_IRQn
@@ -243,12 +242,8 @@ extern int get_byte_dbg(void) ;
 extern void can1_init(void);
 extern uint8_t can1_send(uint16_t id, uint8_t data_len, uint8_t *data);
 
-#define dbg_sendchar  send_char_dbg 
+#define dbg_sendchar  send_char_dbg
 #define dbg_get_byte get_byte_dbg
 
 ////=============================================
 #endif ////__BOARD_H__
-
-
-
-	

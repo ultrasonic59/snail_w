@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -39,9 +39,8 @@
 #include "usbd_cdc_core.h"
 #include "usbd_conf.h"
 
-
 /* Exported typef ------------------------------------------------------------*/
-/* The following structures groups all needed parameters to be configured for the 
+/* The following structures groups all needed parameters to be configured for the
    ComPort. These parameters can modified on the fly by the host through CDC class
    command class requests. */
 typedef struct
@@ -55,15 +54,14 @@ typedef struct
 /* Exported constants --------------------------------------------------------*/
 /* The following define is used to route the USART IRQ handler to be used.
    The IRQ handler function is implemented in the usbd_cdc_vcp.c file. */
-          
+
 #ifdef USE_STM3210C_EVAL
  #define EVAL_COM_IRQHandler            USART2_IRQHandler
 #elif defined(USE_STM324x9I_EVAL)
- #define EVAL_COM_IRQHandler            USART1_IRQHandler 
+ #define EVAL_COM_IRQHandler            USART1_IRQHandler
 #else
- #define EVAL_COM_IRQHandler            USART3_IRQHandler 
+ #define EVAL_COM_IRQHandler            USART3_IRQHandler
 #endif /* USE_STM322xG_EVAL */
-
 
 #define DEFAULT_CONFIG                  0
 #define OTHER_CONFIG                    1

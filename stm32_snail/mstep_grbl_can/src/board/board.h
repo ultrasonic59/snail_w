@@ -1,5 +1,11 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
+#include "tx_api.h"
+
+#ifndef APP_NVIC_LOW_IRQ_PRIORITY
+#define APP_NVIC_LOW_IRQ_PRIORITY  15U
+#endif
+
 ////======================================
 #ifdef MSTEP_BRD
   #include "mstep_board.h"
@@ -13,6 +19,6 @@
 ////======================================
 ////extern void tst_task( void *pvParameters );
 
-#define msleep vTaskDelay
+#define msleep(ms)  tx_thread_sleep((ULONG)(ms))
 
 #endif

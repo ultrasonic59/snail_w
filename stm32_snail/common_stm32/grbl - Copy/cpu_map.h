@@ -22,7 +22,6 @@
    processor types or alternative pin layouts. This version of Grbl officially supports
    only the Arduino Mega328p. */
 
-
 #ifndef cpu_map_h
 #define cpu_map_h
 
@@ -59,7 +58,6 @@
 #define U_DIRECTION_BIT   13
 #define V_DIRECTION_BIT   15
 
-
 #define X_DIRECTION_BIT_DEF (1<<X_DIRECTION_BIT)
 #define Y_DIRECTION_BIT_DEF (1<<Y_DIRECTION_BIT)
 #define Z_DIRECTION_BIT_DEF (1<<Z_DIRECTION_BIT)
@@ -68,7 +66,6 @@
 #define C_DIRECTION_BIT_DEF (1<<C_DIRECTION_BIT)
 #define U_DIRECTION_BIT_DEF (1<<U_DIRECTION_BIT)
 #define V_DIRECTION_BIT_DEF (1<<V_DIRECTION_BIT)
-
 
 #define DIRECTION_MASK    (X_DIRECTION_BIT_DEF|Y_DIRECTION_BIT_DEF|Z_DIRECTION_BIT_DEF|A_DIRECTION_BIT_DEF|B_DIRECTION_BIT_DEF|C_DIRECTION_BIT_DEF|U_DIRECTION_BIT_DEF|V_DIRECTION_BIT_DEF) // All direction bits
 // Define homing/hard limit switch input pins and limit interrupt vectors.
@@ -92,7 +89,6 @@
 #define LIMIT_C_BIT_DEF (1<<C_LIMIT_BIT)
 #define LIMIT_U_BIT_DEF (1<<U_LIMIT_BIT)
 #define LIMIT_V_BIT_DEF (1<<V_LIMIT_BIT)
-
 
 #define LIMIT_MASK       (LIMIT_X_BIT_DEF|LIMIT_Y_BIT_DEF|LIMIT_Z_BIT_DEF|LIMIT_A_BIT_DEF|LIMIT_B_BIT_DEF|LIMIT_C_BIT_DEF|LIMIT_U_BIT_DEF|LIMIT_V_BIT_DEF) // All limit bits
 

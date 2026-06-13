@@ -1,8 +1,3 @@
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-
-////#include "stm32f2xx_gpio.h"
 #include "board.h"
 ////#include "my_grbl.h"
 #include "printk.h"
@@ -10,30 +5,40 @@
 ////#define TEST_PIN ZSTP_PIN
 ////#define TEST_PIN_GPIO ZSTP_PIN_GPIO
 
-void  put_tst_pin(uint8_t idat)
+void  put_tst1_pin(uint8_t idat)
 {
-#if 1  
+#if 1
 if(idat&0x1)
   {
-  GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
    GPIO_SetBits(TST2_PIN_GPIO, TST2_PIN);
-  ////GPIO_SetBits(TST7_PIN_GPIO, TST7_PIN);
   }
 else
   {
-   GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
    GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
-   ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
-  }
-#endif 
+   }
+#endif
 }
+void  put_tst_pin(uint8_t idat)
+{
+#if 1
+if(idat&0x1)
+  {
+  GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
+   }
+else
+  {
+   GPIO_ResetBits(TST3_PIN_GPIO, TST3_PIN);
+   }
+#endif
+}
+
 ////===============================================================
 // Method to store coord data parameters into EEPROM
 void settings_write_coord_data(uint8_t coord_select, float *coord_data)
 {
 }
 // Read selected coordinate data from EEPROM. Updates pointed coord_data value.
-  
+
 uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
 {
 #if 0
@@ -94,13 +99,12 @@ void settings_store_startup_line(uint8_t n, char *line)
 {
 #if 0
   #ifdef FORCE_BUFFER_SYNC_DURING_EEPROM_WRITE
-    protocol_buffer_synchronize(); // A startup line may contain a motion and be executing. 
+    protocol_buffer_synchronize(); // A startup line may contain a motion and be executing.
   #endif
   uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
   memcpy_to_eeprom_with_checksum(addr,(char*)line, LINE_BUFFER_SIZE);
 #endif
 }
-
 
 ////========================================================================
 void coolant_stop(void)
@@ -119,7 +123,7 @@ uint8_t coolant_get_state()
 {
 return 0;
 }
-  
+
 void  SetSpindleEnablebit(void)
 {
 }
@@ -159,21 +163,21 @@ void  put_steps(uint8_t steps)////???
 {
 if(steps&(1 << X_STEP_BIT))
   {
-  printk("x");  
+  printk("x");
   }
 if(steps&(1 << Y_STEP_BIT))
   {
-  printk("y");  
+  printk("y");
   }
 if(steps&(1 << Z_STEP_BIT))
   {
-  printk("z");  
+  printk("z");
   }
-         
+
 }
 void steps_reset(void)
 {
-  
+
 }
 
 void SetStepperDisableBit(void) ////GPIO_SetBits(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_MASK)

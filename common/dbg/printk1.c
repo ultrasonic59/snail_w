@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -173,7 +172,6 @@ int _print_out(char *s, const char *format, va_list sp)
           break;
       }
 
-
       /* check which type of varaible to print */
       switch(*format)
       {
@@ -185,7 +183,7 @@ int _print_out(char *s, const char *format, va_list sp)
           str_len = 1;
           break;
         }
-        
+
         case 'c':
         {
           /* output a single character */
@@ -253,7 +251,7 @@ int _print_out(char *s, const char *format, va_list sp)
 
           if (str_len == 0)
             str_len = 1; /* if value was zero, we need to increment length */
-          
+
           tmp_buf[str_len] = 0;
           break;
         }
@@ -308,7 +306,7 @@ int _print_out(char *s, const char *format, va_list sp)
         case 'X':
           if (prefix_select != 0) prefix_select++;
           /* fall through to processing */
-        case 'x':  
+        case 'x':
         {
           /* output hex value from stack */
           static const char ascii_table_lower[] = "0123456789abcdef";
@@ -335,7 +333,6 @@ int _print_out(char *s, const char *format, va_list sp)
               break;
           }
 
-
           /* write out hex values to buffer...after suppressing initial zeros */
           for (index = 0; index < 8; index++)
           {
@@ -347,7 +344,7 @@ int _print_out(char *s, const char *format, va_list sp)
 
           if (str_len == 0)
             str_len = 1; /* if value was zero, we need to increment length */
-          
+
           tmp_buf[str_len] = 0;
           break;
         }
@@ -376,7 +373,7 @@ int _print_out(char *s, const char *format, va_list sp)
           str_ptr = err_msg;
           str_len = (int)sizeof(err_msg)-1;
           format=err_fmt;
-          
+
           break;
         }
       } /* switch end */

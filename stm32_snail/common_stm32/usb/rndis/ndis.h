@@ -16,14 +16,14 @@
  */
 
 /*
- * ndis.h 
- * 
+ * ndis.h
+ *
  * Modified by Colin O'Flynn <coflynn@newae.com>
  * ntddndis.h modified by Benedikt Spranger <b.spranger@pengutronix.de>
- * 
- * Thanks to the cygwin development team, 
+ *
+ * Thanks to the cygwin development team,
  * espacially to Casper S. Hornstrup <chorns@users.sourceforge.net>
- * 
+ *
  * THIS SOFTWARE IS NOT COPYRIGHTED
  *
  * This source code is offered for use in the public domain. You may
@@ -38,7 +38,6 @@
 
 #ifndef _LINUX_NDIS_H
 #define _LINUX_NDIS_H
-
 
 #define NDIS_STATUS_MULTICAST_FULL	      0xC0010009
 #define NDIS_STATUS_MULTICAST_EXISTS      0xC001000A
@@ -191,8 +190,6 @@ struct NDIS_PM_PACKET_PATTERN {
 #define OID_802_11_DISASSOCIATE           0x0D010115 /*    S     */
 #define OID_802_11_AUTHENTICATION_MODE    0x0D010118 /* Q  S     */
 #define OID_802_11_RELOAD_DEFAULTS        0x0D01011C /*    S     */
-
-
 
 /* OID_GEN_MINIPORT_INFO constants */
 #define NDIS_MINIPORT_BUS_MASTER                      0x00000001

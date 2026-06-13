@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
@@ -82,7 +81,6 @@ typedef unsigned long UBaseType_t;
 #define portWEAK_SYMBOL				__attribute__( ( weak ) )
 
 /*-----------------------------------------------------------*/
-
 
 /* Scheduler utilities. */
 #define portYIELD()											\
@@ -177,4 +175,3 @@ warnings. */
 #endif
 
 #endif /* PORTMACRO_H */
-

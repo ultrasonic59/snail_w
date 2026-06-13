@@ -83,7 +83,6 @@ typedef int bool;
 /////#define printPgmString printString
 // Axis array index values. Must start with 0 and be continuous.
 
-
 #define SOME_LARGE_VALUE FLT_MAX
 
 ////==============================================
@@ -93,7 +92,7 @@ typedef int bool;
 #define SERIAL_NO_DATA 0xff
 
 ////==============================================
-extern void serial_write(uint8_t data); 
+extern void serial_write(uint8_t data);
 ////extern void report_init_message(void);
 extern int serial_read_tx(void);
 

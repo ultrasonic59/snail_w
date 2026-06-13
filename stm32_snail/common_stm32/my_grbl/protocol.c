@@ -26,7 +26,6 @@
 #define LINE_FLAG_COMMENT_PARENTHESES bit(1)
 #define LINE_FLAG_COMMENT_SEMICOLON bit(2)
 
-
 static char line[LINE_BUFFER_SIZE]; // Line to be executed. Zero-terminated.
 #ifdef LEDBLINK
 void LedBlink(void);
@@ -40,7 +39,6 @@ extern void system_clear_exec_motion_overrides() ;
 extern void system_clear_exec_accessory_overrides() ;
 
 static void protocol_exec_rt_suspend();
-
 
 /*
   GRBL PRIMARY LOOP:
@@ -176,7 +174,6 @@ void protocol_main_loop()
 ////  return; /* Never reached */
 }
 
-
 // Block until all buffered steps are executed or in a cycle state. Works with feed hold
 // during a synchronize call, if it should happen. Also, waits for clean cycle end.
 void protocol_buffer_synchronize()
@@ -188,7 +185,6 @@ void protocol_buffer_synchronize()
     if (sys.abort) { return; } // Check for system abort
   } while (plan_get_current_block() || (sys.state == STATE_CYCLE));
 }
-
 
 // Auto-cycle start triggers when there is a motion ready to execute and if the main program is not
 // actively parsing commands.
@@ -202,7 +198,6 @@ void protocol_auto_cycle_start()
     system_set_exec_state_flag(EXEC_CYCLE_START); // If so, execute them!
   }
 }
-
 
 // This function is the general interface to Grbl's real-time command execution system. It is called
 // from various check points in the main program, primarily where there may be a while loop waiting
@@ -220,7 +215,6 @@ void protocol_execute_realtime()
   protocol_exec_rt_system();
   if (sys.suspend) { protocol_exec_rt_suspend(); }
 }
-
 
 // Executes run-time commands, when required. This function primarily operates as Grbl's state
 // machine and controls the various real-time features Grbl has to offer.
@@ -271,14 +265,14 @@ void protocol_exec_rt_system()
 
       // State check for allowable states for hold methods.
       if (!(sys.state & (STATE_ALARM | STATE_CHECK_MODE))) {
-      
+
         // If in CYCLE or JOG states, immediately initiate a motion HOLD.
         if (sys.state & (STATE_CYCLE | STATE_JOG)) {
           if (!(sys.suspend & (SUSPEND_MOTION_CANCEL | SUSPEND_JOG_CANCEL))) { // Block, if already holding.
             st_update_plan_block_parameters(); // Notify stepper module to recompute for hold deceleration.
             sys.step_control = STEP_CONTROL_EXECUTE_HOLD; // Initiate suspend state with active flag.
             if (sys.state == STATE_JOG) { // Jog cancelled upon any hold event, except for sleeping.
-              if (!(rt_exec & EXEC_SLEEP)) { sys.suspend |= SUSPEND_JOG_CANCEL; } 
+              if (!(rt_exec & EXEC_SLEEP)) { sys.suspend |= SUSPEND_JOG_CANCEL; }
             }
           }
         }
@@ -329,12 +323,12 @@ void protocol_exec_rt_system()
           // are executed if the door switch closes and the state returns to HOLD.
           sys.suspend |= SUSPEND_SAFETY_DOOR_AJAR;
         }
-        
+
       }
 
       if (rt_exec & EXEC_SLEEP) {
         if (sys.state == STATE_ALARM) { sys.suspend |= (SUSPEND_RETRACT_COMPLETE|SUSPEND_HOLD_COMPLETE); }
-        sys.state = STATE_SLEEP; 
+        sys.state = STATE_SLEEP;
       }
 
       system_clear_exec_state_flag((EXEC_MOTION_CANCEL | EXEC_FEED_HOLD | EXEC_SAFETY_DOOR | EXEC_SLEEP));
@@ -510,7 +504,6 @@ void protocol_exec_rt_system()
 
 }
 
-
 // Handles Grbl system suspend procedures, such as feed hold, safety door, and parking motion.
 // The system will enter this loop, create local variables for suspend tasks, and return to
 // whatever function that invoked the suspend, such that Grbl resumes normal operation.
@@ -560,10 +553,10 @@ static void protocol_exec_rt_suspend()
     // Block until initial hold is complete and the machine has stopped motion.
     if (sys.suspend & SUSPEND_HOLD_COMPLETE) {
 
-      // Parking manager. Handles de/re-energizing, switch state checks, and parking motions for 
+      // Parking manager. Handles de/re-energizing, switch state checks, and parking motions for
       // the safety door and sleep states.
       if (sys.state & (STATE_SAFETY_DOOR | STATE_SLEEP)) {
-      
+
         // Handles retraction motions and de-energizing.
         if (bit_isfalse(sys.suspend,SUSPEND_RETRACT_COMPLETE)) {
 
@@ -576,7 +569,7 @@ static void protocol_exec_rt_suspend()
             coolant_set_state(COOLANT_DISABLE);     // De-energize
 
           #else
-					
+
             // Get current position and store restore location and spindle retract waypoint.
             system_convert_array_steps_to_mpos(parking_target,sys_position);
             if (bit_isfalse(sys.suspend,SUSPEND_RESTART_RETRACT)) {
@@ -637,7 +630,6 @@ static void protocol_exec_rt_suspend()
 
         } else {
 
-          
           if (sys.state == STATE_SLEEP) {
             report_feedback_message(MESSAGE_SLEEP_MODE);
             // Spindle and coolant should already be stopped, but do it again just to be sure.
@@ -646,8 +638,8 @@ static void protocol_exec_rt_suspend()
             st_go_idle(); // Disable steppers
             while (!(sys.abort)) { protocol_exec_rt_system(); } // Do nothing until reset.
             return; // Abort received. Return to re-initialize.
-          }    
-          
+          }
+
           // Allows resuming from parking/safety door. Actively checks if safety door is closed and ready to resume.
           if (sys.state == STATE_SAFETY_DOOR) {
             if (!(system_check_safety_door_ajar())) {
@@ -726,7 +718,6 @@ static void protocol_exec_rt_suspend()
           }
 
         }
-
 
       } else {
 

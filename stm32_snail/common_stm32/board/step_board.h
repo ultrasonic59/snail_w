@@ -19,7 +19,6 @@
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
-
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
 #if 0
 ////=============== TST1 ============================
@@ -331,12 +330,8 @@ extern void set_mot_rej(uint8_t rej);
 extern int sendchar6 (int c) ;
 extern int get_byte6(void) ;
 
-#define dbg_sendchar  sendchar6 
+#define dbg_sendchar  sendchar6
 #define dbg_get_byte get_byte6
 
 ////=============================================
 #endif ////__STEP_BOARD_H__
-
-
-
-	

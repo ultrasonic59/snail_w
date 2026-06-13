@@ -127,7 +127,4 @@
 	#define taskCHECK_FOR_STACK_OVERFLOW()
 #endif
 
-
-
 #endif /* STACK_MACROS_H */
-

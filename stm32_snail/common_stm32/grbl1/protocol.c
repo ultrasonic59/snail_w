@@ -359,7 +359,6 @@ bool protocol_main_loop (void)
     }
 }
 
-
 // Block until all buffered steps are executed or in a cycle state. Works with feed hold
 // during a synchronize call, if it should happen. Also, waits for clean cycle end.
 bool protocol_buffer_synchronize (void)
@@ -368,12 +367,11 @@ bool protocol_buffer_synchronize (void)
 
     // If system is queued, ensure cycle resumes if the auto start flag is present.
     protocol_auto_cycle_start();
-    
+
     while((ok = protocol_execute_realtime()) && (plan_get_current_block() || state_get() == STATE_CYCLE));
 
     return ok;
 }
-
 
 // Auto-cycle start triggers when there is a motion ready to execute and if the main program is not
 // actively parsing commands.
@@ -386,7 +384,6 @@ void protocol_auto_cycle_start (void)
     if(!ABORTED && plan_get_current_block()) // Check if there are any blocks in the buffer.
         system_set_exec_state_flag(EXEC_CYCLE_START); // If so, execute them!
 }
-
 
 // This function is the general interface to grblHAL's real-time command execution system. It is called
 // from various check points in the main program, primarily where there may be a while loop waiting

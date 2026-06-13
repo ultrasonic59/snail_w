@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 #ifndef QUEUE_H
 #define QUEUE_H
 
@@ -561,7 +560,6 @@ typedef struct QueueDefinition * QueueSetMemberHandle_t;
  */
 #define xQueueOverwrite( xQueue, pvItemToQueue ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), 0, queueOVERWRITE )
 
-
 /**
  * queue. h
  * <pre>
@@ -982,7 +980,6 @@ void vQueueDelete( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
  * \ingroup QueueManagement
  */
 #define xQueueSendToFrontFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_FRONT )
-
 
 /**
  * queue. h
@@ -1646,10 +1643,8 @@ void vQueueSetQueueNumber( QueueHandle_t xQueue, UBaseType_t uxQueueNumber ) PRI
 UBaseType_t uxQueueGetQueueNumber( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
 uint8_t ucQueueGetQueueType( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
 
-
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* QUEUE_H */
-

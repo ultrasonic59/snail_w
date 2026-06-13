@@ -1,4 +1,3 @@
-
 #ifndef __FLASH_IF_H
 #define __FLASH_IF_H
 
@@ -14,5 +13,4 @@ uint32_t _FLASH_If_Write(__IO uint32_t* FlashAddress, uint32_t* Data, uint32_t D
 uint16_t _FLASH_If_GetWriteProtectionStatus(void);
 uint32_t _FLASH_If_DisableWriteProtection(void);
 
-#endif  
-
+#endif

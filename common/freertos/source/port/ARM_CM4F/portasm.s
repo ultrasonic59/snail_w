@@ -38,7 +38,6 @@
 	PUBLIC vPortStartFirstTask
 	PUBLIC vPortEnableVFP
 
-
 /*-----------------------------------------------------------*/
 
 xPortPendSVHandler:
@@ -93,7 +92,6 @@ xPortPendSVHandler:
 
 	bx r14
 
-
 /*-----------------------------------------------------------*/
 
 vPortSVCHandler:
@@ -143,7 +141,4 @@ vPortEnableVFP:
 	str r1, [r0]
 	bx	r14
 
-
-
 	END
-

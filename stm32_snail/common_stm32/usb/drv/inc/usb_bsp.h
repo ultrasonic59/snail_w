@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -35,46 +35,43 @@
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
-  
-/** @defgroup USB_BSP
-  * @brief This file is the 
-  * @{
-  */ 
 
+/** @defgroup USB_BSP
+  * @brief This file is the
+  * @{
+  */
 
 /** @defgroup USB_BSP_Exported_Defines
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USB_BSP_Exported_Types
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USB_BSP_Exported_Macros
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USB_BSP_Exported_Variables
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USB_BSP_Exported_FunctionsPrototype
   * @{
-  */ 
+  */
 void BSP_Init(void);
 
 void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
@@ -85,22 +82,21 @@ void USB_OTG_BSP_TimerIRQ (void);
 #ifdef USE_HOST_MODE
 void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
 void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-void USB_OTG_BSP_Resume(USB_OTG_CORE_HANDLE *pdev) ;                                                                
+void USB_OTG_BSP_Resume(USB_OTG_CORE_HANDLE *pdev) ;
 void USB_OTG_BSP_Suspend(USB_OTG_CORE_HANDLE *pdev);
 
 #endif /* USE_HOST_MODE */
 /**
   * @}
-  */ 
+  */
 
 #endif /* __USB_BSP__H__ */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

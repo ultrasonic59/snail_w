@@ -125,12 +125,11 @@
 #define SPINDLE_STOP_OVR_RESTORE        bit(2)
 #define SPINDLE_STOP_OVR_RESTORE_CYCLE  bit(3)
 
-
 // Define global system variables
 typedef struct {
   uint8_t state;               // Tracks the current system state of Grbl.
   uint8_t prev_state;          // Tracks the previous current system state of Grbl.
-  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.             
+  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.
   uint8_t suspend;             // System suspend bitflag variable that manages holds, cancels, and safety door.
   uint8_t soft_limit;          // Tracks soft limit errors for the state machine. (boolean)
   uint8_t step_control;        // Governs the step segment generator depending on system state.
@@ -186,7 +185,6 @@ uint8_t system_execute_line(char *line);
 // Execute the startup script lines stored in EEPROM upon initialization
 void system_execute_startup(char *line);
 
-
 void system_flag_wco_change();
 
 // Returns machine position of axis 'idx'. Must be sent a 'step' array.
@@ -215,6 +213,5 @@ void system_clear_exec_motion_overrides();
 void system_clear_exec_accessory_overrides();
 
 void _EXTI15_10_IRQHandler(void);
-
 
 #endif

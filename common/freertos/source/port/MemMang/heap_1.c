@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 /*
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
@@ -141,6 +140,3 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
-
-
-

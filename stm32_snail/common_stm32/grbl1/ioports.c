@@ -1006,7 +1006,7 @@ FLASHMEM bool ioport_remap (io_port_type_t type, io_port_direction_t dir, uint8_
     uint8_t org_port;
     bool ok;
     io_ports_private_t *cfg = get_port_data(type, dir);
- 
+
     if((ok = (cfg->claimed.mask & (1UL << cfg->map[port_to])) == 0)) {
 
         if((org_port = map_reverse(cfg, port_from)) != port_to) {

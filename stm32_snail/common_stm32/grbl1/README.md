@@ -1,20 +1,20 @@
 ## grblHAL ##
 
-Latest build date is 202603416, see the [changelog](changelog.md) for details.  
+Latest build date is 202603416, see the [changelog](changelog.md) for details.
 
 > [!NOTE]
->  A settings reset will be performed on an update of builds prior to 20241208. Backup and restore of settings is recommended.  
+>  A settings reset will be performed on an update of builds prior to 20241208. Backup and restore of settings is recommended.
 
 ---
 
 A web app for [building for some drivers](http://svn.io-engineering.com:8080/) is now available, feedback will be appreciated.
 
 grblHAL has [many extensions](https://github.com/grblHAL/core/wiki) that may cause issues with some senders.
-As a workaround for these a [compile time option](https://github.com/grblHAL/core/wiki/Changes-from-grbl-1.1#workaround) has been added that disables extensions selectively. 
+As a workaround for these a [compile time option](https://github.com/grblHAL/core/wiki/Changes-from-grbl-1.1#workaround) has been added that disables extensions selectively.
 
 > [!NOTE]
-> grblHAL defaults to normally closed \(NC\) switches for inputs, if none are connected when testing it is likely that the controller will start in alarm mode.  
-> Temporarily short the Reset, E-Stop and Safety Door<sup>4</sup> inputs to ground or invert the corresponding inputs by setting `$14=73` to avoid that.  
+> grblHAL defaults to normally closed \(NC\) switches for inputs, if none are connected when testing it is likely that the controller will start in alarm mode.
+> Temporarily short the Reset, E-Stop and Safety Door<sup>4</sup> inputs to ground or invert the corresponding inputs by setting `$14=73` to avoid that.
 > Please check out [this Wiki page](https://github.com/grblHAL/core/wiki/Changes-from-grbl-1.1) for additional important information.
 
 Windows users may try [ioSender](https://github.com/terjeio/Grbl-GCode-Sender), binary releases can be found [here](https://github.com/terjeio/Grbl-GCode-Sender/releases).
@@ -27,7 +27,7 @@ Currently drivers are available for more than 15 different processors/processor 
 
 grblHAL has an open architecture allowing [plugins](https://github.com/grblHAL/plugins) to extend functionality.
 User made plugins can be added to grblHAL without changing a single file in the source<sup>1</sup>, and allows for a wide range extensions to be added.
-New M-codes can be added, space for plugin specific settings can be allocated, events can be subscribed to etc. etc.  
+New M-codes can be added, space for plugin specific settings can be allocated, events can be subscribed to etc. etc.
 Adding code to drive an ATC, extra outputs or even adding a UI<sup>2</sup> has never been easier. You can even add your own [driver](https://github.com/grblHAL/Templates/tree/master/arm-driver) if you feel so inclined.
 
 HAL = Hardware Abstraction Layer
@@ -41,9 +41,9 @@ grblHAL includes full acceleration management with look ahead. That means the co
 
 This is a port/rewrite of [grbl 1.1f](https://github.com/gnea/grbl) and should be compatible with GCode senders compliant with the specifications for that version. It should be possible to change default compile-time configurations if problems arise, eg. the default serial buffer sizes has been increased in some of the [drivers](https://github.com/grblHAL/drivers) provided.
 
-<sup>1</sup> This feature is only to be used for private plugins, if shared then a single call must be added to the driver code of the target processors.   
-<sup>2</sup> I do not usually recommend doing this, and I will not accept pull requests for any. However I may add a link to the github repository for any that might be made.  
-<sup>3</sup> Driver/processor dependent.  
+<sup>1</sup> This feature is only to be used for private plugins, if shared then a single call must be added to the driver code of the target processors.
+<sup>2</sup> I do not usually recommend doing this, and I will not accept pull requests for any. However I may add a link to the github repository for any that might be made.
+<sup>3</sup> Driver/processor dependent.
 <sup>4</sup> Not enabled by default if building from source, but may be enabled in prebuilt firmware.
 
 ***

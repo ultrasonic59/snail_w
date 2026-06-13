@@ -40,7 +40,6 @@ typedef QueueHandle_t SemaphoreHandle_t;
 #define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( uint8_t ) 0U )
 #define semGIVE_BLOCK_TIME					( ( TickType_t ) 0U )
 
-
 /**
  * semphr. h
  * <pre>vSemaphoreCreateBinary( SemaphoreHandle_t xSemaphore )</pre>
@@ -777,7 +776,6 @@ typedef QueueHandle_t SemaphoreHandle_t;
 	#define xSemaphoreCreateMutexStatic( pxMutexBuffer ) xQueueCreateMutexStatic( queueQUEUE_TYPE_MUTEX, ( pxMutexBuffer ) )
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
-
 /**
  * semphr. h
  * <pre>SemaphoreHandle_t xSemaphoreCreateRecursiveMutex( void )</pre>
@@ -1136,5 +1134,3 @@ typedef QueueHandle_t SemaphoreHandle_t;
 #define uxSemaphoreGetCount( xSemaphore ) uxQueueMessagesWaiting( ( QueueHandle_t ) ( xSemaphore ) )
 
 #endif /* SEMAPHORE_H */
-
-

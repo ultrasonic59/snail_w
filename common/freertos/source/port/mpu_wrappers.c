@@ -1316,7 +1316,6 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-
 /* Functions that the application writer wants to execute in privileged mode
 can be defined in application_defined_privileged_functions.h.  The functions
 must take the same format as those above whereby the privilege state on exit

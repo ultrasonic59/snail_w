@@ -12,25 +12,25 @@
 #include "board.h"
 #include "printk.h"
 ///=============================
-int sendchar2 (int c) 
-{ 
+int sendchar2 (int c)
+{
 while (!(USART2->SR & 0x0080));
 USART2->DR = (c & 0x1FF);
 return (c);
 }
 
-int get_byte2 (void) 
+int get_byte2 (void)
 {
 while (!(USART2->SR & 0x0020));
 return (USART2->DR);
 }
-int get_byte_dbg (void) 
+int get_byte_dbg (void)
 {
 while (!(USART2->SR & 0x0020));
 return (USART2->DR);
 }
 
-int send_char_dbg(int ch) 
+int send_char_dbg(int ch)
 {
 //sendchar_hdlc(ch);
 sendchar2(ch);
@@ -86,8 +86,8 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
-  
-////=========== DBG_UART =================================================== 
+
+////=========== DBG_UART ===================================================
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -101,7 +101,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(UART_DBG_TX_GPIO_PORT, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO_PORT, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 ////===================================================================
@@ -257,7 +257,6 @@ void CAN_Config(void)
   CAN_InitTypeDef        CAN_InitStructure;
   CAN_FilterInitTypeDef  CAN_FilterInitStructure;
 
-
   /* CAN GPIOs configuration **************************************************/
 
   /* Enable GPIO clock */
@@ -298,7 +297,6 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
   CAN_InitStructure.CAN_Prescaler = 2;
   CAN_Init(CAN1, &CAN_InitStructure);
-
 
   CAN_FilterInitStructure.CAN_FilterNumber = 0;
   CAN_FilterInitStructure.CAN_FilterFIFOAssignment=CAN_Filter_FIFO0;
@@ -352,17 +350,17 @@ TIM_ITConfig(TIMER, TIM_IT_Update, ENABLE);
 TIM_Cmd(TIMER, ENABLE);
 
 NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-if (TIMER == TIM2) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn; 
+if (TIMER == TIM2)
+  {
+  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
   }
-else if (TIMER == TIM3) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn; 
+else if (TIMER == TIM3)
+  {
+  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
   }
-else if (TIMER == TIM4) 
-  { 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn; 
+else if (TIMER == TIM4)
+  {
+  NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
   }
 NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = PP;
 NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
@@ -370,12 +368,11 @@ NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 }
 
-
 ////=============================================
 void hw_board_init(void)
 {
 init_gpio();
-UART_DBG_Init(); 
+UART_DBG_Init();
 #ifndef IS_BOOTER
 CAN_Config();
 #endif
@@ -385,20 +382,20 @@ CAN_Config();
 ////============================================
 #ifndef IS_BOOTER
 
-////========================================================   
+////========================================================
 void tst_task( void *pvParameters )
 {
-printk("\n\r tst_task"); 
+printk("\n\r tst_task");
 for(;;)
   {
-//// sendchar2 (0x33) ; 
+//// sendchar2 (0x33) ;
 ////  put_tst_pin(btst);
-///  btst++;  
-  ////delay__ms(1);  
+///  btst++;
+  ////delay__ms(1);
 ////  uDelay(20000);
-    msleep(20); 
+    msleep(20);
 
   }
 }
 ////============================================
-#endif ///IS_BOOTER	
+#endif ///IS_BOOTER

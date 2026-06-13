@@ -600,7 +600,6 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 		}
 		#endif /* configASSERT_DEFINED */
 
-
 		if( ( pxTaskBuffer != NULL ) && ( puxStackBuffer != NULL ) )
 		{
 			/* The memory used for the task's TCB and stack are passed into this
@@ -3069,7 +3068,6 @@ void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, const TickType_t xIte
 		designed for use by kernel code, and has special calling requirements -
 		it should be called with the scheduler suspended. */
 
-
 		/* Place the event list item of the TCB in the appropriate event list.
 		In this case it is assume that this is the only task that is going to
 		be waiting on this event list, so the faster vListInsertEnd() function
@@ -4336,7 +4334,6 @@ TCB_t *pxTCB;
 		 * through a call to vTaskList().
 		 */
 
-
 		/* Make sure the write buffer does not contain a string. */
 		*pcWriteBuffer = ( char ) 0x00;
 
@@ -5197,7 +5194,6 @@ when performing module tests). */
 	#include "tasks_test_access_functions.h"
 #endif
 
-
 #if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 )
 
 	#include "freertos_tasks_c_additions.h"
@@ -5210,5 +5206,3 @@ when performing module tests). */
 	#endif
 
 #endif
-
-

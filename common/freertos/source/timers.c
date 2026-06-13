@@ -48,7 +48,6 @@ for the header files above, but not in this file, in order to generate the
 correct privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e9021 !e961 !e750. */
 
-
 /* This entire source file will be skipped if the application is not configured
 to include software timer functionality.  This #if is closed at the very bottom
 of this file.  If you want to include software timer functionality then ensure
@@ -97,7 +96,6 @@ typedef struct tmrTimerParameters
 	TickType_t			xMessageValue;		/*<< An optional value used by a subset of commands, for example, when changing the period of a timer. */
 	Timer_t *			pxTimer;			/*<< The timer to which the command will be applied. */
 } TimerParameter_t;
-
 
 typedef struct tmrCallbackParameters
 {
@@ -1097,6 +1095,3 @@ Timer_t * const pxTimer = xTimer;
 to include software timer functionality.  If you want to include software timer
 functionality then ensure configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 #endif /* configUSE_TIMERS == 1 */
-
-
-

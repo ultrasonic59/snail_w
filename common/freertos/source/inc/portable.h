@@ -138,7 +138,6 @@ typedef struct HeapRegion
  */
 void vPortDefineHeapRegions( const HeapRegion_t * const pxHeapRegions ) PRIVILEGED_FUNCTION;
 
-
 /*
  * Map to the memory management routines required for the port.
  */
@@ -178,4 +177,3 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
 #endif
 
 #endif /* PORTABLE_H */
-

@@ -22,7 +22,6 @@
 #ifndef gcode_h
 #define gcode_h
 
-
 // Define modal group internal numbers for checking multiple command violations and tracking the
 // type of command that is called in the block. A modal group is a group of g-code commands that are
 // mutually exclusive, or cannot exist on the same line, because they each toggle a state or execute
@@ -50,9 +49,9 @@
 
 // Define command actions for within execution-type modal groups (motion, stopping, non-modal). Used
 // internally by the parser to know which command to execute.
-// NOTE: Some macro values are assigned specific values to make g-code state reporting and parsing 
+// NOTE: Some macro values are assigned specific values to make g-code state reporting and parsing
 // compile a litte smaller. Necessary due to being completely out of flash on the 328p. Although not
-// ideal, just be careful with values that state 'do not alter' and check both report.c and gcode.c 
+// ideal, just be careful with values that state 'do not alter' and check both report.c and gcode.c
 // to see how they are used, if you need to alter them.
 
 // Modal Group G0: Non-modal actions
@@ -177,7 +176,7 @@
 #define GC_PROBE_FAIL_INIT  GC_UPDATE_POS_NONE
 #define GC_PROBE_FAIL_END   GC_UPDATE_POS_TARGET
 #ifdef SET_CHECK_MODE_PROBE_TO_START
-  #define GC_PROBE_CHECK_MODE   GC_UPDATE_POS_NONE  
+  #define GC_PROBE_CHECK_MODE   GC_UPDATE_POS_NONE
 #else
   #define GC_PROBE_CHECK_MODE   GC_UPDATE_POS_TARGET
 #endif
@@ -192,7 +191,6 @@
 #define GC_PARSER_LASER_FORCE_SYNC      bit(5)
 #define GC_PARSER_LASER_DISABLE         bit(6)
 #define GC_PARSER_LASER_ISMOTION        bit(7)
-
 
 // NOTE: When this struct is zeroed, the above defines set the defaults for the system.
 typedef struct {
@@ -228,7 +226,6 @@ typedef struct {
   float xyz[N_AXIS];    // X,Y,Z Translational axes
 } gc_values_t;
 
-
 typedef struct {
   gc_modal_t modal;
 
@@ -249,14 +246,12 @@ typedef struct {
 } parser_state_t;
 extern parser_state_t gc_state;
 
-
 typedef struct {
   uint8_t non_modal_command;
   gc_modal_t modal;
   gc_values_t values;
 } parser_block_t;
 parser_block_t gc_block;
-
 
 // Initialize the parser
 void gc_init();

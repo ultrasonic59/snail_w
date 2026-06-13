@@ -11,7 +11,7 @@
 
 #define DEF_CAN_BR   6  ///500
 
-#ifndef _FALSE 
+#ifndef _FALSE
 #define _FALSE 0
 #endif
 

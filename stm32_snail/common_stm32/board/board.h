@@ -1,5 +1,11 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
+#include "tx_api.h"
+
+#ifndef APP_NVIC_LOW_IRQ_PRIORITY
+#define APP_NVIC_LOW_IRQ_PRIORITY  15U
+#endif
+
 ////======================================
 #ifdef MSTEP_BRD
   #include "mstep_board.h"
@@ -29,7 +35,7 @@ extern int32_t curr_coord;
 extern uint8_t use_enc;
 extern int32_t next_coord;
 
-#define msleep vTaskDelay
+#define msleep(ms)  tx_thread_sleep((ULONG)(ms))
 #ifndef _MASTER_
 ////extern int32_t cur_coord;
 extern uint8_t cur_state;

@@ -2103,7 +2103,6 @@ status_code_t gc_execute_block (char *block)
 
     // Parsing complete!
 
-
   /* -------------------------------------------------------------------------------------
      STEP 3: Error-check all commands and values passed in this block. This step ensures all of
      the commands are valid for execution and follows the NIST standard as closely as possible.
@@ -3004,7 +3003,7 @@ status_code_t gc_execute_block (char *block)
                     gc_block.values.xyz[idx] = gc_state.g92_offset.coord.values[idx];
             } while(idx);
             break;
-            
+
 #if ENABLE_ACCELERATION_PROFILES
         case NonModal_SetAccelerationProfile:
             if(gc_block.words.e)
@@ -3124,7 +3123,6 @@ status_code_t gc_execute_block (char *block)
                     if (!(gc_block.modal.motion == MotionMode_Seek || gc_block.modal.motion == MotionMode_Linear))
                         RETURN(Status_GcodeG53InvalidMotionMode); // [G53 G0/1 not active]
                     break;
-
 
                 default:
                     break;

@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 #ifndef TIMERS_H
 #define TIMERS_H
 
@@ -65,7 +64,6 @@ or interrupt version of the queue send function should be used. */
 #define tmrCOMMAND_RESET_FROM_ISR				( ( BaseType_t ) 7 )
 #define tmrCOMMAND_STOP_FROM_ISR				( ( BaseType_t ) 8 )
 #define tmrCOMMAND_CHANGE_PERIOD_FROM_ISR		( ( BaseType_t ) 9 )
-
 
 /**
  * Type by which software timers are referenced.  For example, a call to
@@ -1095,7 +1093,6 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  */
 #define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
-
 /**
  * BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend,
  *                                          void *pvParameter1,
@@ -1290,6 +1287,3 @@ BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommand
 }
 #endif
 #endif /* TIMERS_H */
-
-
-

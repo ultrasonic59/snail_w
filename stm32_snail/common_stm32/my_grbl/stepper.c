@@ -92,7 +92,6 @@ const PORTPINDEF limit_pin_mask[N_AXIS] =
   #endif
 #endif
 
-
 // Stores the planner block Bresenham algorithm execution data for the segments in the segment
 // buffer. Normally, this buffer is partially in-use, but, for the worst case scenario, it will
 // never exceed the number of accessible stepper buffer segments (SEGMENT_BUFFER_SIZE-1).
@@ -205,7 +204,6 @@ typedef struct {
 } st_prep_t;
 static st_prep_t prep;
 
-
 /*    BLOCK VELOCITY PROFILE DEFINITION
           __________________________
          /|                        |\     _________________         ^
@@ -244,19 +242,18 @@ static st_prep_t prep;
   are shown and defined in the above illustration.
 */
 
-
 // Stepper state initialization. Cycle should only start if the st.cycle_start flag is
 // enabled. Startup init and limits call this function but shouldn't start the cycle.
 void st_wake_up()????????
 {
   // Enable stepper drivers.
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
-  { 
+  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE))
+  {
 	  SetStepperDisableBit();
   }
-  else 
-  { 
-	  ResetStepperDisableBit(); 
+  else
+  {
+	  ResetStepperDisableBit();
   }
 
   // Initialize stepper output bits to ensure first ISR call does not step.
@@ -280,13 +277,12 @@ void st_wake_up()????????
 
   TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
   /* Set the Autoreload value */
-#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
+#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
   TIM2->PSC = st.exec_segment->prescaler;
 #endif
   TIM2->EGR = TIM_PSCReloadMode_Immediate;
   NVIC_EnableIRQ(TIM2_IRQn);
 }
-
 
 // Stepper shutdown
 void st_go_idle()
@@ -305,16 +301,15 @@ void st_go_idle()
     pin_state = true; // Override. Disable steppers.
   }
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { pin_state = !pin_state; } // Apply pin invert.
-  if (pin_state) 
-  { 
+  if (pin_state)
+  {
 	  SetStepperDisableBit();
   }
-  else 
-  { 
+  else
+  {
 	  ResetStepperDisableBit();
   }
 }
-
 
 /* "The Stepper Driver Interrupt" - This timer interrupt is the workhorse of Grbl. Grbl employs
    the venerable Bresenham line algorithm to manage and exactly synchronize multi-axis moves.
@@ -377,8 +372,8 @@ else
   }
 
   if (busy) { // The busy-flag is used to avoid reentering this interrupt
-    return; 
-    } 
+    return;
+    }
   GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
   TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 
@@ -405,7 +400,7 @@ else
       // Initialize step segment timing per step and load number of steps to execute.
 	  TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
 	  /* Set the Autoreload value */
-#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
+#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
 	  TIM2->PSC = st.exec_segment->prescaler;
 #endif
       st.step_count = st.exec_segment->n_step; // NOTE: Can sometimes be zero when moving slow.
@@ -443,7 +438,6 @@ else
       return; // Nothing to do but exit.
     }
   }
-
 
   // Check probing state.
   if (sys_probe_state == PROBE_ACTIVE) { probe_state_monitor(); }
@@ -505,7 +499,6 @@ else
   busy = false;
 }
 
-
 /* The Stepper Port Reset Interrupt: Timer0 OVF interrupt handles the falling edge of the step
    pulse. This should always trigger before the next Timer1 COMPA interrupt and independently
    finish, if Timer1 is disabled after completing a move.
@@ -529,7 +522,6 @@ void TIM3_IRQHandler(void)
 	}
 }
 
-
 // Generates the step and direction port invert masks used in the Stepper Interrupt Driver.
 void st_generate_step_dir_invert_masks()
 {
@@ -541,7 +533,6 @@ void st_generate_step_dir_invert_masks()
     if (bit_istrue(settings.dir_invert_mask,bit(idx))) { dir_port_invert_mask |= direction_pin_mask[idx]; }
   }
 }
-
 
 // Reset and clear stepper subsystem variables
 void st_reset()
@@ -585,7 +576,7 @@ void stepper_init()
 	RCC_APB2PeriphClockCmd(RCC_DIRECTION_PORT, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = DIRECTION_MASK;
 	GPIO_Init(DIRECTION_PORT, &GPIO_InitStructure);
-  
+
   // Configurating TIM2
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	// RCC->APB1ENR |= RCC_APB1Periph_TIM2;
@@ -601,7 +592,6 @@ void stepper_init()
  	NVIC_DisableIRQ(TIM2_IRQn);
 }
 
-
 // Called by planner_recalculate() when the executing block is updated by the new plan.
 void st_update_plan_block_parameters()
 {
@@ -612,7 +602,6 @@ void st_update_plan_block_parameters()
   }
 }
 
-
 // Increments the step segment buffer block data ring buffer.
 static uint8_t st_next_block_index(uint8_t block_index)
 {
@@ -620,7 +609,6 @@ static uint8_t st_next_block_index(uint8_t block_index)
   if ( block_index == (SEGMENT_BUFFER_SIZE-1) ) { return(0); }
   return(block_index);
 }
-
 
 #ifdef PARKING_ENABLE
   // Changes the run state of the step segment buffer to execute the special parking motion.
@@ -638,7 +626,6 @@ static uint8_t st_next_block_index(uint8_t block_index)
     prep.recalculate_flag &= ~(PREP_FLAG_RECALCULATE);
     pl_block = NULL; // Always reset parking motion to reload new block.
   }
-
 
   // Restores the step segment buffer to the normal run state after a parking motion.
   void st_parking_restore_buffer()
@@ -658,7 +645,6 @@ static uint8_t st_next_block_index(uint8_t block_index)
     pl_block = NULL; // Set to reload next block.
   }
 #endif
-
 
 /* Prepares step segment buffer. Continuously called from main program.
 
@@ -684,15 +670,15 @@ void st_prep_buffer()
     if (pl_block == NULL) {
 
       // Query planner for a queued block
-      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) { 
-        pl_block = plan_get_system_motion_block(); 
+      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) {
+        pl_block = plan_get_system_motion_block();
         }
-      else { 
-        pl_block = plan_get_current_block(); 
+      else {
+        pl_block = plan_get_current_block();
         }
       if (pl_block == NULL) { // No planner blocks. Exit.
-        return; 
-        } 
+        return;
+        }
 
       // Check if we need to only recompute the velocity profile or load a new block.
       if (prep.recalculate_flag & PREP_FLAG_RECALCULATE) {
@@ -742,7 +728,7 @@ void st_prep_buffer()
         }
 #ifdef VARIABLE_SPINDLE
         // Setup laser mode variables. PWM rate adjusted motions will always complete a motion with the
-        // spindle off. 
+        // spindle off.
         st_prep_block->is_pwm_rate_adjusted = false;
         if (settings.flags & BITFLAG_LASER_MODE) {
           if (pl_block->condition & PL_COND_FLAG_SPINDLE_CCW) {
@@ -844,12 +830,12 @@ void st_prep_buffer()
 					prep.maximum_speed = prep.exit_speed;
 				}
 			}
-      
+
       #ifdef VARIABLE_SPINDLE
         bit_true(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM); // Force update whenever updating block.
       #endif
     }
-    
+
     // Initialize new segment
     segment_t *prep_segment = &segment_buffer[segment_buffer_head];
 
@@ -962,7 +948,7 @@ void st_prep_buffer()
       if (st_prep_block->is_pwm_rate_adjusted || (sys.step_control & STEP_CONTROL_UPDATE_SPINDLE_PWM)) {
         if (pl_block->condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)) {
           float rpm = pl_block->spindle_speed;
-          // NOTE: Feed and rapid overrides are independent of PWM value and do not alter laser power/rate.        
+          // NOTE: Feed and rapid overrides are independent of PWM value and do not alter laser power/rate.
           if (st_prep_block->is_pwm_rate_adjusted) { rpm *= (prep.current_speed * prep.inv_rate); }
           // If current_speed is zero, then may need to be rpm_min*(100/MAX_SPINDLE_SPEED_OVERRIDE)
           // but this would be instantaneous only and during a motion. May not matter at all.
@@ -977,7 +963,7 @@ void st_prep_buffer()
       prep_segment->spindle_pwm = prep.current_spindle_pwm; // Reload segment PWM value
 
     #endif
-    
+
     /* -----------------------------------------------------------------------------------
        Compute segment step rate, steps to execute, and apply necessary rate corrections.
        NOTE: Steps are computed by direct scalar conversion of the millimeter distance
@@ -1023,9 +1009,9 @@ uint32_t cycles = 1000;////????
     #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
       // Compute step timing and multi-axis smoothing level.
       // NOTE: AMASS overdrives the timer with each level, so only one prescalar is required.
-      if (cycles < AMASS_LEVEL1) 
-      { 
-        prep_segment->amass_level = 0; 
+      if (cycles < AMASS_LEVEL1)
+      {
+        prep_segment->amass_level = 0;
       }
       else {
         if (cycles < AMASS_LEVEL2) { prep_segment->amass_level = 1; }
@@ -1089,7 +1075,6 @@ uint32_t cycles = 1000;////????
   }
 }
 
-
 // Called by realtime status reporting to fetch the current speed being executed. This value
 // however is not exactly the current speed, but the speed computed in the last step segment
 // in the segment buffer. It will always be behind by up to the number of segment blocks (-1)
@@ -1118,17 +1103,17 @@ void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP)
 	TIM_Cmd(TIMER, ENABLE);
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
- 	if (TIMER == TIM2) 
-          { 
-          NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn; 
+ 	if (TIMER == TIM2)
+          {
+          NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
           }
- 	else if (TIMER == TIM3) 
-          { 
-          NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn; 
+ 	else if (TIMER == TIM3)
+          {
+          NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
           }
- 	else if (TIMER == TIM4) 
-          { 
-  ////????        NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn; 
+ 	else if (TIMER == TIM4)
+          {
+  ////????        NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
           }
 
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = PP;

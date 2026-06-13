@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    EEPROM_Emulation/inc/eeprom.h 
+  * @file    EEPROM_Emulation/inc/eeprom.h
   * @author  MCD Application Team
    * @version V1.0.0
   * @date    10-October-2011
-  * @brief   This file contains all the functions prototypes for the EEPROM 
+  * @brief   This file contains all the functions prototypes for the EEPROM
   *          emulation firmware library.
   ******************************************************************************
   * @attention
@@ -18,7 +18,7 @@
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __EMUL_EEPROM_H
@@ -32,13 +32,13 @@
 /* Define the size of the sectors to be used */
 #define PAGE_SIZE               (uint32_t)0x4000  /* Page size = 16KByte */
 
-/* Device voltage range supposed to be [2.7V to 3.6V], the operation will 
+/* Device voltage range supposed to be [2.7V to 3.6V], the operation will
    be done by word  */
 #define VOLTAGE_RANGE           (uint8_t)VoltageRange_3
 
 /* EEPROM start address in Flash */
 #define EEPROM_START_ADDRESS  ((uint32_t)0x08008000) /* EEPROM emulation start address:
-                                                  from sector2 : after 16KByte of used 
+                                                  from sector2 : after 16KByte of used
                                                   Flash memory */
 
 /* Pages 0 and 1 base and end addresses */
@@ -75,5 +75,3 @@ uint16_t EE_Rd(uint16_t Address, uint16_t* Data);
 uint16_t EE_Wr(uint16_t Address, uint16_t Data);
 
 #endif /* __EEPROM_H */
-
-

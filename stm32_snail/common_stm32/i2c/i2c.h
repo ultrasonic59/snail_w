@@ -1,4 +1,3 @@
-
 #ifndef __I2C_H__
 #define __I2C_H__
 
@@ -34,4 +33,3 @@ extern void I2C_encoder_Init(void) ;
 extern int read_encoder_val(uint16_t *oval);
 
 #endif
-

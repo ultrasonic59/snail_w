@@ -60,7 +60,7 @@ uint8_t system_check_safety_door_ajar(void)
 uint8_t system_control_get_state()
 {
   uint8_t control_state = 0;
-#if 0 
+#if 0
   uint16_t pin= GPIO_ReadInputData(CONTROL_PIN_PORT);
   #ifdef INVERT_CONTROL_PIN_MASK
     pin ^= INVERT_CONTROL_PIN_MASK;
@@ -76,8 +76,6 @@ uint8_t system_control_get_state()
 #endif
   return(control_state);
 }
-
-
 
 // Directs and executes one line of formatted input from protocol_process. While mostly
 // incoming streaming g-code blocks, this also executes Grbl internal commands, such as
@@ -242,8 +240,6 @@ uint8_t system_execute_line(char *line)
   return(STATUS_OK); // If '$' command makes it to here, then everything's ok.
 }
 
-
-
 // Executes user startup script, if stored.
 void system_execute_startup(char *line)
 {
@@ -274,7 +270,7 @@ void system_flag_wco_change()
 float system_convert_axis_steps_to_mpos(int32_t *steps, uint8_t idx)
 {
   float pos=0;
-#if 0  
+#if 0
   #ifdef COREXY
     if (idx==X_AXIS) {
       pos = (float)system_convert_corexy_to_x_axis_steps(steps) / settings.steps_per_mm[idx];
@@ -286,7 +282,7 @@ float system_convert_axis_steps_to_mpos(int32_t *steps, uint8_t idx)
   #else
     pos = steps[idx]/settings.steps_per_mm[idx];
   #endif
-#endif   
+#endif
   return(pos);
 }
 void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
@@ -330,4 +326,3 @@ void system_clear_exec_accessory_overrides() {
   sys_rt_exec_accessory_override = 0;
 ////  __enable_irq();
 }
-

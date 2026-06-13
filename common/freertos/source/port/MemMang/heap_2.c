@@ -67,7 +67,6 @@ static void prvHeapInit( void );
 	static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
-
 /* Define the linked list structure.  This is used to link free blocks in order
 of their size. */
 typedef struct A_BLOCK_LINK
@@ -75,7 +74,6 @@ typedef struct A_BLOCK_LINK
 	struct A_BLOCK_LINK *pxNextFreeBlock;	/*<< The next free block in the list. */
 	size_t xBlockSize;						/*<< The size of the free block. */
 } BlockLink_t;
-
 
 static const uint16_t heapSTRUCT_SIZE	= ( ( sizeof ( BlockLink_t ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
 #define heapMINIMUM_BLOCK_SIZE	( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )

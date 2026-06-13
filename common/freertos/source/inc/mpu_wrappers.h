@@ -155,7 +155,6 @@ only for ports that are using the MPU. */
 		#define xStreamBufferGenericCreate				MPU_xStreamBufferGenericCreate
 		#define xStreamBufferGenericCreateStatic		MPU_xStreamBufferGenericCreateStatic
 
-
 		/* Remove the privileged function macro, but keep the PRIVILEGED_DATA
 		macro so applications can place data in privileged access sections
 		(useful when using statically allocated objects). */
@@ -181,6 +180,4 @@ only for ports that are using the MPU. */
 
 #endif /* portUSING_MPU_WRAPPERS */
 
-
 #endif /* MPU_WRAPPERS_H */
-

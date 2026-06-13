@@ -1,6 +1,4 @@
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
+#include "board.h"
 
 ////#include "stm32f2xx_gpio.h"
 #include "board.h"
@@ -8,10 +6,9 @@
 
 /// uint32_t SystemCoreClock = 120000000;
 
-
 void  put_tst_pin(uint8_t idat)
 {
-#if 1  
+#if 1
 if(idat&0x1)
   {
   GPIO_SetBits(TST3_PIN_GPIO, TST3_PIN);
@@ -24,7 +21,7 @@ else
    GPIO_ResetBits(TST2_PIN_GPIO, TST2_PIN);
    ////GPIO_ResetBits(TST7_PIN_GPIO, TST7_PIN);
   }
-#endif 
+#endif
 }
 ///=================================================================
 ///settings_t settings;
@@ -62,7 +59,6 @@ uint32_t get_count(){
    return 0;
 }
 
-
 uint32_t plc_output_set_state(uint8_t number, uint8_t state){
   return 0;
 }
@@ -92,16 +88,15 @@ void coolant_stop()
 }
 
 uint8_t coolant_get_state( )
-{ 
+{
  return 0;
 }
-  
+
  uint8_t spindle_get_state()
 {
   return 0;
 }
 
 void coolant_set_state(uint8_t mode){}
-
 
 ///void CDC_send_str(char *str_report, uint32_t len){}

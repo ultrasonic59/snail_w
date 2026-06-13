@@ -3,8 +3,7 @@
 ///=========================================================
 #include "uart.h"
 
-#define CAN_MAX_LEN_QUEU 4
-
+#define CAN_MAX_LEN_QUEU 32
 
 #define AXIS_X           (0x1<<0)
 #define AXIS_Y           (0x1<<1)
@@ -19,8 +18,8 @@
   #define AXIS_BRD AXIS_Z
 #elif DOZA_BRD
   #define AXIS_BRD DOZA_ID
-#else 
-  #error "\n\r=== STEP_... nodefined ==="; 
+#else
+  #error "\n\r=== STEP_... nodefined ===";
 #endif
 
 #define ID_BRD     (AXIS_BRD<<5)
@@ -100,7 +99,6 @@
 #define BOOTER_STATE_PROG     0xF2
 #define BOOTER_NO_BOOT        0x13
 
-
 #define STATE_IDLE           0
 #define STATE_READY          1
 #define STATE_MOVE           2
@@ -119,61 +117,60 @@
 #define  _packed_  __packed
 #endif
 
-
 typedef struct  go_cmd_s_{
-  uint8_t  cmd;                       /// 
+  uint8_t  cmd;                       ///
   uint8_t  dirs;                     /// .7 -check conc Dirs X,Y,Z ....
   uint16_t  step_per;                 /// period step
-  uint32_t  steps;                 /// steps X,Y , Z 
+  uint32_t  steps;                 /// steps X,Y , Z
 }go_cmd_t;
 
 typedef _packed_ struct  put_stat_cmd_s_{
-  uint8_t  cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
   uint8_t  state;                     /// ready,move,error
   uint8_t  rsv;
-  int32_t  coord;                      /// 
+  int32_t  coord;                      ///
 }put_stat_cmd_t;
 
 ///typedef struct  put_stat_cmd_s_ put_stat_cmd_t;
 
 typedef _packed_ struct  encoder_cmd_s_{
-  uint8_t  cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
-  int32_t  coord;                     /// 
+  uint8_t  cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
+  int32_t  coord;                     ///
   uint16_t temp_val;
 }encoder_cmd_t;
 
 ///typedef struct  encoder_cmd_s_ encoder_cmd_t;
 
 typedef struct  put_boot_stat_cmd_s_{
-  uint8_t  cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
-  uint8_t  state;                     /// 
+  uint8_t  cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
+  uint8_t  state;                     ///
 }put_boot_stat_cmd_t;
 
 typedef struct  ack_s_{
-  uint8_t  ack_cmd;                         /// 
-  uint8_t  axis;                        /// X,Y , Z 
+  uint8_t  ack_cmd;                         ///
+  uint8_t  axis;                        /// X,Y , Z
 }ack_t;
 
 typedef struct  put_ack_s_{
-  uint8_t  cmd;                         /// 
-  ack_t   ack;                         /// 
+  uint8_t  cmd;                         ///
+  ack_t   ack;                         ///
 }put_ack_t;
 
 typedef  _packed_ struct  set_param_cmd_s_{
-  uint8_t   cmd;                         /// 
-  uint16_t  num_par;                        /// 
-  uint8_t   len_par;                     ///bytes 
-  uint32_t  par_val;                      /// 
+  uint8_t   cmd;                         ///
+  uint16_t  num_par;                        ///
+  uint8_t   len_par;                     ///bytes
+  uint32_t  par_val;                      ///
 }set_param_cmd_t;
 typedef  _packed_ struct  spi_mot_cmd_s_{
-  uint8_t   cmd;                         /// 
-  uint8_t   addr;                        /// 
-  uint8_t   len_dat;                     ///bytes 
+  uint8_t   cmd;                         ///
+  uint8_t   addr;                        ///
+  uint8_t   len_dat;                     ///bytes
   uint8_t   b_val;
-  uint32_t  w_val;                      /// 
+  uint32_t  w_val;                      ///
 }spi_mot_cmd_t;
 
 #define MAX_CAN_NUM_BYTES  8
@@ -214,25 +211,23 @@ typedef _packed_ struct doza_cmd_s {
     uint16_t time;
 }doza_cmd_t;
 
-
-
 ///============ for progr =====================
 #define MAX_NUM_WORDS_PRG     3
 typedef struct  prg_flash_cmd_s_{
-  uint8_t    cmd;                         /// 
-  uint8_t    num_bytes;                   ///bytes  
-  uint16_t    data[MAX_NUM_WORDS_PRG];                    /// 
+  uint8_t    cmd;                         ///
+  uint8_t    num_bytes;                   ///bytes
+  uint16_t    data[MAX_NUM_WORDS_PRG];                    ///
 }prg_flash_cmd_t;
 
 typedef struct  rd_flash_cmd_s_{
-  uint8_t    cmd;                         /// 
-  uint8_t    num_bytes;                   ///bytes  
-  uint8_t    data[MAX_NUM_WORDS_PRG*2];                    /// 
+  uint8_t    cmd;                         ///
+  uint8_t    num_bytes;                   ///bytes
+  uint8_t    data[MAX_NUM_WORDS_PRG*2];                    ///
 }rd_flash_cmd_t;
 
 typedef struct  set_flash_addr_s_{
-  uint8_t    cmd;                      /// 
-  uint32_t   b_addr;                   ///  
+  uint8_t    cmd;                      ///
+  uint32_t   b_addr;                   ///
 }set_flash_addr_t;
 
 ///=========================================================

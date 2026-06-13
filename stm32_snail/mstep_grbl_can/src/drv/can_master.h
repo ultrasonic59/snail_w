@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "can.h"
 
-#define CAN_MAX_LEN_QUEU        8
+#define CAN_MAX_LEN_QUEU        32
 #define CAN_SEND_STACK_SIZE     512
 #define CAN_TASK_STACK_SIZE     512
 #define CAN_SEND_TASK_PRIORITY  5

@@ -1,12 +1,7 @@
-
-
 #include <stdint.h>
 #include <string.h>
 
 #include "uart.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
 #include "board.h"
 #include "hdlc.h"
 
@@ -21,7 +16,7 @@ extern uint16_t enc_offs;  ///when coord =0;
 static encoder_data_t resiv_Enc={0};
 
 void change_coord(void){
-uint16_t t_enc;  
+uint16_t t_enc;
 static uint16_t prev_enc=0;
 memcpy(&resiv_Enc,g_hdlc.in_buff,sizeof(encoder_data_t));
 t_enc=resiv_Enc.Coord;
@@ -32,7 +27,7 @@ curr_enc= MAX_ENC_COORD -t_enc;
     else if((prev_enc<MIN_TRIG)&&(curr_enc>MAX_TRIG))
        enc_obor--;
     prev_enc=curr_enc ;
-curr_coord= (enc_obor<<14) + curr_enc- enc_offs;  
+curr_coord= (enc_obor<<14) + curr_enc- enc_offs;
 
  ///   t_encoder_data.coord=curr_enc-enc_offs;
 ///    t_encoder_data.val= enc_obor;
@@ -44,13 +39,13 @@ void UART_ENC_IRQHandler(void)
 uint8_t ch;
 uint32_t tmp_sr;
 
-tmp_sr=UART_ENC->SR;  
-////put_tst1(1);  
+tmp_sr=UART_ENC->SR;
+////put_tst1(1);
 if((tmp_sr&USART_FLAG_RXNE) != 0)
   {
   UART_ENC->SR &= ~USART_FLAG_RXNE;              ///  USART_ClearITPendingBit(UART_BT, USART_IT_RXNE);
   ch = (u8)(UART_ENC->DR & 0x0FF);
-  
+
   if (hdlc_on_bytein(ch) > 0)
     {
       ;
@@ -68,7 +63,7 @@ void init_irq_enc(void)
 {
 NVIC_InitTypeDef NVIC_InitStructure;
 NVIC_InitStructure.NVIC_IRQChannel = UART_ENC_IRQn;
-NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
+NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = APP_NVIC_LOW_IRQ_PRIORITY;
 NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;////7;	//1;
 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
@@ -93,8 +88,8 @@ USART_Cmd(UART_ENC, ENABLE);
 init_irq_enc();
 
 }
-int send_char_enc(int c) 
-{ 
+int send_char_enc(int c)
+{
 while (!(UART_ENC->SR & 0x0080));
 UART_ENC->DR = (c & 0x1FF);
 return (c);
@@ -108,5 +103,3 @@ uint8_t uart_send_buff(uint8_t *buff, uint16_t len)
 }
  return len;
 }
-
-

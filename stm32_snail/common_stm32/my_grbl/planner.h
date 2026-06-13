@@ -22,7 +22,6 @@
 #ifndef planner_h
 #define planner_h
 
-
 // The number of linear motions that can be in the plan at any give time
 #ifndef BLOCK_BUFFER_SIZE
 #define BLOCK_BUFFER_SIZE 36
@@ -43,7 +42,6 @@
 #define PL_COND_FLAG_COOLANT_MIST      bit(7)
 #define PL_COND_MOTION_MASK    (PL_COND_FLAG_RAPID_MOTION|PL_COND_FLAG_SYSTEM_MOTION|PL_COND_FLAG_NO_FEED_OVERRIDE)
 #define PL_COND_ACCESSORY_MASK (PL_COND_FLAG_SPINDLE_CW|PL_COND_FLAG_SPINDLE_CCW|PL_COND_FLAG_COOLANT_FLOOD|PL_COND_FLAG_COOLANT_MIST)
-
 
 // This struct stores a linear movement of a g-code block motion with its critical "nominal" values
 // are as specified in the source g-code.
@@ -80,7 +78,6 @@ typedef struct {
   #endif
 } plan_block_t;
 
-
 // Planner data prototype. Must be used when passing new motions to the planner.
 typedef struct {
   float feed_rate;          // Desired feed rate for line motion. Value is ignored, if rapid motion.
@@ -90,7 +87,6 @@ typedef struct {
     int32_t line_number;    // Desired line number to report when executing.
   #endif
 } plan_line_data_t;
-
 
 // Initialize and reset the motion plan subsystem
 void plan_reset(); // Reset all
@@ -140,6 +136,5 @@ uint8_t plan_get_block_buffer_count();
 uint8_t plan_check_full_buffer();
 
 void plan_get_planner_mpos(float *target);
-
 
 #endif

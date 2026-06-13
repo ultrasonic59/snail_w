@@ -24,7 +24,6 @@
 #include "board.h"
 #include "my_stepper.h"
 
-
 // Homing axis search distance multiplier. Computed by this value times the cycle travel.
 #ifndef HOMING_AXIS_SEARCH_SCALAR
   #define HOMING_AXIS_SEARCH_SCALAR  1.5f // Must be > 1 to ensure limit switch will be engaged.
@@ -36,15 +35,15 @@
 void limits_init()
 {
 ////	GPIO_InitTypeDef GPIO_InitStructure;
-#if 0        
+#if 0
 	RCC_APB2PeriphClockCmd(RCC_LIMIT_PORT | RCC_APB2Periph_AFIO, ENABLE);
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Pin = LIMIT_MASK;
 	GPIO_Init(LIMIT_PORT, &GPIO_InitStructure);
 #endif
-////????  
-#if 0        
+////????
+#if 0
 	if (bit_istrue(settings.flags, BITFLAG_HARD_LIMIT_ENABLE))
 	{
 		GPIO_EXTILineConfig(GPIO_LIMIT_PORT, X_LIMIT_BIT);
@@ -69,16 +68,14 @@ void limits_init()
 	{
 		limits_disable();
 	}
-#endif        
+#endif
 }
-
 
 // Disables hard limits.
 void limits_disable()
 {
 ////???  NVIC_DisableIRQ(EXTI15_10_IRQn);
 }
-
 
 // Returns limit state as a bit-wise uint8 variable. Each bit indicates an axis limit, where
 // triggered is 1 and not triggered is 0. Invert mask is applied. Axes are defined by their
@@ -97,36 +94,35 @@ if(pin&(0x1<<YSTOP_PIN_NPIN))
 pin = GPIO_ReadInputData(ZSTOP_PIN_GPIO);
 if(pin&(0x1<<ZSTOP_PIN_NPIN))
   limit_state |=(0x1<<2);
-    
+
    limit_state ^= (settings.inv_lim&0x7) ;
-#if 0   
-  if (bit_isfalse(settings.flags,BITFLAG_INVERT_LIMIT_PINS)) 
-    { 
-      pin ^= LIMIT_MASK; 
+#if 0
+  if (bit_isfalse(settings.flags,BITFLAG_INVERT_LIMIT_PINS))
+    {
+      pin ^= LIMIT_MASK;
     }
-  if (pin) 
+  if (pin)
     {
     uint8_t idx;
-    for (idx=0; idx<N_AXIS; idx++) 
+    for (idx=0; idx<N_AXIS; idx++)
       {
-      if (pin & limit_pin_mask[idx]) 
-        { 
-        limit_state |= (1 << idx); 
+      if (pin & limit_pin_mask[idx])
+        {
+        limit_state |= (1 << idx);
         }
       }
   }
-#endif 
-#endif  
+#endif
+#endif
   return(limit_state);
 }
-
 
 // This is the Limit Pin Change Interrupt, which handles the hard limit feature. A bouncing
 // limit switch can cause a lot of problems, like false readings and multiple interrupt calls.
 // If a switch is triggered at all, something bad has happened and treat it as such, regardless
 // if a limit switch is being disengaged. It's impossible to reliably tell the state of a
 // bouncing pin because the Arduino microcontroller does not retain any state information when
-// detecting a pin change. If we poll the pins in the ISR, you can miss the correct reading if the 
+// detecting a pin change. If we poll the pins in the ISR, you can miss the correct reading if the
 // switch is bouncing.
 // NOTE: Do not attach an e-stop to the limit pins, because this interrupt is disabled during
 // homing cycles and will not respond correctly. Upon user request or need, there may be a
@@ -371,7 +367,6 @@ void limits_go_home(uint8_t cycle_mask)
   }
   sys.step_control = STEP_CONTROL_NORMAL_OP; // Return step control to normal operation.
 }
-
 
 // Performs a soft limit check. Called from mc_line() only. Assumes the machine has been homed,
 // the workspace volume is in all negative space, and the system is in normal operation.

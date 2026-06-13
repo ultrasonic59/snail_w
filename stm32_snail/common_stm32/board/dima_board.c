@@ -1,6 +1,5 @@
 #include <string.h>
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "tx_api.h"
 
 #include "can.h"
 #include "can_cmds.h"
@@ -9,6 +8,7 @@
 
 extern void uDelay (const uint32_t usec);
 extern void  put_tst_pin(uint8_t idat);
+extern void  put_tst1_pin(uint8_t idat);
 
 int32_t curr_coord=0;
 int32_t offs_encoder=0;
@@ -18,8 +18,8 @@ uint8_t ena_check_conc=0;
 void CAN_Config(void);
 
 ///=============================
-int send_char_dbg (int c) 
-{ 
+int send_char_dbg (int c)
+{
 while (!(UART_DBG->SR & 0x0080));
 UART_DBG->DR = (c & 0x1FF);
 return (c);
@@ -29,14 +29,14 @@ void _putk(char ch)
 send_char_dbg(ch);
 }
 
-int get_byte_dbg (void) 
+int get_byte_dbg (void)
 {
 while (!(UART_DBG->SR & USART_SR_RXNE));
 return (UART_DBG->DR);
 }
 int check_push_key_dbg(void)
 {
-return  (UART_DBG->SR & USART_SR_RXNE); 
+return  (UART_DBG->SR & USART_SR_RXNE);
 }
 
 void init_gpio(void)
@@ -74,8 +74,8 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
-  
-////=========== DBG_UART =================================================== 
+
+////=========== DBG_UART ===================================================
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -89,7 +89,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(UART_DBG_TX_GPIO, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 ////===================================================================
@@ -204,7 +204,7 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
   GPIO_Init(CAN1_GPIO_PORT, &GPIO_InitStructure);
-////=========== UART_ENC =================================================== 
+////=========== UART_ENC ===================================================
 RCC_AHB1PeriphClockCmd(ENC_TX_PIN_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = ENC_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -218,7 +218,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( ENC_RX_PIN_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(ENC_TX_PIN_GPIO, ENC_TX_PIN_NPIN, UART_ENC_TX_AF);
 GPIO_PinAFConfig(ENC_RX_PIN_GPIO, ENC_RX_PIN_NPIN, UART_ENC_RX_AF);
 
@@ -243,7 +243,6 @@ USART_Cmd(UART_DBG, ENABLE);
 }
 
 ////==================================================
-
 
 ///===========================================================
 volatile uint32_t gsr;
@@ -271,7 +270,7 @@ void hw_board_init(void)
 {
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
-UART_DBG_Init(); 
+UART_DBG_Init();
 init_can();
 
 #ifndef BOOTER
@@ -313,20 +312,19 @@ uint16_t curr_enc=0;  ///
 int32_t enc_obor=0;
 uint16_t enc_offs=0;  ///when coord =0;
 
-
 void state_task( void *pvParameters )
 {
-uint8_t tmp; 
+uint8_t tmp;
 ///uint16_t prev_enc=0;
-uint8_t ena_sleep=0; 
+uint8_t ena_sleep=0;
 
-///int32_t prev_coord=0xffffffff;  
-uint8_t prev_state=0xff; 
-printk("\n\r state_task"); 
+///int32_t prev_coord=0xffffffff;
+uint8_t prev_state=0xff;
+printk("\n\r state_task");
 for(;;)
   {
   ena_sleep=1;
-  tmp=get_conc_n();  
+  tmp=get_conc_n();
   tmp<<=4;
   cur_state&= ~CONC_MASK;
   cur_state |= tmp;
@@ -337,7 +335,7 @@ for(;;)
   ///    put_can_cmd_stat(cur_state,cur_coord);
       ena_sleep=0;
      }
-#if 0  
+#if 0
   curr_enc=resiv_enc.coord;
 
   if(prev_enc!=curr_enc){
@@ -351,7 +349,7 @@ for(;;)
     t_encoder_data.val= enc_obor;
  ///   put_can_cmd_enc_coord(t_encoder_data);
  ///    put_can_cmd_encoder(t_encoder_data);
-#endif  
+#endif
     ena_sleep=0;
  ///   printk("[enc=%x:%d] \n\r",resiv_enc.coord,resiv_enc.coord);
  /// }
@@ -360,15 +358,15 @@ for(;;)
   }
 
 }
-////========================================================  
+////========================================================
 void tst1_task( void *pvParameters )
 {
-////uint8_t btst=0; 
-uint32_t t_coord=0;  
-uint8_t t_stat=0x8; 
+////uint8_t btst=0;
+uint32_t t_coord=0;
+uint8_t t_stat=0x8;
 
-////uint8_t ii=0; 
-printk("\n\r tst1_task"); 
+////uint8_t ii=0;
+printk("\n\r tst1_task");
 ///=======================================
 #if 0
 can_msg_t  send_msg;
@@ -381,7 +379,7 @@ send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;
 t_go_cmd.steps=10;
 memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-send_msg.id=ID_BRD; 
+send_msg.id=ID_BRD;
 #endif
 ///============================================
 #if 0
@@ -390,7 +388,7 @@ for(;;)
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
-    printk("\n\r can_rx"); 
+    printk("\n\r can_rx");
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
     printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
     for(ii=0;ii<8;ii++)
@@ -408,38 +406,37 @@ for(;;)
 for(;;)
   {
   put_can_cmd_stat(t_stat,t_coord);
-   
-   t_coord++; 
+
+   t_coord++;
     msleep(20);
   }
 }
 ////=======================================================
 void tst_task( void *pvParameters )
 {
-///uint8_t btst=0; 
+///uint8_t btst=0;
 char key=0;
-printk("\n\r tst_task"); 
- 
+printk("\n\r tst_task");
+
 for(;;)
 {
 if(check_push_key_dbg())
   {
-  key=get_byte_dbg() ;  
+  key=get_byte_dbg() ;
   switch(key)
     {
     case 'a':
     case 'A':
-      printk("\n\r go to app"); 
+      printk("\n\r go to app");
       goto_app();
       break;
     case 'b':
     case 'B':
-      printk("\n\r go to boot"); 
+      printk("\n\r go to boot");
       goto_booter();
       break;
    }
-  } 
+  }
 msleep(10);
 }
 }
-	

@@ -339,7 +339,6 @@ FLASHMEM bool delay_sec (float seconds, delaymode_t mode)
     return ok;
 }
 
-
 float convert_delta_vector_to_unit_vector (float *vector)
 {
     uint_fast8_t idx = N_AXIS;

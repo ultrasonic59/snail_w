@@ -125,7 +125,6 @@ static float *transform_from_cartesian (float *target, float *position)
     return target;
 }
 
-
 static inline float get_distance (float *p0, float *p1)
 {
     uint_fast8_t idx = Z_AXIS;
@@ -199,12 +198,10 @@ static float *wp_segment_line (float *target, float *position, plan_line_data_t 
     return iterations == 0 || jog_cancel ? NULL : cpos.values;
 }
 
-
 static uint_fast8_t wp_limits_get_axis_mask (uint_fast8_t idx)
 {
     return ((idx == A_MOTOR) || (idx == B_MOTOR)) ? (bit(X_AXIS) | bit(Y_AXIS)) : bit(idx);
 }
-
 
 static void wp_limits_set_target_pos (uint_fast8_t idx) // fn name?
 {
@@ -228,7 +225,6 @@ static void wp_limits_set_target_pos (uint_fast8_t idx) // fn name?
             break;
     }
 }
-
 
 // Set machine positions for homed limit switches. Don't update non-homed axes.
 // NOTE: settings.max_travel[] is stored as a negative value.
@@ -303,7 +299,6 @@ static bool wp_homing_cycle (axes_signals_t cycle, axes_signals_t auto_square)
 
     return false;
 }
-
 
 static void wp_settings_changed (settings_t *settings, settings_changed_flags_t changed)
 {

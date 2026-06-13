@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32f2xx_it.h 
+  * @file    stm32f2xx_it.h
   * @author  MCD Application Team
   * @version V1.0.2
   * @date    06-June-2011
@@ -25,7 +25,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx.h"

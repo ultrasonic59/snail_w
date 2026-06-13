@@ -221,7 +221,6 @@ extern void gc_output_message (char *message);
 
 //
 
-
 // Callback from delay to deenergize steppers after movement, might been cancelled
 FLASHMEM void st_deenergize (void *data)
 {
@@ -846,7 +845,6 @@ FLASHMEM void st_parking_setup_buffer (void)
     pl_block = NULL; // Always reset parking motion to reload new block.
 }
 
-
 // Restores the step segment buffer to the normal run state after a parking motion.
 FLASHMEM void st_parking_restore_buffer (void)
 {
@@ -1384,7 +1382,6 @@ void st_prep_buffer (void)
             prep_segment->target_position = prep.target_position; //st_prep_block->millimeters - pl_block->millimeters;
         }
 
-
 #ifdef JERK_LOG
 if(jlog.idx < sizeof(jlog.data) - 1 && prep.ramp_type != Ramp_Cruise) {
     jlog.data[jlog.idx].n_step = prep_segment->n_step;
@@ -1445,7 +1442,6 @@ if(jlog.idx < sizeof(jlog.data) - 1 && prep.ramp_type != Ramp_Cruise) {
         }
     }
 }
-
 
 // Called by realtime status reporting to fetch the current speed being executed. This value
 // however is not exactly the current speed, but the speed computed in the last step segment

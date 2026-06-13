@@ -13,6 +13,8 @@ uint8_t  CAN_TxRdy = 0;
 uint8_t  CAN_RxRdy = 0;
 can_msg_t CAN_RxMsg;
 
+extern void can_master_rx_signal_from_isr(void);
+
 static can_br_coef_t can_br_coef_tab[] = {
   {150, CAN_BS1_15tq, CAN_BS2_5tq},
   {75,  CAN_BS1_15tq, CAN_BS2_5tq},
@@ -29,15 +31,7 @@ static void NVIC_can_Config(void)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
 
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-
   NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-  NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX1_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -147,6 +141,18 @@ void CAN_rdMsg(can_msg_t *msg)
 
 void CAN_wrMsg(can_msg_t *msg)
 {
+  uint32_t wait = 100000U;
+
+  while ((CAN1->TSR & CAN_TSR_TME0) == 0U) {
+    if (CAN1->TSR & CAN_TSR_RQCP0) {
+      CAN1->TSR |= CAN_TSR_RQCP0;
+      CAN_TxRdy = 1;
+    }
+    if (--wait == 0U) {
+      return;
+    }
+  }
+
   CAN1->sTxMailBox[0].TIR = 0;
 
   if (msg->format == STANDARD_FORMAT) {
@@ -183,14 +189,7 @@ void CAN1_RX0_IRQHandler(void)
   if (CAN1->RF0R & CAN_RF0R_FMP0) {
     CAN_rdMsg(&CAN_RxMsg);
     CAN_RxRdy = 1;
-  }
-}
-
-void CAN1_RX1_IRQHandler(void)
-{
-  if (CAN1->RF1R & CAN_RF1R_FMP1) {
-    CAN_rdMsg(&CAN_RxMsg);
-    CAN_RxRdy = 1;
+    can_master_rx_signal_from_isr();
   }
 }
 
@@ -235,7 +234,6 @@ void can1_init(void)
 
   NVIC_can_Config();
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
-  CAN_ITConfig(CAN1, CAN_IT_FMP1, ENABLE);
   canfilter_master_init();
 
   CAN_RxRdy = 0;

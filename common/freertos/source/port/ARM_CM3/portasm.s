@@ -37,8 +37,6 @@
 	PUBLIC vPortSVCHandler
 	PUBLIC vPortStartFirstTask
 
-
-
 /*-----------------------------------------------------------*/
 
 xPortPendSVHandler:
@@ -66,7 +64,6 @@ xPortPendSVHandler:
 	msr psp, r0
 	isb
 	bx r14
-
 
 /*-----------------------------------------------------------*/
 

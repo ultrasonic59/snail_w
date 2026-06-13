@@ -134,7 +134,6 @@ void report_feedback_message(uint8_t message_code)
 	  CDC_send_str(str_report, strlen(str_report));
 }
 
-
 // Welcome message
 void report_init_message()
 {
@@ -147,7 +146,6 @@ void report_grbl_help() {
 	sprintf(str_report,"[HLP:$$ $# $G $I $N $x=val $Nx=line $J=line $SLP $C $X $H ~ ! ? ctrl-x]\r\n");
 	CDC_send_str(str_report, strlen(str_report));
 }
-
 
 // Grbl global settings print out.
 // NOTE: The numbering scheme here must correlate to storing in settings.c
@@ -198,7 +196,6 @@ void report_grbl_settings() {
   CDC_send_str(str_report, strlen(str_report));
 }
 
-
 // Prints current probe parameters. Upon a probe command, these parameters are updated upon a
 // successful probe or upon a failed probe with the G38.3 without errors command (if supported).
 // These values are retained until Grbl is power-cycled, whereby they will be re-zeroed.
@@ -217,7 +214,6 @@ void report_probe_parameters()
   sprintf(str_report,"[PRB:%.3f,%.3f,%.3f:%d]\r\n", print_position[0], print_position[1], print_position[2], sys.probe_succeeded);
   CDC_send_str(str_report, strlen(str_report));
 }
-
 
 // Prints Grbl NGC parameters (coordinate offsets, probing)
 void report_ngc_parameters()
@@ -254,7 +250,6 @@ void report_ngc_parameters()
   CDC_send_str(str_report, strlen(str_report));
   report_probe_parameters(); // Print probe parameters. Not persistent in memory.
 }
-
 
 // Print current gcode parser mode state
 void report_gcode_modes()
@@ -364,7 +359,6 @@ void report_build_info(char *line)
   CDC_send_str(str_report, strlen(str_report));
 }
 
-
 // Prints the character string line Grbl has received from the user, which has been pre-parsed,
 // and has been sent into protocol_execute_line() routine to be executed by Grbl.
 void report_echo_line_received(char *line)
@@ -372,7 +366,6 @@ void report_echo_line_received(char *line)
   sprintf(str_report + strlen(str_report),"[echo:%s]\r\n", line);
   CDC_send_str(str_report, strlen(str_report));
 }
-
 
  // Prints real-time data. This function grabs a real-time snapshot of the stepper subprogram
  // and the actual location of the CNC machine. Users may change the following function to their
@@ -460,8 +453,6 @@ void report_realtime_status()
   	  	  		  	break;
   }
 
-
-
   // Returns planner and serial read buffer states.
   #ifdef REPORT_FIELD_BUFFER_STATE
     if (bit_istrue(settings.status_report_mask,BITFLAG_RT_STATUS_BUFFER_STATE)) {
@@ -488,7 +479,7 @@ void report_realtime_status()
       sprintf(str_report + strlen(str_report),"|FS:%.0f,%.0f", st_get_realtime_rate(), sys.spindle_speed);
     #else
       sprintf(str_report + strlen(str_report),"|F:%.0f", st_get_realtime_rate());
-    #endif      
+    #endif
   #endif
 
   #ifdef REPORT_FIELD_PIN_STATE
@@ -551,7 +542,7 @@ void report_realtime_status()
       if (sp_state || cl_state) {
     	  sprintf(str_report + strlen(str_report),"|A:");
         if (sp_state) { // != SPINDLE_STATE_DISABLE
-          #ifdef VARIABLE_SPINDLE 
+          #ifdef VARIABLE_SPINDLE
             #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
               serial_write('S'); // CW
             #else
@@ -567,14 +558,13 @@ void report_realtime_status()
         #ifdef ENABLE_M7
           if (cl_state & COOLANT_STATE_MIST) { sprintf(str_report + strlen(str_report),"M"); }
         #endif
-      }  
+      }
     }
   #endif
 
     sprintf(str_report + strlen(str_report),">\r\n");
     CDC_send_str(str_report, strlen(str_report));
 }
-
 
 #ifdef DEBUG
   void report_realtime_debug()

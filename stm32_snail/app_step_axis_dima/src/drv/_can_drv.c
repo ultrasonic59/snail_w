@@ -34,7 +34,7 @@ void can1_init(void)
 {
 CAN_InitTypeDef        CAN_InitStructure;
 CAN_FilterInitTypeDef  CAN_FilterInitStructure;
-  
+
 GPIO_InitTypeDef GPIO_InitStructure;
 ////============== CAN1_INH ============================
 RCC_AHB1PeriphClockCmd(CAN1_INH_PIN_RCC, ENABLE);
@@ -77,7 +77,7 @@ NVIC_can_Config();
   CAN_InitStructure.CAN_TXFP = DISABLE;
   CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;///CAN_Mode_LoopBack;
   CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
-  
+
   /* Baudrate = 500 Kbps */
   CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
   CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
@@ -88,19 +88,19 @@ NVIC_can_Config();
   CAN_FilterInitStructure.CAN_FilterNumber = 0;
   CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
   CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
-  
+
 /////  CAN_FilterInitStructure.CAN_FilterIdHigh = CAN_FILTR_ID<<5;
   CAN_FilterInitStructure.CAN_FilterIdHigh = 0;
  CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
 /////  CAN_FilterInitStructure.CAN_FilterMaskIdHigh = CAN_FILTR_MASK<<5;///0x0000;
   CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
   CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
-  
+
   CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_FIFO0;
   CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
   CAN_FilterInit(&CAN_FilterInitStructure);
 
-  /* CAN FIFO0 message pending interrupt enable */ 
+  /* CAN FIFO0 message pending interrupt enable */
   CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 
 }
@@ -116,7 +116,7 @@ uint8_t ii ;
   TxMessage.RTR = CAN_RTR_DATA;
   if(data_len>MAX_CAN_DATA_LEN)
     {
-    data_len=MAX_CAN_DATA_LEN ; 
+    data_len=MAX_CAN_DATA_LEN ;
     }
   TxMessage.DLC = data_len;
   for(ii=0;ii<data_len;ii++)
@@ -132,7 +132,6 @@ TestStatus CAN_Interrupt(void)
   CanTxMsg TxMessage;
   uint32_t i = 0;
 
-
   /* transmit 1 message */
   TxMessage.StdId = 0;
   TxMessage.ExtId = 0x1234;
@@ -145,17 +144,17 @@ TestStatus CAN_Interrupt(void)
 
   /* initialize the value that will be returned */
   ret = 0xFF;
-       
+
   /* receive message with interrupt handling */
   i = 0;
   while((ret ==  0xFF) && (i < 0xFFF))
   {
     i++;
   }
-  
+
   if (i ==  0xFFF)
   {
-    ret = 0;  
+    ret = 0;
   }
 
   /* disable interrupt handling */
@@ -197,7 +196,7 @@ if (TestRx !=  FAILED)
   /* Infinite loop */
   while (1)
   {
-    
+
   }
 
 return 0;
@@ -217,7 +216,54 @@ typedef struct  CAN_msg_s_{
   unsigned char  format;             // 0 - STANDARD, 1- EXTENDED IDENTIFIER
   unsigned char  type;               // 0 - DATA FRAME, 1 - REMOTE FRAME
 } can_msg_t;
-can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */                        
+can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */
+
+#define CAN_RX_QUEUE_CAP  64U
+static can_msg_t CAN_RxQueue[CAN_RX_QUEUE_CAP];
+static volatile uint8_t CAN_RxQueueRd = 0U;
+static volatile uint8_t CAN_RxQueueWr = 0U;
+
+static void CAN_rx_push_isr(const can_msg_t *msg)
+{
+  uint8_t wr;
+  uint8_t next;
+
+  wr = CAN_RxQueueWr;
+  next = (uint8_t)(wr + 1U);
+  if (next >= CAN_RX_QUEUE_CAP) {
+    next = 0U;
+  }
+  if (next == CAN_RxQueueRd) {
+    return;
+  }
+  CAN_RxQueue[wr] = *msg;
+  CAN_RxQueueWr = next;
+  CAN_RxRdy = 1U;
+}
+
+int CAN_rx_pop(can_msg_t *msg)
+{
+  uint8_t rd;
+
+  __disable_irq();
+  rd = CAN_RxQueueRd;
+  if (rd == CAN_RxQueueWr) {
+    CAN_RxRdy = 0U;
+    __enable_irq();
+    return 0;
+  }
+  *msg = CAN_RxQueue[rd];
+  rd = (uint8_t)(rd + 1U);
+  if (rd >= CAN_RX_QUEUE_CAP) {
+    rd = 0U;
+  }
+  CAN_RxQueueRd = rd;
+  if (rd == CAN_RxQueueWr) {
+    CAN_RxRdy = 0U;
+  }
+  __enable_irq();
+  return 1;
+}
 
 /*----------------------------------------------------------------------------
   read a message from CAN peripheral and release it
@@ -253,22 +299,20 @@ void CAN_rdMsg (can_msg_t *msg)  {
   CAN1->RF0R |= CAN_RF0R_RFOM0;             /* Release FIFO 0 output mailbox */
 }
 
-
 void CAN1_RX0_IRQHandler (void)
 {
 if (CAN1->RF0R & CAN_RF0R_FMP0)
   {			/* message pending ?              */
   CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
-  CAN_RxRdy = 1;                          // set receive flag
+  CAN_rx_push_isr(&CAN_RxMsg);
   }
 }
-
 
 ////==================================================================
 void CAN_wrFilter (unsigned int id, unsigned char format)  {
   static unsigned short CAN_filterIdx = 0;
          unsigned int   CAN_msgId     = 0;
-  
+
   if (CAN_filterIdx > 13) {                 /* check if Filter Memory is full*/
     return;
   }
@@ -288,7 +332,7 @@ void CAN_wrFilter (unsigned int id, unsigned char format)  {
 
   CAN1->sFilterRegister[CAN_filterIdx].FR1 = CAN_msgId; /*  32-bit identifier                */
   CAN1->sFilterRegister[CAN_filterIdx].FR2 = CAN_msgId; /*  32-bit identifier                */
-    													   
+
   CAN1->FFA1R &= ~(unsigned int)(1 << CAN_filterIdx);   /* assign filter to FIFO 0           */
   CAN1->FA1R  |=  (unsigned int)(1 << CAN_filterIdx);   /* activate filter                   */
 
@@ -297,13 +341,13 @@ void CAN_wrFilter (unsigned int id, unsigned char format)  {
   CAN_filterIdx += 1;                       /* increase filter index         */
 }
 
-void CAN_waitReady (void)  
+void CAN_waitReady (void)
 {
 while ((CAN1->TSR & CAN_TSR_TME0) == 0);  /* Transmit mailbox 0 is empty    */
 CAN_TxRdy = 1;
- 
+
 }
-void CAN_setup (void)  
+void CAN_setup (void)
 {
 unsigned int brp;
 
@@ -318,11 +362,11 @@ unsigned int brp;
                CAN_IER_TMEIE    );        /* enable Transmit mbx empty IRQ    */
 
 brp = 4;//4;
-                                                                          
-CAN1->BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | (          0x1FF)); 
+
+CAN1->BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | (          0x1FF));
 CAN1->BTR |=  ((((1-1) & 0x03) << 24) | (((8-1) & 0x07) << 20) | (((6-1) & 0x0F) << 16) | ((brp-1) & 0x1FF));
 }
-void CAN_start (void)  
+void CAN_start (void)
 {
 CAN1->MCR &= ~CAN_MCR_INRQ;             /* normal operating mode, reset INRQ*/
 while (CAN1->MSR & CAN_MCR_INRQ);
@@ -337,8 +381,8 @@ CAN_setup ();                                   /* setup CAN Controller     */
 CAN_wrFilter (0x0, STANDARD_FORMAT);
 ////CAN_wrFilter (0x080 + NODE, STANDARD_FORMAT);
 ////CAN_wrFilter (0x700 + NODE, STANDARD_FORMAT);
-	
+
 CAN_start ();                                   /* start CAN Controller   */
-	
+
 CAN_waitReady ();                               /* wait til tx mbx is empty */
 }

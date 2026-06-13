@@ -14,4 +14,4 @@ extern uint8_t prg_dat(uint8_t *data);
 extern void set_curr_addr_prg(uint32_t *iaddr);
 extern uint8_t rd_nflash(prg_flash_cmd_t *data);
 
-#endif ////  __MY_MISC_H__ 
+#endif ////  __MY_MISC_H__

@@ -130,7 +130,6 @@ typedef struct corCoRoutineControlBlock
  */
 BaseType_t xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t uxPriority, UBaseType_t uxIndex );
 
-
 /**
  * croutine. h
  *<pre>
@@ -579,7 +578,6 @@ void vCoRoutineSchedule( void );
  * \ingroup Tasks
  */
 #define crQUEUE_SEND_FROM_ISR( pxQueue, pvItemToQueue, xCoRoutinePreviouslyWoken ) xQueueCRSendFromISR( ( pxQueue ), ( pvItemToQueue ), ( xCoRoutinePreviouslyWoken ) )
-
 
 /**
  * croutine. h

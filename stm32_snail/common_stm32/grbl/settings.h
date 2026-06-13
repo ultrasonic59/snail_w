@@ -25,7 +25,6 @@
 #include "grbl.h"
 #include "config.h"
 
-
 // Version of the EEPROM data. Will be used to migrate existing data from older versions of Grbl
 // when firmware is upgraded. Always stored in byte 0 of eeprom
 #define SETTINGS_VERSION 10  // NOTE: Check settings_reset() when moving to next version.

@@ -22,7 +22,6 @@
    processor types or alternative pin layouts. This version of Grbl officially supports
    only the Arduino Mega328p. */
 
-
 #ifndef cpu_map_h
 #define cpu_map_h
 

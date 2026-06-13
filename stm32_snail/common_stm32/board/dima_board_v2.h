@@ -27,13 +27,12 @@
 #define DEF_MOT_TIM_PRESC           64  ////8
 
 #define MAX_PER         64000
-#define MIN_PER         10        
+#define MIN_PER         10
 
 ////============================================
 #define ENC_TIM_PERIOD 0Xffff
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
-
 
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
 ////=============== TST1============================
@@ -243,8 +242,7 @@ typedef union cmd_param_u
 uint8_t bpar[4];
 uint16_t hpar[2];
 int32_t wpar;
-}cmd_param_t; 
-
+}cmd_param_t;
 
 typedef struct cmd_s_
 {
@@ -255,7 +253,6 @@ extern cmd_t cur_cmd;
 ////========================================================================
 ////#define EXEC_CYCLE_STOP     (0x1<<2) // bitmask 00000100
 ////#define STATE_HOMING        (0x1<<2) // Performing homing cycle
-
 
 #ifndef SEGMENT_BUFFER_SIZE
  #define SEGMENT_BUFFER_SIZE 10
@@ -274,7 +271,7 @@ extern cmd_t cur_cmd;
 #define  Z_DIRECTION_BIT 2
 typedef struct system_s_{
   uint8_t state;               // Tracks the current system state of Grbl.
-  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.             
+  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.
   uint8_t suspend;             // System suspend bitflag variable that manages holds, cancels, and safety door.
   uint8_t soft_limit;          // Tracks soft limit errors for the state machine. (boolean)
   uint8_t step_control;        // Governs the step segment generator depending on system state.
@@ -323,10 +320,9 @@ typedef struct {
   #endif
 } segment_t;
 
-
 // Stepper ISR data struct. Contains the running data for the main stepper ISR.
 typedef struct stepper_s_{
-#if 0  
+#if 0
   #ifdef STEP_PULSE_DELAY
     uint8_t step_bits;  // Stores out_bits output to complete the step pulse delay
   #endif
@@ -340,12 +336,12 @@ typedef struct stepper_s_{
     uint32_t steps[N_AXIS];
   #endif
 
-#endif 
+#endif
   // Used by the bresenham line algorithm
   uint32_t counter_x;        // Counter variables for the bresenham line tracer
   uint32_t counter_y;
   uint32_t counter_z;
-    
+
   uint16_t step_count;       // Steps remaining in line segment motion
   uint8_t exec_block_index; // Tracks the current st_block index. Change indicates new block.
   st_block_t *exec_block;   // Pointer to the block data for the segment being executed
@@ -354,20 +350,19 @@ uint8_t dir_outbits;
 uint8_t step_outbits;         // The next stepping-bits to be output
 } stepper_t;
 
-
 ////======================================
 #define I2C_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define I2C_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define I2C_TASK_PRIORITY				3U
 
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define MOTOR_TASK_PRIORITY				3U
 #define CAN_SEND_STACK_SIZE                     1024////
 #define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define CAN_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define APP_PRIORITY	                       (6)	
+#define CAN_TASK_PRIORITY				3U
+#define APP_PRIORITY	                       (6)
 
 #define TST_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define TST_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define TST_TASK_PRIORITY				3U
 ////=============Addr eeprom ==========================================
 #define ADDR_EEPROM_BOOT_WORK   0x0
 #define VAL_EEPROM_WORK        0xAA55
@@ -386,7 +381,7 @@ uint8_t step_outbits;         // The next stepping-bits to be output
 ///  #define MASK_CON 0x3
   #define MASK_CON0  0x1
   #define MASK_CON1  0x2
-  
+
 #endif
 
 ////============================================
@@ -431,7 +426,3 @@ extern void  on_led(uint8_t idat);
 
 ////=============================================
 #endif ////__DIMA_BOARD_H__
-
-
-
-	

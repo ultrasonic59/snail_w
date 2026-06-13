@@ -134,7 +134,7 @@ time. */
 #define mainCOM_TEST_BAUD_RATE		( 115200 )
 
 extern void  put_tst_pin(uint8_t idat);
-#endif   
+#endif
 ////========================================================
 void uDelay (const uint32_t usec)
 {
@@ -149,11 +149,11 @@ do
   }
 while (1);
 }
-   
+
 ////============================================
 int main( void )
 {
-////uint8_t btst=0; 
+////uint8_t btst=0;
 uint32_t tst=0;
 #ifdef DEBUG
   debug();
@@ -161,63 +161,62 @@ uint32_t tst=0;
 __disable_irq();
 hw_board_init();
 
-printk("\n\r=== [test1] ==="); 
-////printk("\n\r=== [test2] ==="); 
-////printk("\n\r=== [test3] ==="); 
-////printk("\n\r=== [test4] ==="); 
+printk("\n\r=== [test1] ===");
+////printk("\n\r=== [test2] ===");
+////printk("\n\r=== [test3] ===");
+////printk("\n\r=== [test4] ===");
 
 #if 0
-printk("\n\r [test]"); 
+printk("\n\r [test]");
 tst= LED_PWM_TIM->CR1;/// & TIM_CR1_CEN;
-printk("\n\r [test=%x]",tst); 
+printk("\n\r [test=%x]",tst);
 tst= LED_PWM_TIM->CNT;/// & TIM_CR1_CEN;
-printk("\n\r [test_cnt=%x]",tst); 
-tst= LED_PWM_TIM->CCR3;/// 
-printk("\n\r [test_ccr3=%x]",tst); 
-tst= LED_PWM_TIM->CCR2;/// 
-printk("\n\r [test_ccr2=%x]",tst); 
-tst= LED_PWM_TIM->CCR1;/// 
-printk("\n\r [test_ccr1=%x]",tst); 
+printk("\n\r [test_cnt=%x]",tst);
+tst= LED_PWM_TIM->CCR3;///
+printk("\n\r [test_ccr3=%x]",tst);
+tst= LED_PWM_TIM->CCR2;///
+printk("\n\r [test_ccr2=%x]",tst);
+tst= LED_PWM_TIM->CCR1;///
+printk("\n\r [test_ccr1=%x]",tst);
 /*
 tst= GPIOC->MODER;
-printk("\n\r [test_MODER=%x[%x]]",tst,tst>>16); 
+printk("\n\r [test_MODER=%x[%x]]",tst,tst>>16);
 tst= GPIOC->AFR[1];
-printk("\n\r [test_AFR[1]=%x[%x]]",tst,tst&0xf); 
+printk("\n\r [test_AFR[1]=%x[%x]]",tst,tst&0xf);
 */
-tst= LED_PWM_TIM->CCER;/// 
+tst= LED_PWM_TIM->CCER;///
 printk("\n\r [test_ccer=%x]",tst);
 
-tst= LED_PWM_TIM->BDTR;/// 
-printk("\n\r [test_bdtr=%x]",tst); 
+tst= LED_PWM_TIM->BDTR;///
+printk("\n\r [test_bdtr=%x]",tst);
 
-
-tst= TIM_LED->CCER;/// 
+tst= TIM_LED->CCER;///
 printk("\n\r [test_ccer=%x]",tst);
 
-tst= TIM_LED->BDTR;/// 
-printk("\n\r [test_bdtr=%x]",tst); 
+tst= TIM_LED->BDTR;///
+printk("\n\r [test_bdtr=%x]",tst);
 
-tst= TIM_LED->PSC;/// 
-printk("\n\r [TIM_LED->PSC=%x]",tst); 
+tst= TIM_LED->PSC;///
+printk("\n\r [TIM_LED->PSC=%x]",tst);
 
-tst= TIM_LED->CCMR2;/// 
-printk("\n\r [TIM_LED->CCMR2=%x]",tst); 
+tst= TIM_LED->CCMR2;///
+printk("\n\r [TIM_LED->CCMR2=%x]",tst);
 #endif
 
 ///on_led0(1);
 ////set_led_dutycycle (LED_PWM_TIM_PERIOD);
 ////  put_mot_nstep(20);
 
-#if 0        
+#if 0
 for(;;)
   {
  tst= TIM_LED->CNT;/// & TIM_CR1_CEN;
-////printk("\n\r [test_cnt=%x]",tst); 
-   
- ////sendchar2 (0x33) ; 
+////printk("\n\r [test_cnt=%x]",tst);
+
+ ////sendchar2 (0x33) ;
   put_tst_pin(btst);
   btst++;
-#if 0  
+#if 0
   tst+=10;
   if(tst>LED_PWM_TIM_PERIOD)
     tst=LED_PWM_TIM_PERIOD;
@@ -225,18 +224,18 @@ for(;;)
 //// on_led1(btst>>5);
  set_led_dutycycle (tst);
 #endif
-  ////delay__ms(1);  
+  ////delay__ms(1);
   uDelay(100000);
   }
-#endif  
+#endif
 ////=================================================
 can1_init();
 can_main();
 ////=================================================
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-        
+
 ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-         
+
 	/* Start the tasks defined within this file/specific to this demo. */
  ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 ////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -316,7 +315,6 @@ extern unsigned short usMaxJitter;
 }
 #endif
 /*-----------------------------------------------------------*/
-
 
 #ifdef  DEBUG
 /* Keep the linker happy. */

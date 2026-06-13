@@ -21,7 +21,6 @@
 
 #include "grbl.h"
 
-
 // Execute linear motion in absolute millimeter coordinates. Feed rate given in millimeters/second
 // unless invert_feed_rate is true. Then the feed_rate means that the motion should be completed in
 // (1 minute)/feed_rate time.
@@ -76,7 +75,6 @@ void mc_line(float *target, plan_line_data_t *pl_data)
   }
 }
 
-
 // Execute an arc in offset mode format. position == current xyz, target == target xyz,
 // offset == offset from current xyz, axis_X defines circle plane in tool space, axis_linear is
 // the direction of helical travel, radius == circle radius, isclockwise boolean. Used
@@ -113,11 +111,11 @@ void mc_arc(float *target, plan_line_data_t *pl_data, float *position, float *of
     // Multiply inverse feed_rate to compensate for the fact that this movement is approximated
     // by a number of discrete segments. The inverse feed_rate should be correct for the sum of
     // all segments.
-    if (pl_data->condition & PL_COND_FLAG_INVERSE_TIME) { 
-      pl_data->feed_rate *= segments; 
+    if (pl_data->condition & PL_COND_FLAG_INVERSE_TIME) {
+      pl_data->feed_rate *= segments;
       bit_false(pl_data->condition,PL_COND_FLAG_INVERSE_TIME); // Force as feed absolute mode over arc segments.
     }
-    
+
     float theta_per_segment = angular_travel/segments;
     float linear_per_segment = (target[axis_linear] - position[axis_linear])/segments;
 
@@ -190,7 +188,6 @@ void mc_arc(float *target, plan_line_data_t *pl_data, float *position, float *of
   mc_line(target, pl_data);
 }
 
-
 // Execute dwell in seconds.
 void mc_dwell(float seconds)
 {
@@ -205,7 +202,6 @@ void mc_wait_end_of_motion()
 	if (sys.state == STATE_CHECK_MODE) { return; }
 	protocol_buffer_synchronize();
 }
-
 
 // Perform homing cycle to locate and set machine zero. Only '$H' executes this command.
 // NOTE: There should be no motions in the buffer and Grbl must be in an idle state before
@@ -227,7 +223,7 @@ void mc_homing_cycle(uint8_t cycle_mask)
 
   // -------------------------------------------------------------------------------------
   // Perform homing routine. NOTE: Special motion case. Only system reset works.
-  
+
   #ifdef HOMING_SINGLE_AXIS_COMMANDS
     if (cycle_mask) { limits_go_home(cycle_mask); } // Perform homing cycle based on mask.
     else
@@ -256,7 +252,6 @@ void mc_homing_cycle(uint8_t cycle_mask)
   // If hard limits feature enabled, re-enable hard limits pin change register after homing cycle.
   limits_init();
 }
-
 
 // Perform tool length probe cycle. Requires probe switch.
 // NOTE: Upon probe failure, the program will be stopped and placed into ALARM state.
@@ -324,7 +319,6 @@ uint8_t mc_probe_cycle(float *target, plan_line_data_t *pl_data, uint8_t parser_
   else { return(GC_PROBE_FAIL_END); } // Failed to trigger probe within travel. With or without error.
 }
 
-
 // Plans and executes the single special motion case for parking. Independent of main planner buffer.
 // NOTE: Uses the always free planner ring buffer head to store motion parameters for execution.
 #ifdef PARKING_ENABLE
@@ -353,7 +347,6 @@ uint8_t mc_probe_cycle(float *target, plan_line_data_t *pl_data, uint8_t parser_
   }
 #endif
 
-
 #ifdef ENABLE_PARKING_OVERRIDE_CONTROL
   void mc_override_ctrl_update(uint8_t override_state)
   {
@@ -363,7 +356,6 @@ uint8_t mc_probe_cycle(float *target, plan_line_data_t *pl_data, uint8_t parser_
     sys.override_ctrl = override_state;
   }
 #endif
-
 
 // Method to ready the system to reset by setting the realtime reset command and killing any
 // active processes in the system. This also checks if a system reset is issued while Grbl
@@ -386,7 +378,7 @@ void mc_reset()
     // violated, by which, all bets are off.
     if ((sys.state & (STATE_CYCLE | STATE_HOMING | STATE_JOG)) ||
     		(sys.step_control & (STEP_CONTROL_EXECUTE_HOLD | STEP_CONTROL_EXECUTE_SYS_MOTION))) {
-      if (sys.state == STATE_HOMING) { 
+      if (sys.state == STATE_HOMING) {
         if (!sys_rt_exec_alarm) {system_set_exec_alarm(EXEC_ALARM_HOMING_FAIL_RESET); }
       } else { system_set_exec_alarm(EXEC_ALARM_ABORT_CYCLE); }
       st_go_idle(); // Force kill steppers. Position has likely been lost.

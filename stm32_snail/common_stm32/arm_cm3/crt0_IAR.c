@@ -11,11 +11,9 @@
 #include "platform_init.h"
 #include "platform_cmsis.h"
 
-
 extern void __iar_program_start( void );
 extern void platform_init_system_clocks(void);
 extern void platform_init_memory(void);
-
 
 int __low_level_init( void );
 
@@ -40,7 +38,6 @@ int __low_level_init( void );
      platform_init_memory();
      return 1; /* return 1 to force memory init */
 }
-
 
  /* Use stackless because we might have arrived here
   * because the PC was set by a debugger.  If the vector

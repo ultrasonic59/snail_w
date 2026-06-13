@@ -39,7 +39,7 @@ uint16_t modbus_crc16x (const uint8_t *buf, uint_fast16_t len)
 {
     uint_fast8_t i;
     uint16_t crc = 0xFFFF;
- 
+
     while(len--) {
         crc ^= (uint16_t)*buf++;;       // XOR byte into least sig. byte of crc
         for(i = 8; i != 0; i--) {       // Loop over each bit

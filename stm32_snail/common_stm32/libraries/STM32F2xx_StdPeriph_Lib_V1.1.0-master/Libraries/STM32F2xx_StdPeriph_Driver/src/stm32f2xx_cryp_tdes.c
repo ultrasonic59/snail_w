@@ -3,8 +3,8 @@
   * @file    stm32f2xx_cryp_tdes.c
   * @author  MCD Application Team
   * @version V1.1.2
-  * @date    05-March-2012 
-  * @brief   This file provides high level functions to encrypt and decrypt an 
+  * @date    05-March-2012
+  * @brief   This file provides high level functions to encrypt and decrypt an
   *          input message using TDES in ECB/CBC modes .
   *          It uses the stm32f2xx_cryp.c/.h drivers to access the STM32F2xx CRYP
   *          peripheral.
@@ -14,7 +14,7 @@
   *          ===================================================================
   *                                   How to use this driver
   *          ===================================================================
-  *          1. Enable The CRYP controller clock using 
+  *          1. Enable The CRYP controller clock using
   *            RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE); function.
   *
   *          2. Encrypt and decrypt using TDES in ECB Mode using CRYP_TDES_ECB()
@@ -36,24 +36,23 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx_cryp.h"
-
 
 /** @addtogroup STM32F2xx_StdPeriph_Driver
   * @{
   */
 
-/** @defgroup CRYP 
+/** @defgroup CRYP
   * @brief CRYP driver modules
   * @{
   */
@@ -67,19 +66,17 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-
 /** @defgroup CRYP_Private_Functions
   * @{
-  */ 
+  */
 
 /** @defgroup CRYP_Group7 High Level TDES functions
- *  @brief   High Level TDES functions 
+ *  @brief   High Level TDES functions
  *
-@verbatim   
+@verbatim
  ===============================================================================
                           High Level TDES functions
  ===============================================================================
-
 
 @endverbatim
   * @{
@@ -99,7 +96,7 @@
   *          - SUCCESS: Operation done
   *          - ERROR: Operation failed
   */
-ErrorStatus CRYP_TDES_ECB(uint8_t Mode, uint8_t Key[24], uint8_t *Input, 
+ErrorStatus CRYP_TDES_ECB(uint8_t Mode, uint8_t Key[24], uint8_t *Input,
                           uint32_t Ilength, uint8_t *Output)
 {
   CRYP_InitTypeDef TDES_CRYP_InitStructure;
@@ -183,7 +180,7 @@ ErrorStatus CRYP_TDES_ECB(uint8_t Mode, uint8_t Key[24], uint8_t *Input,
   /* Disable Crypto */
   CRYP_Cmd(DISABLE);
 
-  return status; 
+  return status;
 }
 
 /**
@@ -293,22 +290,22 @@ ErrorStatus CRYP_TDES_CBC(uint8_t Mode, uint8_t Key[24], uint8_t InitVectors[8],
   /* Disable Crypto */
   CRYP_Cmd(DISABLE);
 
-  return status; 
+  return status;
 }
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

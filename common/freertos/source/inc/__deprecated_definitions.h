@@ -28,7 +28,6 @@
 #ifndef DEPRECATED_DEFINITIONS_H
 #define DEPRECATED_DEFINITIONS_H
 
-
 /* Each FreeRTOS port has a unique portmacro.h header file.  Originally a
 pre-processor definition was used to ensure the pre-processor found the correct
 portmacro.h file for the port being used.  That scheme was deprecated in favour
@@ -246,7 +245,6 @@ projects should not use them. */
 	#include "portmacro.h"
 #endif
 
-
 #ifdef __IAR_V850ES_Fx3__
 	#include "../../Source/portable/IAR/V850ES/portmacro.h"
 #endif
@@ -276,4 +274,3 @@ projects should not use them. */
 #endif
 
 #endif /* DEPRECATED_DEFINITIONS_H */
-

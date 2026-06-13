@@ -793,7 +793,7 @@ FLASHMEM static status_code_t reboot_system (sys_state_t state, char *args)
 
         hal.reboot();
     }
-    
+
     return hal.reboot ? Status_OK : Status_InvalidStatement;
 }
 

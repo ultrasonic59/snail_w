@@ -7,14 +7,14 @@
 #include "mstep_board.h"
 #include "printk.h"
 ///=============================
-int sendchar2 (int c) 
-{ 
+int sendchar2 (int c)
+{
 while (!(USART2->SR & 0x0080));
 USART2->DR = (c & 0x1FF);
 return (c);
 }
 
-int get_byte2 (void) 
+int get_byte2 (void)
 {
 while (!(USART2->SR & 0x0020));
 return (USART2->DR);
@@ -71,8 +71,8 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
-  
-////=========== DBG_UART =================================================== 
+
+////=========== DBG_UART ===================================================
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -86,7 +86,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(UART_DBG_TX_GPIO_PORT, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO_PORT, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 ////===================================================================
@@ -350,7 +350,7 @@ LED_PWM_TIM->ARR = LED_PWM_TIM_PERIOD;////(uint16_t) (((SystemCoreClock / APB2_p
 LED_PWM_TIM->CCR3 = LED_PWM_TIM_PERIOD/2;////30;
 LED_PWM_TIM->CCER |= TIM_CCER_CC3NE;////| TIM_CCER_CC3NP;
 LED_PWM_TIM->BDTR |= TIM_BDTR_MOE;
-LED_PWM_TIM->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; 
+LED_PWM_TIM->CCMR2 = TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1;
 LED_PWM_TIM->CR1 &= ~TIM_CR1_DIR;
 LED_PWM_TIM->CR1 &= ~TIM_CR1_CMS;
 LED_PWM_TIM->CR1 |= TIM_CR1_CEN;
@@ -358,10 +358,9 @@ LED_PWM_TIM->CR1 |= TIM_CR1_CEN;
 
 volatile uint32_t num_step=0;
 
-
 void mot_tim_init(void)
 {
-NVIC_InitTypeDef NVIC_InitStructure; 
+NVIC_InitTypeDef NVIC_InitStructure;
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
 MOT_STEP_TIM ->PSC = MOT_TIM_PRESC;
@@ -370,7 +369,7 @@ MOT_STEP_TIM ->ARR = MOT_TIM_PERIOD;////
 MOT_STEP_TIM ->CCR2 = MOT_TIM_PERIOD/2;////30;
 MOT_STEP_TIM->CCER |= TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
-MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1; 
+MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
 MOT_STEP_TIM->CR1 |= TIM_CR1_CEN;
@@ -389,7 +388,6 @@ NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStructure);
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC2, ENABLE);
 
-
 }
 void stop_mot_step_tim(void)
 {
@@ -398,20 +396,20 @@ TIM_Cmd(MOT_STEP_TIM, DISABLE);
 
 void put_mot_nstep(uint32_t nstep)
 {
-num_step=nstep; 
+num_step=nstep;
 set_ena_mot(0);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
 volatile uint32_t gsr;
 ////=======================================================
 void MOT_STEP_TIM_IRQHandler(void)
-{ 
+{
 if(num_step)
   {
-  num_step--;  
+  num_step--;
   if(num_step==0)
     {
-    stop_mot_step_tim(); 
+    stop_mot_step_tim();
     set_ena_mot(1);
     }
   }
@@ -453,22 +451,22 @@ return GPIO_ReadInputDataBit(CONC_PIN_GPIO, CONC_PIN);
 void hw_board_init(void)
 {
 init_gpio();
-UART_DBG_Init(); 
+UART_DBG_Init();
 
 led_tim_init();
 mot_tim_init();
 }
 ////============================================
-////========================================================   
+////========================================================
 void tst_task( void *pvParameters )
 {
-////uint8_t btst=0; 
-uint8_t psk=0; 
+////uint8_t btst=0;
+uint8_t psk=0;
 char key=0;
 int nstep=300;
 uint8_t dir=0;
 uint8_t mot_rej=0;
-printk("\n\r tst_task"); 
+printk("\n\r tst_task");
 
 set_sleep_mot(1);
 set_ena_mot(1);
@@ -477,19 +475,19 @@ uDelay(1000);
 set_reset_mot(1);
 ////set_ena_mot(0);
 
-#if 0       
+#if 0
 for(;;)
   {
-//// sendchar2 (0x33) ; 
+//// sendchar2 (0x33) ;
   put_tst_pin(btst);
-  btst++;  
-  ////delay__ms(1);  
+  btst++;
+  ////delay__ms(1);
   uDelay(20000);
   }
-#endif        
+#endif
  for(;;)
   {
-  key=dbg_get_byte() ;  
+  key=dbg_get_byte() ;
   switch(key)
     {
     case 'a':
@@ -510,9 +508,9 @@ for(;;)
     case 'p':
      psk=1;
       break;
-     
+
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej);
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -522,7 +520,6 @@ for(;;)
     }
 ////  set_led_dutycycle (duty);
 
-  } 
+  }
 }
 ////============================================
-	

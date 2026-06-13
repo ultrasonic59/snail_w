@@ -21,7 +21,6 @@
 
 #define MOT_STEP_TIM_IRQHandler	 TIM1_CC_IRQHandler
 
-
 #define MOT_TIM_IRQN    TIM1_CC_IRQn
 #if 0
 ////=============== TST1 ============================
@@ -320,7 +319,7 @@ typedef union cmd_param_u
 {
 uint8_t bpar[4];
 int32_t wpar;
-}cmd_param_t;  
+}cmd_param_t;
 typedef struct cmd_s_
 {
 uint8_t cmd;
@@ -329,7 +328,7 @@ cmd_param_t par;
 extern cmd_t cur_cmd;
 ////======================================
 #define MOTOR_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define MOTOR_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define MOTOR_TASK_PRIORITY				3U
 
 extern void mot_spi_init(void);
 extern void init_step_mot(void);
@@ -349,13 +348,9 @@ extern void can1_init(void);
 extern void motor_task( void *pvParameters );
 extern int check_push_key(void);
 
-#define dbg_sendchar  sendchar6 
+#define dbg_sendchar  sendchar6
 #define dbg_get_byte get_byte6
 ////#define check_push_key get_byte6
 
 ////=============================================
 #endif ////__STEP_BOARD_H__
-
-
-
-	

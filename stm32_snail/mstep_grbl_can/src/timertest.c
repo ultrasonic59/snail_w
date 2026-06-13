@@ -28,7 +28,7 @@
 /* High speed timer test as described in main.c. */
 
 /* Scheduler includes. */
-#include "FreeRTOS.h"
+#include "board.h"
 
 /* Library includes. */
 ////#include "stm32f10x_lib.h"
@@ -76,7 +76,6 @@ unsigned long ulFrequency;
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 NVIC_InitTypeDef NVIC_InitStructure;
 
-
 	/* Enable timer clocks */
 	RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM2, ENABLE );
 	RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM3, ENABLE );
@@ -87,7 +86,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseStructInit( &TIM_TimeBaseStructure );
 
 	/* Time base configuration for timer 2 - which generates the interrupts. */
-	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
+	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;
 	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) ( ulFrequency & 0xffffUL );
 	TIM_TimeBaseStructure.TIM_Prescaler = 0x0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;
@@ -95,19 +94,18 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInit( TIM2, &TIM_TimeBaseStructure );
 	TIM_ARRPreloadConfig( TIM2, ENABLE );
 
-	
 	/* Configuration for timer 3 which is used as a high resolution time
 	measurement. */
 	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) 0xffff;
 	TIM_TimeBaseInit( TIM3, &TIM_TimeBaseStructure );
 	TIM_ARRPreloadConfig( TIM3, ENABLE );
-	
+
 	/* Enable TIM2 IT.  TIM3 does not generate an interrupt. */
 ////????	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQChannel;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = timerHIGHEST_PRIORITY;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init( &NVIC_InitStructure );	
+	NVIC_Init( &NVIC_InitStructure );
 	TIM_ITConfig( TIM2, TIM_IT_Update, ENABLE );
 
 	/* Finally, enable both timers. */
@@ -123,7 +121,7 @@ unsigned short usThisCount, usDifference;
 
 	/* Capture the free running timer 3 value as we enter the interrupt. */
 	usThisCount = TIM3->CNT;
-	
+
 	if( usSettleCount >= timerSETTLE_TIME )
 	{
 		/* What is the difference between the timer value in this interrupt
@@ -153,11 +151,3 @@ unsigned short usThisCount, usDifference;
 
     TIM_ClearITPendingBit( TIM2, TIM_IT_Update );
 }
-
-
-
-
-
-
-
-

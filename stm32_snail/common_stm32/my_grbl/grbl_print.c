@@ -21,7 +21,6 @@
 
 #include "my_grbl.h"
 
-
 void printString(const char *s)
 {
   while (*s)
@@ -46,13 +45,12 @@ void print_uint8_base10(uint8_t n)
   if (digit_a) { serial_write(digit_a); }
 }
 
-
 // Prints an uint8 variable in base 2 with desired number of desired digits.
-void print_uint8_base2_ndigit(uint8_t n, uint8_t digits) 
+void print_uint8_base2_ndigit(uint8_t n, uint8_t digits)
 {
 ////	unsigned char buf[digits];
 	unsigned char buf[20];
-  
+
   uint8_t i = 0;
 
   for (; i < digits; i++) {
@@ -63,7 +61,6 @@ void print_uint8_base2_ndigit(uint8_t n, uint8_t digits)
   for (; i > 0; i--)
       serial_write('0' + buf[i - 1]);
 }
-
 
 void print_uint32_base10(uint32_t n)
 {
@@ -84,7 +81,6 @@ void print_uint32_base10(uint32_t n)
     serial_write('0' + buf[i-1]);
 }
 
-
 void printInteger(long n)
 {
   if (n < 0) {
@@ -94,7 +90,6 @@ void printInteger(long n)
     print_uint32_base10(n);
   }
 }
-
 
 // Convert float to string by immediately converting to a long integer, which contains
 // more digits than a float. Number of decimal places, which are tracked by a counter,
@@ -137,7 +132,6 @@ void printFloat(float n, uint8_t decimal_places)
     serial_write(buf[i-1]);
   }
 }
-
 
 // Floating value printing handlers for special variables types used in Grbl and are defined
 // in the config.h.

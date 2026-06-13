@@ -16,36 +16,33 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 #include <stdlib.h>
 #include <string.h>
 #include "usbd_conf.h"
 #include "usbd_desc.h"
 #include "config.h"
 #include "system.h"
-
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
+#include "tx_api.h"
 #include "my_types.h"
 ///#include "_hdlc.h"
 #include "printk.h"
 #include "min_max.h"
 #include "ring_buff.h"
 #include "can.h"
-extern int send_char_dbg(int ch); 
+extern int send_char_dbg(int ch);
 
 #if (USB_CLASS == CDC_VCP)|| (USB_CLASS == MSC_CDC)    ///================================
 
-#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED 
-#pragma     data_alignment = 4 
+#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+#pragma     data_alignment = 4
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 
 #include "usbd_cdc_vcp.h"
@@ -63,11 +60,10 @@ LINE_CODING linecoding =
     0x08    /* nb. of bits 8*/
   };
 
-
 USART_InitTypeDef USART_InitStructure;
 #endif
 
-/* These are external variables imported from CDC core to be used for IN 
+/* These are external variables imported from CDC core to be used for IN
    transfer management. */
 extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
                                      These data will be sent over USB IN endpoint
@@ -81,12 +77,12 @@ static uint16_t VCP_Init     (void);
 static uint16_t VCP_DeInit   (void);
 static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
 ////static uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
-////static 
+////static
 ////uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
 
 ///static uint16_t VCP_COMConfig(uint8_t Conf);
 
-CDC_IF_Prop_TypeDef VCP_fops = 
+CDC_IF_Prop_TypeDef VCP_fops =
 {
   VCP_Init,
   VCP_DeInit,
@@ -107,13 +103,13 @@ static uint16_t VCP_DeInit(void)
 }
 
 static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
-{ 
+{
   return USBD_OK;
 }
 #if 0
 /**
   * @brief  VCP_DataTx
-  *         CDC received data to be send over USB IN endpoint are managed in 
+  *         CDC received data to be send over USB IN endpoint are managed in
   *         this function.
   * @param  Buf: Buffer of data to be sent
   * @param  Len: Number of data to be sent (in bytes)
@@ -190,7 +186,7 @@ unsigned VCP_PutContig(void const* buff, unsigned len)
 {
 unsigned avail = VCP_SpaceAvailContig();
 unsigned sz = MIN_(avail, len);
-if (sz) 
+if (sz)
   {
   memcpy(VCP_SpacePtr(), buff, sz);
   VCP_MarkWritten(sz);
@@ -222,7 +218,7 @@ APP_Rx_ptr_in++;
 if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
   {
   APP_Rx_ptr_in = 0;
-  }  
+  }
 ////xQueueSend(g_hdlc_bt.ua_snd_dat, &btmp, portMAX_DELAY);
 /////on_int_tx_uart_bt();
 ///_printk("[%x]",APP_Rx_ptr_in);
@@ -231,7 +227,7 @@ if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
 #else
 void hdlc_vcp_send_byte(u8 val)
 {
-int num;  
+int num;
 u8 btmp=val;
 for(;;)
 {
@@ -251,14 +247,14 @@ uint16_t ii;
 
 for(ii=0;ii<len;ii++)
 {
-APP_Rx_Buffer[APP_Rx_ptr_in]=buff[ii]; 
+APP_Rx_Buffer[APP_Rx_ptr_in]=buff[ii];
 if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
   {
   APP_Rx_ptr_in = 0;
-  }  
+  }
 
 }
-///memcpy(APP_Rx_Buffer,buff,len);  
+///memcpy(APP_Rx_Buffer,buff,len);
 #endif
 return 0;
 }
@@ -271,9 +267,9 @@ return 0;
 
 ////TaskHandle_t  vcp_rx_thread_handle;
 ///TaskHandle_t  vcp_tx_thread_handle;
-TaskHandle_t  vcp_thread_handle;
+TX_THREAD *vcp_thread_handle;
 #if 0
-////static 
+////static
 uint16_t _VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
 ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -298,7 +294,6 @@ return USBD_OK;
 extern uint8_t serial_get_tx_buffer_count(void);
 extern int serial_read_tx(void);
 
-
 void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
   uint32_t i;
   uint8_t data;
@@ -308,23 +303,23 @@ void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
   // Pick off realtime command characters directly from the serial stream. These characters are
   // not passed into the main buffer, but these set system state flag bits for realtime execution.
   switch (data) {
-      case CMD_RESET:	
+      case CMD_RESET:
         mc_reset();
       	 break; // Call motion control reset routine.
-      case CMD_STATUS_REPORT: 
-        system_set_exec_state_flag(EXEC_STATUS_REPORT); 
+      case CMD_STATUS_REPORT:
+        system_set_exec_state_flag(EXEC_STATUS_REPORT);
         break; // Set as true
-      case CMD_CYCLE_START:   
-        system_set_exec_state_flag(EXEC_CYCLE_START); 
+      case CMD_CYCLE_START:
+        system_set_exec_state_flag(EXEC_CYCLE_START);
         break; // Set as true
-      case CMD_FEED_HOLD:     
-        system_set_exec_state_flag(EXEC_FEED_HOLD); 
+      case CMD_FEED_HOLD:
+        system_set_exec_state_flag(EXEC_FEED_HOLD);
         break; // Set as true
       default :
         if (data > 0x7F) { // Real-time control characters are extended ACSII only.
           switch(data) {
-            case CMD_SAFETY_DOOR:   
-              system_set_exec_state_flag(EXEC_SAFETY_DOOR); 
+            case CMD_SAFETY_DOOR:
+              system_set_exec_state_flag(EXEC_SAFETY_DOOR);
               break; // Set as true
             case CMD_JOG_CANCEL:
               if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
@@ -333,61 +328,61 @@ void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
               break;
             #ifdef DEBUG
               case CMD_DEBUG_REPORT: {
-                uint8_t sreg = SREG; 
-                cli(); 
-                bit_true(sys_rt_exec_debug,EXEC_DEBUG_REPORT); 
+                uint8_t sreg = SREG;
+                cli();
+                bit_true(sys_rt_exec_debug,EXEC_DEBUG_REPORT);
                 SREG = sreg;
               } break;
             #endif
-            case CMD_FEED_OVR_RESET           : 
-              system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET); 
+            case CMD_FEED_OVR_RESET           :
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_RESET);
               break;
-            case CMD_FEED_OVR_COARSE_PLUS     : 
-              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS); 
+            case CMD_FEED_OVR_COARSE_PLUS     :
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_PLUS);
               break;
-            case CMD_FEED_OVR_COARSE_MINUS    : 
-              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS); 
+            case CMD_FEED_OVR_COARSE_MINUS    :
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_COARSE_MINUS);
               break;
-            case CMD_FEED_OVR_FINE_PLUS       : 
-              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS); 
+            case CMD_FEED_OVR_FINE_PLUS       :
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_PLUS);
               break;
-            case CMD_FEED_OVR_FINE_MINUS      : 
-              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS); 
+            case CMD_FEED_OVR_FINE_MINUS      :
+              system_set_exec_motion_override_flag(EXEC_FEED_OVR_FINE_MINUS);
               break;
-            case CMD_RAPID_OVR_RESET          : 
-              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET); 
+            case CMD_RAPID_OVR_RESET          :
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_RESET);
               break;
-            case CMD_RAPID_OVR_MEDIUM         : 
-              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM); 
+            case CMD_RAPID_OVR_MEDIUM         :
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_MEDIUM);
               break;
-            case CMD_RAPID_OVR_LOW            : 
-              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW); 
+            case CMD_RAPID_OVR_LOW            :
+              system_set_exec_motion_override_flag(EXEC_RAPID_OVR_LOW);
               break;
-            case CMD_SPINDLE_OVR_RESET        : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET); 
+            case CMD_SPINDLE_OVR_RESET        :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_RESET);
               break;
-            case CMD_SPINDLE_OVR_COARSE_PLUS  : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS); 
+            case CMD_SPINDLE_OVR_COARSE_PLUS  :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_PLUS);
               break;
-            case CMD_SPINDLE_OVR_COARSE_MINUS : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS); 
+            case CMD_SPINDLE_OVR_COARSE_MINUS :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_COARSE_MINUS);
               break;
-            case CMD_SPINDLE_OVR_FINE_PLUS    : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS); 
+            case CMD_SPINDLE_OVR_FINE_PLUS    :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_PLUS);
               break;
-            case CMD_SPINDLE_OVR_FINE_MINUS   : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS); 
+            case CMD_SPINDLE_OVR_FINE_MINUS   :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_FINE_MINUS);
               break;
-            case CMD_SPINDLE_OVR_STOP         : 
-              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP); 
+            case CMD_SPINDLE_OVR_STOP         :
+              system_set_exec_accessory_override_flag(EXEC_SPINDLE_OVR_STOP);
               break;
-            case CMD_COOLANT_FLOOD_OVR_TOGGLE : 
-              system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE); 
+            case CMD_COOLANT_FLOOD_OVR_TOGGLE :
+              system_set_exec_accessory_override_flag(EXEC_COOLANT_FLOOD_OVR_TOGGLE);
               break;
 
             #ifdef ENABLE_M7
-              case CMD_COOLANT_MIST_OVR_TOGGLE: 
-                system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); 
+              case CMD_COOLANT_MIST_OVR_TOGGLE:
+                system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE);
                 break;
             #endif
 
@@ -400,22 +395,18 @@ void   OnUsbDataRx(uint8_t *rd_dat,uint32_t sz){
   }
  }
 
-
-
-
-
 #define MAX_LEN_RD_DAT 256
 ////===================================
 void vcp_thread(void *pdata)
 {
-uint8_t rd_dat[MAX_LEN_RD_DAT];  
-uint32_t sz; 
+uint8_t rd_dat[MAX_LEN_RD_DAT];
+uint32_t sz;
 int t_dat;
 uint8_t rd_tdat;
-printk("\n\r vcp_Thread\n\r"); 
+printk("\n\r vcp_Thread\n\r");
 
-#if 1  
-for (;;) 
+#if 1
+for (;;)
 {
   uint8_t did_work = 0;
 
@@ -426,13 +417,13 @@ while (sz)
   if (sz > MAX_LEN_RD_DAT)
     {
     VCP_GetContig(rd_dat,MAX_LEN_RD_DAT);
-    OnUsbDataRx(rd_dat,MAX_LEN_RD_DAT); 
+    OnUsbDataRx(rd_dat,MAX_LEN_RD_DAT);
     sz-=MAX_LEN_RD_DAT;
     }
   else
     {
     VCP_GetContig(rd_dat,sz);
-    OnUsbDataRx(rd_dat,sz); 
+    OnUsbDataRx(rd_dat,sz);
     sz=0;
     }
   }
@@ -471,7 +462,7 @@ volatile int vtmp;
 #if 0
 void init_hdlc_vcp(void)
 {
-BaseType_t rez;  
+BaseType_t rez;
 g_hdlc_vcp.fn_send_byte=hdlc_vcp_send_byte;
 ////g_hdlc_vcp.fn_send_frame=hdlc_vcp_send_frame;
 g_hdlc_vcp.fn_set_rec_dat=pc_set_rec_dat;////hdlc_bt_set_rec_dat;
@@ -491,13 +482,13 @@ vtmp=rez;
 ///put_tst1(0);
 }
 #endif
-///======================================  
+///======================================
 ////static uint8_t flg_usb_on=0;
-///======================================  
+///======================================
 void on_off_usb_thr(uint8_t on_off)
 {
 
-#if 0  
+#if 0
 if(on_off&0x1)
   {
   if(flg_usb_on)
@@ -521,6 +512,6 @@ else
   }
 #endif
 }
-///======================================  
+///======================================
 #endif ///(USB_CLASS == CDC_VCP)
-///======================================  
+///======================================

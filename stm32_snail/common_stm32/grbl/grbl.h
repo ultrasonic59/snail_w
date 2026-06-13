@@ -63,7 +63,7 @@
 
 #define VCP_RX_STACK_SIZE	        1024////( ( unsigned short ) 512 )
 #define VCP_TX_STACK_SIZE	      1024//// ( ( unsigned short ) 512 )
-#define APP_PRIORITY  ( tskIDLE_PRIORITY + 3 )
+#define APP_PRIORITY  3U
 
 // ---------------------------------------------------------------------------------------
 // COMPILE-TIME ERROR CHECKING OF DEFINE VALUES:

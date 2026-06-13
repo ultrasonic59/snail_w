@@ -17,7 +17,7 @@
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -29,62 +29,56 @@
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-  
+
 /** @defgroup USBD_MSC_CDC
   * @brief This file is the Header file for usbd_msc_cdc_wrapper.c
   * @{
-  */ 
-
+  */
 
 /** @defgroup USBD_CDC_MSC_Exported_Defines
   * @{
-  */ 
-
+  */
 
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_CORE_Exported_TypesDefinitions
   * @{
   */
 
-
 /**
   * @}
-  */ 
-
-
+  */
 
 /** @defgroup USBD_CORE_Exported_Macros
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_CORE_Exported_Variables
   * @{
-  */ 
+  */
 
 extern USBD_Class_cb_TypeDef  USBD_MSC_CDC_cb;
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 #endif  // __USB_MSC_CDC_WRAPPER_H_
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /******************* (C) COPYRIGHT 2013 STMicroelectronics *****END OF FILE****/

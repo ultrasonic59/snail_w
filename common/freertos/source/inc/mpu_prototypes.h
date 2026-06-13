@@ -33,7 +33,6 @@
  * so the kernel code always runs will full privileges.
  */
 
-
 #ifndef MPU_PROTOTYPES_H
 #define MPU_PROTOTYPES_H
 
@@ -151,7 +150,4 @@ BaseType_t MPU_xStreamBufferSetTriggerLevel( StreamBufferHandle_t xStreamBuffer,
 StreamBufferHandle_t MPU_xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer ) FREERTOS_SYSTEM_CALL;
 StreamBufferHandle_t MPU_xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer, uint8_t * const pucStreamBufferStorageArea, StaticStreamBuffer_t * const pxStaticStreamBuffer ) FREERTOS_SYSTEM_CALL;
 
-
-
 #endif /* MPU_PROTOTYPES_H */
-

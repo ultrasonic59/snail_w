@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
@@ -12,8 +11,10 @@
 #include "printk.h"
 #include "serial.h"
 
+extern void set_ena_mot(uint8_t idat);
+
 #ifdef USE_THREADX
-#include "rtos_compat.h"
+#include "tx_api.h"
 #endif
 
 #ifndef CAN_SEND_DEBUG
@@ -51,6 +52,10 @@ typedef struct {
 
 static volatile uint8_t st_can_axis_state[N_AXIS];
 static volatile uint8_t st_can_go_ack_mask;
+static volatile uint8_t st_can_axis_present_mask;
+static volatile uint8_t st_can_axis_seen_mask;
+static uint32_t st_can_axis_last_seen_ms[N_AXIS];
+static uint32_t st_can_stat_req_ms[N_AXIS];
 #endif
 
 typedef struct {
@@ -70,6 +75,8 @@ static uint32_t can_batch_steps[N_AXIS];
 static uint32_t can_batch_sent_steps[N_AXIS];
 static uint16_t can_batch_step_per;
 static uint16_t can_batch_step_per_max;
+static uint16_t can_batch_cruise_step_per;
+static uint16_t can_batch_target_cruise_per;
 static uint8_t can_batch_ramp_type;
 static uint8_t can_batch_block_index;
 static uint8_t can_batch_dirs;
@@ -95,7 +102,6 @@ static volatile uint8_t busy;
 static uint8_t step_port_invert_mask;
 static uint8_t dir_port_invert_mask;
 
-
 ///==================================================
 ///======================================================
 // Stepper state initialization. Cycle should only start if the st.cycle_start flag is
@@ -103,12 +109,12 @@ static uint8_t dir_port_invert_mask;
 void st_wake_up()
 {
   // Enable stepper drivers.
-/*  
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { 
-    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_RESET); 
+/*
+  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) {
+    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_RESET);
   }
-  else { 
-    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_SET); 
+  else {
+    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_SET);
   }
 */
   // Initialize stepper output bits to ensure first ISR call does not step.
@@ -142,7 +148,7 @@ void st_wake_up()
 static uint8_t st_next_block_index(uint8_t block_index)
 {
   block_index++;
-  if ( block_index == (SEGMENT_BUFFER_SIZE-1) ) { 
+  if ( block_index == (SEGMENT_BUFFER_SIZE-1) ) {
     return(0);
   }
   return(block_index);
@@ -251,6 +257,11 @@ void st_can_send_count_report(void)
 void st_can_master_poll_stat(void)
 {
 }
+
+uint8_t st_can_get_present_mask(void)
+{
+  return 0U;
+}
 #endif
 
 #ifndef CAN_SEND_DEBUG
@@ -271,10 +282,52 @@ static uint8_t st_can_axis_idx_from_brd(uint8_t axis_brd)
   return 0xFFU;
 }
 
+static void st_can_mark_axis_present(uint8_t idx)
+{
+  uint8_t axis_bit = st_can_axis_bit(idx);
+
+  st_can_axis_seen_mask |= axis_bit;
+  st_can_axis_present_mask |= axis_bit;
+  st_can_axis_last_seen_ms[idx] = HAL_GetTick();
+}
+
+static void st_can_presence_tick(void)
+{
+  uint32_t now = HAL_GetTick();
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    uint8_t axis_bit = st_can_axis_bit(idx);
+
+    if (!ST_CAN_AXIS_ENABLED(idx)) {
+      continue;
+    }
+    if ((st_can_axis_present_mask & axis_bit) != 0U) {
+      if ((now - st_can_axis_last_seen_ms[idx]) >= (uint32_t)CAN_AXIS_PRESENCE_MS) {
+        st_can_axis_present_mask &= (uint8_t)~axis_bit;
+        st_can_axis_state[idx] = ST_CAN_STATE_IDLE;
+      }
+      continue;
+    }
+    if ((st_can_axis_seen_mask & axis_bit) == 0U &&
+        st_can_stat_req_ms[idx] != 0U &&
+        (now - st_can_stat_req_ms[idx]) >= (uint32_t)CAN_AXIS_STAT_RSP_MS) {
+      st_can_axis_seen_mask |= axis_bit;
+    }
+  }
+}
+
+uint8_t st_can_get_present_mask(void)
+{
+  return (uint8_t)(st_can_axis_present_mask & (uint8_t)CAN_WAIT_AXIS_MASK);
+}
+
 void st_can_master_poll_stat(void)
 {
   uint8_t cmd[2];
   uint8_t brd_mask = (uint8_t)CAN_WAIT_AXIS_MASK;
+  uint8_t idx;
+  uint32_t now = HAL_GetTick();
 
   if (brd_mask == 0U) {
     return;
@@ -282,7 +335,56 @@ void st_can_master_poll_stat(void)
 
   cmd[0] = GET_STAT_CMD;
   cmd[1] = brd_mask;
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if ((brd_mask & (uint8_t)(1U << idx)) != 0U) {
+      st_can_stat_req_ms[idx] = now;
+    }
+  }
+  set_ena_mot(1U);
   can_master_tx((uint32_t)(brd_mask << 5), cmd, 2U);
+  st_can_presence_tick();
+}
+
+static uint8_t st_can_filter_move_mask(uint8_t move_mask)
+{
+  uint8_t idx;
+  uint8_t filtered = 0U;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    uint8_t axis_bit = st_can_axis_bit(idx);
+
+    if ((move_mask & axis_bit) == 0U) {
+      continue;
+    }
+    if (!ST_CAN_AXIS_ENABLED(idx)) {
+      continue;
+    }
+    if ((st_can_axis_seen_mask & axis_bit) != 0U &&
+        (st_can_axis_present_mask & axis_bit) == 0U) {
+      continue;
+    }
+    filtered |= axis_bit;
+  }
+  return filtered;
+}
+
+static uint8_t st_can_wait_move_mask(uint8_t move_mask)
+{
+  return (uint8_t)(st_can_filter_move_mask(move_mask) & st_can_axis_present_mask);
+}
+
+static int st_can_axis_should_send(uint8_t axis)
+{
+  uint8_t axis_bit = st_can_axis_bit(axis);
+
+  if (!ST_CAN_AXIS_ENABLED(axis)) {
+    return 0;
+  }
+  if ((st_can_axis_seen_mask & axis_bit) != 0U &&
+      (st_can_axis_present_mask & axis_bit) == 0U) {
+    return 0;
+  }
+  return 1;
 }
 
 static void st_can_rx_process_msg(const can_msg_t *msg)
@@ -299,6 +401,7 @@ static void st_can_rx_process_msg(const can_msg_t *msg)
     if (ack->ack.ack_cmd == GO_CMD) {
       idx = st_can_axis_idx_from_brd(ack->ack.axis);
       if (idx < N_AXIS) {
+        st_can_mark_axis_present(idx);
         st_can_go_ack_mask |= st_can_axis_bit(idx);
         st_can_axis_state[idx] = ST_CAN_STATE_MOVE;
       }
@@ -306,8 +409,10 @@ static void st_can_rx_process_msg(const can_msg_t *msg)
   } else if (msg->data[0] == PUT_STAT_CMD && msg->len >= 4U) {
     const put_stat_cmd_t *stat = (const put_stat_cmd_t *)msg->data;
 
+    set_ena_mot(0U);
     idx = st_can_axis_idx_from_brd(stat->axis);
     if (idx < N_AXIS) {
+      st_can_mark_axis_present(idx);
       st_can_axis_state[idx] = stat->state;
     }
   }
@@ -347,7 +452,7 @@ static void st_can_yield_ms(void)
   st_can_master_service_rx();
 #endif
 #ifdef USE_THREADX
-  taskYIELD();
+  tx_thread_relinquish();
 #endif
 }
 
@@ -364,13 +469,53 @@ static void st_can_send_go_fire(uint8_t move_mask, uint8_t dirs, uint16_t step_p
 {
   uint8_t idx;
 
+  move_mask = st_can_filter_move_mask(move_mask);
+  if (move_mask == 0U) {
+    return;
+  }
+
   for (idx = 0; idx < N_AXIS; idx++) {
-    if (move_mask & st_can_axis_bit(idx)) {
+    if ((move_mask & st_can_axis_bit(idx)) && st_can_axis_should_send(idx)) {
       st_can_axis_state[idx] = ST_CAN_STATE_MOVE;
       can_send_axis_go(idx, dirs, step_per, axis_steps[idx]);
     }
   }
 }
+
+#if CAN_PIPELINE_WAIT_ACK
+static void st_can_wait_go_ack(uint8_t move_mask)
+{
+  uint32_t t0;
+  uint8_t want;
+
+  want = st_can_filter_move_mask(move_mask);
+  if (want == 0U) {
+    return;
+  }
+
+  t0 = HAL_GetTick();
+  for (;;) {
+    want = st_can_filter_move_mask(move_mask);
+    if (want == 0U) {
+      return;
+    }
+
+    st_can_master_service_rx();
+    if ((st_can_go_ack_mask & want) == want) {
+      return;
+    }
+    if (sys.abort) {
+      return;
+    }
+    if ((HAL_GetTick() - t0) >= (uint32_t)CAN_CMD_RSP_TIMEOUT_MS) {
+      return;
+    }
+
+    protocol_execute_realtime();
+    st_can_yield_ms();
+  }
+}
+#endif
 #endif
 
 #if !CAN_PIPELINE_GO
@@ -380,6 +525,10 @@ static void st_can_send_go_one_axis_with_retry(uint8_t axis, uint8_t dirs, uint1
   uint32_t last_send;
   uint8_t axis_bit = st_can_axis_bit(axis);
   uint8_t retries = 0;
+
+  if (!st_can_axis_should_send(axis)) {
+    return;
+  }
 
   st_can_go_ack_mask &= (uint8_t)~axis_bit;
   st_can_axis_state[axis] = ST_CAN_STATE_MOVE;
@@ -427,51 +576,122 @@ static void st_can_send_go_with_retry(uint8_t move_mask, uint8_t dirs, uint16_t 
 }
 #endif
 
-static void st_can_wait_axes_move_done(uint8_t move_mask, uint16_t step_per, uint32_t max_steps)
+static int st_can_wait_axes_move_done(uint8_t move_mask, uint16_t step_per, uint32_t max_steps)
 {
   uint32_t timeout_ms;
   uint32_t t0;
-  uint32_t last_fallback_poll = 0;
+  uint32_t last_poll = 0;
+  uint8_t wait_mask;
+
+  wait_mask = st_can_wait_move_mask(move_mask);
+  if (wait_mask == 0U) {
+    return 1;
+  }
 
   timeout_ms = st_can_segment_time_ms(step_per, max_steps);
-  timeout_ms += (timeout_ms >> 2) + 10U;
+  timeout_ms += (timeout_ms >> 2) + 50U;
   t0 = HAL_GetTick();
-  last_fallback_poll = t0;
+  last_poll = t0;
 
   for (;;) {
     uint8_t idx;
     uint8_t done = 1;
 
     st_can_master_service_rx();
+    st_can_presence_tick();
+    wait_mask = st_can_wait_move_mask(move_mask);
+    if (wait_mask == 0U) {
+      return 1;
+    }
     if (sys.abort) {
-      return;
+      return 0;
     }
     if (sys_rt_exec_state & EXEC_RESET) {
       sys.abort = true;
-      return;
+      return 0;
     }
 
     for (idx = 0; idx < N_AXIS; idx++) {
-      if ((move_mask & st_can_axis_bit(idx)) && !st_can_axis_is_idle(idx)) {
+      if ((wait_mask & st_can_axis_bit(idx)) && !st_can_axis_is_idle(idx)) {
         done = 0;
         break;
       }
     }
     if (done) {
-      return;
+      return 1;
     }
 
     if ((HAL_GetTick() - t0) >= timeout_ms) {
-      return;
+      return 0;
     }
 
-    if ((HAL_GetTick() - last_fallback_poll) >= (uint32_t)CAN_STAT_FALLBACK_POLL_MS) {
+    if ((HAL_GetTick() - last_poll) >= (uint32_t)CAN_STAT_WAIT_POLL_MS) {
       st_can_master_poll_stat();
-      last_fallback_poll = HAL_GetTick();
+      last_poll = HAL_GetTick();
     }
 
     st_can_yield_ms();
   }
+}
+
+static int st_can_wait_axes_idle(uint8_t move_mask)
+{
+  uint32_t t0 = HAL_GetTick();
+  uint32_t last_poll = t0;
+  uint8_t wait_mask;
+
+  for (;;) {
+    uint8_t idx;
+    uint8_t done = 1;
+
+    st_can_master_service_rx();
+    st_can_presence_tick();
+    wait_mask = st_can_wait_move_mask(move_mask);
+    if (wait_mask == 0U) {
+      return 1;
+    }
+    if (sys.abort) {
+      return 0;
+    }
+    if (sys_rt_exec_state & EXEC_RESET) {
+      sys.abort = true;
+      return 0;
+    }
+
+    for (idx = 0; idx < N_AXIS; idx++) {
+      if ((wait_mask & st_can_axis_bit(idx)) && !st_can_axis_is_idle(idx)) {
+        done = 0;
+        break;
+      }
+    }
+    if (done) {
+      return 1;
+    }
+
+    if ((HAL_GetTick() - t0) >= (uint32_t)CAN_AXIS_WAIT_IDLE_MS) {
+      return 0;
+    }
+
+    if ((HAL_GetTick() - last_poll) >= (uint32_t)CAN_STAT_WAIT_POLL_MS) {
+      st_can_master_poll_stat();
+      last_poll = HAL_GetTick();
+    }
+
+    st_can_yield_ms();
+  }
+}
+
+static uint8_t st_can_move_mask_from_steps(const uint32_t axis_steps[N_AXIS])
+{
+  uint8_t idx;
+  uint8_t move_mask = 0U;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (axis_steps[idx] != 0U && ST_CAN_AXIS_ENABLED(idx)) {
+      move_mask |= st_can_axis_bit(idx);
+    }
+  }
+  return st_can_filter_move_mask(move_mask);
 }
 #endif
 #endif
@@ -539,6 +759,7 @@ static void st_send_segment_can(uint8_t dirs, uint16_t step_per,
     }
   }
 
+  move_mask = st_can_filter_move_mask(move_mask);
   if (move_mask == 0) {
     return;
   }
@@ -548,9 +769,21 @@ static void st_send_segment_can(uint8_t dirs, uint16_t step_per,
 #ifdef CAN_SEGMENT_WAIT
 #ifndef CAN_SEND_DEBUG
 #if CAN_PIPELINE_GO
-  st_can_send_go_fire(move_mask, dirs, step_per, axis_steps);
-  if (wait_done) {
-    st_can_wait_axes_move_done(move_mask, step_per, max_steps);
+  {
+    uint8_t send_mask = move_mask;
+
+    send_mask = st_can_filter_move_mask(send_mask);
+    st_can_go_ack_mask &= (uint8_t)~send_mask;
+    st_can_send_go_fire(move_mask, dirs, step_per, axis_steps);
+#if CAN_PIPELINE_WAIT_ACK
+    st_can_wait_go_ack(move_mask);
+#endif
+    if (!wait_done) {
+      st_can_yield_ms();
+    }
+    if (wait_done) {
+      st_can_wait_axes_move_done(move_mask, step_per, max_steps);
+    }
   }
 #else
   st_can_send_go_with_retry(move_mask, dirs, step_per, axis_steps);
@@ -651,6 +884,47 @@ static uint8_t st_can_ramp_zone(uint8_t ramp_type)
   return RAMP_DECEL;
 }
 
+static uint16_t st_can_block_target_cruise_per(uint8_t block_index)
+{
+  uint8_t idx = segment_buffer_tail;
+  uint16_t cruise_per = 0U;
+  uint8_t has_cruise = 0U;
+
+  while (idx != segment_buffer_head) {
+    const segment_t *seg = &segment_buffer[idx];
+
+    if (seg->st_block_index == block_index) {
+      uint16_t key = st_can_step_per_batch_key_ex(seg->can_step_per, CAN_STEP_PER_QUANT_RAMP);
+
+      if (seg->ramp_type == RAMP_CRUISE) {
+        has_cruise = 1U;
+        if (cruise_per == 0U || key < cruise_per) {
+          cruise_per = key;
+        }
+      }
+    }
+    idx++;
+    if (idx == SEGMENT_BUFFER_SIZE) {
+      idx = 0U;
+    }
+  }
+  if (has_cruise) {
+    return cruise_per;
+  }
+  return 0U;
+}
+
+static uint32_t st_can_batch_min_steps_for_zone(uint8_t seg_zone)
+{
+  if (seg_zone == RAMP_ACCEL) {
+    return (uint32_t)CAN_BATCH_MIN_STEPS_ACCEL;
+  }
+  if (seg_zone == RAMP_DECEL) {
+    return (uint32_t)CAN_BATCH_MIN_STEPS_DECEL;
+  }
+  return (uint32_t)CAN_BATCH_MIN_STEPS_RAMP;
+}
+
 static float st_can_mm_min_for_step_per(float steps_per_mm, uint16_t step_per)
 {
   uint32_t cycles;
@@ -665,6 +939,27 @@ static float st_can_mm_min_for_step_per(float steps_per_mm, uint16_t step_per)
   return (float)((uint64_t)F_TIM * 60ULL) / ((float)cycles * steps_per_mm);
 }
 
+static uint16_t st_can_cap_accel_slow_start(uint16_t step_per)
+{
+  uint32_t slow_limit = (uint32_t)CAN_STEP_PER_RAMP_START_MAX;
+
+  if (can_batch_target_cruise_per != 0U) {
+    uint32_t cruise_limit = (uint32_t)can_batch_target_cruise_per *
+                            (uint32_t)CAN_STEP_PER_RAMP_START_RATIO;
+
+    if (cruise_limit < slow_limit) {
+      slow_limit = cruise_limit;
+    }
+  }
+  if (slow_limit > 65535U) {
+    slow_limit = 65535U;
+  }
+  if ((uint32_t)step_per > slow_limit) {
+    return (uint16_t)slow_limit;
+  }
+  return step_per;
+}
+
 static void st_can_cap_prep_profile(plan_block_t *pb, st_prep_t *prep_p, float steps_per_mm,
                                     float block_accel)
 {
@@ -673,7 +968,8 @@ static void st_can_cap_prep_profile(plan_block_t *pb, st_prep_t *prep_p, float s
   float exit_sqr;
   float entry_sqr;
   float inv_2_accel;
-  float intersect;
+  float intersect_distance;
+  float nominal_speed;
 
   if (CAN_STEP_PER_SLAVE_MIN == 0U) {
     return;
@@ -687,68 +983,98 @@ static void st_can_cap_prep_profile(plan_block_t *pb, st_prep_t *prep_p, float s
   exit_sqr = prep_p->exit_speed * prep_p->exit_speed;
   entry_sqr = pb->entry_speed_sqr;
   cap_sqr = cap * cap;
-  prep_p->maximum_speed = cap;
-  prep_p->accelerate_until = pb->millimeters;
-  prep_p->decelerate_after = 0.0f;
-  prep_p->ramp_type = RAMP_ACCEL;
+  nominal_speed = cap;
+  prep_p->maximum_speed = nominal_speed;
 
-  intersect = 0.5f * (pb->millimeters + inv_2_accel * (entry_sqr - exit_sqr));
-  if (intersect > 0.0f && intersect < pb->millimeters) {
+  if (entry_sqr > cap_sqr) {
+    prep_p->accelerate_until = pb->millimeters - inv_2_accel * (entry_sqr - cap_sqr);
+    if (prep_p->accelerate_until <= 0.0f) {
+      prep_p->ramp_type = RAMP_DECEL;
+      prep_p->exit_speed = sqrtf(entry_sqr - 2.0f * block_accel * pb->millimeters);
+      if (prep_p->exit_speed < 0.0f) {
+        prep_p->exit_speed = 0.0f;
+      }
+      return;
+    }
     prep_p->decelerate_after = inv_2_accel * (cap_sqr - exit_sqr);
-    if (prep_p->decelerate_after < intersect) {
-      prep_p->accelerate_until -= inv_2_accel * (cap_sqr - entry_sqr);
-      if (entry_sqr >= cap_sqr - 0.001f) {
-        prep_p->ramp_type = RAMP_CRUISE;
+    prep_p->ramp_type = RAMP_DECEL_OVERRIDE;
+    return;
+  }
+
+  intersect_distance = 0.5f * (pb->millimeters + inv_2_accel * (entry_sqr - exit_sqr));
+  if (intersect_distance > 0.0f) {
+    if (intersect_distance < pb->millimeters) {
+      prep_p->decelerate_after = inv_2_accel * (cap_sqr - exit_sqr);
+      if (prep_p->decelerate_after < intersect_distance) {
+        if (entry_sqr >= cap_sqr - 0.001f) {
+          prep_p->ramp_type = RAMP_ACCEL;
+          prep_p->accelerate_until = pb->millimeters - inv_2_accel * (cap_sqr - entry_sqr);
+          if (prep_p->accelerate_until < 0.0f) {
+            prep_p->accelerate_until = 0.0f;
+          }
+        } else {
+          prep_p->ramp_type = RAMP_ACCEL;
+          prep_p->accelerate_until = pb->millimeters - inv_2_accel * (cap_sqr - entry_sqr);
+        }
+      } else {
+        prep_p->ramp_type = RAMP_ACCEL;
+        prep_p->accelerate_until = intersect_distance;
+        prep_p->decelerate_after = intersect_distance;
+        prep_p->maximum_speed = sqrtf(2.0f * block_accel * intersect_distance + exit_sqr);
+        if (prep_p->maximum_speed > cap) {
+          prep_p->maximum_speed = cap;
+        }
       }
     } else {
-      prep_p->accelerate_until = intersect;
-      prep_p->decelerate_after = intersect;
-      prep_p->maximum_speed = sqrtf(2.0f * block_accel * intersect + exit_sqr);
-      if (prep_p->maximum_speed > cap) {
-        prep_p->maximum_speed = cap;
-      }
+      prep_p->ramp_type = RAMP_DECEL;
     }
-  } else if (intersect <= 0.0f) {
-    prep_p->ramp_type = RAMP_DECEL;
+  } else {
+    prep_p->ramp_type = RAMP_ACCEL;
+    prep_p->accelerate_until = 0.0f;
+    prep_p->maximum_speed = prep_p->exit_speed;
   }
 }
 
-static uint8_t st_can_batch_should_idle_flush(void)
-{
-  if (!can_batch_active || st_can_batch_max_axis_steps() == 0U) {
-    return 0U;
-  }
-  if (st_can_planner_starved()) {
-    return 0U;
-  }
-  if (can_batch_ramp_type == RAMP_CRUISE || can_batch_ramp_type == RAMP_DECEL) {
-    return 1U;
-  }
-  return 0U;
-}
-
+#if !CAN_BATCH_ZONE_ONLY
 static uint8_t st_can_batch_key_change_flush(uint8_t seg_zone, uint16_t seg_key)
 {
-  uint32_t batch_steps;
-
-  batch_steps = st_can_batch_max_axis_steps();
-  if (batch_steps >= (uint32_t)CAN_BATCH_MIN_STEPS_RAMP) {
-    return 1U;
+  if (seg_zone == RAMP_CRUISE) {
+    return 0U;
   }
   if (can_batch_ramp_type == RAMP_ACCEL && seg_key < can_batch_step_per) {
-    if (((uint32_t)can_batch_step_per - (uint32_t)seg_key) >= (uint32_t)CAN_STEP_PER_RAMP_HYST) {
-      return 1U;
+#if CAN_BATCH_MIN_STEPS_ACCEL > 0U
+    if (st_can_batch_max_axis_steps() < (uint32_t)CAN_BATCH_MIN_STEPS_ACCEL) {
+      return 0U;
     }
-    return 0U;
-  }
-  if (can_batch_ramp_type == RAMP_DECEL && seg_key > can_batch_step_per_max) {
-    if (((uint32_t)seg_key - (uint32_t)can_batch_step_per_max) >= (uint32_t)CAN_STEP_PER_RAMP_HYST) {
-      return 1U;
+#endif
+#if CAN_STEP_PER_RAMP_HYST > 0U
+    if (((uint32_t)can_batch_step_per - (uint32_t)seg_key) < (uint32_t)CAN_STEP_PER_RAMP_HYST) {
+      return 0U;
     }
-    return 0U;
+#endif
+    return 1U;
   }
-  return 1U;
+  if (can_batch_ramp_type == RAMP_DECEL && seg_key > can_batch_step_per) {
+#if CAN_BATCH_MIN_STEPS_DECEL > 0U
+    if (st_can_batch_max_axis_steps() < (uint32_t)CAN_BATCH_MIN_STEPS_DECEL) {
+      return 0U;
+    }
+#endif
+#if CAN_STEP_PER_RAMP_HYST > 0U
+    if (((uint32_t)seg_key - (uint32_t)can_batch_step_per) < (uint32_t)CAN_STEP_PER_RAMP_HYST) {
+      return 0U;
+    }
+#endif
+    return 1U;
+  }
+#if CAN_BATCH_MIN_STEPS_RAMP > 0U
+  if (st_can_batch_max_axis_steps() >= (uint32_t)CAN_BATCH_MIN_STEPS_RAMP) {
+    return 1U;
+  }
+#endif
+  return 0U;
 }
+#endif
 
 static uint8_t st_can_batch_need_flush(uint8_t seg_dirs, uint8_t seg_block_index)
 {
@@ -767,7 +1093,7 @@ static uint8_t st_can_batch_need_flush(uint8_t seg_dirs, uint8_t seg_block_index
   return 0U;
 }
 
-static void st_can_batch_clamp_to_planner(uint32_t send_steps[N_AXIS])
+static void st_can_batch_peek_send(uint32_t send_steps[N_AXIS])
 {
   uint8_t idx;
 
@@ -788,28 +1114,7 @@ static void st_can_batch_clamp_to_planner(uint32_t send_steps[N_AXIS])
     if (send_steps[idx] > rem) {
       send_steps[idx] = rem;
     }
-    can_batch_steps[idx] -= send_steps[idx];
   }
-}
-
-static uint16_t st_can_batch_send_step_per(void)
-{
-  if (can_batch_ramp_type == RAMP_DECEL) {
-    return can_batch_step_per_max;
-  }
-  return can_batch_step_per;
-}
-
-static void st_can_batch_reset(void)
-{
-  memset(can_batch_steps, 0, sizeof(can_batch_steps));
-  can_batch_step_per = 0;
-  can_batch_step_per_max = 0;
-  can_batch_ramp_type = 0;
-  can_batch_dirs = 0;
-  can_batch_direction_bits = 0;
-  can_batch_active = 0;
-  can_batch_block = NULL;
 }
 
 static void st_can_batch_note_sent(const uint32_t send_steps[N_AXIS])
@@ -821,29 +1126,132 @@ static void st_can_batch_note_sent(const uint32_t send_steps[N_AXIS])
   }
 }
 
+static void st_can_batch_commit_send(const uint32_t send_steps[N_AXIS])
+{
+  uint8_t idx;
+
+  for (idx = 0; idx < N_AXIS; idx++) {
+    if (send_steps[idx] != 0U && send_steps[idx] <= can_batch_steps[idx]) {
+      can_batch_steps[idx] -= send_steps[idx];
+    }
+  }
+  st_can_batch_note_sent(send_steps);
+}
+
+static uint16_t st_can_batch_send_step_per(void)
+{
+#if CAN_BATCH_ZONE_ONLY
+  if (can_batch_ramp_type == RAMP_ACCEL || can_batch_ramp_type == RAMP_DECEL) {
+    return can_batch_step_per_max;
+  }
+#endif
+  return can_batch_step_per;
+}
+
+static void st_can_batch_reset(void)
+{
+  memset(can_batch_steps, 0, sizeof(can_batch_steps));
+  can_batch_step_per = 0;
+  can_batch_step_per_max = 0;
+  can_batch_ramp_type = 0;
+  can_batch_target_cruise_per = 0U;
+  can_batch_dirs = 0;
+  can_batch_direction_bits = 0;
+  can_batch_active = 0;
+  can_batch_block = NULL;
+}
+
+static void st_can_batch_flush(uint8_t wait_done);
+
+#if CAN_PIPELINE_GO
+static uint8_t st_can_batch_ramp_wait(uint8_t base_wait)
+{
+  /* Pipeline: slave queues GO in go_cmd_queue and chains in mot_go_try_chain_isr(). */
+  return base_wait;
+}
+#else
+static uint8_t st_can_batch_ramp_wait(uint8_t base_wait)
+{
+  (void)base_wait;
+  return 1U;
+}
+#endif
+
+static void st_can_batch_sync_block(uint8_t seg_block_index)
+{
+  if (seg_block_index == can_batch_block_index) {
+    return;
+  }
+  if (can_batch_active) {
+#if CAN_PIPELINE_GO
+    st_can_batch_flush(st_can_batch_ramp_wait(0U));
+#else
+    st_can_batch_flush(1U);
+#endif
+  }
+  if (can_batch_active && st_can_batch_max_axis_steps() > 0U) {
+    st_can_batch_reset();
+  }
+  memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
+  can_batch_block_index = seg_block_index;
+  can_batch_cruise_step_per = 0U;
+  can_batch_target_cruise_per = st_can_block_target_cruise_per(seg_block_index);
+}
+
 static void st_can_batch_flush(uint8_t wait_done)
 {
   uint32_t send_steps[N_AXIS];
   uint8_t idx;
   uint8_t has_send = 0U;
   uint8_t has_remain = 0U;
+  uint8_t move_mask;
+  uint32_t max_steps = 0U;
+  uint16_t step_per;
+  int move_ok = 1;
 
   if (!can_batch_active) {
     return;
   }
 
   memset(send_steps, 0, sizeof(send_steps));
-  st_can_batch_clamp_to_planner(send_steps);
+  st_can_batch_peek_send(send_steps);
   for (idx = 0; idx < N_AXIS; idx++) {
     if (send_steps[idx] != 0U && ST_CAN_AXIS_ENABLED(idx)) {
       has_send = 1U;
-      break;
+      if (send_steps[idx] > max_steps) {
+        max_steps = send_steps[idx];
+      }
     }
   }
-  if (has_send) {
-    st_send_segment_can(can_batch_direction_bits, st_can_batch_send_step_per(), send_steps, wait_done);
-    st_can_batch_note_sent(send_steps);
+  if (!has_send) {
+    return;
   }
+
+  move_mask = st_can_move_mask_from_steps(send_steps);
+  if (move_mask == 0U) {
+    return;
+  }
+
+  step_per = st_can_batch_send_step_per();
+  if (can_batch_ramp_type == RAMP_ACCEL) {
+    if (can_batch_target_cruise_per != 0U && step_per < can_batch_target_cruise_per) {
+      step_per = can_batch_target_cruise_per;
+    }
+    if (can_batch_cruise_step_per != 0U && step_per < can_batch_cruise_step_per) {
+      step_per = can_batch_cruise_step_per;
+    }
+    step_per = st_can_cap_accel_slow_start(step_per);
+  }
+  st_send_segment_can(can_batch_direction_bits, step_per, send_steps, wait_done);
+
+  if (wait_done) {
+    move_ok = st_can_wait_axes_move_done(move_mask, step_per, max_steps);
+    if (!move_ok && !st_can_wait_axes_idle(move_mask)) {
+      return;
+    }
+  }
+
+  st_can_batch_commit_send(send_steps);
   for (idx = 0; idx < N_AXIS; idx++) {
     if (can_batch_steps[idx] != 0U) {
       has_remain = 1U;
@@ -858,7 +1266,11 @@ static void st_can_batch_flush(uint8_t wait_done)
 void st_can_batch_flush_if_pending(void)
 {
   if (can_batch_active) {
+#if CAN_PIPELINE_GO
+    st_can_batch_flush(st_can_batch_ramp_wait(0U));
+#else
     st_can_batch_flush(1U);
+#endif
   }
 }
 
@@ -924,25 +1336,87 @@ static void st_execute_can_segments(void)
       uint16_t seg_key = st_can_step_per_batch_key_ex(seg_step_per, seg_quant);
       uint8_t seg_block_index = st.exec_segment->st_block_index;
       uint8_t do_flush = 0U;
+      uint8_t flush_cruise_follow = 0U;
+#if CAN_PIPELINE_GO
       uint8_t flush_wait = 0U;
+#else
+      uint8_t flush_wait = 1U;
+#endif
+
+      st_can_batch_sync_block(seg_block_index);
+
+      {
+        uint16_t cruise_target = st_can_block_target_cruise_per(seg_block_index);
+        if (cruise_target != 0U) {
+          can_batch_target_cruise_per = cruise_target;
+        }
+      }
+      if (seg_zone == RAMP_CRUISE) {
+        can_batch_target_cruise_per = seg_key;
+      }
+
+#if CAN_STEP_PER_SLAVE_MIN > 0U
+      if (seg_zone == RAMP_ACCEL) {
+        uint16_t cap_key = st_can_step_per_batch_key_ex((uint16_t)CAN_STEP_PER_SLAVE_MIN,
+                                                        CAN_STEP_PER_QUANT_RAMP);
+        if (seg_key < cap_key) {
+          seg_key = cap_key;
+        }
+      }
+#endif
+      if (seg_zone == RAMP_ACCEL && can_batch_cruise_step_per != 0U &&
+          seg_key < can_batch_cruise_step_per) {
+        seg_key = can_batch_cruise_step_per;
+      }
+
+      if (seg_zone == RAMP_DECEL) {
+        if (can_batch_cruise_step_per != 0U && seg_key < can_batch_cruise_step_per) {
+          seg_key = can_batch_cruise_step_per;
+        }
+        if (can_batch_active && can_batch_ramp_type == RAMP_DECEL &&
+            seg_key < can_batch_step_per) {
+          seg_key = can_batch_step_per;
+        }
+      }
 
       if (can_batch_active) {
         if (st_can_batch_need_flush(seg_dirs, seg_block_index)) {
           do_flush = 1U;
-          flush_wait = 1U;
         } else if (seg_zone != can_batch_ramp_type) {
           do_flush = 1U;
-          flush_wait = 0U;
-        } else if (seg_key != can_batch_step_per) {
-          if (st_can_batch_key_change_flush(seg_zone, seg_key)) {
-            do_flush = 1U;
+          if (seg_zone == RAMP_DECEL && can_batch_ramp_type == RAMP_CRUISE) {
             flush_wait = 0U;
+          }
+#if CAN_PIPELINE_GO
+          if (seg_zone == RAMP_CRUISE && can_batch_ramp_type == RAMP_ACCEL) {
+            flush_wait = 0U;
+          }
+#endif
+#if !CAN_BATCH_ZONE_ONLY
+        } else if (seg_key != can_batch_step_per) {
+          if (seg_zone == RAMP_DECEL && seg_key < can_batch_step_per) {
+            /* ignore faster keys while slowing down */
+          } else if (st_can_batch_key_change_flush(seg_zone, seg_key)) {
+            do_flush = 1U;
+          } else if (st_can_batch_max_axis_steps() > 0U &&
+                     (seg_zone == RAMP_ACCEL || seg_zone == RAMP_DECEL)) {
+            uint32_t min_ramp = st_can_batch_min_steps_for_zone(seg_zone);
+            if (min_ramp == 0U || st_can_batch_max_axis_steps() >= min_ramp) {
+              do_flush = 1U;
+            }
           } else if (seg_zone == RAMP_DECEL && seg_key > can_batch_step_per_max) {
             can_batch_step_per_max = seg_key;
           }
+#endif
         }
         if (do_flush) {
-          st_can_batch_flush(flush_wait);
+          if (can_batch_ramp_type == RAMP_ACCEL && seg_zone == RAMP_CRUISE) {
+            can_batch_target_cruise_per = seg_key;
+#if CAN_PIPELINE_GO
+            flush_cruise_follow = 1U;
+#endif
+          }
+          st_can_batch_flush(st_can_batch_ramp_wait(flush_wait));
         }
       }
       for (idx = 0; idx < N_AXIS; idx++) {
@@ -951,10 +1425,6 @@ static void st_execute_can_segments(void)
         }
       }
       if (!can_batch_active) {
-        if (seg_block_index != can_batch_block_index) {
-          memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
-          can_batch_block_index = seg_block_index;
-        }
         can_batch_block = st.exec_block;
         can_batch_step_per = seg_key;
         can_batch_step_per_max = seg_key;
@@ -962,20 +1432,44 @@ static void st_execute_can_segments(void)
         can_batch_dirs = st_can_dir_key(seg_dirs);
         can_batch_direction_bits = seg_dirs;
         can_batch_active = 1;
-      } else if (seg_zone != RAMP_CRUISE && seg_key > can_batch_step_per_max) {
+        if (seg_zone == RAMP_CRUISE) {
+          can_batch_cruise_step_per = seg_key;
+        }
+      } else if (can_batch_ramp_type == RAMP_CRUISE) {
+        can_batch_cruise_step_per = can_batch_step_per;
+      } else if (seg_zone == RAMP_ACCEL && seg_key < can_batch_step_per_max) {
+        can_batch_step_per_max = seg_key;
+      } else if (seg_zone == RAMP_DECEL && seg_key > can_batch_step_per_max) {
         can_batch_step_per_max = seg_key;
       }
+#if CAN_PIPELINE_GO
+      if (flush_cruise_follow && can_batch_active &&
+          can_batch_ramp_type == RAMP_CRUISE &&
+          st_can_batch_max_axis_steps() > 0U) {
+        st_can_batch_flush(st_can_batch_ramp_wait(0U));
+      }
+#endif
     }
 
     st_discard_current_segment();
   }
 
   if (segment_buffer_head == segment_buffer_tail) {
-    if (st_can_batch_should_idle_flush()) {
-      st_can_batch_flush(0U);
+#if !CAN_BATCH_ZONE_ONLY
+    if (can_batch_active && st_can_batch_max_axis_steps() > 0U) {
+      st_can_batch_flush(st_can_batch_ramp_wait(0U));
     }
+#endif
     if (st_can_planner_starved()) {
       st_can_batch_flush_if_pending();
+      can_batch_block_index = 0xFFU;
+      can_batch_target_cruise_per = 0U;
+      memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
+#ifdef CAN_SEGMENT_WAIT
+#ifndef CAN_SEND_DEBUG
+      st_can_wait_axes_idle((uint8_t)CAN_WAIT_AXIS_MASK);
+#endif
+#endif
       st_go_idle();
       system_set_exec_state_flag(EXEC_CYCLE_STOP);
     }
@@ -1002,7 +1496,6 @@ void st_prep_buffer()
     goto can_execute_exit;
   }
 
-  
   while (segment_buffer_tail != segment_next_head) { // Check if we need to fill the buffer.
 
     // Determine if we need to load a new planner block or if the block needs to be recomputed.
@@ -1035,11 +1528,11 @@ void st_prep_buffer()
         st_prep_block->direction_bits = pl_block->direction_bits;
         #ifdef ENABLE_DUAL_AXIS
           #if (DUAL_AXIS_SELECT == X_AXIS)
-            if (st_prep_block->direction_bits & (1<<X_DIRECTION_BIT)) { 
+            if (st_prep_block->direction_bits & (1<<X_DIRECTION_BIT)) {
           #elif (DUAL_AXIS_SELECT == Y_AXIS)
-            if (st_prep_block->direction_bits & (1<<Y_DIRECTION_BIT)) { 
+            if (st_prep_block->direction_bits & (1<<Y_DIRECTION_BIT)) {
           #endif
-            st_prep_block->direction_bits_dual = (1<<DUAL_DIRECTION_BIT); 
+            st_prep_block->direction_bits_dual = (1<<DUAL_DIRECTION_BIT);
           }  else { st_prep_block->direction_bits_dual = 0; }
         #endif
         uint8_t idx;
@@ -1073,16 +1566,16 @@ void st_prep_buffer()
         } else {
           prep.current_speed = sqrt(pl_block->entry_speed_sqr);
         }
-        
+
         #ifdef VARIABLE_SPINDLE
           // Setup laser mode variables. PWM rate adjusted motions will always complete a motion with the
-          // spindle off. 
+          // spindle off.
           st_prep_block->is_pwm_rate_adjusted = false;
           if (settings.flags & BITFLAG_LASER_MODE) {
-            if (pl_block->condition & PL_COND_FLAG_SPINDLE_CCW) { 
+            if (pl_block->condition & PL_COND_FLAG_SPINDLE_CCW) {
               // Pre-compute inverse programmed rate to speed up PWM updating per step segment.
               prep.inv_rate = 1.0/pl_block->programmed_rate;
-              st_prep_block->is_pwm_rate_adjusted = true; 
+              st_prep_block->is_pwm_rate_adjusted = true;
             }
           }
         #endif
@@ -1188,12 +1681,12 @@ void st_prep_buffer()
         st_prep_block = &st_block_buffer[prep.st_block_index];
         st_can_cap_prep_profile(pl_block, &prep, st_prep_block->steps_per_mm, st_can_block_accel);
       }
-      
+
       #ifdef VARIABLE_SPINDLE
         bit_true(sys.step_control, STEP_CONTROL_UPDATE_SPINDLE_PWM); // Force update whenever updating block.
       #endif
     }
-    
+
     // Initialize new segment
     segment_t *prep_segment = &segment_buffer[segment_buffer_head];
 
@@ -1304,16 +1797,16 @@ void st_prep_buffer()
       /* -----------------------------------------------------------------------------------
         Compute spindle speed PWM output for step segment
       */
-      
+
       if (st_prep_block->is_pwm_rate_adjusted || (sys.step_control & STEP_CONTROL_UPDATE_SPINDLE_PWM)) {
         if (pl_block->condition & (PL_COND_FLAG_SPINDLE_CW | PL_COND_FLAG_SPINDLE_CCW)) {
           float rpm = pl_block->spindle_speed;
-          // NOTE: Feed and rapid overrides are independent of PWM value and do not alter laser power/rate.        
+          // NOTE: Feed and rapid overrides are independent of PWM value and do not alter laser power/rate.
           if (st_prep_block->is_pwm_rate_adjusted) { rpm *= (prep.current_speed * prep.inv_rate); }
           // If current_speed is zero, then may need to be rpm_min*(100/MAX_SPINDLE_SPEED_OVERRIDE)
           // but this would be instantaneous only and during a motion. May not matter at all.
           prep.current_spindle_pwm = spindle_compute_pwm_value(rpm);
-        } else { 
+        } else {
           sys.spindle_speed = 0.0;
           prep.current_spindle_pwm = SPINDLE_PWM_OFF_VALUE;
         }
@@ -1322,7 +1815,7 @@ void st_prep_buffer()
       prep_segment->spindle_pwm = prep.current_spindle_pwm; // Reload segment PWM value
 
     #endif
-    
+
     /* -----------------------------------------------------------------------------------
        Compute segment step rate, steps to execute, and apply necessary rate corrections.
        NOTE: Steps are computed by direct scalar conversion of the millimeter distance
@@ -1437,7 +1930,6 @@ can_execute_exit:
   st_execute_can_segments();
 }
 
-
 void st_update_plan_block_parameters()
 {
   if (pl_block != NULL) {
@@ -1446,7 +1938,6 @@ void st_update_plan_block_parameters()
     pl_block = NULL;
   }
 }
-
 
 // Called by realtime status reporting to fetch the current speed being executed. This value
 // however is not exactly the current speed, but the speed computed in the last step segment
@@ -1476,14 +1967,14 @@ void st_go_idle()
     delay_ms(settings.stepper_idle_lock_time);
     pin_state = true; // Override. Disable steppers.
   }
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { 
-    pin_state = !pin_state; 
+  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) {
+    pin_state = !pin_state;
   } // Apply pin invert.
-///  if (pin_state) { 
-///    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_SET); 
+///  if (pin_state) {
+///    HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_SET);
 ///  }
- /// else { 
- ///   HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_RESET); 
+ /// else {
+ ///   HAL_GPIO_WritePin(STEPPERS_DISABLE_PORT, STEPPERS_DISABLE_BIT_Pin, GPIO_PIN_RESET);
 ///  }
 }
 
@@ -1500,8 +1991,8 @@ void st_generate_step_dir_invert_masks()
   step_port_invert_mask = 0;
   dir_port_invert_mask = 0;
   for (idx=0; idx<N_AXIS; idx++) {
-    if (bit_istrue(settings.step_invert_mask,bit(idx))) { 
-      step_port_invert_mask |= get_step_pin_mask(idx); 
+    if (bit_istrue(settings.step_invert_mask,bit(idx))) {
+      step_port_invert_mask |= get_step_pin_mask(idx);
     }
     if (bit_istrue(settings.dir_invert_mask,bit(idx))) {
       dir_port_invert_mask |= get_direction_pin_mask(idx);
@@ -1510,7 +2001,7 @@ void st_generate_step_dir_invert_masks()
   #ifdef ENABLE_DUAL_AXIS
     step_port_invert_mask_dual = 0;
     dir_port_invert_mask_dual = 0;
-    // NOTE: Dual axis invert uses the N_AXIS bit to set step and direction invert pins.    
+    // NOTE: Dual axis invert uses the N_AXIS bit to set step and direction invert pins.
     if (bit_istrue(settings.step_invert_mask,bit(N_AXIS))) { step_port_invert_mask_dual = (1<<DUAL_STEP_BIT); }
     if (bit_istrue(settings.dir_invert_mask,bit(N_AXIS))) { dir_port_invert_mask_dual = (1<<DUAL_DIRECTION_BIT); }
   #endif
@@ -1532,7 +2023,7 @@ void st_reset()
   busy = false;
 
   st_can_batch_reset();
-  can_batch_block_index = 0;
+  can_batch_block_index = 0xFFU;
   memset(can_batch_sent_steps, 0, sizeof(can_batch_sent_steps));
 
 #ifndef CAN_SEND_DEBUG
@@ -1540,8 +2031,13 @@ void st_reset()
     uint8_t idx;
     for (idx = 0; idx < N_AXIS; idx++) {
       st_can_axis_state[idx] = ST_CAN_STATE_IDLE;
+      st_can_axis_last_seen_ms[idx] = 0U;
+      st_can_stat_req_ms[idx] = 0U;
     }
     st_can_go_ack_mask = 0;
+    st_can_axis_present_mask = 0;
+    st_can_axis_seen_mask = 0;
+    st_can_master_poll_stat();
   }
 #endif
 
@@ -1555,7 +2051,7 @@ void st_reset()
   // Initialize step and direction port pins.
  /// GPIO_WritePort(STEP_PORT, (GPIO_ReadPort(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
  /// GPIO_WritePort(DIRECTION_PORT, (GPIO_ReadPort(DIRECTION_PORT) & ~DIRECTION_MASK) | (dir_port_invert_mask & DIRECTION_MASK));
-  
+
   #ifdef ENABLE_DUAL_AXIS
     st.dir_outbits_dual = dir_port_invert_mask_dual;
     STEP_PORT_DUAL = (STEP_PORT_DUAL & ~STEP_MASK_DUAL) | step_port_invert_mask_dual;

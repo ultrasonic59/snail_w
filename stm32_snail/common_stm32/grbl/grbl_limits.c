@@ -40,7 +40,7 @@
 
 void limits_init()
 {
-/*  
+/*
   if (bit_istrue(settings.flags,BITFLAG_HARD_LIMIT_ENABLE)) {
 	  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 	  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
@@ -50,7 +50,6 @@ void limits_init()
 */
 }
 
-
 // Disables hard limits.
 void limits_disable()
 {/*
@@ -58,7 +57,6 @@ void limits_disable()
 	HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 */
 }
-
 
 // Returns limit state as a bit-wise uint8 variable. Each bit indicates an axis limit, where
 // triggered is 1 and not triggered is 0. Invert mask is applied. Axes are defined by their
@@ -69,7 +67,7 @@ void limits_disable()
 uint8_t limits_get_state()
 {
   uint8_t limit_state = 0;
-/*  
+/*
   uint16_t pin = GPIO_ReadPort(LIMIT_PIN_PORT) & LIMIT_MASK;
 
   #ifdef INVERT_LIMIT_PIN_MASK
@@ -89,13 +87,12 @@ uint8_t limits_get_state()
   return(limit_state);
 }
 
-
 // This is the Limit Pin Change Interrupt, which handles the hard limit feature. A bouncing
 // limit switch can cause a lot of problems, like false readings and multiple interrupt calls.
 // If a switch is triggered at all, something bad has happened and treat it as such, regardless
 // if a limit switch is being disengaged. It's impossible to reliably tell the state of a
 // bouncing pin because the Arduino microcontroller does not retain any state information when
-// detecting a pin change. If we poll the pins in the ISR, you can miss the correct reading if the 
+// detecting a pin change. If we poll the pins in the ISR, you can miss the correct reading if the
 // switch is bouncing.
 // NOTE: Do not attach an e-stop to the limit pins, because this interrupt is disabled during
 // homing cycles and will not respond correctly. Upon user request or need, there may be a
@@ -282,12 +279,12 @@ void limits_go_home(uint8_t cycle_mask)
         sys.homing_axis_lock = axislock;
         #ifdef ENABLE_DUAL_AXIS
           if (sys.homing_axis_lock_dual) { // NOTE: Only true when homing dual axis.
-            if (limit_state & (1 << N_AXIS)) { 
+            if (limit_state & (1 << N_AXIS)) {
               sys.homing_axis_lock_dual = 0;
               dual_axis_async_check |= DUAL_AXIS_CHECK_TRIGGER_2;
             }
           }
-          
+
           // When first dual axis limit triggers, record position and begin checking distance until other limit triggers. Bail upon failure.
           if (dual_axis_async_check) {
             if (dual_axis_async_check & DUAL_AXIS_CHECK_ENABLE) {
@@ -397,7 +394,6 @@ void limits_go_home(uint8_t cycle_mask)
   }
   sys.step_control = STEP_CONTROL_NORMAL_OP; // Return step control to normal operation.
 }
-
 
 // Performs a soft limit check. Called from mc_line() only. Assumes the machine has been homed,
 // the workspace volume is in all negative space, and the system is in normal operation.

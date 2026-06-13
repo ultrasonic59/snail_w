@@ -1,11 +1,9 @@
-
 #include "board.h"
 #include "i2c.h"
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "tx_api.h"
+#include "threadx_app.h"
 #include "printk.h"
 
-   
 void I2C_Eeprom_Init(void) {
   GPIO_InitTypeDef  GPIO_InitStructure;
   I2C_InitTypeDef   I2C_InitStructure;
@@ -19,8 +17,8 @@ void I2C_Eeprom_Init(void) {
   GPIO_InitStructure.GPIO_Pin = SDA_EEPROM_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP;
   GPIO_Init(SDA_EEPROM_PIN_GPIO, &GPIO_InitStructure);
   GPIO_InitStructure.GPIO_Pin = SCL_EEPROM_PIN;
   GPIO_Init(SCL_EEPROM_PIN_GPIO, &GPIO_InitStructure);
@@ -33,7 +31,7 @@ void I2C_Eeprom_Init(void) {
   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
   I2C_InitStructure.I2C_ClockSpeed = 100000;  //
-  
+
   //Initialize the Peripheral
   I2C_Init(I2C_EEPROM, &I2C_InitStructure);
   // I2C Peripheral Enable
@@ -53,13 +51,13 @@ void I2C_encoder_Init(void) {
   GPIO_InitStructure.GPIO_Pin = SDA_ENCODER_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP;
   GPIO_Init(SDA_ENCODER_PIN_GPIO, &GPIO_InitStructure);
-  
+
   GPIO_InitStructure.GPIO_Pin = SCL_ENCODER_PIN;
   GPIO_Init(SCL_ENCODER_PIN_GPIO, &GPIO_InitStructure);
-  
+
   GPIO_PinAFConfig(SCL_ENCODER_PIN_GPIO, SCL_ENCODER_NPIN, GPIO_AF_I2C_ENCODER);
   GPIO_PinAFConfig(SDA_ENCODER_PIN_GPIO, SDA_ENCODER_NPIN, GPIO_AF_I2C_ENCODER);
   //Configure and Initialize the I2C
@@ -69,38 +67,37 @@ void I2C_encoder_Init(void) {
   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
   I2C_InitStructure.I2C_ClockSpeed = 400000;  //
-  
+
   //Initialize the Peripheral
   I2C_Init(I2C_ENCODER, &I2C_InitStructure);
   // I2C Peripheral Enable
   I2C_Cmd(I2C_ENCODER, ENABLE);
-  
 
-#if 0 
-  
+#if 0
+
   //Enable the GPIOs for the SCL/SDA Pins
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIO_SCL | RCC_AHB1Periph_GPIO_SDA, ENABLE);
-  
+
   //Configure and initialize the GPIOs
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SCL;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP; 
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; //PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL; //UP;
   GPIO_Init(GPIO_SCL, &GPIO_InitStructure);
 
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_SDA;
   GPIO_Init(GPIO_SDA, &GPIO_InitStructure);
-  
+
   //Connect GPIO pins to peripheral
   GPIO_PinAFConfig(GPIO_SCL, GPIO_PinSource_SCL, GPIO_AF_I2Cx);
 	GPIO_PinAFConfig(GPIO_SDA, GPIO_PinSource_SDA, GPIO_AF_I2Cx);
-  
+
 #endif
-///  return; 
+///  return;
 }
-#endif   
-   
+#endif
+
 #if 0
 void i2c_init(void){
 RCC->AHB1ENR|=RCC_AHB1ENR_GPIOBEN; //enable gpiob clock
@@ -109,10 +106,10 @@ GPIOB->MODER|=0xA0000; //set pb8and9 to alternative function
 GPIOB->AFR[1]|=0x44;
 ////???GPIOB->OTYPER|=GPIO_OTYPER_OT8|GPIO_OTYPER_OT9; //set pb8 and pb9 as open drain
 I2Cx->CR1=I2C_CR1_SWRST;
-I2Cx->CR1&=~I2C_CR1_SWRST;	
+I2Cx->CR1&=~I2C_CR1_SWRST;
 I2Cx->CR2|=50;
-I2Cx->CCR|=0x2|(1<<15)|(1<<14); 
-I2Cx->TRISE=20; //output max rise 
+I2Cx->CCR|=0x2|(1<<15)|(1<<14);
+I2Cx->TRISE=20; //output max rise
 I2Cx->CR1|=I2C_CR1_PE;
 }
 #endif
@@ -252,7 +249,7 @@ while(!(I2Cx->SR1&I2C_SR1_ADDR)){      /*wait until address flag is set*/
 }
 if(wait_time>=MAX_WAIT)
      return -3;
-tmp = I2Cx->SR2; 
+tmp = I2Cx->SR2;
 wait_time=0;
 
 /*clear SR2 by reading it */
@@ -274,7 +271,7 @@ while(!(I2Cx->SR1&I2C_SR1_TXE)){       /*wait until data register empty*/
 }
 if(wait_time>=MAX_WAIT)
      return -5;
-I2Cx->DR = data; 
+I2Cx->DR = data;
 wait_time=0;
 while (!(I2Cx->SR1 & I2C_SR1_BTF)){     /*wait until transfer finished*/
    wait_time++;
@@ -285,8 +282,8 @@ while (!(I2Cx->SR1 & I2C_SR1_BTF)){     /*wait until transfer finished*/
 if(wait_time>=MAX_WAIT)
      return -6;
 I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
-return 0;	
-#endif	
+return 0;
+#endif
 }
 int i2c_writeBuff(I2C_TypeDef* I2Cx,uint8_t haddr,uint16_t addr,uint8_t *data,uint8_t len)
 {
@@ -326,7 +323,7 @@ while(!(I2Cx->SR1&I2C_SR1_ADDR)){      /*wait until address flag is set*/
 }
 if(wait_time>=MAX_WAIT)
      return -3;
-tmp = I2Cx->SR2; 
+tmp = I2Cx->SR2;
 wait_time=0;
 
 /*clear SR2 by reading it */
@@ -349,7 +346,7 @@ while(!(I2Cx->SR1&I2C_SR1_TXE)){       /*wait until data register empty*/
 if(wait_time>=MAX_WAIT)
      return -5;
 for(ii=0;ii<len;ii++){
-I2Cx->DR = data[ii]; 
+I2Cx->DR = data[ii];
 wait_time=0;
 while (!(I2Cx->SR1 & I2C_SR1_BTF)){     /*wait until transfer finished*/
    wait_time++;
@@ -362,10 +359,9 @@ I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
 if(wait_time>=MAX_WAIT)
      return -6;
 ////I2Cx->CR1 |=I2C_CR1_STOP;	/*Generate Stop*/
-return 0;	
-#endif	
+return 0;
+#endif
 }
-
 
 int i2c_readByteEEprom(uint16_t addr, uint8_t *data)
 {
@@ -403,28 +399,28 @@ uDelay (DELAY_WRITE);
 /*
 if(rez<0)
    return rez;
-taskENTER_CRITICAL();
+tx_app_critical_enter();
 uDelay (DELAY_WRITE);
 
 rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr+1,(data>>8)&0xff);
 uDelay (DELAY_WRITE);
-taskEXIT_CRITICAL();
+tx_app_critical_exit();
 */
 return rez;
 }
 #if 0
 int i2c_writeHwordEEprom(uint16_t addr,uint16_t data){
  int rez;
- 
+
 rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr,data&0xff);
 if(rez<0)
    return rez;
-taskENTER_CRITICAL();
+tx_app_critical_enter();
 uDelay (DELAY_WRITE);
 
 rez=  i2c_writeByte(I2C_EEPROM ,EEPROM_ADDR ,addr+1,(data>>8)&0xff);
 uDelay (DELAY_WRITE);
-taskEXIT_CRITICAL();
+tx_app_critical_exit();
 
 return rez;
 }
@@ -541,13 +537,13 @@ if(rez==0)
       htmp>>=2;
       if(oval)
         *oval=htmp;
-  ///    printk(": data[%x] ",htmp); 
+  ///    printk(": data[%x] ",htmp);
       }
    }
 ////  else
-////     printk(": error[%d] ",rez); 
+////     printk(": error[%d] ",rez);
 ////    }
-return rez;  
+return rez;
 }
 #endif
 extern int check_push_key_dbg(void);
@@ -561,13 +557,13 @@ uint8_t cur_cmd=0;
 uint8_t cur_size=0;
 
 int rez=0;
-printk("\n\r i2c_dbg_task"); 
+printk("\n\r i2c_dbg_task");
 
 for(;;)
 {
 if(check_push_key_dbg())
   {
-  key=get_byte_dbg() ;  
+  key=get_byte_dbg() ;
   switch(key)
     {
     case 't':
@@ -603,9 +599,9 @@ if(check_push_key_dbg())
        break;
    case 'z':
        break;
-    
+
    }
-  printk("\n\r addr[%x] size[%x] wdat[%x] cmd[%c]",cur_addr,cur_size, w_dat,cur_cmd); 
+  printk("\n\r addr[%x] size[%x] wdat[%x] cmd[%c]",cur_addr,cur_size, w_dat,cur_cmd);
   if(cur_cmd=='r')
   {
     if(cur_size==1)
@@ -613,21 +609,21 @@ if(check_push_key_dbg())
     uint8_t btmp;
     rez=i2c_readByteEEprom(cur_addr, &btmp);
    if(rez==0)
-      printk(": data[%x] ",btmp); 
+      printk(": data[%x] ",btmp);
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
     else if(cur_size==2)
     {
     uint16_t htmp;
     rez=i2c_readHwordEEprom(cur_addr, &htmp);
    if(rez==0)
-      printk(": data[%x] ",htmp); 
+      printk(": data[%x] ",htmp);
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
-    
-  cur_cmd=0; 
+
+  cur_cmd=0;
   }
   else if(cur_cmd=='w')
   {
@@ -635,23 +631,23 @@ if(check_push_key_dbg())
     {
     rez=i2c_writeByteEEprom(cur_addr, w_dat&0xff);
    if(rez==0)
-      printk(": ok "); 
+      printk(": ok ");
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
   else if(cur_size==2)
     {
     rez=i2c_writeHwordEEprom(cur_addr, w_dat);
    if(rez==0)
-      printk(": ok "); 
+      printk(": ok ");
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
-   cur_cmd=0; 
+   cur_cmd=0;
   }
-  
-#if USE_ENCODER  
-  
+
+#if USE_ENCODER
+
  else if(cur_cmd=='e')  /// read encoder
   {
     if(cur_size==1)
@@ -659,9 +655,9 @@ if(check_push_key_dbg())
     uint8_t btmp;
      rez=i2c_readByteEncoder(ENCODER_HVAL,&btmp);
    if(rez==0)
-      printk(": data[%x] ",btmp); 
+      printk(": data[%x] ",btmp);
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
     else if(cur_size==2)
     {
@@ -677,23 +673,20 @@ if(check_push_key_dbg())
       htmp<<=8;
       htmp|=btmp;
       htmp>>=2;
-      printk(": data[%x] ",htmp); 
+      printk(": data[%x] ",htmp);
       }
    }
 
    else
-     printk(": error[%d] ",rez); 
+     printk(": error[%d] ",rez);
     }
-    
-  cur_cmd=0; 
+
+  cur_cmd=0;
   }
   #endif
- } 
+ }
 
 }
 }
-
 
 ///========================================================================
-
-

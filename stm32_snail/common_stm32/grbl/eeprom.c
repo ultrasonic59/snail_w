@@ -53,7 +53,7 @@ void eeprom_put_char( uint8_t addr, uint8_t new_value )
 	Eeprom_Fill_Buffer((uint8_t)addr, new_value);
 }
 
-// Extensions added as part of Grbl 
+// Extensions added as part of Grbl
 
 void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsigned int size) {
 	uint8_t addr = (destination & 0xff);
@@ -62,7 +62,6 @@ void memcpy_to_eeprom_with_checksum(unsigned int destination, char *source, unsi
 	uint32_t page_start = 0;
 	uint32_t page_stop;
 	uint32_t page;
-
 
 	page_start = destination >> 8;
 	page_stop = (destination + size) >> 8;

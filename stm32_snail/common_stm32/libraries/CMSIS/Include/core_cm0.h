@@ -31,7 +31,6 @@
 #ifndef __CORE_CM0_H_GENERIC
 #define __CORE_CM0_H_GENERIC
 
-
 /** \mainpage CMSIS Cortex-M0
 
   This documentation describes the CMSIS Cortex-M Core Peripheral Access Layer.
@@ -47,18 +46,17 @@
 
 /** \defgroup CMSIS_MISRA_Exceptions  CMSIS MISRA-C:2004 Compliance Exceptions
   CMSIS violates following MISRA-C2004 Rules:
-  
+
    - Violates MISRA 2004 Required Rule 8.5, object/function definition in header file.<br>
-     Function definitions in header files are used to allow 'inlining'. 
+     Function definitions in header files are used to allow 'inlining'.
 
    - Violates MISRA 2004 Required Rule 18.4, declaration of union type or object of union type: '{...}'.<br>
      Unions are used for effective representation of core registers.
-   
+
    - Violates MISRA 2004 Advisory Rule 19.7, Function-like macro defined.<br>
-     Function-like macros are used to allow more efficient code. 
+     Function-like macros are used to allow more efficient code.
 
  */
-
 
 /*******************************************************************************
  *                 CMSIS definitions
@@ -77,7 +75,6 @@
 #define __CM0_CMSIS_VERSION       ((__CM0_CMSIS_VERSION_MAIN << 16) | __CM0_CMSIS_VERSION_SUB) /*!< CMSIS HAL version number       */
 
 #define __CORTEX_M                (0x00)                                                       /*!< Cortex core                    */
-
 
 #if   defined ( __CC_ARM )
   #define __ASM            __asm                                      /*!< asm keyword for ARM Compiler          */
@@ -158,8 +155,6 @@
 
 /*@} end of group CMSIS_core_definitions */
 
-
-
 /*******************************************************************************
  *                 Register Abstraction
  ******************************************************************************/
@@ -199,7 +194,6 @@ typedef union
   uint32_t w;                            /*!< Type      used for word access                  */
 } APSR_Type;
 
-
 /** \brief  Union type to access the Interrupt Program Status Register (IPSR).
  */
 typedef union
@@ -211,7 +205,6 @@ typedef union
   } b;                                   /*!< Structure used for bit  access                  */
   uint32_t w;                            /*!< Type      used for word access                  */
 } IPSR_Type;
-
 
 /** \brief  Union type to access the Special-Purpose Program Status Registers (xPSR).
  */
@@ -238,7 +231,6 @@ typedef union
   uint32_t w;                            /*!< Type      used for word access                  */
 } xPSR_Type;
 
-
 /** \brief  Union type to access the Control Registers (CONTROL).
  */
 typedef union
@@ -254,7 +246,6 @@ typedef union
 } CONTROL_Type;
 
 /*@} end of group CMSIS_CORE */
-
 
 /** \ingroup  CMSIS_core_register
     \defgroup CMSIS_NVIC CMSIS NVIC
@@ -279,7 +270,6 @@ typedef struct
 }  NVIC_Type;
 
 /*@} end of group CMSIS_NVIC */
-
 
 /** \ingroup  CMSIS_core_register
     \defgroup CMSIS_SCB CMSIS SCB
@@ -385,7 +375,6 @@ typedef struct
 
 /*@} end of group CMSIS_SCB */
 
-
 /** \ingroup  CMSIS_core_register
     \defgroup CMSIS_SysTick CMSIS SysTick
   Type definitions for the Cortex-M System Timer Registers
@@ -435,7 +424,6 @@ typedef struct
 
 /*@} end of group CMSIS_SysTick */
 
-
 /** \ingroup  CMSIS_core_register
     \defgroup CMSIS_CoreDebug CMSIS Core Debug
   Cortex-M0 Core Debug Registers (DCB registers, SHCSR, and DFSR) are only accessible over DAP
@@ -443,7 +431,6 @@ typedef struct
   @{
  */
 /*@} end of group CMSIS_CoreDebug */
-
 
 /** \ingroup  CMSIS_core_register
   @{
@@ -460,10 +447,7 @@ typedef struct
 #define SysTick             ((SysTick_Type   *)     SysTick_BASE  )   /*!< SysTick configuration struct       */
 #define NVIC                ((NVIC_Type      *)     NVIC_BASE     )   /*!< NVIC configuration struct          */
 
-
 /*@} */
-
-
 
 /*******************************************************************************
  *                Hardware Abstraction Layer
@@ -474,8 +458,6 @@ typedef struct
   - Core SysTick Functions
   - Core Register Access Functions
 */
-
-
 
 /* ##########################   NVIC functions  #################################### */
 /** \ingroup  CMSIS_Core_FunctionInterface
@@ -489,7 +471,6 @@ typedef struct
 #define _SHP_IDX(IRQn)           ( ((((uint32_t)(IRQn) & 0x0F)-8) >>    2)     )
 #define _IP_IDX(IRQn)            (   ((uint32_t)(IRQn)            >>    2)     )
 
-
 /** \brief  Enable External Interrupt
 
     This function enables a device specific interrupt in the NVIC interrupt controller.
@@ -502,7 +483,6 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
   NVIC->ISER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
 
-
 /** \brief  Disable External Interrupt
 
     This function disables a device specific interrupt in the NVIC interrupt controller.
@@ -514,7 +494,6 @@ static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 {
   NVIC->ICER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
-
 
 /** \brief  Get Pending Interrupt
 
@@ -530,7 +509,6 @@ static __INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
   return((uint32_t) ((NVIC->ISPR[0] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));
 }
 
-
 /** \brief  Set Pending Interrupt
 
     This function sets the pending bit for the specified interrupt.
@@ -543,7 +521,6 @@ static __INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
   NVIC->ISPR[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
 
-
 /** \brief  Clear Pending Interrupt
 
     This function clears the pending bit for the specified interrupt.
@@ -555,7 +532,6 @@ static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
 {
   NVIC->ICPR[0] = (1 << ((uint32_t)(IRQn) & 0x1F)); /* Clear pending interrupt */
 }
-
 
 /** \brief  Set Interrupt Priority
 
@@ -578,7 +554,6 @@ static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
         (((priority << (8 - __NVIC_PRIO_BITS)) & 0xFF) << _BIT_SHIFT(IRQn)); }
 }
 
-
 /** \brief  Get Interrupt Priority
 
     This function reads the priority for the specified interrupt. The interrupt
@@ -600,7 +575,6 @@ static __INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
     return((uint32_t)((NVIC->IP[ _IP_IDX(IRQn)] >> _BIT_SHIFT(IRQn) ) >> (8 - __NVIC_PRIO_BITS)));  } /* get priority for device specific interrupts  */
 }
 
-
 /** \brief  System Reset
 
     This function initiate a system reset request to reset the MCU.
@@ -616,8 +590,6 @@ static __INLINE void NVIC_SystemReset(void)
 }
 
 /*@} end of CMSIS_Core_NVICFunctions */
-
-
 
 /* ##################################    SysTick function  ############################################ */
 /** \ingroup  CMSIS_Core_FunctionInterface
@@ -652,9 +624,6 @@ static __INLINE uint32_t SysTick_Config(uint32_t ticks)
 #endif
 
 /*@} end of CMSIS_Core_SysTickFunctions */
-
-
-
 
 #endif /* __CORE_CM0_H_DEPENDANT */
 

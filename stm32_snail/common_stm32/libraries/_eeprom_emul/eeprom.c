@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    EEPROM_Emulation/src/eeprom.c 
+  * @file    EEPROM_Emulation/src/eeprom.c
   * @author  MCD Application Team
   * @version V3.1.0
   * @date    07/27/2009
@@ -16,10 +16,10 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2009 STMicroelectronics</center></h2>
-  */ 
+  */
 /** @addtogroup EEPROM_Emulation
   * @{
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "eeprom.h"
@@ -608,6 +608,6 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

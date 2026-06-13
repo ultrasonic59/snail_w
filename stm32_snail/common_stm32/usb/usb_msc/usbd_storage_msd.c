@@ -16,69 +16,67 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_msc_mem.h"
 #include "rook_sd.h"
 #include "my_misc.h"
 
-#define STORAGE_LUN_NBR                  1 
+#define STORAGE_LUN_NBR                  1
 /* USB Mass storage Standard Inquiry Data */
 const int8_t  STORAGE_Inquirydata[] = {//36
-  
+
   /* LUN 0 */
-  0x00,		
-  0x80,		
-  0x02,		
+  0x00,
+  0x80,
+  0x02,
   0x02,
   (USBD_STD_INQUIRY_LENGTH - 5),
   0x00,
-  0x00,	
+  0x00,
   0x00,
   'S', 'T', 'M', ' ', ' ', ' ', ' ', ' ', /* Manufacturer : 8 bytes */
   'm', 'i', 'c', 'r', 'o', 'S', 'D', ' ', /* Product      : 16 Bytes */
   'F', 'l', 'a', 's', 'h', ' ', ' ', ' ',
   '1', '.', '0' ,'0',                     /* Version      : 4 Bytes */
-}; 
+};
 
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup STORAGE_Private_FunctionPrototypes
   * @{
-  */ 
+  */
 int8_t STORAGE_Init (uint8_t lun);
 
-int8_t STORAGE_GetCapacity (uint8_t lun, 
-                           uint32_t *block_num, 
+int8_t STORAGE_GetCapacity (uint8_t lun,
+                           uint32_t *block_num,
                            uint32_t *block_size);
 
 int8_t  STORAGE_IsReady (uint8_t lun);
 
 int8_t  STORAGE_IsWriteProtected (uint8_t lun);
 
-int8_t STORAGE_Read (uint8_t lun, 
-                        uint8_t *buf, 
+int8_t STORAGE_Read (uint8_t lun,
+                        uint8_t *buf,
                         uint32_t blk_addr,
                         uint16_t blk_len);
 
-int8_t STORAGE_Write (uint8_t lun, 
-                        uint8_t *buf, 
+int8_t STORAGE_Write (uint8_t lun,
+                        uint8_t *buf,
                         uint32_t blk_addr,
                         uint16_t blk_len);
 
 int8_t STORAGE_GetMaxLun (void);
-
 
 USBD_STORAGE_cb_TypeDef USBD_MICRO_SDIO_fops =
 {
@@ -93,11 +91,10 @@ USBD_STORAGE_cb_TypeDef USBD_MICRO_SDIO_fops =
 };
 
 USBD_STORAGE_cb_TypeDef  *USBD_STORAGE_fops = &USBD_MICRO_SDIO_fops;
-////#ifndef USE_STM3210C_EVAL   
+////#ifndef USE_STM3210C_EVAL
 ////extern SD_CardInfo SDCardInfo;
 ////#endif
 __IO uint32_t count = 0;
-
 
 /**
   * @brief  Initialize the storage medium
@@ -108,7 +105,7 @@ __IO uint32_t count = 0;
 int8_t STORAGE_Init (uint8_t lun)
 {
   return (0);
-  
+
 }
 
 /**
@@ -120,27 +117,27 @@ int8_t STORAGE_Init (uint8_t lun)
   */
 int8_t STORAGE_GetCapacity (uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {
-#if 0 
-#ifdef USE_STM3210C_EVAL   
+#if 0
+#ifdef USE_STM3210C_EVAL
   SD_CardInfo SDCardInfo;
-  
-  SD_GetCardInfo(&SDCardInfo);  
-  
+
+  SD_GetCardInfo(&SDCardInfo);
+
 #else
   if(SD_GetStatus() != 0 )
   {
-    return (-1); 
-  }   
-#endif  
+    return (-1);
+  }
+#endif
 #endif
   SD_CardInfo SDCardInfo;
-  
-  SD_GetCardInfo(&SDCardInfo);  
-  
-  *block_size =  512;  
-  *block_num =  SDCardInfo.CardCapacity / 512;  
+
+  SD_GetCardInfo(&SDCardInfo);
+
+  *block_size =  512;
+  *block_num =  SDCardInfo.CardCapacity / 512;
   return (0);
-  
+
 }
 
 /**
@@ -150,9 +147,9 @@ int8_t STORAGE_GetCapacity (uint8_t lun, uint32_t *block_num, uint32_t *block_si
   */
 int8_t  STORAGE_IsReady (uint8_t lun)
 {
-#if 0 
-#ifndef USE_STM3210C_EVAL  
-  
+#if 0
+#ifndef USE_STM3210C_EVAL
+
   static int8_t last_status = 0;
 
   if(last_status  < 0)
@@ -160,19 +157,19 @@ int8_t  STORAGE_IsReady (uint8_t lun)
     SD_Init();
     last_status = 0;
   }
-  
+
   if(SD_GetStatus() != 0)
   {
     last_status = -1;
-    return (-1); 
-  }  
+    return (-1);
+  }
 #else
   if( SD_Init() != 0)
   {
     return (-1);
-  }  
+  }
 #endif
-#endif  
+#endif
   return (0);
 }
 
@@ -194,23 +191,23 @@ int8_t  STORAGE_IsWriteProtected (uint8_t lun)
   * @param  blk_len : nmber of blocks to be read
   * @retval Status
   */
-int8_t STORAGE_Read (uint8_t lun, 
-                 uint8_t *buf, 
-                 uint32_t blk_addr,                       
+int8_t STORAGE_Read (uint8_t lun,
+                 uint8_t *buf,
+                 uint32_t blk_addr,
                  uint16_t blk_len)
 {
-///int ii;  
+///int ii;
  if(SD_ReadSector(blk_addr, buf, blk_len)==0)
 ///  return 0;
 ///else
   return -1;
 #if 0
-  _printk("\n blk[%d]:",blk_addr);  
+  _printk("\n blk[%d]:",blk_addr);
 for(ii=0;ii<64;ii++)
 {
-_printk(" [%x]",*(buf+ii));  
+_printk(" [%x]",*(buf+ii));
 }
-  _printk("\n ");  
+  _printk("\n ");
 #endif
   return 0;
 }
@@ -222,31 +219,31 @@ _printk(" [%x]",*(buf+ii));
   * @param  blk_len : nmber of blocks to be read
   * @retval Status
   */
-int8_t STORAGE_Write (uint8_t lun, 
-                  uint8_t *buf, 
+int8_t STORAGE_Write (uint8_t lun,
+                  uint8_t *buf,
                   uint32_t blk_addr,
                   uint16_t blk_len)
 {
-if(SD_WriteSector(blk_addr, buf, blk_len)==0) 
+if(SD_WriteSector(blk_addr, buf, blk_len)==0)
 ///  return 0;
 ///else
   return -1;
-#if 0  
-  if( SD_WriteMultiBlocks (buf, 
-                           blk_addr * 512, 
+#if 0
+  if( SD_WriteMultiBlocks (buf,
+                           blk_addr * 512,
                            512,
                            blk_len) != 0)
   {
     return -1;
   }
 #endif
-#if 0  
-#ifndef USE_STM3210C_EVAL  
+#if 0
+#ifndef USE_STM3210C_EVAL
   SD_WaitWriteOperation();
-  while (SD_GetStatus() != SD_TRANSFER_OK);  
-#endif  
-#endif  
-  
+  while (SD_GetStatus() != SD_TRANSFER_OK);
+#endif
+#endif
+
   return (0);
 }
 
@@ -263,4 +260,3 @@ int8_t STORAGE_GetMaxLun (void)
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

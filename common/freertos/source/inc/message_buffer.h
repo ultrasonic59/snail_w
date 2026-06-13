@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 /*
  * Message buffers build functionality on top of FreeRTOS stream buffers.
  * Whereas stream buffers are used to send a continuous stream of data from one
@@ -494,7 +493,6 @@ const TickType_t xBlockTime = pdMS_TO_TICKS( 20 );
  */
 #define xMessageBufferReceive( xMessageBuffer, pvRxData, xBufferLengthBytes, xTicksToWait ) xStreamBufferReceive( ( StreamBufferHandle_t ) xMessageBuffer, pvRxData, xBufferLengthBytes, xTicksToWait )
 
-
 /**
  * message_buffer.h
  *
@@ -670,7 +668,6 @@ BaseType_t xMessageBufferReset( MessageBufferHandle_t xMessageBuffer );
  * \ingroup MessageBufferManagement
  */
 #define xMessageBufferReset( xMessageBuffer ) xStreamBufferReset( ( StreamBufferHandle_t ) xMessageBuffer )
-
 
 /**
  * message_buffer.h

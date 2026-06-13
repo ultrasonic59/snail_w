@@ -44,7 +44,6 @@ MAIN_EXCLUDED = """        <file>
             </excluded>
         </file>"""
 
-
 def collect_threadx_sources():
     files = [
         ROOT / "azure_port" / "tx_initialize_low_level.s",
@@ -58,7 +57,6 @@ def collect_threadx_sources():
             files.append(p)
     return files
 
-
 def strip_freertos(text: str) -> str:
     text = re.sub(r"    <group>\s*<name>FreeRTOS</name>.*?</group>\s*", "", text, flags=re.DOTALL)
     lines = []
@@ -68,7 +66,6 @@ def strip_freertos(text: str) -> str:
             continue
         lines.append(line)
     return "".join(lines)
-
 
 def normalize_include_paths(text: str) -> str:
     def replacer(_match):
@@ -84,7 +81,6 @@ def normalize_include_paths(text: str) -> str:
         text,
         flags=re.DOTALL,
     )
-
 
 def normalize_defines(text: str) -> str:
     def replacer(match):
@@ -105,7 +101,6 @@ def normalize_defines(text: str) -> str:
         flags=re.DOTALL,
     )
 
-
 def normalize_assembler_defines(text: str) -> str:
     asm_defines = "USE_THREADX"
 
@@ -124,7 +119,6 @@ def normalize_assembler_defines(text: str) -> str:
         flags=re.DOTALL,
     )
 
-
 def strip_i2c_debug_exclusion(text: str) -> str:
     return re.sub(
         r"(<name>\$PROJ_DIR\$\\\.\\.\\common_stm32\\i2c\\i2c\.(?:c|h)</name>\s*)"
@@ -134,13 +128,11 @@ def strip_i2c_debug_exclusion(text: str) -> str:
         flags=re.DOTALL,
     )
 
-
 def normalize_linker_config(text: str) -> str:
     return text.replace(
         "$PROJ_DIR$\\mstep_rtos.icf",
         "$PROJ_DIR$\\mstep_threadx.icf",
     )
-
 
 def patch_ewp(text: str) -> str:
     text = text.replace("$PROJ_DIR$\\..\\..\\common\\", "$PROJ_DIR$\\..\\common\\")
@@ -167,7 +159,6 @@ def patch_ewp(text: str) -> str:
     text = text.replace("</project>", group + "</project>")
     return text
 
-
 def build_threadx_group(files):
     lines = ["    <group>\n", "        <name>ThreadX</name>\n"]
     for f in files:
@@ -177,7 +168,6 @@ def build_threadx_group(files):
         lines.append("        </file>\n")
     lines.append("    </group>\n")
     return "".join(lines)
-
 
 def main():
     if not EWP.exists():
@@ -196,7 +186,6 @@ def main():
 
     print("ThreadX only: no FreeRTOS kernel sources. azure_port/FreeRTOS.h is a legacy shim.")
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

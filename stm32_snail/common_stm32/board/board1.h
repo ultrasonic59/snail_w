@@ -13,13 +13,13 @@
 #define CAN_SEND_STACK_SIZE                 1024////
 #define TST_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
 
-#define         APP_PRIORITY	     ( tskIDLE_PRIORITY + 3 )	
+#define         APP_PRIORITY	     3U
 #define APPLICATION_STACK_SIZE         (4000)
 #define TST_TASK_PRIORITY		APP_PRIORITY ////		( tskIDLE_PRIORITY + 3 )
 #define CAN_TASK_STACK_SIZE			1024            ////( configMINIMAL_STACK_SIZE + 50 )
-#define CAN_TASK_PRIORITY		( tskIDLE_PRIORITY + 6 )
-#define TIME_WAIT_RDY           200 
-#define TIME_WAIT_ACK           100 
+#define CAN_TASK_PRIORITY		6U
+#define TIME_WAIT_RDY           200
+#define TIME_WAIT_ACK           100
 ////======================================
 extern uint32_t curr_x;
 extern uint32_t curr_y;

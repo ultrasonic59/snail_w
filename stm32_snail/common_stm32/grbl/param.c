@@ -554,7 +554,6 @@ divided by 10) for the values of M codes and G codes. All numbers
 If an integer_value is required in some situation, a test for being
 close to an integer is applied to the number after it is read.
 
-
 arc_tangent_combo = arc_tangent expression divided_by expression .
 
 binary_operation1 = divided_by | modulo | power | times .
@@ -590,7 +589,6 @@ real_value =
    real_number | expression | parameter_value | unary_combo.
 
 unary_combo = ordinary_unary_combo | arc_tangent_combo .
-
 
 Production Tokens in Terms of Characters -
 
@@ -877,7 +875,6 @@ the calculated value of the three logical operations should be. This
 function calculates either 1.0 (meaning true) or 0.0 (meaning false).
 Any non-zero input value is taken as meaning true, and only 0.0 means
 false.
-
 
 */
 
@@ -1354,5 +1351,3 @@ int execute_unary( /* ARGUMENTS                       */
     }
   return RS274NGC_OK;
 }
-
-

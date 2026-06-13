@@ -29,7 +29,6 @@ extern void  __enable_irq();
 
 #define EEPROM_PAGE0 0
 
-
 ///extern void Eeprom_Read_Page(uint16_t BufferOffset);
 
 ///extern void report_init_message();
@@ -39,5 +38,4 @@ extern void  __enable_irq();
 extern uint32_t get_count();
 extern void CDC_send_str(char *str_report, uint32_t len);
 
-
-#endif ////  __ZZZZ_H__ 
+#endif ////  __ZZZZ_H__

@@ -42,15 +42,15 @@ void st_go_idle()
     pin_state = true; // Override. Disable steppers.
   }
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { pin_state = !pin_state; } // Apply pin invert.
-  if (pin_state) 
-  { 
+  if (pin_state)
+  {
 	  SetStepperDisableBit();
   }
-  else 
-  { 
+  else
+  {
 	  ResetStepperDisableBit();
   }
-#endif  
+#endif
 }
 
 ////============================================================
@@ -96,7 +96,7 @@ else
       // Initialize step segment timing per step and load number of steps to execute.
 	  TIM2->ARR = st.exec_segment->cycles_per_tick - 1;
 	  /* Set the Autoreload value */
-#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING        
+#ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
 	  TIM2->PSC = st.exec_segment->prescaler;
 #endif
       st.step_count = st.exec_segment->n_step; // NOTE: Can sometimes be zero when moving slow.
@@ -134,7 +134,6 @@ else
       return; // Nothing to do but exit.
     }
   }
-
 
   // Check probing state.
 ////????  if (sys_probe_state == PROBE_ACTIVE) { probe_state_monitor(); }
@@ -205,7 +204,7 @@ void TIM3_IRQHandler(void)
     // Reset stepping pins (leave the direction pins)
 /////		GPIO_Write(STEP_PORT, (GPIO_ReadOutputData(STEP_PORT) & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK));
         reset_mot_step();
-                
+
 	}
 }
 

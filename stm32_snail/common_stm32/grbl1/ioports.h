@@ -72,7 +72,6 @@ __NOTE:__ The latest value read is stored in \ref #sys sys.var5399.
 */
 typedef int32_t (*ll_wait_on_input_ptr)(uint8_t port, wait_mode_t wait_mode, float timeout);
 
-
 /*! \brief Pointer to function for setting pin description for a digital or analog port.
 \param type as an \a #io_port_type_t enum value.
 \param dir as an \a #io_port_direction_t enum value.
@@ -124,7 +123,6 @@ typedef bool (*claim_port_ptr)(io_port_type_t type, io_port_direction_t dir, uin
 \returns \a true if successful, \a false if not.
 */
 typedef bool (*ll_claim_port_ptr)(io_port_direction_t dir, uint8_t port, uint8_t user_port, const char *description);
-
 
 /*! \brief Pointer to function for swapping two digital or analog ports.
 \param type as an \a #io_port_type_t enum value.

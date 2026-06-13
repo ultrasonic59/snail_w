@@ -16,7 +16,6 @@
 
 /* Modified by Terje Io for grblHAL */
 
-
 #include "nuts_bolts.h"
 
 #if NGC_EXPRESSIONS_ENABLE

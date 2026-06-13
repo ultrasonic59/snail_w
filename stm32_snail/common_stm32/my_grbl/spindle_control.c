@@ -27,7 +27,7 @@ static float pwm_gradient; // Precalulated value to speed up rpm to PWM conversi
 
 void spindle_init()
 {
-#if 0 
+#if 0
 #ifdef VARIABLE_SPINDLE
   pwm_gradient = SPINDLE_PWM_RANGE / (settings.rpm_max - settings.rpm_min);
 #endif

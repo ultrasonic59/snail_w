@@ -3,4 +3,4 @@
 #include <stdint.h>
 ///=======================================================================
 extern void uDelay (const uint32_t usec);
-#endif ////  __MY_MISC_H__ 
+#endif ////  __MY_MISC_H__

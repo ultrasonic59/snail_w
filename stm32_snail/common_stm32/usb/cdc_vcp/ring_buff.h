@@ -51,4 +51,3 @@ static inline unsigned ring_space_wrapped(unsigned size, unsigned head, unsigned
 	else
 		return tail - 1;
 }
-

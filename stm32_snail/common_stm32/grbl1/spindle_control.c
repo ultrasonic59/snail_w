@@ -210,7 +210,6 @@ FLASHMEM bool spindle_select (spindle_id_t spindle_id)
     return (sys_spindle[0].enabled && sys_spindle[0].hal.id == spindle_id) || spindle_activate(spindle_id, 0);
 }
 
-
 /*! \brief Get the handlers (function pointers) etc. associated with the spindle.
 \param spindle_id spindle id as a \ref spindle_id_t.
 \param hal a \ref spindle_hal_t enum value:

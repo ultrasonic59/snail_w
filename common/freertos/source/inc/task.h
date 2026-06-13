@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 #ifndef INC_TASK_H
 #define INC_TASK_H
 
@@ -227,7 +226,6 @@ is used in assert() statements. */
 #define taskSCHEDULER_SUSPENDED		( ( BaseType_t ) 0 )
 #define taskSCHEDULER_NOT_STARTED	( ( BaseType_t ) 1 )
 #define taskSCHEDULER_RUNNING		( ( BaseType_t ) 2 )
-
 
 /*-----------------------------------------------------------
  * TASK CREATION API
@@ -1050,7 +1048,6 @@ void vTaskPrioritySet( TaskHandle_t xTask, UBaseType_t uxNewPriority ) PRIVILEGE
 
 	 //...
 
-
 	 // Suspend ourselves.
 	 vTaskSuspend( NULL );
 
@@ -1098,7 +1095,6 @@ void vTaskSuspend( TaskHandle_t xTaskToSuspend ) PRIVILEGED_FUNCTION;
 	 // another task calls vTaskResume( xHandle ).
 
 	 //...
-
 
 	 // Resume the suspended task ourselves.
 	 vTaskResume( xHandle );
@@ -2411,11 +2407,7 @@ TaskHandle_t pvTaskIncrementMutexHeldCount( void ) PRIVILEGED_FUNCTION;
  */
 void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNCTION;
 
-
 #ifdef __cplusplus
 }
 #endif
 #endif /* INC_TASK_H */
-
-
-

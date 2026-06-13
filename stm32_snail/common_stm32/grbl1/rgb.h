@@ -244,8 +244,8 @@ static inline rgb_color_t rgb_1bpp_unpack (uint8_t *led, uint8_t intensity)
     if(intensity) {
 
         color.G = *led++;
-        color.R = *led++; 
-        color.B = *led; 
+        color.R = *led++;
+        color.B = *led;
 
         color = rgb_reset_intensity(color, intensity);
     }

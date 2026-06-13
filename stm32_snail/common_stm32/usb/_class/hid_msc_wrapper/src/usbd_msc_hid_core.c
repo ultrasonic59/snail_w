@@ -7,15 +7,15 @@
   * @brief   This file provides the HID core functions.
   *
   * @verbatim
-  *      
-  *          ===================================================================      
+  *
+  *          ===================================================================
   *                                composite HID_MSC
-  *          =================================================================== 
-  *      
+  *          ===================================================================
+  *
   * @note     In HS mode and when the DMA is used, all variables and data structures
   *           dealing with the DMA during the transaction process should be 32-bit aligned.
-  *           
-  *      
+  *
+  *
   *  @endverbatim
   *
   ******************************************************************************
@@ -29,14 +29,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_msc_hid_core.h"
@@ -45,56 +45,48 @@
 #include "usbd_desc.h"
 #include "usbd_req.h"
 
-
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
 
-
-/** @defgroup USBD_HID 
+/** @defgroup USBD_HID
   * @brief usbd core module
   * @{
-  */ 
+  */
 
 /** @defgroup USBD_HID_Private_TypesDefinitions
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_HID_Private_Defines
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_HID_Private_Macros
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
-
-
-
+  */
 
 /** @defgroup USBD_HID_Private_FunctionPrototypes
   * @{
   */
 
-
-static uint8_t  USBD_MSC_HID_Init (void  *pdev, 
+static uint8_t  USBD_MSC_HID_Init (void  *pdev,
                                uint8_t cfgidx);
 
-static uint8_t  USBD_MSC_HID_DeInit (void  *pdev, 
+static uint8_t  USBD_MSC_HID_DeInit (void  *pdev,
                                  uint8_t cfgidx);
 
-static uint8_t  USBD_MSC_HID_Setup (void  *pdev, 
+static uint8_t  USBD_MSC_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req);
 
 static uint8_t  *USBD_MSC_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
@@ -103,35 +95,35 @@ static uint8_t  USBD_MSC_HID_DataIn (void  *pdev, uint8_t epnum);
 static uint8_t  USBD_MSC_HID_DataOut(void *pdev , uint8_t epnum);
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_HID_Private_Variables
   * @{
-  */ 
+  */
 
-USBD_Class_cb_TypeDef  USBD_MSC_HID_cb = 
+USBD_Class_cb_TypeDef  USBD_MSC_HID_cb =
 {
   USBD_MSC_HID_Init,
   USBD_MSC_HID_DeInit,
   USBD_MSC_HID_Setup,
-  NULL, /*EP0_TxSent*/  
+  NULL, /*EP0_TxSent*/
   NULL, /*EP0_RxReady*/
   USBD_MSC_HID_DataIn, /*DataIn*/
   USBD_MSC_HID_DataOut, /*DataOut*/
   NULL, /*SOF */
   NULL,
-  NULL,      
+  NULL,
   USBD_MSC_HID_GetCfgDesc,
-#ifdef USB_OTG_HS_CORE  
+#ifdef USB_OTG_HS_CORE
   USBD_MSC_HID_GetCfgDesc, /* use same config as per FS */
-#endif  
+#endif
 };
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
-    #pragma data_alignment=4   
+    #pragma data_alignment=4
   #endif
-#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */ 
+#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 /* USB HID device Configuration Descriptor */
 __ALIGN_BEGIN static uint8_t USBD_MSC_HID_CfgDesc[USB_MSC_HID_CONFIG_DESC_SIZ] __ALIGN_END =
 {
@@ -146,7 +138,7 @@ __ALIGN_BEGIN static uint8_t USBD_MSC_HID_CfgDesc[USB_MSC_HID_CONFIG_DESC_SIZ] _
   the configuration*/
   0xE0,         /*bmAttributes: bus powered and Support Remote Wake-up */
   0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
-  
+
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
   0x09,         /*bLength: Interface Descriptor size*/
@@ -173,14 +165,14 @@ __ALIGN_BEGIN static uint8_t USBD_MSC_HID_CfgDesc[USB_MSC_HID_CONFIG_DESC_SIZ] _
   /* 27 */
   0x07,          /*bLength: Endpoint Descriptor size*/
   USB_ENDPOINT_DESCRIPTOR_TYPE, /*bDescriptorType:*/
-  
+
   HID_IN_EP,     /*bEndpointAddress: Endpoint Address (IN)*/
   0x03,          /*bmAttributes: Interrupt endpoint*/
   HID_IN_PACKET, /*wMaxPacketSize: 4 Byte max */
   0x00,
   0x0A,          /*bInterval: Polling Interval (10 ms)*/
   /* 34 */
-  
+
   /********************  Mass Storage interface ********************/
   0x09,   /* bLength: Interface Descriptor size */
   0x04,   /* bDescriptorType: */
@@ -199,7 +191,7 @@ __ALIGN_BEGIN static uint8_t USBD_MSC_HID_CfgDesc[USB_MSC_HID_CONFIG_DESC_SIZ] _
   LOBYTE(MSC_MAX_PACKET),
   HIBYTE(MSC_MAX_PACKET),
   0x00,   /*Polling interval in milliseconds */
-  
+
   0x07,   /*Endpoint descriptor length = 7 */
   0x05,   /*Endpoint descriptor type */
   MSC_OUT_EP,   /*Endpoint address (OUT, address 1) */
@@ -234,11 +226,11 @@ extern uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_MSC_HID_Private_Functions
   * @{
-  */ 
+  */
 
 /**
   * @brief  USBD_MSC_HID_Init
@@ -247,15 +239,15 @@ extern uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  USBD_MSC_HID_Init (void  *pdev, 
+static uint8_t  USBD_MSC_HID_Init (void  *pdev,
                                    uint8_t cfgidx)
 {
   /* HID initialization */
   USBD_HID_Init (pdev,cfgidx);
-  
+
   /* MSC initialization */
   USBD_MSC_Init (pdev,cfgidx);
-  
+
   return USBD_OK;
 }
 
@@ -266,15 +258,15 @@ static uint8_t  USBD_MSC_HID_Init (void  *pdev,
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  USBD_MSC_HID_DeInit (void  *pdev, 
+static uint8_t  USBD_MSC_HID_DeInit (void  *pdev,
                                      uint8_t cfgidx)
 {
   /* HID De-initialization */
   USBD_HID_DeInit (pdev,cfgidx);
-  
+
   /* MSC De-initialization */
   USBD_MSC_DeInit (pdev,cfgidx);
-  
+
   return USBD_OK;
 }
 
@@ -285,7 +277,7 @@ static uint8_t  USBD_MSC_HID_DeInit (void  *pdev,
   * @param  req: usb requests
   * @retval status
   */
-static uint8_t  USBD_MSC_HID_Setup (void  *pdev, 
+static uint8_t  USBD_MSC_HID_Setup (void  *pdev,
                                     USB_SETUP_REQ *req)
 {
   switch (req->bmRequest & USB_REQ_RECIPIENT_MASK)
@@ -299,22 +291,22 @@ static uint8_t  USBD_MSC_HID_Setup (void  *pdev,
     {
       return (USBD_MSC_Setup(pdev, req));
     }
-    
+
   case USB_REQ_RECIPIENT_ENDPOINT:
     if (req->wIndex == HID_IN_EP)
     {
-      return (USBD_HID_Setup (pdev, req));   
+      return (USBD_HID_Setup (pdev, req));
     }
     else
     {
       return (USBD_MSC_Setup(pdev, req));
     }
-  }   
+  }
   return USBD_OK;
 }
 
 /**
-  * @brief  USBD_MSC_HID_GetCfgDesc 
+  * @brief  USBD_MSC_HID_GetCfgDesc
   *         return configuration descriptor
   * @param  speed : current device speed
   * @param  length : pointer data length
@@ -333,11 +325,11 @@ static uint8_t  *USBD_MSC_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
   * @param  epnum: endpoint index
   * @retval status
   */
-static uint8_t  USBD_MSC_HID_DataIn (void  *pdev, 
+static uint8_t  USBD_MSC_HID_DataIn (void  *pdev,
                               uint8_t epnum)
 {
   /*DataIN can be for MSC or HID */
-  
+
   if (epnum == (MSC_IN_EP&~0x80) )
   {
     return (USBD_MSC_DataIn(pdev, epnum));
@@ -363,16 +355,14 @@ static uint8_t  USBD_MSC_HID_DataOut(void *pdev , uint8_t epnum)
 
 /**
   * @}
-  */ 
-
-
-/**
-  * @}
-  */ 
-
+  */
 
 /**
   * @}
-  */ 
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -16,14 +16,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_USR_H__
@@ -31,11 +31,9 @@
 
 #include "usb_core.h"
 
-
 extern  USBD_Usr_cb_TypeDef USR_cb;
 extern  USBD_Usr_cb_TypeDef USR_FS_cb;
 extern  USBD_Usr_cb_TypeDef USR_HS_cb;
-
 
 void     USBD_USR_Init(void);
 void     USBD_USR_DeviceReset (uint8_t speed);
@@ -44,7 +42,7 @@ void     USBD_USR_DeviceSuspended(void);
 void     USBD_USR_DeviceResumed(void);
 
 void     USBD_USR_DeviceConnected(void);
-void     USBD_USR_DeviceDisconnected(void); 
+void     USBD_USR_DeviceDisconnected(void);
 
 void     USBD_USR_FS_Init(void);
 void     USBD_USR_FS_DeviceReset (uint8_t speed);
@@ -53,7 +51,7 @@ void     USBD_USR_FS_DeviceSuspended(void);
 void     USBD_USR_FS_DeviceResumed(void);
 
 void     USBD_USR_FS_DeviceConnected(void);
-void     USBD_USR_FS_DeviceDisconnected(void);  
+void     USBD_USR_FS_DeviceDisconnected(void);
 
 void     USBD_USR_HS_Init(void);
 void     USBD_USR_HS_DeviceReset (uint8_t speed);
@@ -62,9 +60,6 @@ void     USBD_USR_HS_DeviceSuspended(void);
 void     USBD_USR_HS_DeviceResumed(void);
 
 void     USBD_USR_HS_DeviceConnected(void);
-void     USBD_USR_HS_DeviceDisconnected(void);  
-
+void     USBD_USR_HS_DeviceDisconnected(void);
 
 #endif /*__USBD_USR_H__*/
-
-

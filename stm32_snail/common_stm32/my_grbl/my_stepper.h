@@ -147,12 +147,12 @@ const PORTPINDEF limit_pin_mask[N_AXIS] =
     error "AMASS must have 1 or more levels to operate correctly."
   #endif
 #endif
-      
+
 #define TIMEOUT_SEND	10
 
 extern void stepper_init(void);
-extern void SetStepperDisableBit(void); 
-extern void ResetStepperDisableBit(void); 
+extern void SetStepperDisableBit(void);
+extern void ResetStepperDisableBit(void);
 extern void steps_reset(void);
 extern uint16_t spindle_compute_pwm_value(float rpm);
 #endif  ////__MY_STEPPER_H__

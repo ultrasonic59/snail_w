@@ -1,11 +1,6 @@
 #include <string.h>
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-
 #include "board.h"
 #include "printk.h"
-#include "task.h"
 
 #include "snail_can_cmds.h"
 #include "can.h"
@@ -15,7 +10,7 @@
 
 extern volatile uint8_t can_go_step_done;
 extern uint8_t cur_state;
-extern BaseType_t mot_go_try_chain_isr(BaseType_t *pxHigherPriorityTaskWoken);
+extern UINT mot_go_try_chain_isr(void);
 
 volatile uint32_t num_Step = 0U;
 static void stop_mot_step_tim(void);
@@ -33,14 +28,14 @@ void motor_task( void *pvParameters )
 {
 ///  int ii=0;
  /// uint16_t t_len=0;
-uint8_t btst=0; 
-uint8_t psk=0; 
+uint8_t btst=0;
+uint8_t psk=0;
 ///uint16_t tst;
 char key=0;
 int nstep=300;
 uint8_t dir=0;
 uint8_t mot_rej=0;
-printk("\n\r motor_task"); 
+printk("\n\r motor_task");
 motor_init();
 
 #if 0
@@ -57,25 +52,25 @@ init_step_mot();
 ///mot_spi_wr(0x0,tst);
  ena_mot(0) ;
 #endif
- 
+
 for(;;)
 {
 /*
   if( g_hdlc.len_obr_dat){
     t_len=g_hdlc.len_obr_dat;
     g_hdlc.len_obr_dat=0;
-        printk("\n\r len[%x]",t_len); 
+        printk("\n\r len[%x]",t_len);
 
     for(ii=0;ii<t_len;ii++){
-         printk("%x=[%x] ",ii,g_hdlc.obr_buff[ii]   ); 
-     
+         printk("%x=[%x] ",ii,g_hdlc.obr_buff[ii]   );
+
     }
 
   }
 */
 if(check_push_key_dbg())
   {
-  key=get_byte_dbg() ;  
+  key=get_byte_dbg() ;
   switch(key)
     {
     case 'a':
@@ -101,17 +96,17 @@ if(check_push_key_dbg())
       break;
     case 'P':
           ena_check_conc=1;
- 
+
      psk=1;
       break;
    case 'z':
      print_mot_reg();
       break;
-    
+
    }
   btst = get_conc_n();
 
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]",nstep,dir,mot_rej,ena_check_conc,btst); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x] chk_conc[%x] conc=[%x]",nstep,dir,mot_rej,ena_check_conc,btst);
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -119,8 +114,8 @@ if(check_push_key_dbg())
     put_mot_nStep(nstep);
     psk=0;
     }
-  
-  }  
+
+  }
 }
 }
 
@@ -131,7 +126,7 @@ void mot_spi_init(void)
 GPIO_InitTypeDef GPIO_InitStructure;
 SPI_InitTypeDef  SPI_InitStructure;
   MOT_SPI_PeriphClockCmd(MOT_SPI_RCC, ENABLE);
-  
+
 RCC_AHB1PeriphClockCmd(MOT_SPI_SCK_PIN_RCC,ENABLE);
 RCC_AHB1PeriphClockCmd(MOT_SPI_MISO_PIN_RCC,ENABLE);
 RCC_AHB1PeriphClockCmd(MOT_SPI_MOSI_PIN_RCC,ENABLE);
@@ -176,7 +171,7 @@ SPI_Cmd(MOT_SPI, ENABLE);
 }
 uint16_t mot_spi_transfer(uint16_t i_data)
 {
-uint16_t rez=0; 
+uint16_t rez=0;
 GPIO_SetBits(MOT_SPI_SCS_PIN_GPIO, MOT_SPI_SCS_PIN);
 
 while (SPI_I2S_GetFlagStatus(MOT_SPI, SPI_I2S_FLAG_TXE) == RESET);
@@ -208,7 +203,7 @@ void mot_spi_wrp(uint8_t addr,uint16_t *pdata)
 {
 uint16_t tmp;
 memcpy(&tmp,pdata,sizeof(uint16_t));
-mot_spi_wr(addr,tmp);       
+mot_spi_wr(addr,tmp);
 }
 uint16_t mot_spi_rd(uint8_t addr)
 {
@@ -219,7 +214,7 @@ tmp|= 0x8000;
 rez=mot_spi_transfer(tmp);
 return rez&0xfff;
 }
-////========================================================  
+////========================================================
 
 CTRL_Register_t 	G_CTRL_REG;
 TORQUE_Register_t 	G_TORQUE_REG;
@@ -232,7 +227,7 @@ STATUS_Register_t 	G_STATUS_REG;
 
 void init_step_mot(void)
 {
-uint16_t tmp; 
+uint16_t tmp;
 // CTRL Register
 
 G_CTRL_REG.DTIME 	= 0;///0x03;
@@ -296,7 +291,7 @@ if(EE_Rd(ADDR_EEPROM_MOT_BLANK,&tmp)!=0)
   memcpy(&tmp,(uint16_t*)&G_BLANK_REG,sizeof(uint16_t));
   }
 mot_spi_wrp(ADDR_MOT_BLANK,(uint16_t*)&tmp);
-  
+
 if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
   {
   memcpy(&tmp,(uint16_t*)&G_DECAY_REG,sizeof(uint16_t));
@@ -314,10 +309,10 @@ if(EE_Rd(ADDR_EEPROM_MOT_DECAY,&tmp)!=0)
   }
 mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&tmp);
 
-mot_spi_wr(ADDR_MOT_STATUS,0);       
+mot_spi_wr(ADDR_MOT_STATUS,0);
 
 }
-////========================================================  
+////========================================================
 void set_mot_rej(uint8_t rej)
 {
 uint16_t tmp;
@@ -348,7 +343,6 @@ printk("\n\r set_mot_trq[%x]",tmp);
 
 }
 
-
 void print_mot_reg(void)
 {
 uint16_t tmp;
@@ -372,7 +366,7 @@ printk("\n\r STATUS[%x]",tmp);
 ////extern CanRxMsg RxMessage;
 void reset_mot_step(void)
 {
-  
+
 }
 
 static void set_mot_per_hw(uint16_t per)
@@ -400,6 +394,60 @@ static struct {
   uint16_t active_per;
 } mot_ramp;
 
+static uint16_t mot_ramp_pick_steps(uint16_t from, uint16_t to, uint32_t move_steps,
+                                    uint8_t enforce_min16)
+{
+  uint32_t delta;
+  uint32_t steps;
+
+  if (from == to || move_steps == 0U) {
+    return 0U;
+  }
+  delta = (from > to) ? (uint32_t)(from - to) : (uint32_t)(to - from);
+  steps = (uint32_t)MOT_PER_RAMP_STEPS;
+  if (delta > (uint32_t)MOT_PER_RAMP_DELTA_REF) {
+    steps = (delta * (uint32_t)MOT_PER_RAMP_STEPS) / (uint32_t)MOT_PER_RAMP_DELTA_REF;
+  }
+  if (steps > (uint32_t)MOT_PER_RAMP_STEPS_MAX) {
+    steps = (uint32_t)MOT_PER_RAMP_STEPS_MAX;
+  }
+  if (steps > move_steps) {
+    steps = move_steps;
+  }
+  if (enforce_min16 && steps < 16U && move_steps >= 16U) {
+    steps = 16U;
+  }
+  return (uint16_t)steps;
+}
+
+static void mot_ramp_begin_chain(uint16_t target_per, uint32_t move_steps)
+{
+  uint16_t from;
+  uint16_t to;
+  uint16_t steps;
+
+  to = mot_clamp_per(target_per);
+  from = mot_ramp.active_per;
+  if (from < MIN_PER) {
+    from = MIN_PER;
+  }
+  mot_ramp.start_per = from;
+  mot_ramp.end_per = to;
+  steps = mot_ramp_pick_steps(from, to, move_steps, 0U);
+  if (steps > (uint16_t)MOT_PER_RAMP_CHAIN_STEPS) {
+    steps = (uint16_t)MOT_PER_RAMP_CHAIN_STEPS;
+  }
+  if (from == to || steps == 0U) {
+    mot_ramp.ramp_steps = 0U;
+    mot_ramp.ramp_left = 0U;
+    mot_ramp.active_per = to;
+    return;
+  }
+  mot_ramp.ramp_steps = steps;
+  mot_ramp.ramp_left = steps;
+  mot_ramp.active_per = from;
+}
+
 static void mot_ramp_begin(uint16_t target_per, uint32_t move_steps)
 {
   uint16_t from;
@@ -413,10 +461,7 @@ static void mot_ramp_begin(uint16_t target_per, uint32_t move_steps)
   }
   mot_ramp.start_per = from;
   mot_ramp.end_per = to;
-  steps = MOT_PER_RAMP_STEPS;
-  if (move_steps > 0U && move_steps < steps) {
-    steps = (uint16_t)move_steps;
-  }
+  steps = mot_ramp_pick_steps(from, to, move_steps, 1U);
   if (from == to || steps == 0U) {
     mot_ramp.ramp_steps = 0U;
     mot_ramp.ramp_left = 0U;
@@ -455,10 +500,7 @@ static void mot_ramp_on_step(void)
 
 static uint8_t mot_finish_stepping(void)
 {
-  BaseType_t woken = pdFALSE;
-
-  if (mot_go_try_chain_isr(&woken) == pdTRUE) {
-    (void)woken;
+  if (mot_go_try_chain_isr() != 0U) {
     return 1U;
   }
   stop_mot_step_tim();
@@ -472,9 +514,22 @@ void mot_go_start(uint8_t dirs, uint16_t per, uint32_t steps)
     put_mot_nStep(0U);
     return;
   }
+  printk("\n\rGo [dir=%x:per=%x:steps=%x] ", dirs, per, (unsigned)steps);
   set_dir_mot(dirs);
   mot_ramp_begin(per, steps);
   ena_mot(1);
+  num_Step = steps;
+  TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
+  TIM_Cmd(MOT_STEP_TIM, ENABLE);
+}
+
+void mot_go_chain(uint8_t dirs, uint16_t per, uint32_t steps)
+{
+  if (steps == 0U) {
+    return;
+  }
+  set_dir_mot(dirs);
+  mot_ramp_begin_chain(per, steps);
   num_Step = steps;
   TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
   TIM_Cmd(MOT_STEP_TIM, ENABLE);
@@ -509,7 +564,7 @@ cur_mot_dir= tdat;
   tdat=idat&DIR_Z;
 #endif
 #endif
-  
+
 if(tdat)
   {
   GPIO_SetBits(MOT_DIR_PIN_GPIO, MOT_DIR_PIN);
@@ -556,7 +611,7 @@ else
 ///==================================================
 void mot_step_tim_init(void)
 {
-NVIC_InitTypeDef NVIC_InitStructure; 
+NVIC_InitTypeDef NVIC_InitStructure;
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
 MOT_STEP_TIM ->PSC = DEF_MOT_TIM_PRESC;
@@ -566,7 +621,7 @@ TIM_ARRPreloadConfig(MOT_STEP_TIM, ENABLE);
 TIM_OC1PreloadConfig(MOT_STEP_TIM, TIM_OCPreload_Enable);
 MOT_STEP_TIM->CCER |= TIM_CCER_CC1E;////TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
-MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1; 
+MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
 
@@ -590,7 +645,7 @@ mot_ramp.ramp_left = 0U;
 void ena_mot(uint8_t ena_dis)
 {
 uint16_t tmp;
-////return ; 
+////return ;
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
 if(ena_dis&0x1)
 {
@@ -607,15 +662,15 @@ void put_mot_nStep(uint32_t nstep)
 {
   if(nstep){
      ena_mot(1) ;
-     num_Step=nstep; 
+     num_Step=nstep;
      TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
      TIM_Cmd(MOT_STEP_TIM, ENABLE);
   }
   else{
   ///    ena_mot(0) ;
-      num_Step=nstep; 
+      num_Step=nstep;
       TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, DISABLE);
-      TIM_Cmd(MOT_STEP_TIM, DISABLE);  
+      TIM_Cmd(MOT_STEP_TIM, DISABLE);
   }
 }
 
@@ -625,8 +680,8 @@ uint8_t use_enc=0;///1;
 int32_t step_coord=0;
 
 void MOT_STEP_TIM_IRQHandler(void)
-{ 
-///uint8_t end_step=0;  
+{
+///uint8_t end_step=0;
 uint8_t tconc;
 tconc=  get_conc_n();
 #if 0
@@ -658,7 +713,7 @@ else
   if(num_Step==0){
     mot_finish_stepping();
    }
-  else{ 
+  else{
   if(use_enc){
    cur_step_out=1;
    set_step_mot(cur_step_out);
@@ -675,7 +730,7 @@ else
         num_Step=1;
     }
   }
-  else {  
+  else {
    cur_step_out=1;
    set_step_mot(cur_step_out);
   num_Step--;
@@ -718,7 +773,7 @@ if(EE_ReadVariable(ADDR_EEPROM_MOT_REJ, &tmp)==0)
 else
 */
  ///  set_mot_rej(DEF_MOT_REJ);
-  
+
 }
 ///==============================================
 ///spi_mot_cmd_t  req_spi_mot_cmd;
@@ -733,23 +788,23 @@ if(i_cmd->len_dat==4){
 ///  printk("\n\r wr_spi_mot[%x:%x:%x]",i_cmd->addr+1,i_cmd->len_dat,odat);
 
 }
-return 0;  
+return 0;
 }
 
 int rd_spi_mot(spi_mot_cmd_t *i_cmd)
 {
-uint32_t odat=0;  
-uint32_t odat1=0;  
+uint32_t odat=0;
+uint32_t odat1=0;
 
 odat=mot_spi_rd(i_cmd->addr&0x7);
 if(i_cmd->len_dat==4)
 {
-odat1= mot_spi_rd((i_cmd->addr+1)&0x7);  
+odat1= mot_spi_rd((i_cmd->addr+1)&0x7);
 odat|= odat1<<16;
 }
 i_cmd->w_val=odat;
 i_cmd->len_dat=5;    ///send all dat
 printk("\n\r rd_spi_mot[%x:%x:%x]",i_cmd->addr,i_cmd->len_dat,odat);
 
- return 0; 
+ return 0;
 }

@@ -51,7 +51,7 @@
 // Define global system variables
 typedef struct {
   uint8_t state;               // Tracks the current system state of Grbl.
-  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.             
+  uint8_t abort;               // System abort flag. Forces exit back to main loop for reset.
   uint8_t suspend;             // System suspend bitflag variable that manages holds, cancels, and safety door.
   uint8_t soft_limit;          // Tracks soft limit errors for the state machine. (boolean)
   uint8_t step_control;        // Governs the step segment generator depending on system state.
@@ -93,4 +93,3 @@ extern void system_execute_startup(char *line);
 extern void system_convert_array_steps_to_mpos(float *position, int32_t *steps);
 ////======================================
 #endif  ////_GRBL_SYS_H_
-

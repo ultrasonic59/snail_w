@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 #include "FreeRTOS.h"
@@ -27,7 +26,7 @@ TaskHandle_t  can_send_thread_handle;
 ////============================================
 int main( void )
 {
-////uint8_t btst=0; 
+////uint8_t btst=0;
 ////uint32_t tst=0;
 #ifdef DEBUG
   debug();
@@ -35,13 +34,13 @@ int main( void )
 __disable_irq();
 hw_board_init();
 #if STEP_X
-  printk("\n\r=== [step_x_axis] ==="); 
+  printk("\n\r=== [step_x_axis] ===");
 #elif STEP_Y
-  printk("\n\r=== [step_y_axis] ==="); 
+  printk("\n\r=== [step_y_axis] ===");
 #elif STEP_Z
-  printk("\n\r=== [step_z_axis] ==="); 
-#else 
-  #error "\n\r=== STEP_... nodefined ==="; 
+  printk("\n\r=== [step_z_axis] ===");
+#else
+  #error "\n\r=== STEP_... nodefined ===";
 #endif
 ////=================================================
 CAN1_Init();

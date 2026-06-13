@@ -1,29 +1,22 @@
 #include <string.h>
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-
-////#include "board.h"
+#include "grbl.h"
 #include "board.h"
 #include "printk.h"
-
 #include "snail_cmds.h"
-#include "grbl.h"
 
 ///setup _setup;
 ///cmd_t cur_cmd={0};
 void grbl_task( void *pvParameters )
 {
-printk("\n\r grbl_task"); 
+printk("\n\r grbl_task");
 
 grbl_init();
 
 }
 
-
 void _grbl_task( void *pvParameters )
 {
-printk("\n\r grbl_task"); 
+printk("\n\r grbl_task");
 
 #if 0
 set_sleep_mot(1);
@@ -38,20 +31,20 @@ init_step_mot();
 ///tst=mot_spi_rd(0x0);
 ///tst|=0x1;
 ///mot_spi_wr(0x0,tst);
-#if 0      
+#if 0
 for(;;)
   {
-//// sendchar2 (0x33) ; 
+//// sendchar2 (0x33) ;
   put_tst_pin(btst);
-  btst++;  
-  ////delay__ms(1);  
+  btst++;
+  ////delay__ms(1);
   uDelay(20000);
 ///  mot_spi_transfer(0x1234);
 tst=mot_spi_rd(0x0);
-printk("\n\r rd[%x]",tst); 
+printk("\n\r rd[%x]",tst);
 
   }
-#endif 
+#endif
 #if 0
 ena_mot(0) ;
 for(;;)
@@ -81,7 +74,7 @@ else
 #if 0
  for(;;)
   {
-  key=dbg_get_byte() ;  
+  key=dbg_get_byte() ;
   switch(key)
     {
     case 'a':
@@ -104,9 +97,9 @@ else
     case 'p':
      psk=1;
       break;
-     
+
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej);
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -116,6 +109,6 @@ else
     }
 ////  set_led_dutycycle (duty);
 
-  } 
+  }
 }
 #endif

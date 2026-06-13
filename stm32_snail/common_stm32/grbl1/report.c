@@ -405,7 +405,6 @@ FLASHMEM status_code_t report_help (char *args)
     return Status_OK;
 }
 
-
 // grblHAL settings print out.
 
 FLASHMEM static int cmp_settings (const void *a, const void *b)
@@ -511,7 +510,6 @@ FLASHMEM void report_grbl_settings (bool all, void *data)
             settings_iterator(&details->settings[idx], print_setting, data);
     } while((details = details->next));
 }
-
 
 // Prints current probe parameters. Upon a probe command, these parameters are updated upon a
 // successful probe or upon a failed probe with the G38.3 without errors command (if supported).
@@ -1306,7 +1304,7 @@ void report_realtime_status (stream_write_ptr stream_write, status_report_tracki
         // Report distance-to-go.
         stream_write("|DTG:");
         stream_write(get_axis_values(dist_remaining));
-    }   
+    }
 
     spindle_ptrs_t *spindle_0;
     spindle_state_t spindle_0_state;
@@ -2537,9 +2535,9 @@ FLASHMEM status_code_t report_uart_ports (sys_state_t state, char *args)
 
             free(port_data);
         } else
-            stream_enumerate_streams(report_port_info, NULL);   
-    } 
-  
+            stream_enumerate_streams(report_port_info, NULL);
+    }
+
     return Status_OK;
 }
 

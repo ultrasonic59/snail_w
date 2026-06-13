@@ -81,7 +81,6 @@ typedef union {
     };
 } driver_cap_t;
 
-
 /*! \brief Pointer to function called to set up driver peripherals after settings are loaded. */
 typedef bool (*driver_setup_ptr)(settings_t *settings);
 
@@ -122,7 +121,6 @@ The callback function will be called for each pin.
 */
 typedef void (*enumerate_pins_ptr)(bool low_level, pin_info_ptr callback, void *data);
 
-
 /*************
  *  Coolant  *
  *************/
@@ -142,7 +140,6 @@ typedef struct {
     coolant_set_state_ptr set_state;    //!< Handler for setting coolant state.
     coolant_get_state_ptr get_state;    //!< Handler for getting coolant state.
 } coolant_ptrs_t;
-
 
 /********************
  *  Limit switches  *
@@ -170,7 +167,6 @@ typedef struct {
     limits_get_state_ptr get_state;                     //!< Handler for getting limit switches status.
     limit_interrupt_callback_ptr interrupt_callback;    //!< Callback for informing about limit switches events. _Set by the core at startup._
 } limits_ptrs_t;
-
 
 /************
  *  Homing  *
@@ -208,7 +204,6 @@ typedef struct {
     control_signals_callback_ptr interrupt_callback;    //!< Callback for informing about control switches events. _Set by the core at startup.
 } control_signals_ptrs_t;
 
-
 /**************
  *  Steppers  *
  **************/
@@ -229,20 +224,17 @@ typedef union {
 */
 typedef void (*motor_iterator_callback_ptr)(motor_map_t motor);
 
-
 /*! \brief Pointer to function for iterating over stepper motor vs. axis mappings.
 
 \param callback pointer to a #motor_iterator_callback_ptr function to be called for each motor.
 */
 typedef void (*motor_iterator_ptr)(motor_iterator_callback_ptr callback);
 
-
 /*! \brief Pointer to function for enabling all stepper motors and the main stepper interrupt.
 
 The first interrupt should be generated after a short delay to allow the drivers time to apply power to the motors.
 */
 typedef void (*stepper_wake_up_ptr)(void);
-
 
 /*! \brief Pointer to function for disabling the main stepper interrupt.
 
@@ -348,7 +340,6 @@ typedef struct {
     stepper_status_ptr status;                          //!< Optional handler handler for querying steppper driver status or attempting to reset it.
 } stepper_ptrs_t;
 
-
 /**************
  *  ms delay  *
  **************/
@@ -361,7 +352,6 @@ typedef struct {
    volatile uint32_t ms;
    delay_callback_ptr callback;
 } delay_t;
-
 
 /************
  *  Probes  *
@@ -413,7 +403,6 @@ typedef struct {
     probe_get_caps_ptr get_caps;                    //!< Optional handler for getting probe capabilities.
     probe_connected_toggle_ptr connected_toggle;    //!< Optional handler for toggling probe connected status.
 } probe_ptrs_t;
-
 
 /*******************************
  *  Tool selection and change  *

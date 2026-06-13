@@ -1,4 +1,3 @@
-
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_CONF__H__
 #define __USBD_CONF__H__
@@ -19,17 +18,16 @@
 /// #define USB_CLASS MSC
 ///===============================
 
-
 #define USBD_CFG_MAX_NUM                1
 
-#define USBD_SELF_POWERED               
-#define USB_MAX_STR_DESC_SIZ            255 
+#define USBD_SELF_POWERED
+#define USB_MAX_STR_DESC_SIZ            255
 ///=======================================
-  
+
 #if (USB_CLASS==MSC_CDC)
   #define MSC_INTERFACE_IDX 0x0                            	// Index of MSC interface
   #define CDC_INTERFACE_IDX 0x1                            	// Index of CDC interface
- 
+
 // endpoints numbers
   #define MSC_EP_IDX                      0x01
   #define CDC_CMD_EP_IDX                  0x02
@@ -76,4 +74,3 @@
 #endif //__USBD_CONF__H__
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

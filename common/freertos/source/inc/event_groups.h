@@ -66,8 +66,6 @@ extern "C" {
  * \defgroup EventGroup
  */
 
-
-
 /**
  * event_groups.h
  *
@@ -688,7 +686,6 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  */
 EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
-
 /**
  * event_groups.h
  *<pre>
@@ -742,7 +739,6 @@ void vEventGroupDelete( EventGroupHandle_t xEventGroup ) PRIVILEGED_FUNCTION;
 void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet ) PRIVILEGED_FUNCTION;
 void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear ) PRIVILEGED_FUNCTION;
 
-
 #if (configUSE_TRACE_FACILITY == 1)
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup ) PRIVILEGED_FUNCTION;
 	void vEventGroupSetNumber( void* xEventGroup, UBaseType_t uxEventGroupNumber ) PRIVILEGED_FUNCTION;
@@ -753,5 +749,3 @@ void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToCl
 #endif
 
 #endif /* EVENT_GROUPS_H */
-
-

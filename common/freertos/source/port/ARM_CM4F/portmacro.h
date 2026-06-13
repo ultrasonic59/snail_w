@@ -170,4 +170,3 @@ warnings. */
 #endif
 
 #endif /* PORTMACRO_H */
-

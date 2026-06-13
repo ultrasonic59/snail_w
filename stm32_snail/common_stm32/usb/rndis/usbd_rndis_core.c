@@ -58,7 +58,7 @@ USBD_Class_cb_TypeDef usbd_rndis_cb =
 	rndis_iso_in_incomplete,
 	rndis_iso_out_incomplete,
   usbd_rndis_get_cfg,
-#ifdef USE_USB_OTG_HS   
+#ifdef USE_USB_OTG_HS
   usbd_rndis_get_cfg /* use same cobfig as per FS */
 #endif /* USE_USB_OTG_HS  */
 };
@@ -73,7 +73,7 @@ __ALIGN_BEGIN static __IO uint32_t  usbd_cdc_AltSet  __ALIGN_END = 0;
 __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_RNDIS_CONFIG_DESC_SIZ]  __ALIGN_END =
 {
 	//  RNDIS requires only one configuration as follows..
-	
+
 	9,                                 //  bLength         = 9 bytes.
 	USB_CONFIGURATION_DESCRIPTOR_TYPE, //  bDescriptorType = CONFIGURATION
 	USB_RNDIS_CONFIG_DESC_SIZ, 0x00,   //  wTotalLength    = From offset 18 to end <---
@@ -82,9 +82,9 @@ __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_RNDIS_CONFIG_DESC_SIZ]  __ALIGN_END =
 	0x00,                              //  iConfiguration  = unused.
 	0x40,                              //  bmAttributes    = Self-Powered.
 	0x01,                              //  MaxPower        = x2mA
-	
+
 	//  Communication Class INTERFACE descriptor
-	
+
 	9,                                 //  bLength         = 9 bytes.
 	USB_INTERFACE_DESCRIPTOR_TYPE,     //  bDescriptorType = INTERFACE
 	0x00,                              // bInterfaceNo     = 0
@@ -94,47 +94,47 @@ __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_RNDIS_CONFIG_DESC_SIZ]  __ALIGN_END =
 	0x02,                              // bIfSubClass      = Comm if sub
 	0xff,                              // bIfProtocol      = Vendor specific
 	0x00,                              // iInterface       = unused
-	
+
 	//  Functional Descriptors for Communication Class Interface per RNDIS spec.
-	
+
 	// Header Functional Descriptor
 	0x05,                              // bFunctionLength
 	0x24,                              // bDescriptorType = CS Interface
 	0x00,                              // bDescriptorSubtype
 	0x10,                              // bcdCDC = 1.10
 	0x01,                              // bcdCDC = 1.10
-	
+
 	// Call Management Functional Descriptor
 	0x05,                              // bFunctionLength
 	0x24,                              // bDescriptorType = CS Interface
 	0x01,                              // bDescriptorSubtype = Call Management
 	0x00,                              // bmCapabilities
 	0x01,                              // bDataInterface
-	
+
 	// Abstract Control Management Functional Descriptor
 	0x04,                              // bFunctionLength
 	0x24,                              // bDescriptorType = CS Interface
 	0x02,                              // bDescriptorSubtype = Abstract Control Management
 	0x00,                              // bmCapabilities = Requests/notifications not supported
-	
+
 	// Union Functional Descriptor
 	0x05,                              // bFunctionLength
 	0x24,                              // bDescriptorType = CS Interface
 	0x06,                              // bDescriptorSubtype = Union
 	0x00,                              // bControlInterface = "RNDIS Communications Control"
 	0x01,                              // bSubordinateInterface0 = "RNDIS Ethernet Data"
-	
+
 	// Endpoint descriptors for Communication Class Interface
-	
+
 	7,                                 //  bLength         = 7 bytes
 	USB_ENDPOINT_DESCRIPTOR_TYPE,      //  bDescriptorType = ENDPOINT
 	RNDIS_NOTIFICATION_IN_EP,          //  bEndpointAddr   = IN - EP3
 	0x03,                              //  bmAttributes    = Interrupt endpoint
 	8, 0,                              //  wMaxPacketSize
 	80,                                //  bInterval       = 1 ms polling from host
-	
+
 	//  Data Class INTERFACE descriptor
-	
+
 	9,                                 //  bLength         = 9 bytes
 	USB_INTERFACE_DESCRIPTOR_TYPE,     //  bDescriptorType = INTERFACE
 	0x01,                              //  bInterfaceNo    = 1
@@ -144,16 +144,16 @@ __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_RNDIS_CONFIG_DESC_SIZ]  __ALIGN_END =
 	0x00,                              //  bIfSubClass     = unused
 	0x00,                              //  bIfProtocol     = unused
 	0x00,                              //  iInterface      = unused
-	
+
 	// Endpoint descriptors for Data Class Interface
-	
+
 	7,                                 //  bLength         = 7 bytes.
 	USB_ENDPOINT_DESCRIPTOR_TYPE,      //  bDescriptorType = ENDPOINT [IN]
 	RNDIS_DATA_IN_EP,                  //  bEndpointAddr   = IN EP
 	0x02,                              //  bmAttributes    = BULK
 	RNDIS_DATA_IN_SZ, 0,               //  wMaxPacketSize
 	0,                                 //  bInterval       = ignored for BULK.
-	
+
 	7,                                 //  bLength         = 7 bytes.
 	USB_ENDPOINT_DESCRIPTOR_TYPE,      //  bDescriptorType = ENDPOINT [OUT]
 	RNDIS_DATA_OUT_EP,                 //  bEndpointAddr   = OUT EP
@@ -179,7 +179,7 @@ static uint8_t  usbd_rndis_deinit(void  *pdev, uint8_t cfgidx)
   return USBD_OK;
 }
 
-const uint32_t OIDSupportedList[] = 
+const uint32_t OIDSupportedList[] =
 {
     OID_GEN_SUPPORTED_LIST,
     OID_GEN_HARDWARE_STATUS,
@@ -229,11 +229,11 @@ static uint8_t usbd_rndis_setup(void  *pdev, USB_SETUP_REQ *req)
         }
         else /* Host-to-Device requeset */
         {
-          USBD_CtlPrepareRx(pdev, encapsulated_buffer, req->wLength);          
+          USBD_CtlPrepareRx(pdev, encapsulated_buffer, req->wLength);
         }
       }
       return USBD_OK;
-      
+
     default:
 			return USBD_OK;
 //    USBD_CtlError (pdev, req);
@@ -325,13 +325,13 @@ void rndis_query(void  *pdev)
 
 void rndis_handle_config_parm(const char *data, int keyoffset, int valoffset, int keylen, int vallen)
 {
-//	if (strncmp(parmname, "rawmode", 7) == 0) 
+//	if (strncmp(parmname, "rawmode", 7) == 0)
 //	{
-//		if (parmvalue[0] == '0') 
+//		if (parmvalue[0] == '0')
 //		{
 //			usbstick_mode.raw = 0;
-//		} 
-//		else 
+//		}
+//		else
 //		{
 //			usbstick_mode.raw = 1;
 //		}
@@ -340,11 +340,11 @@ void rndis_handle_config_parm(const char *data, int keyoffset, int valoffset, in
 
 void rndis_packetFilter(uint32_t newfilter)
 {
-	if (newfilter & NDIS_PACKET_TYPE_PROMISCUOUS) 
+	if (newfilter & NDIS_PACKET_TYPE_PROMISCUOUS)
 	{
 //		USB_ETH_HOOK_SET_PROMISCIOUS_MODE(true);
-	} 
-	else 
+	}
+	else
 	{
 //		USB_ETH_HOOK_SET_PROMISCIOUS_MODE(false);
 	}
@@ -383,7 +383,7 @@ void rndis_handle_set_msg(void  *pdev)
 	i = 0;
 	while (parmlength > 0)
 	{
-		// Convert from uint16_t to char array. 
+		// Convert from uint16_t to char array.
 		parmname[i] = (char)*(PARMNAME + 2*i); // FSE! FIX IT!
 		parmlength -= 2;
 		i++;
@@ -415,8 +415,8 @@ void rndis_handle_set_msg(void  *pdev)
 			{
 				rndis_packetFilter(oid_packet_filter);
 				rndis_state = rndis_data_initialized;
-			} 
-			else 
+			}
+			else
 			{
 				rndis_state = rndis_initialized;
 			}
@@ -475,7 +475,7 @@ static uint8_t usbd_rndis_ep0_recv(void  *pdev)
 		case REMOTE_NDIS_QUERY_MSG:
 			rndis_query(pdev);
 			break;
-			
+
 		case REMOTE_NDIS_SET_MSG:
 			rndis_handle_set_msg(pdev);
 			break;

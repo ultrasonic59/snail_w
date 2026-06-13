@@ -5,7 +5,7 @@
   * @version V1.0.2
   * @date    06-June-2011
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -34,11 +34,9 @@ extern void xPortSysTickHandler(void);
 extern void usart1_irq(void);
 extern void usart2_irq(void);
 
-
 /******************************************************************************/
 /*            Cortex-M3 Processor Exceptions Handlers                         */
 /******************************************************************************/
-
 
 /**
   * @brief   This function handles NMI exception.
@@ -53,7 +51,6 @@ void NMI_Handler(void)
   }
 }
 
-
 void hard_fault_handler_c (unsigned int * hardfault_args)
 {
 #if 1
@@ -65,12 +62,12 @@ void hard_fault_handler_c (unsigned int * hardfault_args)
   volatile unsigned int stacked_lr;
   volatile unsigned int stacked_pc;
   volatile unsigned int stacked_psr;
- 
+
   stacked_r0 = ((unsigned long) hardfault_args[0]);
   stacked_r1 = ((unsigned long) hardfault_args[1]);
   stacked_r2 = ((unsigned long) hardfault_args[2]);
   stacked_r3 = ((unsigned long) hardfault_args[3]);
- 
+
   stacked_r12 = ((unsigned long) hardfault_args[4]);
   stacked_lr = ((unsigned long) hardfault_args[5]);
   stacked_pc = ((unsigned long) hardfault_args[6]);
@@ -93,7 +90,7 @@ void hard_fault_handler_c (unsigned int * hardfault_args)
   printf ("DFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED30))));
   printf ("AFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED3C))));
   printf ("SCB_SHCSR = %x\r\n", SCB->SHCSR);
- 
+
   while (1);
 #endif
 }
@@ -152,7 +149,7 @@ void UsageFault_Handler(void)
   */
 
 #ifndef USE_THREADX
-void SVC_Handler(void) 
+void SVC_Handler(void)
 {
   vPortSVCHandler();
 }
@@ -183,7 +180,7 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void) 
+void SysTick_Handler(void)
 {
   xPortSysTickHandler();
 }
@@ -222,12 +219,12 @@ void DMA2_Stream3_IRQHandler(void)
 }
 extern void usart1_tx_dma_irq(void);
 void DMA2_Stream7_IRQHandler(void)
-{ 
+{
 //// usart1_tx_dma_irq();
 }
 //// extern void usart1_rx_dma_irq(void);
 void DMA2_Stream2_IRQHandler(void)
-{ 
+{
 //// usart1_rx_dma_irq();
 }
 ////=============================
@@ -278,17 +275,13 @@ extern CanRxMsg RxMessage;
 #ifdef USEUSB
 
 #include "usb_core.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
+#include "usb_dcd_int.h"
 
 extern USB_OTG_CORE_HANDLE           USB_OTG_dev;
-extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-extern xQueueHandle q_usb_in;
 
 void OTG_FS_IRQHandler(void)
 {
-USBD_OTG_ISR_Handler(&USB_OTG_dev) ; 
+USBD_OTG_ISR_Handler(&USB_OTG_dev) ;
 }
 
 #endif /* USEUSB */

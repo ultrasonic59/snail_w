@@ -22,8 +22,7 @@
 #include "grbl.h"
 
 #ifdef USEUSB
-#include "FreeRTOS.h"
-#include "task.h"
+#include "tx_api.h"
 #endif
 
 #define RX_RING_BUFFER (RX_BUFFER_SIZE+1)
@@ -37,7 +36,6 @@ uint8_t serial_tx_buffer[TX_RING_BUFFER];
 uint8_t serial_tx_buffer_head = 0;
 volatile uint8_t serial_tx_buffer_tail = 0;
 
-
 // Returns the number of bytes available in the RX serial buffer.
 uint8_t serial_get_rx_buffer_available()
 {
@@ -45,7 +43,6 @@ uint8_t serial_get_rx_buffer_available()
   if (serial_rx_buffer_head >= rtail) { return(RX_BUFFER_SIZE - (serial_rx_buffer_head-rtail)); }
   return((rtail-serial_rx_buffer_head-1));
 }
-
 
 // Returns the number of bytes used in the RX serial buffer.
 // NOTE: Deprecated. Not used unless classic status reports are enabled in config.h.
@@ -56,7 +53,6 @@ uint8_t serial_get_rx_buffer_count()
   return (RX_BUFFER_SIZE - (rtail-serial_rx_buffer_head));
 }
 
-
 // Returns the number of bytes used in the TX serial buffer.
 // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
 uint8_t serial_get_tx_buffer_count()
@@ -66,12 +62,10 @@ uint8_t serial_get_tx_buffer_count()
   return (TX_RING_BUFFER - (ttail-serial_tx_buffer_head));
 }
 
-
 void serial_init()
 {
 
 }
-
 
 // Writes one byte to the TX serial buffer. Called by main program.
 void serial_write(uint8_t data) {
@@ -83,7 +77,7 @@ void serial_write(uint8_t data) {
     if (sys_rt_exec_state & EXEC_RESET) {
       return;
     }
-    taskYIELD();
+    tx_thread_relinquish();
     if (++wait > 8000U) {
       return;
     }
@@ -115,7 +109,6 @@ void serial_tx_unget(void)
   }
 }
 
-
 void serial_rx_push(uint8_t data)
 {
   uint8_t next_head = serial_rx_buffer_head + 1;
@@ -125,7 +118,6 @@ void serial_rx_push(uint8_t data)
     serial_rx_buffer_head = next_head;
   }
 }
-
 
 // Fetches the first byte in the serial read buffer. Called by main program.
 uint8_t serial_read()
@@ -143,7 +135,6 @@ uint8_t serial_read()
     return data;
   }
 }
-
 
 void serial_reset_read_buffer()
 {

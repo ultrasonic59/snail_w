@@ -231,7 +231,6 @@ typedef void (*stream_write_ptr)(const char *s);
 */
 typedef void (*stream_write_n_ptr)(const uint8_t *s, uint16_t len);
 
-
 /*! \brief Pointer to function for writing a single character to the output stream.
 \param c the character to write.
 */
@@ -258,7 +257,6 @@ __NOTE:__ Stream implementations should pass the character over the current hand
 User or plugin code should __not__ enqueue realtime command characters via this handler, it should call \a grbl.enqueue_realtime_command() instead.
 */
 typedef bool (*enqueue_realtime_command2_ptr)(uint8_t c);
-
 
 /*! \brief Pointer to function for setting the enqueue realtime commands handler.
 \param handler a \a enqueue_realtime_command_ptr pointer to the new handler function.

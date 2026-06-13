@@ -1,5 +1,5 @@
 #pragma once
-#include <intrinsics.h> 
+#include <intrinsics.h>
 /*
  * IAR specific functions for IRQ disable/enable
  */
@@ -17,4 +17,3 @@ static inline void atomic_end(atomic_t a)
 {
 	__set_interrupt_state(a);
 }
-

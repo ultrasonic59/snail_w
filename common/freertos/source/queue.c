@@ -47,7 +47,6 @@ for the header files above, but not in this file, in order to generate the
 correct privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750 !e9021. */
 
-
 /* Constants used with the cRxLock and cTxLock structure members. */
 #define queueUNLOCKED					( ( int8_t ) -1 )
 #define queueLOCKED_UNMODIFIED			( ( int8_t ) 0 )
@@ -759,7 +758,6 @@ Queue_t * const pxQueue = xQueue;
 	}
 	#endif
 
-
 	/*lint -save -e904 This function relaxes the coding standard somewhat to
 	allow return statements within the function itself.  This is done in the
 	interest of execution time efficiency. */
@@ -1290,7 +1288,6 @@ Queue_t * const pxQueue = xQueue;
 	}
 	#endif
 
-
 	/*lint -save -e904  This function relaxes the coding standard somewhat to
 	allow return statements within the function itself.  This is done in the
 	interest of execution time efficiency. */
@@ -1434,7 +1431,6 @@ Queue_t * const pxQueue = xQueue;
 		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	}
 	#endif
-
 
 	/*lint -save -e904 This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
@@ -1649,7 +1645,6 @@ Queue_t * const pxQueue = xQueue;
 		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	}
 	#endif
-
 
 	/*lint -save -e904  This function relaxes the coding standard somewhat to
 	allow return statements within the function itself.  This is done in the
@@ -2927,15 +2922,3 @@ Queue_t * const pxQueue = xQueue;
 	}
 
 #endif /* configUSE_QUEUE_SETS */
-
-
-
-
-
-
-
-
-
-
-
-

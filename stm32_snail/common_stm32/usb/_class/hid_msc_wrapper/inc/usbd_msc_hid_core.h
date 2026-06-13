@@ -16,14 +16,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -35,66 +35,62 @@
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-  
+
 /** @defgroup USBD_HID
   * @brief This file is the Header file for USBD_msc.c
   * @{
-  */ 
+  */
 #define HID_INTERFACE 0x0
 #define MSC_INTERFACE 0x1
 
 /** @defgroup USBD_HID_Exported_Defines
   * @{
-  */ 
+  */
 #define USB_MSC_HID_CONFIG_DESC_SIZ  (USB_HID_CONFIG_DESC_SIZ -9 + USB_MSC_CONFIG_DESC_SIZ)
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_CORE_Exported_TypesDefinitions
   * @{
   */
 
-
 /**
   * @}
-  */ 
-
-
+  */
 
 /** @defgroup USBD_CORE_Exported_Macros
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_CORE_Exported_Variables
   * @{
-  */ 
+  */
 
 extern USBD_Class_cb_TypeDef  USBD_MSC_HID_cb;
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USB_CORE_Exported_Functions
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 #endif  /* __USB_HID_CORE_H_ */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

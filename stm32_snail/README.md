@@ -208,7 +208,7 @@ MOT_STEP_TIM->CCR1 = per;
 period_timer_ticks ≈ step_per * CAN_STEP_PER_PRESCALE   // PRESCALE = 64
 ```
 
-В логе slave `per` печатается **в hex** (`printk("…%x…", per)`), в CAN-логе master — **в decimal**.  
+В логе slave `per` печатается **в hex** (`printk("…%x…", per)`), в CAN-логе master — **в decimal**.
 Пример: `per=750` на slave = `0x750` = **1872** decimal — это одно и то же значение `step_per`.
 
 ### Число шагов на slave

@@ -8,9 +8,9 @@
  * Copyright (C) 2009-2011 ARM Limited. All rights reserved.
  *
  * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -24,9 +24,8 @@
 #ifndef __CORE_CMFUNC_H
 #define __CORE_CMFUNC_H
 
-
 /* ###########################  Core Function Access  ########################### */
-/** \ingroup  CMSIS_Core_FunctionInterface   
+/** \ingroup  CMSIS_Core_FunctionInterface
     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
   @{
  */
@@ -53,7 +52,6 @@ static __INLINE uint32_t __get_CONTROL(void)
   return(__regControl);
 }
 
-
 /** \brief  Set Control Register
 
     This function writes the given value to the Control Register.
@@ -65,7 +63,6 @@ static __INLINE void __set_CONTROL(uint32_t control)
   register uint32_t __regControl         __ASM("control");
   __regControl = control;
 }
-
 
 /** \brief  Get ISPR Register
 
@@ -79,7 +76,6 @@ static __INLINE uint32_t __get_IPSR(void)
   return(__regIPSR);
 }
 
-
 /** \brief  Get APSR Register
 
     This function returns the content of the APSR Register.
@@ -91,7 +87,6 @@ static __INLINE uint32_t __get_APSR(void)
   register uint32_t __regAPSR          __ASM("apsr");
   return(__regAPSR);
 }
-
 
 /** \brief  Get xPSR Register
 
@@ -105,7 +100,6 @@ static __INLINE uint32_t __get_xPSR(void)
   return(__regXPSR);
 }
 
-
 /** \brief  Get Process Stack Pointer
 
     This function returns the current value of the Process Stack Pointer (PSP).
@@ -117,7 +111,6 @@ static __INLINE uint32_t __get_PSP(void)
   register uint32_t __regProcessStackPointer  __ASM("psp");
   return(__regProcessStackPointer);
 }
-
 
 /** \brief  Set Process Stack Pointer
 
@@ -131,7 +124,6 @@ static __INLINE void __set_PSP(uint32_t topOfProcStack)
   __regProcessStackPointer = topOfProcStack;
 }
 
-
 /** \brief  Get Main Stack Pointer
 
     This function returns the current value of the Main Stack Pointer (MSP).
@@ -143,7 +135,6 @@ static __INLINE uint32_t __get_MSP(void)
   register uint32_t __regMainStackPointer     __ASM("msp");
   return(__regMainStackPointer);
 }
-
 
 /** \brief  Set Main Stack Pointer
 
@@ -157,7 +148,6 @@ static __INLINE void __set_MSP(uint32_t topOfMainStack)
   __regMainStackPointer = topOfMainStack;
 }
 
-
 /** \brief  Get Priority Mask
 
     This function returns the current state of the priority mask bit from the Priority Mask Register.
@@ -170,7 +160,6 @@ static __INLINE uint32_t __get_PRIMASK(void)
   return(__regPriMask);
 }
 
-
 /** \brief  Set Priority Mask
 
     This function assigns the given value to the Priority Mask Register.
@@ -182,7 +171,6 @@ static __INLINE void __set_PRIMASK(uint32_t priMask)
   register uint32_t __regPriMask         __ASM("primask");
   __regPriMask = (priMask);
 }
- 
 
 #if       (__CORTEX_M >= 0x03)
 
@@ -193,14 +181,12 @@ static __INLINE void __set_PRIMASK(uint32_t priMask)
  */
 #define __enable_fault_irq                __enable_fiq
 
-
 /** \brief  Disable FIQ
 
     This function disables FIQ interrupts by setting the F-bit in the CPSR.
     Can only be executed in Privileged modes.
  */
 #define __disable_fault_irq               __disable_fiq
-
 
 /** \brief  Get Base Priority
 
@@ -214,7 +200,6 @@ static __INLINE uint32_t  __get_BASEPRI(void)
   return(__regBasePri);
 }
 
-
 /** \brief  Set Base Priority
 
     This function assigns the given value to the Base Priority register.
@@ -226,7 +211,6 @@ static __INLINE void __set_BASEPRI(uint32_t basePri)
   register uint32_t __regBasePri         __ASM("basepri");
   __regBasePri = (basePri & 0xff);
 }
- 
 
 /** \brief  Get Fault Mask
 
@@ -239,7 +223,6 @@ static __INLINE uint32_t __get_FAULTMASK(void)
   register uint32_t __regFaultMask       __ASM("faultmask");
   return(__regFaultMask);
 }
-
 
 /** \brief  Set Fault Mask
 
@@ -254,7 +237,6 @@ static __INLINE void __set_FAULTMASK(uint32_t faultMask)
 }
 
 #endif /* (__CORTEX_M >= 0x03) */
-
 
 #if       (__CORTEX_M == 0x04)
 
@@ -274,7 +256,6 @@ static __INLINE uint32_t __get_FPSCR(void)
 #endif
 }
 
-
 /** \brief  Set FPSCR
 
     This function assigns the given value to the Floating Point Status/Control register.
@@ -290,7 +271,6 @@ static __INLINE void __set_FPSCR(uint32_t fpscr)
 }
 
 #endif /* (__CORTEX_M == 0x04) */
-
 
 #elif defined ( __ICCARM__ ) /*------------------ ICC Compiler -------------------*/
 /* IAR iccarm specific functions */
@@ -310,7 +290,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __enable_irq(void)
   __ASM volatile ("cpsie i");
 }
 
-
 /** \brief  Disable IRQ Interrupts
 
   This function disables IRQ interrupts by setting the I-bit in the CPSR.
@@ -320,7 +299,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __disable_irq(void)
 {
   __ASM volatile ("cpsid i");
 }
-
 
 /** \brief  Get Control Register
 
@@ -336,7 +314,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_CONTROL(void)
   return(result);
 }
 
-
 /** \brief  Set Control Register
 
     This function writes the given value to the Control Register.
@@ -347,7 +324,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_CONTROL(uint32_t c
 {
   __ASM volatile ("MSR control, %0" : : "r" (control) );
 }
-
 
 /** \brief  Get ISPR Register
 
@@ -363,7 +339,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_IPSR(void)
   return(result);
 }
 
-
 /** \brief  Get APSR Register
 
     This function returns the content of the APSR Register.
@@ -377,7 +352,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_APSR(void)
   __ASM volatile ("MRS %0, apsr" : "=r" (result) );
   return(result);
 }
-
 
 /** \brief  Get xPSR Register
 
@@ -393,7 +367,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_xPSR(void)
   return(result);
 }
 
-
 /** \brief  Get Process Stack Pointer
 
     This function returns the current value of the Process Stack Pointer (PSP).
@@ -407,7 +380,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_PSP(void)
   __ASM volatile ("MRS %0, psp\n"  : "=r" (result) );
   return(result);
 }
- 
 
 /** \brief  Set Process Stack Pointer
 
@@ -419,7 +391,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_PSP(uint32_t topOf
 {
   __ASM volatile ("MSR psp, %0\n" : : "r" (topOfProcStack) );
 }
-
 
 /** \brief  Get Main Stack Pointer
 
@@ -434,7 +405,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_MSP(void)
   __ASM volatile ("MRS %0, msp\n" : "=r" (result) );
   return(result);
 }
- 
 
 /** \brief  Set Main Stack Pointer
 
@@ -446,7 +416,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_MSP(uint32_t topOf
 {
   __ASM volatile ("MSR msp, %0\n" : : "r" (topOfMainStack) );
 }
-
 
 /** \brief  Get Priority Mask
 
@@ -462,7 +431,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_PRIMASK(void)
   return(result);
 }
 
-
 /** \brief  Set Priority Mask
 
     This function assigns the given value to the Priority Mask Register.
@@ -473,7 +441,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_PRIMASK(uint32_t p
 {
   __ASM volatile ("MSR primask, %0" : : "r" (priMask) );
 }
- 
 
 #if       (__CORTEX_M >= 0x03)
 
@@ -487,7 +454,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __enable_fault_irq(void)
   __ASM volatile ("cpsie f");
 }
 
-
 /** \brief  Disable FIQ
 
     This function disables FIQ interrupts by setting the F-bit in the CPSR.
@@ -498,7 +464,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __disable_fault_irq(void
   __ASM volatile ("cpsid f");
 }
 
-
 /** \brief  Get Base Priority
 
     This function returns the current value of the Base Priority register.
@@ -508,11 +473,10 @@ __attribute__( ( always_inline ) ) static __INLINE void __disable_fault_irq(void
 __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_BASEPRI(void)
 {
   uint32_t result;
-  
+
   __ASM volatile ("MRS %0, basepri_max" : "=r" (result) );
   return(result);
 }
-
 
 /** \brief  Set Base Priority
 
@@ -525,7 +489,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_BASEPRI(uint32_t v
   __ASM volatile ("MSR basepri, %0" : : "r" (value) );
 }
 
-
 /** \brief  Get Fault Mask
 
     This function returns the current value of the Fault Mask register.
@@ -535,11 +498,10 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_BASEPRI(uint32_t v
 __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_FAULTMASK(void)
 {
   uint32_t result;
-  
+
   __ASM volatile ("MRS %0, faultmask" : "=r" (result) );
   return(result);
 }
-
 
 /** \brief  Set Fault Mask
 
@@ -553,7 +515,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_FAULTMASK(uint32_t
 }
 
 #endif /* (__CORTEX_M >= 0x03) */
-
 
 #if       (__CORTEX_M == 0x04)
 
@@ -575,7 +536,6 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_FPSCR(void)
 #endif
 }
 
-
 /** \brief  Set FPSCR
 
     This function assigns the given value to the Floating Point Status/Control register.
@@ -591,7 +551,6 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_FPSCR(uint32_t fps
 
 #endif /* (__CORTEX_M == 0x04) */
 
-
 #elif defined ( __TASKING__ ) /*------------------ TASKING Compiler --------------*/
 /* TASKING carm specific functions */
 
@@ -604,6 +563,5 @@ __attribute__( ( always_inline ) ) static __INLINE void __set_FPSCR(uint32_t fps
 #endif
 
 /*@} end of CMSIS_Core_RegAccFunctions */
-
 
 #endif /* __CORE_CMFUNC_H */

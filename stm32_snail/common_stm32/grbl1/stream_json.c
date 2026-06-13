@@ -74,7 +74,6 @@ static bool add_tag (json_out_t *json, const char *tag)
     return ok;
 }
 
-
 bool json_start_object (json_out_t *json)
 {
     if(json->level < json->max_level) {

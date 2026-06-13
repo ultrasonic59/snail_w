@@ -5,7 +5,7 @@
   * @version V1.0.2
   * @date    06-June-2011
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -42,11 +42,9 @@ extern void sdio_irq(void);
 ///extern void usart1_tx_dma_irq(void);
 ///extern void usart6_irq();
 
-
 /******************************************************************************/
 /*            Cortex-M3 Processor Exceptions Handlers                         */
 /******************************************************************************/
-
 
 /**
   * @brief   This function handles NMI exception.
@@ -61,7 +59,6 @@ void NMI_Handler(void)
   }
 }
 
-
 void hard_fault_handler_c (unsigned int * hardfault_args)
 {
 #if 1
@@ -73,12 +70,12 @@ void hard_fault_handler_c (unsigned int * hardfault_args)
   volatile unsigned int stacked_lr;
   volatile unsigned int stacked_pc;
   volatile unsigned int stacked_psr;
- 
+
   stacked_r0 = ((unsigned long) hardfault_args[0]);
   stacked_r1 = ((unsigned long) hardfault_args[1]);
   stacked_r2 = ((unsigned long) hardfault_args[2]);
   stacked_r3 = ((unsigned long) hardfault_args[3]);
- 
+
   stacked_r12 = ((unsigned long) hardfault_args[4]);
   stacked_lr = ((unsigned long) hardfault_args[5]);
   stacked_pc = ((unsigned long) hardfault_args[6]);
@@ -101,7 +98,7 @@ void hard_fault_handler_c (unsigned int * hardfault_args)
   printf ("DFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED30))));
   printf ("AFSR = %x\r\n", (*((volatile unsigned long *)(0xE000ED3C))));
   printf ("SCB_SHCSR = %x\r\n", SCB->SHCSR);
- 
+
   while (1);
 #endif
 }
@@ -159,7 +156,7 @@ void UsageFault_Handler(void)
   * @retval None
   */
 
-void SVC_Handler(void) 
+void SVC_Handler(void)
 {
   vPortSVCHandler();
 }
@@ -188,10 +185,10 @@ extern void user_tick_hnd(void);
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void) 
+void SysTick_Handler(void)
 {
   xPortSysTickHandler();
-  
+
 }
 
 /******************************************************************************/
@@ -227,24 +224,24 @@ void DMA2_Stream3_IRQHandler(void)
 sdio_dma_irq();
 }
 void USART1_IRQHandler(void)
-{  
+{
 usart1_irq();
 }
 extern void usart1_tx_dma_irq(void);
 void DMA2_Stream7_IRQHandler(void)
-{ 
+{
 usart1_tx_dma_irq();
 }
 extern void usart1_rx_dma_irq(void);
 void DMA2_Stream2_IRQHandler(void)
-{ 
+{
 usart1_rx_dma_irq();
 }
 ////=============================
 #if 0
 /*Bluretooth UART API */
 void DMA2_Stream1_IRQHandler(void)
-{ 
+{
 ////  usart6_rx_dma_irq();
 }
 
@@ -254,7 +251,7 @@ void DMA2_Stream6_IRQHandler(void)
 }
 
 void USART6_IRQHandler(void)
-{  
+{
  ////   usart6_irq();
 }
 #endif
@@ -297,40 +294,36 @@ void EXTI15_10_IRQHandler(void)
 }
 ///==================================================
 #include "usb_core.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
 
 extern USB_OTG_CORE_HANDLE           USB_OTG_dev;
 ////extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 extern void my_USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
 extern uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 extern uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 #endif
-extern xQueueHandle q_usb_in;
 ////USB_OTG_CORE_HANDLE           *pUSB_OTG_dev;
 /**
 * @brief  This function handles OTG_HS Handler.
 * @param  None
 * @retval None
 */
-#ifdef USE_USB_OTG_HS  
+#ifdef USE_USB_OTG_HS
 void OTG_HS_IRQHandler(void)
 #else
 void OTG_FS_IRQHandler(void)
 #endif
 {
 /// my_USBD_OTG_ISR_Handler (&USB_OTG_dev);
-#if 1  
+#if 1
 ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 ///pUSB_OTG_dev=&USB_OTG_dev;
 ////xQueueSendFromISR(q_usb_in, &pUSB_OTG_dev, &xHigherPriorityTaskWoken);
 my_USBD_OTG_ISR_Handler (&USB_OTG_dev);
-#endif  
+#endif
 }
 
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
 /**
 * @brief  This function handles EP1_IN Handler.
 * @param  None

@@ -1,7 +1,6 @@
 #ifndef __PRINTK_H__
 #define __PRINTK_H__
 
-
 #define __DEBUG
 
 ////=============================================
@@ -14,16 +13,12 @@
   #define printk	_printk_dummy1
 #endif
 #endif
-  
-#if 0  
+
+#if 0
 #include <stdio.h>
-  
+
 #define _printk	printf
 #define printk	printf
 #endif
 ////=============================================
 #endif ////__PRINTK_H__
-
-
-
-	

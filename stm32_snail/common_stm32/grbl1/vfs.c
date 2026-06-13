@@ -215,7 +215,7 @@ vfs_events_t vfs = {0};
 
 static vfs_mount_t *get_rootfs (void)
 {
-    return &root;    
+    return &root;
 }
 
 // Strip trailing directory separator, FatFS dont't like it (WinSCP adds it)

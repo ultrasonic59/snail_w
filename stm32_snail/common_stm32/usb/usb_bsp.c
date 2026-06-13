@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.2.0
   * @date    09-November-2015
-  * @brief   This file is responsible to offer board support package and is 
+  * @brief   This file is responsible to offer board support package and is
   *          configurable by user.
   ******************************************************************************
   * @attention
@@ -17,25 +17,21 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 
   #include "stm32f2xx.h"
   #include "stm32f2xx_conf.h"
 #include "usb_bsp.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
-
-
+#include "board.h"
 
 /**
 * @brief  USB_OTG_BSP_Init
@@ -46,31 +42,30 @@
 
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;    
-  
-  RCC_AHB1PeriphClockCmd( RCC_AHB1Periph_GPIOA , ENABLE);  
-  
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  RCC_AHB1PeriphClockCmd( RCC_AHB1Periph_GPIOA , ENABLE);
+
    /* Configure SOF ID DM DP Pins */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | 
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 |
                                 GPIO_Pin_12;
-  
+
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);  
-  
-  GPIO_PinAFConfig(GPIOA,GPIO_PinSource11,GPIO_AF_OTG1_FS) ; 
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  GPIO_PinAFConfig(GPIOA,GPIO_PinSource11,GPIO_AF_OTG1_FS) ;
   GPIO_PinAFConfig(GPIOA,GPIO_PinSource12,GPIO_AF_OTG1_FS) ;
-   
+
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_OTG_FS, ENABLE) ; 
- 
-  
+  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_OTG_FS, ENABLE) ;
+
   /* enable the PWR clock */
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);   
-  
- //// EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);  
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+
+ //// EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
 }
 /**
 * @brief  USB_OTG_BSP_EnableInterrupt
@@ -80,14 +75,14 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 */
 void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 {
-  NVIC_InitTypeDef NVIC_InitStructure; 
-  
+  NVIC_InitTypeDef NVIC_InitStructure;
+
 ////  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  NVIC_InitStructure.NVIC_IRQChannel = OTG_FS_IRQn;  
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;///0x6;
+  NVIC_InitStructure.NVIC_IRQChannel = OTG_FS_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = APP_NVIC_LOW_IRQ_PRIORITY;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;///3;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);  
+  NVIC_Init(&NVIC_InitStructure);
 }
 /**
 * @brief  USB_OTG_BSP_uDelay
@@ -109,7 +104,6 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
   while (1);
 }
 
-
 /**
 * @brief  USB_OTG_BSP_mDelay
 *          This function provides delay time in milli sec
@@ -118,7 +112,7 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
 */
 void USB_OTG_BSP_mDelay (const uint32_t msec)
 {
-  USB_OTG_BSP_uDelay(msec * 1000);   
+  USB_OTG_BSP_uDelay(msec * 1000);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

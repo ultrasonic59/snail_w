@@ -1,10 +1,10 @@
-#include "rtos_compat.h"
+#include "tx_api.h"
 #include "board.h"
 #include "emul_eeprom.h"
 
 uint8_t boot_state = BOOTER_NO_BOOT;
 uint16_t cur_conf = 0;
-TaskHandle_t can_send_thread_handle;
+TX_THREAD *can_send_thread_handle;
 
 uint16_t VirtAddVarTab[NB_OF_VAR] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF,

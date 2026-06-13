@@ -106,7 +106,6 @@ typedef struct MPU_SETTINGS
 	xMPU_REGION_REGISTERS xRegion[ portTOTAL_NUM_REGIONS ];
 } xMPU_SETTINGS;
 
-
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
@@ -225,4 +224,3 @@ warnings. */
 #endif
 
 #endif /* PORTMACRO_H */
-

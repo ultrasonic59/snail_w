@@ -1,6 +1,5 @@
 #include <string.h>
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "board.h"
 
 #include "can.h"
 #include "can_cmds.h"
@@ -17,8 +16,8 @@ uint8_t ena_check_conc=0;
 void CAN_Config(void);
 
 ///=============================
-int send_char_dbg (int c) 
-{ 
+int send_char_dbg (int c)
+{
 while (!(UART_DBG->SR & 0x0080));
 UART_DBG->DR = (c & 0x1FF);
 return (c);
@@ -28,14 +27,14 @@ void _putk(char ch)
 send_char_dbg(ch);
 }
 
-int get_byte_dbg (void) 
+int get_byte_dbg (void)
 {
 while (!(UART_DBG->SR & USART_SR_RXNE));
 return (UART_DBG->DR);
 }
 int check_push_key_dbg(void)
 {
-return  (UART_DBG->SR & USART_SR_RXNE); 
+return  (UART_DBG->SR & USART_SR_RXNE);
 }
 
 void init_gpio(void)
@@ -118,8 +117,8 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
 ///GPIO_PinAFConfig(TST8_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
-  
-////=========== DBG_UART =================================================== 
+
+////=========== DBG_UART ===================================================
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -133,7 +132,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(UART_DBG_TX_GPIO, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 ////=============== MOT_ENA ============================
@@ -247,7 +246,6 @@ USART_Cmd(UART_DBG, ENABLE);
 
 ////==================================================
 
-
 ///===========================================================
 volatile uint32_t gsr;
 
@@ -274,7 +272,7 @@ void hw_board_init(void)
 {
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
-UART_DBG_Init(); 
+UART_DBG_Init();
 init_can();
 I2C_Eeprom_Init();
 I2C_encoder_Init();
@@ -314,13 +312,13 @@ uint8_t t_led=0;
 
 void state_task( void *pvParameters )
 {
-  uint8_t tmp; 
-int32_t prev_coord=0xffffffff;  
-uint8_t prev_state=0xff; 
-printk("\n\r state_task"); 
+  uint8_t tmp;
+int32_t prev_coord=0xffffffff;
+uint8_t prev_state=0xff;
+printk("\n\r state_task");
 for(;;)
   {
-  tmp=get_conc_n();  
+  tmp=get_conc_n();
   tmp<<=4;
   cur_state&= ~CONC_MASK;
   cur_state |= tmp;
@@ -344,15 +342,15 @@ for(;;)
   }
 
 }
-////========================================================  
+////========================================================
 void tst1_task( void *pvParameters )
 {
-////uint8_t btst=0; 
-uint32_t t_coord=0;  
-uint8_t t_stat=0x8; 
+////uint8_t btst=0;
+uint32_t t_coord=0;
+uint8_t t_stat=0x8;
 
-////uint8_t ii=0; 
-printk("\n\r tst1_task"); 
+////uint8_t ii=0;
+printk("\n\r tst1_task");
 ///=======================================
 #if 0
 can_msg_t  send_msg;
@@ -365,7 +363,7 @@ send_msg.format=STANDARD_FORMAT;
 send_msg.type=DATA_FRAME;
 t_go_cmd.steps=10;
 memcpy(send_msg.data,&t_go_cmd,sizeof(go_cmd_t));
-send_msg.id=ID_BRD; 
+send_msg.id=ID_BRD;
 #endif
 ///============================================
 #if 0
@@ -374,7 +372,7 @@ for(;;)
   if( CAN_RxRdy)
     {
     CAN_RxRdy=0;
-    printk("\n\r can_rx"); 
+    printk("\n\r can_rx");
     printk("\n\r ExtId[%x]",CAN_RxMsg.id);
     printk("\n\r DLC[%x]\n\r ",CAN_RxMsg.len);
     for(ii=0;ii<8;ii++)
@@ -392,29 +390,29 @@ for(;;)
 for(;;)
   {
   put_can_cmd_stat(t_stat,t_coord);
-   
-   t_coord++; 
+
+   t_coord++;
     msleep(20);
   }
 }
 ////=======================================================
 void tst_task( void *pvParameters )
 {
-///uint8_t btst=0; 
+///uint8_t btst=0;
 char key=0;
-printk("\n\r tst_task"); 
- 
+printk("\n\r tst_task");
+
 for(;;)
 {
 if(check_push_key_dbg())
   {
-  key=get_byte_dbg() ; 
-      printk("\n\r [%]", key); 
-  } 
+  key=get_byte_dbg() ;
+      printk("\n\r [%]", key);
+  }
 msleep(10);
 }
 }
-	
+
 void  set_ms1(uint8_t idat)
 {
 if(idat&0x1)

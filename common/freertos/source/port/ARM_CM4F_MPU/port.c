@@ -724,24 +724,3 @@ uint32_t ul;
 	}
 
 #endif /* configASSERT_DEFINED */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

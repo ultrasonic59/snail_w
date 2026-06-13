@@ -473,7 +473,7 @@ static char spindle_types[100] = "";
 static char axis_dist[4] = "mm";
 static char axis_rate[8] = "mm/min";
 static char axis_accel[10] = "mm/sec^2";
-#if ENABLE_JERK_ACCELERATION   
+#if ENABLE_JERK_ACCELERATION
 static char axis_jerk[10] = "mm/sec^3";
 #endif
 #if DELTA_ROBOT
@@ -1213,7 +1213,7 @@ static const char *set_axis_setting_unit (setting_id_t setting_id, uint_fast8_t 
             unit = is_rotary ? "deg/sec^2" : "mm/sec^2";
             break;
 
-#if ENABLE_JERK_ACCELERATION   
+#if ENABLE_JERK_ACCELERATION
         case Setting_AxisJerk:
             unit = is_rotary ? "deg/sec^3" : "mm/sec^3";
             break;
@@ -1353,11 +1353,11 @@ FLASHMEM static status_code_t set_axis_setting (setting_id_t setting, float valu
             settings.axis[idx].acceleration = override_backup.acceleration[idx] = value * 60.0f * 60.0f; // Convert to mm/min^2 for internal use.
             break;
 
-#if ENABLE_JERK_ACCELERATION      
+#if ENABLE_JERK_ACCELERATION
         case Setting_AxisJerk:
             settings.axis[idx].jerk = override_backup.jerk[idx] = value * 60.0f * 60.0f * 60.0f; // Convert to mm/min^3 for internal use.
             break;
-#endif            
+#endif
 
         case Setting_AxisMaxTravel:
             if(settings.axis[idx].max_travel != -value) {
@@ -1456,7 +1456,7 @@ FLASHMEM static float get_float (setting_id_t setting)
                 value = settings.axis[idx].homing_seek_rate;
                 break;
 
-#if ENABLE_JERK_ACCELERATION          
+#if ENABLE_JERK_ACCELERATION
             case Setting_AxisJerk:
                 value = settings.axis[idx].jerk / (60.0f * 60.0f * 60.0f); // Convert from mm/min^3 to mm/sec^3.
                 break;
@@ -2363,7 +2363,7 @@ PROGMEM static const setting_descr_t setting_descr[] = {
     { (setting_id_t)(Setting_AxisStepsPerMM + 1), "Travel resolution in steps per degree." }, // "Hack" to get correct description for rotary axes
     { Setting_AxisMaxRate, "Maximum rate. Used as G0 rapid rate." },
     { Setting_AxisAcceleration, "Acceleration. Used for motion planning to not exceed motor torque and lose steps." },
-#if ENABLE_JERK_ACCELERATION   
+#if ENABLE_JERK_ACCELERATION
     { Setting_AxisJerk, "Maximum rate of acceleration change - smoothes out acceleration profile up to max axis acceleration.\\n\\n"
                         "Minimum value of x10 Acceleration setting to ensure decent acceleration times.\\n"
                         "Maximum is calculated by current acceleration and stepper segment time.\\n"

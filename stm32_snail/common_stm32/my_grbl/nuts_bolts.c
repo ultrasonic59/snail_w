@@ -21,9 +21,7 @@
 
 #include "my_grbl.h"
 
-
 #define MAX_INT_DIGITS 8 // Maximum number of digits in int32 (and float)
-
 
 // Extracts a floating point value from a string. The following code is based loosely on
 // the avr-libc strtod() function by Michael Stumpf and Dmitry Xmelkov and many freely
@@ -107,7 +105,6 @@ uint8_t read_float(char *line, uint8_t *char_counter, float *float_ptr)
   return(true);
 }
 
-
 // Non-blocking delay function used for general operation and suspend features.
 void delay_sec(float seconds, uint8_t mode)
 {
@@ -125,7 +122,6 @@ void delay_sec(float seconds, uint8_t mode)
 	}
 }
 
-
 // Delays variable defined milliseconds. Compiler compatibility fix for _delay_ms(),
 // which only accepts constants in future compiler releases.
 void delay__ms(uint16_t ms)
@@ -133,10 +129,8 @@ void delay__ms(uint16_t ms)
   while ( ms-- ) { _delay_ms(1); }
 }
 
-
 // Simple hypotenuse computation function.
 float hypot_f(float x, float y) { return(sqrtf(x*x + y*y)); }
-
 
 float convert_delta_vector_to_unit_vector(float *vector)
 {
@@ -152,7 +146,6 @@ float convert_delta_vector_to_unit_vector(float *vector)
   for (idx=0; idx<N_AXIS; idx++) { vector[idx] *= inv_magnitude; }
   return(magnitude);
 }
-
 
 float limit_value_by_axis_maximum(float *max_value, float *unit_vec)
 {

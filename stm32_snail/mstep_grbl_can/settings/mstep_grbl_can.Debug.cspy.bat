@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_grbl_can\settings\mstep_grbl_can.Debug.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_grbl_can\settings\mstep_grbl_can.Debug.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\grbl_can\mstep_grbl_can\settings\mstep_grbl_can.Debug.general.xcl" --backend -f "D:\proj\grbl_can\mstep_grbl_can\settings\mstep_grbl_can.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_grbl_can\settings\mstep_grbl_can.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_grbl_can\settings\mstep_grbl_can.Debug.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\grbl_can\mstep_grbl_can\settings\mstep_grbl_can.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\grbl_can\mstep_grbl_can\settings\mstep_grbl_can.Debug.driver.xcl" 
 
 @echo off 
 :end

@@ -809,7 +809,6 @@ ISR_CODE bool ISR_FUNC(task_run_on_reset)(foreground_task_ptr fn, void *data)
     return task != NULL;
 }
 
-
 /*! \brief Enqueue a function to be called once by the foreground process after the boot sequence is completed.
 \param fn pointer to a \a foreground_task_ptr type of function.
 \param data pointer to data to be passed to the callee.

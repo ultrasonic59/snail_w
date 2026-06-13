@@ -271,13 +271,11 @@ void plan_discard_current_block (void)
     }
 }
 
-
 // Returns address of planner buffer block used by system motions. Called by segment generator.
 plan_block_t *plan_get_system_motion_block (void)
 {
     return block_buffer.head;
 }
-
 
 // Returns address of first planner block, if available. Called by various main program functions.
 plan_block_t *plan_get_current_block (void)
@@ -285,13 +283,11 @@ plan_block_t *plan_get_current_block (void)
     return block_buffer.head == block_buffer.tail ? NULL : block_buffer.tail;
 }
 
-
 // Returns address of the last block added, if available. Called by the grblHAL simulator.
 plan_block_t *plan_get_recent_block (void)
 {
     return block_buffer.head == block_buffer.tail ? NULL : block_buffer.head->prev;
 }
-
 
 inline float plan_get_exec_block_exit_speed_sqr (void)
 {
@@ -299,13 +295,11 @@ inline float plan_get_exec_block_exit_speed_sqr (void)
     return block == block_buffer.head ? 0.0f : block->entry_speed_sqr;
 }
 
-
 // Returns the availability status of the block ring buffer. True, if full.
 bool plan_check_full_buffer (void)
 {
     return block_buffer.tail == block_buffer.next_head;
 }
-
 
 // Computes and returns block nominal speed based on running condition and override values.
 // NOTE: All system motion commands, such as homing/parking, are not subject to overrides.
@@ -330,7 +324,6 @@ float plan_compute_profile_nominal_speed (plan_block_t *block)
 // TODO: if nominal speed is outside bounds when synchronized motion is on then (?? retract and) abort, ignore overrides?
     return nominal_speed > MINIMUM_FEED_RATE ? nominal_speed : MINIMUM_FEED_RATE;
 }
-
 
 // Computes and updates the max entry speed (sqr) of the block, based on the minimum of the junction's
 // previous and current nominal speeds and max junction speed.
@@ -384,7 +377,6 @@ static inline float limit_max_rate_by_axis_maximum (float *unit_vec)
 
     return limit_value;
 }
-
 
 /* Add a new linear movement to the buffer. target[N_AXIS] is the signed, absolute target position
    in millimeters. Feed rate specifies the speed of the motion. If feed rate is inverted, the feed
@@ -565,10 +557,10 @@ bool plan_buffer_line (float *target, plan_line_data_t *pl_data)
 
 #if ENABLE_JERK_ACCELERATION
 
-    // Calculate effective acceleration over block. Since jerk acceleration takes longer to execute due to ramp up and 
-    // ramp down of the acceleration at the start and end of a ramp we need to adjust the acceleration value the planner 
-    // uses so it still calculates reasonable entry speeds, exit speeds and times to decelerate/accelerate. 
-    // 2 general cases emerge: 
+    // Calculate effective acceleration over block. Since jerk acceleration takes longer to execute due to ramp up and
+    // ramp down of the acceleration at the start and end of a ramp we need to adjust the acceleration value the planner
+    // uses so it still calculates reasonable entry speeds, exit speeds and times to decelerate/accelerate.
+    // 2 general cases emerge:
     //     -slow speed regime: incomplete jerk ramp (max_acceleration is not reached)
     //     -high speed regime: complete jerk ramp + time at max_axcel to reach desired programmed_rates
     // Profiles are calculated as symmetrical (calculate to 1/2 programmed rate, then double)
@@ -664,7 +656,6 @@ bool plan_buffer_line (float *target, plan_line_data_t *pl_data)
     return true;
 }
 
-
 // Get the planner position vectors.
 float *plan_get_position (void)
 {
@@ -680,7 +671,6 @@ float *plan_get_position (void)
     return position;
 }
 
-
 // Reset the planner position vectors. Called by the system abort/initialization routine.
 void plan_sync_position (void)
 {
@@ -690,7 +680,6 @@ void plan_sync_position (void)
 #endif
 }
 
-
 // Returns the number of available blocks are in the planner buffer.
 uint_fast16_t plan_get_block_buffer_available (void)
 {
@@ -698,7 +687,6 @@ uint_fast16_t plan_get_block_buffer_available (void)
                             ? (block_buffer.size - (block_buffer.head - block_buffer.tail))
                             : ((block_buffer.tail - block_buffer.head) - 1));
 }
-
 
 // Re-initialize buffer plan with a partially completed block, assumed to exist at the buffer tail.
 // Called after a steppers have come to a complete stop for a feed hold and the cycle is stopped.

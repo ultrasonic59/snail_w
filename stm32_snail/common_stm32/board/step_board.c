@@ -15,14 +15,14 @@ void mot_spi_wr(uint8_t addr,uint16_t idata);
 uint16_t mot_spi_rd(uint8_t addr);
 
 ///=============================
-int sendchar6 (int c) 
-{ 
+int sendchar6 (int c)
+{
 while (!(USART6->SR & 0x0080));
 USART6->DR = (c & 0x1FF);
 return (c);
 }
 
-int get_byte6 (void) 
+int get_byte6 (void)
 {
 while (!(USART6->SR & 0x0020));
 return (USART6->DR);
@@ -82,8 +82,8 @@ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( TST7_PIN_GPIO, &GPIO_InitStructure );
 GPIO_PinAFConfig(TST7_PIN_GPIO, TST7_PIN_NPIN, GPIO_AF_TIM8);
-  
-////=========== DBG_UART =================================================== 
+
+////=========== DBG_UART ===================================================
 RCC_AHB1PeriphClockCmd(UART_DBG_TX_RCC, ENABLE);
 GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -97,7 +97,7 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 GPIO_Init( UART_DBG_RX_GPIO, &GPIO_InitStructure );
-  
+
 GPIO_PinAFConfig(UART_DBG_TX_GPIO, UART_DBG_TX_PIN_NPIN, UART_DBG_TX_AF);
 GPIO_PinAFConfig(UART_DBG_RX_GPIO, UART_DBG_RX_PIN_NPIN, UART_DBG_RX_AF);
 ////===================================================================
@@ -288,7 +288,7 @@ volatile uint32_t num_step=0;
 
 void mot_tim_init(void)
 {
-NVIC_InitTypeDef NVIC_InitStructure; 
+NVIC_InitTypeDef NVIC_InitStructure;
 
 RCC->APB2ENR |= MOT_STEP_TIM_RCC;
 MOT_STEP_TIM ->PSC = MOT_TIM_PRESC;
@@ -298,8 +298,8 @@ MOT_STEP_TIM ->ARR = MOT_TIM_PERIOD;////
 MOT_STEP_TIM ->CCR1 = MOT_TIM_PERIOD/2;////30;
 MOT_STEP_TIM->CCER |= TIM_CCER_CC1E;////TIM_CCER_CC2NE;////| TIM_CCER_CC3NP;
 MOT_STEP_TIM->BDTR |= TIM_BDTR_MOE;
-////MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1; 
-MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1; 
+////MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1;
+MOT_STEP_TIM->CCMR1 = TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_DIR;
 MOT_STEP_TIM->CR1 &= ~TIM_CR1_CMS;
 ///MOT_STEP_TIM->CR1 |= TIM_CR1_CEN;
@@ -318,7 +318,6 @@ NVIC_Init(&NVIC_InitStructure);
 ///TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC2, ENABLE);
 ///TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 
-
 }
 void stop_mot_step_tim(void)
 {
@@ -327,7 +326,7 @@ TIM_Cmd(MOT_STEP_TIM, DISABLE);
 void ena_mot(uint8_t ena_dis)
 {
 uint16_t tmp;
- 
+
 tmp=mot_spi_rd(ADDR_MOT_CTRL);
 if(ena_dis&0x1)
 {
@@ -342,20 +341,20 @@ mot_spi_wr(ADDR_MOT_CTRL,tmp);
 void put_mot_nstep(uint32_t nstep)
 {
 ena_mot(1) ;
- num_step=nstep; 
+ num_step=nstep;
 TIM_ITConfig(MOT_STEP_TIM, TIM_IT_CC1, ENABLE);
 TIM_Cmd(MOT_STEP_TIM, ENABLE);
 }
 volatile uint32_t gsr;
 ////=======================================================
 void MOT_STEP_TIM_IRQHandler(void)
-{ 
+{
 if(num_step)
   {
-  num_step--;  
+  num_step--;
   if(num_step==0)
     {
-    stop_mot_step_tim(); 
+    stop_mot_step_tim();
     ena_mot(0) ;
     }
   }
@@ -372,7 +371,7 @@ void hw_board_init(void)
 {
 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 init_gpio();
-UART_DBG_Init(); 
+UART_DBG_Init();
 
 mot_tim_init();
 mot_spi_init();
@@ -384,7 +383,7 @@ void mot_spi_init(void)
 GPIO_InitTypeDef GPIO_InitStructure;
 SPI_InitTypeDef  SPI_InitStructure;
   MOT_SPI_PeriphClockCmd(MOT_SPI_RCC, ENABLE);
-  
+
 RCC_AHB1PeriphClockCmd(MOT_SPI_SCK_PIN_RCC,ENABLE);
 RCC_AHB1PeriphClockCmd(MOT_SPI_MISO_PIN_RCC,ENABLE);
 RCC_AHB1PeriphClockCmd(MOT_SPI_MOSI_PIN_RCC,ENABLE);
@@ -429,7 +428,7 @@ SPI_Cmd(MOT_SPI, ENABLE);
 }
 uint16_t mot_spi_transfer(uint16_t i_data)
 {
-uint16_t rez=0; 
+uint16_t rez=0;
 GPIO_SetBits(MOT_SPI_SCS_PIN_GPIO, MOT_SPI_SCS_PIN);
 
 while (SPI_I2S_GetFlagStatus(MOT_SPI, SPI_I2S_FLAG_TXE) == RESET);
@@ -460,7 +459,7 @@ void mot_spi_wrp(uint8_t addr,uint16_t *pdata)
 {
 uint16_t tmp;
 memcpy(&tmp,pdata,sizeof(uint16_t));
-mot_spi_wr(addr,tmp);       
+mot_spi_wr(addr,tmp);
 }
 uint16_t mot_spi_rd(uint8_t addr)
 {
@@ -471,7 +470,7 @@ tmp|= 0x8000;
 rez=mot_spi_transfer(tmp);
 return rez&0xfff;
 }
-////========================================================  
+////========================================================
 
 CTRL_Register_t 	G_CTRL_REG;
 TORQUE_Register_t 	G_TORQUE_REG;
@@ -484,7 +483,7 @@ STATUS_Register_t 	G_STATUS_REG;
 
 void init_step_mot(void)
 {
-  
+
 // CTRL Register
 
 G_CTRL_REG.DTIME 	= 0x03;
@@ -533,7 +532,7 @@ mot_spi_wrp(ADDR_MOT_STALL,(uint16_t*)&G_STALL_REG);
 mot_spi_wrp(ADDR_MOT_DRIVE,(uint16_t*)&G_DRIVE_REG);
 
 }
-////========================================================  
+////========================================================
 void set_mot_rej(uint8_t rej)
 {
 uint16_t tmp;
@@ -544,14 +543,14 @@ mot_spi_wr(ADDR_MOT_CTRL,tmp);
 }
 void tst_task( void *pvParameters )
 {
-///uint8_t btst=0; 
-uint8_t psk=0; 
+///uint8_t btst=0;
+uint8_t psk=0;
 ///uint16_t tst;
 char key=0;
 int nstep=300;
 uint8_t dir=0;
 uint8_t mot_rej=0;
-printk("\n\r tst_task"); 
+printk("\n\r tst_task");
 
 set_sleep_mot(1);
 ////set_ena_mot(1);
@@ -564,26 +563,26 @@ init_step_mot();
 ///tst=mot_spi_rd(0x0);
 ///tst|=0x1;
 ///mot_spi_wr(0x0,tst);
-#if 0      
+#if 0
 for(;;)
   {
-//// sendchar2 (0x33) ; 
+//// sendchar2 (0x33) ;
   put_tst_pin(btst);
-  btst++;  
-  ////delay__ms(1);  
+  btst++;
+  ////delay__ms(1);
   uDelay(20000);
 ///  mot_spi_transfer(0x1234);
 tst=mot_spi_rd(0x0);
-printk("\n\r rd[%x]",tst); 
+printk("\n\r rd[%x]",tst);
 
   }
-#endif 
+#endif
 
     ena_mot(0) ;
 
  for(;;)
   {
-  key=dbg_get_byte() ;  
+  key=dbg_get_byte() ;
   switch(key)
     {
     case 'a':
@@ -606,9 +605,9 @@ printk("\n\r rd[%x]",tst);
     case 'p':
      psk=1;
       break;
-     
+
    }
-  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej); 
+  printk("\n\r nstep[%d] dir[%x] Mot_rej[%x]",nstep,dir,mot_rej);
   set_dir_mot(dir);
   set_mot_rej(mot_rej);
   if(psk)
@@ -618,8 +617,6 @@ printk("\n\r rd[%x]",tst);
     }
 ////  set_led_dutycycle (duty);
 
-  } 
+  }
 }
 ////============================================
-
-	

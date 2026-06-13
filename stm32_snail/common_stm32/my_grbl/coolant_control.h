@@ -28,7 +28,6 @@
 #define COOLANT_STATE_FLOOD     bit(0)
 #define COOLANT_STATE_MIST      bit(1)
 
-
 // Initializes coolant control pins.
 void coolant_init();
 

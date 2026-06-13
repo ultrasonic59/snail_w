@@ -16,14 +16,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -34,16 +34,15 @@
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-  
+
 /** @defgroup USBD_CUSTOMHID
   * @brief This file is the Header file for usbd_customhid_core.c
   * @{
-  */ 
-
+  */
 
 /** @defgroup USBD_CUSTOMHID_Exported_Defines
   * @{
-  */ 
+  */
 #define USBD_CUSTOM_HID_REPORT_DESC_SIZE     163
 
 #define USB_CUSTOM_HID_CONFIG_DESC_SIZ       41
@@ -51,7 +50,6 @@
 
 #define CUSTOM_HID_DESCRIPTOR_TYPE           0x21
 #define CUSTOM_HID_REPORT_DESC               0x22
-
 
 #define CUSTOM_HID_REQ_SET_PROTOCOL          0x0B
 #define CUSTOM_HID_REQ_GET_PROTOCOL          0x03
@@ -79,51 +77,48 @@
 #define ADC_REPORT_ID                        0x07
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_CORE_Exported_TypesDefinitions
   * @{
   */
 /**
   * @}
-  */ 
-
-
+  */
 
 /** @defgroup USBD_CORE_Exported_Macros
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_CORE_Exported_Variables
   * @{
-  */ 
+  */
 extern USBD_Class_cb_TypeDef  USBD_CUSTOMHID_cb;
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USB_CORE_Exported_Functions
   * @{
-  */ 
-uint8_t USBD_CUSTOM_HID_SendReport (USB_OTG_CORE_HANDLE  *pdev, 
+  */
+uint8_t USBD_CUSTOM_HID_SendReport (USB_OTG_CORE_HANDLE  *pdev,
                                  uint8_t *report,
                                  uint16_t len);
 /**
   * @}
-  */ 
+  */
 
 #endif  /* __USB_CUSTOMHID_CORE_H_ */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

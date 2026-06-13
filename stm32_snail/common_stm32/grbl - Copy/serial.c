@@ -32,7 +32,6 @@ uint8_t serial_tx_buffer[TX_RING_BUFFER];
 uint8_t serial_tx_buffer_head = 0;
 volatile uint8_t serial_tx_buffer_tail = 0;
 
-
 // Returns the number of bytes available in the RX serial buffer.
 uint8_t serial_get_rx_buffer_available()
 {
@@ -40,7 +39,6 @@ uint8_t serial_get_rx_buffer_available()
   if (serial_rx_buffer_head >= rtail) { return(RX_BUFFER_SIZE - (serial_rx_buffer_head-rtail)); }
   return((rtail-serial_rx_buffer_head-1));
 }
-
 
 // Returns the number of bytes used in the RX serial buffer.
 // NOTE: Deprecated. Not used unless classic status reports are enabled in config.h.
@@ -51,7 +49,6 @@ uint8_t serial_get_rx_buffer_count()
   return (RX_BUFFER_SIZE - (rtail-serial_rx_buffer_head));
 }
 
-
 // Returns the number of bytes used in the TX serial buffer.
 // NOTE: Not used except for debugging and ensuring no TX bottlenecks.
 uint8_t serial_get_tx_buffer_count()
@@ -61,18 +58,15 @@ uint8_t serial_get_tx_buffer_count()
   return (TX_RING_BUFFER - (ttail-serial_tx_buffer_head));
 }
 
-
 void serial_init()
 {
 
 }
 
-
 // Writes one byte to the TX serial buffer. Called by main program.
 void serial_write(uint8_t data) {
 
 }
-
 
 // Fetches the first byte in the serial read buffer. Called by main program.
 uint8_t serial_read()
@@ -86,7 +80,6 @@ uint8_t serial_read()
 	  }
 	return data;
 }
-
 
 void serial_reset_read_buffer()
 {

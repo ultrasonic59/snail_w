@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F2xx_StdPeriph_Template/stm32f2xx_conf.h  
+  * @file    Project/STM32F2xx_StdPeriph_Template/stm32f2xx_conf.h
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    13-April-2012
@@ -16,35 +16,34 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F2xx_CONF_H
 #define __STM32F2xx_CONF_H
 
-#include "stm32f2xx_can.h" 
+#include "stm32f2xx_can.h"
 #include "stm32f2xx_dma.h"
 #include "stm32f2xx_exti.h"
 #include "stm32f2xx_flash.h"
 #include "stm32f2xx_gpio.h"
 #include "stm32f2xx_iwdg.h"
-#include "stm32f2xx_pwr.h" 
+#include "stm32f2xx_pwr.h"
 #include "stm32f2xx_rcc.h"
-#include "stm32f2xx_rtc.h" 
+#include "stm32f2xx_rtc.h"
 #include "stm32f2xx_spi.h"
 #include "stm32f2xx_syscfg.h"
-#include "stm32f2xx_tim.h" 
+#include "stm32f2xx_tim.h"
 #include "stm32f2xx_usart.h"
 /* #include "stm32f2xx_wwdg.h" */
 #include "misc.h" /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
-
 
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  DEBUG

@@ -36,8 +36,6 @@
 extern xQueueHandle rdy_to_send;
 extern void obr_segment(void);
 
-
-
 void TIM_Configuration(TIM_TypeDef* TIMER, u16 Period, u16 Prescaler, u8 PP);
 extern void  put_steps(uint8_t steps);
 
@@ -45,21 +43,21 @@ extern void  put_steps(uint8_t steps);
 static volatile uint8_t busy;
 uint8_t curr_dir=0;
 
-////static 
+////static
 st_block_t st_block_buffer[SEGMENT_BUFFER_SIZE-1];
-////static 
+////static
 segment_t segment_buffer[SEGMENT_BUFFER_SIZE];
-////static 
+////static
 stepper_t st;
 // Step segment ring buffer indices
-///static 
+///static
 volatile uint8_t segment_buffer_tail;
-///static 
+///static
 uint8_t segment_buffer_head;
 static uint8_t segment_next_head;
-///static 
+///static
 uint16_t step_port_invert_mask;
-///static 
+///static
 ////uint16_t dir_port_invert_mask;
 static plan_block_t *pl_block;     // Pointer to the planner block being prepped
 static st_block_t *st_prep_block;  // Pointer to the stepper block data being prepped
@@ -68,7 +66,7 @@ static st_prep_t prep;
 ////===============================================
 void  set_curr_dir(uint8_t dirs)
 {
-curr_dir=dirs;  
+curr_dir=dirs;
 }
 
 ////===================================================================
@@ -118,13 +116,13 @@ void st_wake_up(void)
 /////uint8_t  btmp=0;
 #if 0
   // Enable stepper drivers.
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) 
-  { 
+  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE))
+  {
   SetStepperDisableBit();
   }
-  else 
-  { 
-  ResetStepperDisableBit(); 
+  else
+  {
+  ResetStepperDisableBit();
   }
 #endif
 ///#if 0
@@ -132,7 +130,7 @@ st.step_pulse_time = (settings.pulse_microseconds)*TICKS_PER_MICROSECOND;
 ///==== ena steps ========
  ////xQueueSend(rdy_to_send,&btmp,TIMEOUT_SEND);
 obr_segment();
-//// rdy_blk=1; 
+//// rdy_blk=1;
 #ifdef WIN32
   nTimer1Out = 1;
 #endif
@@ -156,19 +154,18 @@ void st_go_idle(void)
     pin_state = true; // Override. Disable steppers.
   }
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) {
-    pin_state = !pin_state; 
+    pin_state = !pin_state;
     } // Apply pin invert.
-  if (pin_state) 
-  { 
+  if (pin_state)
+  {
 	  SetStepperDisableBit();
   }
-  else 
-  { 
+  else
+  {
 	  ResetStepperDisableBit();
   }
 }
 ////==================================================================
-
 
 // Initialize and start the stepper motor subsystem
 void stepper_init(void)
@@ -187,7 +184,6 @@ void st_generate_step_dir_invert_masks()
   }
 }
 #endif
-
 
 // Reset and clear stepper subsystem variables
 void st_reset(void)
@@ -215,7 +211,6 @@ void st_reset(void)
 }
 // Stepper shutdown
 
-
 // Called by planner_recalculate() when the executing block is updated by the new plan.
 void st_update_plan_block_parameters()
 {
@@ -225,7 +220,6 @@ void st_update_plan_block_parameters()
     pl_block = NULL; // Flag st_prep_segment() to load and check active velocity profile.
   }
 }
-
 
 // Increments the step segment buffer block data ring buffer.
 static uint8_t st_next_block_index(uint8_t block_index)
@@ -304,11 +298,11 @@ do
                 st.step_outbits |= (1 << X_STEP_BIT);
                 tst_cnt[X_AXIS] ++;
                 st.counter_x -= st.exec_block->step_event_count;
-                if (st.exec_block->direction_bits & (1 << X_DIRECTION_BIT)) { 
-                    sys_position[X_AXIS]--; 
+                if (st.exec_block->direction_bits & (1 << X_DIRECTION_BIT)) {
+                    sys_position[X_AXIS]--;
                 }
-                else { 
-                    sys_position[X_AXIS]++; 
+                else {
+                    sys_position[X_AXIS]++;
                 }
             }
 #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
@@ -321,10 +315,10 @@ do
                 tst_cnt[Y_AXIS] ++;
                 st.counter_y -= st.exec_block->step_event_count;
                 if (st.exec_block->direction_bits & (1 << Y_DIRECTION_BIT)) {
-                    sys_position[Y_AXIS]--; 
+                    sys_position[Y_AXIS]--;
                 }
                 else {
-                    sys_position[Y_AXIS]++; 
+                    sys_position[Y_AXIS]++;
                 }
             }
 #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
@@ -336,11 +330,11 @@ do
                 st.step_outbits |= (1 << Z_STEP_BIT);
                 tst_cnt[Z_AXIS] ++;
                 st.counter_z -= st.exec_block->step_event_count;
-                if (st.exec_block->direction_bits & (1 << Z_DIRECTION_BIT)) { 
-                    sys_position[Z_AXIS]--; 
+                if (st.exec_block->direction_bits & (1 << Z_DIRECTION_BIT)) {
+                    sys_position[Z_AXIS]--;
                 }
-                else { 
-                    sys_position[Z_AXIS]++; 
+                else {
+                    sys_position[Z_AXIS]++;
                 }
             }
             // During a homing cycle, lock out and prevent desired axes from moving.
@@ -356,15 +350,15 @@ do
                    ,tst_cnt[Y_AXIS]
                    ,tst_cnt[Z_AXIS]);
 
-#if 0        
+#if 0
         printf("\n tst_cnt[%d][%02x][%d][%d][%d]", st.exec_segment->cycles_per_tick, st.exec_block->direction_bits
             , tst_cnt[X_AXIS]
             , tst_cnt[Y_AXIS]
             , tst_cnt[Y_AXIS]
         );
 #endif
-        
-        ////   if (st.step_count == 0) 
+
+        ////   if (st.step_count == 0)
         {
             // Segment is complete. Discard current segment and advance segment indexing.
             st.exec_segment = NULL;
@@ -394,8 +388,8 @@ do
 void st_prep_buffer()
 {
   // Block step prep buffer, while in a suspend state and there is no suspend motion to execute.
-  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) { 
-    return; 
+  if (bit_istrue(sys.step_control,STEP_CONTROL_END_MOTION)) {
+    return;
     }
 
   while (segment_buffer_tail != segment_next_head) { // Check if we need to fill the buffer.
@@ -404,15 +398,15 @@ void st_prep_buffer()
     if (pl_block == NULL) {
 
       // Query planner for a queued block
-      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) { 
-        pl_block = plan_get_system_motion_block(); 
+      if (sys.step_control & STEP_CONTROL_EXECUTE_SYS_MOTION) {
+        pl_block = plan_get_system_motion_block();
         }
-      else { 
-        pl_block = plan_get_current_block(); 
+      else {
+        pl_block = plan_get_current_block();
         }
       if (pl_block == NULL) { // No planner blocks. Exit.
-        return; 
-        } 
+        return;
+        }
 
       // Check if we need to only recompute the velocity profile or load a new block.
       if (prep.recalculate_flag & PREP_FLAG_RECALCULATE) {
@@ -436,16 +430,16 @@ void st_prep_buffer()
         st_prep_block->direction_bits = pl_block->direction_bits;
         uint8_t idx;
         #ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-          for (idx=0; idx<N_AXIS; idx++) { 
-            st_prep_block->steps[idx] = (pl_block->steps[idx] << 1); 
+          for (idx=0; idx<N_AXIS; idx++) {
+            st_prep_block->steps[idx] = (pl_block->steps[idx] << 1);
           }
           st_prep_block->step_event_count = (pl_block->step_event_count << 1);
         #else
           // With AMASS enabled, simply bit-shift multiply all Bresenham data by the max AMASS
           // level, such that we never divide beyond the original data anywhere in the algorithm.
           // If the original data is divided, we can lose a step from integer roundoff.
-          for (idx=0; idx<N_AXIS; idx++) { 
-            st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL; 
+          for (idx=0; idx<N_AXIS; idx++) {
+            st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL;
             }
           st_prep_block->step_event_count = pl_block->step_event_count << MAX_AMASS_LEVEL;
         #endif
@@ -556,9 +550,9 @@ void st_prep_buffer()
 					prep.maximum_speed = prep.exit_speed;
 				}
 			}
-      
+
      }
-    
+
     // Initialize new segment
     segment_t *prep_segment = &segment_buffer[segment_buffer_head];
 
@@ -708,9 +702,9 @@ void st_prep_buffer()
     #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
       // Compute step timing and multi-axis smoothing level.
       // NOTE: AMASS overdrives the timer with each level, so only one prescalar is required.
-      if (cycles < AMASS_LEVEL1) 
-      { 
-        prep_segment->amass_level = 0; 
+      if (cycles < AMASS_LEVEL1)
+      {
+        prep_segment->amass_level = 0;
       }
       else {
         if (cycles < AMASS_LEVEL2) { prep_segment->amass_level = 1; }
@@ -741,8 +735,8 @@ void st_prep_buffer()
 
     // Segment complete! Increment segment buffer indices, so stepper ISR can immediately execute it.
     segment_buffer_head = segment_next_head;
-    if ( ++segment_next_head == SEGMENT_BUFFER_SIZE ) { 
-      segment_next_head = 0; 
+    if ( ++segment_next_head == SEGMENT_BUFFER_SIZE ) {
+      segment_next_head = 0;
     }
 
     // Update the appropriate planner and segment data.
@@ -788,8 +782,4 @@ float st_get_realtime_rate()
   return 0.0f;
 }
 
-
 ////===================================================================
-
-
-

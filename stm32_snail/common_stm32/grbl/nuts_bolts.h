@@ -39,7 +39,6 @@
 
 #define MAP_P0 0
 
-
 // CoreXY motor assignments. DO NOT ALTER.
 // NOTE: If the A and B motor axis bindings are changed, this effects the CoreXY equations.
 #ifdef COREXY

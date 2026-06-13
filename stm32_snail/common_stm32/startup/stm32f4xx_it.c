@@ -165,17 +165,17 @@ void DMA2_Stream3_IRQHandler(void)
 sdio_dma_irq();
 }
 void USART1_IRQHandler(void)
-{  
+{
 usart1_irq();
 }
 extern void usart1_tx_dma_irq(void);
 void DMA2_Stream7_IRQHandler(void)
-{ 
+{
 usart1_tx_dma_irq();
 }
 extern void usart1_rx_dma_irq(void);
 void DMA2_Stream2_IRQHandler(void)
-{ 
+{
 usart1_rx_dma_irq();
 }
 /*EXTI ISR*/
@@ -205,9 +205,6 @@ void EXTI4_IRQHandler(void)
 }
 
 #include "usb_core.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
 
 extern USB_OTG_CORE_HANDLE           USB_OTG_dev;
 extern void my_USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
@@ -222,17 +219,13 @@ extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 */
 void OTG_FS_IRQHandler(void)
 {
-USBD_OTG_ISR_Handler(&USB_OTG_dev) ; 
-  
+USBD_OTG_ISR_Handler(&USB_OTG_dev) ;
+
 /// my_USBD_OTG_ISR_Handler (&USB_OTG_dev);
-#if 0  
+#if 0
 ///signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 ////pUSB_OTG_dev=&USB_OTG_dev;
 ////xQueueSendFromISR(q_usb_in, &pUSB_OTG_dev, &xHigherPriorityTaskWoken);
 my_USBD_OTG_ISR_Handler (&USB_OTG_dev);
-#endif  
+#endif
 }
-
-
-
-

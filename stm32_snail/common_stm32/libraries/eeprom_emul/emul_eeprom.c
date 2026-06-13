@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    EEPROM_Emulation/src/eeprom.c 
+  * @file    EEPROM_Emulation/src/eeprom.c
   * @author  MCD Application Team
   * @version V1.0.0
   * @date    10-October-2011
@@ -17,19 +17,19 @@
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
-  */ 
+  */
 
 /** @addtogroup EEPROM_Emulation
   * @{
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "board.h"
 #include "emul_eeprom.h"
 #include "printk.h"
 #include "my_misc.h"
-#include "FreeRTOS.h"
-#include "task.h"
+#include "tx_api.h"
+#include "threadx_app.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -44,14 +44,14 @@ extern uint16_t VirtAddVarTab[NB_OF_VAR];
 
 FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange)
 {
-printk("\n\r FLASH_EraseSector[%x:%x] =>",FLASH_Sector, VoltageRange); 
- 
-return _FLASH_EraseSector(FLASH_Sector, VoltageRange); 
+printk("\n\r FLASH_EraseSector[%x:%x] =>",FLASH_Sector, VoltageRange);
+
+return _FLASH_EraseSector(FLASH_Sector, VoltageRange);
 }
 
 FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data)
 {
-////printk("\n\r FLASH_ProgramHalfWord[%x:%x] =>",Address, Data); 
+////printk("\n\r FLASH_ProgramHalfWord[%x:%x] =>",Address, Data);
 
 return _FLASH_ProgramHalfWord(Address, Data);
 }
@@ -76,7 +76,6 @@ uint16_t ee_init(void)
   uint16_t EepromStatus = 0, ReadStatus = 0;
   int16_t x = -1;
   uint16_t  FlashStatus;
-  
 
   /* Get Page0 status */
   PageStatus0 = (*(__IO uint16_t*)PAGE0_BASE_ADDRESS);
@@ -92,7 +91,7 @@ uint16_t ee_init(void)
        else
         FlashStatus = FLASH_ProgramHalfWord(PAGE0_BASE_ADDRESS, VALID_PAGE);
        break;
-    
+
     case ERASING:
       if (PageStatus1 == VALID_PAGE) /* Page0 erased, Page1 valid */
       {
@@ -286,9 +285,9 @@ uint16_t ee_init(void)
 uint16_t EE_Init(void)
 {
 uint16_t rez;
-taskENTER_CRITICAL();
+tx_app_critical_enter();
 rez= ee_init();
-taskEXIT_CRITICAL();
+tx_app_critical_exit();
  return rez;
 }
 
@@ -371,7 +370,7 @@ uint16_t ee_Write(uint16_t VirtAddress, uint16_t Data)
 static FLASH_Status EE_Format(void)
 {
   FLASH_Status FlashStatus = FLASH_COMPLETE;
-printk("\n\r +EE_Format!!! ="); 
+printk("\n\r +EE_Format!!! =");
 
   /* Erase Page0 */
   FlashStatus = FLASH_EraseSector(PAGE0_ID, VOLTAGE_RANGE);
@@ -399,10 +398,10 @@ printk("\n\r +EE_Format!!! =");
 }
 uint16_t EE_Wr(uint16_t VirtAddress, uint16_t Data)
 {
-uint16_t rez;  
-taskENTER_CRITICAL();
+uint16_t rez;
+tx_app_critical_enter();
 rez= ee_Write(VirtAddress, Data);
-taskEXIT_CRITICAL();
+tx_app_critical_exit();
 return rez;
 }
 /**
@@ -515,18 +514,18 @@ static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress, uint16_t Da
     {
       /* Set variable data */
       FlashStatus = FLASH_ProgramHalfWord(Address, Data);
- ///     printk("\n\r ee_write_data[%x:%x:%x] =>",Address, Data,FlashStatus); 
+ ///     printk("\n\r ee_write_data[%x:%x:%x] =>",Address, Data,FlashStatus);
       /* If program operation was failed, a Flash error code is returned */
       if (FlashStatus != FLASH_COMPLETE)
       {
-      printk("Error \n\r==="); 
-      
+      printk("Error \n\r===");
+
         return FlashStatus;
       }
       /* Set variable virtual address */
       FlashStatus = FLASH_ProgramHalfWord(Address + 2, VirtAddress);
- ///     printk("\n\r ee_write_addr[%x:%x:%x] =>",Address+2, VirtAddress,FlashStatus); 
-      
+ ///     printk("\n\r ee_write_addr[%x:%x:%x] =>",Address+2, VirtAddress,FlashStatus);
+
       /* Return program operation status */
       return FlashStatus;
     }
@@ -643,6 +642,6 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

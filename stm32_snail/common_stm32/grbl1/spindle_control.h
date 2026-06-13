@@ -232,7 +232,6 @@ typedef union {
 #define PWM_SPINDLE_NO_DELAYS ",Ignore on/off delays"
 #endif
 
-
 typedef union {
     uint8_t value;
     uint8_t mask;

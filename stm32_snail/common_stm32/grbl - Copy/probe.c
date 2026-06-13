@@ -24,13 +24,11 @@
 // Inverts the probe pin state depending on user settings and probing cycle mode.
 uint16_t probe_invert_mask;
 
-
 // Probe pin initialization routine.
 void probe_init()
 {
   probe_configure_invert_mask(false); // Initialize invert mask.
 }
-
 
 // Called by probe_init() and the mc_probe() routines. Sets up the probe pin invert mask to
 // appropriately set the pin logic according to setting for normal-high/normal-low operation
@@ -42,7 +40,6 @@ void probe_configure_invert_mask(uint8_t is_probe_away)
   if (is_probe_away) { probe_invert_mask ^= PROBE_MASK; }
 }
 
-
 // Returns the probe pin state. Triggered = true. Called by gcode parser and probe state monitor.
 uint8_t probe_get_state() {
 	uint8_t probe_state = 0;
@@ -50,7 +47,6 @@ uint8_t probe_get_state() {
 	if (pin & get_probe_pin_mask()) {probe_state |= 1;}
 	return probe_state;
 }
-
 
 // Monitors probe pin state and records the system position when detected. Called by the
 // stepper ISR per ISR tick.

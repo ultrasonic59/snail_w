@@ -22,7 +22,6 @@
 #ifndef print_h
 #define print_h
 
-
 void printString(const char *s);
 
 ////void printPgmString(const char *s);

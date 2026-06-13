@@ -27,12 +27,11 @@ settings_t settings;
 void settings_store_startup_line(uint8_t n, char *line)
 {
   #ifdef FORCE_BUFFER_SYNC_DURING_EEPROM_WRITE
-    protocol_buffer_synchronize(); // A startup line may contain a motion and be executing. 
+    protocol_buffer_synchronize(); // A startup line may contain a motion and be executing.
   #endif
   uint32_t addr = n*(LINE_BUFFER_SIZE+1)+EEPROM_ADDR_STARTUP_BLOCK;
   memcpy_to_eeprom_with_checksum(addr,(char*)line, LINE_BUFFER_SIZE);
 }
-
 
 // Method to store build info into EEPROM
 // NOTE: This function can only be called in IDLE state.
@@ -56,12 +55,11 @@ void write_global_settings()
 	}
 }
 
-
 // Method to restore EEPROM-saved Grbl global settings back to defaults.
 void settings_restore(uint8_t restore_flag) {
 	char data = 0;
 
-  if (restore_flag & SETTINGS_RESTORE_DEFAULTS) {    
+  if (restore_flag & SETTINGS_RESTORE_DEFAULTS) {
 	  	  settings.pulse_microseconds = (uint8_t)DEFAULT_STEP_PULSE_MICROSECONDS;
 	      settings.stepper_idle_lock_time = (uint8_t)DEFAULT_STEPPER_IDLE_LOCK_TIME;
 	      settings.step_invert_mask = (uint8_t)DEFAULT_STEPPING_INVERT_MASK;
@@ -107,7 +105,6 @@ void settings_restore(uint8_t restore_flag) {
 	      settings.max_rate[U_AXIS] = DEFAULT_U_MAX_RATE;
 	      settings.max_rate[V_AXIS] = DEFAULT_V_MAX_RATE;
 
-
 	      settings.acceleration[X_AXIS] = DEFAULT_X_ACCELERATION;
 	      settings.acceleration[Y_AXIS] = DEFAULT_Y_ACCELERATION;
 	      settings.acceleration[Z_AXIS] = DEFAULT_Z_ACCELERATION;
@@ -149,7 +146,6 @@ void settings_restore(uint8_t restore_flag) {
   }
 }
 
-
 // Reads startup line from EEPROM. Updated pointed line string data.
 uint8_t settings_read_startup_line(uint8_t n, char *line)
 {
@@ -163,7 +159,6 @@ uint8_t settings_read_startup_line(uint8_t n, char *line)
   return(true);
 }
 
-
 // Reads startup line from EEPROM. Updated pointed line string data.
 uint8_t settings_read_build_info(char *line)
 {
@@ -176,7 +171,6 @@ uint8_t settings_read_build_info(char *line)
   return(true);
 }
 
-
 // Method to store coord data parameters into EEPROM
 void settings_write_coord_data(uint8_t coord_select, float *coord_data)
 {
@@ -186,7 +180,6 @@ void settings_write_coord_data(uint8_t coord_select, float *coord_data)
   uint32_t addr = coord_select*(sizeof(float)*N_AXIS+EEPROM_CHECKSUM_SIZE) + EEPROM_ADDR_PARAMETERS;
   memcpy_to_eeprom_with_checksum(addr,(char*)coord_data, sizeof(float)*N_AXIS);
 }
-
 
 // Read selected coordinate data from EEPROM. Updates pointed coord_data value.
 uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
@@ -200,7 +193,6 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
   }
   return(true);
 }
-
 
 // Reads Grbl global settings struct from EEPROM.
 uint8_t read_global_settings() {
@@ -217,7 +209,6 @@ uint8_t read_global_settings() {
   }
   return(true);
 }
-
 
 // A helper method to set settings from command line
 uint8_t settings_store_global_setting(uint8_t parameter, float value) {
@@ -332,7 +323,6 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
   return(STATUS_OK);
 }
 
-
 // Initialize the config subsystem
 void settings_init() {
   if(!read_global_settings()) {
@@ -341,7 +331,6 @@ void settings_init() {
     report_grbl_settings();
   }
 }
-
 
 // Returns step pin mask according to Grbl internal axis indexing.
 uint16_t get_step_pin_mask(uint8_t axis_idx)
@@ -356,7 +345,6 @@ uint16_t get_step_pin_mask(uint8_t axis_idx)
   return((1<<V_STEP_BIT));
 }
 
-
 // Returns direction pin mask according to Grbl internal axis indexing.
 uint16_t get_direction_pin_mask(uint8_t axis_idx)
 {
@@ -369,7 +357,6 @@ uint16_t get_direction_pin_mask(uint8_t axis_idx)
   if ( axis_idx == U_AXIS ) { return((1<<U_DIRECTION_BIT)); }
   return((1<<V_DIRECTION_BIT));
 }
-
 
 // Returns limit pin mask according to Grbl internal axis indexing.
 uint16_t get_limit_pin_mask(uint8_t axis_idx)

@@ -18,7 +18,6 @@ uint16_t outputs_state;
 volatile uint8_t sys_rt_exec_debug;
 #endif
 
-
 void grbl_init(void)
 {
 	settings_init(); // Load Grbl settings from EEPROM

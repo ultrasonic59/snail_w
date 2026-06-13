@@ -16,14 +16,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -35,62 +35,56 @@
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-  
+
 /** @defgroup USBD_HID_CDC
   * @brief This file is the Header file for usbd_msc_cdc_wrapper.c
   * @{
-  */ 
-
+  */
 
 /** @defgroup USBD_HID_MSC_Exported_Defines
   * @{
-  */ 
-
+  */
 
 /**
   * @}
-  */ 
-
+  */
 
 /** @defgroup USBD_CORE_Exported_TypesDefinitions
   * @{
   */
 
-
 /**
   * @}
-  */ 
-
-
+  */
 
 /** @defgroup USBD_CORE_Exported_Macros
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBD_CORE_Exported_Variables
   * @{
-  */ 
+  */
 
 extern USBD_Class_cb_TypeDef  USBD_HID_CDC_cb;
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 #endif /* __USB_MSC_CDC_WRAPPER_H_ */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /******************* (C) COPYRIGHT 2015 STMicroelectronics *****END OF FILE****/

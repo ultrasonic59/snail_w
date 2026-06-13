@@ -11,6 +11,7 @@
 ////=======================================================
 ////#define CANx CAN1
 #define MAX_CAN_DATA_LEN 8
+extern void put_tst1_pin(uint8_t idat);
 
 ////=======================================================
 typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
@@ -33,15 +34,12 @@ can_br_coef_t can_br30[]=
   {2,CAN_BS1_13tq,CAN_BS2_2tq}  ////1000 kb
 };
 
-
 CanRxMsg RxMessage;
 
 ////=============================================================
 void NVIC_can_Config(void)
 {
 NVIC_InitTypeDef NVIC_InitStructure;
-
-NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
 NVIC_InitStructure.NVIC_IRQChannel = CAN1_RX0_IRQn;
 NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
@@ -105,7 +103,7 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
   CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
 
   /* CAN Baudrate = 1MBps (CAN clocked at 30 MHz) */
-  
+
    /* Baudrate = 500 Kbps */
   CAN_InitStructure.CAN_BS1 = CAN_BS1_6tq;
   CAN_InitStructure.CAN_BS2 = CAN_BS2_8tq;
@@ -143,45 +141,101 @@ RCC_AHB1PeriphClockCmd(CAN1_GPIO_CLK, ENABLE);
 
 }
 
-
 ///=============================================
 
-can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */                        
+can_msg_t       CAN_RxMsg;                  /* CAN message for receiving        */
+
+#define CAN_RX_QUEUE_CAP  64U
+static can_msg_t CAN_RxQueue[CAN_RX_QUEUE_CAP];
+static volatile uint8_t CAN_RxQueueRd = 0U;
+static volatile uint8_t CAN_RxQueueWr = 0U;
+
+extern void can_rx_signal_from_isr(void);
+
+static void CAN_rx_push_isr(const can_msg_t *msg)
+{
+  uint8_t wr;
+  uint8_t next;
+
+  if (msg->len != 0U && msg->data[0] == GET_STAT_CMD) {
+    uint8_t prev;
+
+    prev = CAN_RxQueueRd;
+    if (prev == 0U) {
+      prev = (uint8_t)(CAN_RX_QUEUE_CAP - 1U);
+    } else {
+      prev = (uint8_t)(prev - 1U);
+    }
+    if (prev != CAN_RxQueueWr) {
+      CAN_RxQueue[prev] = *msg;
+      CAN_RxQueueRd = prev;
+      CAN_RxRdy = 1U;
+      return;
+    }
+  }
+
+  wr = CAN_RxQueueWr;
+  next = (uint8_t)(wr + 1U);
+  if (next >= CAN_RX_QUEUE_CAP) {
+    next = 0U;
+  }
+  if (next == CAN_RxQueueRd) {
+    return;
+  }
+  CAN_RxQueue[wr] = *msg;
+  CAN_RxQueueWr = next;
+  CAN_RxRdy = 1U;
+}
+
+int CAN_rx_pop(can_msg_t *msg)
+{
+  uint8_t rd;
+
+  __disable_irq();
+  rd = CAN_RxQueueRd;
+  if (rd == CAN_RxQueueWr) {
+    CAN_RxRdy = 0U;
+    __enable_irq();
+    return 0;
+  }
+  *msg = CAN_RxQueue[rd];
+  rd = (uint8_t)(rd + 1U);
+  if (rd >= CAN_RX_QUEUE_CAP) {
+    rd = 0U;
+  }
+  CAN_RxQueueRd = rd;
+  if (rd == CAN_RxQueueWr) {
+    CAN_RxRdy = 0U;
+  }
+  __enable_irq();
+  return 1;
+}
+
 /*----------------------------------------------------------------------------
   write a message to CAN peripheral and transmit it
  *----------------------------------------------------------------------------*/
 void CAN_wrMsg (can_msg_t *msg)  {
+  CanTxMsg tx_msg;
+  uint8_t ii;
+  uint32_t wait = 100000U;
 
-  CAN1->sTxMailBox[0].TIR  = 0;           /* Reset TIR register               */
-                                          /* Setup identifier information     */
-  if (msg->format == STANDARD_FORMAT) {   /*    Standard ID                   */
-    CAN1->sTxMailBox[0].TIR |= (uint32_t)(msg->id << 21) | CAN_ID_STD;
-  } else {                                /* Extended ID                      */
-    CAN1->sTxMailBox[0].TIR |= (uint32_t)(msg->id <<  3) | CAN_ID_EXT;
+  while ((CAN1->TSR & (CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2)) == 0U) {
+    if (--wait == 0U) {
+      return;
+    }
   }
-                                          /* Setup type information           */
-  if (msg->type == DATA_FRAME)  {         /* DATA FRAME                       */
-    CAN1->sTxMailBox[0].TIR |= CAN_RTR_DATA;
-  } else {                                /* REMOTE FRAME                     */
-    CAN1->sTxMailBox[0].TIR |= CAN_RTR_REMOTE;
-  }
-                                          /* Setup data bytes                 */
-  CAN1->sTxMailBox[0].TDLR = (((uint32_t)msg->data[3] << 24) | 
-                              ((uint32_t)msg->data[2] << 16) |
-                              ((uint32_t)msg->data[1] <<  8) | 
-                              ((uint32_t)msg->data[0])        );
-  CAN1->sTxMailBox[0].TDHR = (((uint32_t)msg->data[7] << 24) | 
-                              ((uint32_t)msg->data[6] << 16) |
-                              ((uint32_t)msg->data[5] <<  8) |
-                              ((uint32_t)msg->data[4])        );
-                                          /* Setup length                     */
-  CAN1->sTxMailBox[0].TDTR &= ~CAN_TDT0R_DLC;
-  CAN1->sTxMailBox[0].TDTR |=  (msg->len & CAN_TDT0R_DLC);
 
-  CAN1->IER |= CAN_IER_TMEIE;                 /* enable  TME interrupt        */
-  CAN1->sTxMailBox[0].TIR |=  CAN_TI0R_TXRQ;  /* transmit message             */
+  tx_msg.StdId = (msg->format == STANDARD_FORMAT) ? msg->id : 0U;
+  tx_msg.ExtId = (msg->format == EXTENDED_FORMAT) ? msg->id : 0U;
+  tx_msg.IDE = (msg->format == STANDARD_FORMAT) ? CAN_ID_STD : CAN_ID_EXT;
+  tx_msg.RTR = (msg->type == DATA_FRAME) ? CAN_RTR_DATA : CAN_RTR_REMOTE;
+  tx_msg.DLC = msg->len;
+  for (ii = 0U; ii < CAN_MAX_NUM_BYTES; ii++) {
+    tx_msg.Data[ii] = msg->data[ii];
+  }
+
+  CAN_Transmit(CAN1, &tx_msg);
 }
-
 
 /*----------------------------------------------------------------------------
   read a message from CAN peripheral and release it
@@ -222,7 +276,9 @@ void CAN1_RX0_IRQHandler (void)
 if (CAN1->RF0R & CAN_RF0R_FMP0)
   {			/* message pending ?              */
   CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
-  CAN_RxRdy = 1;                          // set receive flag
+  CAN_rx_push_isr(&CAN_RxMsg);
+  can_rx_signal_from_isr();
+        put_tst1_pin(1);
   }
 }
 void CAN1_RX1_IRQHandler (void)
@@ -230,7 +286,10 @@ void CAN1_RX1_IRQHandler (void)
 if (CAN1->RF1R & CAN_RF0R_FMP0)
   {			/* message pending ?              */
   CAN_rdMsg (&CAN_RxMsg);                 /* read the message               */
-  CAN_RxRdy = 1;                          // set receive flag
+  CAN_rx_push_isr(&CAN_RxMsg);
+  can_rx_signal_from_isr();
+        put_tst1_pin(1);
+  
   }
 }
 ////================================================================================
@@ -238,14 +297,22 @@ if (CAN1->RF1R & CAN_RF0R_FMP0)
   CAN transmit interrupt handler
  *----------------------------------------------------------------------------*/
 void CAN1_TX_IRQHandler (void) {
+  uint32_t complete = CAN1->TSR & (CAN_TSR_RQCP0 | CAN_TSR_RQCP1 | CAN_TSR_RQCP2);
 
+  if (complete != 0U) {
+    CAN1->TSR |= complete;
+    CAN1->IER &= ~CAN_IER_TMEIE;
+    CAN_TxRdy = 1;
+  }
+#if 0
   if (CAN1->TSR & CAN_TSR_RQCP0) {          /* request completed mbx 0        */
     CAN1->TSR |= CAN_TSR_RQCP0;             /* reset request complete mbx 0   */
     CAN1->IER &= ~CAN_IER_TMEIE;            /* disable  TME interrupt         */
-	
+
 	CAN_TxRdy = 1;
 //	sendchar2(0x34);
   }
+#endif
 }
 ////==============================================================
 void CAN_FilterConfig(uint8_t num,uint32_t id,uint32_t mask)
@@ -313,7 +380,7 @@ int _can_init(uint32_t sjw, uint32_t ts1, uint32_t ts2,
 return can_init(DISABLE,DISABLE,DISABLE, ENABLE,
 	     DISABLE, DISABLE, sjw, ts1, ts2,
 	     brp, _FALSE, _FALSE);
-  
+
 }
 
 int can_speed(uint8_t index) {
@@ -322,7 +389,6 @@ if(index>=MAX_NUM_BR )
 else
   return _can_init(CAN_SJW_1tq, can_br30[index].ts1,can_br30[index].ts2,can_br30[index].pre);
 }
-
 
 void init_can(void)
 {

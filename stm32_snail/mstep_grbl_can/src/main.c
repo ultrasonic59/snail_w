@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 #include "FreeRTOS.h"
@@ -14,7 +13,6 @@
 #include "usbd_usr.h"
 #include "usb_conf.h"
 #include "usbd_desc.h"
-
 
 #include "misc.h"
 #include "printk.h"
@@ -37,7 +35,7 @@ extern void vcp_thread(void *pdata);
 extern TaskHandle_t  vcp_thread_handle;
 
 extern int can_main(void);
-#pragma data_alignment=8   
+#pragma data_alignment=8
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
 
 extern USBD_Usr_cb_TypeDef USR_cb;
@@ -47,8 +45,8 @@ extern USBD_Class_cb_TypeDef  USBD_CDC_VCP_cb;
 ////============================================
 int main( void )
 {
-///uint8_t btst=0; 
-BaseType_t rez; 
+///uint8_t btst=0;
+BaseType_t rez;
 ////uint32_t tst=0;
 #ifdef DEBUG
   debug();
@@ -56,15 +54,15 @@ BaseType_t rez;
 __disable_irq();
 hw_board_init();
 
-///=================================  
+///=================================
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
-            &USR_desc, 
-            &USBD_Class_cb, 
+            &USR_desc,
+            &USBD_Class_cb,
             &USR_cb);
 
-printk("\n\r=== usb-grbl-can ==="); 
-printk("\n\r=== settings_t [%x]===",sizeof(settings_t)); 
+printk("\n\r=== usb-grbl-can ===");
+printk("\n\r=== settings_t [%x]===",sizeof(settings_t));
 
 ////=================================================
 can1_init();
@@ -74,12 +72,12 @@ NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 /*
 for(;;){
 btst = eeprom_get_char( 0 );
-printk("\n\r[%x]",btst); 
+printk("\n\r[%x]",btst);
 
 }
-*/        
+*/
 ////    xTaskCreate( gbrl_thr, "gbrl", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-         
+
 	/* Start the tasks defined within this file/specific to this demo. */
  ////???   xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 ////???	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -92,12 +90,12 @@ printk("\n\r[%x]",btst);
 	/* Configure the timers used by the fast interrupt timer test. */
 /////	vSetupTimerTest();
 rez=xTaskCreate( grbl_task, "grbl_task", GRBL_TASK_STACK_SIZE, NULL, GRBL_TASK_PRIORITY, NULL );
-printk("\n\r grbl_task[%x]",rez); 
+printk("\n\r grbl_task[%x]",rez);
 
 ///xTaskCreate( tst1_task, "tst1_task", TST_TASK_STACK_SIZE, NULL, TST_TASK_PRIORITY, NULL );
- 
+
 rez=xTaskCreate(vcp_thread, (const char*)"vcp_thread",VCP_TASK_STACK_SIZE, 0, VCP_TASK_PRIORITY, &vcp_thread_handle);
-printk("\n\r vcp_thread[%x]",rez); 
+printk("\n\r vcp_thread[%x]",rez);
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -164,7 +162,6 @@ extern unsigned short usMaxJitter;
 }
 #endif
 /*-----------------------------------------------------------*/
-
 
 #ifdef  DEBUG
 /* Keep the linker happy. */

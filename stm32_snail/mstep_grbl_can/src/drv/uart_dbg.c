@@ -1,4 +1,3 @@
-
 #include "brook.h"
 #include "serial_cnf.h"
 
@@ -12,15 +11,15 @@ UART_DBG_CLK_INIT(UART_DBG_CLK, ENABLE);
 
 void USART1_IRQHandler(void)
 {
-///int cnt;  
+///int cnt;
 #if 0
 u8 ch;
 uint32_t tmp_sr;
 signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 signed portBASE_TYPE xTaskWoken= pdFALSE;
 
-tmp_sr=UART_DBG->SR;  
-////put_tst1(1);  
+tmp_sr=UART_DBG->SR;
+////put_tst1(1);
 if((tmp_sr&USART_FLAG_RXNE) != 0)
 ////if(USART_GetITStatus(UART4, USART_IT_RXNE) != RESET)
   {
@@ -34,9 +33,9 @@ if((tmp_sr&USART_FLAG_RXNE) != 0)
 else if((tmp_sr&USART_FLAG_ORE) != 0)
 ////if(USART_GetITStatus(UART4, USART_IT_RXNE) != RESET)
   {
-////  put_tst3(1);  
+////  put_tst3(1);
   ch = (u8)(UART_BT->DR & 0x0FF);
-///  ringbuffer_putc(&rx_bt_buffer, ch); 
+///  ringbuffer_putc(&rx_bt_buffer, ch);
 ////  rt_hw_serial_isr(&serial4);
   /* clear interrupt */
   USART_ClearITPendingBit(UART_BT, USART_FLAG_ORE);
@@ -54,7 +53,7 @@ if ((tmp_sr&USART_FLAG_TXE) != 0)
       UART_BT->CR1 &= ~USART_CR1_TXEIE;		      // disable TX interrupt if nothing to send
       }
       UART_BT->SR &= ~USART_IT_TXE;              ///  USART_ClearITPendingBit(UART_BT, USART_IT_TXE);
-     
+
     }
 #endif
 #endif
@@ -70,7 +69,7 @@ static void DBG_GPIO_Configuration(void)
     /* Configure BT Rx/tx PIN */
     GPIO_InitStructure.GPIO_Pin = UART_DBG_TX_PIN;
     GPIO_Init(UART_DBG_TX_GPIO_PORT, &GPIO_InitStructure);
-    
+
     GPIO_InitStructure.GPIO_Pin = UART_DBG_RX_PIN;
     GPIO_Init(UART_DBG_RX_GPIO_PORT, &GPIO_InitStructure);
 
@@ -79,12 +78,12 @@ static void DBG_GPIO_Configuration(void)
     GPIO_PinAFConfig(UART_DBG_RX_GPIO_PORT, UART_DBG_RX_SOURCE, UART_DBG_RX_AF);
 }
 ///==========================
-int get_byte_dbg(void) 
+int get_byte_dbg(void)
 {
 while (!(UART_DBG->SR & USART_SR_RXNE));
 return (UART_DBG->DR);
 }
-int rdy_rx_dbg(void) 
+int rdy_rx_dbg(void)
 {
 if((UART_DBG->SR & USART_SR_RXNE))
   return 1;
@@ -92,8 +91,8 @@ else
   return 0;
 }
 ///======================================
-int send_char_dbg(int c) 
-{ 
+int send_char_dbg(int c)
+{
 while (!(UART_DBG->SR & 0x0080));
 UART_DBG->DR = (c & 0x1FF);
 return (c);
@@ -125,7 +124,7 @@ DBG_GPIO_Configuration();
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
   USART_Init(UART_DBG, &USART_InitStructure);
-  
+
   USART_Cmd(UART_DBG, ENABLE);
 
 for (i = 0; i < 0x1000; i++)

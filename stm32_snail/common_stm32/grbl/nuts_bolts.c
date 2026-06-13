@@ -22,7 +22,6 @@
 #include "grbl.h"
 #include "zzzz.h"
 
-
 #define MAX_INT_DIGITS 8 // Maximum number of digits in int32 (and float)
 
 // Extracts a floating point value from a string. The following code is based loosely on
@@ -107,7 +106,6 @@ uint8_t read_float(char *line, uint32_t *char_counter, float *float_ptr)
   return(true);
 }
 
-
 // Non-blocking delay function used for general operation and suspend features.
 void delay_sec(float seconds, uint8_t mode)
 {
@@ -141,7 +139,6 @@ float hypot_f(float x, float y)
 	return(sqrtf(x*x + y*y));
 }
 
-
 float convert_delta_vector_to_unit_vector(float *vector)
 {
   uint8_t idx;
@@ -162,7 +159,6 @@ float convert_delta_vector_to_unit_vector(float *vector)
   return(magnitude);
 }
 
-
 float limit_value_by_axis_maximum(float *max_value, float *unit_vec)
 {
   uint8_t idx;
@@ -175,4 +171,3 @@ float limit_value_by_axis_maximum(float *max_value, float *unit_vec)
   }
   return(limit_value);
 }
-

@@ -168,7 +168,7 @@ static void modbus_poll (void *data)
                 // Flushing the buffer prevents these characters from appearing as an RX message.
                 // Since Modbus is half-duplex, there should never be valid data recived during a message transmit.
                 stream.flush_rx_buffer();
-                
+
                 state = ModBus_AwaitReply;
 
                 if(stream.set_direction)

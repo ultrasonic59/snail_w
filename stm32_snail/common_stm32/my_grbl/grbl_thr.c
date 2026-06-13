@@ -30,22 +30,19 @@ void _delay_ms(uint32_t x)
 	SysTick->CTRL = 0x00;                                            // Close the counter
 	SysTick->VAL = 0X00;                                            // Empty the counter
 #endif
-vTaskDelay(x);        
+vTaskDelay(x);
 }
-
-
 
 void grbl_thread(void* pp)
 {
-printk("\n\r grbl_thread\n\r"); 
+printk("\n\r grbl_thread\n\r");
 ////  serial_init();   // Setup serial baud rate and interrupts
   settings_init(); // Load Grbl settings from EEPROM
   stepper_init();  // Configure stepper pins and interrupt timers
 ////  system_init();   // Configure pinout pins and pin-change interrupt
   memset(sys_position,0,sizeof(sys_position)); // Clear machine position.
 
-
-for (;;) { 
+for (;;) {
   uint8_t prior_state = sys.state;
   memset(&sys, 0, sizeof(system_t)); // Clear system struct variable.
   sys.state = prior_state;
@@ -77,11 +74,6 @@ for (;;) {
 
     // Start Grbl main loop. Processes program inputs and executes them.
     protocol_main_loop();
-} 
-
 }
 
-
-
-
-
+}

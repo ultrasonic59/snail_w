@@ -11,7 +11,7 @@
 
 #define DEF_CAN_BR   6  ///500
 
-#ifndef _FALSE 
+#ifndef _FALSE
 #define _FALSE 0
 #endif
 
@@ -52,6 +52,7 @@ extern void CAN1_Init (void);
 extern uint8_t  CAN_RxRdy;              /* CAN HW received a message        */
 extern uint8_t  CAN_TxRdy;              /* CAN HW ready to transmit message */
 extern can_msg_t  CAN_RxMsg;
+extern int CAN_rx_pop(can_msg_t *msg);
 extern void CAN_rdMsg(can_msg_t *msg);
 extern void CAN_wrMsg(can_msg_t *msg);
 extern void CAN_Config(void);

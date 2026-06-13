@@ -226,7 +226,7 @@ FLASHMEM static void rx_packet (modbus_message_t *msg)
                 response.num_values = min(msg->adu[2], MODBUS_MAX_REGISTERS); // byte count
                 for(idx = 0; idx < response.num_values; idx++)
                     response.values[idx] = msg->adu[3 + idx];
-                break;                
+                break;
 
             default:;
                 response.num_values = cmds[response.function].single_register || cmds[response.function].is_write ? 2 : msg->adu[2] / 2;
@@ -301,7 +301,7 @@ FLASHMEM status_code_t modbus_message (uint8_t server, modbus_function_t functio
         } else { // read
             cmd.adu[4] = (uint8_t)(registers >> 8);
             cmd.adu[5] = (uint8_t)(registers & 0xFF);
-    
+
             if(function == ModBus_ReadCoils || function == ModBus_ReadDiscreteInputs)
                 cmd.rx_length = 5 + ((registers + 7) / 8);	// bit-packed, ceil(n/8) bytes
             else

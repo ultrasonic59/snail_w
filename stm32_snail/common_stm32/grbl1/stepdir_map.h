@@ -571,7 +571,6 @@ PROGMEM static const uint32_t c_dir_outmap[] = {
   #endif
 };
 
-
 static uint32_t dir_outmap[sizeof(c_dir_outmap) / sizeof(uint32_t)];
 
 #endif
@@ -603,4 +602,3 @@ static void stepdirmap_init (settings_t *settings)
 }
 
 #endif
-

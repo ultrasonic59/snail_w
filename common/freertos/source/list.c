@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-
 #include <stdlib.h>
 #include "FreeRTOS.h"
 #include "list.h"
@@ -195,4 +194,3 @@ List_t * const pxList = pxItemToRemove->pxContainer;
 	return pxList->uxNumberOfItems;
 }
 /*-----------------------------------------------------------*/
-

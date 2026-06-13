@@ -132,7 +132,6 @@ typedef enum {
 // Modal Group G4: Arc IJK distance mode
 //#define DISTANCE_ARC_MODE_INCREMENTAL 0 // G91.1 - Default, must be zero
 
-
 /*! Modal Group G5: Feed rate mode
 
 Do not alter values!
@@ -170,7 +169,6 @@ typedef enum {
     CCRetractMode_RPos = 1       //!< 1 - G99
 } cc_retract_mode_t;
 
-
 /*! Modal Group G12 and G0: Coordinate system identificators
 
 Do not alter values!
@@ -194,7 +192,6 @@ typedef enum  {
     CoordinateSystem_G92,                           //!< 11 - G92 (G0) when #COMPATIBILITY_LEVEL <= 1, 8 otherwise
     N_CoordinateSystems                             //!< 12 when #COMPATIBILITY_LEVEL <= 1, 9 otherwise
 }  __attribute__ ((__packed__)) coord_system_id_t;
-
 
 /*!  Modal Group G13: Control mode
 
@@ -690,7 +687,6 @@ typedef struct {
     axes_signals_t rotary_wrap;
 #endif
 } parser_block_t;
-
 
 static inline axes_signals_t gc_paramwords_to_axes (parameter_words_t p_words)
 {

@@ -240,7 +240,6 @@ static aux_ctrl_t aux_ctrl[] = {
 #endif
 };
 
-
 // General inputs
 
 #ifdef STM32_PLATFORM
@@ -478,7 +477,6 @@ static inline control_signals_t aux_ctrl_scan_status (control_signals_t signals)
 #endif
 
 #endif
-
 
 // The following pins are bound explicitly to aux output pins
 static aux_ctrl_out_t aux_ctrl_out[] = {
@@ -731,7 +729,7 @@ static inline void aux_ctrl_claim_out_ports (aux_claim_explicit_out_ptr aux_clai
 
 #ifdef STM32_PLATFORM
 
-// Used for validating pins that requires IRQ capabilities 
+// Used for validating pins that requires IRQ capabilities
 
 #ifdef RESET_PIN
 #define RESET_BIT (1<<RESET_PIN)

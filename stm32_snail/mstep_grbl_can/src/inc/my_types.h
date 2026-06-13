@@ -1,8 +1,9 @@
 #ifndef __MY_TYPES_H__
 #define __MY_TYPES_H__
 
+#include <stdint.h>
 #include <intrinsics.h>
-
+#include "tx_api.h"
 
 typedef __istate_t atomic_t;
 
@@ -53,7 +54,6 @@ typedef void (*void_fn_u8_pvoid)(uint8_t,void *);
 typedef uint8_t (*u8_fn_pvoid_pu8_u16)(void*,uint8_t*,uint16_t);
 typedef uint8_t (*u8_fn_pu8_u16)(uint8_t*,uint16_t);
 
-
-#define msleep vTaskDelay
+#define msleep(ms)  tx_thread_sleep((ULONG)(ms))
 
 #endif

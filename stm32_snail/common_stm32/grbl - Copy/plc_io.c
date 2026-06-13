@@ -60,4 +60,3 @@ uint32_t plc_action_input_event(uint32_t pin, uint32_t edge, uint32_t timeout, u
 
 	return 0;
 }
-

@@ -159,7 +159,6 @@ Experimental - testing required and homing needs to be worked out.
 #define POLAR_ROBOT Off
 #endif
 
-
 /*! \def COREXY
 \brief Enable CoreXY kinematics. Use ONLY with CoreXY machines.
 <br>__IMPORTANT:__ If homing is enabled, you must reconfigure the homing cycle \#defines above to
@@ -351,7 +350,6 @@ much greater than this. The default setting should capture most, if not all, ful
 #define BEZIER_SIGMA 0.1f
 #endif
 ///@}
-
 
 /*! \def DWELL_TIME_STEP
 \brief Time delay increments performed during a dwell.
@@ -939,7 +937,6 @@ Enable this setting to feedrate override over a soft reset.
 #endif
 ///@}
 
-
 // Control signals settings (Group_ControlSignals)
 
 #ifndef __DOXYGEN__ // For now do not include in documentation
@@ -1407,7 +1404,6 @@ and less range over the total 255 PWM levels to signal different spindle speeds.
 #endif
 ///@}
 
-
 // Tool change settings (Group_Toolchange)
 
 /*! @name $341 - Setting_ToolChangeMode
@@ -1717,7 +1713,6 @@ are used the logic of the input signals should be be inverted with the \ref axis
 #define DEFAULT_HOME_SIGNALS_INVERT_MASK 0 // Set to -1 or AXES_BITMASK to invert for all axes
 #endif
 ///@}
-
 
 // Probing settings (Group_Probing)
 
@@ -2197,7 +2192,6 @@ Adds directory entries in $F and $F+ output to allow hierarchical navigation of 
 #define DEFAULT_FS_HIERACHICAL_LISTING Off // Default disabled. Set to \ref On or 1 to enable.
 #endif
 ///@}
-
 
 // Axis settings (Group_XAxis - Group_VAxis)
 

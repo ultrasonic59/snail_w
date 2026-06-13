@@ -97,8 +97,8 @@ typedef struct plan_block {
     float entry_speed_sqr;          // The current planned entry speed at block junction in (mm/min)^2
     float max_entry_speed_sqr;      // Maximum allowable entry speed based on the minimum of junction limit and
                                     // neighboring nominal speeds with overrides in (mm/min)^2
-    float acceleration;             // Effective acceleration over plannerblock calculated from trapezoidal movement plan. Does not change in trapezoidal mode.                     
-#if ENABLE_JERK_ACCELERATION   
+    float acceleration;             // Effective acceleration over plannerblock calculated from trapezoidal movement plan. Does not change in trapezoidal mode.
+#if ENABLE_JERK_ACCELERATION
     float max_acceleration;         // Axis-limit adjusted line acceleration in (mm/min^2). Does not change.
     float jerk;                     // Axis-limit adjusted jerk value in (mm/min^3). Does not change.
 #endif
@@ -126,7 +126,6 @@ typedef struct plan_block {
     struct plan_block *prev, *next; // Linked list pointers, DO NOT MOVE - these MUST be the last elements in the struct!
 } plan_block_t;
 
-
 // Planner data prototype. Must be used when passing new motions to the planner.
 typedef struct {
     float feed_rate;                // Desired feed rate for line motion. Value is ignored, if rapid motion.
@@ -152,7 +151,6 @@ typedef struct {
     char *message;                  // Message to be displayed when block is executed.
     output_command_t *output_commands;
 } plan_line_data_t;
-
 
 // Define planner variables
 typedef struct {

@@ -678,4 +678,3 @@ bool maslow_init (void)
 }
 
 #endif
-

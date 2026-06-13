@@ -1113,7 +1113,6 @@ FLASHMEM gc_probe_t mc_probe_cycle (float *target, plan_line_data_t *pl_data, gc
     return sys.flags.probe_succeeded ? GCProbe_Found : GCProbe_FailEnd;
 }
 
-
 // Plans and executes the single special motion case for parking. Independent of main planner buffer.
 // NOTE: Uses the always free planner ring buffer head to store motion parameters for execution.
 FLASHMEM bool mc_parking_motion (float *parking_target, plan_line_data_t *pl_data)

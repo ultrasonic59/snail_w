@@ -21,12 +21,10 @@
 #include "grbl.h"
 #include "gpio.h"
 
-
 void system_init()
 {
 	//Eeprom_Write_CR();
 }
-
 
 // Returns control pin state as a uint8 bitfield. Each bit indicates the input pin state, where
 // triggered is 1 and not triggered is 0. Invert mask is applied. Bitfield organization is
@@ -49,7 +47,6 @@ uint8_t system_control_get_state()
   }
   return(control_state);
 }
-
 
 // Pin change interrupt for pin-out commands, i.e. cycle start, feed hold, and reset. Sets
 // only the realtime command execute variable to have the main program execute these when
@@ -81,7 +78,6 @@ void _EXTI15_10_IRQHandler(void)
 }
 }
 
-
 // Returns if safety door is ajar(T) or closed(F), based on pin state.
 uint8_t system_check_safety_door_ajar()
 {
@@ -91,7 +87,6 @@ uint8_t system_check_safety_door_ajar()
     return(false); // Input pin not enabled, so just return that it's closed.
   #endif
 }
-
 
 // Executes user startup script, if stored.
 void system_execute_startup(char *line)
@@ -109,7 +104,6 @@ void system_execute_startup(char *line)
     }
   }
 }
-
 
 // Directs and executes one line of formatted input from protocol_process. While mostly
 // incoming streaming g-code blocks, this also executes Grbl internal commands, such as
@@ -274,8 +268,6 @@ uint8_t system_execute_line(char *line)
   return(STATUS_OK); // If '$' command makes it to here, then everything's ok.
 }
 
-
-
 void system_flag_wco_change()
 {
   #ifdef FORCE_BUFFER_SYNC_DURING_WCO_CHANGE
@@ -283,7 +275,6 @@ void system_flag_wco_change()
   #endif
   sys.report_wco_counter = 0;
 }
-
 
 // Returns machine position of axis 'idx'. Must be sent a 'step' array.
 // NOTE: If motor steps and machine position are not in the same coordinate frame, this function
@@ -305,7 +296,6 @@ float system_convert_axis_steps_to_mpos(int32_t *steps, uint8_t idx)
   return(pos);
 }
 
-
 void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
 {
   uint8_t idx;
@@ -314,7 +304,6 @@ void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
   }
   return;
 }
-
 
 // CoreXY calculation only. Returns x or y-axis "steps" based on CoreXY motor steps.
 #ifdef COREXY
@@ -327,7 +316,6 @@ void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
     return( (steps[A_MOTOR] - steps[B_MOTOR])/2 );
   }
 #endif
-
 
 // Checks and reports if target array exceeds machine travel limits.
 uint8_t system_check_travel_limits(float *target)
@@ -349,7 +337,6 @@ uint8_t system_check_travel_limits(float *target)
   }
   return(false);
 }
-
 
 // Special handlers for setting and clearing Grbl's real-time execution flags.
 void system_set_exec_state_flag(uint8_t mask) {
