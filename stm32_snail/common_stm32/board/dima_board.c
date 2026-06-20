@@ -1,5 +1,13 @@
 #include <string.h>
-#include "tx_api.h"
+
+#ifdef THREADX
+ #include "tx_api.h"
+#else
+ #include "FreeRTOS.h"
+ #include "task.h"
+ #include "queue.h"
+
+#endif
 
 #include "can.h"
 #include "can_cmds.h"

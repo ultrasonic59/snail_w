@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
+& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\v2\booter_step_axis_dima_v2\settings\booter_step_axis_dima_v2.booter_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\v2\booter_step_axis_dima_v2\settings\booter_step_axis_dima_v2.booter_x_dbg.driver.xcl" 
 }
 else
 {
-& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
+& "C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\v2\booter_step_axis_dima_v2\settings\booter_step_axis_dima_v2.booter_x_dbg.general.xcl" --debug_file=$debugfile --backend -f "D:\proj\velograph\snail_w\stm32_snail\v2\booter_step_axis_dima_v2\settings\booter_step_axis_dima_v2.booter_x_dbg.driver.xcl" 
 }

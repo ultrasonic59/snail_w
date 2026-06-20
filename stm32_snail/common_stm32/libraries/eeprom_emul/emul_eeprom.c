@@ -28,8 +28,15 @@
 #include "emul_eeprom.h"
 #include "printk.h"
 #include "my_misc.h"
-#include "tx_api.h"
-#include "threadx_app.h"
+#ifdef THREADX
+ #include "tx_api.h"
+ #include "threadx_app.h"
+#else
+ #include "FreeRTOS.h"
+ #include "task.h"
+ #include "queue.h"
+
+#endif
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -285,10 +292,10 @@ uint16_t ee_init(void)
 uint16_t EE_Init(void)
 {
 uint16_t rez;
-tx_app_critical_enter();
+ENTER_CRITICAL();
 rez= ee_init();
-tx_app_critical_exit();
- return rez;
+EXIT_CRITICAL();
+return rez;
 }
 
 uint16_t EE_Rd(uint16_t VirtAddress, uint16_t* Data)
@@ -399,9 +406,9 @@ printk("\n\r +EE_Format!!! =");
 uint16_t EE_Wr(uint16_t VirtAddress, uint16_t Data)
 {
 uint16_t rez;
-tx_app_critical_enter();
+ENTER_CRITICAL();
 rez= ee_Write(VirtAddress, Data);
-tx_app_critical_exit();
+EXIT_CRITICAL();
 return rez;
 }
 /**

@@ -1,6 +1,9 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
+
+#ifdef THREADX
 #include "tx_api.h"
+#endif
 
 #ifndef APP_NVIC_LOW_IRQ_PRIORITY
 #define APP_NVIC_LOW_IRQ_PRIORITY  15U
@@ -35,7 +38,18 @@ extern int32_t curr_coord;
 extern uint8_t use_enc;
 extern int32_t next_coord;
 
+#ifdef THREADX
 #define msleep(ms)  tx_thread_sleep((ULONG)(ms))
+#define ENTER_CRITICAL	tx_app_critical_enter
+#define EXIT_CRITICAL	tx_app_critical_exit
+
+#else
+///#define msleep(ms)  tx_thread_sleep((ULONG)(ms))
+#define msleep vTaskDelay
+#define ENTER_CRITICAL	taskENTER_CRITICAL
+#define EXIT_CRITICAL	taskEXIT_CRITICAL
+
+#endif
 #ifndef _MASTER_
 ////extern int32_t cur_coord;
 extern uint8_t cur_state;

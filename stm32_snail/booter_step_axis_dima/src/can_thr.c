@@ -2,8 +2,6 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "semphr.h"
-///#include "stm32f2xx_gpio.h"
-///#include "stm32f2xx_rcc.h"
 
 #include "can.h"
 #include "can_cmds.h"

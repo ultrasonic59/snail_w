@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\proj\velograph\snail\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail_w\stm32_snail\mstep_rtos\settings\mstep_rtos.step_x_dbg.driver.xcl" 
 
 @echo off 
 :end
