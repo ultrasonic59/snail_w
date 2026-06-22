@@ -1,7 +1,7 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 
-#ifdef THREADX
+#ifdef USE_THREADX
 #include "tx_api.h"
 #endif
 
@@ -38,7 +38,7 @@ extern int32_t curr_coord;
 extern uint8_t use_enc;
 extern int32_t next_coord;
 
-#ifdef THREADX
+#ifdef USE_THREADX
 #define msleep(ms)  tx_thread_sleep((ULONG)(ms))
 #define ENTER_CRITICAL	tx_app_critical_enter
 #define EXIT_CRITICAL	tx_app_critical_exit

@@ -28,7 +28,7 @@
 #include "emul_eeprom.h"
 #include "printk.h"
 #include "my_misc.h"
-#ifdef THREADX
+#ifdef USE_THREADX
  #include "tx_api.h"
  #include "threadx_app.h"
 #else

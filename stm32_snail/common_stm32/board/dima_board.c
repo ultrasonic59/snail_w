@@ -1,6 +1,6 @@
 #include <string.h>
 
-#ifdef THREADX
+#ifdef USE_THREADX
  #include "tx_api.h"
 #else
  #include "FreeRTOS.h"
