@@ -46,7 +46,6 @@ public:
 	explicit CprogHex(bool* data_ok=nullptr, can_cmd_t* odat=nullptr, quint8* stat = nullptr, qint32* p_cur_pb_val=nullptr);
     bool isConnected() const;
     bool isOpened() const;
-	///quint8 get_curr_state();
 	QString COM_port_name;
 	void config_port();
     void connectToDev();
@@ -58,9 +57,13 @@ public:
 private:
     quint8 getHexLineType(QString line);
 	quint8 progHexLine(QString line);
+	quint8 rdHexLine(QString line);
 	quint8 hex2bin(QString line );
 	quint8 progFlashLine();
+	quint8 rdFlashLine();
 	quint8 progFlashChunc(quint8 *dat, quint8 len);
+	quint8 rdFlashChunc(quint8* dat, quint8 len);
+
     quint8 setProgAddr(quint32 addres);
 	quint8 erraseAddr(quint32 addres);
 	quint8 checkErraseAddr(quint32 addres);
@@ -74,17 +77,15 @@ private:
 
 	quint32	linAddr;
 	bin_data_t cur_bin_data;
-	quint16 cur_ks;
-	quint32 size_app;
+	quint16 cur_KS;
+	quint32 size_App;
 private:
     QSerialPort *m_pSerialPort;
     bool m_isConnected;
     bool m_isOpened;
-  ////   void connectToDev();
 	bool getStat(); 
 	QByteArray SendRes(QByteArray sentData);
 	quint32 can_id;
-////	quint8 state_dev;
 public slots:
 	void sl_connect(bool conn);
 	void sl_set_can_id(QString);
@@ -97,19 +98,16 @@ public slots:
 	void sl_progr_eeprom(void);
 	void sl_rd_flash(dat_req_t* data);
 	void sl_verif(QFile*);
+	void sl_init(QFile*);
+
 
 public:
-///	bool progr(QFile *pFile);
-///	void set_can_id(QString id);
 	void SetConnected(bool conn);
-///	void rd_eeprom(dat_req_t* data );
-///	void wr_eeprom(dat_req_t* data );
 	bool wr_eeprom(quint16 addr, quint16 data );
 
-///	void rd_flash(dat_req_t* data );
 	void clr_ks(void)
 		{
-		cur_ks=0;
+		cur_KS=0;
 		}
 
 signals:

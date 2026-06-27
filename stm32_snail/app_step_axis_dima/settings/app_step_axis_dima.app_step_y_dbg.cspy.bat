@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\grbl_can\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.general.xcl" --backend -f "D:\proj\grbl_can\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.general.xcl" --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\grbl_can\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\grbl_can\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.driver.xcl" 
+"C:\iar\ewarm-9.60.2\common\bin\cspybat" -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.general.xcl" "--debug_file=%~1" --backend -f "D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\settings\app_step_axis_dima.app_step_y_dbg.driver.xcl" 
 
 @echo off 
 :end

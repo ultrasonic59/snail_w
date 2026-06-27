@@ -162,6 +162,8 @@ if(EE_Rd(ADDR_EEPROM_SIZEL_APP, &tmp)!=0)
 size_app|=tmp;
 if(EE_Rd(ADDR_KS_APP, &rd_ks)!=0)
   return 0;
+if(size_app < MIN_SIZE_APP)
+    return 0;
 for(ii=0;ii< size_app;ii+=2)
 /// for(ii=0;ii< size_app/2;ii++)
  {

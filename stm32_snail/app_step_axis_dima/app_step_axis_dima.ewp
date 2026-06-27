@@ -801,7 +801,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
+                    <state>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_threadx_no_boot.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1497,14 +1497,14 @@
                     <state>$PROJ_DIR$\src\inc</state>
                     <state>$PROJ_DIR$\azure_port</state>
                     <state>$PROJ_DIR$\..\common_stm32\threadx_app</state>
-                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\common\inc</state>
-                    <state>$PROJ_DIR$\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\azure_rtos\threadx\common\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\board</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\STM32F2xx_StdPeriph_Driver</state>
                     <state>$PROJ_DIR$\..\common_stm32\my_misc</state>
-                    <state>$PROJ_DIR$\..\common\can</state>
-                    <state>$PROJ_DIR$\..\common\dbg</state>
+                    <state>$PROJ_DIR$\..\..\common\can</state>
+                    <state>$PROJ_DIR$\..\..\common\dbg</state>
                     <state>$PROJ_DIR$\..\common_stm32\libraries\eeprom_emul</state>
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
                     <state>$PROJ_DIR$\..\common_stm32</state>
@@ -1930,7 +1930,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
+                    <state>$PROJ_DIR$\app_step_threadx_no_boot.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2638,6 +2638,10 @@
                     <state>$PROJ_DIR$\..\common_stm32\can</state>
                     <state>$PROJ_DIR$\src\hdlc</state>
                     <state>$PROJ_DIR$\..\common_stm32</state>
+                    <state>$PROJ_DIR$\..\..\common\azure_rtos\threadx\common\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\azure_rtos\threadx\ports\cortex_m3\iar\inc</state>
+                    <state>$PROJ_DIR$\..\..\common\can</state>
+                    <state>$PROJ_DIR$\..\..\common\dbg</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -3059,7 +3063,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\app_step_threadx.icf</state>
+                    <state>D:\proj\velograph\snail_w\stm32_snail\app_step_axis_dima\app_step_threadx_no_boot.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

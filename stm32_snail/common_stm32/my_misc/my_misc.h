@@ -4,7 +4,7 @@
 #include "can_cmds.h"
 
 typedef  void (*pFunction)(void);
-
+#define MIN_SIZE_APP 1024
 ///=======================================================================
 extern void uDelay (const uint32_t usec);
 extern void goto_booter(void);

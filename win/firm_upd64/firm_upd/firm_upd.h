@@ -78,15 +78,7 @@ public slots:
 	void set_pb_val(quint32 val);
 	void setBootMode();
 	void ver_flash();
-
-///	void sl_set_curr_state(quint8);
-
-////public slots:
- ////   void openFileDialog();
- ////   void program();
-////    void serialDataReceived();
-////    void serialError();
-////    void serialReady();
+	void init_prg();
 
 signals:
     void hardwareResponseFinished();
@@ -95,6 +87,8 @@ signals:
 	void s_set_can_id(QString);
 	void s_SetBootMode();
 	void s_progr(QFile*);
+	void s_init(QFile*);
+
 	void s_req_curr_state();
 	void s_rd_eeprom(dat_req_t*);
 	void s_wr_eeprom(dat_req_t*);
